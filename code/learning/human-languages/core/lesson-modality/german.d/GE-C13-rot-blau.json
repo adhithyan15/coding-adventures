@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C13-rot-blau",
     "language": "german",
-    "chapter": 20,
-    "sequence": 340,
+    "chapter": 21,
+    "sequence": 329,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7217617353e5c928"
+    "sourceHash": "fnv1a64:ddc325b78420729c"
   },
   "findings": []
 }

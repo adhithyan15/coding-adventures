@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C14-habere
 spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
 sequence: 351
-chapter: 21
+chapter: 22
 type: etymology
 headword: haben ist nicht habēre
 gloss: the famous false cognate — haben is a cousin of capture, and Latin habēre is a cousin of give

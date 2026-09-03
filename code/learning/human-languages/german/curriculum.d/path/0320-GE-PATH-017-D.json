@@ -1,0 +1,16 @@
+{
+  "id": "GE-PATH-017-D",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "GE-C13-rot",
+    "GE-C13-rot-ruber",
+    "GE-C13-blau",
+    "GE-C13-blau-bleu",
+    "GE-C13-rot-blau"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-017-D-ROT-BLAU"
+  ],
+  "after": []
+}

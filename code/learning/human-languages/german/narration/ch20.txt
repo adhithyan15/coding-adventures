@@ -1,89 +1,230 @@
-German, chapter 20: Colours.
-2 lessons. All 2 can be done entirely by ear.
+German, chapter 20: The Colour German Lent Away.
+7 lessons. All 7 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-schwarz, weiß — and the word German lent away.
+Lesson 1 of 7.
+schwarz — "black".
 
 Warm-up.
 [pause 2 seconds]
-German's colour words are home-grown — no Latin here. But one of them has a sibling that emigrated: a German word for "shining" became the word for white in French, Italian and Portuguese.
+Four colours are coming, and not one of them was borrowed. That is rarer than it sounds.
 
-schwarz.
-schwarz ("black") from Proto-Germanic swartaz. Its English cousin survives in swarthy ("dark-complexioned"). Further back it's related to Latin sordēs ("dirt") — the root of English sordid. Black and grubby, from one idea.
+You'll want to know: schwarz.
+schwarz — "black."
+One word, two consonant clusters, and no Latin in sight. German's colour vocabulary is home-grown: where the months came in wholesale from Latin, the colours stayed Germanic.
 
-weiß.
-weiß ("white") from Proto-Germanic hwītaz = exactly English white. Same word, different spelling clothes.
-Note the ß (Eszett): it marks a sharp s after a long vowel. Weiß rhymes with English vice, not vice-versa's second half. In Switzerland you'll see it written weiss — the letter is optional there.
+Sounds you'll need.
+schw-cluster — sch is English sh, and the w after it is a v. So the word opens shv-, which English never does at the start of a word. Take it slowly: sh … v … and then run them together.
+z-ts — a German z is always ts, never English z. The word ends -arts.
+Put together: SHVARTS.
 
-The word that emigrated.
-German also has blank — "shiny, polished, bare." That word, in its Frankish form blank ("shining"), was borrowed into Romance, where it pushed Latin's own albus out and became:
+Guided Practice.
+[pause 1 second]
+[your turn — say: the opening cluster alone — "shv, shv"]
+[pause 8 seconds for the answer]
+[your turn — say: "schwarz" — SHVARTS]
+[pause 8 seconds for the answer]
+[your turn — say: the two clusters apart, then together — "shv … arts … schwarz"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"schwarz, schwarz."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "black." (Schwarz.) How does the word open? (Shv- — sch plus a w that is a v.) How is a German z sounded? (Ts.) Was it borrowed from Latin? (No — the colours are inherited.) Next: the English cousin it left behind.
+
+
+Lesson 2 of 7.
+schwarz, taken apart — the English cousin that survived only in one word, and the Latin relative that means dirt.
+
+Warm-up.
+[pause 2 seconds]
+English has this word too. It has been reduced to one dusty corner of the dictionary.
+
+The word, taken apart.
+Schwarz comes from Germanic swartaz. English inherited the same word — and then black took over the everyday job, leaving the old one alive in exactly one place:
+swarthy — "dark-complexioned".
+That is schwarz, worn down and pushed to the edge. Say the pair aloud and the family shows: schwarz, swarthy.
+Further back there is a Latin relative, and it is not flattering. The root behind swartaz also gave Latin sordēs, "dirt" — which English took as sordid. Black and grubby turn out to be one idea seen twice: the colour of soot, and the state of being covered in it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "schwarz, swarthy"]
+[pause 8 seconds for the answer]
+[your turn — say: the Latin relative — "sordēs, sordid"]
+[pause 8 seconds for the answer]
+[your turn — say: the idea they share — "the colour, and being covered in it"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"schwarz, swarthy."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which English word is schwarz's cousin? (Swarthy.) What does it mean? (Dark-complexioned.) Which English word comes from the Latin relative? (Sordid, from sordēs "dirt".) Next: the second colour, and the letter that only German has.
+
+
+Lesson 3 of 7.
+weiß — "white".
+
+Warm-up.
+[pause 2 seconds]
+Black's opposite, and the first ordinary word in this book that needs the letter you were shown back in the writing chapter.
+
+You'll want to know: weiß.
+weiß — "white."
+Three letters and every one of them is a trap for an English eye. It is pronounced, near enough, like English vice.
+
+Sounds you'll need.
+w-is-v — German w is English v. The word opens v-.
+diphthong-ei — German ei is the vowel of English eye. Never "ee".
+ss-eszett-long — and here is the ß, doing exactly what you were told it does: marking a sharp s after a long vowel. You met that in the writing chapter with nothing to spend it on. Ei is long, so the s is written ß and sounded sharp. This is the word that spends it.
+So weiß rhymes with vice — not with the second half of vice versa, where the s is soft.
+You already know what Switzerland does with that letter, and weiß is the word where you will see it: Swiss German writes weiss, with the ß spelled out.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "weiß" — like English vice]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "schwarz, weiß"]
+[pause 8 seconds for the answer]
+[your turn — say: the rule out loud — "long vowel, sharp s, written ß"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"schwarz, weiß."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "white." (Weiß.) Which English word does it rhyme with? (Vice.) Why is the s written ß? (The vowel before it is long.) How does Switzerland write it? (Weiss.) Next: the English word it is, under the spelling.
+
+
+Lesson 4 of 7.
+weiß, taken apart — the same word in different spelling clothes — no borrowing, no drift, only orthography.
+
+Warm-up.
+[pause 2 seconds]
+Schwarz needed a fossil to show its English cousin. This one needs nothing.
+
+The word, taken apart.
+Weiß comes from Germanic hwītaz, and so does English white. Not a cousin, not a borrowing — the same word, and neither language moved its meaning by a hair.
+What separates them is spelling and nothing else:
+[a table of 2 rows, read aloud]
+the vowel. German: ei. English: i.
+the sharp s. German: ß. English: t plus a silent e.
+That is the whole distance. Weiß and white look unrelated on the page and are identical underneath, which is a useful warning about judging these pairs by eye: schwarz/swarthy looked close and had drifted in meaning, while weiß/white looks distant and has not drifted at all.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "weiß, white"]
+[pause 8 seconds for the answer]
+[your turn — say: the ancestor — "hwītaz"]
+[pause 8 seconds for the answer]
+[your turn — say: both colours and both cousins — "schwarz swarthy, weiß white"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"weiß, white — one word."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which English word is weiß? (White — the same word.) Did its meaning drift? (No.) Which of this chapter's two pairs drifted in meaning? (Schwarz/swarthy.) Next: a German colour word the Romance languages took.
+
+
+Lesson 5 of 7.
+blank — "shiny".
+
+Warm-up.
+[pause 2 seconds]
+A word that looks English, is German, and means neither of the things you would guess.
+
+You'll want to know: blank.
+blank — "shiny," "polished," "bare."
+Not "blank" in the English sense of empty-of-writing, and not a colour. A polished shoe is blank; a bare sword is blank. The idea underneath is shining.
+Hold on to that meaning exactly as it is, because the next lesson is about what happened when the neighbours borrowed it and let it drift.
+
+Sounds you'll need.
+vowel-a — short and clipped, the a of English hat.
+ng-cluster — the -nk closes with the back-of-the-mouth n that English puts in bank, and then a real k.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "blank" — shiny, not empty]
+[pause 8 seconds for the answer]
+[your turn — say: what it is not — "not a colour"]
+[pause 8 seconds for the answer]
+[your turn — say: the three colours so far and the odd one out — "schwarz, weiß … blank"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"blank — shiny."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does blank mean in German? (Shiny, polished, bare.) Is it a colour? (No.) Does it mean English "blank"? (No.) Next: what the Romance languages did with it.
+
+
+Lesson 6 of 7.
+The word that emigrated — the Germanic word that became "white" in three Romance languages and pushed Latin's own word out.
+
+Warm-up.
+[pause 2 seconds]
+Blank means shining. In three languages next door, it means white.
+
+The word, taken apart.
+In its Frankish form blank, "shining," this word was borrowed into Romance. Once there it stopped meaning shiny and started meaning white — and it displaced Latin's own word for white, albus, almost entirely:
 [a table of 4 rows, read aloud]
 language: French. "white": blanc.
 language: Italian. "white": bianco.
 language: Portuguese. "white": branco.
-language: German. "white": blank — still just "shiny".
-This is the reverse of the usual flow. Latin normally lends to Germanic (Fenster from fenestra, Wein from vīnum, from the food lesson). Here Germanic lent to Latin's daughters — and German kept the original meaning while they turned it into a colour.
+language: German. "white": blank — still only "shiny".
+Latin's albus survives in English only in learned scraps: albino, album (originally a white tablet), albumen. The everyday Romance word for the commonest colour there is came from Germanic.
+
+Why it's said this way.
+This runs against the usual current. Almost everywhere else in this book the lending goes the other way: Latin hands words to Germanic, and German takes them. Wein came from Latin vīnum; the month names came over wholesale and are still Latin under a German spelling.
+Here, once, Germanic did the lending — and the two sides then went different ways with it. German kept the original sense and never made it a colour; the borrowers made it a colour and let the shine fall away.
+A word does not carry its meaning with it when it crosses a border. It carries only its sound, and the new language decides the rest.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "schwarz, weiß"]
+[your turn — say: the three borrowers — "blanc, bianco, branco"]
 [pause 8 seconds for the answer]
-[your turn — say: "der Wein ist weiß" — the same wine, coloured again]
+[your turn — say: the German original — "blank, and it still means shiny"]
 [pause 8 seconds for the answer]
-[your turn — say: "weiß, white" — hear the same word]
+[your turn — say: the direction — "Germanic lent this one; usually Latin lends"]
 [pause 8 seconds for the answer]
-[your turn — say: "blank" — and remember: French made this one mean white]
-[pause 8 seconds for the answer]
+[repeat that twice]
+"blank, blanc — one word, two meanings."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Are German's colour words borrowed from Latin? (No — both are native Germanic.) What English word is schwarz's cousin? (Swarthy — and, further off, sordid.) What is weiß in English, letter for letter? (White.) Which German word became French blanc? (Blank, "shining" — Germanic lending into Romance for once.) Next: rot and blau, and one more word that travelled.
+Which three Romance words came from blank? (Blanc, bianco, branco.) Which Latin word did they push out? (Albus.) Does German blank mean white? (No — still shiny.) Which way does the lending usually run? (Latin to Germanic — as with Wein and the month names.) Next: the two colours together.
 
 
-Lesson 2 of 2.
-rot, blau — cousins and emigrants.
+Lesson 7 of 7.
+Practice — black, white, and the one that left.
 
 Warm-up.
 [pause 2 seconds]
-Two more native German colours. One is related to the French word for red — genuinely, not by borrowing. The other is a second German word the Romance languages took.
+No new words. Two colours, three words, and two families that behaved in opposite ways.
 
-rot — an ancient cousin.
-rot from Proto-Germanic raudaz from PIE h₁rewdʰ-. That root is one of the oldest colour words we can reconstruct, and it went everywhere:
+The word, taken apart.
 [a table of 3 rows, read aloud]
-language: German. word: rot.
-language: English. word: red, rust, ruddy.
-language: Latin. word: ruber, rubeus becomes French rouge, ruby, rubric.
-So rot and rouge are cousins, not borrowings — they split apart thousands of years before either language existed. Red is the colour humans name first, after black and white.
-
-blau — the second emigrant.
-blau from Proto-Germanic blēwaz. Like blank in the last lesson, this word was borrowed into Romance:
-[a table of 4 rows, read aloud]
-language: German. "blue": blau.
-language: French. "blue": bleu.
-language: Italian. "blue": blu.
-language: English. "blue": blue — taken from French, not from German.
-English is the odd one here: it had Germanic blāw available but borrowed the French form instead. The word went Germanic becomes French becomes English, coming home in disguise.
-Portuguese went a different way entirely — its blue is azul, from Arabic — a second, entirely separate road to blue, and the one Spanish took too.
-
-The chapter in one table.
-[a table of 4 rows, read aloud]
-German: schwarz. source: Germanic swartaz. did Romance borrow it?: no.
-German: weiß. source: Germanic hwītaz. did Romance borrow it?: no — but blank went instead.
-German: rot. source: Germanic raudaz. did Romance borrow it?: no — Latin had its own cousin.
-German: blau. source: Germanic blēwaz. did Romance borrow it?: yes — bleu, blu.
+German: schwarz. where it came from: Germanic swartaz. what English or Romance did with it: English kept it only in swarthy.
+German: weiß. where it came from: Germanic hwītaz. what English or Romance did with it: English kept it whole, as white.
+German: blank. where it came from: Frankish blank. what English or Romance did with it: Romance took it and made it white.
+Three words, three fates: one nearly lost, one perfectly preserved, one emigrated and changed job.
+You cannot put these into a sentence yet — German needs a verb for that and it is still several chapters away. Bank the words; the sentence comes later.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "rot, blau"]
+[your turn — say: the two colours — "schwarz, weiß"]
 [pause 8 seconds for the answer]
-[your turn — say: "der Wein ist rot" — the wine you already have, coloured]
+[your turn — say: them with their English cousins — "schwarz swarthy, weiß white"]
 [pause 8 seconds for the answer]
-[your turn — say: the cousins — "rot, red, rouge"]
+[your turn — say: the emigrant and its children — "blank; blanc, bianco, branco"]
 [pause 8 seconds for the answer]
-[your turn — say: all four — "schwarz, weiß, rot, blau"]
+[your turn — say: the three fates — "kept, lost, emigrated"]
 [pause 8 seconds for the answer]
+[repeat that twice]
+"schwarz, weiß, blank."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is rot related to French rouge by borrowing or by descent? (Descent — both from PIE h₁rewdʰ-.) Which two German colour words did Romance borrow? (Blank becomes blanc/bianco/branco, and blau becomes bleu/blu.) Where did English get blue from? (French — the long way round.) Next chapter: putting colours onto the things you already name.
+Say both colours. (Schwarz, weiß.) Which one is the same word as its English cousin? (Weiß/white.) Which survives in English only as swarthy? (Schwarz.) Which German word became "white" abroad? (Blank.) Why is weiß written with ß? (Long vowel before a sharp s.) Next: the other two colours, and a cousin that is not a borrowing.

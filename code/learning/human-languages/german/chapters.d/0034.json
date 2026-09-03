@@ -1,21 +1,21 @@
 {
   "chapter": 34,
-  "title": "Dog and Cat",
-  "label": "ch:ge-dog-and-cat",
-  "canDo": "I can name a dog and a cat in German and say which of the two words German inherited and which one it borrowed.",
+  "title": "Weather",
+  "label": "ch:ge-weather",
+  "canDo": "I can talk about the weather in German — das Wetter, es ist heiß, es ist kalt, es regnet.",
   "spineNodes": [
-    "SPINE-DEFINITE-REFERENCE"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C22-hund-katze",
+    "lesson": "GE-C21-das-wetter",
     "kind": "production",
-    "summary": "Say Hund beside English hound and the unexplained dog that displaced it, then say Katze and admit it is the borrowed Late Latin cattus — widespread, but not universal: Romanian pisică and Serbian mačka went their own way. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "Say das Wetter as English weather's own cousin, build hot and cold with sein rather than a Romance 'make', and say es regnet on the same root as English rain. The chapter's only lesson, so the payoff covers everything it introduces.",
     "assesses": [
-      "GE-LEX-HUND-02",
-      "GE-ETYMON-HUND-03",
-      "GE-LEX-KATZE-04",
-      "GE-ETYMON-KATZE-05",
-      "GE-EVIDENCE-CAT-WORDS-06"
+      "GE-LEX-WETTER-02",
+      "GE-ETYMON-WETTER-03",
+      "GE-GRAMMAR-WEATHER-SEIN-04",
+      "GE-LEX-REGNET-05",
+      "GE-ETYMON-REGNET-06"
     ]
   }
 }

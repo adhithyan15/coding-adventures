@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C16-drei-wurzeln
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 580
-chapter: 27
+chapter: 28
 type: etymology
 headword: bin, ist, war
 gloss: three ancient verbs, one paradigm — why the forms of sein look unrelated

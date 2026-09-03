@@ -1,15 +1,15 @@
 {
   "language": "german",
   "chapter": 35,
-  "sourceHash": "fnv1a64:bb05073c26bf85e3",
+  "sourceHash": "fnv1a64:2de7a8fa08ff2f20",
   "lessonIds": [
-    "GE-C23-gruen-gelb"
+    "GE-C22-hund-katze"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "german/narration/ch35.txt",
   "json": "german/narration/ch35.json",
-  "textHash": "fnv1a64:e73338415593ed25",
-  "jsonHash": "fnv1a64:14fb6a0409bc1491",
+  "textHash": "fnv1a64:b181a391ce943c5d",
+  "jsonHash": "fnv1a64:54f6a779fa2cbbd3",
   "findings": []
 }

@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C28-tee
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 930
-chapter: 40
+chapter: 41
 type: word
 headword: der Tee
 gloss: tea — a word that looks like its English cousin and is not said like it, and travelled to Europe by sea rather than overland

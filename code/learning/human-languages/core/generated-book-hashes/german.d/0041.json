@@ -1,11 +1,11 @@
 {
   "language": "german",
   "chapter": 41,
-  "sourceHash": "fnv1a64:50193295fa7be38c",
+  "sourceHash": "fnv1a64:b3aa6f0e1ce3238e",
   "lessonIds": [
-    "GE-C29-freund",
-    "GE-C29-freundin",
-    "GE-C29-familie"
+    "GE-C28-kaffee",
+    "GE-C28-tee",
+    "GE-C28-milch"
   ],
-  "tex": "german/book/chapters/ch41-friend-and-family.tex"
+  "tex": "german/book/chapters/ch41-coffee-tea-milk.tex"
 }

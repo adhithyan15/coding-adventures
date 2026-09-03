@@ -1,22 +1,19 @@
 {
   "language": "german",
   "chapter": 21,
-  "sourceHash": "fnv1a64:cd149d13ea3d0ad3",
+  "sourceHash": "fnv1a64:77a7470fba9a5f21",
   "lessonIds": [
-    "GE-C14-haben",
-    "GE-C14-hab-stamm",
-    "GE-C14-du-hast",
-    "GE-C14-er-hat",
-    "GE-C14-b-verlust",
-    "GE-C14-einen",
-    "GE-C14-habere",
-    "GE-C14-practice"
+    "GE-C13-rot",
+    "GE-C13-rot-ruber",
+    "GE-C13-blau",
+    "GE-C13-blau-bleu",
+    "GE-C13-rot-blau"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 8,
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
   "text": "german/narration/ch21.txt",
   "json": "german/narration/ch21.json",
-  "textHash": "fnv1a64:608638d98654fbc5",
-  "jsonHash": "fnv1a64:3caca338dd1c1faf",
+  "textHash": "fnv1a64:311d84205bcbdc6a",
+  "jsonHash": "fnv1a64:89f07de55d714e73",
   "findings": []
 }

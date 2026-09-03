@@ -10,6 +10,12 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 
 ---
 
+## Supply chain & CI pinning
+
+- **A third-party GitHub Action on a tag or branch is not pinned — a tag is mutable and a branch is worse.** `pypa/gh-action-pypi-publish@release/v1` is a *branch* ref on the action that holds PyPI trusted-publishing OIDC: whoever controls that branch controls a publish with the repo's identity. Same shape for `dtolnay/rust-toolchain@master`, which installs the compiler for every Rust job. Pin release- and publish-path actions to a 40-character SHA with a trailing `# vX.Y.Z` comment so a future bump is reviewable. Verify the SHA maps to the version the comment claims — `gh api repos/OWNER/REPO/tags` — rather than trusting the tag you started from. **Enumerate by what the ref IS, not by the strings you happened to notice.** The first pass here pinned `dtolnay/rust-toolchain@master` and missed `@stable` — also a branch, 8 more sites, including release workflows the same commit had already edited. In one of them the *publisher* got pinned while the *compiler producing the bytes being published* stayed mutable in the same file, which is the higher-value target. `gh api repos/OWNER/REPO/branches` tells you which refs are branches; grepping for the one you thought of does not. Existing pins drift too: a `# stable` pin already in the tree had diverged from the branch it named. **And check that classifier with an exit code, not with output emptiness.** `gh api repos/O/R/branches/REF` prints its 404 body to *stdout* and exits non-zero, so `[ -n "$(gh api ... 2>/dev/null)" ]` counts every missing branch as a branch. That bug had me about to report "all eight refs are branches" when three were; use `if gh api ... >/dev/null 2>&1`. Most `@vN` refs on popular actions are mutable *tags* rather than branches -- still worth pinning, but ranking the work needs the distinction to be right. **And pin the GENERATORS, not just the tree.** `web-app-scaffold-generator` emits a deploy workflow with `peaceiris/actions-gh-pages@v4` baked into a template string, so every scaffolded app re-introduced an unpinned action holding `contents: write`. A sweep that fixes the checked-in files and leaves the thing that writes them has a half-life, not a fix. `grep` the emitters (`--include='*.ts' --include='*.py' --include='*.go'`), not only the workflows.
+- **Pin to the version that FIXES the bug you are citing, not the one you happen to have installed.** Pinning `cargo-tarpaulin` to the locally installed 0.35.2 would have frozen CI on the last release *before* upstream fixed the very SIGILL the pin was written to prevent (fixed in 0.35.3, yanked, republished as 0.35.4). Check the upstream changelog and crates.io before pinning; that check is also what surfaces yanks.
+- **`--locked` without `--version` is not a pin.** It locks the dependency tree of whatever version resolves, so the tool itself still drifts. `cargo install --locked cargo-geiger` looked pinned and was not.
+
 ## BUILD files & dependency management
 
 - **A missing BUILD file is now a CI failure, not a silent gap — `code/BUILD-EXEMPTIONS` is the ledger.** `build-tool -validate-build-files` fails on any directory that has a `Cargo.toml`, no `BUILD`, and no entry in `code/BUILD-EXEMPTIONS`. Entries are `EXCLUDED <path>  # <reason>` (genuinely never built — a compile-only JNI bridge, a wasm-only cdylib) or `PENDING <path>  # <reason>` (a tracked backlog item), and the reason is mandatory. **Stale entries fail too**: land a BUILD for a `PENDING` crate and the same PR must delete its exemption line, so the ledger can never outlive the problem. This closed an 84-crate gap; it did NOT come from a scaffold-generator bug (that tool has templated BUILD since 2026-03-21) but from crates hand-rolled afterwards. If you add a crate and CI complains, the fix is a BUILD file — reach for an exemption only when the crate genuinely has nothing to run, and say where it IS covered.
@@ -6038,6 +6044,41 @@ enough to trip the depth limit passes while proving nothing about breadth — my
 first attempt did exactly that, and the assertion on which error fired is what
 exposed it.
 
+## A "drive this to zero" programme meets a validator that has never seen zero
+
+The last hand-written chapter in a 1,330-chapter corpus was generated, which
+emptied `core/book-generation.d/handwritten.d/`. Git cannot track an empty
+directory, so the directory left the tree — and the owner-root validator, which
+asserts the root holds EXACTLY `_meta.json` plus every section directory, failed
+with "missing, legacy, or unexpected entries".
+
+It passed locally and failed in CI, for the reason that pairing always has:
+`git rm` leaves the now-empty directory sitting on the authoring machine, and
+only a fresh checkout sees that it is gone. **The empty case had been unreachable
+for as long as any track had one hand-written chapter, so nothing had ever
+exercised it — and the programme's whole purpose was to reach it.**
+
+Three things generalise.
+
+**A long-running "reduce X to zero" effort should test the zero before it gets
+there.** The terminal state of such a programme is by construction the one state
+no fixture covers, and it arrives exactly once, in the PR that has the least
+appetite for a surprise.
+
+**"Must exist" and "may be empty" are two claims, and a fix must not merge
+them.** The tempting repair was to let an absent section read as empty. That
+would trade loud for silent: a genuinely deleted `targets.d` would then produce a
+book with no generated chapters and no error. The fix is a tracked `.gitkeep`
+that holds the directory open plus one filter in the reader, so *missing* still
+throws and *empty* becomes expressible.
+
+**Two readers of one contract drift apart one fix at a time.** The TypeScript
+loader and `data/scripts/sharded_ledger.py` both enforce this shape. Fixing the
+TypeScript side made the Python side reject a tree the TypeScript side had just
+accepted, so the counter it computes went from "zero, correctly" to a crash. Both
+now filter the placeholder, both carry a comment pointing at the other, and both
+test suites pin the empty case AND the absent case.
+
 ## A package's gate is `bash BUILD`, not `vitest`
 
 Splitting a German book chapter added 27 lessons that all keep the `GE-C09-`
@@ -6371,3 +6412,91 @@ Two smaller points, both of which cost a CI round trip:
   checkable without knowing anything about the world. "An Ubuntu archive is
   present" requires a list of what Ubuntu archives look like, and that list is
   maintained by somebody else.
+
+## The diagnostic I added to fix one bug immediately exposed the next
+
+Having replaced the apt guard with one that prints what survived, the first
+green run said:
+
+```
+pruned 2 vendor source list(s): microsoft-prod.list azure-cli.sources
+apt sources remaining: google-chrome.sources ubuntu.sources
+```
+
+`google-chrome.sources` is a repository nothing here installs from, and it can
+403 exactly the way `packages.microsoft.com` did. The fix I had just merged
+closed the reported instance and left an identical hole — the acceptance
+criterion said "a third-party repository that this repository never installs
+from cannot fail a required job", and that was still false for Chrome's.
+
+I had enumerated vendors: microsoft, azure-cli. That is a **denylist over a set
+somebody else controls** — the contents of a runner image — so it can only ever
+be as current as the last time a person looked at one, and every miss is silent
+until an outage. Adding `google-chrome*` would fix today and not the next image
+change.
+
+The correction is the same one this file already records for archive member
+names: what *we* depend on is a closed set. Every package installed across all
+six workflows comes from the Ubuntu archive, and no workflow runs
+`add-apt-repository`. So keep `ubuntu.sources` and drop everything else, with an
+`APT_KEEP` escape hatch for the day a workflow legitimately adds a PPA —
+otherwise the wrapper would delete a repository a previous step just added and
+fail with "unable to locate package", pointing at the package rather than at
+itself.
+
+Two things worth carrying:
+
+- **Print what you saw, not what you concluded — the evidence finds the next
+  bug.** This diagnostic was added to save a round trip diagnosing a misfiring
+  guard. It paid for itself immediately by naming a repository I did not know
+  was there. A log line that reports a verdict could not have.
+- **I made the same structural mistake twice in one day**, on filename hazards
+  and then on vendor repositories, having written the lesson down in between.
+  The tell is identical both times: *am I enumerating the bad cases, and is that
+  set maintained by someone other than me?* If so, enumerate the good ones.
+
+## A staging copy silently disabled a security guard three commits later
+
+`_zip_tree` refuses hard links, with a stated reason: a hard link reaches
+outside the payload with none of a symlink's tells, and `.git/config` on a
+runner holds the checkout token. That guard was mutation-tested and worked.
+
+Then I added a staging step — copy the bundle into a temp directory, archive
+that — to stop the SwiftUI payload including the whole SwiftPM project. The
+guard has not fired since, because `shutil.copytree` **dereferences** a hard
+link: it reads the bytes and writes a fresh file with `st_nlink == 1`. By the
+time the archiver walks the staged tree there is nothing left to detect.
+Verified on a fixture:
+
+```
+_zip_tree on the source tree : refused: payload contains a hard link
+after copytree staging       : nlink 1 -> ARCHIVED: b'AUTHORIZATION: basic ...'
+```
+
+Nothing about the guard changed. What changed was *what it was pointed at*, and
+the two commits were far enough apart that neither review looked at both.
+
+Three things generalise:
+
+- **A check is defined by the tree it walks, not by the function it lives in.**
+  Inserting a transformation upstream of a validator can void it without
+  touching a line of it, and no test of the validator will notice — the fixture
+  goes straight into the validator, not through the new step.
+- **When you add a copy, ask what the copy normalises away.** `copytree`
+  flattens hard links, and with `symlinks=False` would flatten symlinks too. A
+  copy is not identity; it is a filter with opinions.
+- **Verify the tree you are about to ship, not the one you inspected.** The
+  engine was checked on the source and never re-checked on the staged copy, so
+  the property asserted was not a property of the published bytes. Now checked
+  on both.
+
+Also from the same review, and the same species as the byte scan: the engine
+check matched on FILENAME. It accepted `engram_capi.pdb`, a one-byte file, and
+a text file — while rejecting a real versioned soname
+(`libengram_capi.so.0.4.0`), because `Path.stem` strips only one suffix. A Rust
+cdylib on Windows emits `engram_capi.dll`, `engram_capi.dll.lib` and
+`engram_capi.pdb` side by side, so a copy step with a sloppy glob picks up the
+debug symbols and passes. It now checks the platform's container magic and
+matches on `name`. The release note text was corrected too: it claimed the lane
+"carries the engine", where the code proves "a shared library of the right kind
+is in the right directory". **Prose outruns code — say what the check proves.**

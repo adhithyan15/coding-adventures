@@ -1,74 +1,74 @@
 ---
+schema_version: 2
 id: GE-C13-schwarz-weiss
-sequence: 335
+spine_node: SPINE-TIME-OF-DAY
+sequence: 324
 chapter: 20
-type: word
-headword: schwarz, weiß
-gloss: black and white — both native Germanic, and one of them German lent to half of Europe
-concept_tag: GE-COLOUR-BLACK-WHITE
-prerequisites: [GE-C12-zahlen-13-20]
-sounds: [schw-cluster, eszett]
-roots: [germanic-swartaz, germanic-hweit]
-etymology_hook: "schwarz ← *swartaz (English 'swarthy'; cousin of Latin sordēs 'dirt' → sordid); weiß ← *hwītaz = English white — and German's own blank ('shiny') is the word French/Italian/Portuguese BORROWED for 'white'"
-est_minutes: 4
-reviews_of: [GE-C12-zahlen-13-20, GE-C11-brot-wasser]
+type: practice
+headword: (practice)
+gloss: chapter payoff — black and white, their two very different English cousins, and the word that left
+concept_tag: CH13-PRACTICE
+prerequisites: [GE-C13-schwarz, GE-C13-schwarz-swarthy, GE-C13-weiss, GE-C13-weiss-white, GE-C13-blank, GE-C13-blank-blanc]
+sounds: []
+roots: []
+duration:
+  max_seconds: 185
+requires:
+  knowledge: [GE-LEX-SCHWARZ-01, GE-SOUND-SCHWARZ-01, GE-ETYMON-SCHWARZ-SWARTHY-01, GE-LEX-WEISS-01, GE-SOUND-WEISS-01, GE-ETYMON-WEISS-WHITE-01, GE-LEX-BLANK-01, GE-ETYMON-BLANK-BLANC-01]
+introduces:
+  knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-SCHWARZ-01, GE-SOUND-SCHWARZ-01, GE-ETYMON-SCHWARZ-SWARTHY-01, GE-LEX-WEISS-01, GE-SOUND-WEISS-01, GE-ETYMON-WEISS-WHITE-01, GE-LEX-BLANK-01, GE-ETYMON-BLANK-BLANC-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-output, fluency]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C13-blank-blanc, GE-C13-weiss-white, GE-C11-wasser-wein]
 ---
 
-# schwarz, weiß — and the word German lent away
+# Practice — black, white, and the one that left
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SCHWARZ-01, GE-LEX-WEISS-01] -->
 
-[PAUSE 2s] German's colour words are **home-grown** — no Latin here. But one of
-them has a sibling that emigrated: a German word for "shining" became the word
-for **white** in French, Italian and Portuguese.
+[PAUSE 2s] No new words. Two colours, three words, and two families that
+behaved in opposite ways.
 
-## schwarz
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[GE-ETYMON-SCHWARZ-SWARTHY-01, GE-ETYMON-WEISS-WHITE-01, GE-ETYMON-BLANK-BLANC-01] -->
 
-**schwarz** ("black") ← Proto-Germanic ***swartaz***. Its English cousin survives
-in **swarthy** ("dark-complexioned"). Further back it's related to Latin
-***sordēs*** ("dirt") — the root of English **sordid**. Black and grubby, from
-one idea.
+| German | where it came from | what English or Romance did with it |
+|---|---|---|
+| *schwarz* | Germanic \**swartaz* | English kept it only in *swarthy* |
+| *weiß* | Germanic \**hwītaz* | English kept it whole, as *white* |
+| *blank* | Frankish *blank* | Romance took it and made it *white* |
 
-## weiß
+Three words, three fates: one nearly lost, one perfectly preserved, one
+emigrated and changed job.
 
-**weiß** ("white") ← Proto-Germanic ***hwītaz*** = **exactly** English **white**.
-Same word, different spelling clothes.
-
-Note the **ß** (*Eszett*): it marks a sharp *s* after a long vowel. *Weiß* rhymes
-with English *vice*, not *vice-versa*'s second half. In Switzerland you'll see it
-written **weiss** — the letter is optional there.
-
-## The word that emigrated
-
-German also has **blank** — "shiny, polished, bare." That word, in its Frankish
-form ***blank*** ("shining"), was **borrowed into Romance**, where it pushed
-Latin's own *albus* out and became:
-
-| language | "white" |
-|---|---|
-| French | **blanc** |
-| Italian | **bianco** |
-| Portuguese | **branco** |
-| German | *blank* — still just "**shiny**" |
-
-This is the **reverse** of the usual flow. Latin normally lends **to** Germanic
-(*Fenster* ← *fenestra*, *Wein* ← *vīnum*, from the food lesson). Here Germanic lent
-**to** Latin's daughters — and German kept the original meaning while they turned
-it into a colour.
+You cannot put these into a sentence yet — German needs a verb for that and it
+is still several chapters away. Bank the words; the sentence comes later.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SCHWARZ-01, GE-SOUND-SCHWARZ-01, GE-LEX-WEISS-01, GE-SOUND-WEISS-01, GE-LEX-BLANK-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "schwarz, weiß"]
-- [YOU SAY: "der Wein ist weiß" — the same wine, coloured again]
-- [YOU SAY: "weiß · white" — hear the same word]
-- [YOU SAY: "blank" — and remember: French made this one mean *white*]
+- [YOU SAY: the two colours — "schwarz, weiß"]
+- [YOU SAY: them with their English cousins — "schwarz swarthy, weiß white"]
+- [YOU SAY: the emigrant and its children — "blank; blanc, bianco, branco"]
+- [YOU SAY: the three fates — "kept, lost, emigrated"]
+
+[REPEAT x2] "schwarz, weiß, blank."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-ETYMON-SCHWARZ-SWARTHY-01, GE-ETYMON-WEISS-WHITE-01, GE-ETYMON-BLANK-BLANC-01, GE-SOUND-WEISS-01] -->
 
-[PAUSE 3s] Are German's colour words borrowed from Latin? (**No** — both are
-native Germanic.) What English word is *schwarz*'s cousin? (**Swarthy** — and,
-further off, *sordid*.) What is *weiß* in English, letter for letter? (**White**.)
-Which German word became French *blanc*? (***Blank***, "shining" — Germanic
-lending **into** Romance for once.) Next: **rot** and **blau**, and one more word
-that travelled.
+[PAUSE 3s] Say both colours. (**Schwarz, weiß**.) Which one is the same word as
+its English cousin? (***Weiß***/*white*.) Which survives in English only as
+*swarthy*? (***Schwarz***.) Which German word became "white" abroad?
+(***Blank***.) Why is *weiß* written with **ß**? (**Long vowel before a sharp
+s**.) Next: the other two colours, and a cousin that is not a borrowing.

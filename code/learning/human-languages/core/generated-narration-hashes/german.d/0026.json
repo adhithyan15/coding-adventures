@@ -1,21 +1,23 @@
 {
   "language": "german",
   "chapter": 26,
-  "sourceHash": "fnv1a64:37373befa2a99a7d",
+  "sourceHash": "fnv1a64:11b5cb2d6b08a81b",
   "lessonIds": [
-    "GE-C14-alt",
-    "GE-C14-jahr",
-    "GE-C14-jahr-alt",
-    "GE-C14-wie-alt-bist-du",
-    "GE-C14-alter",
-    "GE-C14-alter-sein-haben",
-    "GE-C14-alter-practice"
+    "GE-C16-sein",
+    "GE-C16-ich-bin",
+    "GE-C16-du-bist",
+    "GE-C16-er-ist",
+    "GE-C16-wir-sind",
+    "GE-C16-ihr-seid",
+    "GE-C16-sie-sind",
+    "GE-C16-muede",
+    "GE-C16-praesens-practice"
   ],
-  "voiceLessons": 7,
-  "drivablePrefix": 7,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "german/narration/ch26.txt",
   "json": "german/narration/ch26.json",
-  "textHash": "fnv1a64:2dcff31a79476c1e",
-  "jsonHash": "fnv1a64:d17e16fad3449a95",
+  "textHash": "fnv1a64:1b14afad25d5ce92",
+  "jsonHash": "fnv1a64:30429de6612f64ea",
   "findings": []
 }

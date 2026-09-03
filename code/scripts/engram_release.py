@@ -218,6 +218,35 @@ def swiftui_artifact_name(version: str, platform: str) -> str:
     return f"engram-swiftui-{platform}-v{version}.{SWIFTUI_TARGETS[platform]}"
 
 
+# The Flutter desktop platforms. Every one is a zip because `flutter build`
+# produces an application DIRECTORY per platform -- a `.app` on macOS, a plain
+# bundle tree on Linux, a Release folder on Windows -- rather than an installer.
+FLUTTER_TARGETS = {
+    "linux": "zip",
+    "macos": "zip",
+    "windows": "zip",
+}
+
+# Where each platform's bundle keeps native libraries. Flutter puts them in a
+# different place on every target, which is why the engine's placement is three
+# problems rather than one -- and why a check written against one layout would
+# pass the other two while shipping an app that cannot open a deck.
+FLUTTER_ENGINE_DIRS = {
+    "linux": "lib",
+    "macos": "Contents/Frameworks",
+    "windows": "",  # beside the executable
+}
+
+
+def flutter_artifact_name(version: str, platform: str) -> str:
+    """The published name for one platform's Flutter build."""
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}")
+    if platform not in FLUTTER_TARGETS:
+        raise ValueError(f"unknown Flutter platform: {platform}")
+    return f"engram-flutter-{platform}-v{version}.{FLUTTER_TARGETS[platform]}"
+
+
 def artifact_names(version: str) -> list[str]:
     """Every payload this release publishes.
 
@@ -240,6 +269,10 @@ def artifact_names(version: str) -> list[str]:
     names.extend(
         swiftui_artifact_name(version, platform)
         for platform in sorted(SWIFTUI_TARGETS)
+    )
+    names.extend(
+        flutter_artifact_name(version, platform)
+        for platform in sorted(FLUTTER_TARGETS)
     )
     return names
 
@@ -819,6 +852,11 @@ def archive_swiftui(
     # 47 MB download of build litter. The app ran perfectly, so nothing but
     # reading the member list would have caught it.
     with tempfile.TemporaryDirectory() as staging:
+        # Before the copy: `copytree` dereferences hard links, so `_zip_tree`'s
+        # hard-link guard can never fire on a staged tree. See
+        # `_reject_hard_links`.
+        _reject_hard_links(source)
+
         staged = Path(staging) / source.name
         shutil.copytree(source, staged, symlinks=True)
 
@@ -836,6 +874,32 @@ def archive_swiftui(
     return output
 
 
+def _reject_hard_links(tree: Path) -> None:
+    """Refuse hard links, before staging destroys the evidence.
+
+    `_zip_tree` already refuses them -- a hard link reaches outside the payload
+    with none of a symlink's tells -- but that guard cannot fire for anything
+    archived through a staging copy, because `shutil.copytree` DEREFERENCES a
+    hard link: it reads the bytes and writes a fresh file with `st_nlink == 1`.
+    By the time the archiver walks the staged tree there is nothing left to
+    detect.
+
+    Demonstrated on a fixture: a bundle hard-linking a file outside it is
+    refused by `_zip_tree` directly, and the same tree staged and archived
+    produced a member holding that file's contents verbatim. These are public
+    release assets, and `.git/config` on a runner holds the checkout token.
+    """
+
+    for path in tree.rglob("*"):
+        if path.is_symlink() or not path.is_file():
+            continue
+        if path.stat().st_nlink > 1:
+            raise ValueError(
+                f"payload contains a hard link, which can reach outside it "
+                f"without appearing to: {path.relative_to(tree)}"
+            )
+
+
 def _reject_links_out_of(bundle: Path) -> None:
     """Refuse any symlink inside ``bundle`` that resolves outside it."""
 
@@ -851,6 +915,139 @@ def _reject_links_out_of(bundle: Path) -> None:
 
 def _cmd_archive_swiftui(args: argparse.Namespace) -> int:
     output = archive_swiftui(
+        args.version,
+        args.platform,
+        Path(args.source),
+        Path(args.output_dir),
+        args.commit,
+    )
+    print(output)
+    return 0
+
+
+def archive_flutter(
+    version: str, platform: str, source: Path, output_dir: Path, commit: str
+) -> Path:
+    """Archive a Flutter desktop bundle for publication.
+
+    Flutter resolves `engram-capi` at RUNTIME from the bundle, like Qt and
+    Compose and unlike SwiftUI, so the check here is that the library file is
+    present -- and present in the directory THIS platform's loader looks in.
+    `flutter build` succeeds whether or not it is there, and an app missing it
+    launches perfectly with every deck operation silently unavailable.
+
+    The per-platform layout is the trap. `Contents/Frameworks` on macOS, `lib`
+    on Linux, beside the executable on Windows: a check written against one of
+    them passes the other two while shipping a broken app, which is precisely
+    the failure this repository has already shipped once with Compose.
+    """
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}", commit)
+    if platform not in FLUTTER_TARGETS:
+        raise ValueError(f"unknown Flutter platform: {platform}")
+    if not source.is_dir():
+        raise ValueError(f"Flutter bundle does not exist: {source}")
+
+    expected_dir = source / FLUTTER_ENGINE_DIRS[platform] if FLUTTER_ENGINE_DIRS[
+        platform
+    ] else source
+    engine = _find_engine(expected_dir, platform)
+    if engine is None:
+        # Named separately from "not in the bundle at all", because the two
+        # have different causes: a missing engine is a build that skipped the
+        # copy, while one in the wrong place is a layout assumption that has
+        # drifted from what this platform's loader actually reads.
+        elsewhere = _find_engine(source, platform, recursive=True)
+        if elsewhere is not None:
+            raise ValueError(
+                f"the engine is in the bundle but not where {platform} looks "
+                f"for it: found {elsewhere.relative_to(source)}, expected it "
+                f"under {FLUTTER_ENGINE_DIRS[platform] or '(the bundle root)'}"
+            )
+        raise ValueError(
+            f"Flutter {platform} bundle has no engram_capi engine: {source}"
+        )
+    if engine.stat().st_size == 0:
+        raise ValueError(f"engram_capi engine is empty: {engine}")
+
+    name = flutter_artifact_name(version, platform)
+    output = output_dir / name
+    with tempfile.TemporaryDirectory() as staging:
+        _reject_hard_links(source)
+        staged = Path(staging) / source.name
+        shutil.copytree(source, staged, symlinks=True)
+        _reject_links_out_of(staged)
+
+        # Re-asserted against the tree about to be zipped, not the one that was
+        # inspected a moment ago. Everything above holds of `source`; what gets
+        # published is `staged`, and verifying one while shipping the other is
+        # how a check stops being about the artifact.
+        staged_dir = (
+            staged / FLUTTER_ENGINE_DIRS[platform]
+            if FLUTTER_ENGINE_DIRS[platform]
+            else staged
+        )
+        staged_engine = _find_engine(staged_dir, platform)
+        if staged_engine is None or staged_engine.stat().st_size == 0:
+            raise ValueError(
+                f"the staged bundle has no usable engine at "
+                f"{FLUTTER_ENGINE_DIRS[platform] or '(the bundle root)'}"
+            )
+
+        _zip_tree(
+            Path(staging), output, f"engram-flutter-{platform}-v{version}", commit
+        )
+    return output
+
+
+# What a real shared library starts with, per platform. Checked because the
+# earlier form matched on FILENAME alone, which accepts a `.pdb`, a one-byte
+# file, or a text file that happens to be called `engram_capi` -- and a Rust
+# cdylib on Windows emits `engram_capi.dll`, `engram_capi.dll.lib` and
+# `engram_capi.pdb` side by side, so a copy step with a sloppy glob can pick up
+# the debug symbols and pass a name check while shipping no engine at all.
+#
+# This proves the file is a shared library of the right kind for its platform,
+# in the directory that platform's loader reads. It does NOT prove the library
+# exports the engine's symbols; saying more than that in the release notes
+# would be describing a guarantee the code does not make.
+LIBRARY_MAGIC = {
+    "linux": ((b"\x7fELF",), (".so",)),
+    "macos": ((b"\xcf\xfa\xed\xfe", b"\xca\xfe\xba\xbe", b"\xce\xfa\xed\xfe"), (".dylib",)),
+    "windows": ((b"MZ",), (".dll",)),
+}
+
+
+def _find_engine(
+    directory: Path, platform: str, *, recursive: bool = False
+) -> Path | None:
+    """The `engram_capi` shared library in ``directory``, if there is one."""
+
+    if not directory.is_dir():
+        return None
+    magics, suffixes = LIBRARY_MAGIC[platform]
+    candidates = directory.rglob("*") if recursive else directory.iterdir()
+    for path in sorted(candidates):
+        if not path.is_file() or path.is_symlink():
+            continue
+        # Matched on the NAME, not `stem`: `stem` strips one suffix, so a real
+        # versioned soname like `libengram_capi.so.0.4.0` would not match, and
+        # `engram_capi.pdb` would.
+        name = path.name.removeprefix("lib")
+        if not any(
+            name == f"engram_capi{suffix}" or name.startswith(f"engram_capi{suffix}.")
+            for suffix in suffixes
+        ):
+            continue
+        with path.open("rb") as handle:
+            head = handle.read(4)
+        if any(head.startswith(magic) for magic in magics):
+            return path
+    return None
+
+
+def _cmd_archive_flutter(args: argparse.Namespace) -> int:
+    output = archive_flutter(
         args.version,
         args.platform,
         Path(args.source),
@@ -911,6 +1108,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     names.add_argument("--version", required=True)
     names.set_defaults(handler=_cmd_artifact_names)
+
+    archive_flutter_cmd = subcommands.add_parser(
+        "archive-flutter", help="Archive a Flutter desktop bundle for publication"
+    )
+    archive_flutter_cmd.add_argument("--version", required=True)
+    archive_flutter_cmd.add_argument("--platform", required=True)
+    archive_flutter_cmd.add_argument("--source", required=True)
+    archive_flutter_cmd.add_argument("--output-dir", required=True)
+    archive_flutter_cmd.add_argument("--commit", required=True)
+    archive_flutter_cmd.set_defaults(handler=_cmd_archive_flutter)
 
     archive_swiftui_cmd = subcommands.add_parser(
         "archive-swiftui", help="Archive the SwiftUI .app bundle for publication"

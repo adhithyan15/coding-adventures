@@ -1,12 +1,12 @@
 {
   "language": "german",
   "chapter": 43,
-  "sourceHash": "fnv1a64:4c2d0c7e3a714b11",
+  "sourceHash": "fnv1a64:3af8f6f944f1d9de",
   "lessonIds": [
-    "GE-C31-arm",
-    "GE-C31-finger",
-    "GE-C31-fuss",
-    "GE-C31-herz"
+    "GE-C30-auge",
+    "GE-C30-ohr",
+    "GE-C30-mund",
+    "GE-C30-nase"
   ],
-  "tex": "german/book/chapters/ch43-hand-table-complete.tex"
+  "tex": "german/book/chapters/ch43-face-parts.tex"
 }

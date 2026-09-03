@@ -1,24 +1,25 @@
 {
   "chapter": 22,
-  "title": "The Wrapped Participle",
-  "label": "ch:ge-partizip",
-  "canDo": "I can turn any regular German verb I know into its past participle, and hear that the marking arrives at both ends of the word at once.",
+  "title": "To Have",
+  "label": "ch:haben",
+  "canDo": "I can use every present form of German's verb for “to have”, building the four the ending machine already gives me and knowing the two it gets wrong.",
   "spineNodes": [
-    "SPINE-TALK-ABOUT-PAST"
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
   ],
   "payoff": {
-    "lesson": "GE-C15-partizip-practice",
+    "lesson": "GE-C14-practice",
     "kind": "task",
-    "summary": "The weak participle is a circumfix, so it is met as one concrete word first — gesagt — and only then as the recipe behind it. Three more verbs run through that recipe one at a time, the ge- gets its own lesson because it is the half English threw away, and the infinitive-to-participle table appears only at the end, where it recaps six lessons instead of introducing four words.",
+    "summary": "haben is the weak ending machine on the stem hab-, and the chapter is organised around where that machine fails: it predicts four of the six forms correctly, so those get one lesson that makes the reader build them rather than read them, and du hast and er hat get a lesson each because nothing generates them. The b-drop, the einen that Ich habe einen Bruder needs, and the habēre false cognate follow; the grid is printed only in the practice lesson.",
     "assesses": [
-      "GE-LEX-SAGEN-01",
-      "GE-LEX-GESAGT-01",
-      "GE-GRAMMAR-PARTIZIP-GE-T-01",
-      "GE-LEX-GEMACHT-01",
-      "GE-LEX-GELERNT-01",
-      "GE-LEX-GEWOHNT-01",
-      "GE-ETYMON-GE-PRAEFIX-01"
+      "GE-LEX-HABEN-01",
+      "GE-SOUND-HABEN-01",
+      "GE-GRAMMAR-HABEN-REGULAR-01",
+      "GE-GRAMMAR-HABEN-DU-HAST-01",
+      "GE-GRAMMAR-HABEN-ER-HAT-01",
+      "GE-GRAMMAR-HABEN-B-DROP-01",
+      "GE-LEX-EINEN-01",
+      "GE-ETYMON-HABEN-HABERE-01"
     ],
-    "note": "Chapter 15 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces, because the practice lesson is where the four participles are first allowed to stand together: the table there is a recap, which is the only condition under which it may be printed at all."
+    "note": "Chapter 14 is generated from schema-v2 lessons, so the payoff is atom-scored. The four regular cells share one lesson because chapter 5's ending machine is an atom this chapter REQUIRES rather than assumes — applying an owned rule is not the inference maxNewGrammarCellsPerLesson exists to forbid. The two cells the rule gets wrong are met individually."
   }
 }

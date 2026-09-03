@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C14-jahr-alt
 spine_node: SPINE-TIME-OF-DAY
 sequence: 543
-chapter: 26
+chapter: 27
 type: etymology
 headword: Jahr und alt
 gloss: both words are English wearing German spelling, and alt has a Latin cousin hiding in adult

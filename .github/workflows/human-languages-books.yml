@@ -669,7 +669,7 @@ jobs:
           test -n "$(find dist/human-languages/books -maxdepth 1 -name '*.pdf' -print -quit)"
 
       - name: Publish books to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: dist/human-languages/books
@@ -715,7 +715,7 @@ jobs:
           cat release-notes.md
 
       - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           name: ${{ steps.version.outputs.name }}

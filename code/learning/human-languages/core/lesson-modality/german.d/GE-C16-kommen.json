@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C16-kommen",
     "language": "german",
-    "chapter": 28,
+    "chapter": 29,
     "sequence": 615,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ed6b3c5025812231"
+    "sourceHash": "fnv1a64:2c0927b160159428"
   },
   "findings": []
 }

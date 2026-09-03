@@ -1,9 +1,9 @@
 {
   "language": "german",
   "chapter": 33,
-  "sourceHash": "fnv1a64:46a40b37d3875435",
+  "sourceHash": "fnv1a64:5dc6e88300ac1876",
   "lessonIds": [
-    "GE-C21-das-wetter"
+    "GE-C20-entschuldigung"
   ],
-  "tex": "german/book/chapters/ch33-weather.tex"
+  "tex": "german/book/chapters/ch33-sorry.tex"
 }

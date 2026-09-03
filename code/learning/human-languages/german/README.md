@@ -106,67 +106,80 @@ French *nuit* — one Indo-European word, split four ways.
   *five* to *fif-*. *Zwanzig* is **two tens**, its *-zig* and English *-ty* the
   same word worn further. The Romance sisters all break partway through the
   teens; German does not break at all.
-- **Chapter 20 — Colours**: schwarz/weiß, rot/blau.
-- **Chapter 21 — To Have**: *haben* — the four present forms the ending
+- **Chapter 20 — The Colour German Lent Away**: *schwarz* is Germanic
+  *\*swartaz*, which English kept only in the dusty corner of **swarthy**;
+  *weiß* is *\*hwītaz*, which English kept whole as **white**. Then ***blank***,
+  a German word for *shining*, went the **other way** — it became the word for
+  **white** in French, Italian and Portuguese, pushing Latin *albus* out of
+  everyday use. After nineteen chapters of German buying words from Rome, this
+  is the chapter where Rome's daughters buy from German.
+- **Chapter 21 — An Ancient Cousin and a Second Emigrant**: *rot* is
+  *\*raudaz*, from one of the oldest reconstructable colour words — and Latin
+  *ruber* is its **cousin rather than its source**, a resemblance by descent
+  from far enough back that neither language borrowed. *blau* is the **second
+  emigrant**: Germanic *\*blēwaz* went into French as *bleu*, and English then
+  borrowed its own **blue** back from French rather than keeping the word it had
+  inherited.
+- **Chapter 22 — To Have**: *haben* — the four present forms the ending
   machine already gives you, the two it gets wrong (*du hast*, *er hat*), the
   *b* both of them drop, *einen* for the thing you have, and the *habēre* false
   cognate: German *haben* is a cousin of *capture*, Latin *habēre* of *give*.
-- **Chapter 22 — The Wrapped Participle**: the weak past participle met one
+- **Chapter 23 — The Wrapped Participle**: the weak past participle met one
   word at a time — *gesagt*, *gemacht*, *gelernt*, *gewohnt* — the circumfix
   that marks a German verb at both ends at once, and the *ge-* English dropped
   and left fossilised inside *enough*.
-- **Chapter 23 — The Past Built From Have**: the *Perfekt* — *haben* plus a
+- **Chapter 24 — The Past Built From Have**: the *Perfekt* — *haben* plus a
   participle, each of the four person slots on its own, the bracket that
   strands the participle at the end of the clause, *gestern*, and the fact
   that *ich habe gesagt* is plain English “I said”.
-- **Chapter 24 — The Simple Past**: the *Präteritum* — *sagte*, *machte*,
+- **Chapter 25 — The Simple Past**: the *Präteritum* — *sagte*, *machte*,
   *hatte*, *konnte*, the dental preterite German shares with English *-ed*,
   the speech-against-writing split, and the areal change that pushed the same
   tense out of French and Italian speech over the same centuries.
-- **Chapter 25 — I Am, You Are**: *sein*, met one present form per lesson —
+- **Chapter 26 — I Am, You Are**: *sein*, met one present form per lesson —
   *bin*, *bist*, *ist*, *sind*, *seid* — plus *müde*, and the grid only at the
   end, as a recap.
-- **Chapter 26 — Being Your Years**: *alt*, *das Jahr*, *Wie alt bist du?* and
+- **Chapter 27 — Being Your Years**: *alt*, *das Jahr*, *Wie alt bist du?* and
   *Ich bin zwanzig Jahre alt* — moved here from the hand-written *haben*
   chapter because the sentence needs the copula, plus the split that puts
   German and English on one side (*I am twenty*) and all four Romance
   languages on the other (*j'ai vingt ans*).
-- **Chapter 27 — Three Verbs Under One Roof**: *war/warst/waren*, the three
+- **Chapter 28 — Three Verbs Under One Roof**: *war/warst/waren*, the three
   Proto-Indo-European roots inside one infinitive, suppletion, and why the
   commonest words are the last to be regularised.
-- **Chapter 28 — The Past That Takes To Be**: the *sein*-perfect —
+- **Chapter 29 — The Past That Takes To Be**: the *sein*-perfect —
   *kommen*, *fahren*, *werden*, *bleiben*, the learned list, and the
   participle that agrees with nothing where French has four forms.
-- **Chapter 29 — Head and Hand**: *der Kopf*, *Haupt*, *die Hand*.
-- **Chapter 30 — Yes and No**: *ja*, *nein*, and the negative-answer *doch*.
-- **Chapter 31 — Please**: *Wasser, bitte* from previously learned words.
-- **Chapter 32 — Sorry**: *Entschuldigung*, *es tut mir leid*.
-- **Chapter 33 — Weather**: *das Wetter*, *es ist heiß/kalt*, *es regnet*.
-- **Chapter 34 — Dog and Cat**: *Hund*, *Katze*.
-- **Chapter 35 — Green and Yellow**: *grün*, *gelb*.
-- **Chapter 36 — Verbs of the Mind**: *denken*, *verstehen*, *lesen*,
+- **Chapter 30 — Head and Hand**: *der Kopf*, *Haupt*, *die Hand*.
+- **Chapter 31 — Yes and No**: *ja*, *nein*, and the negative-answer *doch*.
+- **Chapter 32 — Please**: *Wasser, bitte* from previously learned words.
+- **Chapter 33 — Sorry**: *Entschuldigung*, *es tut mir leid*.
+- **Chapter 34 — Weather**: *das Wetter*, *es ist heiß/kalt*, *es regnet*.
+- **Chapter 35 — Dog and Cat**: *Hund*, *Katze*.
+- **Chapter 36 — Green and Yellow**: *grün*, *gelb*.
+- **Chapter 37 — Verbs of the Mind**: *denken*, *verstehen*, *lesen*,
   *schreiben* — and the strong-verb vowel break (*du liest*).
-- **Chapter 37 — Taking, Asking, Helping, Liking**: *nehmen*, *fragen*,
+- **Chapter 38 — Taking, Asking, Helping, Liking**: *nehmen*, *fragen*,
   *helfen*, *mögen/lieben* — and *gern*, German'''s third way of liking.
-- **Chapter 38 — Sitting, Standing, Sleeping, Hearing**: *sitzen*, *stehen*,
+- **Chapter 39 — Sitting, Standing, Sleeping, Hearing**: *sitzen*, *stehen*,
   *schlafen*, *hören* — the second sound shift's *t*-branch, and a second way
   for a strong verb to break (*du schläfst*).
-- **Chapter 39 — Going, Running, Opening, Closing**: *gehen*, *laufen*,
+- **Chapter 40 — Going, Running, Opening, Closing**: *gehen*, *laufen*,
   *rennen*, *öffnen*, *schließen* — where German's walk/run line actually
   falls, and the first separable verbs (*Ich mache die Hand auf*).
-- **Chapter 40 — Coffee, Tea, and Milk**: *der Kaffee*, *der Tee*, *die
+- **Chapter 41 — Coffee, Tea, and Milk**: *der Kaffee*, *der Tee*, *die
   Milch* — extends the *Wasser, bitte* request pattern to two loanwords
   (Arabic/Turkish/Italian; Hokkien Chinese by way of Dutch) and one native
   word.
-- **Chapter 41 — Friend and Family**: *der Freund*, *die Freundin* (the
+- **Chapter 42 — Friend and Family**: *der Freund*, *die Freundin* (the
   native *-in* feminine suffix), *die Familie* (the one Latin loan in the
   chapter).
-- **Chapter 42 — Eyes, Ears, Mouth, Nose**: *das Auge*, *das Ohr*, *der
-  Mund*, *die Nase* — extends Chapter 29's body-part material to the rest of
+- **Chapter 43 — Eyes, Ears, Mouth, Nose**: *das Auge*, *das Ohr*, *der
+  Mund*, *die Nase* — extends Chapter 30's body-part material to the rest of
   the face.
-- **Chapter 43 — Arm, Finger, Foot, Heart**: *der Arm*, *der Finger*, *der
+- **Chapter 44 — Arm, Finger, Foot, Heart**: *der Arm*, *der Finger*, *der
   Fuß*, *das Herz* — completes the five-word Hand/Arm/Finger/Fuß/Herz set
-  Chapter 29 named but only a fifth of which it taught.
+  Chapter 30 named but only a fifth of which it taught.
 
 **All forty chapters are authored and in the book (383 pages).**
 
@@ -184,13 +197,11 @@ language.
 finish a chapter, and names the lesson that proves it. It is authored intent —
 no validator may rewrite it.
 
-**Forty-two of forty-three chapters are atom-scored: 1–19 and 21–43.** Those
-are exactly the chapters whose lessons have been migrated to schema version 2
-and so declare real knowledge atoms. Chapter 20 alone is still schema v1 and carries
-no `practises.knowledge`, so a payoff written for them could only assess
-invented atoms — they carry an authored payoff anchored to real lesson content
-and an empty `assesses` until the migration reaches them. They are left out on purpose: an absent entry is debt the gap report can
-measure, a stub is a chapter falsely claiming a capability it never delivered.
+**All forty-four chapters are atom-scored.** Every lesson in the track has been
+migrated to schema version 2 and declares real knowledge atoms, so every chapter
+payoff is measured against what its own lessons teach rather than authored by
+hand. There is no schema-v1 remainder and no chapter carrying an empty
+`assesses`, which is what the earlier note here was counting down.
 
 Representativeness — the share of a chapter's introduced atoms its payoff
 actually assesses, floored at 0.5 by `core/chapter-policy.json`:
@@ -228,45 +239,45 @@ actually assesses, floored at 0.5 by `core/chapter-policy.json`:
 | 39 Eyes, Ears, Mouth, Nose | `GE-C30-nase` | 12 / 12 = 1.00 |
 | 40 Arm, Finger, Foot, Heart | `GE-C31-herz` | 12 / 12 = 1.00 |
 
-Chapter 29 is the one authored chapter that fails. It runs three word lessons
+Chapter 30 is the one authored chapter that fails. It runs three word lessons
 deep — *Kopf*, *Kopf/Haupt*, *Hand* — with no terminal consolidation lesson, so
 its payoff can only be the last lesson by `sequence` and reaches a third of the
 chapter. The `assesses` list is **not** padded to hide that: the honest fix is a
-real Kopf/Haupt/Hand practice lesson. Chapter 30 has the same missing-practice
+real Kopf/Haupt/Hand practice lesson. Chapter 31 has the same missing-practice
 shape but clears the floor because *nein* reassesses *ja*.
 
-Chapters 36 and 37 close over **all** of their own atoms, and both payoffs also
-reach back past their own chapter — chapter 36's to `GE-LEX-HAND-02`,
-`GE-ETYMON-HAND-MANUS-05` and `GE-SOUND-GRIMMS-LAW-04` from chapter 29;
-chapter 37's to all four of chapter 36's verbs plus `GE-LEX-HUND-02`,
+Chapters 37 and 38 close over **all** of their own atoms, and both payoffs also
+reach back past their own chapter — chapter 37's to `GE-LEX-HAND-02`,
+`GE-ETYMON-HAND-MANUS-05` and `GE-SOUND-GRIMMS-LAW-04` from chapter 30;
+chapter 38's to all four of chapter 37's verbs plus `GE-LEX-HUND-02`,
 `GE-LEX-KATZE-04` (ch. 27) and `GE-LEX-WETTER-02` (ch. 26). That is HL09 §7:
 a payoff scoped only to its own chapter adds to the orphan pile rather than
 draining it.
 
-Chapters 38 and 39 do the same and were written to drain it deliberately.
-Chapter 38's payoff reaches to `GE-SOUND-GRIMMS-LAW-04` (ch. 22),
+Chapters 39 and 40 do the same and were written to drain it deliberately.
+Chapter 39's payoff reaches to `GE-SOUND-GRIMMS-LAW-04` (ch. 22),
 `GE-LEX-HUND-02`/`GE-ETYMON-HUND-03`/`GE-LEX-KATZE-04` (ch. 27) and all three
-of chapter 37's closing atoms; chapter 39's reaches to `GE-LEX-NEHMEN-02`,
+of chapter 38's closing atoms; chapter 40's reaches to `GE-LEX-NEHMEN-02`,
 `GE-ETYMON-NEHMEN-03` and `GE-ETYMON-HELFEN-08` (ch. 30), `GE-LEX-HAND-02` and
-`GE-SOUND-HAND-03` (ch. 22), and back into chapter 38. Six atoms that no lesson
+`GE-SOUND-HAND-03` (ch. 22), and back into chapter 39. Six atoms that no lesson
 had ever revisited are revisited here: `GE-SOUND-HAND-03`, `GE-ETYMON-HUND-03`,
 `GE-LEX-REGNET-05`, `GE-LEX-MOEGEN-LIEBEN-09`, `GE-ETYMON-MOEGEN-LIEBEN-10` and
 `GE-GRAMMAR-GERN-11`. The track's never-revisited share falls from **31 of 61
 atoms (51%) to 27 of 81 (33%)**.
 
-Chapters 40–43 are the pre-A1 vocabulary tranche (fourteen nouns; see
+Chapters 41–44 are the pre-A1 vocabulary tranche (fourteen nouns; see
 CHANGELOG). All four payoffs close over their own chapter's atoms at 1.00
-representativeness. Chapter 40's payoff also rescues chapter 39's two
+representativeness. Chapter 41's payoff also rescues chapter 40's two
 never-revisited atoms, `GE-LEX-SCHLIESSEN-10` and `GE-ETYMON-SCHLIESSEN-11`;
-chapter 42's rescues chapter 38's disputed `GE-ETYMON-HOEREN-10` "sharp-eared"
-link, never revisited since it was flagged; chapter 43's reaches to chapters
-14, 17, 26, 31 and 35 at once, completing the Hand/Arm/Finger/Fuß/Herz set
-chapter 29 printed but only a fifth of which it taught.
+chapter 43's rescues chapter 39's disputed `GE-ETYMON-HOEREN-10` "sharp-eared"
+link, never revisited since it was flagged; chapter 44's reaches to chapters
+15, 18, 27, 32 and 36 at once, completing the Hand/Arm/Finger/Fuß/Herz set
+chapter 30 printed but only a fifth of which it taught.
 
 ## Reinforcement chaining (HL09 §7)
 
 A chapter-end payoff cannot close the R1 window (n+1…n+3), so the reach-back
-runs at two cadences. Every lesson in chapters 36–37 also names atoms from the
+runs at two cadences. Every lesson in chapters 37–38 also names atoms from the
 **one to three lessons immediately before it**, across the chapter seam:
 
 | Lesson | Reaches back to |
@@ -278,29 +289,29 @@ runs at two cadences. Every lesson in chapters 36–37 also names atoms from the
 | `GE-C25-nehmen` | `GE-C24-schreiben`, `GE-C24-lesen`, ch. 22 `GE-LEX-HAND-02` |
 | `GE-C25-fragen` | `GE-C25-nehmen`, `GE-C24-lesen`, ch. 23 `ja`/`nein`/`doch` |
 | `GE-C25-helfen` | `GE-C25-fragen`, `GE-C25-nehmen`, ch. 22 and ch. 24 |
-| `GE-C25-moegen-lieben` | all of chapters 36 and 37, plus chapters 33 and 34 |
+| `GE-C25-moegen-lieben` | all of chapters 37 and 38, plus chapters 34 and 35 |
 | `GE-C26-sitzen` | `GE-C25-moegen-lieben`, `GE-C25-helfen`, `GE-C24-lesen` — *Ich sitze gern*, and the *p*-branch beside the new *t*-branch |
 | `GE-C26-stehen` | `GE-C26-sitzen`; ch. 29 `GE-C24-verstehen`, which had *stehen* inside it |
 | `GE-C26-schlafen` | `GE-C26-stehen`, `GE-C26-sitzen`, ch. 29's vowel break, ch. 26 `GE-LEX-REGNET-05` |
-| `GE-C26-hoeren` | all of chapter 38, plus chapters 29, 34 and 37 |
+| `GE-C26-hoeren` | all of chapter 39, plus chapters 30, 34 and 37 |
 | `GE-C27-gehen` | `GE-C26-hoeren`, `GE-C26-stehen`, `GE-C26-schlafen`, `GE-C26-sitzen` |
 | `GE-C27-laufen` | `GE-C27-gehen`; ch. 31's umlaut break, ch. 30 `GE-ETYMON-HELFEN-08`, ch. 27 `GE-LEX-HUND-02` |
 | `GE-C27-oeffnen` | `GE-C27-laufen`, `GE-C27-gehen`, ch. 30 `GE-ETYMON-HELFEN-08`, ch. 22 *Hand* |
-| `GE-C27-schliessen` | all of chapter 39, plus chapters 29, 37 and 38 |
+| `GE-C27-schliessen` | all of chapter 40, plus chapters 30, 37 and 38 |
 | `GE-C28-kaffee` | ch. 24 `bitte` pattern; ch. 32's orphaned `GE-LEX-SCHLIESSEN-10`/`GE-ETYMON-SCHLIESSEN-11` |
 | `GE-C28-tee` | `GE-C28-kaffee` |
-| `GE-C28-milch` | all of chapter 40, plus ch. 24's `bitte` pattern again |
+| `GE-C28-milch` | all of chapter 41, plus ch. 24's `bitte` pattern again |
 | `GE-C29-freund` | `GE-C28-milch` |
 | `GE-C29-freundin` | `GE-C29-freund` |
-| `GE-C29-familie` | all of chapter 41 |
+| `GE-C29-familie` | all of chapter 42 |
 | `GE-C30-auge` | `GE-C29-familie`; ch. 22 `GE-LEX-KOPF-02` |
 | `GE-C30-ohr` | `GE-C30-auge`; ch. 31 `GE-LEX-HOEREN-09`/`GE-ETYMON-HOEREN-10` |
 | `GE-C30-mund` | `GE-C30-ohr` |
-| `GE-C30-nase` | all of chapter 42, plus ch. 22 `GE-LEX-KOPF-02`/`GE-LEX-HAND-02` |
+| `GE-C30-nase` | all of chapter 43, plus ch. 22 `GE-LEX-KOPF-02`/`GE-LEX-HAND-02` |
 | `GE-C31-arm` | `GE-C30-nase`; ch. 22 `GE-LEX-HAND-02` |
 | `GE-C31-finger` | `GE-C31-arm` |
 | `GE-C31-fuss` | `GE-C31-finger`; ch. 22 `GE-SOUND-GRIMMS-LAW-04` (via the prerequisite chain) |
-| `GE-C31-herz` | all of chapter 43, plus ch. 22 `GE-LEX-HAND-02`, ch. 27 `GE-ETYMON-HUND-03`, ch. 31 `GE-ETYMON-HOEREN-10` |
+| `GE-C31-herz` | all of chapter 44, plus ch. 22 `GE-LEX-HAND-02`, ch. 27 `GE-ETYMON-HUND-03`, ch. 31 `GE-ETYMON-HOEREN-10` |
 
 The field that carries this is `practises.knowledge`. `reviews_of` names lesson
 ids, not atoms, so it cannot close a reinforcement window and never has.

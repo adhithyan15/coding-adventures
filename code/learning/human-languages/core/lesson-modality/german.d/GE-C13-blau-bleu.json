@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C13-blau-bleu",
+    "language": "german",
+    "chapter": 21,
+    "sequence": 328,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dadfc968e41fe14"
+  },
+  "findings": []
+}

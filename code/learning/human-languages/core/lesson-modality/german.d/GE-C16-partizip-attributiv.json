@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C16-partizip-attributiv",
     "language": "german",
-    "chapter": 28,
+    "chapter": 29,
     "sequence": 645,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:84a39f41f62ef41b"
+    "sourceHash": "fnv1a64:d9e677054c8ca6ae"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C15-gewohnt
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 380
-chapter: 22
+chapter: 23
 type: word
 headword: gewohnt
 gloss: lived, dwelt — the wrap on wohnen, and the English fossil that still means "accustomed"

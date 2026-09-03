@@ -446,13 +446,40 @@ export function bookGenerationOwnerContents(
   return outputs;
 }
 
+/**
+ * A section directory MUST exist, and MAY be empty.
+ *
+ * Those are two different claims and the distinction is the whole reason this
+ * function keeps its hard `isDirectory` check while filtering one filename out
+ * of the listing.
+ *
+ * `handwritten.d` reached zero entries when the last hand-written chapter in the
+ * corpus was generated. Git cannot track an empty directory, so the directory
+ * itself disappeared from the tree, and `readBookGenerationOwners` -- which
+ * asserts the owner root holds EXACTLY `_meta.json` plus every section -- failed
+ * with "missing, legacy, or unexpected entries" on a fresh checkout while
+ * passing on the authoring machine, where `git rm` leaves the empty directory
+ * behind. The empty case had been unreachable for as long as any track had one
+ * hand-written chapter, so nothing had ever exercised it.
+ *
+ * The fix is a tracked `.gitkeep` that holds the directory open, and this filter
+ * so the placeholder is not mistaken for an owner record. It is deliberately NOT
+ * "an absent section directory reads as empty": a genuinely deleted `targets.d`
+ * would then produce a book with no generated chapters and no error, which is
+ * the loud-to-silent trade this codebase refuses everywhere else. Missing still
+ * throws; empty is now expressible.
+ */
+const DIRECTORY_PLACEHOLDER = ".gitkeep";
+
 function readStrictDirectory(root: string, directory: string): string[] {
   const path = join(root, BOOK_GENERATION_DIRECTORY, directory);
   const stat = lstatSync(path);
   if (stat.isSymbolicLink() || !stat.isDirectory()) {
     throw new Error(`book-generation owner '${path}' must be a real directory`);
   }
-  return readdirSync(path).sort(codeUnit);
+  return readdirSync(path)
+    .filter((name) => name !== DIRECTORY_PLACEHOLDER)
+    .sort(codeUnit);
 }
 
 export function readBookGenerationOwners(root: string): LoadedBookGenerationOwners {

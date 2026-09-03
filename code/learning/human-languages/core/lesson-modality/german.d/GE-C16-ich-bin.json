@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C16-ich-bin",
     "language": "german",
-    "chapter": 25,
+    "chapter": 26,
     "sequence": 505,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a1d6fdc2dfe37560"
+    "sourceHash": "fnv1a64:eed3d252ae940f2b"
   },
   "findings": []
 }

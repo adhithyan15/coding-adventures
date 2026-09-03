@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C16-ich-bin
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 505
-chapter: 25
+chapter: 26
 type: phrase
 headword: ich bin
 gloss: I am — the first form of sein, and it comes from a different verb than the infinitive does

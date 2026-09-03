@@ -1,16 +1,25 @@
 {
   "chapter": 20,
-  "title": "Colours",
-  "label": "ch:colours",
-  "canDo": "I can name basic colours in German and use them to describe something.",
+  "title": "The Colour German Lent Away",
+  "label": "ch:schwarz-weiss",
+  "canDo": "I can say black and white in German, and name the German word Romance borrowed for white.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C13-rot-blau",
+    "lesson": "GE-C13-schwarz-weiss",
     "kind": "task",
-    "summary": "Complete GE-C13-rot-blau, the canonical closing checkpoint, and demonstrate the chapter promise: name basic colours in German and use them to describe something.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "German's colour words are home-grown, with no Latin borrowed in -- and one of them emigrated. schwarz is Germanic swartaz, which English kept only in the dusty corner of swarthy; weiss is hwitaz, which English kept whole as white. Then blank, a German word for shining, went the other way: it became the word for WHITE in French, Italian and Portuguese, pushing Latin albus out of everyday use. After nineteen chapters of German buying words from Rome, this is the chapter where Rome's daughters buy from German.",
+    "assesses": [
+      "GE-LEX-SCHWARZ-01",
+      "GE-SOUND-SCHWARZ-01",
+      "GE-ETYMON-SCHWARZ-SWARTHY-01",
+      "GE-LEX-WEISS-01",
+      "GE-SOUND-WEISS-01",
+      "GE-ETYMON-WEISS-WHITE-01",
+      "GE-LEX-BLANK-01",
+      "GE-ETYMON-BLANK-BLANC-01"
+    ],
+    "note": "Chapter 20 is generated from schema-v2 lessons and introduces eight atoms. Old chapter 20 held fourteen against a ceiling of twelve, so it splits at the .tex's own section seam into 8 and 6. This was the LAST hand-written chapter in the corpus."
   }
 }

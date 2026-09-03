@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C15-wir-haben-gesagt",
     "language": "german",
-    "chapter": 23,
+    "chapter": 24,
     "sequence": 415,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:531f92f55dac0491"
+    "sourceHash": "fnv1a64:1c810553fd182c36"
   },
   "findings": []
 }

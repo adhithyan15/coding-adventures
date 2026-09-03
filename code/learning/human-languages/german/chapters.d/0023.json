@@ -1,25 +1,24 @@
 {
   "chapter": 23,
-  "title": "The Past Built From Have",
-  "label": "ch:perfekt",
-  "canDo": "I can say what I did in German — haben in second place, the participle waiting at the end of the clause — and read it as a plain past rather than as “have done”.",
+  "title": "The Wrapped Participle",
+  "label": "ch:ge-partizip",
+  "canDo": "I can turn any regular German verb I know into its past participle, and hear that the marking arrives at both ends of the word at once.",
   "spineNodes": [
     "SPINE-TALK-ABOUT-PAST"
   ],
   "payoff": {
-    "lesson": "GE-C15-perfekt-practice",
+    "lesson": "GE-C15-partizip-practice",
     "kind": "task",
-    "summary": "The Perfekt is haben plus a participle, and its cost is the four person slots rather than the recipe: ich habe, du hast, er hat, wir haben each get their own lesson before any of them share a page. The bracket that leaves the participle stranded at the end of the clause gets one of its own too, then gestern to fill the gap it opens, and finally the translation trap — ich habe gesagt is “I said”.",
+    "summary": "The weak participle is a circumfix, so it is met as one concrete word first — gesagt — and only then as the recipe behind it. Three more verbs run through that recipe one at a time, the ge- gets its own lesson because it is the half English threw away, and the infinitive-to-participle table appears only at the end, where it recaps six lessons instead of introducing four words.",
     "assesses": [
-      "GE-GRAMMAR-PERFEKT-HABEN-01",
-      "GE-GRAMMAR-PERFEKT-ICH-01",
-      "GE-GRAMMAR-PERFEKT-DU-01",
-      "GE-GRAMMAR-PERFEKT-ER-01",
-      "GE-GRAMMAR-PERFEKT-WIR-01",
-      "GE-GRAMMAR-PARTIZIP-FINAL-01",
-      "GE-LEX-GESTERN-01",
-      "GE-GRAMMAR-PERFEKT-ALS-VERGANGENHEIT-01"
+      "GE-LEX-SAGEN-01",
+      "GE-LEX-GESAGT-01",
+      "GE-GRAMMAR-PARTIZIP-GE-T-01",
+      "GE-LEX-GEMACHT-01",
+      "GE-LEX-GELERNT-01",
+      "GE-LEX-GEWOHNT-01",
+      "GE-ETYMON-GE-PRAEFIX-01"
     ],
-    "note": "Chapter 16 is generated from schema-v2 lessons, so the payoff is atom-scored. The four-slot table in the practice lesson is a recap of four lessons rather than an introduction to four forms, which is what makes printing it permissible."
+    "note": "Chapter 15 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces, because the practice lesson is where the four participles are first allowed to stand together: the table there is a recap, which is the only condition under which it may be printed at all."
   }
 }

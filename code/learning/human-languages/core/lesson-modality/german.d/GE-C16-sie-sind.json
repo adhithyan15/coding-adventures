@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C16-sie-sind",
     "language": "german",
-    "chapter": 25,
+    "chapter": 26,
     "sequence": 530,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ce6a390a88a1a187"
+    "sourceHash": "fnv1a64:59a6ef68821703c6"
   },
   "findings": []
 }

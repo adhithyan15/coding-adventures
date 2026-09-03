@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C14-haben
 spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
 sequence: 345
-chapter: 21
+chapter: 22
 type: word
 headword: haben
 gloss: to have — the twin of English have, and the workhorse the rest of the book leans on

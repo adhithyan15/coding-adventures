@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C16-wir-sind
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 520
-chapter: 25
+chapter: 26
 type: phrase
 headword: wir sind
 gloss: we are — the plural form, and the first one that looks like the infinitive

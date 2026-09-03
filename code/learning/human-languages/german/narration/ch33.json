@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 33,
-  "title": "Weather",
+  "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:79a972d575027662",
+  "sourceHash": "fnv1a64:3f3bc410e3d8620a",
   "lessons": [
     {
-      "id": "GE-C21-das-wetter",
-      "sequence": 730,
-      "title": "das Wetter, es regnet — German's own native words, English's own cousins",
-      "headword": "das Wetter, es regnet",
-      "romanization": "das Wetter, es regnet",
-      "gloss": "weather — a NATIVE Germanic word, unlike Romance's shared Latin tempus family; Wetter is the SAME word as English \"weather,\" and regnet is the SAME word as English \"rain\"",
+      "id": "GE-C20-entschuldigung",
+      "sequence": 720,
+      "title": "Entschuldigung — “sorry” / “excuse me”",
+      "headword": "Entschuldigung",
+      "romanization": "Entschuldigung",
+      "gloss": "sorry / excuse me (literally \"un-guilting,\" from Schuld \"guilt/fault\")",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:508ca2182ba31ab8",
+      "sourceHash": "fnv1a64:fd8077ed557c2f70",
       "notice": null,
       "blocks": [
         {
@@ -35,49 +35,58 @@
             },
             {
               "kind": "speech",
-              "text": "Every Romance language you've met so far shares the exact same Latin word for \"weather\" (tempus). German breaks completely from that family — with a word that's actually a much closer cousin of English."
+              "text": "You already know bitte does triple duty for \"please,\" \"you're welcome,\" and \"here you go.\" German's word for sorry is just as hard-working: Entschuldigung covers both \"excuse me\" and \"I'm sorry.\""
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The two words: das Wetter and weather",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "das Wetter = \"weather\" — from Proto-Germanic wedrą — the exact same word as English weather itself (both descend from the same Germanic ancestor, not one borrowed from the other). Unlike Spanish's tiempo, French's temps, or Latin's own tempus-family, German's weather word has no connection to Latin at all — it's a native Germanic inheritance, cousin to English rather than to Romance."
+              "text": "ent- = a \"removal / undoing\" prefix — the same shape as in entdecken (\"un-cover\" becomes discover) or entfernen (\"un-distance\" becomes remove)."
+            },
+            {
+              "kind": "speech",
+              "text": "Schuld = \"guilt, fault, blame\" (also, separately, \"debt\" — a Schuld can be money owed or wrong done)."
+            },
+            {
+              "kind": "speech",
+              "text": "-igung = a noun-forming suffix, roughly \"-ing/-ation.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So Entschuldigung is literally \"an un-guilting\" — the act of removing blame. Saying it hands the guilt back: I release you from any fault (when getting someone's attention or brushing past) or I ask you to release me from mine (when apologizing)."
+            },
+            {
+              "kind": "speech",
+              "text": "Schuld has a striking cousin: it traces to the same ancient Germanic root as English shall and should — a verb that originally meant \"to owe.\" Schuld (what is owed, guilt) and shall (what one is obliged to do) are, at root, the same idea of an obligation outstanding."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: Es ist heiß / Es ist kalt",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: Everyday repair and deeper regret",
           "segments": [
             {
               "kind": "speech",
-              "text": "Es ist heiß. — \"It's hot.\" — literally \"it is hot.\" Es ist kalt. — \"It's cold.\" — literally \"it is cold.\""
+              "text": "For deeper regret — real sorrow, not a bump in the hallway — German often reaches for es tut mir leid, literally \"it does to-me sorrow\":"
             },
             {
               "kind": "speech",
-              "text": "German uses sein (\"to be\") here — matching the same \"be\" pattern you already met in German's own AGE lesson (ich bin zwanzig), not the Romance \"make\" periphrasis (hacer/faire)."
+              "text": "es = \"it,\" tut = \"does\" (from tun, \"to do\"), mir = \"to me,\" Leid = \"sorrow, suffering\" (a cousin of English loath, both from a root meaning \"hateful, painful\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Use Entschuldigung for the everyday sorry/excuse-me (stepping on a foot, interrupting), and es tut mir leid when you mean it more — condolences, a real regret. The two overlap; native speakers move between them by feel."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: es regnet",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Es regnet. — \"It's raining.\" — from regnen from Proto-Germanic regnōną — the same root as English rain. Just like Wetter/ \"weather,\" this is a genuine Germanic cousin-pair, not a shared Latin borrowing the way Spanish's llueve and French's pleut are."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -90,34 +99,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Wetter\" — weather, the same word as English \"weather\"",
+              "instruction": "\"Schuld\" — guilt/fault — then \"Entschuldigung,\" sorry / excuse me",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Wetter\" — weather, the same word as English \"weather\"]"
+              "source": "[YOU SAY: \"Schuld\" — guilt/fault — then \"Entschuldigung,\" sorry / excuse me]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Es ist heiß. Es ist kalt.\" — it's hot/cold",
+              "instruction": "the deeper phrase — \"es tut mir leid,\" it pains me / I'm so sorry",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es ist heiß. Es ist kalt.\" — it's hot/cold]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Es regnet\" — it's raining, same root as English \"rain\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es regnet\" — it's raining, same root as English \"rain\"]"
+              "source": "[YOU SAY: the deeper phrase — \"es tut mir leid,\" it pains me / I'm so sorry]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -129,7 +129,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does Wetter come from Latin, like the Romance languages' weather words? (No — it's native Germanic, the same word as English \"weather.\") What verb does German use for \"it's hot/cold\" — sein (\"be\") or a hacer-style \"make\"? (Sein, \"to be\" — matching German's own AGE pattern.) What English word is regnet related to? (Rain — same Proto-Germanic root, regnōną.)"
+              "text": "What does Entschuldigung literally mean, piece by piece? (\"Un-guilting\" — ent- \"away\" + Schuld \"guilt/fault.\") What English word shares Schuld's ancient root? (Shall/should — both from a root meaning \"to owe.\") What's the deeper phrase for real regret? (Es tut mir leid, \"it does to me sorrow.\")"
             }
           ]
         }
