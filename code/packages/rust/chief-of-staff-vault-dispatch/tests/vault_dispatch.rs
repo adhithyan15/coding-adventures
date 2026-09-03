@@ -1024,7 +1024,16 @@ fn orchestrator(host: HostProfile) -> OrchestratorProfileRuntime {
 }
 
 #[test]
-fn a_conforming_host_registers_both_vault_tools() {
+fn registering_both_vault_tools_is_now_refused_by_s_i7() {
+    // This test used to assert that a Tier2 host holding both capabilities may
+    // register both tools. D18S S-I7 makes that false: `vault.request_direct`
+    // requires a caller-supplied `consumer_agent_id`, naming a peer a V1 agent
+    // cannot know exists. Tier and capabilities are still satisfied -- the
+    // refusal is about WHAT the tool lets the caller say, not about privilege.
+    //
+    // `register_lease_only_into_host` exists for exactly this, and is what the
+    // end-to-end harness already uses; `register_into_host` now has no caller
+    // that is a V1 agent surface.
     let mut host = orchestrator(host_profile(
         PrivilegeTier::Tier2,
         &[VAULT_REQUEST_LEASE_TOOL_ID, VAULT_REQUEST_DIRECT_TOOL_ID],
@@ -1032,9 +1041,27 @@ fn a_conforming_host_registers_both_vault_tools() {
     ));
     let bridge = VaultToolBridge::new(vault_with_secret(), RecordingDelivery::accepting());
 
-    bridge
+    let error = bridge
         .register_into_host(&mut host)
-        .expect("a Tier2 host holding both capabilities may register both tools");
+        .expect_err("a V1 agent host may not be offered a peer-naming tool");
+    assert!(
+        matches!(
+            error,
+            HostRuntimeError::ToolNamesAnotherAgent { ref tool_id, .. }
+                if tool_id == VAULT_REQUEST_DIRECT_TOOL_ID
+        ),
+        "expected the peer-naming tool to be named, got {error:?}"
+    );
+
+    // The lease half still registers, so the useful capability is intact.
+    let mut lease_host = orchestrator(host_profile(
+        PrivilegeTier::Tier2,
+        &[VAULT_REQUEST_LEASE_TOOL_ID],
+        &["vault:lease"],
+    ));
+    VaultToolBridge::new(vault_with_secret(), RecordingDelivery::accepting())
+        .register_lease_only_into_host(&mut lease_host)
+        .expect("the lease path names no peer and is unaffected");
 }
 
 #[test]
@@ -1066,14 +1093,18 @@ fn a_host_missing_the_declared_capability_cannot_register() {
 
     let error = bridge
         .register_into_host(&mut host)
-        .expect_err("vault:direct is declared by the definition and missing from the host");
+        .expect_err("registration must fail");
+    // S-I7 is checked before capabilities, so a peer-naming tool is refused on
+    // that ground first. Both refusals are correct; the ordering is what
+    // changed, and this asserts the stronger one rather than pretending the
+    // capability check is what stops it.
     assert!(
         matches!(
             error,
-            HostRuntimeError::MissingCapability { ref capability, .. }
-                if capability == "vault:direct"
+            HostRuntimeError::ToolNamesAnotherAgent { ref tool_id, .. }
+                if tool_id == VAULT_REQUEST_DIRECT_TOOL_ID
         ),
-        "expected the missing capability to be named, got {error:?}"
+        "expected the S-I7 refusal, got {error:?}"
     );
 }
 
@@ -1107,15 +1138,18 @@ fn the_preflight_covers_the_registry_checks_too_not_only_the_profile_ones() {
     // before it fails anyway, which is exactly the half-wired state the
     // pre-flight exists to prevent. The profile checks are the obvious three;
     // the registry's duplicate-id check is the one a caller trips over.
+    //
+    // Squats the LEASE id rather than the direct one. S-I7 now refuses
+    // `request_direct` outright, so using it here would test the S-I7 refusal
+    // instead of the duplicate-id detection this test is about.
     let mut host = orchestrator(host_profile(
         PrivilegeTier::Tier2,
-        &[VAULT_REQUEST_LEASE_TOOL_ID, VAULT_REQUEST_DIRECT_TOOL_ID],
-        &["vault:lease", "vault:direct"],
+        &[VAULT_REQUEST_LEASE_TOOL_ID],
+        &["vault:lease"],
     ));
 
-    // Something else already owns one of the two ids.
     let squatted =
-        builtin_tool_definition(VAULT_REQUEST_DIRECT_TOOL_ID).expect("built-in must exist");
+        builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID).expect("built-in must exist");
     host.register_handler(squatted, |_arguments, _context| {
         Ok(ToolHandlerOutput::new(JsonValue::Null))
     })
@@ -1123,22 +1157,22 @@ fn the_preflight_covers_the_registry_checks_too_not_only_the_profile_ones() {
 
     let bridge = VaultToolBridge::new(vault_with_secret(), RecordingDelivery::accepting());
     let error = bridge
-        .register_into_host(&mut host)
+        .register_lease_only_into_host(&mut host)
         .expect_err("the occupied id must be caught during pre-flight");
     assert!(
         matches!(
             error,
             HostRuntimeError::ToolApi(ToolApiError::DuplicateToolId(ref tool))
-                if tool == VAULT_REQUEST_DIRECT_TOOL_ID
+                if tool == VAULT_REQUEST_LEASE_TOOL_ID
         ),
         "expected a duplicate-id rejection, got {error:?}"
     );
 
-    // Only the squatter is registered: the bridge added neither of its own.
+    // Only the squatter is registered: the bridge added nothing of its own.
     assert_eq!(
         host.summary().registered_tool_count,
         1,
-        "the refused pair must not have wired request_lease on the way past"
+        "a refused registration must not wire anything on the way past"
     );
 }
 
