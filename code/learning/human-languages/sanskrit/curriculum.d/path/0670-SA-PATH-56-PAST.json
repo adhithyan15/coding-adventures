@@ -1,0 +1,14 @@
+{
+  "id": "SA-PATH-56-PAST",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "SA-C56-agacchat",
+    "SA-C56-apathat",
+    "SA-R56-past"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-056-PAST"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:d277c9d8cec2e922",
+  "lessonIds": [
+    "SA-C53-yah",
+    "SA-C53-sah",
+    "SA-C53-yah-sah",
+    "SA-C53-yatra-tatra",
+    "SA-R53-correlative"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch53.txt",
+  "json": "sanskrit/narration/ch53.json",
+  "textHash": "fnv1a64:406595ba352a68d1",
+  "jsonHash": "fnv1a64:f196ceb61f625b41",
+  "findings": []
+}

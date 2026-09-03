@@ -1,0 +1,12 @@
+{
+  "id": "SA-PATH-57-CAN",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "lessons": [
+    "SA-C57-shaknoti"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-057-CAN"
+  ],
+  "after": []
+}

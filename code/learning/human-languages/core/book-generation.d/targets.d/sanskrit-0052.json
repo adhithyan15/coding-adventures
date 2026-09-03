@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 52,
+  "output": "sanskrit/book/chapters/ch52-two-things-joined.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

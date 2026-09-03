@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 54,
+  "output": "sanskrit/book/chapters/ch54-thus-it-was-said.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "SA-PATH-54-ITI",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "SA-C54-iti",
+    "SA-C54-iti-clause",
+    "SA-R54-iti"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-054-ITI"
+  ],
+  "after": []
+}

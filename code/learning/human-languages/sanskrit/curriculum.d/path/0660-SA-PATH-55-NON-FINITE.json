@@ -1,0 +1,14 @@
+{
+  "id": "SA-PATH-55-NON-FINITE",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "SA-C55-gatva",
+    "SA-C55-gantum",
+    "SA-R55-non-finite"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-055-NON-FINITE"
+  ],
+  "after": []
+}

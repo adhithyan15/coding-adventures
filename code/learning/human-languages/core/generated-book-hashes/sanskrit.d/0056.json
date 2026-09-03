@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:85944679a3113bc8",
+  "lessonIds": [
+    "SA-C56-agacchat",
+    "SA-C56-apathat",
+    "SA-R56-past"
+  ],
+  "tex": "sanskrit/book/chapters/ch56-what-happened-yesterday.tex"
+}

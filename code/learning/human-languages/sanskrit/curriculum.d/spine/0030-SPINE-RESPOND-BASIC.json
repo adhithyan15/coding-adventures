@@ -4,7 +4,8 @@
     "SA-PATH-27-REPLY",
     "SA-PATH-36-REPLY",
     "SA-PATH-42-REPLY",
-    "SA-PATH-49-REPLY"
+    "SA-PATH-49-REPLY",
+    "SA-PATH-52-JOINS"
   ],
   "omits": [
     "RESPONSE-YESNO",

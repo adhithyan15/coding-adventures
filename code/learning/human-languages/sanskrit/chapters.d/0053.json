@@ -1,0 +1,20 @@
+{
+  "chapter": 53,
+  "title": "Which One, That One",
+  "label": "ch:sa-which-one-that-one",
+  "canDo": "I can open a clause with a य- word and answer it with the matching त- word, so that two Sanskrit clauses hold together as one sentence.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R53-correlative",
+    "kind": "production",
+    "summary": "Complete SA-R53-correlative and say both correlative sentences, naming for each the axis it joins on.",
+    "assesses": [
+      "SA-REL-YAH-01",
+      "SA-REL-SAH-01",
+      "SA-GRAMMAR-CORRELATIVE-01",
+      "SA-GRAMMAR-CORRELATIVE-PLACE-01"
+    ]
+  }
+}

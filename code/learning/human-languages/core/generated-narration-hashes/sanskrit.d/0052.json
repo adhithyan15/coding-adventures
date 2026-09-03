@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:01c79afcccd46aca",
+  "lessonIds": [
+    "SA-C52-ca",
+    "SA-C52-va",
+    "SA-C52-kintu",
+    "SA-C52-na-na",
+    "SA-R52-joins"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "sanskrit/narration/ch52.txt",
+  "json": "sanskrit/narration/ch52.json",
+  "textHash": "fnv1a64:aff2dfef81debfbc",
+  "jsonHash": "fnv1a64:e76d10cc0d628907",
+  "findings": []
+}

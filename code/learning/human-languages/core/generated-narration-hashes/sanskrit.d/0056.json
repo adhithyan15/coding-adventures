@@ -1,0 +1,17 @@
+{
+  "language": "sanskrit",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:910f1380b7492665",
+  "lessonIds": [
+    "SA-C56-agacchat",
+    "SA-C56-apathat",
+    "SA-R56-past"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "sanskrit/narration/ch56.txt",
+  "json": "sanskrit/narration/ch56.json",
+  "textHash": "fnv1a64:1cb1c29ae4f4d1e7",
+  "jsonHash": "fnv1a64:4bed7ce35419e3f1",
+  "findings": []
+}

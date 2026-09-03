@@ -1,0 +1,18 @@
+{
+  "chapter": 61,
+  "title": "The Turning Season",
+  "label": "ch:sa-the-turning-season",
+  "canDo": "I can name a season in Sanskrit and write the independent vowel ऋ that its name begins with.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "SA-S225-letter-vocalic-r",
+    "kind": "recognition",
+    "summary": "Complete SA-S225-letter-vocalic-r and name the word you already say that begins with ऋ.",
+    "assesses": [
+      "SA-LEX-C61-SEASON-01",
+      "SA-SCRIPT-RECOG-225"
+    ]
+  }
+}
