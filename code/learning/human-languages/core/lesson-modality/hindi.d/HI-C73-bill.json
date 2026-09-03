@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C73-bill",
+    "language": "hindi",
+    "chapter": 80,
+    "sequence": 3080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbd95b24e159f7bb"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:c19d4438c06c313b",
+  "lessonIds": [
+    "HI-C74-open",
+    "HI-C74-closed",
+    "HI-C74-entrance",
+    "HI-C74-exit",
+    "HI-C74-late"
+  ],
+  "tex": "hindi/book/chapters/ch81-words-on-the-door.tex"
+}

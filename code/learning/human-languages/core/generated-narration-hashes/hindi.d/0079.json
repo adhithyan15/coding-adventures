@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:234b1ada7c238df9",
+  "lessonIds": [
+    "HI-C72-money",
+    "HI-C72-rupee",
+    "HI-C72-price",
+    "HI-C72-expensive",
+    "HI-C72-buy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch79.txt",
+  "json": "hindi/narration/ch79.json",
+  "textHash": "fnv1a64:28dcbf13ecaf9468",
+  "jsonHash": "fnv1a64:ccff5a2f3af793ff",
+  "findings": []
+}

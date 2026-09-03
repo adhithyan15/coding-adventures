@@ -110,13 +110,19 @@ describe("corpus snapshot", () => {
 
     expect(report.summary.tracksWithNoCoreVerb).toBe(3);
     expect(report.summary.universallyMissing).toHaveLength(0);
-    // 38 -> 39. Marathi's pre-A1 verb tranche (chapters 22-25) puts ten more
-    // CANONICAL core-verb tags on the board -- GIVE, DRINK, BRING, PUT, SIT,
-    // SLEEP, WALK, SAY, LEARN, GET -- where the track previously had four verbs
-    // under namespaced MR-VERB-* tags that this cross-language join cannot see.
-    // The mean is allowed to rise for that reason and no other: it moves because
-    // a track taught the shared concepts, not because the denominator shrank.
-    expect(report.summary.meanCoveredPercent).toBe(39); // a new zero-verb starter makes the corpus average honest
+    // 38 -> 39 -> 40. The 39 was Marathi's pre-A1 verb tranche (chapters 22-25),
+    // which put ten more CANONICAL core-verb tags on the board -- GIVE, DRINK,
+    // BRING, PUT, SIT, SLEEP, WALK, SAY, LEARN, GET -- where the track
+    // previously had four verbs under namespaced MR-VERB-* tags that this
+    // cross-language join cannot see. The 40 is Hindi's pre-A1 vocabulary
+    // tranche (chapters 75-81), which takes the track 13 -> 17 covered by
+    // teaching `jana`, `khelna`, `kharidna` and `pina` against the canonical
+    // VERB-GO, VERB-PLAY, VERB-BUY and VERB-DRINK. Measured by running
+    // `verbCoverage` over the corpus with and without those 33 lessons: 39
+    // without, 40 with. The mean is allowed to rise for that reason and no
+    // other: it moves because a track taught the shared concepts, not because
+    // the denominator shrank -- `tracksWithNoCoreVerb` is unchanged at 3.
+    expect(report.summary.meanCoveredPercent).toBe(40);
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.

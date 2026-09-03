@@ -1,0 +1,21 @@
+{
+  "chapter": 75,
+  "title": "Where You Come From",
+  "label": "ch:hi-where-you-come-from",
+  "canDo": "I can say what country I am in, what city I live in and what language I speak when I meet somebody.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "HI-C68-english",
+    "kind": "production",
+    "summary": "Complete HI-C68-english and say all five words in order, then name the two languages you can put beside भाषा.",
+    "assesses": [
+      "HI-LEX-C68-ORIGIN-01",
+      "HI-LEX-C68-ORIGIN-02",
+      "HI-LEX-C68-ORIGIN-03",
+      "HI-LEX-C68-ORIGIN-04",
+      "HI-LEX-C68-ORIGIN-05"
+    ]
+  }
+}

@@ -1,0 +1,660 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 76,
+  "title": "Ways of Going",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:93892c605bb1103c",
+  "lessons": [
+    {
+      "id": "HI-C69-vehicle",
+      "sequence": 2880,
+      "title": "गाड़ी (gāṛī) — a vehicle; a train",
+      "headword": "गाड़ी",
+      "romanization": "gāṛī",
+      "gloss": "a vehicle; a train",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6d94b18c6547fbe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words back before anything new: what does bhāshā mean, and what is अंग्रेज़ी? The next five words are how you leave the शहर you live in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गाड़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाड़ी (gāṛī) — \"a vehicle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "From Sanskrit गर्त (garta), a cart, through the Prakrits. It began as the thing oxen pulled and it has taken in everything since: a car is a गाड़ी (gāṛī), a train is a गाड़ी (gāṛī), a bullock cart is a गाड़ी (gāṛī)."
+            },
+            {
+              "kind": "speech",
+              "text": "That width is the reason to learn it first. बस you already own, and बस names one thing only. गाड़ी (gāṛī) names whatever is carrying you, so it is the word that never leaves you stuck — point at anything with wheels and गाड़ी (gāṛī) is right."
+            },
+            {
+              "kind": "speech",
+              "text": "The ड़ in the middle is the flapped retroflex, made by flicking the tongue down off the roof of the mouth. It is ड with the nuqta underneath."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five words for getting somewhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bhāshā, then read अंग्रेज़ी and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bhāshā*, then read **अंग्रेज़ी** and say what it means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "gāṛī, slowly, with the flap in the middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *gāṛī*, slowly, with the flap in the middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "gāṛī and bas, and say which one is wider",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *gāṛī* and *bas*, and say which one is wider]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गाड़ी (gāṛī) mean? (\"a vehicle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C69-railway",
+      "sequence": 2890,
+      "title": "रेल (rel) — the railway",
+      "headword": "रेल",
+      "romanization": "rel",
+      "gloss": "the railway",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f5b7a9604c3f795",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say gāṛī, then write गाड़ी: ग, then the ा stroke, then ड with its nuqta, then ी. Four pieces, all of them yours already."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रेल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रेल (rel) — \"the railway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "English rail, borrowed whole in the nineteenth century and spelt with the े matra, which is where an English ay sound usually lands in Devanagari."
+            },
+            {
+              "kind": "speech",
+              "text": "रेल (rel) on its own is the system: the network, the line, the railway as an institution. The train itself is रेलगाड़ी — रेल (rel) plus the गाड़ी (gāṛī) you learnt in the last lesson — and in speech people shorten that back to plain गाड़ी (gāṛī). Two words you now hold combine into the third without anything new."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाड़ी (gāṛī) and रेल (rel), and the compound they make between them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read अंग्रेज़ी, then say it without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **अंग्रेज़ी**, then say it without looking]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rel, then gāṛī, then relgāṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rel*, then *gāṛī*, then *relgāṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "गाड़ी (gāṛī) once more, without looking",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: गाड़ी once more, without looking]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रेल (rel) mean? (\"the railway\".) What is a रेलगाड़ी? (\"a train\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C69-station",
+      "sequence": 2900,
+      "title": "स्टेशन (sṭeshan) — a station",
+      "headword": "स्टेशन",
+      "romanization": "sṭeshan",
+      "gloss": "a station",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cd0607abb0af225",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of your two words names the network, and which names the thing that moves along it?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्टेशन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्टेशन (sṭeshan) — \"a station\"."
+            },
+            {
+              "kind": "speech",
+              "text": "English station, and it shows its seams. Hindi does not open a word with two consonants stuck together, so the writing does it the Devanagari way instead: स with the vowel-killer ् underneath, then ट. That stack is the same virama you met inside नमस्ते."
+            },
+            {
+              "kind": "speech",
+              "text": "The retroflex ट rather than dental त is deliberate. When Hindi borrows an English t, it hears the English tongue as curled back, so station becomes स्टेशन (sṭeshan) and not स्तेशन. Every English t you meet in a Hindi loan will do this."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is painted on every platform board in the country, in Devanagari and in Latin letters side by side."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three: गाड़ी (gāṛī), रेल (rel), स्टेशन (sṭeshan). A vehicle, a network, and the place you wait."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "स्टेशन (sṭeshan), and find the ् that stacks the first two letters",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: स्टेशन, and find the ् that stacks the first two letters]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sṭeshan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sṭeshan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rel sṭeshan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rel sṭeshan*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्टेशन (sṭeshan) mean? (\"a station\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C69-ticket",
+      "sequence": 2910,
+      "title": "टिकट (ṭikaṭ) — a ticket",
+      "headword": "टिकट",
+      "romanization": "ṭikaṭ",
+      "gloss": "a ticket",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4793865a32183c47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write स्टेशन (sṭeshan) from memory. Start with the stacked स्, then ट, then े on top, then श, then न."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टिकट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टिकट (ṭikaṭ) — \"a ticket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "English ticket, and both of its t sounds land on retroflex ट for the reason the last lesson gave. The ि in the middle is the short i matra, and it is written before the letter it is sounded after — you learnt that trick when you first wrote a name."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the word you actually say at a window. You already know how to ask for one thing politely: एक चाय दीजिए got you a cup of tea. एक टिकट (ṭikaṭ) दीजिए is the same frame with a new word dropped in, and it will get you onto a train."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and a request you can already make with the fourth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭikaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭikaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek ṭikaṭ dījie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek ṭikaṭ dījie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "टिकट (ṭikaṭ), putting the ि down before the ट it belongs to",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: टिकट, putting the ि down before the ट it belongs to]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you ask for one ticket? (ek ṭikaṭ dījie.) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C69-go",
+      "sequence": 2920,
+      "title": "जाना (jānā) — to go",
+      "headword": "जाना",
+      "romanization": "jānā",
+      "gloss": "to go",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:460dd0ee88cbbd10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four words of this chapter so far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जाना (jānā) — \"to go\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit या (yā-), \"to go\", is the root; Hindi turned the initial y- into j-, which it does to many inherited words, and added the -ना ending that every Hindi doing word carries when you name it plain."
+            },
+            {
+              "kind": "speech",
+              "text": "You already own three that end the same way: बोलना, देखना, सुनना. The ending is the pattern, not a coincidence, and जाना (jānā) now joins them."
+            },
+            {
+              "kind": "speech",
+              "text": "जाना (jānā) is the one doing word a traveller cannot do without. मैं स्टेशन (sṭeshan) जाता हूँ uses the same shape as मैं हिंदी बोलता हूँ, which you have been saying since the early chapters — the same frame, a different word inside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: गाड़ी (gāṛī), रेल (rel), स्टेशन (sṭeshan), टिकट (ṭikaṭ), जाना (jānā). A way to travel and a way to say you are going."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ sṭeshan jātā hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ sṭeshan jātā hūṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "टिकट (ṭikaṭ) and then जाना (jānā), both from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: टिकट and then जाना, both from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जाना (jānā) mean? (\"to go\".) Say that you go to the station."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

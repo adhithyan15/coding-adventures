@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C72-rupee",
+    "language": "hindi",
+    "chapter": 79,
+    "sequence": 3020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77409fa634b44515"
+  },
+  "findings": []
+}
