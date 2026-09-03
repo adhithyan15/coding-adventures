@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Compose the model tool surface through `CompositeModelToolDispatcher`, with
+  the smart-home dispatcher as one source rather than the whole surface. No
+  behaviour change today -- it is a list of one -- but adding the second source
+  is now an addition rather than a rewrite of the daemon's composition.
+- Memoize `D18dSmartHomeModelTools::definitions`. It ignores the binding and
+  rebuilt the whole 322-entry smart-home catalog once per production tool id,
+  measured at 17ms. `ListModelTools` and `CompleteWithTools` already paid that;
+  routing a composite by tool name would have made `ExecuteTool` pay it too, on
+  a path whose rate a child controls and where the previous gate was a
+  ten-element string scan.
+
 - Compose the config-backed exact privilege resolver and Trust Checker into the
   production daemon. Fully declared Tier 0 channel and pipeline mutations are
   executable; missing mappings and interactive tiers remain fail-closed.
