@@ -2,6 +2,99 @@
 
 ## [Unreleased]
 
+### Added — the joining column, from 0 of 11 to 10, and the repair language the book had none of (HL-C316)
+
+- Add chapters 35-41 — "The Word for Not, and the Word for Sorry", "And, Or,
+  But", "The Word That Carries a Thought", "Because, and Therefore", "If, and
+  When", "He, She, We, and the One Who", and "Who, Where, When, How Many" — as
+  seven five-lesson chapters, one new item per lesson, with the writing lesson
+  third in every one. Gujarati: 34 chapters and 228 lessons -> 41 and 263.
+
+**What the inventory measured, and what was actually wrong.** The A1 inventory's
+`Jodaan` column stood at **0 of 11**. `ane` ("and") returned zero occurrences in
+228 lesson files, so a learner could not say *tea and milk* although both words
+are taught on facing pages of the same chapter. `nathi` returned zero too, so
+"I don't understand" could not be said at all. `maaf` and `kshama` were both
+absent, so there was no apology and no way to stop a stranger to ask anything.
+
+**The finding under the finding: this was never a script debt.** Ten of the
+eleven joining devices — *ane*, *athava*, *pan*, *ke*, *kemke*, *maate*,
+*tethi*, *jo*, *jyaare*, *je* — are spelled entirely in glyphs the track had
+already taught before chapter 30. Nobody had written the words down. The tranche
+spends exactly **one** new letter in seven chapters: the **ફ** that *maaf karo*
+required, and the apology is the only item in the run that needed one.
+
+**Repair came first, because it was the starkest gap.** Chapter 35 teaches that
+`nathi` REPLACES `chhe` rather than joining it; then *samajto nathi*, in the
+speaker-gender form that matches the learner; then `ફ`; then *maaf karo*, which
+both apologises and gets attention. A reader who is lost now has something to
+say about it.
+
+**Points closed in columns the tranche was not aiming at.** The negator alone
+closed the can't-say-I-don't-understand function; the complementiser gave
+`vicharvu` and `jaanvu` — both taught twenty-nine chapters ago — the first
+objects they have ever had; and the question family closed four points at once.
+Gujarati A1 coverage **100/210 -> 120/210 (48% -> 57%)**:
+
+| column | before | after |
+| --- | --- | --- |
+| Jodaan (joining and subordination) | 0/11 | **10/11** |
+| Prashna (asking questions) | 4/10 | 8/10 |
+| Sarvanaam (pronouns) | 4/8 | 6/8 |
+| Nakaar (negation) | 2/4 | 3/4 |
+| Vyavahaar (communicative functions) | 17/30 | 20/30 |
+
+Four spine omissions are realised as well: `COURTESY-SORRY`,
+`CONNECTIVE-BECAUSE`, `QUESTION-WHERE` and — through chapter 36's carrier node —
+the first segment `SPINE-DESCRIBE-QUALITIES` has ever held.
+
+**Left uncovered, each with its reason written into the inventory.** The
+distributive (`JOIN-04`) and `kevi rite` (`Q-06`) need no new glyph and are
+one-lesson jobs. `neither ... nor` (`NEG-04`, `ADV-06`) needs the `na ... na`
+correlative. `teo` (`PRON-04`) is the only one blocked by the script: it needs
+the independent vowel **ઓ**, which no lesson teaches — so that point now names
+its own fix as a script lesson rather than reading as missing vocabulary.
+
+**Reinforcement, decomposed rather than reported.** Total misses 283 -> 364, and
+a bare rise says nothing about whose debt it is, so it was measured against the
+same corpus without chapters 35-41:
+
+- **+41** the tranche's own atoms — the last chapters in the book, whose R3 and
+  R4 windows fall past the final lesson and cannot be serviced from inside it.
+- **+47** pre-existing atoms whose windows *did not exist* until the track grew.
+  R4 is distance 80-250; at 228 lessons an atom introduced at position 151 had
+  no R4 to miss, and at 263 it does. Nothing about those lessons changed.
+- **-4** of those 47, closed deliberately: chapter 41's *where* lesson reads the
+  chapter-22 row — *shaalaa*, *rasto*, the route map — cold, at distance ~106,
+  which is inside R4 rather than decorative.
+- **-3** pre-existing misses closed outright by the chapter-opening retrievals:
+  `chhe`, `hun` and `kem` each reach their R4 for the first time.
+
+R1 moved by only 4 across 38 new atoms, because every chapter opens by
+retrieving the two preceding items by name — the boundary fix, built in from the
+first chapter rather than added after the count rose.
+
+**Two defects only the compiled page showed.** The `[YOU RECALL: …]` cue renders
+raw, brackets and all, unless it is a list item — 239 corpus uses are bulleted
+and the 28 bare ones were all mine; they are bulleted now and render as
+*Recall: …* like every other cue. And the index's apparent dropping of the
+`ક્ય`/`જ્ય` conjuncts is a `pdftotext` extraction artifact, not a rendering
+defect: rasterising pages 231, 237 and 245 shows every conjunct set correctly,
+and `missing_character` is 0.
+
+### Verified
+
+- Whole package suite: 124 test files, 1777 passed. Every `check:*` gate green.
+- language-ladder: 39 files, 442 passed.
+- The book compiles under XeLaTeX with `missing_character = 0`, every warning
+  class at baseline, no undefined reference in the final pass, and three pages
+  were rasterised and read.
+- Ratchets held at zero: `scriptClosureViolations`, `neverTaughtGlyphs`,
+  `glyphLessonSpikes`, `durationViolations`, **`forwardReferences`** (three
+  previews I had written into chapters 37 and 39 named chapter-40 and chapter-41
+  headwords and were removed before they could count).
+- Taught glyphs 43 -> 44. Atoms taught 219 -> 257.
+
 ### Added — twenty new pre-A1 headwords, and the fifth-return slab that pays for them (HL-C286)
 
 - Add chapters 31-34 — "The Table Is Set", "Inside the House", "Sun, Sky, and

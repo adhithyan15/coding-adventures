@@ -1,0 +1,601 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 38,
+  "title": "Because, and Therefore",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:8c9e976a749c776c",
+  "lessons": [
+    {
+      "id": "GU-C34-kemke",
+      "sequence": 1930,
+      "title": "કેમકે (kemke) — because",
+      "headword": "કેમકે",
+      "romanization": "kemke",
+      "gloss": "because — the answer to a question this book could ask thirty chapters ago",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9312438188a28772",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One chapter back, the frames that report a thought. Three chapters back — and also thirty chapters back — the word for why."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "vichārũ chhũ ke, then kem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *vichārũ chhũ ke*, then *kem*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Since the third chapter of this book you have been able to ask કેમ?. You have never once been able to answer it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The answer is the question with the swallowing word stuck to it:"
+            },
+            {
+              "kind": "speech",
+              "text": "કેમ (why) + કે (that) = કેમકે (kemke) — because."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves are already yours; nothing here is new except the join. Gujarati answers why by saying, in effect, \"why-that\" — and then the reason follows as a whole sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "(what happened) કેમકે (kemke) (the reason)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kem — then kemke. The question, then the answer's opening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kem* — then *kemke*. The question, then the answer's opening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "any sentence, kemke, and a reason.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: any sentence, *kemke*, and a reason.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "ke alone, then kemke. One reports, one explains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *ke* alone, then *kemke*. One reports, one explains.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two words is કેમકે (kemke) built from, and what does each contribute? (કેમ, why, and કે, that.) Answer a why question about anything."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C34-kem-kemke",
+      "sequence": 1940,
+      "title": "કેમ? … કેમકે … (kem? … kemke …) — asking why, and answering it",
+      "headword": "કેમ? … કેમકે …",
+      "romanization": "kem? … kemke …",
+      "gloss": "the question and its answer, as one exchange",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1449b5d65f7e3a64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, the answering word. Three chapters back, at the same position in its chapter, the sentence that admits you are lost."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "kemke, and samajto nathī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *kemke*, and *samajto nathī*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The exchange, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both halves are yours, and they are the same three sounds twice over:"
+            },
+            {
+              "kind": "speech",
+              "text": "— કેમ? — why? — … કેમકે (kemke) … — … because …"
+            },
+            {
+              "kind": "speech",
+              "text": "Say them as a pair rather than as two lessons. The question word is inside the answer, which makes this one of the easiest exchanges in the language to hold: if you can ask it you can already say most of the reply."
+            },
+            {
+              "kind": "speech",
+              "text": "This is also where the repair kit pays off. If the reason comes back too fast, you now have both halves of that exchange too — ask kem, and if the answer outruns you, say samajto nathī and get it again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "ask kem?, then answer yourself with kemke and a reason.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: ask *kem?*, then answer yourself with *kemke* and a reason.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "the same, but reply samajto nathī and ask again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: the same, but reply *samajto nathī* and ask again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kem and kemke back to back until the pair is one motion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kem* and *kemke* back to back until the pair is one motion.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask why, answer it, and then say you did not follow the answer. Three sentences, all of them yours in the last four chapters."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C34-kemke-write",
+      "sequence": 1950,
+      "title": "કેમકે (kemke) reaches the page",
+      "headword": "કેમકે",
+      "romanization": "kemke",
+      "gloss": "because, on the page — four signs, all of them old",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:95b2f3dc8c75a15f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the word is its own pattern"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the word is its own pattern until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One chapter back you wrote કે. Write it once from memory before anything is uncovered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the word is its own pattern",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover કેમકે (kemke). Read it in two halves rather than four signs:"
+            },
+            {
+              "kind": "speech",
+              "text": "કે, મ, કે."
+            },
+            {
+              "kind": "speech",
+              "text": "The કે you wrote last chapter appears twice, with મ between them. Nothing here is new to the hand — the whole word is one old syllable, a known letter, and that syllable again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy કેમકે (kemke) once with the model in view. Check that both ે strokes sit at the same height."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write કેમકે (kemke) from memory, then uncover and compare. Which piece of it did you already write in the previous chapter? (કે — and it is in there twice.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C34-maate",
+      "sequence": 1960,
+      "title": "માટે (māṭe) — for, in order to",
+      "headword": "માટે",
+      "romanization": "māṭe",
+      "gloss": "for, in order to — the reason stated forwards instead of backwards",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64caa97e66b65b9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back: the word that answers why. Two chapters back, at the same place in its chapter: the word that joins two nouns."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "kemke, and ane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *kemke*, and *ane*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કેમકે (kemke) looks backwards — it names the cause of something that already happened. માટે (māṭe) looks forwards — it names what something is for:"
+            },
+            {
+              "kind": "speech",
+              "text": "(a thing) માટે (māṭe) — \"for …\""
+            },
+            {
+              "kind": "speech",
+              "text": "It follows the thing it applies to rather than preceding it, which is the Gujarati habit you have already met with the postpositions."
+            },
+            {
+              "kind": "speech",
+              "text": "The two are worth holding apart from the start. A cause and a purpose are different answers to the same why, and languages that use one word for both make their learners guess."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "something you can name, then māṭe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: something you can name, then *māṭe*.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "a kemke answer and a māṭe answer to the same question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: a *kemke* answer and a *māṭe* answer to the same question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "say what a thing is for.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: say what a thing is for.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of કેમકે and માટે looks back at a cause, and which looks forward to a purpose? (kemke back, māṭe forward.) Where does માટે stand? (After the thing it applies to.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C34-tethi",
+      "sequence": 1970,
+      "title": "તેથી (tethī) — therefore",
+      "headword": "તેથી",
+      "romanization": "tethī",
+      "gloss": "therefore — the reason first, the result second",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19695a51260027ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The two reason-words of this chapter so far: one looks back at a cause, one forward to a purpose."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "kemke, māṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *kemke*, *māṭe*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કેમકે (kemke) puts the result first and the reason second. તેથી (tethī) does the opposite — reason first, then the conclusion drawn from it:"
+            },
+            {
+              "kind": "speech",
+              "text": "(reason). તેથી (tethī) (result). — \"…, therefore …\""
+            },
+            {
+              "kind": "speech",
+              "text": "The word says so itself. તે is that, and the -થી ending means from — so તેથી (tethī) is literally from that, which is what a conclusion is. You have seen that -થી before, on the end of નથી, where it was the worn-down is; here it is the separate postposition meaning from. Same two letters, two different histories, and it is worth knowing they are not the same thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "a reason, then tethī, then the result.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: a reason, then *tethī*, then the result.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the same two facts joined by kemke, then by tethī. The order flips.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the same two facts joined by *kemke*, then by *tethī*. The order flips.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nathī and tethī back to back — the same ending, different jobs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nathī* and *tethī* back to back — the same ending, different jobs.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say two facts joined by kemke, then say them again with tethī. What changed? (The order — kemke puts the result first, tethī the reason.) Next chapter: if, and when."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

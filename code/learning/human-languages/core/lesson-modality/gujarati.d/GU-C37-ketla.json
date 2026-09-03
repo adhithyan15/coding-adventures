@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C37-ketla",
+    "language": "gujarati",
+    "chapter": 41,
+    "sequence": 2120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63c1d9c88bb0e4cd"
+  },
+  "findings": []
+}

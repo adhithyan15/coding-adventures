@@ -1,0 +1,17 @@
+{
+  "id": "GU-EXT-045-REASONS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask why and answer it, write kemke, say what a thing is for, and draw a conclusion with tethi.",
+  "prerequisites": [
+    "GU-EXT-044-KE-FRAMES"
+  ],
+  "lessons": [
+    "GU-C34-kemke",
+    "GU-C34-kem-kemke",
+    "GU-C34-kemke-write",
+    "GU-C34-maate",
+    "GU-C34-tethi"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:04aaf6467afacdc4",
+  "lessonIds": [
+    "GU-C31-nathi",
+    "GU-C31-samajto-nathi",
+    "GU-W08-pha",
+    "GU-C31-maaf",
+    "GU-C31-repair-five"
+  ],
+  "tex": "gujarati/book/chapters/ch35-not-and-sorry.tex"
+}

@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "GU-W08-pha",
+    "language": "gujarati",
+    "chapter": 35,
+    "sequence": 1800,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:55c5205943b99e6f",
+    "detachableSegments": [
+      "Script — meet one form",
+      "Writing — notice and trace",
+      "Writing — guided copy, model in view"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

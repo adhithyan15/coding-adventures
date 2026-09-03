@@ -59,6 +59,9 @@ onto known continuity debt.
 1. Grow high-frequency concrete vocabulary in tiny listening-first runways.
 2. Add location, time, possession, simple requests, repair, negation, and basic
    question patterns with explicit Gujarati agreement and word order.
+   **Repair, negation, joining and the question family are done** — chapters
+   35-41 (HL-C316) take the A1 joining column from 0 of 11 to 10 and add the
+   apology the book had no word for. Location, time and possession remain.
 3. Expand handwriting from single forms and short words to short dictated
    messages, while continuing guided copy, delayed copy, and free recall.
 4. Add connected mini-dialogues, short readings, speaker audio, and cumulative

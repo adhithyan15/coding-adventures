@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "GU-C36-te-write",
+    "language": "gujarati",
+    "chapter": 40,
+    "sequence": 2050,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dc0352c151c5f581",
+    "detachableSegments": [
+      "Script — the same stroke, a third time",
+      "Writing — guided copy, model in view"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

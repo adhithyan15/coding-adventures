@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:02c62f74727b74b4",
+  "lessonIds": [
+    "GU-C37-kon",
+    "GU-C37-kyaan",
+    "GU-C37-kyaan-write",
+    "GU-C37-kyaare",
+    "GU-C37-ketla"
+  ],
+  "tex": "gujarati/book/chapters/ch41-question-words.tex"
+}

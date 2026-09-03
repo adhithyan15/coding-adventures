@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:8c9e976a749c776c",
+  "lessonIds": [
+    "GU-C34-kemke",
+    "GU-C34-kem-kemke",
+    "GU-C34-kemke-write",
+    "GU-C34-maate",
+    "GU-C34-tethi"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "gujarati/narration/ch38.txt",
+  "json": "gujarati/narration/ch38.json",
+  "textHash": "fnv1a64:760dd0b388b6ccab",
+  "jsonHash": "fnv1a64:61fb8b622495e4ea",
+  "findings": []
+}

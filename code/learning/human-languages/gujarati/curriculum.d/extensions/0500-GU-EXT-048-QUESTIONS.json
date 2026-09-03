@@ -1,0 +1,17 @@
+{
+  "id": "GU-EXT-048-QUESTIONS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask who, where, when and how many, write kyaan, and hear the ka- ja- ta- pattern the whole family is built on.",
+  "prerequisites": [
+    "GU-EXT-047-PRONOUNS"
+  ],
+  "lessons": [
+    "GU-C37-kon",
+    "GU-C37-kyaan",
+    "GU-C37-kyaan-write",
+    "GU-C37-kyaare",
+    "GU-C37-ketla"
+  ]
+}

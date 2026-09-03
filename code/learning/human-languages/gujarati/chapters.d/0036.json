@@ -1,0 +1,23 @@
+{
+  "chapter": 36,
+  "title": "And, Or, But",
+  "label": "ch:gu-and-or-but",
+  "canDo": "I can join two things or two whole sentences with and, offer a choice with or, set one thing against another with but, and say that something applies too.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GU-C32-pan",
+    "kind": "task",
+    "summary": "The three coordinators, and the first two-clause sentence this book can make. ane joins two nouns and two whole sentences and costs neither of them anything; athava asks the listener to choose; pan sets one against the other -- and moved to just after a noun, the same word becomes 'also', which is the first time in this book that position alone decides a word's job.",
+    "assesses": [
+      "GU-JOIN-ANE-01",
+      "GU-JOIN-ANE-CLAUSE-01",
+      "GU-SCRIPT-ANE-01",
+      "GU-JOIN-ATHAVA-01",
+      "GU-JOIN-PAN-01",
+      "GU-JOIN-PAN-ALSO-01"
+    ],
+    "note": "Carried on SPINE-DESCRIBE-QUALITIES because coordination has no canonical spine concept of its own and that node is A1 and empty. The level is the honest one: the A1 inventory enumerates all eleven joining devices, while the corpus spine stages CONNECTIVE-SO and CONNECTIVE-IF at B1 -- so the pure coordinators take a track-local concept rather than claiming a canonical concept the ladder places higher."
+  }
+}

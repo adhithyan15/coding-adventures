@@ -1,0 +1,16 @@
+{
+  "id": "GU-PATH-036",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "GU-C37-kon",
+    "GU-C37-kyaan",
+    "GU-C37-kyaan-write",
+    "GU-C37-kyaare",
+    "GU-C37-ketla"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-048-QUESTIONS"
+  ],
+  "after": []
+}
