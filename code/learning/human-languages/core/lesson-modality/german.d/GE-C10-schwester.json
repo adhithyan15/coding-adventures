@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C10-schwester",
+    "language": "german",
+    "chapter": 16,
+    "sequence": 290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a109c51fd8c6bfe7"
+  },
+  "findings": []
+}

@@ -632,7 +632,29 @@ const LIST_ITEM = /^- /;
  * instruction to wait is no ink at all.
  */
 function stripDeliveryCues(line: string): string | undefined {
-  let text = line.replace(PAUSE_CUE, "");
+  // A `[YOU SAY: ...]` filling a whole NON-BULLET line. `bookVoice` routes
+  // bullets through `renderCueList`, which puts every cue into book voice --- but
+  // a cue authored as a plain paragraph never reached that path, so it was
+  // emitted verbatim and LaTeX-escaped into `{[}YOU SAY: ...{]}` ON THE PRINTED
+  // PAGE. 93 stage directions across 30 chapter files in 10 tracks shipped that
+  // way (spanish 14 files, hindi 5, gujarati 4, tamil 3), and no gate could see
+  // it: `check:books` compares the generator against itself, and the escaping
+  // makes it valid LaTeX that compiles cleanly.
+  //
+  // Same treatment a lone cue gets inside a list, so the two paths agree.
+  const whole = parseCue(line.trim());
+  if (whole) return `*${cueVoice(whole.verb).item}:* ${whole.content}`;
+  // The same cue INLINE: as a prefix followed by prose ("[YOU SAY: x] Point to
+  // the second word"), or several in one sentence ("[YOU SAY: a], [YOU SAY: b]").
+  // A lazy match to the first `]` is safe HERE and would not be safe for the
+  // whole-line form above: measured across every lesson in the corpus, 26 lines
+  // carry trailing prose after the close bracket and NOT ONE has a `[` inside
+  // the cue content, so there is nothing for a lazy match to truncate.
+  const inline = line.replace(
+    /\[YOU ([A-Z]+(?: [A-Z]+)*):[ \t]*([^\]]*)\]/g,
+    (_all, verb: string, content: string) => `*${cueVoice(verb).item}:* ${content}`,
+  );
+  let text = inline.replace(PAUSE_CUE, "");
   const repeat = REPEAT_CUE.exec(text);
   if (repeat) {
     const times = Number(repeat[1]);

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C10-mutter",
+    "language": "german",
+    "chapter": 16,
+    "sequence": 284,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88ddb220c62c1634"
+  },
+  "findings": []
+}

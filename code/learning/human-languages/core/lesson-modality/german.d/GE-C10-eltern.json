@@ -3,7 +3,7 @@
     "id": "GE-C10-eltern",
     "language": "german",
     "chapter": 16,
-    "sequence": 285,
+    "sequence": 286,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:48a6c99b58397411"
+    "sourceHash": "fnv1a64:0b293ee3e80b8222"
   },
   "findings": []
 }

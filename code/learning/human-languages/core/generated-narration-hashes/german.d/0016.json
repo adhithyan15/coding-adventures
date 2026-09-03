@@ -1,16 +1,27 @@
 {
   "language": "german",
   "chapter": 16,
-  "sourceHash": "fnv1a64:caa53a4ddcd6d498",
+  "sourceHash": "fnv1a64:a2f146574616b85e",
   "lessonIds": [
+    "GE-C10-vater",
+    "GE-C10-vater-pater",
+    "GE-C10-mutter",
+    "GE-C10-mutter-mater",
     "GE-C10-eltern",
+    "GE-C10-bruder",
+    "GE-C10-bruder-frater",
+    "GE-C10-schw",
+    "GE-C10-schwester",
+    "GE-C10-schwester-soror",
+    "GE-C10-geschwister-wort",
+    "GE-C10-ge-kollektiv",
     "GE-C10-geschwister"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 13,
+  "drivablePrefix": 13,
   "text": "german/narration/ch16.txt",
   "json": "german/narration/ch16.json",
-  "textHash": "fnv1a64:ebb69e466d5d6c82",
-  "jsonHash": "fnv1a64:2c2bc824e739b514",
+  "textHash": "fnv1a64:f8ace45ea21cb6c7",
+  "jsonHash": "fnv1a64:16379659f3da3bf4",
   "findings": []
 }

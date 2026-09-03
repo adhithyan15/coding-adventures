@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C10-vater-pater",
+    "language": "german",
+    "chapter": 16,
+    "sequence": 283,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26404df29dd5a4b9"
+  },
+  "findings": []
+}

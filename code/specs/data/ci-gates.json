@@ -158,6 +158,24 @@
         "code/specs/grammar-tools.json"
       ]
     },
+    "mosaic-grammar-regen-check": {
+      "scope": "job",
+      "description": "Regenerates the three Mosaic language compilers' combined _grammar.rs from their .tokens/.grammar sources and rejects a stale committed file. These three were the only _grammar.rs files in the repository that no sweep covered, so their sources drifted unnoticed (#14067).",
+      "packages": [
+        "rust/grammar-tools",
+        "rust/programs/grammar-tools",
+        "rust/mosmodel-compiler",
+        "rust/moslayout-compiler",
+        "rust/mosstyle-compiler"
+      ],
+      "paths": [
+        "code/grammars/mosmodel/**",
+        "code/grammars/moslayout/**",
+        "code/grammars/mosstyle/**",
+        "code/packages/rust/grammar-tools/**",
+        "code/programs/rust/grammar-tools/**"
+      ]
+    },
     "unicode17-elixir-conformance": {
       "scope": "job",
       "description": "Generated Elixir Unicode 17 tables against every official normalization/casing vector.",

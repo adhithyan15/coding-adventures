@@ -1,6 +1,6 @@
 {
   "chapter": 16,
-  "title": "Family",
+  "title": "The Pair That Proves Grimm's Law",
   "label": "ch:family",
   "canDo": "I can identify close family members in German and say who someone is.",
   "spineNodes": [
@@ -9,8 +9,21 @@
   "payoff": {
     "lesson": "GE-C10-geschwister",
     "kind": "task",
-    "summary": "Complete GE-C10-geschwister, the canonical closing checkpoint, and demonstrate the chapter promise: identify close family members in German and say who someone is.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Four people and two words for groups of them, and a sound law legible across all four. Vater against pater is p becoming f; Mutter against mater is t becoming th and then moving again inside German; Bruder against frater is a breathy b flattening one way in Germanic and turning to f in Latin, so the swap runs the opposite way; and Schwester against soror is the one that did not move at all, because the law touches stops and leaves an s alone. Every word in the chapter is inherited, where every month name was bought.",
+    "assesses": [
+      "GE-LEX-VATER-01",
+      "GE-ETYMON-VATER-PATER-01",
+      "GE-LEX-MUTTER-01",
+      "GE-ETYMON-MUTTER-MATER-01",
+      "GE-LEX-ELTERN-01",
+      "GE-LEX-BRUDER-01",
+      "GE-ETYMON-BRUDER-FRATER-01",
+      "GE-SOUND-SCHW-01",
+      "GE-LEX-SCHWESTER-01",
+      "GE-ETYMON-SCHWESTER-SOROR-01",
+      "GE-LEX-GESCHWISTER-01",
+      "GE-GRAMMAR-GE-KOLLEKTIV-01"
+    ],
+    "note": "Chapter 16 is generated from schema-v2 lessons, so the payoff is atom-scored, and it assesses all twelve the chapter introduces. Twelve is exactly maxNewAtomsPerChapter and the chapter is therefore NOT split -- the rule is the ceiling, not the median. It fits at twelve only because three things it argues are already owned and get spent rather than re-taught: GE-GRAMMAR-SOUND-LAW-01 from chapter 6, GE-SOUND-V-AS-F-01 from chapter 7, and GE-GRAMMAR-NATIVE-VS-LOAN-01 from chapter 9. The culture claim rides as a culture claim only, as GE-CULTURE-DREI-SCHICHTEN-01 does in chapter 12, so it does not consume a thirteenth atom slot."
   }
 }

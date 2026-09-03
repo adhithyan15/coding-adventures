@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C10-geschwister-wort",
+    "language": "german",
+    "chapter": 16,
+    "sequence": 292,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:466d07305478c143"
+  },
+  "findings": []
+}
