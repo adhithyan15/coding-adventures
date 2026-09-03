@@ -42,6 +42,13 @@ on:
       # passed; without this path the same change would still not build
       # anything. See #13925.
       - code/packages/rust/mosaic-emit-react/**
+      # XAML is the one backend nobody can build on a non-Windows machine, so
+      # this lane is the ONLY place its emitted csproj and markup are ever
+      # compiled -- and engram-capi is the crate whose Windows exports nothing
+      # else verifies. Without these paths a change to either merges green and
+      # first surfaces when a release is dispatched.
+      - code/packages/rust/mosaic-emit-xaml/**
+      - code/packages/rust/engram-capi/**
   workflow_dispatch:
     inputs:
       version:
@@ -636,10 +643,79 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  # Windows only, and not as a scoping choice: WinUI's markup compiler is a
+  # Windows-native tool, so `dotnet` restores and type-checks elsewhere and then
+  # stops with `XamlCompiler output file was not created`.
+  #
+  # This is also the one backend nobody can build on a non-Windows machine, so
+  # unlike the other four its payload has never been launched by hand. The
+  # assertions here are correspondingly the only thing standing between a green
+  # build and a broken download.
+  build-xaml:
+    name: Build the XAML app (windows)
+    needs: validate
+    runs-on: windows-latest
+    steps:
+      - name: Checkout the validated release commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      # .NET probes for native libraries BESIDE the executable, so the script
+      # copies the engine into the publish output and asserts it landed. An app
+      # published without it launches and every deck operation silently does
+      # nothing -- and `dotnet publish` succeeds either way.
+      - name: Build and publish the XAML app
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash code/programs/mosaic/engram-app/scripts/build-native.sh \
+            --backend xaml --output "$RUNNER_TEMP/engram-xaml" --build
+
+      - name: Archive the artifact for publication
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          publish="$RUNNER_TEMP/engram-xaml/xaml/publish"
+          if [ ! -d "$publish" ]; then
+            echo "no XAML publish output at $publish" >&2
+            exit 1
+          fi
+          mkdir -p release-assets
+          python code/scripts/engram_release.py archive-xaml \
+            --version "$RELEASE_VERSION" --platform windows \
+            --source "$publish" --output-dir release-assets \
+            --commit "$RELEASE_COMMIT"
+          ls -la release-assets
+
+      - name: Upload the XAML payload
+        uses: actions/upload-artifact@v7
+        with:
+          name: engram-xaml-windows
+          path: release-assets/*
+          if-no-files-found: error
+          retention-days: 7
+
   publish:
     name: Publish one Engram release
     if: github.event_name == 'workflow_dispatch'
-    needs: [validate, build-web, build-desktop, build-compose, build-swiftui, build-flutter, build-qt]
+    needs: [validate, build-web, build-desktop, build-compose, build-swiftui, build-flutter, build-qt, build-xaml]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -716,6 +792,10 @@ jobs:
             lane checks per platform, because an engine present in the wrong
             one of those produces an app that launches with every deck
             operation silently unavailable.
+
+            **A XAML / WinUI 3 build is included for Windows** — a genuine
+            WinUI application from the same Mosaic package, carrying the engine
+            beside its executable where .NET probes for it.
 
             **A Qt build is included for macOS**, deployed with `macdeployqt`
             so the Qt frameworks travel inside the bundle — the app runs

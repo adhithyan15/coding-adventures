@@ -82,6 +82,7 @@ class ArtifactNamesTests(unittest.TestCase):
                 "engram-flutter-macos-v0.4.0.zip",
                 "engram-flutter-windows-v0.4.0.zip",
                 "engram-qt-macos-v0.4.0.zip",
+                "engram-xaml-windows-v0.4.0.zip",
             ],
         )
 
@@ -1676,6 +1677,247 @@ class MachOReaderTests(unittest.TestCase):
             engram_release.non_relocatable_dependencies(fat, depth_in_bundle=2),
             ["/opt/homebrew/lib/libx.dylib"],
         )
+
+
+def _pe_with_exports(names: list[str]) -> bytes:
+    """A minimal PE32+ DLL exporting exactly these names.
+
+    Synthesised, and cross-checked against real Windows DLLs: the parser reads
+    `CoreMessagingXP.dll`, `DwmSceneI.dll` and friends from the WindowsAppSDK
+    NuGet package and returns their genuine export names, while the managed
+    `app.dll` and apphost `app.exe` from a `dotnet publish -r win-x64` return
+    zero. That cross-check is what caught the parser reading
+    `AddressOfFunctions` (+28) where `AddressOfNames` (+32) belongs -- a
+    fixture built from the same wrong layout would have agreed with it.
+    """
+
+    section_rva, section_offset = 0x1000, 0x400
+    blob = bytearray()
+
+    def rva(offset: int) -> int:
+        return section_rva + offset
+
+    # Export directory, then the name-pointer array, then the strings.
+    directory = bytearray(40)
+    names_array_offset = 40
+    strings_offset = names_array_offset + 4 * len(names)
+    struct.pack_into("<I", directory, 24, len(names))          # NumberOfNames
+    struct.pack_into("<I", directory, 28, rva(strings_offset))  # AddressOfFunctions
+    struct.pack_into("<I", directory, 32, rva(names_array_offset))  # AddressOfNames
+    blob += directory
+
+    strings = bytearray()
+    pointers = bytearray()
+    for name in names:
+        pointers += struct.pack("<I", rva(strings_offset + len(strings)))
+        strings += name.encode() + b"\x00"
+    blob += pointers + strings
+
+    optional = bytearray(240)
+    struct.pack_into("<H", optional, 0, 0x20B)  # PE32+
+    struct.pack_into("<II", optional, 112, rva(0), len(blob))  # export directory
+
+    section = bytearray(40)
+    section[:8] = b".rdata\x00\x00"
+    struct.pack_into("<IIII", section, 8, len(blob), section_rva, len(blob), section_offset)
+
+    header = b"PE\x00\x00" + struct.pack("<HHIIIHH", 0x8664, 1, 0, 0, 0, len(optional), 0x2022)
+    image = bytearray(b"MZ" + b"\x00" * 0x3E)
+    struct.pack_into("<I", image, 0x3C, 0x40)
+    image += header + optional + section
+    image += b"\x00" * (section_offset - len(image))
+    image += blob
+    return bytes(image)
+
+
+ENGINE_EXPORTS = [f"eg_symbol_{index}" for index in range(24)]
+
+
+def _write_xaml_publish(
+    root: Path,
+    *,
+    engine: bool = True,
+    exe: bool = True,
+    runtimeconfig: bool = True,
+    deps: bool = True,
+    flattened: bool = True,
+    engine_exports: list[str] | None = None,
+) -> Path:
+    """A stand-in for what `dotnet publish` writes for the WinUI app."""
+
+    publish = root / "xaml" / "publish"
+    publish.mkdir(parents=True)
+    if exe:
+        (publish / "EngramApp.exe").write_bytes(b"MZ" + b"\x00" * 128)
+    (publish / "EngramApp.dll").write_bytes(_pe_with_exports([]))
+    if runtimeconfig:
+        (publish / "EngramApp.runtimeconfig.json").write_text("{}\n", encoding="utf-8")
+    if deps:
+        (publish / "EngramApp.deps.json").write_text("{}\n", encoding="utf-8")
+    (publish / "Assets").mkdir()
+    if engine:
+        (publish / "engram_capi.dll").write_bytes(
+            _pe_with_exports(ENGINE_EXPORTS if engine_exports is None else engine_exports)
+        )
+    natives = publish / "runtimes" / "win-x64" / "native"
+    natives.mkdir(parents=True)
+    (natives / "Microsoft.WindowsAppRuntime.Bootstrap.dll").write_bytes(
+        _pe_with_exports(["DllGetActivationFactory"])
+    )
+    if flattened:
+        (publish / "Microsoft.WindowsAppRuntime.Bootstrap.dll").write_bytes(
+            _pe_with_exports(["DllGetActivationFactory"])
+        )
+    return publish
+
+
+class ArchiveXamlTests(unittest.TestCase):
+    def test_archives_the_publish_output(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(root)
+            output = engram_release.archive_xaml(
+                "0.4.0", "windows", publish, root / "out", COMMIT
+            )
+            self.assertEqual(output.name, "engram-xaml-windows-v0.4.0.zip")
+            self.assertIn(output.name, engram_release.artifact_names("0.4.0"))
+            with zipfile.ZipFile(output) as archive:
+                self.assertIn(
+                    "engram-xaml-windows-v0.4.0/Engram/engram_capi.dll",
+                    archive.namelist(),
+                )
+
+    def test_refuses_output_without_the_engine(self) -> None:
+        # .NET probes for native libraries BESIDE the executable, so an app
+        # published without the engine there launches with every deck operation
+        # silently unavailable -- and `dotnet publish` succeeds either way.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(root, engine=False)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_xaml(
+                    "0.4.0", "windows", publish, root / "out", COMMIT
+                )
+            self.assertIn("no engram_capi.dll", str(caught.exception))
+
+    def test_refuses_output_with_no_executable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(root, exe=False)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_xaml(
+                    "0.4.0", "windows", publish, root / "out", COMMIT
+                )
+            self.assertIn("EngramApp.exe apphost", str(caught.exception))
+
+    def test_a_managed_dll_does_not_satisfy_the_engine_check(self) -> None:
+        # `EngramApp.dll` is the managed assembly and sits right beside the
+        # engine; a check matching any `.dll` would pass on a publish output
+        # that never received the native library.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(root, engine=False)
+            self.assertTrue((publish / "EngramApp.dll").is_file())
+            with self.assertRaises(ValueError):
+                engram_release.archive_xaml(
+                    "0.4.0", "windows", publish, root / "out", COMMIT
+                )
+
+    def test_refuses_a_hard_link(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(root)
+            secret = root / "outside.txt"
+            secret.write_text("TOKEN\n", encoding="utf-8")
+            try:
+                os.link(secret, publish / "innocuous.dat")
+            except OSError:
+                self.skipTest("filesystem does not support hard links")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_xaml(
+                    "0.4.0", "windows", publish, root / "out", COMMIT
+                )
+            self.assertIn("hard link", str(caught.exception))
+
+    def test_refuses_an_engine_that_exports_nothing(self) -> None:
+        # `MZ` is not a discriminator: every PE starts with it, including this
+        # app's own managed assembly. Copying `EngramApp.dll` over
+        # `engram_capi.dll` passed every check this lane had -- an app that
+        # launches into a UI where nothing works, on the ONE platform where
+        # nobody can run the payload by hand. `build-native.sh`'s `nm` gate has
+        # no Windows arm and falls through to "unknown", so nothing else
+        # covered it either.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(root, engine_exports=[])
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_xaml(
+                    "0.4.0", "windows", publish, root / "out", COMMIT
+                )
+            self.assertIn("exports only 0 eg_* symbols", str(caught.exception))
+
+    def test_refuses_a_partially_exporting_engine(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(root, engine_exports=["eg_a", "eg_b"])
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_xaml(
+                    "0.4.0", "windows", publish, root / "out", COMMIT
+                )
+            self.assertIn("exports only 2", str(caught.exception))
+
+    def test_refuses_output_missing_its_runtime_metadata(self) -> None:
+        for kwargs, expected in [
+            ({"runtimeconfig": False}, "runtimeconfig"),
+            ({"deps": False}, "deps.json"),
+        ]:
+            with self.subTest(**kwargs):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    publish = _write_xaml_publish(root, **kwargs)
+                    with self.assertRaises(ValueError) as caught:
+                        engram_release.archive_xaml(
+                            "0.4.0", "windows", publish, root / "out", COMMIT
+                        )
+                    self.assertIn(expected, str(caught.exception))
+
+    def test_refuses_natives_left_only_under_runtimes(self) -> None:
+        # `FlattenNativeRuntimeDlls` copies the WindowsAppSDK natives beside the
+        # executable because the unpackaged bootstrap looks for them there --
+        # but it runs into `$(OutDir)` and this lane archives `$(PublishDir)`.
+        # The csproj guards its `.pri` and `.xbf` against exactly this and never
+        # guarded the natives.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(root, flattened=False)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_xaml(
+                    "0.4.0", "windows", publish, root / "out", COMMIT
+                )
+            message = str(caught.exception)
+            self.assertIn("only under runtimes/win-x64/native", message)
+            self.assertIn("Bootstrap", message)
+
+    def test_an_incidental_exe_does_not_stand_in_for_the_apphost(self) -> None:
+        # `UseAppHost=false`, or an apphost the SDK declined to generate,
+        # produces exactly this shape: a publish output with some `.exe` in it
+        # and nothing launchable.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            publish = _write_xaml_publish(root, exe=False)
+            (publish / "createdump.exe").write_bytes(b"MZ" + b"\x00" * 128)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_xaml(
+                    "0.4.0", "windows", publish, root / "out", COMMIT
+                )
+            self.assertIn("EngramApp.exe apphost", str(caught.exception))
+
+    def test_xaml_is_windows_only(self) -> None:
+        # Not a scoping choice: WinUI's markup compiler is a Windows-native
+        # tool, so `dotnet` restores and type-checks elsewhere and then stops.
+        self.assertEqual(sorted(engram_release.XAML_TARGETS), ["windows"])
+        with self.assertRaises(ValueError):
+            engram_release.xaml_artifact_name("0.4.0", "macos")
 
 
 class CommandLineTests(unittest.TestCase):
