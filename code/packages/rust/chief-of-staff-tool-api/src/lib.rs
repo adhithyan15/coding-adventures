@@ -399,6 +399,76 @@ impl JsonSchema {
     }
 
     /// Validate a value against this schema.
+    /// Validate a value the CALLER supplied, additionally refusing an agent
+    /// identity smuggled through a position no schema describes.
+    ///
+    /// Separate from [`JsonSchema::validate_value`] on purpose. S-I7's second
+    /// clause is *the agent cannot supply one*, which is about arguments. The
+    /// first clause -- the view contains no agent identity -- is enforced by
+    /// refusing peer-naming tools at registration, not by rejecting values.
+    ///
+    /// Applying this to outputs breaks tools that legitimately return
+    /// principal ids: the smart-home audit and access-review readers exist to
+    /// report on principals, and they are kept away from V1 agents by the
+    /// registration gate rather than by mangling their results.
+    pub fn validate_supplied_value(&self, value: &JsonValue) -> ToolValidationReport {
+        let mut report = self.validate_value(value);
+        let mut errors = Vec::new();
+        self.reject_supplied_identities(value, "$", &mut errors);
+        if !errors.is_empty() {
+            report.errors.extend(errors);
+            report.ok = false;
+        }
+        report
+    }
+
+    /// Walk only the positions the schema does not describe.
+    fn reject_supplied_identities(
+        &self,
+        value: &JsonValue,
+        path: &str,
+        errors: &mut Vec<ToolValidationIssue>,
+    ) {
+        match (self, value) {
+            (Self::Any, _) => reject_agent_identity_keys(value, path, errors),
+            (
+                Self::Object {
+                    properties,
+                    allow_unknown_fields,
+                    ..
+                },
+                JsonValue::Object(fields),
+            ) => {
+                for (name, child) in fields {
+                    let child_path = format!("{path}.{name}");
+                    match properties.iter().find(|property| property.name == *name) {
+                        Some(property) => {
+                            property
+                                .schema
+                                .reject_supplied_identities(child, &child_path, errors);
+                        }
+                        None if *allow_unknown_fields => {
+                            if names_an_agent(name) {
+                                errors.push(issue(
+                                    child_path.clone(),
+                                    "field names an agent other than the caller",
+                                ));
+                            }
+                            reject_agent_identity_keys(child, &child_path, errors);
+                        }
+                        None => {}
+                    }
+                }
+            }
+            (Self::Array { items }, JsonValue::Array(values)) => {
+                for (index, item) in values.iter().enumerate() {
+                    items.reject_supplied_identities(item, &format!("{path}[{index}]"), errors);
+                }
+            }
+            _ => {}
+        }
+    }
+
     pub fn validate_value(&self, value: &JsonValue) -> ToolValidationReport {
         let mut report = ToolValidationReport::ok(value.clone());
         self.validate_value_at(value, "$", &mut report.errors);
@@ -959,6 +1029,39 @@ const AGENT_IDENTITY_PROPERTY_NAMES: &[&str] = &[
 /// `validate_schema_key` permits it though, and `to_json_schema_value` exists
 /// to project these into provider formats where camelCase is idiomatic, so the
 /// convention is not enforced anywhere and should not be relied on.
+/// Reject an agent identity appearing anywhere inside an unverified value.
+///
+/// Walks the actual JSON rather than a schema, because this runs where a
+/// schema stopped describing things. Recurses through objects and arrays so a
+/// peer buried at `spec.deliver_to.agent_id` is caught as surely as one at the
+/// top.
+fn reject_agent_identity_keys(
+    value: &JsonValue,
+    path: &str,
+    errors: &mut Vec<ToolValidationIssue>,
+) {
+    match value {
+        JsonValue::Object(fields) => {
+            for (name, child) in fields {
+                let child_path = format!("{path}.{name}");
+                if names_an_agent(name) {
+                    errors.push(issue(
+                        child_path.clone(),
+                        "field names an agent other than the caller",
+                    ));
+                }
+                reject_agent_identity_keys(child, &child_path, errors);
+            }
+        }
+        JsonValue::Array(items) => {
+            for (index, item) in items.iter().enumerate() {
+                reject_agent_identity_keys(item, &format!("{path}[{index}]"), errors);
+            }
+        }
+        _ => {}
+    }
+}
+
 fn normalize_property_name(property: &str) -> String {
     property
         .chars()
@@ -3512,7 +3615,9 @@ impl InMemoryToolRegistry {
             return report;
         };
 
-        let argument_report = definition.input_schema.validate_value(&request.arguments);
+        let argument_report = definition
+            .input_schema
+            .validate_supplied_value(&request.arguments);
         report.errors.extend(argument_report.errors);
         report.warnings.extend(argument_report.warnings);
         report.ok = report.errors.is_empty();
@@ -5550,6 +5655,147 @@ fn json_schema_type(type_name: &str) -> JsonValue {
 
 #[cfg(test)]
 mod tests {
+
+    fn obj(fields: Vec<(&str, JsonValue)>) -> JsonValue {
+        JsonValue::Object(
+            fields
+                .into_iter()
+                .map(|(name, value)| (name.to_string(), value))
+                .collect(),
+        )
+    }
+
+    fn text(value: &str) -> JsonValue {
+        JsonValue::String(value.to_string())
+    }
+
+    #[test]
+    fn an_any_position_still_takes_arbitrary_structure() {
+        // The point of the value-level check is that it closes S-I7's second
+        // clause WITHOUT closing the open-by-design positions. A job spec and
+        // a metadata bag must keep working.
+        let schema = JsonSchema::Any;
+        let cases = vec![
+            obj(vec![
+                ("command", text("build")),
+                ("args", JsonValue::Array(vec![text("--release")])),
+            ]),
+            obj(vec![(
+                "nested",
+                obj(vec![("deeply", JsonValue::Bool(true))]),
+            )]),
+            JsonValue::Array(vec![
+                JsonValue::Bool(false),
+                obj(vec![("still", text("fine"))]),
+            ]),
+            text("a bare string"),
+            JsonValue::Null,
+        ];
+        for value in cases {
+            assert!(
+                schema.validate_supplied_value(&value).ok,
+                "an Any position must still accept {value:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn an_any_position_rejects_a_smuggled_agent_identity() {
+        // `job.install` takes `spec: Any`, and the first case is the exact
+        // payload `tools_with_unverifiable_schema`'s doc cites as validating
+        // clean before this change.
+        let schema = JsonSchema::Any;
+        let cases = vec![
+            obj(vec![("run_as_agent_id", text("peer-7"))]),
+            obj(vec![(
+                "deliver_to",
+                obj(vec![("agent_id", text("peer-7"))]),
+            )]),
+            obj(vec![("recipients", JsonValue::Array(vec![text("peer-7")]))]),
+            JsonValue::Array(vec![obj(vec![("consumer_agent_id", text("peer-7"))])]),
+            obj(vec![(
+                "a",
+                obj(vec![(
+                    "b",
+                    JsonValue::Array(vec![obj(vec![("principal_id", text("peer-7"))])]),
+                )]),
+            )]),
+            obj(vec![("host_id", text("peer-7"))]),
+        ];
+        for value in cases {
+            let report = schema.validate_supplied_value(&value);
+            assert!(!report.ok, "an Any position must reject {value:?}");
+            assert!(
+                report
+                    .errors
+                    .iter()
+                    .any(|error| error.message.contains("names an agent")),
+                "the error must say why, got {:?}",
+                report.errors
+            );
+        }
+    }
+
+    #[test]
+    fn unknown_fields_are_open_but_may_not_name_an_agent() {
+        // `allow_unknown_fields` is an unverified position for the same reason
+        // `Any` is: nothing describes what may appear there.
+        let schema = JsonSchema::Object {
+            properties: vec![SchemaProperty::new("known", JsonSchema::String)],
+            required: vec!["known".to_string()],
+            allow_unknown_fields: true,
+        };
+        let fine = obj(vec![
+            ("known", text("x")),
+            ("extra", obj(vec![("anything", JsonValue::Bool(true))])),
+        ]);
+        assert!(schema.validate_supplied_value(&fine).ok);
+
+        let smuggled = obj(vec![
+            ("known", text("x")),
+            ("consumer_agent_id", text("peer-7")),
+        ]);
+        assert!(!schema.validate_supplied_value(&smuggled).ok);
+
+        let nested = obj(vec![
+            ("known", text("x")),
+            ("extra", obj(vec![("agent_id", text("peer-7"))])),
+        ]);
+        assert!(!schema.validate_supplied_value(&nested).ok);
+    }
+
+    #[test]
+    fn the_check_runs_on_the_invocation_path_for_a_real_builtin() {
+        // Not a synthetic schema: `job.install` is a real Tier1 built-in whose
+        // `spec` is `Any`, and this is the path an agent's arguments take.
+        let definition = builtin_tool_definition("job.install").expect("job.install is a built-in");
+
+        let smuggled = obj(vec![
+            ("spec", obj(vec![("run_as_agent_id", text("peer-7"))])),
+            ("idempotency_key", text("k")),
+        ]);
+        assert!(
+            !definition
+                .input_schema
+                .validate_supplied_value(&smuggled)
+                .ok
+        );
+
+        let ordinary = obj(vec![(
+            "spec",
+            obj(vec![
+                ("schedule", text("0 * * * *")),
+                ("command", text("sync")),
+            ]),
+        )]);
+        assert!(
+            definition
+                .input_schema
+                .validate_supplied_value(&ordinary)
+                .ok,
+            "an ordinary job spec must still install"
+        );
+    }
 
     #[test]
     fn the_builtin_catalog_names_another_agent_in_exactly_one_place() {

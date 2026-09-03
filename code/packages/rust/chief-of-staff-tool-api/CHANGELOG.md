@@ -4,6 +4,23 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add `JsonSchema::validate_supplied_value`, which validates shape and
+  additionally refuses an agent identity smuggled through a position no schema
+  describes. Tool invocation now validates arguments with it.
+- This closes S-I7's second clause -- *the agent cannot supply one* -- for the
+  eleven built-ins `tools_with_unverifiable_schema` reports. `job.install`'s
+  `spec: Any` accepted `{"run_as_agent_id": "peer-7"}` and reported clean.
+- Fully schematizing those positions was rejected: a job `spec` and a
+  `metadata` bag are open by design, and a schema enumerating their keys would
+  be wrong the first time someone added one. The check moves from the declared
+  shape to the actual value, so structure stays open and identity names do not.
+- Deliberately NOT applied to outputs. S-I7's first clause -- the view contains
+  no agent identity -- is enforced by refusing peer-naming tools at
+  registration. Applying it to outputs broke the smart-home audit and
+  access-review readers, which exist to report on principals; they are kept
+  away from V1 agents by the registration gate rather than by mangling their
+  results.
+
 - Add `tools_naming_another_agent`, `tools_with_unverifiable_schema` and
   `v1_agent_tool_catalog`, making D18S S-I7 checkable: in V1 an agent's view
   contains no agent identity and the agent cannot supply one. These are
