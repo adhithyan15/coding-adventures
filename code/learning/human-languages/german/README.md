@@ -51,7 +51,10 @@ French *nuit* — one Indo-European word, split four ways.
 - **Chapter 11 — The German Weekend**: *Samstag* (the **Sabbath**, not Saturn —
   Hebrew *shabbāt* by way of Greek), *Sonntag* (the sun's, a day Romance
   renamed and German did not), and *Sonnabend*, the northern Saturday.
-- **Chapter 12 — Telling the Time**: Uhr, Mittag/Mitternacht.
+- **Chapter 12 — Telling the Time**: *die Uhr*, borrowed from Latin *hōra* with
+  the clocks that needed it, beside native *Stunde* for the span it did not
+  take — then *Mitte*, *Mittag* and *Mitternacht*, compounds German built out
+  of words it already owned, where French inherited *midi* from *medius diēs*.
 - **Chapter 13 — Months and Seasons**: Monate, Jahreszeiten (*Herbst*/harvest).
 - **Chapter 14 — Family**: Eltern, Geschwister.
 - **Chapter 15 — Bread, Water, Wine**: Brot, Wasser/Wein.

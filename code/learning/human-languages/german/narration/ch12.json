@@ -3,23 +3,23 @@
   "language": "german",
   "chapter": 12,
   "title": "Telling the Time",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d5f7ca8d40827b53",
+  "drivablePrefix": 10,
+  "sourceHash": "fnv1a64:f74aed23f376e855",
   "lessons": [
     {
       "id": "GE-C08-uhr",
       "sequence": 245,
-      "title": "Uhr — the clock, and a Roman word in the German day",
-      "headword": "Uhr",
-      "romanization": "Uhr",
-      "gloss": "clock / o'clock — and a Latin word inside German",
+      "title": "die Uhr — \"the clock\"",
+      "headword": "die Uhr",
+      "romanization": "die Uhr",
+      "gloss": "the clock, and o'clock — the first everyday German word in this book that Rome supplied",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c33b7e459b8039b",
+      "sourceHash": "fnv1a64:6b5927b13d03002d",
       "notice": null,
       "blocks": [
         {
@@ -35,71 +35,354 @@
             },
             {
               "kind": "speech",
-              "text": "Something new happens here. German's numbers were homegrown (eins, zwei), and its weekdays were Germanic gods (Donnerstag). But its word for the clock — Uhr — is borrowed from Latin. Time-keeping came to the German world with Roman and monastic clocks, and the Latin word rode in with them."
+              "text": "Something changes here. The numbers were German's own and the weekdays were German's gods — this word is neither."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "input",
+          "title": "You'll want to know: die Uhr",
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-u-long — Uhr = oor, a long u then a soft r: one syllable."
+              "text": "die Uhr — \"the clock,\" and also \"o'clock.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A die-word, and one syllable. It does two jobs: the object on the wall, and the word you say when telling the time."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — a Latin loan among Germanic natives",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Uhr comes from Latin hōra, \"hour\" — the same word that became French heure, Italian ora, and English hour. German took it in (through medieval Latin/Low German ūr(e)) and made it Uhr."
+              "text": "u-long — a long u, the vowel of English moor."
             },
             {
               "kind": "speech",
-              "text": "That's the striking part: three layers of the German day, three different origins —."
+              "text": "r-final — and then a soft r that barely closes: German's final r colours the vowel and stops rather than rolling."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: oor. One syllable, nothing more."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Uhr\" — oor, long and soft",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Uhr\" — *oor*, long and soft]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its two jobs — \"the clock; o'clock\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its two jobs — \"the clock; o'clock\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it beside a word you own — \"der Tag, die Uhr\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it beside a word you own — \"der Tag, die Uhr\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"die Uhr.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the clock.\" (Die Uhr.) Which article? (Die.) How many syllables? (One — oor.) What else does the word mean? (O'clock.) Next: where it came from, which is not where the rest of this book's words come from."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C08-uhr-hora",
+      "sequence": 246,
+      "title": "Uhr, taken apart",
+      "headword": "Uhr und hōra",
+      "romanization": "Uhr und hōra",
+      "gloss": "the third layer of the German day — numbers native, weekdays Germanic, the clock Latin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b387772b4f110112",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have twice met a language keeping some words and buying others. Here is the third time, and it completes a picture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uhr comes from Latin hōra, \"hour\" — the same word that became French heure, Italian ora and English hour. It reached German through medieval Latin and Low German ūr(e)."
+            },
+            {
+              "kind": "speech",
+              "text": "Timekeeping arrived with Roman and monastic clocks, and the word rode in with the machinery."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three layers of the German day, three different origins:"
             },
             {
               "kind": "table",
               "headers": [
                 "what",
                 "German",
-                "origin"
+                "where it came from"
               ],
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "what: the numbers. German: eins, zwei, drei. origin: native Germanic (twins of English).",
-                "what: the weekdays. German: Montag, Donnerstag. origin: Germanic gods (Latin months).",
-                "what: the clock. German: Uhr. origin: Latin loan (hōra)."
+                "what: the numbers. German: eins, zwei, drei. where it came from: native Germanic.",
+                "what: the weekdays. German: Montag, Donnerstag. where it came from: Germanic gods.",
+                "what: the clock. German: Uhr. where it came from: Latin, from hōra."
               ]
             },
             {
               "kind": "speech",
-              "text": "German kept its own numbers and gods, but for the machine that measures hours, it reached for Rome. (German also has a native word, Stunde, \"an hour's span\" — but for clock-reading, \"o'clock,\" it's Uhr.)"
+              "text": "German kept its own counting and its own gods. For the machine that measures hours it reached for Rome."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same rule you were given with the months and again with Samstag: the words used every hour of every day are the hardest to displace, and the words that arrive with an institution come in whole. A clock is an institution arriving."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: \"Es ist … Uhr\"",
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family — \"Uhr, hōra, heure, ora, hour\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family — \"Uhr, hōra, heure, ora, hour\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three layers — \"numbers native, weekdays gods, clock Latin\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three layers — \"numbers native, weekdays gods, clock Latin\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reason — \"the clock came in, and its word came with it\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reason — \"the clock came in, and its word came with it\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Uhr — from hōra.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin word is Uhr? (Hōra.) Which English word is its cousin? (Hour.) Which two layers of the German day are not borrowed? (The numbers and the weekdays.) Why did this one come in? (It arrived with the clocks.) Next: the German word that was there already."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C08-stunde",
+      "sequence": 247,
+      "title": "die Stunde — \"an hour\"",
+      "headword": "die Stunde",
+      "romanization": "die Stunde",
+      "gloss": "an hour's span — the native word that survived beside the borrowed one, with the jobs divided",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc2e61d5e7251e67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A borrowed word usually arrives because a language needs one. This time German already had a perfectly good word, and took the Latin one anyway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Stunde",
           "segments": [
             {
               "kind": "speech",
-              "text": "To tell the time, German says es ist (\"it is\") + the number + Uhr:"
+              "text": "die Stunde — \"an hour,\" in the sense of a span of sixty minutes."
             },
             {
               "kind": "speech",
-              "text": "Es ist ein Uhr. — \"It is one o'clock.\" Es ist zwei Uhr. — \"It is two o'clock.\" Es ist zehn Uhr. — \"It is ten o'clock.\""
+              "text": "Native Germanic, and older in the language than Uhr. It is the word for a duration: a lesson lasts eine Stunde."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "st-initial-scht — a German st- at the start of a word is sht-, not st-. So this opens SHTOON-, which is the single most useful spelling rule in German after ei and ie."
             },
             {
               "kind": "speech",
-              "text": "Uhr doesn't add a plural here (not \"zwei Uhren\" for the time) — it works like English o'clock: zwei Uhr = \"two o'clock.\" (Uhren, plural, means \"clocks\" the objects.)"
+              "text": "u-long — the same long u you met in Uhr."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The loan did not push the native word out. The two divided the work instead:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "for",
+                "German uses"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "for: reading a clock — \"o'clock\". German uses: Uhr.",
+                "for: a length of time — \"an hour\". German uses: Stunde."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English has the same split and hides it: hour covers both, and o'clock is a worn-down phrase (of the clock) doing the first job."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth holding on to, because it is what borrowing usually looks like. The loan rarely kills the native word; it takes a slice of the meaning and the two settle into different rooms."
             }
           ]
         },
@@ -117,29 +400,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Uhr\" — oor",
+              "instruction": "\"die Stunde\" — SHTOON-duh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Uhr\" — *oor*]"
+              "source": "[YOU SAY: \"die Stunde\" — *SHTOON-duh*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Es ist ein Uhr, zwei Uhr, drei Uhr\"",
+              "instruction": "the pair and their jobs — \"Uhr for the clock, Stunde for the span\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es ist ein Uhr, zwei Uhr, drei Uhr\"]"
+              "source": "[YOU SAY: the pair and their jobs — \"Uhr for the clock, Stunde for the span\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Uhr / heure / hour\" — all from Latin hōra",
+              "instruction": "the spelling rule — \"st- at the front is sht-\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Uhr / heure / hour\" — all from Latin *hōra*]"
+              "source": "[YOU SAY: the spelling rule — \"st- at the front is sht-\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"die Uhr, die Stunde.\""
             }
           ]
         },
@@ -156,26 +448,26 @@
             },
             {
               "kind": "speech",
-              "text": "Where does Uhr come from, and why is that notable? (Latin hōra — a loanword, unlike German's native numbers and Germanic day-gods.) Two French/English cousins of Uhr? (heure, hour.) How does German say \"it is three o'clock\"? (Es ist drei Uhr.) Next: Mittag and Mitternacht — noon and midnight."
+              "text": "Say \"an hour,\" meaning a span. (Eine Stunde.) Which word do you use to read a clock? (Uhr.) Which of the two is native German? (Stunde.) How is st- pronounced at the start of a word? (Sht-.) Next: putting Uhr into a sentence."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C08-mittag-mitternacht",
-      "sequence": 250,
-      "title": "Mittag and Mitternacht — the native middle of day and night",
-      "headword": "Mittag, Mitternacht",
-      "romanization": "Mittag, Mitternacht",
-      "gloss": "noon and midnight — native \"mid-day\" and \"mid-night\"",
+      "id": "GE-C08-es-ist-uhr",
+      "sequence": 248,
+      "title": "Es ist zwei Uhr — telling the time",
+      "headword": "Es ist zwei Uhr",
+      "romanization": "Es ist zwei Uhr",
+      "gloss": "telling the time — es ist, a number you own, and Uhr",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f32771ef9ee665f",
+      "sourceHash": "fnv1a64:57bc10846fddad01",
       "notice": null,
       "blocks": [
         {
@@ -191,52 +483,30 @@
             },
             {
               "kind": "speech",
-              "text": "The clock-word Uhr was Latin. But noon and midnight swing back to native German: Mittag and Mitternacht are plain Germanic compounds — \"the day's middle\" and \"the night's middle\" — built from words you can already almost read."
+              "text": "You have the numbers and you have the word. The frame that joins them needs nothing new."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The two words, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: es ist, a number, Uhr",
           "segments": [
             {
               "kind": "speech",
-              "text": "Both start with Mitte, \"middle\" (cousin of English mid, middle, and of Latin medius):"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "German",
-                "=",
-                "literally"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "German: Mittag. =: Mitte + Tag. literally: \"mid-day\" (noon).",
-                "German: Mitternacht. =: Mitter (Mitte) + Nacht. literally: \"mid-night\" (midnight)."
-              ]
+              "text": "es ist + the number + Uhr."
             },
             {
               "kind": "speech",
-              "text": "Mittag = \"mid-day.\" Tag (\"day\") you met in Montag, Dienstag; put \"middle\" in front and you get noon. Its meaning matches French midi (medius diēs) exactly — same idea, but German built it from its own words instead of borrowing the Latin one."
+              "text": "Es ist ein Uhr. — \"It is one o'clock.\" Es ist zwei Uhr. — \"It is two o'clock.\" Es ist zehn Uhr. — \"It is ten o'clock.\""
             },
             {
               "kind": "speech",
-              "text": "Mitternacht = \"mid-night.\" Nacht (\"night\") is the twin of English night (remember acht/eight, Nacht/night — the -cht/-ght pair). So Mitternacht and English mid-night are the same compound in two Germanic tongues."
+              "text": "Word for word that is the English sentence with o'clock moved: it is two o'clock. Nothing about the order has to be relearned."
             },
             {
               "kind": "speech",
-              "text": "To tell the time with them:"
-            },
-            {
-              "kind": "speech",
-              "text": "Es ist Mittag. — \"It is noon.\" Es ist Mitternacht. — \"It is midnight.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So German splits the day three ways by origin: Uhr (Latin) for the hours, Mittag/Mitternacht (native) for its pivots."
+              "text": "One thing to notice: at one o'clock it is ein Uhr, not eins — the counting form drops its -s here exactly as it does before a noun, which you met with ein and eine."
             }
           ]
         },
@@ -254,29 +524,47 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Mittag\" (noon), \"Mitternacht\" (midnight)",
+              "instruction": "the frame — \"es ist … Uhr\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Mittag\" (noon), \"Mitternacht\" (midnight)]"
+              "source": "[YOU SAY: the frame — \"es ist … Uhr\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"",
+              "instruction": "\"Es ist zwei Uhr.\" \"Es ist zehn Uhr.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"]"
+              "source": "[YOU SAY: \"Es ist zwei Uhr.\" \"Es ist zehn Uhr.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Mitternacht / mid-night\" — the same Germanic compound",
+              "instruction": "the odd one — \"Es ist ein Uhr\", not eins",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Mitternacht / mid-night\" — the same Germanic compound]"
+              "source": "[YOU SAY: the odd one — \"Es ist ein Uhr\", not *eins*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hour it is now, wherever you are",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hour it is now, wherever you are]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Es ist zwei Uhr.\""
             }
           ]
         },
@@ -293,7 +581,886 @@
             },
             {
               "kind": "speech",
-              "text": "What do Mittag and Mitternacht literally mean, and from what native word? (\"Mid-day\" / \"mid-night\"; from Mitte \"middle\" + Tag/Nacht.) How does this differ from Uhr? (Uhr is a Latin loan; these are native compounds.) What English word is Mitternacht the twin of? (Midnight.) Next chapter builds on this toward months and family."
+              "text": "Say \"it is ten o'clock.\" (Es ist zehn Uhr.) What are the three pieces? (Es ist, the number, Uhr.) What happens to eins at one o'clock? (It drops the -s: ein Uhr.) Next: the plural German does not use here."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C08-uhr-ohne-plural",
+      "sequence": 249,
+      "title": "zwei Uhr, not zwei Uhren",
+      "headword": "zwei Uhr, nicht zwei Uhren",
+      "romanization": "zwei Uhr, nicht zwei Uhren",
+      "gloss": "Uhr takes no plural when it means o'clock — it works like English o'clock, not like clocks",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c2e28b97e5c552b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every German noun you have met takes a plural. This one refuses — but only in one of its two jobs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the clock-reading Uhr does not count",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Telling the time, Uhr stays singular however many hours you name."
+            },
+            {
+              "kind": "speech",
+              "text": "Zwei Uhr is \"two o'clock.\" Not zwei Uhren — that would be two clocks, the objects on the wall."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "zwei Uhr means two o'clock.",
+                "zwei Uhren means two clocks."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English does the identical thing and hides it behind an apostrophe. You would never say \"two o'clocks\" either, because o'clock is not a noun being counted — it is a fossilised phrase, of the clock. German's Uhr is doing that job with no apostrophe to warn you."
+            },
+            {
+              "kind": "speech",
+              "text": "So what you are watching is not really about Uhr. It is about a word that has stopped being a countable thing and become a unit of time, a job nouns take on in every language and mark differently in each."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the time — \"zwei Uhr\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the time — \"zwei Uhr\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the objects — \"zwei Uhren\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the objects — \"zwei Uhren\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English that hides it — \"two o'clock, two clocks\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English that hides it — \"two o'clock, two clocks\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"zwei Uhr; zwei Uhren.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"two o'clock.\" (Zwei Uhr.) Say \"two clocks.\" (Zwei Uhren.) Which of the two is the plural? (Uhren.) Why does the time not take one? (It is a unit of time, not a thing being counted.) Next: the two pivots of the day, and they are German's own."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C08-mitte",
+      "sequence": 250,
+      "title": "die Mitte — \"the middle\"",
+      "headword": "die Mitte",
+      "romanization": "die Mitte",
+      "gloss": "the middle — the native piece both of the day's pivots are built from",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4729fa883defd105",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The clock-word was Latin. The two pivots of the German day swing straight back to German's own vocabulary, and they share a piece."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Mitte",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Mitte — \"the middle.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two syllables, short i, and a crisp doubled t: MIT-tuh."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mitte is English mid and middle — the same inherited word, and you can hear it without being told."
+            },
+            {
+              "kind": "speech",
+              "text": "Its Latin cousin is medius, \"middle,\" which English borrowed several times over: medium, median, mediocre (literally \"middling\"), and the medi- of Mediterranean, the sea in the middle of the land."
+            },
+            {
+              "kind": "speech",
+              "text": "So the everyday Germanic word and the learned Latin one sit side by side in English, and German has the first of them. That is the pattern you have been watching all book: two doors into one root, one worn smooth by daily use and one carried in by scholars."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Mitte\" — MIT-tuh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Mitte\" — *MIT-tuh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Germanic side — \"Mitte, mid, middle\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Germanic side — \"Mitte, mid, middle\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin side — \"medius, medium, median\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin side — \"medius, medium, median\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"die Mitte — the middle.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the middle.\" (Die Mitte.) Which two English words is it? (Mid and middle.) Which Latin word is its cousin? (Medius.) Name an English word from that side. (Medium, median or mediocre.) Next: the middle of the day."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C08-mittag",
+      "sequence": 251,
+      "title": "der Mittag — \"noon\"",
+      "headword": "der Mittag",
+      "romanization": "der Mittag",
+      "gloss": "noon — Mitte plus Tag, a compound you can read before you are told it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:060bf8d840844546",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have the middle and you have the day. Put them together before reading on — you will be right."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Mittag",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Mittag — \"noon,\" and literally \"mid-day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Mitt- from Mitte, -tag from Tag. Nothing is hidden and nothing had to be learned: this is the third compound in two chapters you could read on sight, after Montag and Sonnabend."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the identical compound — midday — built from the identical two inherited words. Neither language got it from the other; each still had the pieces and used them."
+            },
+            {
+              "kind": "speech",
+              "text": "To say it is noon: Es ist Mittag. No number and no Uhr, because noon is not an hour you count to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Mittag\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Mittag\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its two pieces — \"Mitte, Tag\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its two pieces — \"Mitte, Tag\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English twin — \"Mittag, midday\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English twin — \"Mittag, midday\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Es ist Mittag.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Es ist Mittag.\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"der Mittag — midday.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"noon.\" (Der Mittag.) What are its two pieces? (Mitte and Tag.) Say \"it is noon.\" (Es ist Mittag.) Does it need a number? (No.) Next: what French does with the same idea, and why German did not."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C08-mittag-midi",
+      "sequence": 252,
+      "title": "Mittag and midi",
+      "headword": "Mittag und midi",
+      "romanization": "Mittag und midi",
+      "gloss": "German and French mean the same thing by noon — but German built it and French inherited it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2c6af2d90d1b9b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "French says midi for noon, and it means exactly what Mittag means. That is not a borrowing in either direction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "French midi comes from Latin medius diēs — \"middle day.\" German Mittag is Mitte plus Tag — \"middle day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The same thought, assembled twice, out of different material:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "built from",
+                "result"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "language: Latin, then French. built from: medius + diēs. result: midi.",
+                "language: German. built from: Mitte + Tag. result: Mittag."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both families looked at the sun overhead and named the moment for the middle of the day. Neither copied the other; the idea is obvious enough that two languages reached it independently, and each used the words it had."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the counterweight to Uhr, and the two are worth holding together."
+            },
+            {
+              "kind": "speech",
+              "text": "For the clock — a machine that arrived from outside — German took the foreign word whole. For noon — something anyone with a sky already has — German built its own out of pieces it owned."
+            },
+            {
+              "kind": "speech",
+              "text": "A language borrows what arrives and builds what was always there. One chapter, both halves of that."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"Mittag, midi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"Mittag, midi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what each is made of — \"Mitte plus Tag; medius plus diēs\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what each is made of — \"Mitte plus Tag; medius plus diēs\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chapter in one line — \"borrow the clock, build the noon\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chapter in one line — \"borrow the clock, build the noon\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Mittag, midi — the same thought, built twice.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is French midi made of? (Medius + diēs, \"middle day\".) And Mittag? (Mitte + Tag.) Did German borrow it? (No — it built its own.) Which word in this chapter was borrowed? (Uhr.) Next: the other pivot."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C08-mitternacht",
+      "sequence": 253,
+      "title": "die Mitternacht — \"midnight\"",
+      "headword": "die Mitternacht",
+      "romanization": "die Mitternacht",
+      "gloss": "midnight — the second pivot, and the -cht/-ght pair paying off again",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccd3ef62bafdca16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The day's other pivot, and the second compound in this chapter you can assemble from words you already have."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Mitternacht",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Mitternacht — \"midnight,\" literally \"mid-night.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Mitter- is Mitte with the linking form it takes inside a compound, and -nacht is the night. English midnight is the same two words again."
+            },
+            {
+              "kind": "speech",
+              "text": "To say it: Es ist Mitternacht. Like Mittag, no number and no Uhr."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ch-ach — the raspy back-of-the-throat sound from Nacht itself, unchanged inside the longer word."
+            },
+            {
+              "kind": "speech",
+              "text": "And that -cht is the correspondence you were given with the numbers: German -cht- answers English -ght- every time."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "acht means eight.",
+                "Nacht means night.",
+                "Licht means light."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "You met the first pair counting to ten. Here it is again on a word you now need, which is what a sound correspondence is for — you learn it once and it keeps paying."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die Mitternacht\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die Mitternacht\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its pieces — \"Mitte, Nacht\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its pieces — \"Mitte, Nacht\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the correspondence — \"acht/eight, Nacht/night, Licht/light\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the correspondence — \"acht/eight, Nacht/night, Licht/light\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Es ist Mitternacht.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Es ist Mitternacht.\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Mittag, Mitternacht.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"midnight.\" (Die Mitternacht.) What are its pieces? (Mitte and Nacht.) What does German -cht- answer in English? (-ght-.) Give the pair you met with the numbers. (Acht / eight.) Next: the whole chapter, said through."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C08-mittag-mitternacht",
+      "sequence": 254,
+      "title": "Practice — the clock and the two pivots",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — the borrowed clock and the two native pivots, said together",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fad1d9e53edd4a7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. One borrowed word and two built ones, and the difference between them is the chapter. Start by saying the borrowed one, one long syllable — Uhr — and then the piece both pivots begin with, Mitte."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: three ways to say when",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "when",
+                "German"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "when: one o'clock. German: Es ist ein Uhr.",
+                "when: ten o'clock. German: Es ist zehn Uhr.",
+                "when: noon. German: Es ist Mittag.",
+                "when: midnight. German: Es ist Mitternacht."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One frame, es ist, and then either a number with Uhr or a pivot on its own. The pivots take no number because they are not hours you count to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hold the two halves of the chapter side by side:"
+            },
+            {
+              "kind": "speech",
+              "text": "Uhr came from Latin hōra, with the clocks. German had Stunde already, so the loan took the clock-reading job and the native word kept the span."
+            },
+            {
+              "kind": "speech",
+              "text": "Mittag and Mitternacht are German's own, built from Mitte with Tag and Nacht — the same thought French assembled out of Latin as midi."
+            },
+            {
+              "kind": "speech",
+              "text": "A language borrows what arrives and builds what was always there. The sky was always there; the clock was delivered."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four sentences above, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four sentences above, in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two hour-words and their jobs — \"Uhr for the clock, Stunde for the span\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two hour-words and their jobs — \"Uhr for the clock, Stunde for the span\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the counted and the uncounted — \"zwei Uhr; Mittag\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the counted and the uncounted — \"zwei Uhr; Mittag\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chapter in one line — \"borrow the clock, build the noon\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chapter in one line — \"borrow the clock, build the noon\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Es ist zwei Uhr. Es ist Mittag. Es ist Mitternacht.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it is two o'clock.\" (Es ist zwei Uhr.) Say \"it is midnight.\" (Es ist Mitternacht.) Which word here is Latin? (Uhr, from hōra.) Which two did German build itself? (Mittag and Mitternacht.) Why does zwei Uhr have no plural? (It is a unit of time, not a thing being counted.)"
             }
           ]
         }
