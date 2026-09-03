@@ -1597,12 +1597,13 @@ describe("the committed Punjabi A1 inventory", () => {
     }
   });
 
-  it("reports an EMPTY joining column, and a script closed over the corpus only", () => {
+  it("reports a joining column that is no longer empty, and a script closed over the corpus only", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(227);
-    expect(coverage.covered).toBe(112);
-    expect(coverage.unmapped).toBe(115);
+    // 112 -> 136. Chapters 37-43 answer this file's own uncovered list.
+    expect(coverage.covered).toBe(136);
+    expect(coverage.unmapped).toBe(91);
     expect(coverage.partial).toBe(0);
     // THE HEADLINE, and it is the starkest of the three tracks measured in this
     // series. ZERO of eleven. Not one of `te`/`ate`, `jaan`, `par`/`lekin`,
@@ -1613,8 +1614,25 @@ describe("the committed Punjabi A1 inventory", () => {
     // in the checked-in A1 task shape asks for a message this corpus cannot
     // produce. Malayalam's column came back 2/11 on the same walk; Punjabi's is
     // empty, and the difference was measured rather than assumed.
+    // THE HEADLINE HAS CHANGED, and this assertion records it. It read
+    // `covered: 0` -- not one of te/ate, jaan, par/lekin, kyunki, je, the
+    // complementiser ki, jadon or jo occurred anywhere in 226 lessons, so the
+    // longest structure the track taught was a four-slot single clause and the
+    // A1 writing paper asked for a message the corpus could not produce.
+    //
+    // The finding under the finding is why it was cheap: ELEVEN of the eleven
+    // devices needed NO NEW SIGN. Every one is spelled in Gurmukhi the track
+    // taught long ago. This was never a script debt -- nobody had written the
+    // words down. The one new letter in seven chapters (tha) was bought for a
+    // question word, not for a joining word.
     const joining = coverage.byCategory["Jorr (joining and subordination)"]!;
-    expect(joining).toEqual({ enumerated: 11, covered: 0 });
+    expect(joining).toEqual({ enumerated: 11, covered: 10 });
+    // Two columns went FULL, and neither was the target: the clause pattern
+    // closed negation, and the par/lekin doublet closed the register rule the
+    // file said one lesson would close.
+    expect(coverage.byCategory["Nanh (negation)"]!).toEqual({ enumerated: 5, covered: 5 });
+    expect(coverage.byCategory["Bolchaal (register: familiar and respectful, Sanskritic and Perso-Arabic)"]!)
+      .toEqual({ enumerated: 5, covered: 5 });
     // Two demonstratives, neither taught — which is why nothing in the track can
     // be pointed at.
     expect(coverage.byCategory["Sanketak (demonstratives and deixis)"]!).toEqual({
@@ -1631,7 +1649,7 @@ describe("the committed Punjabi A1 inventory", () => {
     expect(coverage.byCategory["Faram (filling in a form)"]!).toEqual({ enumerated: 10, covered: 9 });
     expect(coverage.byCategory["Sur (tone and pronunciation)"]!.covered).toBe(6);
     expect(formatExamCoverage(coverage)).toContain(
-      "punjabi A1 (partial inventory): 112/227 points covered (49%)",
+      "punjabi A1 (partial inventory): 136/227 points covered (60%)",
     );
   }, 60_000);
 });

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C40-kyunki",
+    "language": "punjabi",
+    "chapter": 40,
+    "sequence": 2360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d99ba64b3cd9bc59"
+  },
+  "findings": []
+}

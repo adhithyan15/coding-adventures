@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:5a5a45557cc23b47",
+  "lessonIds": [
+    "PA-C42-oh",
+    "PA-C42-asi",
+    "PA-C42-oh-write",
+    "PA-C42-jo",
+    "PA-C42-jo-oh"
+  ],
+  "tex": "punjabi/book/chapters/ch42-pronouns-and-relative.tex"
+}

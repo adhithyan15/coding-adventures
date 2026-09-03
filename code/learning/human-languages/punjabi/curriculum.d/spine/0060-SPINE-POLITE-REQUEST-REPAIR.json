@@ -2,7 +2,8 @@
   "segments": [
     "PA-PATH-014",
     "PA-PATH-024",
-    "PA-PATH-035"
+    "PA-PATH-035",
+    "PA-PATH-039"
   ],
   "omits": [],
   "relocates": {}

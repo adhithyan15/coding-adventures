@@ -1,0 +1,22 @@
+{
+  "chapter": 41,
+  "title": "If, and When",
+  "label": "ch:pa-if-and-when",
+  "canDo": "I can suppose something with a two-part condition, time one event against another, and say what something is for.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "PA-C41-lai",
+    "kind": "task",
+    "summary": "The first joining words that open their clause rather than following it, and the j- family they belong to. Punjabi marks BOTH ends of a condition where English marks only the first. lai is the counterweight: it looks forward to a purpose where kyunki looks back at a cause, and unlike the j- words it FOLLOWS what it applies to, so position alone tells the reader which habit a small word belongs to.",
+    "assesses": [
+      "PA-JOIN-JE-01",
+      "PA-JOIN-JE-TAN-01",
+      "PA-SCRIPT-JE-01",
+      "PA-JOIN-JADON-01",
+      "PA-JOIN-LAI-01"
+    ],
+    "note": "Track-local concepts on an A1 node: the corpus spine stages CONNECTIVE-IF and CONDITIONAL-REAL at B1, so the canonical concept is deliberately not claimed. What A1 needs is the two-clause sentence, not the full conditional system."
+  }
+}

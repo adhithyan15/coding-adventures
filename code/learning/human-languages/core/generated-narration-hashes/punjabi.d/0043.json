@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:7dec2f4cd0310db2",
+  "lessonIds": [
+    "PA-C43-kaun",
+    "PA-C43-kadon",
+    "PA-W10-thatha",
+    "PA-C43-kitthe",
+    "PA-C43-kinne"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch43.txt",
+  "json": "punjabi/narration/ch43.json",
+  "textHash": "fnv1a64:4c163ce80f43293c",
+  "jsonHash": "fnv1a64:5d7b9a8dc5a61439",
+  "findings": []
+}

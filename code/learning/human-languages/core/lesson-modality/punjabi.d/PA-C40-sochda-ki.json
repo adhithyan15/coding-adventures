@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C40-sochda-ki",
+    "language": "punjabi",
+    "chapter": 40,
+    "sequence": 2330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f4a36b1ef060be0"
+  },
+  "findings": []
+}

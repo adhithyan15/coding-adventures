@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:1eb2bf971c88101f",
+  "lessonIds": [
+    "PA-C37-nahin-vaak",
+    "PA-C37-samajh-nahin",
+    "PA-C37-nahin-write",
+    "PA-C37-nahin-pata",
+    "PA-C37-nahin-checkpoint"
+  ],
+  "tex": "punjabi/book/chapters/ch37-sentence-that-says-no.tex"
+}

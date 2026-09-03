@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C37-nahin-checkpoint",
+    "language": "punjabi",
+    "chapter": 37,
+    "sequence": 2210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d5d2b55f4923f2b"
+  },
+  "findings": []
+}

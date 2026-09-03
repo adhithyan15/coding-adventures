@@ -1,0 +1,727 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 43,
+  "title": "Who, When, Where, How Many",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:7dec2f4cd0310db2",
+  "lessons": [
+    {
+      "id": "PA-C43-kaun",
+      "sequence": 2470,
+      "title": "ਕੌਣ (kauṇ) — who",
+      "headword": "ਕੌਣ",
+      "romanization": "kauṇ",
+      "gloss": "who - the question this book named once, in Latin letters, and never taught",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63544abc44b8ba82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the chapter behind you, the describing pair. From the kivēṁ lesson, the question word that named the family. And from three chapters back, why."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "jo … oh …, kivēṁ, kyoṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *jo … oh …*, *kivēṁ*, *kyoṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "je — from two chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *je* — from two chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ate — from five chapters back, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *ate* — from five chapters back, cold]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੌਣ — kauṇ — who."
+            },
+            {
+              "kind": "speech",
+              "text": "The same ਕ as every question word. This one has an odd history in this book: it was named once, in a romanised aside about the family, in Latin letters — never written in Gurmukhi, never practised, never a word you owned."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a different kind of gap from the missing ones. The book told you it existed and never handed it over."
+            },
+            {
+              "kind": "speech",
+              "text": "Now hold the two families side by side, because they answer each other:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਕ- asks, ਜ- opens the clause that answers, ਉ- points at it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kauṇ? — flat, as a whole question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kauṇ?* — flat, as a whole question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "kauṇ? and kyoṁ? — a person, a reason.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *kauṇ?* and *kyoṁ?* — a person, a reason.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "ask kauṇ? and answer with a ਜੋ clause.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: ask *kauṇ?* and answer with a **ਜੋ** clause.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask who. What do ਕ-, ਜ- and ਉ- each do? (Ask, open the answering clause, point at what it means.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C43-kadon",
+      "sequence": 2480,
+      "title": "ਕਦੋਂ (kadoṁ) — when",
+      "headword": "ਕਦੋਂ",
+      "romanization": "kadoṁ",
+      "gloss": "when - the question beside the ਜਦੋਂ that answers it",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d3af66066342c84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, who. Two chapters back, the word that places one event against another."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "kauṇ, and jadoṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *kauṇ*, and *jadoṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "je … tāṁ … — from two chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *je … tāṁ …* — from two chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ate joining two sentences — from five chapters back, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *ate* joining two sentences — from five chapters back, cold]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put them side by side. This is the neatest pattern in the chapter:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਕਦੋਂ (kadoṁ) — when?, ਜਦੋਂ — when …"
+            },
+            {
+              "kind": "speech",
+              "text": "One letter apart. The ਕ asks; the ਜ answers. You learned the answer two chapters ago without knowing it was half of a pair, and the question costs you almost nothing now."
+            },
+            {
+              "kind": "speech",
+              "text": "That pairing runs through the whole language, and you have now seen it three times: ਜੇ … ਤਾਂ, ਜੋ … ਉਹ, and now ਕਦੋਂ (kadoṁ) against ਜਦੋਂ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "kadoṁ? and jadoṁ — question, then answer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *kadoṁ?* and *jadoṁ* — question, then answer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "ask kadoṁ?, then answer with a jadoṁ clause.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: ask *kadoṁ?*, then answer with a *jadoṁ* clause.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three fronts in a row — ka-, ja-, o-.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three fronts in a row — *ka-*, *ja-*, *o-*.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask when, then answer it. What single letter separates the two words? (The first — ਕ asks, ਜ answers.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W10-thatha",
+      "sequence": 2490,
+      "title": "ਥ — the consonant tha",
+      "headword": "ਥ",
+      "romanization": "tha",
+      "gloss": "the consonant tha - the one letter these seven chapters have to buy",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:deffe4909f8ccea1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one new form, and why it is here"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one new form, and why it is here until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One chapter back you wrote ਉਹ. Write it once from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one new form, and why it is here",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ਥ (tha) visible beside ਤ, which you have had for a long time:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਤ — ta, the plain dental, ਥ — tha, the same place with a push of."
+            },
+            {
+              "kind": "speech",
+              "text": "breath behind it."
+            },
+            {
+              "kind": "speech",
+              "text": "The tongue is in the same spot for both; the difference is the breath. Say ta with your hand in front of your mouth, then tha, and feel it."
+            },
+            {
+              "kind": "speech",
+              "text": "Worth saying plainly, because it is the point of this whole run of chapters: this is the only new letter in seven chapters. Every joining word — ate, jāṁ, par, lekin, ki, kyoṁki, je, jadoṁ, jo, laī — was already writable with signs this book taught long ago. The words were missing; the script was not. One question needed one letter, and here it is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Finger-trace ਥ once, then trace it once in the air. Say tha with the breath audible as your finger finishes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model in view and copy ਥ once, then ਤ beside it. Repair only the stroke that separates them."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of ਤ and ਥ (tha) carries the breath? (ਥ (tha).) How many new letters have these seven chapters spent? (This one.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ਜੇ written — from two chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ਜੇ** written — from two chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ਅਤੇ written — from five chapters back, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ਅਤੇ** written — from five chapters back, cold]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C43-kitthe",
+      "sequence": 2500,
+      "title": "ਕਿੱਥੇ (kitthe) — where",
+      "headword": "ਕਿੱਥੇ",
+      "romanization": "kitthe",
+      "gloss": "where - the question the interview paper exists to ask",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f81e1248d569d761",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, the new letter. And the two questions this chapter has already given you."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਥ (tha)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਥ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "kauṇ, kadoṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *kauṇ*, *kadoṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "jadoṁ — from two chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *jadoṁ* — from two chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "jāṁ — from five chapters back, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *jāṁ* — from five chapters back, cold]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਿੱਥੇ — kitthe — where."
+            },
+            {
+              "kind": "speech",
+              "text": "Read it in pieces: ਕ, the ਿ sihari before it, the ੱ addak that doubles the next sound, then ਥ — new one lesson ago — and the ੇ laav."
+            },
+            {
+              "kind": "speech",
+              "text": "The addak is doing real work. It doubles the ਥ (tha), which is why the word is kit-the and not ki-the. Leave it off and the word loses its middle."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the question that asks where somebody lives, and asking that is most of what a spoken interview at this level is for. The book has taught house, city and village for many chapters and could not ask where any of them was."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitthe? with the doubled th audible.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitthe?* with the doubled *th* audible.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "ask where somebody lives.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: ask where somebody lives.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ਕਿੱਥੇ (kitthe), model in view, and check the addak.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ਕਿੱਥੇ**, model in view, and check the addak.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask where someone lives. What does the ੱ do, and what happens if you leave it out? (Doubles the ਥ (tha); the word loses its middle.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C43-kinne",
+      "sequence": 2510,
+      "title": "ਕਿੰਨੇ (kinne) — how many",
+      "headword": "ਕਿੰਨੇ",
+      "romanization": "kinne",
+      "gloss": "how many, how much - the last of the question family",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e19e38af57a306ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The three questions this chapter has given you so far. Say them in order."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "kauṇ, kadoṁ, kitthe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *kauṇ*, *kadoṁ*, *kitthe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "laī — from two chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *laī* — from two chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "nā … nā … — from five chapters back, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *nā … nā …* — from five chapters back, cold]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਿੰਨੇ — kinne — how many, how much."
+            },
+            {
+              "kind": "speech",
+              "text": "The same ਕ one last time, now asking about quantity. With it the family this book named when it taught kivēṁ is finally complete on the page:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ what, ਕਿਵੇਂ how, ਕਿਉਂ why, ਕੌਣ (kauṇ) who, ਕਦੋਂ (kadoṁ) when,"
+            },
+            {
+              "kind": "speech",
+              "text": "ਕਿੱਥੇ (kitthe) where, ਕਿੰਨੇ (kinne) how many."
+            },
+            {
+              "kind": "speech",
+              "text": "Two of those you had before this run. Five arrived in the last four chapters, and only one of the five cost a new letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinne? — flat, as a whole question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinne?* — flat, as a whole question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "the whole family in a row, one breath each.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: the whole family in a row, one breath each.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "ask how many of something you can name.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: ask how many of something you can name.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask all the questions you know, in one run. What do they share, and where were you first told so? (The opening ਕ; the kivēṁ lesson.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

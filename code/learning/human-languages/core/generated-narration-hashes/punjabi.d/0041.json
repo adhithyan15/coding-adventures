@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:b97b3e5d3fe55569",
+  "lessonIds": [
+    "PA-C41-je",
+    "PA-C41-je-tan",
+    "PA-C41-je-write",
+    "PA-C41-jadon",
+    "PA-C41-lai"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch41.txt",
+  "json": "punjabi/narration/ch41.json",
+  "textHash": "fnv1a64:4bef1917a430a63f",
+  "jsonHash": "fnv1a64:db19625256403937",
+  "findings": []
+}

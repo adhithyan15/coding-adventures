@@ -1,0 +1,21 @@
+{
+  "chapter": 39,
+  "title": "But, Twice Over",
+  "label": "ch:pa-but-twice-over",
+  "canDo": "I can set one thing against another with either word for but, and choose between a Sanskritic word and a Perso-Arabic one knowing what the choice tells my listener.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "PA-C39-but-checkpoint",
+    "kind": "task",
+    "summary": "Punjabi has two words for but, one inherited and one Arabic by way of Persian, and that pair is the same shape as the dhanvaad / shukriya pair this book taught in chapter 1 and never explained. The doublet lesson closes a point the inventory said one lesson would close. The writing lesson carries the caution the inventory needed: par is also the first two letters of parivar, which is why the corpus search returned hits and no occurrences.",
+    "assesses": [
+      "PA-JOIN-PAR-01",
+      "PA-JOIN-LEKIN-01",
+      "PA-SCRIPT-PAR-01",
+      "PA-REG-DOUBLET-01",
+      "PA-PERFORMANCE-BUT-FIVE-01"
+    ]
+  }
+}

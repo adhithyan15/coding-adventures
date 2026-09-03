@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C37-samajh-nahin",
+    "language": "punjabi",
+    "chapter": 37,
+    "sequence": 2180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61cd5af1a9f59809"
+  },
+  "findings": []
+}

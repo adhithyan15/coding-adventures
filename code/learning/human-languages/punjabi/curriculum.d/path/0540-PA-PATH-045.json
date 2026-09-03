@@ -1,0 +1,16 @@
+{
+  "id": "PA-PATH-045",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "PA-C43-kaun",
+    "PA-C43-kadon",
+    "PA-W10-thatha",
+    "PA-C43-kitthe",
+    "PA-C43-kinne"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-065-QUESTIONS"
+  ],
+  "after": []
+}

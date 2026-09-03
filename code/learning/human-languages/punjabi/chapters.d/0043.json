@@ -1,0 +1,23 @@
+{
+  "chapter": 43,
+  "title": "Who, When, Where, How Many",
+  "label": "ch:pa-question-words",
+  "canDo": "I can ask who, when, where and how many, and hear that the question family, the clause that answers it and the word that points at the answer are three parallel series.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PA-C43-kinne",
+    "kind": "task",
+    "summary": "The question family completed, and the pattern under it: ka- asks, ja- opens the clause that answers, o- points at what it means. kadon and jadon differ by exactly one letter, so the answer taught two chapters earlier turns out to have been half of a pair. kaun had been NAMED once, in a romanised aside, and never written in Gurmukhi -- a different kind of gap from the merely absent. kitthe is the only word in seven chapters that needed a new letter, and the writing lesson that buys it says so.",
+    "assesses": [
+      "PA-Q-KAUN-01",
+      "PA-Q-KADON-01",
+      "PA-SCRIPT-THA-01",
+      "PA-Q-KITTHE-01",
+      "PA-SCRIPT-KITTHE-01",
+      "PA-Q-KINNE-01"
+    ],
+    "note": "Realises QUESTION-WHERE, which SPINE-ASK-LOCATION has omitted since the track began. PA-A1-Q-09 (tag questions) is deliberately left uncovered: one new item per lesson leaves no sixth slot, and it needs no new glyph."
+  }
+}

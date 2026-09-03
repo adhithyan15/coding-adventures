@@ -1,0 +1,17 @@
+{
+  "id": "PA-EXT-063-CONDITION",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can open a condition with je and close it with taan, write je, time events with jadon, and name a purpose with lai.",
+  "prerequisites": [
+    "PA-EXT-062-THAT-AND-WHY"
+  ],
+  "lessons": [
+    "PA-C41-je",
+    "PA-C41-je-tan",
+    "PA-C41-je-write",
+    "PA-C41-jadon",
+    "PA-C41-lai"
+  ]
+}
