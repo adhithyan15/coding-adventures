@@ -11,8 +11,11 @@
 % `form` atom had no room for:
 %
 %   freezing_rain:
-%     "...they instantly refreeze upon contact with anything that that is
-%      at or below freezing (32 degrees F), creating a glaze of ice."
+%     "Freezing rain occurs when snowflakes descend into a warmer layer of air and melt completely. When these liquid water drops fall through another thin layer of freezing air just above the surface, they don't have enough time to refreeze before reaching the ground. Because they are “supercooled,” they instantly refreeze upon contact with anything that that is at or below freezing (32 degrees F), creating a glaze of ice on the ground, trees, power lines, or other objects."
+%
+%     THE DOUBLED WORD IN "anything that that is" IS THE PAGE'S OWN TYPO and is
+%     reproduced verbatim. A citation that silently corrects its source is the
+%     same defect class as one that silently tidies it.
 %
 % Recall is a binding query:
 %
@@ -53,7 +56,7 @@ table precipitation_freeze_threshold_f {
 
     row (freezing_rain, 32)
 
-    source "...they instantly refreeze upon contact with anything that that is at or below freezing (32 degrees F), creating a glaze of ice."
+    source "Freezing rain occurs when snowflakes descend into a warmer layer of air and melt completely. When these liquid water drops fall through another thin layer of freezing air just above the surface, they don't have enough time to refreeze before reaching the ground. Because they are “supercooled,” they instantly refreeze upon contact with anything that that is at or below freezing (32 degrees F), creating a glaze of ice on the ground, trees, power lines, or other objects."
     locator "https://www.weather.gov/iwx/sleetvsfreezingrain"
     trust authoritative
 }

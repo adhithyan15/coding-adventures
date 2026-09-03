@@ -149,3 +149,38 @@ fn landform_secondary_feature_recalls_plain_uniform_slope_with_citation() {
         "carries the USGS citation: {out}"
     );
 }
+
+const LANDFORM_SECONDARY_FEATURE_PIN: &str = r#""bindings":{"Feature":"bounded_by_abrupt_descent"},"citations":[{"source":"Low-lying land bordered by higher ground; especially elongate, relatively large gently sloping depressions of the Earth's surface, commonly situated between two mountains or between ranges of hills or mountains, and often containing a stream with an outlet.","locator":"https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3","trust":"authoritative","corroborations":[{"source":"Comparatively flat areas of great extent and elevation; specif. extensive land regions considerably above the adjacent country or above sea level; commonly limited on at least one side by an abrupt descent, have flat or nearly smooth surfaces but are often dissected by deep valleys and surmounted by high hills or mountains, and have a large part of their total surface at or near the summit level.","locator":"https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"}"#;
+
+#[test]
+fn landform_secondary_feature_plateau_citation_is_the_pages_whole_sentence() {
+    let dir = scratch("reground");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"landform-secondary-feature.adj\"\n? landform_secondary_feature(plateau, $Feature)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The value carried a MARKED trailing ellipsis ("...an abrupt descent ...").
+    //
+    // DROPPING IT ALONE WAS THE FIRST REPAIR AND IT WAS WORSE: it replaced a
+    // declared elision with an undeclared mid-sentence truncation. The value is
+    // now the page's complete 399-character sentence.
+    //
+    // THE CITATION DOES NOT NAME ITS SUBJECT, and cannot without crossing an
+    // element boundary: the page renders the term and its definition as
+    // siblings -- "plateaus" then "Comparatively flat areas..." -- so a span
+    // naming it would be verbatim against the EXTRACTOR'S CONCATENATION rather
+    // than the page. Stated rather than papered over.
+    //
+    // The pin spans the bindings THROUGH the corroboration, because a `cites`
+    // repair lands past the envelope's trust field. The query asks `plateau`,
+    // the row this corroboration grounds; no authored query does.
+    assert!(
+        out.contains(LANDFORM_SECONDARY_FEATURE_PIN),
+        "the plateau corroboration is a contiguous page span: {out}"
+    );
+}
