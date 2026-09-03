@@ -1,20 +1,34 @@
-//! The whole chain, end to end: a SKILL.md an author could actually write,
-//! through the signed manifest contract, into a running tool surface.
+//! Pins the SKILL.md-to-tool-surface contract: a document an author could
+//! write, through the signed manifest shape, into a registered and invocable
+//! tool.
 //!
-//! Every link here was built separately over the last several changes --
-//! manifest schema v3 (`allowed_tools`) and v4 (`tool_capabilities`), the
-//! SKILL.md sections that populate them, `HostProfile::from_manifest`, and the
-//! D18S S-I7 registration gate. Each landed with unit tests proving its own
-//! half worked. None of them proved the chain worked.
+//! **This is not proof that production traverses this chain, and the first
+//! draft of this file claimed it was.** A security review pointed out that
+//! every link here has zero production callers -- `HostProfile::from_manifest`
+//! (host-runtime's own doc comment says so), `ActiveHostToolRuntime`, and the
+//! host-runtime crate itself, which `chief-of-staff-daemon` does not even
+//! depend on. The daemon's shipped surface is `SmartHomeToolBridge` gated on
+//! the hardcoded `PRODUCTION_SMART_HOME_MODEL_TOOLS` list; none of that is
+//! exercised below.
 //!
-//! That distinction is the reason this file exists. A stack whose every link
-//! passes its own tests can still be a stack nothing traverses, and this repo
-//! has already produced three boundaries sitting on paths production never
-//! takes. So this test starts from bytes an author writes and ends at a tool
-//! result, touching nothing else, and it fails if any link in between stops
-//! carrying its neighbour.
+//! Writing a test to catch "boundaries on paths production never takes", and
+//! then building it out of exactly such a path, is the fourth instance of that
+//! mistake in this arc. Recorded rather than quietly corrected, because the
+//! framing is what would make a green run misleading.
+//!
+//! Placed in `chief-of-staff-skill-package` rather than
+//! `chief-of-staff-host-runtime` because this crate already depends on both
+//! `skill-parser` and `host-runtime` in `[dependencies]`. The build tool's
+//! `parseRustDeps` deliberately ignores `[dev-dependencies]`, and CI is
+//! diff-based -- so as a host-runtime dev-dependency this test would NOT have
+//! run on a PR that changed the parser, which is precisely the PR it exists to
+//! catch.
+//!
+//! What it DOES pin is real: that the manifest schema, the SKILL.md sections,
+//! the profile derivation and the registration checks agree with each other.
+//! When the wiring lands, this is the contract it has to satisfy.
 
-use chief_of_staff_host_runtime::{HostProfile, HostProfileRuntime};
+use chief_of_staff_host_runtime::{HostProfile, HostProfileRuntime, HostRuntimeError};
 use chief_of_staff_skill_parser::parse_skill;
 use chief_of_staff_tool_api::{
     builtin_tool_definition, PrivilegeTier, RequestedBy, ToolHandlerOutput, ToolInvocationRequest,
@@ -87,13 +101,17 @@ fn a_skill_document_becomes_a_running_tool_surface() {
         })
         .expect("a tool the manifest declares must register");
 
-    // 5. Activation refuses a host whose declared tools were not all wired, so
-    //    reaching here means the surface is complete rather than partial.
+    // 5. Activation succeeds because every declared tool is wired. The
+    //    refusal path is exercised separately below -- with one declared tool
+    //    already registered, `missing_tools` here is empty trivially and the
+    //    check could be deleted without this line noticing.
     let active = runtime
         .activate()
         .expect("every declared tool is registered");
 
-    // 6. And the agent can actually call it.
+    // 6. And the agent can call it. Note this runs under the default
+    //    `AllowAllToolPolicy` and a stub handler, so it proves the dispatch
+    //    path and the schemas agree -- not that any policy gate holds.
     let request = ToolInvocationRequest {
         call_id: "call-1".to_string(),
         tool_id: "context.append_entry".to_string(),
@@ -137,10 +155,17 @@ fn a_tool_the_skill_did_not_declare_is_refused() {
         HostProfile::from_manifest("orchestrator-1", &skill.manifest).expect("profile derives");
     let runtime = HostProfileRuntime::new(profile).expect("runtime builds");
 
+    // Asserts the SPECIFIC variant. `memory.remember` is refused twice over --
+    // absent from `allowed_tools` AND requiring `memory:write` the profile
+    // lacks -- so a bare `is_err()` would stay green if the allow-list check
+    // were deleted entirely, and this test's name would become a lie.
     let undeclared = builtin_tool_definition("memory.remember").expect("built-in exists");
     assert!(
-        runtime.check_registration(&undeclared).is_err(),
-        "a tool absent from the SKILL.md must not register"
+        matches!(
+            runtime.check_registration(&undeclared),
+            Err(HostRuntimeError::ToolNotAllowed(ref id)) if id == "memory.remember"
+        ),
+        "must be refused for being undeclared, not for some other reason"
     );
 }
 
@@ -156,9 +181,55 @@ fn a_skill_declaring_a_tool_above_its_tier_cannot_register_it() {
         HostProfile::from_manifest("orchestrator-1", &skill.manifest).expect("profile derives");
     let runtime = HostProfileRuntime::new(profile).expect("runtime builds");
 
+    // The fixture grants `jobs:install`, so the capability check would pass
+    // and tier is the only thing left to fail on. Pinned to the variant so a
+    // future S-I7 or capability refusal cannot quietly take credit.
     let above_tier = builtin_tool_definition("job.install").expect("built-in exists");
     assert!(
-        runtime.check_registration(&above_tier).is_err(),
-        "a Tier1 tool must not register on a Tier0 agent"
+        matches!(
+            runtime.check_registration(&above_tier),
+            Err(HostRuntimeError::PrivilegeCeilingExceeded { .. })
+        ),
+        "must be refused on tier specifically"
+    );
+}
+
+#[test]
+fn a_partially_wired_surface_cannot_activate() {
+    // The main test's `activate()` succeeds trivially: one declared tool, one
+    // registered. Delete the CatalogIncomplete check and it stays green. This
+    // declares two and wires one, so the refusal is actually exercised.
+    let source = SKILL.replace(
+        "- context.append_entry",
+        "- context.append_entry\n- context.read_entries",
+    );
+    let skill = parse_skill(&source).expect("SKILL.md parses");
+    assert_eq!(skill.manifest.allowed_tools.len(), 2);
+
+    let profile =
+        HostProfile::from_manifest("orchestrator-1", &skill.manifest).expect("profile derives");
+    let mut runtime = HostProfileRuntime::new(profile).expect("runtime builds");
+    runtime
+        .register_handler(
+            builtin_tool_definition("context.append_entry").expect("built-in exists"),
+            |_arguments, _context| {
+                Ok(ToolHandlerOutput::new(JsonValue::Object(vec![
+                    (
+                        "session_id".to_string(),
+                        JsonValue::String("sess-1".to_string()),
+                    ),
+                    (
+                        "entry_id".to_string(),
+                        JsonValue::String("entry-1".to_string()),
+                    ),
+                ])))
+            },
+        )
+        .expect("the first declared tool wires");
+
+    // `context.read_entries` is declared and never registered.
+    assert!(
+        runtime.activate().is_err(),
+        "a host whose declared tools are not all wired must not activate"
     );
 }
