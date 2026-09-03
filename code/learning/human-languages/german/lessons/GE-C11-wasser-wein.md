@@ -1,59 +1,88 @@
 ---
+schema_version: 2
 id: GE-C11-wasser-wein
-sequence: 300
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 301
 chapter: 17
-type: word
-headword: das Wasser, der Wein
-gloss: water and wine — one native Germanic, one ancient Latin loan
-concept_tag: GE-FOOD-DRINKS
-prerequisites: [GE-C11-brot]
-sounds: [w-as-v, ai-as-eye]
-roots: [germanic-watar, vinum-latin]
-etymology_hook: "Wasser is INHERITED Germanic (Grimm's-law twin of English water); but Wein — like English wine — is an ANCIENT Latin loan (vīnum), borrowed when Rome brought the vine north; native vs borrowed, side by side"
-est_minutes: 4
-reviews_of: [GE-C11-brot, GE-C10-eltern]
+type: practice
+headword: (practice)
+gloss: chapter payoff — three words on one table, two of them German's own and one on loan
+concept_tag: CH17-PRACTICE
+prerequisites: [GE-C11-brot, GE-C11-brot-bread, GE-C11-wasser, GE-C11-wasser-water, GE-C11-wein, GE-C11-wein-vinum]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [GE-LEX-BROT-01, GE-ETYMON-BROT-BREAD-01, GE-LEX-WASSER-01, GE-ETYMON-WASSER-WATER-01, GE-LEX-WEIN-01, GE-ETYMON-WEIN-VINUM-01, GE-LEX-DER-DIE-DAS-02, GE-SOUND-W-AS-V-01, GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-GRAMMAR-GROSSSCHREIBUNG-01]
+introduces:
+  knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-BROT-01, GE-ETYMON-BROT-BREAD-01, GE-LEX-WASSER-01, GE-ETYMON-WASSER-WATER-01, GE-LEX-WEIN-01, GE-ETYMON-WEIN-VINUM-01, GE-LEX-DER-DIE-DAS-02, GE-SOUND-W-AS-V-01, GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-GRAMMAR-GROSSSCHREIBUNG-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-output, fluency]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C11-wein-vinum, GE-C11-wasser-water, GE-C11-brot-bread]
 ---
 
-# das Wasser, der Wein — one word Germans always had, one Rome brought
+# Practice — one table, two histories
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BROT-01, GE-LEX-WASSER-01, GE-LEX-WEIN-01] -->
 
-[PAUSE 2s] Two drinks, two very different histories. **Wasser** is a word Germanic
-speakers have **always had**; **Wein** is one Rome **carried north** with the
-grapevine. Side by side, they show the difference between an *inherited* word and
-an ancient *loan*.
+[PAUSE 2s] No new words. Three things you could put on a table, and one of them
+is a different kind of word from the other two.
 
-## das Wasser (water) — native Germanic
+## Grammar Lens: three nouns, three articles
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-DER-DIE-DAS-02, GE-LEX-BROT-01, GE-LEX-WASSER-01, GE-LEX-WEIN-01, GE-GRAMMAR-GROSSSCHREIBUNG-01] -->
 
-- **das Wasser** ("water") — the **w** is pronounced **v** (*VAH-ser*). It is the
-  Grimm's-law twin of English **water**: same Germanic root **\*watar**, same core
-  meaning, both native. Like *Brot* and *Vater*, no Latin needed — and neuter,
-  **das** Wasser.
+| German | English |
+|---|---|
+| *das Brot* | the bread |
+| *das Wasser* | the water |
+| *der Wein* | the wine |
 
-## der Wein (wine) — an ancient Latin loan
+Two neuters and a masculine, every one of them capitalised. There is no rule
+behind which is which — the article comes with the noun and is learned with it,
+which is why every word in this book arrives wearing one.
 
-- **der Wein** ("wine") — the **ei** is said "**eye**" (*vine*). Here is the twist:
-  *Wein* is **not** a native Germanic word. It was **borrowed from Latin *vīnum***
-  in Roman times, when the legions brought **viticulture** north of the Alps. The
-  Germanic tribes took the drink *and its name* — which is exactly why **English
-  wine, German Wein, and Latin vīnum** all match: they are one **loan**, not three
-  cousins. (Masculine: *der* Wein.)
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[GE-ETYMON-BROT-BREAD-01, GE-ETYMON-WASSER-WATER-01, GE-ETYMON-WEIN-VINUM-01, GE-GRAMMAR-NATIVE-VS-LOAN-01] -->
 
-**The lesson in one line:** *Wasser* is a word Germans **always had**; *Wein* is a
-word Rome **gave** them — the vine came with a vocabulary.
+Now the histories, which do have a rule behind them:
+
+- ***Brot*** — Germanic *\*braudam*, English **bread**. French took Latin
+  *pānis* and German did not.
+- ***Wasser*** — Germanic *\*watar*, English **water**, with German's own later
+  shift turning the *t* into *ss*.
+- ***Wein*** — Latin *vīnum*, borrowed whole, matching English **wine** and the
+  Latin too closely to be anything else.
+
+Two were always here; one came north on a cart with the plant it names. You can
+read that off the words themselves without knowing any history: the inherited
+pair have **drifted** from their English twins, and the borrowed one has not.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BROT-01, GE-LEX-WASSER-01, GE-LEX-WEIN-01, GE-SOUND-W-AS-V-01, GE-ETYMON-WEIN-VINUM-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "das Wasser" (*v-*), "der Wein" (*-ein* = "eye")]
-- [YOU SAY: "Wasser / water — native twins"; "Wein / wine / vīnum — one Latin loan"]
-- [YOU SAY: the split — "Wasser native, Wein borrowed with the grapevine"]
+- [YOU SAY: all three with their articles — "das Brot, das Wasser, der Wein"]
+- [YOU SAY: the two with a v sound — "Wasser, Wein"]
+- [YOU SAY: which two are German's own — "Brot, Wasser"]
+- [YOU SAY: which one Rome supplied — "Wein"]
+- [YOU SAY: how you can tell — "it did not drift"]
+
+[REPEAT x2] "das Brot, das Wasser, der Wein."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-BROT-01, GE-LEX-WASSER-01, GE-LEX-WEIN-01, GE-ETYMON-WEIN-VINUM-01, GE-GRAMMAR-NATIVE-VS-LOAN-01] -->
 
-[PAUSE 3s] Give "water" and "wine" with articles and correct sounds. (**das
-Wasser** — *v-* — **der Wein** — "vine".) Which is inherited Germanic, and which
-is a Latin loan? (*Wasser* **native** — twin of *water*; *Wein* **borrowed** from
-*vīnum*, with the vine.) Why do *Wein* and English *wine* match so exactly? (Both
-borrowed the **same Latin word**, *vīnum*.) Next chapter: asking for these at the
-table.
+[PAUSE 3s] Say the three with their articles. (**Das Brot, das Wasser, der
+Wein**.) Which is masculine? (***Der Wein***.) Which two did German inherit?
+(***Brot*** **and** ***Wasser***.) Which came from Latin? (***Wein***, **from**
+*vīnum*.) And what arrived with it? (**The vine**.)

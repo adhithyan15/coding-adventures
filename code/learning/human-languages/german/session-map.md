@@ -9,7 +9,7 @@ authoritative order.
 Every chapter listed here is **generated from the lessons** rather than
 hand-written LaTeX, so these tables and the book are the same object seen twice:
 the order below is the `sequence:` order the generator reads. The gap between
-chapter 16 and chapter 20 is the hand-written stretch that has not been retired
+chapter 17 and chapter 20 is the hand-written stretch that has not been retired
 yet.
 
 ## Chapter 1 — Greetings
@@ -305,6 +305,23 @@ get spent rather than re-taught.
 | das sammelnde Ge- | one member in, the whole set out |
 | practice | four people, two collectives, one law with four verdicts |
 
+## Chapter 17 — Bread, Water, Wine
+
+Two lessons become seven, and only six atoms — four of the things the `.tex`
+presents as new are already owned and get spent: all three articles by name
+(ch. 1), capitalisation (ch. 4), *ei* as *eye* (ch. 6), and the loan-versus-native
+split (ch. 9, fifth use).
+
+| Session | What it adds |
+|---|---|
+| das Brot | bread — and the neuter *das* finally gets a noun to sit on |
+| Brot und bread | the absence: Latin *pānis* stopped at the Germanic line |
+| das Wasser | a second *das*-word; the *w* that is a *v*, for the third time |
+| Wasser und water | *t* → *ss*, German's own later shift, as in *Mutter* |
+| der Wein | *der*, not *das* — and it comes out sounding like *vine* |
+| Wein und vinum | too close to be cousins: one loan, arriving with the plant |
+| practice | the inherited pair drifted, the loan did not — read it off the words |
+
 ## Chapter 20 — To Have
 
 Chapter 5 taught the ending machine, so *haben* is met as the place that machine
@@ -444,5 +461,5 @@ six forms of a verb should use them for something real before meeting its past.
 
 ## Next
 
-Chapter 17 — bread, water, wine. Chapters 17–19 are still hand-written LaTeX;
-see `../BACKLOG.d/` for the retirement queue.
+Chapter 18 — numbers eleven to twenty. Chapters 18–19 are still hand-written
+LaTeX; see `../BACKLOG.d/` for the retirement queue.

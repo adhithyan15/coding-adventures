@@ -8,21 +8,21 @@ type: sound
 headword: schw-
 gloss: three letters, two sounds — sch is English sh, and the w after it is a v
 concept_tag: GE-SOUND-SCHW
-prerequisites: [GE-C10-bruder-frater]
+prerequisites: [GE-C10-bruder-frater, GE-C09-winter]
 sounds: [sch-sh, schw-cluster, w-as-v]
 roots: []
 etymology_hook: "sch is one sound, not three, and the w behind it is a v — so schw- comes out shv-, which is a cluster English never makes and every German learner meets on the same day"
 duration:
   max_seconds: 175
 requires:
-  knowledge: [GE-LEX-BRUDER-01]
+  knowledge: [GE-LEX-BRUDER-01, GE-SOUND-W-AS-V-01]
 introduces:
   knowledge: [GE-SOUND-SCHW-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-SOUND-SCHW-01, GE-LEX-BRUDER-01]
+  knowledge: [GE-SOUND-SCHW-01, GE-LEX-BRUDER-01, GE-SOUND-W-AS-V-01]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -44,7 +44,7 @@ without it.
 
 - `sch-sh` — **sch** is **one** sound, and it is the *sh* of English *ship*. Not
   *s-k-h*, not *sk*. Three letters, one consonant.
-- `w-as-v` — and German *w* is a **v**, which you have from *Winter*.
+- `w-as-v` — and German *w* is a **v**, the rule you were given on *Winter*.
 - `schw-cluster` — put them together and *schw-* comes out **shv-**.
 
 English can say *sh* and English can say *v*, but it never puts them side by
@@ -52,7 +52,7 @@ side at the start of a word. Say *shhh*, hold it, then let it fall straight into
 *v* without a vowel between: *shv*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-SCHW-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-SCHW-01, GE-SOUND-W-AS-V-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: the first sound alone — "sh"]
@@ -63,7 +63,7 @@ side at the start of a word. Say *shhh*, hold it, then let it fall straight into
 [REPEAT x2] "shv."
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-SCHW-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-SCHW-01, GE-SOUND-W-AS-V-01] -->
 
 [PAUSE 3s] How many sounds is *sch*? (**One** — English *sh*.) How is German *w*
 said? (**As a** *v*.) So what does *schw-* sound like? (***Shv-***.) Is there a

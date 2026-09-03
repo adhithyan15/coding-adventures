@@ -9,8 +9,15 @@
   "payoff": {
     "lesson": "GE-C11-wasser-wein",
     "kind": "task",
-    "summary": "Complete GE-C11-wasser-wein, the canonical closing checkpoint, and demonstrate the chapter promise: name and request bread, water, and wine in German.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Three things you could put on one table and two histories between them. Brot is Germanic braudam, English bread, where French took Latin panis and German did not. Wasser is Germanic watar with German's own later shift turning the t into ss, the same shift that put the tt into Mutter. Wein is Latin vinum, borrowed whole with the grapevine the legions carried north -- and you can tell it is borrowed without being told, because the inherited pair have drifted from their English twins and the loan has not.",
+    "assesses": [
+      "GE-LEX-BROT-01",
+      "GE-ETYMON-BROT-BREAD-01",
+      "GE-LEX-WASSER-01",
+      "GE-ETYMON-WASSER-WATER-01",
+      "GE-LEX-WEIN-01",
+      "GE-ETYMON-WEIN-VINUM-01"
+    ],
+    "note": "Chapter 17 is generated from schema-v2 lessons, so the payoff is atom-scored, and it assesses all six the chapter introduces. Six sits well under maxNewAtomsPerChapter because four of the things the .tex presents as new are already owned and are spent instead: GE-LEX-DER-DIE-DAS-02 from chapter 1 (the .tex's third-gender grammar lens -- chapter 1 already teaches all three articles by name), GE-GRAMMAR-GROSSSCHREIBUNG-01 from chapter 4, GE-SOUND-EI-AS-EYE-01 from chapter 6, and GE-GRAMMAR-NATIVE-VS-LOAN-01 from chapter 9 for the fifth time."
   }
 }
