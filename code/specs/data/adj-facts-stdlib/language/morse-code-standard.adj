@@ -14,8 +14,8 @@
 %
 %   international_morse_code → itu_r_m_1677_1
 %     "The Morse code, as specified in the current international standard,
-%      International Morse Code Recommendation, ITU-R M.1677-1, was derived
-%      from a much-improved proposal by Friedrich Gerke in 1848."
+%      International Morse Code Recommendation, ITU-R M.1677-1,[2] was
+%      derived from a much-improved proposal by Friedrich Gerke in 1848"
 %
 % Recall is a binding query:
 %
@@ -43,7 +43,9 @@
 % Provenance: reproduces, byte-for-byte, the SAME span already quoted inside
 % `morse-code.adj`'s own `source` field, from the SAME Wikipedia "Morse code"
 % article that table already cites -- no new WebFetch, only a different
-% schema decoding a part of that already-verified quote. `trust consensus`
+% schema decoding a part of that quote -- verified against the page
+% byte-for-byte as of installment 4f, which restored an NBSP earlier sweeps
+% could not see. `trust consensus`
 % -- the same tier the parent table already carries (an encyclopedia
 % reproducing the ITU chart is a secondary reference, not the primary ITU
 % document itself).
@@ -56,7 +58,7 @@ table morse_code_standard {
 
     row (international_morse_code, itu_r_m_1677_1)
 
-    source "The Morse code, as specified in the current international standard, International Morse Code Recommendation, ITU-R M.1677-1, was derived from a much-improved proposal by Friedrich Gerke in 1848."
+    source "The Morse code, as specified in the current international standard, International Morse Code Recommendation, ITU-R M.1677-1,[2] was derived from a much-improved proposal by Friedrich Gerke in 1848"
     locator "https://en.wikipedia.org/wiki/Morse_code"
     trust consensus
 }

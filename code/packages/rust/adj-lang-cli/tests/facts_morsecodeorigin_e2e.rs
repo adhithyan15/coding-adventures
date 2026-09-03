@@ -100,3 +100,38 @@ fn morse_code_origin_abstains_honestly_on_american_morse_code() {
         "the cited span names no originator/year for american_morse_code -- honest abstention: {out}"
     );
 }
+
+
+const MORSE_ORIGIN_SENTENCE_PIN: &str = r#""bindings":{"Originator":"friedrich_gerke","Year":"1848"},"citations":[{"source":"The Morse code, as specified in the current international standard, International Morse Code Recommendation, ITU-R M.1677-1,[2] was derived from a much-improved proposal by Friedrich Gerke in 1848","locator":"https://en.wikipedia.org/wiki/Morse_code","trust":"consensus""#;
+
+#[test]
+fn morse_code_origin_citation_keeps_the_pages_footnote_marker_and_no_full_stop() {
+    let dir = scratch("reground_4f");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"morse-code-origin.adj\"\n? morse_code_origin(international_morse_code, $Originator, $Year)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // TWO DEFECTS IN ONE SENTENCE, shipped byte-identically by three
+    // libraries. Wikipedia reads:
+    //
+    //   ... ITU-R M.1677-1,[2] was derived from a much-improved proposal by
+    //   Friedrich Gerke in 1848 that became known as the "Hamburg alphabet" ...
+    //
+    // (1) The footnote marker [2] was dropped. It sits mid-sentence, so no
+    //     contiguous span covers the clause without it.
+    // (2) A full stop was FABRICATED at "1848." to close a sentence the page
+    //     continues. One character on no page, in a field whose contract is
+    //     that its bytes are on that page.
+    //
+    // PINNED IN ALL THREE LIBRARIES. The value is identical in each, so a
+    // single pin would leave two free to revert with CI still green.
+    assert!(
+        out.contains(MORSE_ORIGIN_SENTENCE_PIN),
+        "the citation matches its page: {out}"
+    );
+}

@@ -4,8 +4,9 @@
 % The shape a learner (or an LLM) produces to ANSWER "how is this letter keyed in
 % Morse?" — it states no fact of its own — it only `import`s the grounded table
 % and asks binding queries. The engine resolves each `?` against the `morse_code`
-% rows and returns the pattern (or the letter, on a reverse query) + the ITU
-% standard's source/locator/trust. Anything that is not one of the 26 letters —
+% rows and returns the pattern (or the letter, on a reverse query) + the
+% table's source/locator/trust — which names the GOVERNING STANDARD and
+% grounds no individual letter; see `morse-code.adj`'s Provenance block. Anything that is not one of the 26 letters —
 % a digit, a symbol — abstains honestly: the engine never invents a pattern it
 % cannot cite.
 %
