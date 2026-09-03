@@ -19,7 +19,7 @@
 #![forbid(unsafe_code)]
 
 use coding_adventures_json_value::{JsonNumber, JsonValue};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 
@@ -910,6 +910,108 @@ pub fn builtin_tool_definition(tool_id: &str) -> Option<ToolDefinition> {
     builtin_tool_catalog()
         .into_iter()
         .find(|definition| definition.tool_id == tool_id)
+}
+
+/// Property names that name an agent other than the caller.
+///
+/// Matched on the whole name and on `*_agent_id` / `agent_id_*` shapes, not by
+/// substring: `agent` alone is too common a word to bar, and a check that
+/// over-matches gets weakened by the first false positive rather than fixed.
+const AGENT_IDENTITY_PROPERTY_NAMES: &[&str] = &[
+    "agent_id",
+    "agent",
+    "peer_agent",
+    "target_agent",
+    "consumer_agent_id",
+    "originator_agent_id",
+    "receiver_agent_id",
+];
+
+fn names_an_agent(property: &str) -> bool {
+    // Deliberately NOT `ends_with("_agent")`. `user_agent` is an HTTP header,
+    // not a peer, and a check that fires on it is a check that gets relaxed
+    // after its first false positive rather than fixed. Names that end in
+    // `_agent` and do mean a peer are listed explicitly instead.
+    AGENT_IDENTITY_PROPERTY_NAMES.contains(&property)
+        || property.ends_with("_agent_id")
+        || property.starts_with("agent_id_")
+}
+
+/// Every property path in a schema that names an agent identity.
+///
+/// Walks nested objects and arrays, because a peer identity buried in
+/// `delivery.recipients[].agent_id` authorizes exactly as much as one at the
+/// top level and is easier to miss in review.
+fn agent_identity_properties(schema: &JsonSchema, path: &str, found: &mut Vec<String>) {
+    match schema {
+        JsonSchema::Object { properties, .. } => {
+            for property in properties {
+                let child = if path.is_empty() {
+                    property.name.clone()
+                } else {
+                    format!("{path}.{}", property.name)
+                };
+                if names_an_agent(&property.name) {
+                    found.push(child.clone());
+                }
+                agent_identity_properties(&property.schema, &child, found);
+            }
+        }
+        JsonSchema::Array { items } => {
+            agent_identity_properties(items, &format!("{path}[]"), found);
+        }
+        _ => {}
+    }
+}
+
+/// Tool ids whose input names an agent other than the caller.
+///
+/// D18S S-I7, the V1 rule: *the agent's view contains no agent identity — not
+/// a peer's, not its own — and the agent cannot supply one.* An agent
+/// addresses a `channel_id`, never an agent; routing is the supervisor's, and
+/// lives in `D18P` records the agent never sees.
+///
+/// This exists because the rule is stated as a property of the agent's view,
+/// which makes it mechanically checkable — and a rule nobody can check is a
+/// rule that drifts. It reports rather than filters, so a *new* violation
+/// fails a test instead of being silently excluded from the surface.
+pub fn tools_naming_another_agent<'a, I>(definitions: I) -> Vec<(String, Vec<String>)>
+where
+    I: IntoIterator<Item = &'a ToolDefinition>,
+{
+    let mut violations = Vec::new();
+    for definition in definitions {
+        let mut properties = Vec::new();
+        agent_identity_properties(&definition.input_schema, "", &mut properties);
+        if !properties.is_empty() {
+            violations.push((definition.tool_id.clone(), properties));
+        }
+    }
+    violations
+}
+
+/// The built-in catalog restricted to what a V1 agent may be offered.
+///
+/// Excludes every tool whose input names another agent, per S-I7. Today that
+/// is `vault.request_direct`, which requires a `consumer_agent_id`: it asks
+/// the host to hand a secret to a peer the caller names, which a V1 agent
+/// cannot know exists. `vault.request_lease` remains available and returns a
+/// bearer capability for the caller itself, so the useful half of vault access
+/// is unaffected.
+///
+/// The exclusion is not a fix for `vault.request_direct` -- the tool is still
+/// correct on the supervisor-side path, where the consumer comes from wiring
+/// rather than from an agent.
+pub fn v1_agent_tool_catalog() -> Vec<ToolDefinition> {
+    let catalog = builtin_tool_catalog();
+    let excluded = tools_naming_another_agent(&catalog)
+        .into_iter()
+        .map(|(tool_id, _)| tool_id)
+        .collect::<BTreeSet<_>>();
+    catalog
+        .into_iter()
+        .filter(|definition| !excluded.contains(&definition.tool_id))
+        .collect()
 }
 
 /// Validate catalog-wide invariants such as duplicate tool ids.
@@ -5327,6 +5429,108 @@ fn json_schema_type(type_name: &str) -> JsonValue {
 
 #[cfg(test)]
 mod tests {
+
+    #[test]
+    fn the_builtin_catalog_names_another_agent_in_exactly_one_place() {
+        // D18S S-I7 (V1): the agent's view contains no agent identity and the
+        // agent cannot supply one. This pins the CURRENT exception list, so a
+        // newly added tool that takes a peer identity fails here instead of
+        // quietly joining the surface.
+        let catalog = builtin_tool_catalog();
+        let violations = tools_naming_another_agent(&catalog);
+        assert_eq!(
+            violations,
+            vec![(
+                "vault.request_direct".to_string(),
+                vec!["consumer_agent_id".to_string()]
+            )],
+            "a tool naming another agent was added or removed; \
+             update S-I7's exception list deliberately, not incidentally"
+        );
+    }
+
+    #[test]
+    fn the_v1_agent_catalog_names_no_other_agent() {
+        let v1 = v1_agent_tool_catalog();
+        assert!(
+            tools_naming_another_agent(&v1).is_empty(),
+            "the V1 surface must be free of peer identities"
+        );
+        // The exclusion is narrow: only request_direct goes, and the lease
+        // path -- which returns a bearer capability for the caller itself --
+        // stays, so the useful half of vault access is unaffected.
+        let ids = v1
+            .iter()
+            .map(|definition| definition.tool_id.as_str())
+            .collect::<Vec<_>>();
+        assert!(!ids.contains(&"vault.request_direct"));
+        assert!(ids.contains(&"vault.request_lease"));
+        assert_eq!(v1.len(), builtin_tool_catalog().len() - 1);
+    }
+
+    #[test]
+    fn agent_identity_detection_matches_shapes_not_substrings() {
+        // `agent` is too common a word to bar by substring: a check that
+        // over-matches gets weakened after the first false positive rather
+        // than fixed, so the matcher is anchored.
+        for named in [
+            "agent_id",
+            "agent",
+            "consumer_agent_id",
+            "originator_agent_id",
+            "peer_agent",
+            "target_agent",
+        ] {
+            assert!(names_an_agent(named), "{named} names an agent");
+        }
+        for benign in [
+            "agent_count",
+            "user_agent",
+            "management_style",
+            "channel_id",
+            "secret_name",
+            "agentic_mode",
+        ] {
+            assert!(!names_an_agent(benign), "{benign} does not name an agent");
+        }
+        // `user_agent` is the one worth calling out: an HTTP header, not a
+        // peer, and barring it by substring would have been the first false
+        // positive that got the whole rule relaxed.
+        assert!(!names_an_agent("user_agent"));
+    }
+
+    #[test]
+    fn a_peer_identity_nested_in_an_array_is_still_found() {
+        // A peer buried in `delivery.recipients[].agent_id` authorizes exactly
+        // as much as one at the top level and is easier to miss in review.
+        let schema = JsonSchema::Object {
+            properties: vec![SchemaProperty::new(
+                "delivery",
+                JsonSchema::Object {
+                    properties: vec![SchemaProperty::new(
+                        "recipients",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Object {
+                                properties: vec![SchemaProperty::new(
+                                    "agent_id",
+                                    JsonSchema::String,
+                                )],
+                                required: vec!["agent_id".to_string()],
+                                allow_unknown_fields: false,
+                            }),
+                        },
+                    )],
+                    required: vec!["recipients".to_string()],
+                    allow_unknown_fields: false,
+                },
+            )],
+            required: vec!["delivery".to_string()],
+            allow_unknown_fields: false,
+        };
+        let mut found = Vec::new();
+        agent_identity_properties(&schema, "", &mut found);
+        assert_eq!(found, vec!["delivery.recipients[].agent_id".to_string()]);
+    }
     /// Tool id for the synthetic fixture below. Deliberately outside the
     /// built-in catalog: a test tool that claims a real id would be rejected,
     /// and would be testing the wrong thing if it were not.

@@ -936,6 +936,15 @@ must install a policy rather than assume one.
 
 #### 7.2 What this binding does *not* establish
 
+**V1 status: `vault.request_direct` is not offered to agents.** It requires the
+caller to name a `consumer_agent_id`, which a V1 agent cannot know exists
+(D18S S-I7). `chief_of_staff_tool_api::v1_agent_tool_catalog` excludes it, and
+`tools_naming_another_agent` reports it so the exclusion is a recorded decision
+rather than a silent filter. The tool remains correct on the supervisor-side
+path, where the consumer comes from wiring rather than from an agent.
+`vault.request_lease` is unaffected and returns a bearer capability for the
+caller itself.
+
 `vault.request_direct`'s `consumer_agent_id` names a consumer the caller asserts
 is authorized. The handler does not perform that authorization; it forwards to
 the trusted adapter, which is the component entitled to accept or refuse. A
@@ -997,9 +1006,16 @@ These target named profiles through the ModelGateway rather than raw provider na
 
 ### 11. Delegation tools
 
-- `agent.spawn`
-- `agent.send`
-- `agent.await`
+- `agent.spawn` — **not exposed in V1**
+- `agent.send` — **not exposed in V1**
+- `agent.await` — **not exposed in V1**
+
+Each names a peer, so each is non-conforming under D18S S-I7: in V1 an agent's
+view contains no agent identity and the agent cannot supply one. An agent
+addresses a `channel_id`; routing is the supervisor's and lives in `D18P`
+records the agent never sees. These remain specified for a later version in
+which delegation is a declared, supervisor-mediated capability rather than an
+ambient one.
 
 These are the high-level sub-agent tools used by the future session kernel.
 

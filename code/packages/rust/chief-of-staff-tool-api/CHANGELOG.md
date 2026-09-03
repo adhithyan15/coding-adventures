@@ -4,6 +4,18 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add `tools_naming_another_agent` and `v1_agent_tool_catalog`, enforcing D18S
+  S-I7: in V1 an agent's view contains no agent identity and the agent cannot
+  supply one. The check walks nested objects and arrays, because a peer
+  identity in `delivery.recipients[].agent_id` authorizes as much as one at the
+  top level and is easier to miss in review.
+- Exclude `vault.request_direct` from the V1 agent surface: it requires a
+  `consumer_agent_id`, naming a peer the agent cannot know exists.
+  `vault.request_lease` is unaffected. The tool stays correct on the
+  supervisor-side path, where the consumer comes from wiring.
+- Report violations rather than silently filtering them, so a newly added tool
+  taking a peer identity fails a test instead of quietly joining the surface.
+
 ### Security
 
 - The terminal event's payload no longer carries `error.details`. Those details
