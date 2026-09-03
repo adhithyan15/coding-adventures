@@ -17,6 +17,7 @@ diverge in how they validate identifiers or shape their payloads.
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 import zipfile
@@ -136,13 +137,67 @@ def _zip_tree(source: Path, output: Path, root_name: str, commit: str) -> None:
 
     if not source.is_dir():
         raise ValueError(f"archive source directory does not exist: {source}")
+    root = source.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         archive.writestr(f"{root_name}/SOURCE_COMMIT", f"{commit}\n")
         for path in sorted(source.rglob("*")):
-            if path.is_file():
-                relative = path.relative_to(source).as_posix()
+            relative = path.relative_to(source).as_posix()
+            _reject_unsafe_member(relative)
+            if path.is_symlink():
+                _write_symlink(archive, path, root, f"{root_name}/{relative}")
+            elif path.is_file():
                 archive.write(path, f"{root_name}/{relative}")
+
+
+def _reject_unsafe_member(relative: str) -> None:
+    """Refuse a member name that some extractor would read as a path.
+
+    ``relative_to`` cannot produce ``..`` or a leading slash, so the classic
+    zip-slip shapes are already impossible. A backslash is the one that gets
+    through: it is a perfectly legal character in a POSIX filename and
+    ``as_posix`` passes it along, but several third-party Windows extractors
+    treat it as a separator, so a file named ``..\\..\\evil.exe`` would land
+    outside the target directory.
+    """
+
+    if "\\" in relative or any(ord(ch) < 0x20 for ch in relative):
+        raise ValueError(f"unsafe archive member name: {relative!r}")
+
+
+def _write_symlink(
+    archive: zipfile.ZipFile, path: Path, root: Path, member: str
+) -> None:
+    """Store a symlink as a link, and only if it stays inside the payload.
+
+    Storing rather than following is not a detail. ``ZipFile.write`` opens the
+    path, so a symlink is archived as *its target's bytes* under an innocuous
+    in-tree name -- and these archives are published as public release assets.
+    Anything able to drop one symlink into the build tree could have the
+    contents of any runner-readable file (``.git/config`` holds the checkout
+    token) baked into a download, with a member name that looks ordinary. The
+    ``zip -qry`` this replaced passed ``-y``, which stores links, so following
+    them would have been a regression as well as a leak.
+
+    Storing is also the only correct behaviour for the payload: a macOS
+    ``.app`` from jpackage carries a bundled runtime full of symlinked
+    directories, and ``rglob`` does not descend into those -- so dereferencing
+    silently *drops* every file beneath them while appearing to succeed.
+
+    A link pointing outside the distribution is refused rather than stored:
+    inside the payload it would dangle at best, and it is the shape an
+    exfiltration attempt takes.
+    """
+
+    target = os.readlink(path)
+    resolved = (path.parent / target).resolve()
+    if resolved != root and not resolved.is_relative_to(root):
+        raise ValueError(f"symlink escapes the payload: {path} -> {target}")
+
+    info = zipfile.ZipInfo(member)
+    info.create_system = 3  # Unix, so the mode below is read back as a mode.
+    info.external_attr = 0o120777 << 16  # S_IFLNK | 0777
+    archive.writestr(info, target)
 
 
 # `src="/assets/…"`, `href="/assets/…"`, and the bare engine path. Matching on
@@ -246,7 +301,9 @@ def archive_compose(
         (
             path
             for path in source.rglob("*")
-            if path.is_file() and path.stem.removeprefix("lib") == "engram_capi"
+            if not path.is_symlink()
+            and path.is_file()
+            and path.stem.removeprefix("lib") == "engram_capi"
         ),
         None,
     )

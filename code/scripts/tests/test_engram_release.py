@@ -374,6 +374,131 @@ class ArchiveComposeTests(unittest.TestCase):
                         "0.4.0", "macos", dist, root / "out", COMMIT
                     )
 
+    def test_a_symlink_is_stored_as_a_link_not_as_its_targets_bytes(self) -> None:
+        # The one that matters most. `ZipFile.write` opens the path, so a
+        # symlink would be archived as its TARGET'S CONTENT under an innocuous
+        # in-tree name -- and this archive is published as a public release
+        # asset. One planted link would bake `.git/config` (which holds the
+        # checkout token) into a download that looks entirely ordinary.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            secret = dist / "Engram.app" / "Contents" / "app" / "real.txt"
+            secret.write_text("SENSITIVE\n", encoding="utf-8")
+            link = secret.with_name("link.txt")
+            link.symlink_to("real.txt")
+
+            output = engram_release.archive_compose(
+                "0.4.0", "macos", dist, root / "out", COMMIT
+            )
+            member = (
+                "engram-compose-macos-v0.4.0/Engram.app/Contents/app/link.txt"
+            )
+            with zipfile.ZipFile(output) as archive:
+                info = archive.getinfo(member)
+                self.assertNotIn(b"SENSITIVE", archive.read(member))
+                self.assertEqual(archive.read(member), b"real.txt")
+            # S_IFLNK, so an extractor recreates a link rather than a file.
+            self.assertEqual((info.external_attr >> 16) & 0o170000, 0o120000)
+
+    def test_a_stored_symlink_extracts_as_a_symlink(self) -> None:
+        # The mode bits above are only a claim about what an extractor will do.
+        # This runs a real one and looks at the result.
+        import shutil
+        import subprocess
+
+        if shutil.which("unzip") is None:
+            self.skipTest("unzip is not installed")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            target = dist / "Engram.app" / "Contents" / "app" / "real.txt"
+            target.write_text("payload\n", encoding="utf-8")
+            (target.with_name("link.txt")).symlink_to("real.txt")
+
+            output = engram_release.archive_compose(
+                "0.4.0", "macos", dist, root / "out", COMMIT
+            )
+            out = root / "extracted"
+            out.mkdir()
+            subprocess.run(
+                ["unzip", "-q", str(output), "-d", str(out)], check=True
+            )
+            restored = (
+                out
+                / "engram-compose-macos-v0.4.0"
+                / "Engram.app"
+                / "Contents"
+                / "app"
+                / "link.txt"
+            )
+            self.assertTrue(restored.is_symlink(), "extracted as a plain file")
+            self.assertEqual(restored.read_text(), "payload\n")
+
+    def test_files_under_a_symlinked_directory_are_not_silently_dropped(self) -> None:
+        # `rglob` does not descend into a symlinked directory, so following
+        # links loses everything beneath one while still reporting success. A
+        # macOS `.app` from jpackage bundles a runtime full of symlinked
+        # directories, which is exactly this case.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            contents = dist / "Engram.app" / "Contents"
+            (contents / "runtime").mkdir()
+            (contents / "runtime" / "release").write_text("JAVA\n", encoding="utf-8")
+            (contents / "Home").symlink_to("runtime")
+
+            output = engram_release.archive_compose(
+                "0.4.0", "macos", dist, root / "out", COMMIT
+            )
+            with zipfile.ZipFile(output) as archive:
+                self.assertIn(
+                    "engram-compose-macos-v0.4.0/Engram.app/Contents/Home",
+                    archive.namelist(),
+                )
+
+    def test_refuses_a_symlink_pointing_outside_the_payload(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (root / "secret.txt").write_text("SENSITIVE\n", encoding="utf-8")
+            (dist / "Engram.app" / "escape.txt").symlink_to(root / "secret.txt")
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("escapes the payload", str(caught.exception))
+
+    def test_a_symlink_cannot_satisfy_the_engine_check(self) -> None:
+        # Otherwise a link named `libengram_capi.dylib` would pass the presence
+        # and non-empty checks while shipping no engine at all.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            engine = next(dist.rglob("libengram_capi.dylib"))
+            other = engine.with_name("something.txt")
+            other.write_text("not an engine\n", encoding="utf-8")
+            engine.unlink()
+            engine.symlink_to("something.txt")
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("engram_capi", str(caught.exception))
+
+    def test_refuses_a_member_name_a_windows_extractor_would_split(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (dist / "Engram.app" / "..\\..\\evil.exe").write_bytes(b"MZ")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("unsafe archive member name", str(caught.exception))
+
     def test_refuses_a_distribution_that_was_never_built(self) -> None:
         # The failure this replaced was the opposite shape -- a packaging step
         # that could not find its tool. A missing distribution should say so
