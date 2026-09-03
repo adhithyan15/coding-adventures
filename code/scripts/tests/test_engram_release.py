@@ -505,6 +505,98 @@ class ArchiveComposeTests(unittest.TestCase):
                 )
             self.assertIn("escapes the payload", str(caught.exception))
 
+    def test_refuses_a_symlink_target_a_windows_extractor_would_split(self) -> None:
+        # The member NAME was checked for backslashes and the symlink TARGET was
+        # not -- two halves of one hazard, written separately, one of them
+        # missed. Under `posixpath` this target is a single harmless-looking
+        # in-root component; an extractor that reads `\` as a separator lands on
+        # `../evil.exe`, outside the payload.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (dist / "Engram.app" / "winlink").symlink_to("..\\..\\..\\evil.exe")
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("unsafe symlink target", str(caught.exception))
+
+    def test_refuses_an_empty_or_control_character_symlink_target(self) -> None:
+        for target in ["", "a\nb"]:
+            with self.subTest(target=target):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    dist = _write_compose_dist(root)
+                    try:
+                        (dist / "Engram.app" / "odd").symlink_to(target)
+                    except (OSError, ValueError):
+                        self.skipTest("filesystem rejects this link target")
+                    with self.assertRaises(ValueError) as caught:
+                        engram_release.archive_compose(
+                            "0.4.0", "macos", dist, root / "out", COMMIT
+                        )
+                    self.assertIn("unsafe symlink target", str(caught.exception))
+
+    def test_refuses_members_that_collide_when_case_is_folded(self) -> None:
+        # On the reader's macOS or Windows machine these are one file, and the
+        # second silently overwrites the first -- a payload that loses a file on
+        # extraction while every check here passes.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            app = dist / "Engram.app" / "Contents" / "app"
+            (app / "Config.json").write_text("{}\n", encoding="utf-8")
+            try:
+                (app / "config.json").write_text("{}\n", encoding="utf-8")
+            except OSError:
+                self.skipTest("filesystem is case-insensitive")
+            if not (app / "Config.json").exists() or len(
+                list(app.glob("[Cc]onfig.json"))
+            ) < 2:
+                self.skipTest("filesystem is case-insensitive")
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("case is folded", str(caught.exception))
+
+    def test_refuses_a_lowercase_source_commit_too(self) -> None:
+        # The guard was exact-case but the collision is not. On a case-sensitive
+        # build filesystem these archive as two distinct members with no warning
+        # at all -- quieter than the bug it replaced -- and collapse on the
+        # downloader's machine, where the planted value wins.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (dist / "source_commit").write_text(f"{'b' * 40}\n", encoding="utf-8")
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("SOURCE_COMMIT", str(caught.exception))
+
+    def test_a_nested_source_commit_is_still_allowed(self) -> None:
+        # It does not collide with the one at the root, so refusing it would be
+        # a false positive -- and a guard that rejects legitimate payloads
+        # breaks the release just as surely as one that misses an attack.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            nested = dist / "Engram.app" / "Contents" / "app" / "SOURCE_COMMIT"
+            nested.write_text("unrelated\n", encoding="utf-8")
+
+            output = engram_release.archive_compose(
+                "0.4.0", "macos", dist, root / "out", COMMIT
+            )
+            with zipfile.ZipFile(output) as archive:
+                self.assertEqual(
+                    archive.read("engram-compose-macos-v0.4.0/SOURCE_COMMIT").decode(),
+                    f"{COMMIT}\n",
+                )
+
     def test_refuses_a_payload_carrying_its_own_source_commit(self) -> None:
         # Two members with the same name: readers take the LAST, so a planted
         # SOURCE_COMMIT wins over the real one and the provenance guarantee is

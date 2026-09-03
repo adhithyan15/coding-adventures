@@ -134,6 +134,11 @@ def _zip_tree(source: Path, output: Path, root_name: str, commit: str) -> None:
     tree produces the same bytes regardless of filesystem iteration order. The
     ``SOURCE_COMMIT`` member records exactly which commit produced the payload,
     so an artifact found later can be traced without relying on the release page.
+
+    Symlinks are **stored as links**, never followed -- see ``_write_symlink``
+    for why that is both the secure and the correct behaviour. Everything these
+    archives contain is published, so this function refuses a payload rather
+    than writing one it cannot vouch for.
     """
 
     if not source.is_dir():
@@ -151,10 +156,24 @@ def _zip_tree(source: Path, output: Path, root_name: str, commit: str) -> None:
     try:
         with zipfile.ZipFile(partial, "w", compression=zipfile.ZIP_DEFLATED) as archive:
             archive.writestr(f"{root_name}/SOURCE_COMMIT", f"{commit}\n")
+            # Any two members that differ only by case are one file on the
+            # reader's macOS or Windows machine, and the second silently
+            # overwrites the first. `SOURCE_COMMIT` is the security-relevant
+            # instance -- it is seeded here so the general check covers it --
+            # but a payload that quietly loses a file on extraction is a bad
+            # payload whatever the file was.
+            seen: dict[str, str] = {f"{root_name}/source_commit": "SOURCE_COMMIT"}
             for path in sorted(source.rglob("*")):
                 relative = path.relative_to(source).as_posix()
                 _reject_unsafe_member(relative)
                 member = f"{root_name}/{relative}"
+                clash = seen.setdefault(member.lower(), relative)
+                if clash != relative:
+                    raise ValueError(
+                        f"two members collide when case is folded, so one would "
+                        f"overwrite the other on extraction: {relative!r} and "
+                        f"{clash!r}"
+                    )
                 if path.is_symlink():
                     _write_symlink(archive, path, root, root_name, member)
                 elif path.is_file():
@@ -163,6 +182,30 @@ def _zip_tree(source: Path, output: Path, root_name: str, commit: str) -> None:
         partial.unlink(missing_ok=True)
         raise
     os.replace(partial, output)
+
+
+def _unsafe_path_text(text: str) -> str | None:
+    """Why ``text`` cannot be trusted as a path inside an archive, or ``None``.
+
+    Applied to member names *and* to symlink targets, from one definition, so
+    the two halves of the pair cannot drift apart -- they were written
+    separately once and the target half was missing this entirely.
+
+    A backslash is the interesting one. It is a perfectly legal character in a
+    POSIX filename and `posixpath` treats it as ordinary, but several
+    third-party Windows extractors read it as a separator. So a symlink target
+    of ``..\\..\\..\\evil.exe`` normalises to one harmless-looking in-root
+    component under the rules we check with, and splits to ``../evil.exe`` --
+    outside the payload -- under the rules that extract it.
+    """
+
+    if not text:
+        return "is empty"
+    if "\\" in text:
+        return "contains a backslash, which some extractors read as a separator"
+    if any(ord(ch) < 0x20 for ch in text):
+        return "contains a control character"
+    return None
 
 
 def _reject_unsafe_member(relative: str) -> None:
@@ -176,15 +219,21 @@ def _reject_unsafe_member(relative: str) -> None:
     outside the target directory.
     """
 
-    if "\\" in relative or any(ord(ch) < 0x20 for ch in relative):
-        raise ValueError(f"unsafe archive member name: {relative!r}")
+    reason = _unsafe_path_text(relative)
+    if reason is not None:
+        raise ValueError(f"unsafe archive member name: {relative!r} {reason}")
 
     # `SOURCE_COMMIT` is written first, so a payload carrying its own copy
     # produces two members with the same name -- and readers take the LAST, so
     # the planted value wins. That defeats the one thing this member exists to
     # do. Python only warns, and CI does not fail on warnings. The precondition
     # is not hypothetical: Vite copies `public/` into `dist/` verbatim.
-    if relative == "SOURCE_COMMIT":
+    # Case-folded, because the collision is. On a case-sensitive build
+    # filesystem `source_commit` and `SOURCE_COMMIT` are two distinct members
+    # and nothing warns -- the shadowing then happens on the *downloader's*
+    # machine, where macOS and Windows collapse them and the planted value
+    # wins. Nested `sub/SOURCE_COMMIT` is still fine: it does not collide.
+    if relative.upper() == "SOURCE_COMMIT":
         raise ValueError(
             "payload contains its own SOURCE_COMMIT, which would shadow the "
             "commit recorded here"
@@ -216,6 +265,14 @@ def _write_symlink(
     """
 
     target = os.readlink(path)
+
+    # Checked with the same predicate as member names -- see `_unsafe_path_text`
+    # for why a backslash in a *target* escapes the payload on the extractor's
+    # machine. Doing it here also makes `C:\\Windows\\...` rejected uniformly
+    # rather than only when the archiving runner happens to be Windows.
+    reason = _unsafe_path_text(target)
+    if reason is not None:
+        raise ValueError(f"unsafe symlink target: {path} -> {target!r} {reason}")
 
     # An absolute target cannot be right in a relocatable payload: it either
     # dangles on the reader's machine or points somewhere unrelated, and it
