@@ -6293,3 +6293,81 @@ Three things generalise:
   written the words "a verification that silently skips is not a verification"
   into this file hours earlier. Knowing the pattern is not the same as checking
   whether your own code has it — so check.
+
+## `apt-get update` fails as a unit, so an unused repo can fail a required job
+
+A docs-only pull request — four Markdown files, no source, no CI change —
+failed its required `build (ubuntu-latest)` job because
+`packages.microsoft.com` returned 403. `apt-get update` exits 100 if *any*
+configured repository fails, and the GitHub runner images preinstall vendor
+repositories this project never installs from. The step only wanted
+`libcairo2-dev` from the Ubuntu archive, which fetched fine.
+
+The fix is to drop the unused vendor lists before updating, so update's exit
+status again means something about the archive we depend on. Deliberately not
+`apt-get update || true`: that hides a genuinely unreachable archive and turns
+a loud failure into a confusing one later, when the install fails for a reason
+that no longer names the cause.
+
+Three things this turned up that are worth keeping:
+
+- **On Ubuntu 24.04 the main archive lives in
+  `/etc/apt/sources.list.d/ubuntu.sources`**, in deb822 format —
+  `/etc/apt/sources.list` is a stub. So the obvious fix, "clear
+  `sources.list.d`", deletes the archive every package comes from, and the job
+  then fails to find `libcairo2-dev` rather than failing to reach Microsoft.
+  Pruning has to be by explicit vendor pattern, and the script asserts an
+  Ubuntu archive survives before installing anything — a guard against its own
+  pattern list being widened too far later.
+
+- **The reported instance was not the population.** The issue said 10 sites in
+  5 workflows; the actual count was 14 in 6, including a workflow the issue did
+  not list. Fixing only what was reported leaves the next outage to red-flag a
+  different required job. A test now asserts no workflow calls `apt-get update`
+  directly, so the invariant is checked rather than remembered.
+
+- **A survey finds things outside its own scope, and those should be logged,
+  not smuggled in.** Six more sites run `apt-get install` with no update at all,
+  and two of those pass `-q` (quiet) where they meant `-y` (assume yes) — with
+  no TTY, apt prompts and aborts. They pass today only because the packages are
+  already in the runner image, which makes the step a silent no-op. Different
+  construct, different fix, real behaviour change to route them through the
+  wrapper. Filed separately rather than expanding the PR.
+
+## A guard that encodes a guess about the environment fails in the environment
+
+The apt wrapper above asserted, before installing, that an Ubuntu archive was
+still configured — by grepping the source lists for `archive.ubuntu.com`,
+`ports.ubuntu.com`, or `azure.archive.ubuntu.com`. It passed every local
+fixture, including two I built to mimic the 24.04 and 22.04 layouts. On the
+real runner it failed immediately:
+
+```
+pruned 1 vendor source list(s): microsoft-prod.list
+error: no Ubuntu archive is configured after pruning.
+```
+
+Nothing was wrong with the pruning. The *guard* was wrong: it encoded my guess
+about which mirror hostname and which file layout the runner image uses, and my
+fixtures encoded the same guess, so they agreed with each other and neither
+agreed with reality. Fixtures I write from an assumption cannot test that
+assumption — they inherit it.
+
+The fix was to stop asking a question that needs environment knowledge. The
+invariant that actually matters is **"pruning left behind something we did not
+prune"** — no hostnames, no layouts, no assumptions about the image. It is also
+the thing the guard was really for: catching a vendor pattern widened until it
+swallows the archive.
+
+Two smaller points, both of which cost a CI round trip:
+
+- **The error reported its conclusion, not its evidence.** "No Ubuntu archive
+  is configured" says what the script decided; it does not say what it saw, so
+  diagnosing it needed another run just to look. The script now prints the
+  surviving sources unconditionally, on success as well as failure — one line
+  that distinguishes "my patterns are too broad" from "this image is laid out
+  differently".
+- **Prefer an invariant over a recognizer.** "At least one source survived" is
+  checkable without knowing anything about the world. "An Ubuntu archive is
+  present" requires a list of what Ubuntu archives look like, and that list is
+  maintained by somebody else.

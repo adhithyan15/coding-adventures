@@ -27,7 +27,7 @@ jobs:
       - name: Test release contract
         run: python3 -m unittest discover -s code/scripts/tests -p test_venture_release.py
       - name: Install Cairo
-        run: sudo apt-get update && sudo apt-get install -y libcairo2-dev
+        run: bash code/scripts/ci/apt-install.sh libcairo2-dev
       - name: Test portable Venture packages
         working-directory: code/packages/rust
         run: cargo test -p venture-browser-core -p venture-browser-cairo -p venture-browser-qt
@@ -41,7 +41,7 @@ jobs:
         with:
           toolchain: "1.98"
       - name: Install Cairo
-        run: sudo apt-get update && sudo apt-get install -y libcairo2-dev
+        run: bash code/scripts/ci/apt-install.sh libcairo2-dev
       - name: Emit all Venture backends
         working-directory: code/programs/mosaic/venture-browser
         run: ./scripts/build-all.sh --release --emit-only --output "$RUNNER_TEMP/venture-generated"
@@ -63,7 +63,7 @@ jobs:
         with:
           toolchain: "1.98"
       - name: Install Cairo
-        run: sudo apt-get update && sudo apt-get install -y libcairo2-dev
+        run: bash code/scripts/ci/apt-install.sh libcairo2-dev
       - name: Build shared Cairo bridge
         working-directory: code/packages/rust
         run: cargo build --release -p venture-browser-cairo

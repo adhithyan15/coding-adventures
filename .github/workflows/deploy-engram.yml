@@ -73,8 +73,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y libcairo2-dev
+          bash code/scripts/ci/apt-install.sh libcairo2-dev
 
       - name: Build the production web bundle
         shell: bash
