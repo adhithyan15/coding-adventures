@@ -12,7 +12,7 @@ headword: "दाल"
 gloss: "lentils, split pulses"
 romanization: "dāl"
 concept_tag: HI-NOUN-LENTILS
-prerequisites: [HI-C52-rice]
+prerequisites: [HI-C52-rice, HI-C50-favour, HI-C51-garland]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C52-KITCHEN-02]
 practises:
-  knowledge: [HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02]
+  knowledge: [HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C50-COURTESY-02, HI-LEX-C51-WELCOME-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Whole pulses are not दाल; split ones are. So the word draws its line throu
 The second of five, and the one named after a knife rather than a plant.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C50-COURTESY-02, HI-LEX-C51-WELCOME-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dāl*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dāl*, then *chāval* — the pair that makes a meal]
+- [YOU RECALL: read **एहसान**, then say *mālā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02] -->

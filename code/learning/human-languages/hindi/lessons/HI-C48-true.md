@@ -12,7 +12,7 @@ headword: "सच"
 gloss: "true"
 romanization: "sac"
 concept_tag: HI-WORD-TRUE
-prerequisites: [HI-C47-neighbour]
+prerequisites: [HI-C47-neighbour, HI-C46-hair, HI-C47-teacher]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C48-REPLY-01]
 practises:
-  knowledge: [HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-01]
+  knowledge: [HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-01, HI-LEX-C46-BODY-01, HI-LEX-C47-ROLE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Hindi keeps the long form as well, in names and in solemn speech, so one idea ca
 The first of five short replies.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-01, HI-LEX-C46-BODY-01, HI-LEX-C47-ROLE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sac*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sac*, then *paṛosī*, so the reply and the person sit together]
+- [YOU RECALL: say *bāl*, then read **शिक्षक**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-01] -->

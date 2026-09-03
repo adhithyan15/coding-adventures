@@ -12,7 +12,7 @@ headword: "एहसान"
 gloss: "a favour"
 romanization: "ehsān"
 concept_tag: HI-NOUN-FAVOUR
-prerequisites: [HI-C50-gratitude]
+prerequisites: [HI-C50-gratitude, HI-C48-enough, HI-C49-day-after]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C50-COURTESY-02]
 practises:
-  knowledge: [HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02]
+  knowledge: [HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C48-REPLY-02, HI-LEX-C49-LEAVE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Two phrases live on it and point opposite ways. *Ehsān mānnā* is to acknowled
 Two: gratitude, and the thing it is owed for.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C48-REPLY-02, HI-LEX-C49-LEAVE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ehsān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ehsān*, then *ābhār*, the favour and the thanks for it]
+- [YOU RECALL: read **बस**, then say *parsoṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02] -->

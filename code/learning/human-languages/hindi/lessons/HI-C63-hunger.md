@@ -12,7 +12,7 @@ headword: "भूख"
 gloss: "hunger"
 romanization: "bhūkh"
 concept_tag: HI-NOUN-HUNGER
-prerequisites: [HI-C62-wood]
+prerequisites: [HI-C62-wood, HI-C61-vessel, HI-C62-rope]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C63-STATE-01]
 practises:
-  knowledge: [HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01]
+  knowledge: [HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01, HI-LEX-C61-FIRE-01, HI-LEX-C62-HANDS-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ So भूख was never the state of an empty stomach — it was the appetite, th
 The first of five things a body reports.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01, HI-LEX-C61-FIRE-01, HI-LEX-C62-HANDS-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bhūkh*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bhūkh*, then *roṭī*, and say which one settles the other]
+- [YOU RECALL: say *bartan*, then read **रस्सी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01] -->

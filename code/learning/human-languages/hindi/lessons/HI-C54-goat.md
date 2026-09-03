@@ -12,7 +12,7 @@ headword: "बकरी"
 gloss: "a goat"
 romanization: "bakrī"
 concept_tag: HI-NOUN-GOAT
-prerequisites: [HI-C54-bird]
+prerequisites: [HI-C54-bird, HI-C52-vegetable, HI-C53-lip]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C54-ANIMAL-05]
 practises:
-  knowledge: [HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05]
+  knowledge: [HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05, HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Notice what the pair does that English does not: *goat* covers both, and English
 The fifth of five. That is the yard.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05, HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bakrī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bakrī*, *gāy*, *ghoṛā*, *machhlī*, *chiṛiyā* — name them round]
+- [YOU RECALL: say *sabzī*, then read **होंठ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05] -->

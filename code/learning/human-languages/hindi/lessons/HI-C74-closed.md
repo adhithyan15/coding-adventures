@@ -12,7 +12,7 @@ headword: "बंद"
 gloss: "closed"
 romanization: "band"
 concept_tag: HI-ADJ-CLOSED
-prerequisites: [HI-C74-open, HI-C73-drink]
+prerequisites: [HI-C74-open, HI-C73-drink, HI-C72-rupee, HI-C73-breakfast]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C74-SIGNS-02]
 practises:
-  knowledge: [HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C73-EATING-05]
+  knowledge: [HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C73-EATING-05, HI-LEX-C72-COST-02, HI-LEX-C73-EATING-02]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -58,13 +58,14 @@ learn them as one pair and you have read half a street.
 The pair every shutter in the country is painted with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C73-EATING-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C73-EATING-05, HI-LEX-C72-COST-02, HI-LEX-C73-EATING-02] -->
 
 [PAUSE 1s]
 - [YOU RECALL: read **पीना**, then say it without looking]
 - [YOU SAY: *khulā*, then *band*]
 - [YOU READ: बंद, and check that it is not बंदर]
 - [YOU WRITE: खुला once more, then बंद beside it]
+- [YOU RECALL: read **रुपया**, then say *nāshtā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02] -->

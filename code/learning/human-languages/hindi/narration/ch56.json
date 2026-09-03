@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "The Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ffd83dc7d4cac5ce",
+  "sourceHash": "fnv1a64:bb1219f889b4ce65",
   "lessons": [
     {
       "id": "HI-C56-road",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3475929b74be89d",
+      "sourceHash": "fnv1a64:751617a562c393c7",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *saṛak*, the thing you set out along]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gāy, then read सूरज",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gāy*, then read **सूरज**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a3f5ba51eac6416",
+      "sourceHash": "fnv1a64:5103d1b2b07c9c25",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *gā̃v*, and feel the nasal where the *m* used to be]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ghoṛā, then read चाँद",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ghoṛā*, then read **चाँद**]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:532d77a20fb105d5",
+      "sourceHash": "fnv1a64:ad60bcf2d4e22824",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bāzār*, on the *saṛak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say machhlī, then read तारा",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *machhlī*, then read **तारा**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5f73125475cc9b2",
+      "sourceHash": "fnv1a64:dda2fd06f5a08371",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dukān*, in the *bāzār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chiṛiyā, then read बादल",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chiṛiyā*, then read **बादल**]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eaab6850ed164d4a",
+      "sourceHash": "fnv1a64:2b1a5f07f70e4207",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *khet*, *gā̃v*, *saṛak*, *bāzār*, *dukān* — walk it in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bakrī, then read आसमान",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bakrī*, then read **आसमान**]"
             }
           ]
         },

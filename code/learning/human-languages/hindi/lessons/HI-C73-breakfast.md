@@ -12,7 +12,7 @@ headword: "नाश्ता"
 gloss: "breakfast"
 romanization: "nāshtā"
 concept_tag: HI-NOUN-BREAKFAST
-prerequisites: [HI-C73-eating-house, HI-C72-buy]
+prerequisites: [HI-C73-eating-house, HI-C72-buy, HI-C71-also, HI-C72-rupee]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C73-EATING-02]
 practises:
-  knowledge: [HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-02, HI-LEX-C72-COST-05]
+  knowledge: [HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-02, HI-LEX-C72-COST-05, HI-LEX-C71-TODAY-02, HI-LEX-C72-COST-02]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -62,13 +62,14 @@ breakfast", built the way **आराम करना** was.
 A place to eat, and the first meal of the day to eat there.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-02, HI-LEX-C72-COST-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-02, HI-LEX-C72-COST-05, HI-LEX-C71-TODAY-02, HI-LEX-C72-COST-02] -->
 
 [PAUSE 1s]
 - [YOU RECALL: read **ख़रीदना**, then say it without looking]
 - [YOU SAY: *nāshtā*]
 - [YOU SAY: *nāshtā karnā*]
 - [YOU WRITE: होटल once more, then नाश्ता beside the printed model]
+- [YOU RECALL: read **भी**, then say *rupayā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-02] -->

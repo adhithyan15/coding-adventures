@@ -12,7 +12,7 @@ headword: "महँगा"
 gloss: "expensive"
 romanization: "mahãgā"
 concept_tag: HI-ADJ-EXPENSIVE
-prerequisites: [HI-C72-price]
+prerequisites: [HI-C72-price, HI-C70-song, HI-C71-also]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C72-COST-04]
 practises:
-  knowledge: [HI-LEX-C72-COST-02, HI-LEX-C72-COST-03, HI-LEX-C72-COST-04]
+  knowledge: [HI-LEX-C72-COST-02, HI-LEX-C72-COST-03, HI-LEX-C72-COST-04, HI-LEX-C70-LEISURE-04, HI-LEX-C71-TODAY-02]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -64,12 +64,13 @@ those two.
 Four: a price, and a judgement to pass on it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-02, HI-LEX-C72-COST-03, HI-LEX-C72-COST-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-02, HI-LEX-C72-COST-03, HI-LEX-C72-COST-04, HI-LEX-C70-LEISURE-04, HI-LEX-C71-TODAY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mahãgā*, with the nose in the middle]
 - [YOU SAY: *bahut mahãgā*]
 - [YOU WRITE: महँगा, putting the ँ above the ह]
+- [YOU RECALL: read **गाना**, then say *bhī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-03, HI-LEX-C72-COST-04] -->

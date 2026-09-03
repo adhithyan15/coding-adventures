@@ -12,7 +12,7 @@ headword: "अनाज"
 gloss: "grain"
 romanization: "anāj"
 concept_tag: HI-NOUN-GRAIN
-prerequisites: [HI-C66-crop]
+prerequisites: [HI-C66-crop, HI-C64-slowly, HI-C65-permission]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C66-FIELD-03]
 practises:
-  knowledge: [HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03]
+  knowledge: [HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C64-MEASURE-03, HI-LEX-C65-GRACE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Usually traced to Sanskrit अन्न (*anna*), 'food', through a longer form 
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C64-MEASURE-03, HI-LEX-C65-GRACE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *anāj*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *anāj*, then *chāval*, and say which one is the sack]
+- [YOU RECALL: say *dhīre*, then read **अनुमति**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03] -->

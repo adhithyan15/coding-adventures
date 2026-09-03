@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 45,
-  "sourceHash": "fnv1a64:82505a42ca050c03",
+  "sourceHash": "fnv1a64:575971086d2d9c42",
   "lessonIds": [
     "HI-C45-fruit",
     "HI-C45-cloth",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch45.txt",
   "json": "hindi/narration/ch45.json",
-  "textHash": "fnv1a64:25a18fb2c072f8d0",
-  "jsonHash": "fnv1a64:0c6a3f17fedd8619",
+  "textHash": "fnv1a64:8e7f3128d7448253",
+  "jsonHash": "fnv1a64:d19919a9c241b53a",
   "findings": []
 }

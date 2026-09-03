@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Hair, Ear, and Throat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6ce53cfafe440d8d",
+  "sourceHash": "fnv1a64:4b01ba9822f9dfae",
   "lessons": [
     {
       "id": "HI-C46-hair",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0be65da569248b2f",
+      "sourceHash": "fnv1a64:2fa2dd229a375642",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bāl*, then *sābun*, so the washing and the washed sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say beṭā, then read फल",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *beṭā*, then read **फल**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de272c3e35ae2aba",
+      "sourceHash": "fnv1a64:6733da57a063a122",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *uṅglī*, then *bāl*, and touch each as you name it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read बेटी, then say kapṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **बेटी**, then say *kapṛā*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5112d145d6d16835",
+      "sourceHash": "fnv1a64:12b93c91628445c0",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kān*, then *uṅglī*, then *bāl*, back down the run]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say parivār, then read दीया",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *parivār*, then read **दीया**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0157425f901e270",
+      "sourceHash": "fnv1a64:bfcb22faca4ef632",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nāk*, then *kān*, so the two openings of the head sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read लोग, then say namak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **लोग**, then say *namak*]"
             }
           ]
         },

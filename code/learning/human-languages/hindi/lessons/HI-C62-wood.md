@@ -12,7 +12,7 @@ headword: "लकड़ी"
 gloss: "wood, a stick of firewood"
 romanization: "lakṛī"
 concept_tag: HI-NOUN-WOOD
-prerequisites: [HI-C62-clay]
+prerequisites: [HI-C62-clay, HI-C60-peacock, HI-C61-stove]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C62-HANDS-05]
 practises:
-  knowledge: [HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05]
+  knowledge: [HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05, HI-LEX-C60-YARD-05, HI-LEX-C61-FIRE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Usually traced back to Sanskrit लगुड (*laguḍa*), 'a club, a staff', th
 Five: रस्सी, सूई, टोकरी, मिट्टी, लकड़ी. Enough to say what a working pair of hands is holding.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05, HI-LEX-C60-YARD-05, HI-LEX-C61-FIRE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *lakṛī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *merā nām* and your own name]
+- [YOU RECALL: say *mor*, then read **चूल्हा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05] -->

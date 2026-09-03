@@ -12,7 +12,7 @@ headword: "गाय"
 gloss: "a cow"
 romanization: "gāy"
 concept_tag: HI-NOUN-COW
-prerequisites: [HI-C53-lip]
+prerequisites: [HI-C53-lip, HI-C52-rice, HI-C53-shoulder]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C54-ANIMAL-01]
 practises:
-  knowledge: [HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01]
+  knowledge: [HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01, HI-LEX-C52-KITCHEN-01, HI-LEX-C53-BODY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ So गाय and *cow* are the same word, separated by five thousand years and m
 The first of five animals, and a word English owns too.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01, HI-LEX-C52-KITCHEN-01, HI-LEX-C53-BODY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gāy*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gāy*, and hear the *c-* of *cow* inside it]
+- [YOU RECALL: say *chāval*, then read **कंधा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01] -->

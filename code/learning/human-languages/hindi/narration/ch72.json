@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "When, and Then",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:36917a9ae0826e43",
+  "sourceHash": "fnv1a64:2796b73569bb8432",
   "lessons": [
     {
       "id": "HI-C72-kab",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78ed8c52b63f273f",
+      "sourceHash": "fnv1a64:a255cbfb072e74b9",
       "notice": null,
       "blocks": [
         {
@@ -103,6 +103,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the five k- words together — *kyā*, *kaun*, *kahāṁ*, *kyoṁ*, *kab*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say saknā, then read चाहना",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *saknā*, then read **चाहना**]"
             },
             {
               "kind": "activity",

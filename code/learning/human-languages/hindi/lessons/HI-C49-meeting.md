@@ -12,7 +12,7 @@ headword: "मुलाक़ात"
 gloss: "a meeting"
 romanization: "mulāqāt"
 concept_tag: HI-NOUN-MEETING
-prerequisites: [HI-C49-set-out]
+prerequisites: [HI-C49-set-out, HI-C47-neighbour, HI-C48-absolutely]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C49-LEAVE-05]
 practises:
-  knowledge: [HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04, HI-LEX-C49-LEAVE-05]
+  knowledge: [HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04, HI-LEX-C49-LEAVE-05, HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It sits inside the ordinary parting line *phir mulāqāt hogī*, 'there will be 
 Five, and the run is closed: right now, the far day, a journey, setting out, a meeting.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04, HI-LEX-C49-LEAVE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04, HI-LEX-C49-LEAVE-05, HI-LEX-C47-ROLE-05, HI-LEX-C48-REPLY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mulāqāt*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *abhī*, *parsoṁ*, *safar*, *nikalnā*, *mulāqāt*]
+- [YOU RECALL: say *paṛosī*, then read **बिलकुल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04, HI-LEX-C49-LEAVE-05] -->

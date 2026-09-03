@@ -12,7 +12,7 @@ headword: "बुख़ार"
 gloss: "a fever"
 romanization: "bukhār"
 concept_tag: HI-NOUN-FEVER
-prerequisites: [HI-C63-sleep]
+prerequisites: [HI-C63-sleep, HI-C61-griddle, HI-C62-clay]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C63-STATE-04]
 practises:
-  knowledge: [HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04]
+  knowledge: [HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04, HI-LEX-C61-FIRE-04, HI-LEX-C62-HANDS-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Older medicine pictured a fever as exactly that: a vapour rising inside a body. 
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04, HI-LEX-C61-FIRE-04, HI-LEX-C62-HANDS-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bukhār*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bukhār*, then *ṭhīk*, and say which one you would rather report]
+- [YOU RECALL: read **तवा**, then say *miṭṭī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04] -->

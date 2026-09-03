@@ -12,7 +12,7 @@ headword: "निकास"
 gloss: "exit"
 romanization: "nikās"
 concept_tag: HI-NOUN-EXIT
-prerequisites: [HI-C74-entrance, HI-C49-set-out]
+prerequisites: [HI-C74-entrance, HI-C49-set-out, HI-C72-expensive, HI-C73-waiter]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C74-SIGNS-04]
 practises:
-  knowledge: [HI-LEX-C49-LEAVE-04, HI-LEX-C74-SIGNS-03, HI-LEX-C74-SIGNS-04]
+  knowledge: [HI-LEX-C49-LEAVE-04, HI-LEX-C74-SIGNS-03, HI-LEX-C74-SIGNS-04, HI-LEX-C72-COST-04, HI-LEX-C73-EATING-04]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,12 +60,13 @@ two are read together or not at all.
 Four, and the second pair of this chapter: प्रवेश and निकास.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-04, HI-LEX-C74-SIGNS-03, HI-LEX-C74-SIGNS-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-04, HI-LEX-C74-SIGNS-03, HI-LEX-C74-SIGNS-04, HI-LEX-C72-COST-04, HI-LEX-C73-EATING-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nikalnā*, then *nikās*]
 - [YOU SAY: *pravesh*, then *nikās*]
 - [YOU WRITE: निकास, lengthening the vowel that निकलना keeps short]
+- [YOU RECALL: read **महँगा**, then say *veṭar*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-03, HI-LEX-C74-SIGNS-04] -->

@@ -12,7 +12,7 @@ headword: "मेज़"
 gloss: "a table"
 romanization: "mez"
 concept_tag: HI-NOUN-TABLE
-prerequisites: [HI-C51-courtyard]
+prerequisites: [HI-C51-courtyard, HI-C49-set-out, HI-C50-blessing]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C51-WELCOME-04]
 practises:
-  knowledge: [HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04]
+  knowledge: [HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04, HI-LEX-C49-LEAVE-04, HI-LEX-C50-COURTESY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ There was no inherited word for a raised surface on four legs because the househ
 Four, and one of them came off a ship.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04, HI-LEX-C49-LEAVE-04, HI-LEX-C50-COURTESY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mez*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mez*, then *āṁgan*, one of them standing inside the other]
+- [YOU RECALL: read **निकलना**, then say *āśīrvād*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04] -->

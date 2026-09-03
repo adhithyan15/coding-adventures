@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 78,
-  "sourceHash": "fnv1a64:e02ad5ca302828e2",
+  "sourceHash": "fnv1a64:0670def2b77b123a",
   "lessonIds": [
     "HI-C71-today",
     "HI-C71-also",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch78.txt",
   "json": "hindi/narration/ch78.json",
-  "textHash": "fnv1a64:d660fa77fc137012",
-  "jsonHash": "fnv1a64:f390781cd94db208",
+  "textHash": "fnv1a64:f13ad7fbddf25ec5",
+  "jsonHash": "fnv1a64:4612a316dc412a21",
   "findings": []
 }

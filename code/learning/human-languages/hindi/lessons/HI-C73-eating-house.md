@@ -12,7 +12,7 @@ headword: "होटल"
 gloss: "an eating house"
 romanization: "hoṭal"
 concept_tag: HI-NOUN-EATING-HOUSE
-prerequisites: [HI-C72-buy, HI-C72-expensive]
+prerequisites: [HI-C72-buy, HI-C72-expensive, HI-C71-today, HI-C72-money]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C73-EATING-01]
 practises:
-  knowledge: [HI-LEX-C72-COST-05, HI-LEX-C73-EATING-01, HI-LEX-C72-COST-04]
+  knowledge: [HI-LEX-C72-COST-05, HI-LEX-C73-EATING-01, HI-LEX-C72-COST-04, HI-LEX-C71-TODAY-01, HI-LEX-C72-COST-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -64,13 +64,14 @@ The ो is the *o* matra, a single stroke above the headline with a tail.
 The first of five words for a meal you did not cook.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C72-COST-04, HI-LEX-C72-COST-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C72-COST-04, HI-LEX-C72-COST-05, HI-LEX-C71-TODAY-01, HI-LEX-C72-COST-01] -->
 
 [PAUSE 1s]
 - [YOU RECALL: say *mahãgā*, then read **ख़रीदना** and say what it means]
 - [YOU HEAR: *hoṭal*]
 - [YOU SAY: *hoṭal*]
 - [YOU SAY: *chāy hoṭal*]
+- [YOU RECALL: say *āj*, then read **पैसा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01] -->

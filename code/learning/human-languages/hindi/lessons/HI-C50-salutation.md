@@ -12,7 +12,7 @@ headword: "प्रणाम"
 gloss: "a bow, a salutation"
 romanization: "praṇām"
 concept_tag: HI-NOUN-SALUTATION
-prerequisites: [HI-C50-blessing]
+prerequisites: [HI-C50-blessing, HI-C48-absolutely, HI-C49-meeting]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C50-COURTESY-05]
 practises:
-  knowledge: [HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05]
+  knowledge: [HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05, HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Sanskrit *pra-ṇāma*, 'a bending forward', on *nam-*, 'to bow' — the identic
 Five, and the run is closed: gratitude, a favour, respect, a blessing, a bow.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05, HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *praṇām*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *ābhār*, *ehsān*, *ādar*, *āśīrvād*, *praṇām*]
+- [YOU RECALL: say *bilkul*, then read **मुलाक़ात**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05] -->

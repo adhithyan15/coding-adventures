@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Where You Come From",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:663bddac3f375ffe",
+  "sourceHash": "fnv1a64:a46518dcf7972ea2",
   "lessons": [
     {
       "id": "HI-C68-country",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:819bd4923f485466",
+      "sourceHash": "fnv1a64:89b19844091058b3",
       "notice": null,
       "blocks": [
         {
@@ -128,6 +128,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: देश, then say what it means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kyoṁ, then read कब",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kyoṁ*, then read **कब**]"
             }
           ]
         },

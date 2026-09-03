@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Inside the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:36c80e3d935c2eda",
+  "sourceHash": "fnv1a64:db8572ad9fa81d15",
   "lessons": [
     {
       "id": "HI-C58-wall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7c67a113a0568d3",
+      "sourceHash": "fnv1a64:b193acf077380976",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dīvār*, and दरवाज़ा in it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say saṛak, then read तोहफ़ा",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *saṛak*, then read **तोहफ़ा**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:574a1d1720008a1e",
+      "sourceHash": "fnv1a64:aab00dd80e351e8d",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *chat*, over the *dīvār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read गाँव, then say dāvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **गाँव**, then say *dāvat*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1884100dd7eaaf72",
+      "sourceHash": "fnv1a64:502f8ec146e612b4",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *khiṛkī*, cut into the *dīvār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bāzār, then say thālī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bāzār*, then say *thālī*]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9aaf54c963d915c8",
+      "sourceHash": "fnv1a64:3f0ced849984ba11",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sīṛhī*, up to the *chat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read दुकान, then say khushbū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **दुकान**, then say *khushbū*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d19f882971639380",
+      "sourceHash": "fnv1a64:4d672b38415e57ef",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *chādar*, *sīṛhī*, *khiṛkī*, *chat*, *dīvār* — name the house]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say khet, then read मिठास",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *khet*, then read **मिठास**]"
             }
           ]
         },

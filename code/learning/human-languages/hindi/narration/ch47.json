@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Who Someone Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7cafc68f283cead9",
+  "sourceHash": "fnv1a64:66eef2a82553a053",
   "lessons": [
     {
       "id": "HI-C47-teacher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfda87fc90016d7b",
+      "sourceHash": "fnv1a64:d6bbc3357b50eab0",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śikṣak*, then *galā*, so the teacher and the voice sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say phal, then read बाल",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *phal*, then read **बाल**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91cfd090f1905adf",
+      "sourceHash": "fnv1a64:5f06e690c7c0abdb",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *chātra*, then *śikṣak*, the pair that needs each other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kapṛā, then say uṅglī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kapṛā*, then say *uṅglī*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e8e6f07b7aeb133",
+      "sourceHash": "fnv1a64:bdaa8120689b1346",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kisān*, then *chātra*, then *śikṣak*, back down the run]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dīyā, then read कान",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dīyā*, then read **कान**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f03c055f479f26e",
+      "sourceHash": "fnv1a64:bc01ec2588d96daa",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mehmān*, then *kisān*, so the visitor and the host sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read नमक, then say nāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **नमक**, then say *nāk*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2735d2602a7a9e31",
+      "sourceHash": "fnv1a64:61b6e371fdbb8801",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *śikṣak*, *chātra*, *kisān*, *mehmān*, *paṛosī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sābun, then read गला",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sābun*, then read **गला**]"
             }
           ]
         },
