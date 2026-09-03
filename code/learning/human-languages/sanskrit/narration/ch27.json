@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Answering With More Than Yes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e542d8250fac5caf",
+  "sourceHash": "fnv1a64:3a43d8f1f7d20235",
   "lessons": [
     {
       "id": "SA-C27-so-be-it",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f930357d99bdf05",
+      "sourceHash": "fnv1a64:137d52e986142828",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *asti*, then *astu*, and say what changed between them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hastaḥ, then read गुरुः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hastaḥ*, then read **गुरुः**]"
             }
           ]
         },
@@ -306,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c57fcb9768f8bb7c",
+      "sourceHash": "fnv1a64:ad7fb398d0d144d7",
       "notice": null,
       "blocks": [
         {
@@ -393,6 +402,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sādhu*, then *guruḥ*, and say what English kept of each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read पादः, then say śiṣyaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **पादः**, then say *śiṣyaḥ*]"
             }
           ]
         },
@@ -428,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b2d8df78a69a4e5",
+      "sourceHash": "fnv1a64:41f5e8b9f95bf9de",
       "notice": null,
       "blocks": [
         {
@@ -515,6 +533,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *alam*, then *keśaḥ*, and name what those two have in common]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śiraḥ, then read राजा",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śiraḥ*, then read **राजा**]"
             }
           ]
         },
@@ -550,7 +577,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b2cba1ca64ed744",
+      "sourceHash": "fnv1a64:3550342b1fbc99a2",
       "notice": null,
       "blocks": [
         {
@@ -637,6 +664,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *asti*, *astu*, *satyam* — three from one root, in that order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read दन्तः, then say atithiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **दन्तः**, then say *atithiḥ*]"
             }
           ]
         },
@@ -672,7 +708,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:325f1e7e30ab7585",
+      "sourceHash": "fnv1a64:e5f1689c2d2c889b",
       "notice": null,
       "blocks": [
         {
@@ -759,6 +795,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *evam astu* as one phrase]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say keśaḥ, then read वैद्यः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *keśaḥ*, then read **वैद्यः**]"
             }
           ]
         },

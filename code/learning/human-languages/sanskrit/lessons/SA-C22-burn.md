@@ -12,7 +12,7 @@ headword: "दहति"
 gloss: "he, she or it burns"
 romanization: "dahati"
 concept_tag: SA-VERB-BURN
-prerequisites: [SA-C22-play]
+prerequisites: [SA-C22-play, SA-C20-people]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-BURN]
 practises:
-  knowledge: [SA-LEX-PLAY, SA-LEX-BURN]
+  knowledge: [SA-LEX-PLAY, SA-LEX-BURN, SA-LEX-C20-PERSON-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ From **√दह्** (*dah*), and its distant English cousin is **day** — by 
 That closes the run: four more actions, each met on its own.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-PLAY, SA-LEX-BURN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-PLAY, SA-LEX-BURN, SA-LEX-C20-PERSON-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dahati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *krīḍati*, so the two sit together]
+- [YOU RECALL: read **जनः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-PLAY, SA-LEX-BURN] -->

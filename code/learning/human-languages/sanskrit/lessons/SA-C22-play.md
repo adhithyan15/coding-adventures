@@ -12,7 +12,7 @@ headword: "क्रीडति"
 gloss: "he, she or it plays"
 romanization: "krīḍati"
 concept_tag: SA-VERB-PLAY
-prerequisites: [SA-C22-lead]
+prerequisites: [SA-C22-lead, SA-C20-old-person]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-PLAY]
 practises:
-  knowledge: [SA-LEX-LEAD, SA-LEX-PLAY]
+  knowledge: [SA-LEX-LEAD, SA-LEX-PLAY, SA-LEX-C20-PERSON-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ From **√क्रीड्** (*krīḍ*). The noun *krīḍā* covers a child'
 One more everyday action. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-LEAD, SA-LEX-PLAY] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-LEAD, SA-LEX-PLAY, SA-LEX-C20-PERSON-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *krīḍati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *nayati*, so the two sit together]
+- [YOU RECALL: say *vṛddhaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-LEAD, SA-LEX-PLAY] -->

@@ -12,7 +12,7 @@ headword: "चन्द्रः"
 gloss: "the moon"
 romanization: "candraḥ"
 concept_tag: SA-SKY-CANDRA
-prerequisites: [SA-C31-sky]
+prerequisites: [SA-C31-sky, SA-C29-pardon, SA-C30-seat]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C31-SKY-02]
 practises:
-  knowledge: [SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02]
+  knowledge: [SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C29-COURTESY-02, SA-LEX-C30-WELCOME-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Latin kept that root in *candēre*, "to glow white", and English is full of its 
 A second word overhead, and a candle lit from the same root.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02, SA-LEX-C29-COURTESY-02, SA-LEX-C30-WELCOME-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *candraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākāśaḥ*, then *candraḥ*]
+- [YOU RECALL: read **क्षम्यताम्**, then say *āsanam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02] -->

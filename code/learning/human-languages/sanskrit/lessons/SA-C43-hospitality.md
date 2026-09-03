@@ -12,7 +12,7 @@ headword: "आतिथ्यम्"
 gloss: "hospitality"
 romanization: "ātithyam"
 concept_tag: SA-COURTESY-ATITHYA
-prerequisites: [SA-C42-much]
+prerequisites: [SA-C42-much, SA-C41-wheel, SA-C42-sometimes]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C43-COURTESY-01]
 practises:
-  knowledge: [SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01]
+  knowledge: [SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01, SA-LEX-C41-CRAFT-01, SA-LEX-C42-REPLY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Classically it runs in an order, and you have the words for all of it: an आस
 The guest word, turned into what is owed to the guest.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01, SA-LEX-C41-CRAFT-01, SA-LEX-C42-REPLY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ātithyam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bahu*, then *ātithyam*]
+- [YOU RECALL: say *cakram*, then read **कदाचित्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 21,
-  "sourceHash": "fnv1a64:f7ad56d30294e518",
+  "sourceHash": "fnv1a64:4b5e08854254ec99",
   "lessonIds": [
     "SA-C21-dance",
     "SA-C21-laugh",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "sanskrit/narration/ch21.txt",
   "json": "sanskrit/narration/ch21.json",
-  "textHash": "fnv1a64:1274ab2c8e93c5bb",
-  "jsonHash": "fnv1a64:644a3445f7dfeac1",
+  "textHash": "fnv1a64:b4d9b73c10e2eeb8",
+  "jsonHash": "fnv1a64:6afc243cdd064a30",
   "findings": []
 }

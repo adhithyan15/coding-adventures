@@ -12,7 +12,7 @@ headword: "आकाशः"
 gloss: "the sky, open space"
 romanization: "ākāśaḥ"
 concept_tag: SA-SKY-AKASHA
-prerequisites: [SA-C30-anjali]
+prerequisites: [SA-C30-anjali, SA-C29-please, SA-C30-door]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C31-SKY-01]
 practises:
-  knowledge: [SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01]
+  knowledge: [SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01, SA-LEX-C29-COURTESY-01, SA-LEX-C30-WELCOME-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ This one stayed home. Hindi, Marathi, Bengali and Telugu all keep it as *ākāś
 A new set of words, and the space that everything else in this chapter sits in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01, SA-LEX-C29-COURTESY-01, SA-LEX-C30-WELCOME-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ākāśaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *añjaliḥ*, then *ākāśaḥ*]
+- [YOU RECALL: say *kṛpayā*, then read **द्वारम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01] -->

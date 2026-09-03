@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 39,
-  "sourceHash": "fnv1a64:2200027835095e4e",
+  "sourceHash": "fnv1a64:7358d36a56f5cf0b",
   "lessonIds": [
     "SA-C39-cow",
     "SA-C39-bird",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch39.txt",
   "json": "sanskrit/narration/ch39.json",
-  "textHash": "fnv1a64:0de5ec6c55205e47",
-  "jsonHash": "fnv1a64:029217a8ffc33142",
+  "textHash": "fnv1a64:4802a0f17f57288e",
+  "jsonHash": "fnv1a64:7984c9527e87264d",
   "findings": []
 }

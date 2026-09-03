@@ -12,7 +12,7 @@ headword: "प्रातः"
 gloss: "morning"
 romanization: "prātaḥ"
 concept_tag: SA-DAYTIME-PRATAH
-prerequisites: [SA-C44-blue]
+prerequisites: [SA-C44-blue, SA-C43-hospitality, SA-C44-white]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C45-DAYTIME-01]
 practises:
-  knowledge: [SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01]
+  knowledge: [SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01, SA-LEX-C43-COURTESY-01, SA-LEX-C44-COLOUR-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Greek *prōi*, "early", is the same small piece put to the same work, and Latin 
 The first part of the day, named.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01, SA-LEX-C43-COURTESY-01, SA-LEX-C44-COLOUR-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *prātaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nīlaḥ*, then *prātaḥ*]
+- [YOU RECALL: say *ātithyam*, then read **श्वेतः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01] -->

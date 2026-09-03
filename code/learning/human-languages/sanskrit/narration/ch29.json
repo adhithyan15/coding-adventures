@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Courtesy Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:95bdf9889b9f746b",
+  "sourceHash": "fnv1a64:d849ed5a67fdf16f",
   "lessons": [
     {
       "id": "SA-C29-please",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c39bebec7a623fe",
+      "sourceHash": "fnv1a64:8d1c8d3b62a88195",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kṛpayā*, and say what it literally claims]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say astu, then read इदानीम्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *astu*, then read **इदानीम्**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cc44c941c8d4eb3",
+      "sourceHash": "fnv1a64:91673b2969efe8ae",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *astu*, then *kṣamyatām*, and say what both leave out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read साधु, then say paraśvaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **साधु**, then say *paraśvaḥ*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:799323baaaa9c906",
+      "sourceHash": "fnv1a64:f6eff7ae536a7d89",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *namaste*, *namaskāraḥ*, *praṇāmaḥ* — and name what all three share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say alam, then read यात्रा",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *alam*, then read **यात्रा**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29c42835dd5c9322",
+      "sourceHash": "fnv1a64:337752b78fb63576",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *karomi*, then *namaskāraḥ*, then *upakāraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read सत्यम्, then say śubham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **सत्यम्**, then say *śubham*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5a82103736019d4",
+      "sourceHash": "fnv1a64:428012790179b73d",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then take *dhanyavādaḥ* apart into its two pieces]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say evam, then read स्वस्ति",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *evam*, then read **स्वस्ति**]"
             }
           ]
         },

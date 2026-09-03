@@ -12,7 +12,7 @@ headword: "नम्रता"
 gloss: "humility"
 romanization: "namratā"
 concept_tag: SA-COURTESY-NAMRATA
-prerequisites: [SA-C43-conduct]
+prerequisites: [SA-C43-conduct, SA-C41-boat, SA-C42-mostly]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C43-COURTESY-03]
 practises:
-  knowledge: [SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03]
+  knowledge: [SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C41-CRAFT-03, SA-LEX-C42-REPLY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Hindi *namratā* is the word people still use of someone who carries success lig
 The bow you already make, become a habit.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C41-CRAFT-03, SA-LEX-C42-REPLY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *namratā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vinayaḥ*, then *namratā*]
+- [YOU RECALL: say *plavaḥ*, then read **प्रायः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03] -->

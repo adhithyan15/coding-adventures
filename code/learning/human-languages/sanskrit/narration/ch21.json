@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f7ad56d30294e518",
+  "sourceHash": "fnv1a64:4b5e08854254ec99",
   "lessons": [
     {
       "id": "SA-C21-dance",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7986083539644d19",
+      "sourceHash": "fnv1a64:7496ce7e7ca82ec3",
       "notice": null,
       "blocks": [
         {
@@ -93,6 +93,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it again, to someone standing in a doorway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ṣaṭ, then read सप्त",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ṣaṭ*, then read **सप्त**]"
             }
           ]
         },
@@ -128,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f9a57e880be4126",
+      "sourceHash": "fnv1a64:499db13d43fd6765",
       "notice": null,
       "blocks": [
         {
@@ -211,6 +220,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *nṛtyati*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read अष्ट",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **अष्ट**]"
             }
           ]
         },
@@ -246,7 +264,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c7d8f68f860390e",
+      "sourceHash": "fnv1a64:2bd210a6906bfd67",
       "notice": null,
       "blocks": [
         {
@@ -329,6 +347,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *hasati*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say navan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *navan*]"
             }
           ]
         },
@@ -364,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af30110090a7683e",
+      "sourceHash": "fnv1a64:9bec9eb0df45d369",
       "notice": null,
       "blocks": [
         {
@@ -447,6 +474,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *tiṣṭhati*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read दश",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **दश**]"
             }
           ]
         },

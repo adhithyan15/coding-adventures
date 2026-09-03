@@ -12,7 +12,7 @@ headword: "दुहिता"
 gloss: "daughter"
 romanization: "duhitā"
 concept_tag: SA-NOUN-DAUGHTER
-prerequisites: [SA-C23-son]
+prerequisites: [SA-C23-son, SA-C21-remember, SA-C22-burn]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-DAUGHTER]
 practises:
-  knowledge: [SA-LEX-SON, SA-LEX-DAUGHTER]
+  knowledge: [SA-LEX-SON, SA-LEX-DAUGHTER, SA-LEX-REMEMBER, SA-LEX-BURN]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ Back to the *-ṛ* family: the stem is **दुहितृ** (*duhitṛ-*), sta
 That closes the run: father, mother, son, daughter — the four words the family kept longest.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-SON, SA-LEX-DAUGHTER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-SON, SA-LEX-DAUGHTER, SA-LEX-REMEMBER, SA-LEX-BURN] -->
 
 [PAUSE 1s]
 - [YOU SAY: *duhitā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all four in order, and name the ending three of them share]
+- [YOU RECALL: read **स्मरति**, then say *dahati*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-SON, SA-LEX-DAUGHTER] -->

@@ -12,7 +12,7 @@ headword: "वाणी"
 gloss: "the voice"
 romanization: "vāṇī"
 concept_tag: SA-SOUND-VANI
-prerequisites: [SA-C50-question]
+prerequisites: [SA-C50-question, SA-C48-goat, SA-C49-only]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C50-SOUND-03]
 practises:
-  knowledge: [SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03]
+  knowledge: [SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C48-BEAST-03, SA-LEX-C49-REPLY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Capitalised, *Vāṇī* is a name of the goddess of speech, so the word carries 
 A sound narrowed down to the human one.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C48-BEAST-03, SA-LEX-C49-REPLY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vāṇī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *praśnaḥ*, then *vāṇī*]
+- [YOU RECALL: say *chāgaḥ*, then read **केवलम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03] -->

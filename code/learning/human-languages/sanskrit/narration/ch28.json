@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Taking Your Leave",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e3d72775d62e3fcb",
+  "sourceHash": "fnv1a64:05c8856e6b3c34ff",
   "lessons": [
     {
       "id": "SA-C28-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1dbaa5a95b0aa15",
+      "sourceHash": "fnv1a64:9f4f084a7e11eba5",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *idānīm*, then *gacchāmi idānīm* as one phrase]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say guruḥ, then read अस्तु",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *guruḥ*, then read **अस्तु**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:301c0a5d1d38545a",
+      "sourceHash": "fnv1a64:63acfab2ce5c4508",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śvaḥ*, then *paraśvaḥ*, and say what *para* contributes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read शिष्यः, then say sādhu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **शिष्यः**, then say *sādhu*]"
             }
           ]
         },
@@ -448,7 +466,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32248089cd30d713",
+      "sourceHash": "fnv1a64:af8f659150e6f536",
       "notice": null,
       "blocks": [
         {
@@ -535,6 +553,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *gacchati*, then *yātrā*, and say which one sounds like setting out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rājā, then read अलम्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rājā*, then read **अलम्**]"
             }
           ]
         },
@@ -570,7 +597,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffd7011995a3db8d",
+      "sourceHash": "fnv1a64:0328277cf25c365f",
       "notice": null,
       "blocks": [
         {
@@ -657,6 +684,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śubhā yātrā*, then *śubhā rātriḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read अतिथिः, then say satyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **अतिथिः**, then say *satyam*]"
             }
           ]
         },
@@ -692,7 +728,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:661db5d4b8befd4d",
+      "sourceHash": "fnv1a64:080ea33871d11667",
       "notice": null,
       "blocks": [
         {
@@ -779,6 +815,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then take *svasti* apart into its two pieces]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vaidyaḥ, then read एवम्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vaidyaḥ*, then read **एवम्**]"
             }
           ]
         },

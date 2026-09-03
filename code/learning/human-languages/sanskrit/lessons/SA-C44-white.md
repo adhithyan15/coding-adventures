@@ -12,7 +12,7 @@ headword: "श्वेतः"
 gloss: "white"
 romanization: "śvetaḥ"
 concept_tag: SA-COLOUR-SHVETA
-prerequisites: [SA-C43-honest]
+prerequisites: [SA-C43-honest, SA-C42-sometimes, SA-C43-hospitality]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C44-COLOUR-01]
 practises:
-  knowledge: [SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01]
+  knowledge: [SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01, SA-LEX-C42-REPLY-01, SA-LEX-C43-COURTESY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ English *white* is the same word by the Germanic road, and Russian *svet*, "ligh
 White, and the brightness that comes with it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01, SA-LEX-C42-REPLY-01, SA-LEX-C43-COURTESY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śvetaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *saralaḥ*, then *śvetaḥ*]
+- [YOU RECALL: say *kadācit*, then read **आतिथ्यम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01] -->

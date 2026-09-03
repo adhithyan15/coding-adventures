@@ -12,7 +12,7 @@ headword: "यात्रा"
 gloss: "a journey"
 romanization: "yātrā"
 concept_tag: SA-LEAVE-JOURNEY
-prerequisites: [SA-C28-day-after]
+prerequisites: [SA-C28-day-after, SA-C26-king, SA-C27-enough]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C28-LEAVE-03]
 practises:
-  knowledge: [SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03]
+  knowledge: [SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C26-ROLE-03, SA-LEX-C27-REPLY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It comes from a root *yā*, "to go", which is not the root behind गच्छ�
 A second going-root, and a noun made from it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C26-ROLE-03, SA-LEX-C27-REPLY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *yātrā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gacchati*, then *yātrā*, and say which one sounds like setting out]
+- [YOU RECALL: say *rājā*, then read **अलम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03] -->

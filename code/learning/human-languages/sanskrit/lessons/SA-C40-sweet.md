@@ -12,7 +12,7 @@ headword: "मोदकः"
 gloss: "a sweet dumpling"
 romanization: "modakaḥ"
 concept_tag: SA-FOOD-MODAKA
-prerequisites: [SA-C40-vegetable]
+prerequisites: [SA-C40-vegetable, SA-C38-soil, SA-C39-snake]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C40-FOOD-05]
 practises:
-  knowledge: [SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05]
+  knowledge: [SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05, SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Set one in front of an अतिथिः and the word does its own explaining.
 Five things from a kitchen: curd, sugar, butter, greens, a sweet.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05, SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *modakaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dadhi* and *modakaḥ* together]
+- [YOU RECALL: say *mṛttikā*, then read **सर्पः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05] -->

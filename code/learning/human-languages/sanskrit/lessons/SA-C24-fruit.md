@@ -12,7 +12,7 @@ headword: "फलम्"
 gloss: "fruit (and the result of anything)"
 romanization: "phalam"
 concept_tag: SA-NOUN-FRUIT
-prerequisites: [SA-C24-rice]
+prerequisites: [SA-C24-rice, SA-C22-play, SA-C23-son]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C24-ASK-03]
 practises:
-  knowledge: [SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03]
+  knowledge: [SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03, SA-LEX-PLAY, SA-LEX-SON]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The root behind it means "to burst, to bear fruit", which is the fruit split ope
 A word that carries an orchard and a consequence at once.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03, SA-LEX-PLAY, SA-LEX-SON] -->
 
 [PAUSE 1s]
 - [YOU SAY: *phalam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *phalam*, and then *jalam* and *phalam* together, naming the ending they share]
+- [YOU RECALL: say *krīḍati*, then read **सूनुः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03] -->

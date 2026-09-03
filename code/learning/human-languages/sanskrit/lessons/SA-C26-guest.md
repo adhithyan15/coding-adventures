@@ -12,7 +12,7 @@ headword: "अतिथिः"
 gloss: "a guest"
 romanization: "atithiḥ"
 concept_tag: SA-PERSON-GUEST
-prerequisites: [SA-C26-king]
+prerequisites: [SA-C26-king, SA-C24-cloth, SA-C25-tooth]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C26-ROLE-04]
 practises:
-  knowledge: [SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04]
+  knowledge: [SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04, SA-LEX-C24-ASK-04, SA-LEX-C25-BODY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Keep the traditional reading; keep also the fact that it is a reading. Either wa
 Four roles, and one of them arrives without warning.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04, SA-LEX-C24-ASK-04, SA-LEX-C25-BODY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *atithiḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *atithiḥ*, and say what the traditional reading claims]
+- [YOU RECALL: read **वस्त्रम्**, then say *dantaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04] -->

@@ -12,7 +12,7 @@ headword: "पतिः"
 gloss: "a husband"
 romanization: "patiḥ"
 concept_tag: SA-KIN-PATI
-prerequisites: [SA-C50-verse]
+prerequisites: [SA-C50-verse, SA-C49-then, SA-C50-sound]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C51-KIN-01]
 practises:
-  knowledge: [SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01]
+  knowledge: [SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01, SA-LEX-C49-REPLY-01, SA-LEX-C50-SOUND-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Beside *kuṭumbam*, the household you can already name, **पतिः** is the
 One end of a household, named.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01, SA-LEX-C49-REPLY-01, SA-LEX-C50-SOUND-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *patiḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ślokaḥ*, then *patiḥ*]
+- [YOU RECALL: say *tarhi*, then read **शब्दः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01] -->

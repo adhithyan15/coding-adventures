@@ -12,7 +12,7 @@ headword: "कलशः"
 gloss: "a water-pot"
 romanization: "kalaśaḥ"
 concept_tag: SA-CRAFT-KALASHA
-prerequisites: [SA-C41-wheel]
+prerequisites: [SA-C41-wheel, SA-C39-bird, SA-C40-sugar]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C41-CRAFT-02]
 practises:
-  knowledge: [SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02]
+  knowledge: [SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C39-ANIMAL-02, SA-LEX-C40-FOOD-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Greek *kalux*, a husk or a cup, has been offered as a cousin, and Latin *calix*,
 The pot that holds water and welcomes people.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C39-ANIMAL-02, SA-LEX-C40-FOOD-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kalaśaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cakram*, then *kalaśaḥ*]
+- [YOU RECALL: read **विहगः**, then say *śarkarā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02] -->

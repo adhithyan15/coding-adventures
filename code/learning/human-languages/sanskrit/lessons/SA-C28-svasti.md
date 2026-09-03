@@ -12,7 +12,7 @@ headword: "स्वस्ति"
 gloss: "well-being (may it go well)"
 romanization: "svasti"
 concept_tag: SA-LEAVE-SVASTI
-prerequisites: [SA-C28-auspicious]
+prerequisites: [SA-C28-auspicious, SA-C26-physician, SA-C27-thus]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C28-LEAVE-05]
 practises:
-  knowledge: [SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05]
+  knowledge: [SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05, SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Add the little ending *-ka* and you have *svastika*, "the mark of well-being", a
 Five ways to leave: now, the day after tomorrow, a journey, a good wish, and well-being itself.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05, SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *svasti*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then take *svasti* apart into its two pieces]
+- [YOU RECALL: say *vaidyaḥ*, then read **एवम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05] -->

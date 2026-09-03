@@ -12,7 +12,7 @@ headword: "प्रणामः"
 gloss: "a bow, a respectful salutation"
 romanization: "praṇāmaḥ"
 concept_tag: SA-COURTESY-BOW
-prerequisites: [SA-C29-pardon]
+prerequisites: [SA-C29-pardon, SA-C27-enough, SA-C28-journey]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C29-COURTESY-03]
 practises:
-  knowledge: [SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03]
+  knowledge: [SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C27-REPLY-03, SA-LEX-C28-LEAVE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ And you have met that *nam* twice already without being told. **नमस्त�
 A root you had used twice, finally named.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C27-REPLY-03, SA-LEX-C28-LEAVE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *praṇāmaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *namaste*, *namaskāraḥ*, *praṇāmaḥ* — and name what all three share]
+- [YOU RECALL: say *alam*, then read **यात्रा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03] -->

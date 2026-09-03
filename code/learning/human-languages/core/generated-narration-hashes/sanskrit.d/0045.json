@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 45,
-  "sourceHash": "fnv1a64:cacdb8420905ac82",
+  "sourceHash": "fnv1a64:65a41b95be06f999",
   "lessonIds": [
     "SA-C45-morning",
     "SA-C45-noon",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch45.txt",
   "json": "sanskrit/narration/ch45.json",
-  "textHash": "fnv1a64:4996be4294ec5669",
-  "jsonHash": "fnv1a64:4d5b1fe5859cfd4e",
+  "textHash": "fnv1a64:11b4ac275818a2b9",
+  "jsonHash": "fnv1a64:459d3baffa1305b6",
   "findings": []
 }

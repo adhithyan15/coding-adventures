@@ -12,7 +12,7 @@ headword: "यथा"
 gloss: "as, in the way that"
 romanization: "yathā"
 concept_tag: SA-REPLY4-YATHA
-prerequisites: [SA-C49-then]
+prerequisites: [SA-C49-then, SA-C47-window, SA-C48-wolf]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C49-REPLY-02]
 practises:
-  knowledge: [SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02]
+  knowledge: [SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C47-DWELL-02, SA-LEX-C48-BEAST-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Said back to somebody on its own, it works as "just so, as you say" — an agree
 The other half of a pair you already had half of.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C47-DWELL-02, SA-LEX-C48-BEAST-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *yathā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tarhi*, then *yathā*]
+- [YOU RECALL: read **वातायनम्**, then say *vṛkaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02] -->

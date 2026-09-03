@@ -12,7 +12,7 @@ headword: "मुहुः"
 gloss: "again and again"
 romanization: "muhuḥ"
 concept_tag: SA-REPLY4-MUHUH
-prerequisites: [SA-C49-only]
+prerequisites: [SA-C49-only, SA-C47-pillar, SA-C48-monkey]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C49-REPLY-04]
 practises:
-  knowledge: [SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04]
+  knowledge: [SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04, SA-LEX-C47-DWELL-04, SA-LEX-C48-BEAST-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It belongs with *muhūrta*, a short measured stretch of time. The picture undern
 A stronger "again" than the one you had.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04, SA-LEX-C47-DWELL-04, SA-LEX-C48-BEAST-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *muhuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kevalam*, then *muhuḥ*]
+- [YOU RECALL: read **स्तम्भः**, then say *vānaraḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04] -->

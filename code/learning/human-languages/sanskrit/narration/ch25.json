@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "The Hand and the Foot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:09672f05536caca2",
+  "sourceHash": "fnv1a64:809be4f7db1ca8d6",
   "lessons": [
     {
       "id": "SA-C25-hand",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58c8332dfc647c58",
+      "sourceHash": "fnv1a64:c2f1a4632947060f",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *hastaḥ*, then *akṣi* and *hastaḥ* together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pitā, then read जलम्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pitā*, then read **जलम्**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bbee7b325b49ef9",
+      "sourceHash": "fnv1a64:e0f9c0739ed3c7d3",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pādaḥ*, then *pitā*, and name the sound law both share with their English cousins]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read माता, then say odanaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **माता**, then say *odanaḥ*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9451c40eb984826",
+      "sourceHash": "fnv1a64:2de47e25cb4547f2",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śiraḥ*, then say *namaste* and name what bends]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sūnuḥ, then read फलम्",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sūnuḥ*, then read **फलम्**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58f6ad30b241bc57",
+      "sourceHash": "fnv1a64:d71f904da9639aa2",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dantaḥ*, then *pādaḥ*, then *pitā* — three words, one shift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read दुहिता, then say vastram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **दुहिता**, then say *vastram*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c6a79024371938f",
+      "sourceHash": "fnv1a64:db273f0ad4d59d06",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, and name the one with no known cousins]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dīpaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dīpaḥ*]"
             }
           ]
         },

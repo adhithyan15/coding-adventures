@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "The Four Oldest Kinship Words",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8be03d20200b5c56",
+  "sourceHash": "fnv1a64:979cb44684cd6828",
   "lessons": [
     {
       "id": "SA-C23-father",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:539cac5cc1565352",
+      "sourceHash": "fnv1a64:30ee4eeb964367c9",
       "notice": null,
       "blocks": [
         {
@@ -102,6 +102,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it beside *pater* and *father*, and hear the one word underneath]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nṛtyati, then read शृणोति",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nṛtyati*, then read **शृणोति**]"
             }
           ]
         },
@@ -137,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa2b88b14f889009",
+      "sourceHash": "fnv1a64:694cea4d410115d0",
       "notice": null,
       "blocks": [
         {
@@ -220,6 +229,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *pitā*, and name the ending they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read हसति, then say nayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **हसति**, then say *nayati*]"
             }
           ]
         },
@@ -255,7 +273,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4d11c1b8bd70766",
+      "sourceHash": "fnv1a64:128c72acc7032ab1",
       "notice": null,
       "blocks": [
         {
@@ -338,6 +356,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it beside *sunus* and *son*, and hear the one word underneath]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tiṣṭhati, then read क्रीडति",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tiṣṭhati*, then read **क्रीडति**]"
             }
           ]
         },
@@ -373,7 +400,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a18228c99269fea4",
+      "sourceHash": "fnv1a64:8fecdb6fc21f8483",
       "notice": null,
       "blocks": [
         {
@@ -456,6 +483,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all four in order, and name the ending three of them share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read स्मरति, then say dahati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **स्मरति**, then say *dahati*]"
             }
           ]
         },

@@ -12,7 +12,7 @@ headword: "शिरः"
 gloss: "head"
 romanization: "śiraḥ"
 concept_tag: SA-BODY-HEAD
-prerequisites: [SA-C25-foot]
+prerequisites: [SA-C25-foot, SA-C23-son, SA-C24-fruit]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C25-BODY-03]
 practises:
-  knowledge: [SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03]
+  knowledge: [SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-SON, SA-LEX-C24-ASK-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Sanskrit has a second head-word, *mūrdhan*, for the top or the summit of a thin
 Three of five, and the bow you already knew has a body part in it now.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-SON, SA-LEX-C24-ASK-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śiraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śiraḥ*, then say *namaste* and name what bends]
+- [YOU RECALL: say *sūnuḥ*, then read **फलम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03] -->

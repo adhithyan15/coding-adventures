@@ -12,7 +12,7 @@ headword: "संवत्सरः"
 gloss: "a year"
 romanization: "saṁvatsaraḥ"
 concept_tag: SA-DAYTIME-SAMVATSARA
-prerequisites: [SA-C45-month]
+prerequisites: [SA-C45-month, SA-C43-honest, SA-C44-blue]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C45-DAYTIME-05]
 practises:
-  knowledge: [SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05]
+  knowledge: [SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05, SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Beside मासः, the small round, **संवत्सरः** is the large 
 Five stretches of time: morning, noon, evening, a month, a year.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05, SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *saṁvatsaraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *prātaḥ* and *saṁvatsaraḥ* together]
+- [YOU RECALL: say *saralaḥ*, then read **नीलः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05] -->
