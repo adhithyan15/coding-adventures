@@ -50,11 +50,11 @@ table cell_division_genetic_outcome {
     columns process, outcome
 
     row (mitosis, genetically_identical)   % NHGRI: "Mitosis is generally followed by equal division of the cell’s content into two daughter cells that have identical genomes."
-    row (meiosis, haploid)                 % NHGRI: "During meiosis, each diploid cell undergoes two rounds of division to yield four haploid daughter cells -- the gametes."
+    row (meiosis, haploid)                 % NHGRI: "During meiosis, each diploid cell undergoes two rounds of division to yield four haploid daughter cells — the gametes."
 
     source "Mitosis is generally followed by equal division of the cell’s content into two daughter cells that have identical genomes."
     locator "https://www.genome.gov/genetics-glossary/Mitosis"
     trust authoritative
 
-    cites "During meiosis, each diploid cell undergoes two rounds of division to yield four haploid daughter cells -- the gametes." locator "https://www.genome.gov/genetics-glossary/Meiosis"
+    cites "During meiosis, each diploid cell undergoes two rounds of division to yield four haploid daughter cells — the gametes." locator "https://www.genome.gov/genetics-glossary/Meiosis"
 }

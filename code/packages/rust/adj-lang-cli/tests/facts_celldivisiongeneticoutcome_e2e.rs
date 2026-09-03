@@ -144,3 +144,38 @@ fn cell_division_genetic_outcome_citation_matches_its_page_glyph_for_glyph() {
         "the cell division genetic outcome citation matches its page: {out}"
     );
 }
+
+const CELL_DIVISION_MEIOSIS_PIN: &str = r#""bindings":{"Outcome":"haploid"},"citations":[{"source":"Mitosis is generally followed by equal division of the cell’s content into two daughter cells that have identical genomes.","locator":"https://www.genome.gov/genetics-glossary/Mitosis","trust":"authoritative","corroborations":[{"source":"During meiosis, each diploid cell undergoes two rounds of division to yield four haploid daughter cells — the gametes.","locator":"https://www.genome.gov/genetics-glossary/Meiosis"}"#;
+
+#[test]
+fn cell_division_meiosis_citation_keeps_the_pages_em_dash() {
+    let dir = scratch("reground");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"cell-division-genetic-outcome.adj\"\n? cell_division_genetic_outcome(meiosis, $Outcome)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The value shipped "--" where the page has an em dash (U+2014). A NEW
+    // AXIS: every screen in this effort keyed on QUOTE characters, so none
+    // could see a dash flattening. Found by hand-diffing a candidate, then
+    // confirmed by a punctuation-general screen -- which itself first
+    // reported ZERO here, because it mapped each dash CHARACTER to a marker
+    // and so read "--" as two marks against the page's one.
+    //
+    // THE QUERY IS `meiosis`, not the companion's first query (`mitosis`).
+    // The repaired value is the meiosis `cites`; pinning mitosis would tie an
+    // answer about genetic identity to evidence about gametes.
+    //
+    // Note for consumers: citations[0] here is the table's mitosis `source`
+    // even for a meiosis answer -- the per-row evidence is in corroborations.
+    // The pin spans bindings THROUGH that corroboration for exactly that
+    // reason. Tracked on #14124.
+    assert!(
+        out.contains(CELL_DIVISION_MEIOSIS_PIN),
+        "the meiosis corroboration matches its page: {out}"
+    );
+}
