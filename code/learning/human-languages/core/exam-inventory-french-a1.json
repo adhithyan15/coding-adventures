@@ -164,8 +164,11 @@
       "category": "Les pronoms",
       "label": "tu versus vous as a register choice",
       "probe": [
+        "FR-GRAM-VOUVOIEMENT-09",
+        "FR-LEX-TU-VOUS-08",
         "FR-GRAMMAR-PLEASE-REGISTER-04"
-      ]
+      ],
+      "note": "The probe was FR-GRAMMAR-PLEASE-REGISTER-04 alone -- chapter 19's s'il vous plait, which demonstrates the register rather than naming it. Chapter 2 owns the point directly: tu and vous as a pair, and the mechanism French uses to be polite, which is to address one respected person in the PLURAL (the language has a verb for it, vouvoyer). Both are added and the please atom is kept, because a candidate is asked to choose in context as well as to state the rule. The point was already covered; this makes the probe say why."
     },
     {
       "id": "A1-P-05",
@@ -249,13 +252,25 @@
       "id": "A1-V-11",
       "category": "Le verbe",
       "label": "vouloir, pouvoir, devoir in the singular",
-      "probe": null
+      "probe": [
+        "FR-LEX-VOULOIR-01",
+        "FR-LEX-POUVOIR-02",
+        "FR-LEX-DEVOIR-03",
+        "FR-GRAMMAR-MODAL-CHAIN-04"
+      ],
+      "note": "Found while authoring the A2 inventory, which is what an inventory is for. Chapter 33 gives vouloir, pouvoir and devoir a lesson each with je / tu / il printed, and types the rule that the second verb never changes -- je veux partir, je peux partir, je dois partir. The point was reading as a content gap and was sending an author to write what already exists. All four atoms are listed because the point names three verbs and the construction they share."
     },
     {
       "id": "A1-V-12",
       "category": "Le verbe",
       "label": "reflexive verbs with se in the present",
-      "probe": null
+      "probe": [
+        "FR-GRAM-REFLEXIVE-SET-04",
+        "FR-GRAM-REFLEXIVE-VERB-06",
+        "FR-LEX-ASSEOIR-01",
+        "FR-LEX-LEVER-04"
+      ],
+      "note": "Chapter 2 names the construction and the pronoun set that drives it -- me, te, se bounce a verb back onto its doer, and s'appeler is 'to call oneself' -- because that is how French gives a name at all. Chapter 27 then runs two reflexive verbs, s'asseoir and se lever, through the whole present including il se leve and ils se levent. The probe names all four because the point asks for the construction AND a verb conjugated in it: the rule without a paradigm is not the present tense, and the verbs without the rule were typed as lexis only."
     },
     {
       "id": "A1-V-13",

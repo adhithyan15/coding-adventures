@@ -904,6 +904,9 @@ function renderMarkdown(
   const paragraph: string[] = [];
   const quote: string[] = [];
   let listOpen = false;
+  // Which environment the open list is in. Markdown's `- ` and `1. ` are
+  // different lists and must not be merged into one.
+  let listEnv: "itemize" | "enumerate" = "itemize";
   let listItem: string[] = [];
   const tableRows: string[][] = [];
 
@@ -930,7 +933,7 @@ function renderMarkdown(
   const closeList = (): void => {
     if (!listOpen) return;
     flushListItem();
-    output.push("\\end{itemize}", "");
+    output.push(`\\end{${listEnv}}`, "");
     listOpen = false;
   };
 
@@ -1086,13 +1089,37 @@ function renderMarkdown(
     if (line.startsWith("- ")) {
       flushParagraph();
       flushQuote();
+      if (listOpen && listEnv !== "itemize") closeList();
       if (!listOpen) {
+        listEnv = "itemize";
         output.push("\\begin{itemize}", "\\raggedright");
         if (tableLayout === "records") output.push("\\setlength{\\itemsep}{0.35em}");
         listOpen = true;
       }
       flushListItem();
       listItem = [line.slice(2)];
+      continue;
+    }
+    // `1. ` — an ORDERED list. There was no branch for this at all, so numbered
+    // steps fell through to the paragraph path and were joined into a single
+    // run-on line. 72 generated chapters shipped that way, and most of them are
+    // writing instructions, where the steps are the whole point: Hindi chapter 1
+    // printed "1. a left bowl -- a rounded scoop on the left. 2. a right spine
+    // -- a vertical downstroke..." as one paragraph. No text assertion could see
+    // it; only the compiled page shows it.
+    const ordered = /^(\d+)\.\s+(.*)$/.exec(line);
+    if (ordered) {
+      flushParagraph();
+      flushQuote();
+      if (listOpen && listEnv !== "enumerate") closeList();
+      if (!listOpen) {
+        listEnv = "enumerate";
+        output.push("\\begin{enumerate}", "\\raggedright");
+        if (tableLayout === "records") output.push("\\setlength{\\itemsep}{0.35em}");
+        listOpen = true;
+      }
+      flushListItem();
+      listItem = [ordered[2]];
       continue;
     }
     if (listOpen && /^\s+/.test(line)) {

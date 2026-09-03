@@ -58,14 +58,36 @@ describe("the generated book.tex", () => {
 
   it("includes handwritten chapters, not only generated ones", () => {
     // `targets` alone silently drops every handwritten chapter from the book —
-    // the same invisible failure this generator exists to prevent. French has
-    // 16 handwritten chapters and would lose all of them.
-    const handwritten = (config.handwritten ?? []).filter((entry) => entry.language === "french");
-    expect(handwritten.length).toBeGreaterThan(0);
-    const inputs = chapterInputsFor(config, "french");
-    for (const entry of handwritten) {
-      expect(inputs).toContain(`\\input{${inputArgument(entry.output)}}`);
+    // the same invisible failure this generator exists to prevent.
+    //
+    // This used to be scoped to French, which then had 16 handwritten chapters.
+    // French now has NONE, and the assertion that it had some failed on the very
+    // success it was written to support. Scoping a corpus check to one track
+    // makes the check die when that track finishes; the invariant belongs to the
+    // generator, not to French.
+    //
+    // So it runs over whatever handwritten chapters the corpus still holds, in
+    // any track. That loop goes quiet when the retirement finishes, which is why
+    // the synthetic case below carries the real weight — it proves the mechanism
+    // works whether or not the corpus still has an example of it.
+    for (const entry of config.handwritten ?? []) {
+      const inputs = chapterInputsFor(config, entry.language);
+      expect(inputs, entry.output).toContain(`\\input{${inputArgument(entry.output)}}`);
     }
+  });
+
+  it("would still input a handwritten chapter once the corpus has none", () => {
+    // The non-vacuous half. A synthetic config with one target and one
+    // handwritten chapter, so this keeps testing the generator after the last
+    // real handwritten chapter is retired and the loop above stops iterating.
+    const synthetic = {
+      ...config,
+      targets: [{ language: "test", chapter: 1, output: "test/book/chapters/ch01-a.tex" }],
+      handwritten: [{ language: "test", chapter: 2, output: "test/book/chapters/ch02-b.tex" }],
+    } as typeof config;
+    const inputs = chapterInputsFor(synthetic, "test");
+    expect(inputs).toContain(`\\input{${inputArgument("test/book/chapters/ch01-a.tex")}}`);
+    expect(inputs).toContain(`\\input{${inputArgument("test/book/chapters/ch02-b.tex")}}`);
   });
 
   it("orders chapters by number, not by output path", () => {

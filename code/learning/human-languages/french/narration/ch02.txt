@@ -37,8 +37,6 @@ What Latin word is je worn down from, and what English word kept it whole? (ego 
 Lesson 2 of 9.
 me — "myself," the same word as English me.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the reflexive set (me / te / se) until you have stopped, and I will say so again when we reach it.
-
 Warm-up.
 [pause 2 seconds]
 The middle piece of je m'appelle. It's a real word with a real history — not just a bit of glue — and you've owned it in English all your life.
@@ -54,9 +52,10 @@ Latin mē and meus ("my"), which became French mon / ma / mes.
 So the tiny m' in je m'appelle is a first-person marker you've carried in English since childhood — me, my, mine are its cousins.
 
 Grammar Lens: the reflexive set (me / te / se).
-me is one of three little pronouns that bounce a verb back onto its doer:
-There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: French, means, root, English cousin. Come back and look at it when you have stopped.
-You'll use me to give your own name (je m'appelle) and te in the informal "what's your name?" (comment tu t'appelles?). Same machine, different person.
+me is one of three little pronouns that bounce a verb back onto its doer — me ("myself"), te ("yourself"), se ("himself, herself"). Their roots run in parallel with the one you just met, and two of them you already own in English:
+te from Latin tē, the cousin of archaic English thee.
+se from Latin sē, the "self" root behind separate and, at a distance, suicide (suī, "of oneself").
+Only me does any work here: it is what gives your own name, je m'appelle. te turns up once, in the informal "what's your name?" (comment tu t'appelles?), and se waits for a lesson that needs it. The set is named so its shape is familiar, not laid out as a grid to memorize — you meet each one where it earns its place.
 
 Guided Practice.
 [pause 1 second]
@@ -116,7 +115,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the two pieces you just met — je and (s')appeler — into the single most useful sentence for meeting anyone.
 
-The phrase, assembled.
+The phrase, taken apart — by assembling it.
 Three atoms, each already taken apart on its own — je (I, from ego), me (myself, from mē), appelle (call, from appellāre):
 je (I) + me (myself) + appelle (call).
 me elides before the vowel of appelle becomes m'.
@@ -215,7 +214,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble it: "how" + "do you call yourself" = the polite question that gets the introduction going.
 
-The phrase, assembled.
+The phrase, taken apart — by assembling it.
 comment (how) + vous appelez-vous ("do you call yourself").
 comment vous appelez-vous? = literally "how do you call yourself?" = the polite "what's your name?"
 
@@ -281,7 +280,7 @@ Warm-up.
 [pause 2 seconds]
 Every piece is built. Here's the exchange it was all for.
 
-The dialogue.
+The exchange.
 [a table of 4 rows, read aloud]
 Je m'appelle Mira. means My name is Mira.
 Comment vous appelez-vous? means What's your name?

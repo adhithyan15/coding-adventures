@@ -1,0 +1,11 @@
+{
+  "id": "FR-EXT-009-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can run the whole introduction exchange: give my name with a reflexive verb, ask for someone else's by inversion, and answer enchanté(e) in the form my own gender takes.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C02-practice"
+  ]
+}

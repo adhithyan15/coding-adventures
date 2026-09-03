@@ -3,11 +3,11 @@
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
     "FR-C02-je",
-    "FR-C02-appeler",
     "FR-C02-me",
+    "FR-C02-appeler",
     "FR-C02-je-mappelle",
-    "FR-C02-enchante",
-    "FR-C02-tu-vous"
+    "FR-C02-tu-vous",
+    "FR-C02-enchante"
   ],
   "before": [],
   "inline": [
