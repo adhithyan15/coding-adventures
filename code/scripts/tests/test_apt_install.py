@@ -282,6 +282,32 @@ class WorkflowConsistencyTests(unittest.TestCase):
             "code/scripts/ci/apt-install.sh:\n  " + "\n  ".join(offenders),
         )
 
+    def test_every_apt_get_install_assumes_yes(self) -> None:
+        # `-q` is QUIET, not assume-yes. Two sites passed `-q` alone, and a
+        # non-interactive `apt-get install` cannot complete an install that
+        # requires changes without `-y` -- it prompts and aborts. Those jobs
+        # were green, which means the step was not installing anything: it read
+        # as a dependency step and behaved as a no-op, and would have started
+        # failing the day the runner image stopped shipping those packages.
+        #
+        # Not routed through the wrapper: these sites run no `apt-get update`,
+        # and adding one would change what they do. See #14211.
+        offenders = []
+        for workflow in sorted(WORKFLOWS.glob("*.yml")):
+            for number, line in enumerate(workflow.read_text().splitlines(), start=1):
+                if not re.search(r"apt-get\s+install", line):
+                    continue
+                flags = re.findall(r"-[A-Za-z]+", line.split("install", 1)[1])
+                if not any("y" in flag for flag in flags):
+                    offenders.append(f"{workflow.name}:{number}: {line.strip()}")
+        self.assertEqual(
+            offenders,
+            [],
+            "`apt-get install` needs `-y`; without it apt prompts and aborts "
+            "in CI, and the step silently does nothing when the packages "
+            "happen to be preinstalled:\n  " + "\n  ".join(offenders),
+        )
+
     def test_the_wrapper_is_executable_and_present(self) -> None:
         self.assertTrue(SCRIPT.is_file(), f"missing: {SCRIPT}")
 
