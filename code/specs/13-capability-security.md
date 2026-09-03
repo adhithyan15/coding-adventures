@@ -996,9 +996,25 @@ kernel cannot be bypassed by application code.
 |------|----------------|-----------|--------|
 | 1 | Push commit with socket code | Layer 3 (Linter) | CI fails — raw `socket` import flagged |
 | 2 | Disable linter in BUILD file | Layer 4 (CI Gate) | Independent static analysis detects `net:connect` not in manifest |
-| 3 | Edit manifest to add `net:connect` | Layer 5 (Hardware Key) | **Blocked** — no signed approval, YubiKey required |
+| 3 | Edit manifest to add `net:connect` | Layer 5 (Hardware Key) | **Refused at signing** — no signed approval, YubiKey required |
 
-**Outcome:** Attack requires 3 separate commits. Stopped at hardware-key gate.
+**Outcome:** Attack requires 3 separate commits and is refused at the
+hardware-key gate before anything is signed.
+
+**What "refused" means here, and what it does not.** Layers 3-5 detect an
+undeclared capability and decline to sign it, which is a hard stop *on this
+document's axis* — the supply chain. Nothing merges and nothing publishes. That
+is what stops this attack.
+
+They are not a runtime boundary, and this document says so itself: the Overview
+states "The system is not a runtime sandbox", and Honest Limitations records
+that Layer 6's sandbox is CI-only and Linux-only. A linter is not present when
+code runs.
+
+The two axes are easy to conflate, so keep them separate. For a **running
+agent**, D18S S-B1 puts the boundary at its own Layer 7 — the OS sandbox and
+the broker. Within **this** document's supply-chain model the hard stop remains
+the Layer 5 hardware key. Neither claim covers the other's ground.
 
 ### Scenario 2: Create a new malicious package
 
@@ -1007,7 +1023,7 @@ kernel cannot be bypassed by application code.
 | Step | Attacker Action | Layer Hit | Result |
 |------|----------------|-----------|--------|
 | 1 | Create package with undeclared network access | Layer 4 (CI Gate) | Static analysis detects `net:connect` outside the effective zero-capability profile |
-| 2 | Add manifest with `net:connect` | Layer 5 (Hardware Key) | **Blocked** — no signed approval |
+| 2 | Add manifest with `net:connect` | Layer 5 (Hardware Key) | **Refused at signing** — no signed approval |
 | 3 | Even if bypassed, trigger publish | Registry gate | PyPI Trusted Publisher not registered for this name |
 
 **Outcome:** New packages face the strictest barriers.

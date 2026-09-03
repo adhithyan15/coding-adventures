@@ -1386,8 +1386,34 @@ jobs:
           cache: true
 
       - name: Install cargo-tarpaulin
+        # PINNED, and --locked. An unpinned `cargo install` means coverage can
+        # break with no repo change, and it already did once:
+        # `chief-of-staff-biometric-approval` passed on the ptrace engine on
+        # 2026-08-14 and SIGILLed months later on untouched code -- the tool
+        # moved, not the crate.
+        #
+        # Diff-based CI hides that failure mode. A package is only rebuilt when
+        # it changes, so tool drift sits dormant until an unrelated PR triggers
+        # a near-full rebuild, and then looks like THAT PR's fault. Pinning
+        # turns a mystery into a one-line, reviewable bump.
+        #
+        # `--locked` matters as much as the version: without it Cargo resolves
+        # tarpaulin's own dependency tree fresh, so a patch release in any
+        # transitive dep reintroduces exactly the drift the pin removes.
+        #
+        # 0.37.2, NOT the 0.35.2 this was first pinned to. Upstream fixed the
+        # ptrace SIGILL in 0.35.3 ("PID parent event is delivered in iteration
+        # after the child stop is reported"), which was yanked and republished
+        # as 0.35.4 -- so 0.35.2 is the last release that still HAS the bug
+        # this pin exists to prevent, and 17 of our 20 tarpaulin invocations
+        # run on the default ptrace engine. Pinning to the version that
+        # happened to be installed locally would have frozen CI on it.
+        #
+        # 0.37.1 also brought llvm_profparser 0.13 and with it LLVM 23 support,
+        # which the `--engine llvm` crates need as the floating `@stable`
+        # toolchain advances.
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
-        run: cargo install cargo-tarpaulin
+        run: cargo install cargo-tarpaulin --version 0.37.2 --locked
 
       - name: Set up Elixir
         # Pure-BEAM packages run executable BUILD_windows fronts on the pinned
