@@ -10,8 +10,21 @@
   "payoff": {
     "lesson": "FR-C02-practice",
     "kind": "task",
-    "summary": "Complete FR-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in French, give my name, and understand the other person's name.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Now a first real exchange — “Je m'appelle Mira.” / “Comment vous appelez-vous?” / “Je m'appelle Arun.” / “Enchanté.” — giving your name, asking for someone else's, and saying you are glad to meet them. We build it the same way as the greetings: each piece taken apart first, then assembled.",
+    "assesses": [
+      "FR-LEX-JE-01",
+      "FR-ETYMON-JE-EGO-02",
+      "FR-LEX-ME-03",
+      "FR-GRAM-REFLEXIVE-SET-04",
+      "FR-LEX-APPELER-05",
+      "FR-GRAM-REFLEXIVE-VERB-06",
+      "FR-LEX-JEMAPPELLE-07",
+      "FR-LEX-TU-VOUS-08",
+      "FR-GRAM-VOUVOIEMENT-09",
+      "FR-LEX-COMMENT-HOW-10",
+      "FR-GRAM-INVERSION-NAME-11",
+      "FR-LEX-ENCHANTE-12"
+    ],
+    "note": "Chapter 2 is schema-v2 as of the hand-written-chapter retirement, so the payoff is atom-scored: FR-C02-practice assesses every atom the chapter introduces. Two of the twelve carry a suffix that keeps them clear of an id a later chapter already owns — FR-LEX-COMMENT-HOW-10 beside chapter 32's FR-LEX-COMMENT-05, which types comment as one of the five question words, and FR-GRAM-INVERSION-NAME-11 beside chapter 32's FR-GRAMMAR-INVERSION-08."
   }
 }

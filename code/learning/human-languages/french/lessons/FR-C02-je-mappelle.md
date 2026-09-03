@@ -1,26 +1,46 @@
 ---
+schema_version: 2
 id: FR-C02-je-mappelle
+spine_node: SPINE-EXCHANGE-NAMES
 sequence: 75
 chapter: 2
 type: phrase
 headword: je m'appelle…
-gloss: my name is… (literally "I call myself…")
+gloss: my name is… (literally "I call myself")
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [FR-C02-je, FR-C02-me, FR-C02-appeler]
 sounds: [elision]
 roots: [ego, me-latin, appellare, nomen]
-est_minutes: 4
+etymology_hook: "je + me + appelle — three pieces already taken apart, and me elides to m' before the vowel of appelle"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FR-LEX-JE-01, FR-LEX-ME-03, FR-LEX-APPELER-05, FR-GRAM-REFLEXIVE-VERB-06]
+introduces:
+  knowledge: [FR-LEX-JEMAPPELLE-07]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [FR-CULTURE-JE-MAPPELLE-PREFERRED-01]
+practises:
+  knowledge: [FR-LEX-JEMAPPELLE-07, FR-LEX-JE-01, FR-LEX-ME-03, FR-LEX-APPELER-05, FR-GRAM-REFLEXIVE-VERB-06]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+variety: standard-contemporary
+register: neutral
 reviews_of: [FR-C02-je, FR-C02-me, FR-C02-appeler]
 ---
 
 # je m'appelle… — "my name is…," literally "I call myself"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Assemble the two pieces you just met — *je* and *(s')appeler* — into
 the single most useful sentence for meeting anyone.
 
-## The phrase, assembled
+## The phrase, taken apart — by assembling it
+<!-- hl-knowledge: introduces=[FR-LEX-JEMAPPELLE-07]; assesses=[FR-LEX-JE-01, FR-LEX-ME-03, FR-LEX-APPELER-05] -->
 
 Three atoms, each already taken apart on its own — [je](FR-C02-je.md) (I, ←
 *ego*), [me](FR-C02-me.md) (myself, ← *mē*), [appelle](FR-C02-appeler.md)
@@ -35,6 +55,7 @@ Three atoms, each already taken apart on its own — [je](FR-C02-je.md) (I, ←
 is Mira."
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-REFLEXIVE-VERB-06] -->
 
 French *prefers* this verb-based "I call myself" to a literal "my name is." The
 literal form does exist:
@@ -47,6 +68,7 @@ real introduction, reach for **je m'appelle**. (You now also see why "noun" is
 literally "a naming word.")
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-JEMAPPELLE-07] -->
 
 [PAUSE 1s]
 - [YOU SAY: "je m'appelle…" then your own name]
@@ -54,6 +76,7 @@ literally "a naming word.")
 - [YOU SAY: the stiff literal alternative — "mon nom est…"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-JEMAPPELLE-07, FR-LEX-ME-03] -->
 
 [PAUSE 3s] What does **je m'appelle** literally mean, and why does *me* become
 *m'*? ("I call myself"; elision before the vowel of *appelle*.) What's the more

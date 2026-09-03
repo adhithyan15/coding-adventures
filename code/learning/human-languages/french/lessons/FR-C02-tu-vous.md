@@ -1,5 +1,7 @@
 ---
+schema_version: 2
 id: FR-C02-tu-vous
+spine_node: SPINE-EXCHANGE-NAMES
 sequence: 80
 chapter: 2
 type: word
@@ -9,23 +11,42 @@ concept_tag: PRONOUN-YOU
 prerequisites: [FR-C02-je]
 sounds: [front-rounded-u]
 roots: [tu, vos]
-est_minutes: 4
+etymology_hook: "tu ← Latin tū, vous ← Latin vōs ('you all') — English lost the split when thou died, leaving one flat you"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FR-LEX-JE-01]
+introduces:
+  knowledge: [FR-LEX-TU-VOUS-08, FR-GRAM-VOUVOIEMENT-09]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FR-LEX-TU-VOUS-08, FR-GRAM-VOUVOIEMENT-09]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+variety: standard-contemporary
+register: neutral
 reviews_of: [FR-C02-je, FR-C02-appeler]
 ---
 
 # tu / vous — "you," familiar and formal
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] To *ask* someone their name, you need "you." French has two, and
 choosing between them is a small act of social judgment.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[FR-LEX-TU-VOUS-08]; assesses=[] -->
 
 - **tu** = *too*, but with the front-rounded French *u* (lips rounded, tongue
   forward). **vous** = *voo* (silent *s*).
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - **tu** (familiar "you") ← Latin **tū**.
 - **vous** (formal / plural "you") ← Latin **vōs**, "you all."
@@ -34,6 +55,7 @@ English once had the same split — old **thou** was the *tu* — but *thou* die
 out, leaving one flat **you** for everyone.
 
 ## Grammar Lens: two "you"s, chosen by register
+<!-- hl-knowledge: introduces=[FR-GRAM-VOUVOIEMENT-09]; assesses=[] -->
 
 - **tu** — for friends, family, children, peers. Intimate, equal.
 - **vous** — for strangers, elders, anyone you'd show respect — **and** it's the
@@ -47,6 +69,7 @@ a verb for it, *vouvoyer*). This is the same politeness Spanish builds with
 over-familiar — **when in doubt, *vous***.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TU-VOUS-08, FR-GRAM-VOUVOIEMENT-09] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tu" (front-rounded *u*), "vous" (*voo*)]
@@ -54,6 +77,7 @@ over-familiar — **when in doubt, *vous***.
 - [YOU SAY: the rule of thumb — "when in doubt, *vous*"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TU-VOUS-08, FR-GRAM-VOUVOIEMENT-09] -->
 
 [PAUSE 3s] What decides *tu* vs *vous* — and what does French do to be polite to
 one person? (Register — familiar vs respect; it uses the *plural* (*vous*) on

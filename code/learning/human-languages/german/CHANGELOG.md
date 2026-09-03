@@ -93,7 +93,7 @@ on is already theirs.
 | atoms never revisited | 78 | **83** |
 | reinforcement window misses | 687 | **800** |
 | `handwritten_parity.py` german | 40 | **39** blocks at risk |
-| corpus narration refusals | 51 | **49** |
+| corpus narration refusals | 50 | **48** |
 | book pages | 346 | **363** |
 
 RE-MEASURED ON RETRIEVAL. This chapter was authored before German chapters 14,

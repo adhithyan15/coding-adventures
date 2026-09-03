@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 2,
-  "sourceHash": "fnv1a64:0221a1b964965213",
+  "sourceHash": "fnv1a64:648cd7804f278be6",
   "lessonIds": [
     "FR-C02-je",
     "FR-C02-me",
@@ -13,11 +13,5 @@
     "FR-C02-enchante",
     "FR-C02-practice"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 0,
-  "text": "french/narration/ch02.txt",
-  "json": "french/narration/ch02.json",
-  "textHash": "fnv1a64:c9ab11431359b703",
-  "jsonHash": "fnv1a64:9d0480cd8da7c233",
-  "findings": []
+  "tex": "french/book/chapters/ch02-introductions.tex"
 }
