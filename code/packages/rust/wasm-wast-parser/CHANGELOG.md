@@ -1,5 +1,39 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.106 — 2026-09-02 — add `ref.eq` (`0xD3`) text-format encoding (W39 slice 1)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 1 of 5.
+`ref.eq` was genuinely unimplemented anywhere in this codebase (confirmed
+via grep before starting). Its real opcode, cross-checked against two
+independent fetches of the GC proposal's own `MVP.md` binary-format
+tables, is **`0xD3`** -- a single BASE-opcode-space byte, immediately
+after `ref.func`'s `0xD2`, NOT under the `0xFB` prefix most other GC
+instructions use.
+
+Both the folded (`encode_folded_instr`) and flat/stream
+(`encode_stream_instr`) instruction encoders now recognize `ref.eq` and
+intercept it before the `get_opcode_by_name` lookup, the same way
+`ref.null`/`ref.is_null` already are (neither is registered in
+`wasm_opcodes::OPCODES`, a single-byte-opcode metadata table that has no
+entry for this genuinely-base-space-but-otherwise-GC-flavored byte
+either). `ref.eq` takes no immediate and two stack operands (both
+recursed into via the existing `encode_instr_list` machinery, the same
+one every other multi-operand instruction, e.g. `i32.add`, already
+uses) -- emits a bare `0xD3` byte with nothing else.
+
+This is the parser half only; see `wasm-execution` and `wasm-validator`'s
+own CHANGELOGs for the runtime semantics and type-checking halves. Real
+corpus effect (measured via `wasm-conformance`'s regenerated baseline,
+diffed programmatically against the pre-change baseline across all 257
+files): `ref_eq.wast` moves from 6/89 assert_return+module+action+
+assert_invalid passing (83 `not_yet_supported`) to 87/89 (2 remaining --
+see `wasm-conformance`'s own CHANGELOG for exactly why those 2 don't
+close in this slice); `array_init_elem.wast`, `array_new_elem.wast`,
+`table_init.wast`, `table_init64.wast` also close a handful of NYS each,
+since all four happen to use `ref.eq` as a general-purpose funcref-
+equality helper in their own fixture bodies, unrelated to this slice's
+own target file. Zero new `Fail` anywhere in the 257-file corpus.
+
 ## 0.1.105 — 2026-09-02 — fix: reject non-power-of-two `align=N` memarg immediates (closes `align.wast`/`align64.wast`/`simd_align.wast`)
 
 Closes the largest remaining coherent NYS cluster in the wasm-conformance
