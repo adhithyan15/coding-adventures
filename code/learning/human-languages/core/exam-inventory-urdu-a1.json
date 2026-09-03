@@ -1,0 +1,4327 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY URDU EXAMINING OR LANGUAGE BODY. core/exam-levels.json records urdu as exam 'no widely-sat international ladder', basis 'editorial', so there is nothing here to defer to. Pakistani board examinations and Indian state Urdu syllabi exist, but they are built for children schooled in Urdu or for literary attainment, not for an adult second-language learner against CEFR can-do descriptors, and neither was consulted. Read 'A1' here as the CEFR descriptor -- can greet, introduce oneself, and handle a short exchange in everyday spoken Urdu -- and as a measuring stick this project built for itself.\n\nEXAM ENVELOPE: AN A1 PAPER IS DECLARED AND IS NOT ON DISK. urdu/assessment.json declares an A1 level and points all four of its skills at 'task-shapes/a1.json'; urdu/task-shapes/ contains pre-a1.json and nothing else, and there is no urdu/mocks/. That is the same shape Gujarati's inventory found, and it is worse than having nothing, because a declaration that is not on disk reads like an envelope until somebody looks. Unlike Arabic, whose A1 task shape is externally sourced from Avant STAMP 4S, nothing here can say which paper item demands which word. Where such a file could write 'the paper asks for X', this one can only write 'an A1 learner needs X'. That is a weaker claim and is stated as one.\n\nTHE TRACK OWNS NO HAND-WRITTEN CHAPTERS, WHICH MAKES THESE NUMBERS TRUSTWORTHY. core/book-generation.d/handwritten.d/ contains eight entries and all eight are German. A hand-written chapter owns no atom and therefore cannot be probed, so an inventory measured against a track that has them reports its hand-written content as absent -- the caveat recorded on French. Urdu is clear of it: every one of its 18 chapters is generated from the lessons this file probes.\n\nTHE CAVEAT NAMES THE SCRIPT AND THE PERSO-ARABIC REGISTER, AND THOSE ARE THIS TRACK'S TWO BEST COLUMNS. tracks.urdu warns that Urdu shares its spoken core with Hindi and that 'the script and the Persian-Arabic register are where the two diverge and where the ramp differs'. Both halves are answered by teaching rather than by assertion: five register atoms name the inherited Indo-Aryan core, the borrowed writing vocabulary, one root arriving by two roads, a loan of a loan and the modern English layer; two cross-linguistic atoms teach the same spoken word in two scripts. Urdu is also the only track in this series whose frontmatter `register` field carries information -- seven distinct values against a uniform 'neutral' in both Bengali and Arabic -- and UR-A1-REG-06 records that no atom asserts that vocabulary, so nothing gates it.\n\nSEARCH FOR AN EXTERNAL SOURCE: NOT SEARCHED, BY INSTRUCTION. The project settled at HL-C287/HL-C290 that the proxy derivation is the method for tracks with no sat ladder, and the search was deliberately not redone for Urdu. Saying so is what keeps 'we did not look' from reading as 'there is nothing to find'.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is the Instituto Cervantes Plan Curricular inventories. The proxy supplies the LEVEL and the shape of the columns; every Urdu exponent is this project's choice, and every point records which Spanish point or points it was derived from.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Spanish is a proxy for LEVEL, never for grammar: each point was read as 'what must an A1 learner be able to do here', and the Urdu exponent that carries the same load was then chosen. Where Urdu carries the load with machinery Spanish has not got -- postpositions and an oblique case, a dative experiencer, a double-agreeing present tense, a three-rung respect ladder -- the point is restated around the Urdu machinery and its Spanish origin recorded in derivedFrom. Restating IS deriving; only two Spanish points yield nothing at all and both are in proxy.notTransferred."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "core/spine.json declares pre-A1 through C2 and core/exam-levels.json maps urdu onto CEFR with mapping 'cefr'. Used for the functional and register columns, where the proxy's exponents are too Spanish-specific to transfer."
+    },
+    {
+      "id": "UR-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/urdu/ -- 89 lessons, 18 chapters, 186 schema-v2 knowledge atoms",
+      "note": "Coverage is measured, not asserted. A point counts as covered only when every atom named in its probe is introduced by a lesson in this track. The atom set was re-derived from the merged tree with the package's own trackIntroducedAtoms, and every probe was checked against it before this file was committed. It is the shortest of the three tracks in this series -- 89 lessons against Bengali's 139 and Arabic's 102 -- and the densest in grammar atoms."
+    },
+    {
+      "id": "UR-ASSESSMENT",
+      "kind": "project-owned",
+      "title": "urdu/assessment.json and urdu/task-shapes/ -- a pre-A1 paper that exists and an A1 one that does not",
+      "note": "assessment.json declares BOTH a pre-A1 level and an A1 level, and the A1 entry points every one of its four skills at 'task-shapes/a1.json' -- a file that is NOT on disk. urdu/task-shapes/ contains pre-a1.json and nothing else, and there is no urdu/mocks/. So the A1 envelope is DECLARED and ABSENT, which is exactly the shape Gujarati's inventory found. Nothing in this file can say which paper item demands which word, and the declaration must not be mistaken for a source."
+    },
+    {
+      "id": "UR-EXAM-LEVELS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/core/exam-levels.json, tracks.urdu",
+      "note": "Records urdu as exam 'no widely-sat international ladder', basis 'editorial', mapping 'cefr', WITH a caveat: 'Urdu shares its spoken core with Hindi, so the Hindi anchors above are the nearest reference; the script and the Persian-Arabic register are where the two diverge and where the ramp differs.' The register and script columns below are built to answer that caveat and are the two columns where this track is strongest."
+    },
+    {
+      "id": "ED-URDU",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Urdu",
+      "note": "There is no Urdu examining body to defer to. Every judgement in this file is the project's own and is attributable to nobody else."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [
+      {
+        "spanishPoints": [
+          "A1-ART-02"
+        ],
+        "why": "Contractions of a preposition with the definite article (al, del). Urdu has neither a preposition nor an article -- it postposes, and it has no article at all -- so there is no pair to contract and nothing a lesson could teach. The absence of the article itself IS enumerated, at UR-A1-DEF-01; this entry is only about the contraction."
+      },
+      {
+        "spanishPoints": [
+          "A1-PRON-07"
+        ],
+        "why": "The exclamative que with an adjective (que bonito!). Urdu exclaims with kya plus an intonation contour, and kya is already enumerated as the interrogative at UR-A1-PRON-07 and UR-A1-QUE-01 and again as the yes-or-no marker at UR-A1-SEN-03. Splitting one word into a third point because Spanish spells its uses differently would be counting the proxy's morphology rather than Urdu's."
+      }
+    ]
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points) and the CEFR Companion Volume A1 descriptors",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Urdu is this project's choice every time. urdu/assessment.json declares an A1 task inventory whose file does not exist, so there is no checked-in paper item to pin an exponent against and no note here can say which one needs a word."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence, coordination and subordination columns)",
+      "note": "THE DIMENSION THE PROXY HELPS MOST AND STILL DOES NOT CLOSE, and the one where this track is unexpectedly strong: the copula, the double-agreeing present, the conjunct verb, the dative experiencer, adjective agreement and the possessive's agreement are all taught, which is more productive grammar than either sibling track owns. Five points have no Spanish origin at all and are flagged urduSpecific -- the oblique case before a postposition, the reflexive possessive apna, nastaliq as a letterform, and three register facts. The proxy also cannot see the biggest hole: the oblique case is the invisible prerequisite under four taught postpositions and no Spanish point asks about it."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "the proxy's orthography columns, plus a direct character census of the corpus taken with the package's own measureScriptClosure",
+      "note": "The census was TAKEN rather than assumed, and it is the one place in this series where the flattering number is the misleading one. Urdu reports only 4 closure violations, the best of the three tracks -- and 15 glyphs taught of 35 shown, 20 never taught, which is the WORST proportion of the three. The gap between those two figures is the exposure rule: 49 lessons are exposure-only and 142 glyph-instances are exempted because every headword carries a romanisation (headwordsWithoutRomanization is 0, matching Bengali and against Arabic's 37). Stroke order is not the blocker -- script-ductus holds 30 sourced urdu-nastaliq records covering fifteen of the twenty never-taught letters -- so this dimension can be closed by authoring."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "the proxy's twenty notional-specific domains (A1-NE01 to A1-NE20) and its seven general-notion blocks",
+      "note": "The domain list is the proxy's and it transfers cleanly, because what a beginner talks about is not language-specific. Which words fill each domain is entirely this project's choice. The distribution is uneven in an unusual way: body, clothing, weather, colour and the mental verbs are complete or nearly so, and the whole of number, time and quantity is EMPTY -- not one numeral, not one day, not one clock word in 89 lessons. This is the only track in this series that cannot count to one."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, and its `note` names what is missing so the file reads as a work queue rather than a score. Every atom named in a probe was checked to exist before this file was committed: a probe naming an atom that does not exist would report 'not covered' forever and would be indistinguishable from real debt.",
+  "points": [
+    {
+      "id": "UR-A1-N-01",
+      "category": "Ism (the noun)",
+      "label": "proper nouns: a personal name, given in an introduction",
+      "probe": [
+        "UR-LEX-MERA-NAAM-HAI",
+        "UR-LEX-NAME-QUESTION"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "urduSpecific": false,
+      "note": "میرا نام … ہے is taught in chapter 2 and آپ کا نام کیا ہے؟ in chapter 3, so both halves of the exchange exist."
+    },
+    {
+      "id": "UR-A1-N-02",
+      "category": "Ism (the noun)",
+      "label": "place names: the town or the country you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-N-01",
+        "A1-NE20-02"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT, and the corpus does not even write its own language's name in its own script: اردو returns ZERO occurrences in 89 files, and so does پاکستان. There is no word for a country, a city or a village, so a learner can be introduced and can never say where they are from."
+    },
+    {
+      "id": "UR-A1-N-03",
+      "category": "Ism (the noun)",
+      "label": "common nouns naming periods of time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "urduSpecific": false,
+      "note": "ABSENT ENTIRELY. دن ('day'), رات ('night'), آج, کل, وقت and سال all return zero occurrences — the two raw matches for دن were checked and are the middle of Persian پسندیدن and پرسیدن in two etymology sections. Not one time word exists in the whole track. This blocks UR-A1-LEX-52, UR-A1-LEX-53 and UR-A1-QUE-05 with it."
+    },
+    {
+      "id": "UR-A1-N-04",
+      "category": "Ism (the noun)",
+      "label": "grammatical gender on the noun, which nothing marks visibly",
+      "probe": [
+        "UR-LEX-BHAI",
+        "UR-GRAMMAR-MERA-GENDER-AGREEMENT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and taught the only way it can be — through agreement rather than through the noun. بھائی's lesson calls it 'the first noun this book has taught with a real grammatical gender', and بہن's lesson is the one that makes میرا bend. Restated: Spanish can point at -o and -a, and Urdu cannot, so the fact an A1 learner must hold is that gender is invisible until something agrees with it."
+    },
+    {
+      "id": "UR-A1-N-05",
+      "category": "Ism (the noun)",
+      "label": "gender by heteronymy: بھائی against بہن, ماں against باپ",
+      "probe": [
+        "UR-LEX-BHAI",
+        "UR-LEX-BAHAN",
+        "UR-LEX-MAAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "urduSpecific": false,
+      "note": "Covered for two of the three pairs. باپ ('father') is never taught, which leaves ماں alone in chapter 17 — the same one-parent hole Bengali has from the other side."
+    },
+    {
+      "id": "UR-A1-N-06",
+      "category": "Ism (the noun)",
+      "label": "number: the plural, and the oblique plural",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT. No noun in the corpus is ever pluralised, and Urdu needs two things here that Spanish needs one for — a plural form and an oblique plural before a postposition. A learner who owns five body words, four garments, four foods and five weather words cannot say more than one of any of them."
+    },
+    {
+      "id": "UR-A1-ADJ-01",
+      "category": "Sifat (the adjective)",
+      "label": "qualifying adjectives in attributive and predicative use",
+      "probe": [
+        "UR-LEX-THIK",
+        "UR-LEX-LAL",
+        "UR-LEX-NILA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "urduSpecific": false,
+      "note": "Covered both ways: ٹھیک is predicative in میں ٹھیک ہوں, and نیلا is attributive in میرا کوٹ نیلا ہے, which the coat lesson gives as a whole sentence."
+    },
+    {
+      "id": "UR-A1-ADJ-02",
+      "category": "Sifat (the adjective)",
+      "label": "the adjective agrees, and only if it ends in -ا",
+      "probe": [
+        "UR-GRAMMAR-ADJECTIVE-AGREEMENT",
+        "UR-LEX-LAL",
+        "UR-LEX-KALA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03",
+        "A1-ADJ-04",
+        "A1-SN-02",
+        "A1-SV-03"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, AND TAUGHT AS A CONTRAST RATHER THAN AS A RULE, which is better. لال and سفید are Persian and never change; کالا and نیلا are inherited and do. Chapter 13 teaches the invariant pair first and then the agreeing pair, so the learner meets the exception before the rule and the rule lands as an explanation."
+    },
+    {
+      "id": "UR-A1-ADJ-03",
+      "category": "Sifat (the adjective)",
+      "label": "position: the adjective stands before its noun",
+      "probe": [
+        "UR-LEX-KOAT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by example rather than by statement: میرا کوٹ نیلا ہے is predicative, and پرانا in chapter 18 is the corpus's only attributive adjective before a noun. No lesson names the order."
+    },
+    {
+      "id": "UR-A1-ADJ-04",
+      "category": "Sifat (the adjective)",
+      "label": "relational adjectives: naming where a person is from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02",
+        "A1-NG3-07"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and blocked behind UR-A1-N-02. Urdu builds these with the same Persian -ی the corpus already teaches inside گرمی and سردی, so the machinery is present and has no place name to attach to."
+    },
+    {
+      "id": "UR-A1-ADJ-05",
+      "category": "Sifat (the adjective)",
+      "label": "degree: بہت ('very')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01",
+        "A1-NG2-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Nothing can be intensified, so the nine adjectives the corpus owns all sit at one strength."
+    },
+    {
+      "id": "UR-A1-ADJ-06",
+      "category": "Sifat (the adjective)",
+      "label": "everyday descriptive adjectives: big, small, good, bad",
+      "probe": [
+        "UR-LEX-PURANA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01",
+        "A1-NG6-01",
+        "A1-NG6-04",
+        "A1-NE01-02"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by ONE word. پرانا ('old') is taught in chapter 18; بڑا, چھوٹا, اچھا and برا all return zero occurrences. ٹھیک covers 'fine' and there is no way to say anything is good or bad."
+    },
+    {
+      "id": "UR-A1-DEF-01",
+      "category": "Tareef (definiteness, and the article Urdu has not got)",
+      "label": "Urdu has no article; a bare noun is definite or indefinite by context",
+      "probe": [
+        "UR-LEX-MERA-NAAM-HAI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-04"
+      ],
+      "urduSpecific": false,
+      "note": "Restated as an absence, which is the demand an A1 learner really faces: not to look for a word that is not there. میرا نام … ہے is the corpus's clearest bare-noun sentence."
+    },
+    {
+      "id": "UR-A1-DEF-02",
+      "category": "Tareef (definiteness, and the article Urdu has not got)",
+      "label": "ایک ('one') pressed into service as an indefinite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ART-03"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT, AND THE WORD ITSELF IS MISSING: ایک returns ZERO occurrences in 89 files. Urdu's nearest thing to an indefinite article is its numeral 'one', and the corpus teaches no numeral at all (UR-A1-Q-01), so this null and that one close together."
+    },
+    {
+      "id": "UR-A1-DEM-01",
+      "category": "Isharat (demonstratives and deixis)",
+      "label": "the near/far demonstrative pair یہ and وہ",
+      "probe": [
+        "UR-LEX-YIH",
+        "UR-LEX-VOH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-02"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, AND URDU IS THE ONLY ONE OF THE THREE TRACKS IN THIS SERIES THAT HAS THIS AT ALL. Bengali's ইই and ওই both return zero occurrences; Arabic's هذا and هذه both return zero. Urdu teaches یہ in chapter 17 and وہ in chapter 18, as the near and far halves of one inherited pair."
+    },
+    {
+      "id": "UR-A1-DEM-02",
+      "category": "Isharat (demonstratives and deixis)",
+      "label": "the same words are also the third-person pronoun",
+      "probe": [
+        "UR-LEX-VOH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-PRON-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and it is a genuine Urdu fact rather than a convenience: وہ is 'that' and 'he' and 'she' and 'they' at once, and its lesson says so. Spanish keeps the two systems apart, so this is a restatement rather than a transfer."
+    },
+    {
+      "id": "UR-A1-DEM-03",
+      "category": "Isharat (demonstratives and deixis)",
+      "label": "position, and the oblique form اس / اُن before a postposition",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Urdu's demonstrative changes shape before every postposition, so یہ and وہ as taught can only ever be subjects — the learner has the words and cannot put them into any of the frames the corpus also teaches."
+    },
+    {
+      "id": "UR-A1-DEM-04",
+      "category": "Isharat (demonstratives and deixis)",
+      "label": "place deixis: یہاں and وہاں",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "urduSpecific": false,
+      "note": "ABSENT: یہاں and وہاں both return zero occurrences. Nothing can be located anywhere, which with the missing میں ('in') as a postposition leaves the whole spatial column empty."
+    },
+    {
+      "id": "UR-A1-POS-01",
+      "category": "Milkiyat (possession)",
+      "label": "the first-person possessive میرا, and that it agrees with the thing owned",
+      "probe": [
+        "UR-LEX-MERA-NAAM-HAI",
+        "UR-GRAMMAR-MERA-GENDER-AGREEMENT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-03"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and the second half is the interesting one: بہن's lesson is titled 'میرا bends to the noun, not to you', which is exactly the fact a Spanish speaker gets wrong."
+    },
+    {
+      "id": "UR-A1-POS-02",
+      "category": "Milkiyat (possession)",
+      "label": "the second-person possessive آپ کا, built from a pronoun plus کا",
+      "probe": [
+        "UR-GRAMMAR-AAP-KA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, in chapter 3. Urdu builds this out of the genitive postposition rather than from a separate paradigm, which UR-A1-PST-01 records."
+    },
+    {
+      "id": "UR-A1-POS-03",
+      "category": "Milkiyat (possession)",
+      "label": "possessives for the remaining persons: ہمارا, اس کا, ان کا",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-POS-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Two of the six persons are available, and the third-person one is blocked behind the missing oblique at UR-A1-DEM-03."
+    },
+    {
+      "id": "UR-A1-Q-01",
+      "category": "Adad (numerals and quantity)",
+      "label": "cardinal numerals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "urduSpecific": false,
+      "note": "NOT ONE NUMERAL IS TAUGHT. ایک and دو both return zero occurrences as words — the two raw matches for دو are inside دوست — so this track cannot count to one. Bengali reaches five and Arabic reaches twenty; Urdu has no number at all. An A1 candidate is asked their age, a price and a telephone number, and none of the three is reachable. This is the single largest lexical gap in any of the three inventories in this series."
+    },
+    {
+      "id": "UR-A1-Q-02",
+      "category": "Adad (numerals and quantity)",
+      "label": "the Urdu digits ۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ as written shapes",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-06"
+      ],
+      "urduSpecific": false,
+      "note": "Zero of ten taught, and Urdu uses shapes that differ from the Arabic ones for four and six even though both scripts share an alphabet — a fact the corpus's own cross-script comparisons would make cheap to teach."
+    },
+    {
+      "id": "UR-A1-Q-03",
+      "category": "Adad (numerals and quantity)",
+      "label": "ordinal numerals: پہلا, دوسرا",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and downstream of UR-A1-Q-01."
+    },
+    {
+      "id": "UR-A1-Q-04",
+      "category": "Adad (numerals and quantity)",
+      "label": "quantifiers: بہت, تھوڑا, کچھ",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-Q-04",
+        "A1-ADV-03",
+        "A1-NG2-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Nothing can be asked for in an amount, which with four foods and no numerals leaves the food chapter unusable in any transaction."
+    },
+    {
+      "id": "UR-A1-Q-05",
+      "category": "Adad (numerals and quantity)",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-PRON-01",
+      "category": "Zameer (pronouns)",
+      "label": "the first-person pronoun میں",
+      "probe": [
+        "UR-LEX-MAIN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and taught inside its own frame — میں … ہوں — rather than as a bare word, which is the right call because Urdu's copula agrees with it. Arabic's أنا returns zero occurrences, so Urdu is ahead of it here."
+    },
+    {
+      "id": "UR-A1-PRON-02",
+      "category": "Zameer (pronouns)",
+      "label": "the second-person pronouns آپ / تم / تُو, at three respect levels",
+      "probe": [
+        "UR-LEX-AAP-TUM-TU",
+        "UR-PRAGMATICS-YOU-REGISTER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, AND IT IS THE STRONGEST SINGLE LESSON IN THE TRACK. All three are given together in chapter 3 with a pragmatics atom of their own, and the lesson's heading — 'choose the relationship first' — makes the point that the choice is social before it is grammatical."
+    },
+    {
+      "id": "UR-A1-PRON-03",
+      "category": "Zameer (pronouns)",
+      "label": "the third-person pronoun وہ",
+      "probe": [
+        "UR-LEX-VOH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, in chapter 18, and covered together with the demonstrative it is identical to. Both siblings in this series have a null here."
+    },
+    {
+      "id": "UR-A1-PRON-04",
+      "category": "Zameer (pronouns)",
+      "label": "plural pronouns: ہم, آپ لوگ",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, on the same footing as the missing noun plural at UR-A1-N-06."
+    },
+    {
+      "id": "UR-A1-PRON-05",
+      "category": "Zameer (pronouns)",
+      "label": "the oblique object pronoun مجھے",
+      "probe": [
+        "UR-GRAMMAR-DATIVE-EXPERIENCER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02",
+        "A1-PRON-08",
+        "A1-SV-05"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and by a lesson that had no obligation to teach it: پسند's lesson introduces مجھے as 'the shape of to me' because the construction needs it. Both sibling tracks have a null here — Bengali teaches the dative FRAME and never the pronoun that fills it."
+    },
+    {
+      "id": "UR-A1-PRON-06",
+      "category": "Zameer (pronouns)",
+      "label": "the dative experiencer: 'to me, X is pleasing'",
+      "probe": [
+        "UR-GRAMMAR-DATIVE-EXPERIENCER",
+        "UR-LEX-PASAND"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-01",
+        "A1-F3-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and restated around Urdu's machinery. Spanish reaches this with gustar and a clitic; Urdu puts the experiencer in the dative and leaves the liked thing as subject, and پسند's lesson is titled 'Urdu does not like things; things please Urdu'."
+    },
+    {
+      "id": "UR-A1-PRON-07",
+      "category": "Zameer (pronouns)",
+      "label": "the interrogative pronoun کیا",
+      "probe": [
+        "UR-LEX-KYA",
+        "UR-ETYMON-KYA-QUESTION-FAMILY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "urduSpecific": false,
+      "note": "Covered in chapter 3, and taught as the head of a family — the k- interrogatives — which is what makes کہاں cheap when it arrives fourteen chapters later."
+    },
+    {
+      "id": "UR-A1-PRON-08",
+      "category": "Zameer (pronouns)",
+      "label": "the relative pronoun جو, and the جو … وہ correlative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05",
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Urdu's relative clause is a correlative pair rather than a Spanish-style postnominal que, so this is a restatement — and both halves are absent, though وہ itself is now taught."
+    },
+    {
+      "id": "UR-A1-PRON-09",
+      "category": "Zameer (pronouns)",
+      "label": "the reflexive اپنا, which Urdu requires where English does not",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "urduSpecific": false,
+      "note": "Restated, not transferred. Spanish's reflexive point is about the clitic se on a verb. Urdu's اپنا is a POSSESSIVE that must replace میرا whenever the owner is also the subject, which is where the same A1 demand -- mark that the actor and the owner are one person -- lands in Urdu. It is a rule a Spanish speaker has no analogue for and which an A1 learner breaks in their second sentence. Untaught, and made more visible by the fact that میرا itself is taught well."
+    },
+    {
+      "id": "UR-A1-ADV-01",
+      "category": "Mutalliqat (adverbs)",
+      "label": "polarity: جی ہاں and نہیں as complete answers",
+      "probe": [
+        "UR-LEX-JI-HAN",
+        "UR-LEX-NAHIN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05",
+        "A1-F1-05"
+      ],
+      "urduSpecific": false,
+      "note": "Covered, both in chapter 1, and جی ہاں is taught with its respect particle rather than as a bare ہاں — see UR-A1-REG-01."
+    },
+    {
+      "id": "UR-A1-ADV-02",
+      "category": "Mutalliqat (adverbs)",
+      "label": "manner: ٹھیک ('fine, well')",
+      "probe": [
+        "UR-LEX-THIK",
+        "UR-LEX-WELLBEING-REPLY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04",
+        "A1-NG6-01",
+        "A1-NG6-07"
+      ],
+      "urduSpecific": false,
+      "note": "Covered, and used in a whole sentence — میں ٹھیک ہوں، شکریہ — which its lesson gives with the word order named."
+    },
+    {
+      "id": "UR-A1-ADV-03",
+      "category": "Mutalliqat (adverbs)",
+      "label": "time deixis: آج, کل, اب",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ],
+      "urduSpecific": false,
+      "note": "ABSENT: آج and کل both return zero occurrences. Nothing can be located in time relative to now — see UR-A1-N-03, which is the same hole from the noun side."
+    },
+    {
+      "id": "UR-A1-ADV-04",
+      "category": "Mutalliqat (adverbs)",
+      "label": "connective adverbs: بھی ('also')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. بھی is one word and would let a learner say 'me too', which is a stock A1 turn."
+    },
+    {
+      "id": "UR-A1-ADV-05",
+      "category": "Mutalliqat (adverbs)",
+      "label": "the interrogative adverbs کیسے and کہاں",
+      "probe": [
+        "UR-LEX-KAISE-KAISI",
+        "UR-LEX-KAHAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "urduSpecific": false,
+      "note": "Covered. کیسے is taught in chapter 4 with its feminine کیسی beside it, and کہاں in chapter 17 as the fourth member of the k- family."
+    },
+    {
+      "id": "UR-A1-ADV-06",
+      "category": "Mutalliqat (adverbs)",
+      "label": "کیوں ('why') against کیونکہ ('because')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08",
+        "A1-SUB-06"
+      ],
+      "urduSpecific": false,
+      "note": "NEITHER EXISTS: کیوں returns zero occurrences and کیونکہ returns zero. A learner cannot ask for a reason or give one, and کیوں is a k- word that the chapter-17 family lesson had every opportunity to include."
+    },
+    {
+      "id": "UR-A1-ADV-07",
+      "category": "Mutalliqat (adverbs)",
+      "label": "quantity adverbs and degree",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, on the same footing as UR-A1-Q-04."
+    },
+    {
+      "id": "UR-A1-V-01",
+      "category": "Fel (the verb)",
+      "label": "the infinitive in -نا, which is how every Urdu verb is named",
+      "probe": [
+        "UR-GRAMMAR-NA-INFINITIVE",
+        "UR-LEX-HONA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and taught first: ہونا's lesson introduces the ending before any verb uses it, which is why the thirteen verbs that follow all land as one class."
+    },
+    {
+      "id": "UR-A1-V-02",
+      "category": "Fel (the verb)",
+      "label": "the copula ہے / ہوں / ہیں, and that it comes last",
+      "probe": [
+        "UR-GRAMMAR-COPULA-FINAL",
+        "UR-GRAMMAR-MAIN-HUN-FRAME",
+        "UR-GRAMMAR-AAP-HAIN",
+        "UR-LEX-HUN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02",
+        "A1-OS-05"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED FOUR TIMES OVER, and it is this track's structural spine: chapter 2 teaches that the verb waits, chapter 4 closes the frame with ہوں and again with ہیں, and chapter 17 reads ہے off the page. Restated around Urdu's machinery — Spanish needs ser, estar and haber where Urdu needs one verb in final position."
+    },
+    {
+      "id": "UR-A1-V-03",
+      "category": "Fel (the verb)",
+      "label": "the present tense, which agrees TWICE — with the person and with the gender",
+      "probe": [
+        "UR-GRAMMAR-PRESENT-TWO-AGREEMENTS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-03"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and it is the hardest thing about the Urdu verb: جانا's lesson shows میں جاتا ہوں against میں جاتی ہوں, so the learner meets double agreement on the first verb rather than the tenth. Neither sibling track teaches a present tense at all."
+    },
+    {
+      "id": "UR-A1-V-04",
+      "category": "Fel (the verb)",
+      "label": "the past tense",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08"
+      ],
+      "urduSpecific": false,
+      "note": "COMPLETELY ABSENT: تھا returns zero occurrences and no verb appears in a past form. Spanish spends five A1 points on the past because a candidate is expected to say what they did; nothing that happened can be reported in this corpus. Urdu's past also needs the ergative نے, which makes this a chapter rather than a lesson."
+    },
+    {
+      "id": "UR-A1-V-05",
+      "category": "Fel (the verb)",
+      "label": "the perfect and the compound tenses",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-V-09",
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "urduSpecific": false,
+      "note": "Absent, and downstream of UR-A1-V-04."
+    },
+    {
+      "id": "UR-A1-V-06",
+      "category": "Fel (the verb)",
+      "label": "the imperative, and the polite request",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01",
+        "A1-F4-02"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT AT EVERY POLITENESS LEVEL. Urdu grades its imperative three ways to match آپ / تم / تُو, and the corpus teaches the three pronouns beautifully (UR-A1-PRON-02) and none of the three verb forms that go with them. Nothing can be asked for or offered."
+    },
+    {
+      "id": "UR-A1-V-07",
+      "category": "Fel (the verb)",
+      "label": "the conjunct verb: a noun plus کرنا, which is how Urdu absorbs foreign words",
+      "probe": [
+        "UR-GRAMMAR-CONJUNCT-VERB",
+        "UR-LEX-MADAD-KARNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and its lesson makes the historical point as well as the grammatical one — 'the machine Urdu used to swallow two foreign vocabularies whole'. Only the second half conjugates, which is exactly what the heading says."
+    },
+    {
+      "id": "UR-A1-V-08",
+      "category": "Fel (the verb)",
+      "label": "the conjunctive participle in کر, which chains two actions",
+      "probe": [
+        "UR-CHUNK-AAP-SE-MIL-KAR"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-V-13",
+        "A1-SUB-01",
+        "A1-SUB-02"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED ONLY INSIDE A CHUNK, and the chunk is not the lesson. آپ سے مل کر خوشی ہوئی is taught whole in chapter 3 and contains the کر participle; no lesson names it, and nothing uses it again. This is Urdu's ordinary way of joining two clauses and it sits in the book unlabelled — the same shape Bengali's دیا کرے has."
+    },
+    {
+      "id": "UR-A1-V-09",
+      "category": "Fel (the verb)",
+      "label": "modality: سکنا ('to be able') and چاہیے ('should, want')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09",
+        "A1-F3-04"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught: سکتا returns zero occurrences and چاہیے returns zero. A learner cannot say what they can do or what they want, which are two of the commonest A1 speaking-task prompts."
+    },
+    {
+      "id": "UR-A1-V-10",
+      "category": "Fel (the verb)",
+      "label": "transitive and intransitive verbs side by side",
+      "probe": [
+        "UR-LEX-JANA",
+        "UR-LEX-PARHNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-OS-06"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by the verb stock rather than by a lesson about it. Urdu's transitivity matters more than Spanish's because it decides whether the past takes نے, and with no past (UR-A1-V-04) that consequence never arrives."
+    },
+    {
+      "id": "UR-A1-PST-01",
+      "category": "Huruf-e-jar (postpositions and case)",
+      "label": "کا, the genitive postposition, which agrees with the thing owned",
+      "probe": [
+        "UR-GRAMMAR-AAP-KA",
+        "UR-GRAMMAR-MERA-GENDER-AGREEMENT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED. آپ کا نام is taught in chapter 3 and the agreement is taught in chapter 9, which between them give the rule and its shape."
+    },
+    {
+      "id": "UR-A1-PST-02",
+      "category": "Huruf-e-jar (postpositions and case)",
+      "label": "سے, for 'from' and 'with'",
+      "probe": [
+        "UR-CHUNK-AAP-SE-MIL-KAR"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07",
+        "A1-NG1-02"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED ONLY INSIDE A CHUNK. سے appears in fourteen files and every occurrence is inside آپ سے مل کر, taught whole. The postposition is never named, so 'from Lahore' and 'with my friend' are both unreachable."
+    },
+    {
+      "id": "UR-A1-PST-03",
+      "category": "Huruf-e-jar (postpositions and case)",
+      "label": "کو, the object and dative postposition",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-SV-04",
+        "A1-SV-05"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT, AND HALF-PRESENT. مجھے is taught in chapter 8 and مجھے IS مجھ + کو fused; the postposition behind it is never named, so the learner has one frozen dative pronoun and no way to make another. The three raw matches for کو were checked and are all inside کوٹ."
+    },
+    {
+      "id": "UR-A1-PST-04",
+      "category": "Huruf-e-jar (postpositions and case)",
+      "label": "میں ('in') and پر ('on')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01",
+        "A1-NG3-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. میں occurs in twelve files and every occurrence is the PRONOUN 'I', which is spelled identically — a genuine ambiguity a lesson would have to disentangle, and no lesson does. Nothing in this corpus can be located anywhere."
+    },
+    {
+      "id": "UR-A1-PST-05",
+      "category": "Huruf-e-jar (postpositions and case)",
+      "label": "the oblique case a noun takes before any postposition",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [],
+      "urduSpecific": true,
+      "note": "NO SPANISH ORIGIN: Spanish prepositions leave their noun untouched. Every Urdu noun changes shape before a postposition, and a learner who does not know that cannot use کا, کو, سے or میں even after learning them. Untaught, and it is the invisible prerequisite under four of the five points above. Urdu-specific."
+    },
+    {
+      "id": "UR-A1-PST-06",
+      "category": "Huruf-e-jar (postpositions and case)",
+      "label": "word order: Urdu puts the verb last, and the rest is fairly free",
+      "probe": [
+        "UR-GRAMMAR-WELLBEING-WORD-ORDER",
+        "UR-GRAMMAR-COPULA-FINAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-SV-06",
+        "A1-SN-03"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and stated twice as a rule rather than shown once as an example — 'keep the copula final' is a lesson heading in chapter 4."
+    },
+    {
+      "id": "UR-A1-SEN-01",
+      "category": "Jumla (the sentence)",
+      "label": "the affirmative declarative",
+      "probe": [
+        "UR-LEX-MERA-NAAM-HAI",
+        "UR-LEX-WELLBEING-REPLY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by two whole sentences, both taught as frames a learner fills."
+    },
+    {
+      "id": "UR-A1-SEN-02",
+      "category": "Jumla (the sentence)",
+      "label": "the negative declarative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught — see UR-A1-NEG-02. The word is in chapter 1 and the sentence it belongs in is nowhere."
+    },
+    {
+      "id": "UR-A1-SEN-03",
+      "category": "Jumla (the sentence)",
+      "label": "the yes-or-no question, marked by کیا at the front or by intonation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT, AND ONE SENTENCE AWAY. کیا is already taught, in chapter 3, as the interrogative 'what'. Its second job — fronted, it turns any statement into a yes-or-no question — is never mentioned, and جی ہاں and نہیں are taught in chapter 1 as answers to a question the book cannot ask."
+    },
+    {
+      "id": "UR-A1-SEN-04",
+      "category": "Jumla (the sentence)",
+      "label": "the content question, with the asking word in situ",
+      "probe": [
+        "UR-LEX-NAME-QUESTION",
+        "UR-LEX-WELLBEING-QUESTION"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and both taught questions show the same thing: Urdu leaves کیا where the answer would stand — آپ کا نام کیا ہے is literally 'your name what is'."
+    },
+    {
+      "id": "UR-A1-SEN-05",
+      "category": "Jumla (the sentence)",
+      "label": "the existential: ہے used for 'there is'",
+      "probe": [
+        "UR-GRAMMAR-COPULA-FINAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "urduSpecific": false,
+      "note": "Covered thinly. The copula is taught four times over and never in its existential use, so the atom is present and the function is not drilled."
+    },
+    {
+      "id": "UR-A1-SEN-06",
+      "category": "Jumla (the sentence)",
+      "label": "the vocative, and addressing somebody by a kin term",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-SN-04",
+        "A1-F5-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Urdu addresses almost everybody by a kin term or a title, and the corpus teaches بھائی, بہن and ماں as nouns without ever using one in address."
+    },
+    {
+      "id": "UR-A1-SEN-07",
+      "category": "Jumla (the sentence)",
+      "label": "gender agreement runs through the whole sentence at once",
+      "probe": [
+        "UR-PRAGMATICS-RESPECTFUL-GENDER-CHOICE",
+        "UR-GRAMMAR-HOW-GENDER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-SN-02"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and it is the corpus's most carefully sequenced idea after the copula: کیسے/کیسی in chapter 4 shows the question agreeing with the person addressed, and the pragmatics atom beside it says respect does not erase agreement."
+    },
+    {
+      "id": "UR-A1-QUE-01",
+      "category": "Sawal (questions)",
+      "label": "کیا ('what')",
+      "probe": [
+        "UR-LEX-KYA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06",
+        "A1-F1-02"
+      ],
+      "urduSpecific": false,
+      "note": "Covered in chapter 3."
+    },
+    {
+      "id": "UR-A1-QUE-02",
+      "category": "Sawal (questions)",
+      "label": "کیسے / کیسی ('how')",
+      "probe": [
+        "UR-LEX-KAISE-KAISI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "urduSpecific": false,
+      "note": "Covered in chapter 4, gendered."
+    },
+    {
+      "id": "UR-A1-QUE-03",
+      "category": "Sawal (questions)",
+      "label": "کہاں ('where')",
+      "probe": [
+        "UR-LEX-KAHAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-NG3-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, in chapter 17 — and neither sibling track has this word. With no postposition میں and no place name, the answer is still unreachable, but the question can be asked."
+    },
+    {
+      "id": "UR-A1-QUE-04",
+      "category": "Sawal (questions)",
+      "label": "کون ('who')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "urduSpecific": false,
+      "note": "SHOWN AND NOT TAUGHT. کون appears in exactly two lessons — UR-W08-vao, where it is a WRITING exercise for the letter و and is glossed 'who' in passing, and chapter 18's practice — and neither introduces a lexical atom for it. It is a k- word, its family lesson exists in chapter 17, and it is one line from being taught."
+    },
+    {
+      "id": "UR-A1-QUE-05",
+      "category": "Sawal (questions)",
+      "label": "کب ('when')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-NG4-01"
+      ],
+      "urduSpecific": false,
+      "note": "ABSENT: zero occurrences. Blocked with the whole time column."
+    },
+    {
+      "id": "UR-A1-QUE-06",
+      "category": "Sawal (questions)",
+      "label": "کتنا ('how much, how many')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "urduSpecific": false,
+      "note": "ABSENT: zero occurrences. With no numeral and no quantifier, price and age are unreachable three ways over."
+    },
+    {
+      "id": "UR-A1-QUE-07",
+      "category": "Sawal (questions)",
+      "label": "the tag question: ہے نا؟",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Both pieces are in chapter 1 and chapter 2 and the tag is never formed."
+    },
+    {
+      "id": "UR-A1-NEG-01",
+      "category": "Nafi (negation)",
+      "label": "نہیں as a complete answer",
+      "probe": [
+        "UR-LEX-NAHIN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "urduSpecific": false,
+      "note": "Covered in chapter 1."
+    },
+    {
+      "id": "UR-A1-NEG-02",
+      "category": "Nafi (negation)",
+      "label": "نہیں before the verb, which is how Urdu negates a sentence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT, AND DELIBERATELY DEFERRED — which is worse than an oversight, because the deferral was never redeemed. The chapter-1 lesson introduces UR-GRAMMAR-NAHIN-NEGATION and says in as many words: 'Inside a sentence it commonly means not. That second job will matter when the track introduces verbs. Today you only need the complete answer.' Fourteen verbs and seventeen chapters later, no lesson comes back to it. میں نہیں سمجھتا — 'I do not understand' — is the sentence a beginner needs most, every piece of it is taught (میں in chapter 4, نہیں in chapter 1, سمجھنا in chapter 7, the present-tense agreement in chapter 6) and the corpus never puts them together."
+    },
+    {
+      "id": "UR-A1-NEG-03",
+      "category": "Nafi (negation)",
+      "label": "نہ and مت, the other two negators Urdu needs",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Urdu uses a different negator before an imperative and another in a subjunctive, so this does not come free with UR-A1-NEG-02 — though with no imperative either (UR-A1-V-06) it is not the first thing to fix."
+    },
+    {
+      "id": "UR-A1-NEG-04",
+      "category": "Nafi (negation)",
+      "label": "negative coordination: نہ … نہ",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and downstream of the empty joining column."
+    },
+    {
+      "id": "UR-A1-JOIN-01",
+      "category": "Rabt (joining and subordination)",
+      "label": "اور ('and')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "urduSpecific": false,
+      "note": "GLOSSED ONCE IN ROMANISATION, WRITTEN NEVER, TAUGHT NEVER — and it is the headline of this file. اور returns ZERO occurrences in Urdu script across 89 lessons. The word appears exactly once in the whole corpus, in a production prompt in chapter 15: '[YOU SAY: bārish, dhūp, aur hawā — rain, sunshine, and wind]'. The learner is asked to SAY a word the book has never taught and cannot read. A learner who owns 18 chapters — five weather words, four foods, four garments, five body words — cannot say 'rain and wind' from anything the corpus taught them."
+    },
+    {
+      "id": "UR-A1-JOIN-02",
+      "category": "Rabt (joining and subordination)",
+      "label": "یا ('or')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-CO-03",
+        "A1-F3-02"
+      ],
+      "urduSpecific": false,
+      "note": "ABSENT. All thirteen raw matches for یا were checked in context and every one is the tail of کیا. No alternative can be offered."
+    },
+    {
+      "id": "UR-A1-JOIN-03",
+      "category": "Rabt (joining and subordination)",
+      "label": "لیکن / مگر ('but')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ],
+      "urduSpecific": false,
+      "note": "ABSENT: both return zero occurrences. Nothing can be qualified or contradicted."
+    },
+    {
+      "id": "UR-A1-JOIN-04",
+      "category": "Rabt (joining and subordination)",
+      "label": "distributive joining: ایک … دوسرا",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and blocked behind the missing numerals as well."
+    },
+    {
+      "id": "UR-A1-JOIN-05",
+      "category": "Rabt (joining and subordination)",
+      "label": "کہ, the complementiser: 'I think THAT …'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03"
+      ],
+      "urduSpecific": false,
+      "note": "ABSENT. All four raw matches for کہ were checked and every one is inside کہاں. سوچنا ('to think') is taught in chapter 7 and there is nothing to attach a clause to it with, so an opinion cannot be reported even though its verb is in the book."
+    },
+    {
+      "id": "UR-A1-JOIN-06",
+      "category": "Rabt (joining and subordination)",
+      "label": "جو as a relative pronoun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught — the same absence recorded from the pronoun side at UR-A1-PRON-08, filed here so the joining column stands as a work queue on its own."
+    },
+    {
+      "id": "UR-A1-JOIN-07",
+      "category": "Rabt (joining and subordination)",
+      "label": "کیونکہ ('because')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ],
+      "urduSpecific": false,
+      "note": "ABSENT: zero occurrences, on both halves of Spanish's why/because pair."
+    },
+    {
+      "id": "UR-A1-JOIN-08",
+      "category": "Rabt (joining and subordination)",
+      "label": "جب ('when') as a clause joiner",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "urduSpecific": false,
+      "note": "ABSENT: zero occurrences. Urdu joins with a جب … تب correlative, so both halves are missing."
+    },
+    {
+      "id": "UR-A1-JOIN-09",
+      "category": "Rabt (joining and subordination)",
+      "label": "purpose: کے لیے plus an infinitive",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. The infinitive itself IS taught, in chapter 6, so the missing half is only the postposition — one of the cheaper nulls in this column."
+    },
+    {
+      "id": "UR-A1-JOIN-10",
+      "category": "Rabt (joining and subordination)",
+      "label": "the کر participle as the everyday way to join two clauses",
+      "probe": [
+        "UR-CHUNK-AAP-SE-MIL-KAR"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-V-13",
+        "A1-SUB-01"
+      ],
+      "urduSpecific": false,
+      "note": "THE ONE COVERED POINT IN THIS COLUMN, AND IT IS COVERED BY A CHUNK. آپ سے مل کر خوشی ہوئی is taught whole because it is how you say 'pleased to meet you'; the کر inside it is Urdu's ordinary clause-joiner and no lesson names it or uses it again. The machinery is in the book and is pointed at nothing."
+    },
+    {
+      "id": "UR-A1-JOIN-11",
+      "category": "Rabt (joining and subordination)",
+      "label": "the ellipsis that makes a farewell out of a sentence",
+      "probe": [
+        "UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and it is the corpus's only lesson about how two words hold together into something larger: خدا حافظ's lesson teaches that a whole clause has been dropped out of it. Filed in the joining column because that is the demand it answers, thinly."
+    },
+    {
+      "id": "UR-A1-REG-01",
+      "category": "Tarz-e-kalam (register, and the Perso-Arabic layer the caveat names)",
+      "label": "جی, the respect particle that turns ہاں into جی ہاں",
+      "probe": [
+        "UR-REGISTER-JI-RESPECT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED IN THE FIRST CHAPTER, which is the right place for it: an Urdu speaker does not say a bare ہاں to a stranger, and the corpus teaches the polite form as the default rather than as a variant."
+    },
+    {
+      "id": "UR-A1-REG-02",
+      "category": "Tarz-e-kalam (register, and the Perso-Arabic layer the caveat names)",
+      "label": "the آپ / تم / تُو ladder as a social choice, not a grammatical one",
+      "probe": [
+        "UR-PRAGMATICS-YOU-REGISTER",
+        "UR-PRAGMATICS-RESPECTFUL-GENDER-CHOICE",
+        "UR-LEX-AAP-TUM-TU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED THREE TIMES, and it is what the exam-levels caveat's 'the ramp differs' half is really about. Chapter 3 teaches the three forms and the choice; chapter 4 adds that respect does not erase gender agreement, which is the mistake a learner makes next."
+    },
+    {
+      "id": "UR-A1-REG-03",
+      "category": "Tarz-e-kalam (register, and the Perso-Arabic layer the caveat names)",
+      "label": "the Perso-Arabic layer: which of your words came from where",
+      "probe": [
+        "UR-REGISTER-INDO-ARYAN-CORE",
+        "UR-REGISTER-WRITING-BORROWED",
+        "UR-REGISTER-TWO-ROADS-ONE-ROOT",
+        "UR-REGISTER-DOUBLE-LOAN",
+        "UR-REGISTER-ENGLISH-LAYER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [],
+      "urduSpecific": true,
+      "note": "NO SPANISH ORIGIN, AND THE STRONGEST COLUMN IN THIS FILE. The exam-levels caveat says the Perso-Arabic register is where Urdu and Hindi diverge, and this is the one place in the corpus where the caveat is answered by teaching rather than by assertion: five register atoms across chapters 6 to 15 name the inherited Indo-Aryan core (بولنا), the borrowed writing vocabulary (لکھنا), one root arriving by two roads (پوچھنا), a loan of a loan (ہوا), and the modern English layer (کوٹ). Measured across the 56 word-lessons: 17 glosses name a Persian source, 3 an Arabic one, 7 an inherited one and 1 an English one, and 44 etymon atoms carry the detail. Urdu-specific and covered."
+    },
+    {
+      "id": "UR-A1-REG-04",
+      "category": "Tarz-e-kalam (register, and the Perso-Arabic layer the caveat names)",
+      "label": "the same spoken word, two scripts: what a Hindi speaker would write",
+      "probe": [
+        "UR-CROSSLINGUAL-THIK",
+        "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [],
+      "urduSpecific": true,
+      "note": "NO SPANISH ORIGIN, AND IT IS THE OTHER HALF OF THE CAVEAT. exam-levels.json says Urdu shares its spoken core with Hindi and that 'the script and the Persian-Arabic register are where the two diverge'. Two lessons answer it directly: ٹھیک's 'one word, two scripts', and خدا حافظ's script bridge on shared history and local spacing. نہیں's lesson makes the same point in prose. Urdu-specific and covered — no other track in this series has a cross-linguistic column at all."
+    },
+    {
+      "id": "UR-A1-REG-05",
+      "category": "Tarz-e-kalam (register, and the Perso-Arabic layer the caveat names)",
+      "label": "the high Perso-Arabic register a learner will meet in print and not in speech",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [],
+      "urduSpecific": true,
+      "note": "NO SPANISH ORIGIN. The corpus teaches contemporary standard Urdu — 74 of 89 lessons declare `variety: contemporary-standard-urdu` and the other 15, all script lessons, declare `standard-urdu` — and says nothing about the formal register of a newspaper editorial, a court document or a nastaliq headline, where the Persian and Arabic layers thicken sharply. That is the register a reader meets first in writing, and this track's whole selling point is that it teaches the script. Urdu-specific and untaught."
+    },
+    {
+      "id": "UR-A1-REG-06",
+      "category": "Tarz-e-kalam (register, and the Perso-Arabic layer the caveat names)",
+      "label": "the frontmatter register field is USED here, unlike in the sibling tracks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [],
+      "urduSpecific": true,
+      "note": "NO SPANISH ORIGIN, AND RECORDED AS A MEASUREMENT RATHER THAN A GAP. Bengali declares `register: neutral` on all 139 lessons and Arabic on 101 of 102, so neither field carries information. Urdu's carries seven distinct values — neutral, respectful, respectful-gender-contrast, broadly-polite, formal-familiar-intimate-contrast, neutral-polite and formal — and they line up with the lessons that teach the ladder. This point is UNCOVERED because no ATOM asserts the convention: the field is a real signal and nothing gates it, so an author can drift it silently. What is owed is a declared vocabulary, not a lesson."
+    },
+    {
+      "id": "UR-A1-SND-01",
+      "category": "Talaffuz (pronunciation)",
+      "label": "the aspirated consonants, written with دو چشمی ہ",
+      "probe": [
+        "UR-SCRIPT-DO-CHASHMI-HE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "urduSpecific": false,
+      "note": "Covered in chapter 7, inside سمجھنا. Aspiration is phonemic in Urdu and invisible to a European ear, so teaching it through the letter that writes it is the right way in."
+    },
+    {
+      "id": "UR-A1-SND-02",
+      "category": "Talaffuz (pronunciation)",
+      "label": "the retroflex consonants ٹ ڈ ڑ",
+      "probe": [
+        "UR-SCRIPT-RRE-LETTER",
+        "UR-SCRIPT-TE-VS-TTE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "urduSpecific": false,
+      "note": "Covered for ڑ in chapter 7 and for the ت/ٹ contrast in chapter 14. This is the other contrast a European ear does not hear, and the corpus teaches both."
+    },
+    {
+      "id": "UR-A1-SND-03",
+      "category": "Talaffuz (pronunciation)",
+      "label": "nasalised vowels, and the نون غنّہ that writes them",
+      "probe": [
+        "UR-SCRIPT-NUN-GHUNNA-01",
+        "UR-SCRIPT-NUN-GHUNNA-WRITE-01",
+        "UR-SCRIPT-NUN-NASAL-VOWEL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED THREE TIMES — recognised in chapter 1, written in chapter 6, and heard inside منہ in chapter 10 — which is proportionate, because ہوں, ہیں and نہیں all end in one."
+    },
+    {
+      "id": "UR-A1-SND-04",
+      "category": "Talaffuz (pronunciation)",
+      "label": "long ā at the start of a word, and the alif madda",
+      "probe": [
+        "UR-SCRIPT-ALIF-MADDA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "urduSpecific": false,
+      "note": "Covered in chapter 7 and revisited in chapter 18's review."
+    },
+    {
+      "id": "UR-A1-SND-05",
+      "category": "Talaffuz (pronunciation)",
+      "label": "the short vowels, which are not written",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT, and it is the single hardest thing about reading Urdu: the script writes long vowels and leaves short ones to be inferred, so a reader must know the word before they can read it. The corpus teaches fourteen letters and never states the principle. The two closure violations in this track that involve a diacritic — کالا and لال, each missing one harakat — are the only places short vowels are marked at all."
+    },
+    {
+      "id": "UR-A1-SND-06",
+      "category": "Talaffuz (pronunciation)",
+      "label": "stress and phrase rhythm",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O2-01",
+        "A1-O2-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. urdu/pronunciation-reference.md exists and carries no atom, so no probe can reach whatever it contains."
+    },
+    {
+      "id": "UR-A1-KHT-01",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "the page runs right to left",
+      "probe": [
+        "UR-SCRIPT-RTL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "urduSpecific": false,
+      "note": "Covered in chapter 2, taught with the first letter rather than asserted separately."
+    },
+    {
+      "id": "UR-A1-KHT-02",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "letters join, and some refuse to join leftward",
+      "probe": [
+        "UR-SCRIPT-JOINING-01",
+        "UR-SCRIPT-VAO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "urduSpecific": false,
+      "note": "Covered in chapters 4 and 8 — 'letters hold hands and slide downhill, and alif refuses to hold the next one' is the corpus's own phrasing, which is the right register for a beginner."
+    },
+    {
+      "id": "UR-A1-KHT-03",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "nastaliq slopes: the same alphabet, written differently from Arabic",
+      "probe": [
+        "UR-SCRIPT-JOINING-01",
+        "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [],
+      "urduSpecific": true,
+      "note": "NO SPANISH ORIGIN: the PCIC has no point about a calligraphic style, because Spanish has one letterform. Urdu is written in nastaliq and Arabic in naskh, the two look nothing alike on a page, and the corpus's declared script is `urdu-nastaliq` rather than `arabic`. The joining lesson teaches the downhill slope that is nastaliq's signature. Urdu-specific and covered."
+    },
+    {
+      "id": "UR-A1-KHT-04",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "one skeleton, several letters, told apart by dots",
+      "probe": [
+        "UR-SCRIPT-NUN-01",
+        "UR-SCRIPT-PE-01",
+        "UR-SCRIPT-BE-LETTER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "urduSpecific": false,
+      "note": "Covered across chapters 4, 6 and 7. Arabic's inventory teaches this as an explicit FAMILY four times over; Urdu teaches the letters one at a time and the principle is left implicit."
+    },
+    {
+      "id": "UR-A1-KHT-05",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "the two forms of ہ, and the ے that only ever ends a word",
+      "probe": [
+        "UR-SCRIPT-HE-01",
+        "UR-SCRIPT-BARI-YE-01",
+        "UR-SCRIPT-YE-01",
+        "UR-SCRIPT-YE-THIRD-VALUE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED WELL. گول ہ, بڑی ے and ی's three separate jobs are each given a lesson, which is proportionate: these are the letters ہے, ہیں and ہوں are made of."
+    },
+    {
+      "id": "UR-A1-KHT-06",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "reading a whole taught word off the page",
+      "probe": [
+        "UR-SCRIPT-SEVEN-READ-01",
+        "UR-SCRIPT-READ-HAI-01",
+        "UR-SCRIPT-READ-MEETING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, AND IT IS THE TRACK'S BEST STRUCTURAL IDEA: chapters 16, 17 and 18 turn words the learner already says into words they can read, ending with 'the whole first meeting readable from the page'. The book opens with a sentence and closes by making that sentence readable."
+    },
+    {
+      "id": "UR-A1-KHT-07",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "every letter a lesson puts in front of the reader has been taught first",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "urduSpecific": false,
+      "note": "MEASURED, AND THE NUMBER THAT LOOKS BEST HERE IS THE ONE TO DISTRUST. measureScriptClosure reports only 4 closure violations — the best of the three tracks in this series, against Bengali's 21 and Arabic's 57 — and that is bought by the exposure rule, not by teaching: 49 lessons are exposure-only and 142 glyph-instances are exempted because the headword carries a romanisation. The teaching figure is 15 glyphs taught of 35 shown, 20 never taught, which is the WORST proportion of the three (Bengali 34 of 45, Arabic 30 of 45). The twenty, by how many lessons want each: د 13 · ھ 11 · خ 6 · ٹ 6 · ج 5 · ئ 4 · ح 4 · ف 4 · ب 4 · ت 3 · ظ 3 · چ 3 · ِ 2 · َ 2 · ڑ 1 · ق 1 · ض 1 · ه 1 · ء 1 · گ 1. ب and ت are among them, which is startling in a track that teaches بولنا and پوچھنا."
+    },
+    {
+      "id": "UR-A1-KHT-08",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "stroke order: how each letter is actually written by hand",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "urduSpecific": false,
+      "note": "SOURCED BUT LARGELY UNUSED, which is Arabic's problem rather than Bengali's. script-ductus holds 30 sourced urdu-nastaliq glyph records — including ھ, ٹ, ڑ, گ, چ, د, خ, ج, ح, ف, ب, ت, ظ, ض and ق, fifteen of the twenty never-taught letters — so the data for a filmstrip exists and no lesson consumes it for them. This is authoring, not research."
+    },
+    {
+      "id": "UR-A1-KHT-09",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "every headword shows how it is said",
+      "probe": [
+        "UR-SCRIPT-MERA-NAAM-HAI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, AND MEASURED AT ZERO EXCEPTIONS: `headwordsWithoutRomanization` is 0 across all 89 lessons, matching Bengali and against 37 for Arabic. It is also what makes the closure figure at UR-A1-KHT-07 flattering, so the two points have to be read together."
+    },
+    {
+      "id": "UR-A1-KHT-10",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "Urdu has no letter case, so there is nothing to capitalise",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "urduSpecific": false,
+      "note": "Recorded because a learner must be TOLD, not because a paradigm is owed. One sentence in the first script lesson."
+    },
+    {
+      "id": "UR-A1-KHT-11",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "the Urdu full stop ۔, and the mirrored question mark ؟",
+      "probe": [
+        "UR-SCRIPT-URDU-QUESTION-MARK"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-04"
+      ],
+      "urduSpecific": false,
+      "note": "HALF COVERED, AND THE HALF THAT IS COVERED IS THE RARER ONE. The mirrored ؟ is taught in chapter 3; the ۔ that ends every Urdu sentence is used throughout the corpus — میرا کوٹ نیلا ہے۔ — and never taught. One character."
+    },
+    {
+      "id": "UR-A1-KHT-12",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "the rest of the punctuation Urdu borrowed",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught as a set. Urdu uses a mirrored comma ، as well, and it appears in the corpus untaught."
+    },
+    {
+      "id": "UR-A1-KHT-13",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "spacing: which letters end a word and which merely end a shape",
+      "probe": [
+        "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING",
+        "UR-SCRIPT-KHUDA-HAFIZ-SPACED"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and it is a problem Latin script does not have: a non-joining letter mid-word looks like a word break. خدا حافظ's lesson teaches exactly this."
+    },
+    {
+      "id": "UR-A1-KHT-14",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "the alphabet in order, and the names of the letters",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT AS AN ORDERED SET, and 15 of roughly 38 letters taught at all. The corpus teaches letters as its words need them, which is the right pedagogy and leaves a real gap: a learner who cannot recite the order cannot use a dictionary or fill in a form."
+    },
+    {
+      "id": "UR-A1-KHT-15",
+      "category": "Rasm-ul-khat (script and orthography)",
+      "label": "abbreviations, initialisms and symbols",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-EXAM-LEVELS",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02",
+        "A1-O4-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, merged into one point because Urdu does not divide them as the PCIC does."
+    },
+    {
+      "id": "UR-A1-FUN-01",
+      "category": "Kaam (communicative functions)",
+      "label": "greet",
+      "probe": [
+        "UR-LEX-SALAM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F6-02"
+      ],
+      "urduSpecific": false,
+      "note": "سلام is taught in the first lesson. It is the corpus's only greeting — there is no آداب and no صبح بخیر — which is thin beside Arabic's three."
+    },
+    {
+      "id": "UR-A1-FUN-02",
+      "category": "Kaam (communicative functions)",
+      "label": "respond to a greeting",
+      "probe": [
+        "UR-LEX-SALAM",
+        "UR-DIALOGUE-WELLBEING"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-02"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by the chapter-4 dialogue, which rehearses the whole wellbeing exchange as one unit."
+    },
+    {
+      "id": "UR-A1-FUN-03",
+      "category": "Kaam (communicative functions)",
+      "label": "take leave",
+      "probe": [
+        "UR-LEX-KHUDA-HAFIZ",
+        "UR-PRAGMATICS-STANDARD-FAREWELL",
+        "UR-DIALOGUE-TAKE-LEAVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-11",
+        "A1-F6-06"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and taught in three pieces — خدا, حافظ, then the phrase — with a pragmatics atom saying it is the standard farewell and a chapter-5 dialogue that opens and closes a whole interaction."
+    },
+    {
+      "id": "UR-A1-FUN-04",
+      "category": "Kaam (communicative functions)",
+      "label": "introduce oneself by name",
+      "probe": [
+        "UR-LEX-MERA-NAAM-HAI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-04",
+        "A1-F1-01",
+        "A1-F1-03"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by the frame, taught in chapter 2 with the copula's final position named."
+    },
+    {
+      "id": "UR-A1-FUN-05",
+      "category": "Kaam (communicative functions)",
+      "label": "ask somebody's name",
+      "probe": [
+        "UR-LEX-NAME-QUESTION",
+        "UR-DIALOGUE-NAME-EXCHANGE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "urduSpecific": false,
+      "note": "Covered at the آپ rung, with a practice lesson that runs the complete exchange."
+    },
+    {
+      "id": "UR-A1-FUN-06",
+      "category": "Kaam (communicative functions)",
+      "label": "respond to an introduction",
+      "probe": [
+        "UR-LEX-NICE-TO-MEET",
+        "UR-ETYMON-KHUSH-PERSIAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ],
+      "urduSpecific": false,
+      "note": "آپ سے مل کر خوشی ہوئی is taught whole in chapter 3, with خوش traced to Persian in the same lesson."
+    },
+    {
+      "id": "UR-A1-FUN-07",
+      "category": "Kaam (communicative functions)",
+      "label": "ask how somebody is",
+      "probe": [
+        "UR-LEX-WELLBEING-QUESTION",
+        "UR-GRAMMAR-AAP-HAIN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F6-01"
+      ],
+      "urduSpecific": false,
+      "note": "Covered, and gendered: آپ کیسے ہیں؟ and آپ کیسی ہیں؟ are taught together."
+    },
+    {
+      "id": "UR-A1-FUN-08",
+      "category": "Kaam (communicative functions)",
+      "label": "say how you are",
+      "probe": [
+        "UR-LEX-WELLBEING-REPLY",
+        "UR-GRAMMAR-WELLBEING-WORD-ORDER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F2-04",
+        "A1-NG6-01"
+      ],
+      "urduSpecific": false,
+      "note": "میں ٹھیک ہوں، شکریہ is taught as a whole sentence with its word order named."
+    },
+    {
+      "id": "UR-A1-FUN-09",
+      "category": "Kaam (communicative functions)",
+      "label": "thank",
+      "probe": [
+        "UR-LEX-SHUKRIYA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "urduSpecific": false,
+      "note": "شکریہ, taught in the first chapter and used as the second half of the wellbeing reply."
+    },
+    {
+      "id": "UR-A1-FUN-10",
+      "category": "Kaam (communicative functions)",
+      "label": "reply to thanks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F4-04"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. There is no کوئی بات نہیں and no خوش آمدید, so a thanks cannot be answered — which is odd in a track that teaches the thanks itself in chapter 1."
+    },
+    {
+      "id": "UR-A1-FUN-11",
+      "category": "Kaam (communicative functions)",
+      "label": "apologise",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT, AND THIS IS THE GUJARATI SHAPE RATHER THAN THE BENGALI ONE. معاف returns ZERO occurrences in 89 files and there is no سوری, no معذرت and no equivalent anywhere. A learner cannot say sorry at all. Arabic teaches آسف in chapter 7 and Bengali دুঃখিত in chapter 22; Urdu teaches neither."
+    },
+    {
+      "id": "UR-A1-FUN-12",
+      "category": "Kaam (communicative functions)",
+      "label": "say excuse me, and get somebody's attention",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-06",
+        "A1-F6-03"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT, on the same footing. There is no way to interrupt, to squeeze past, or to open a conversation with a stranger."
+    },
+    {
+      "id": "UR-A1-FUN-13",
+      "category": "Kaam (communicative functions)",
+      "label": "say please",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT. براہ مہربانی and مہربانی both return zero occurrences. With no imperative either (UR-A1-V-06), nothing can be requested politely or at all."
+    },
+    {
+      "id": "UR-A1-FUN-14",
+      "category": "Kaam (communicative functions)",
+      "label": "say you do not understand, and ask for a repeat",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F2-15",
+        "A1-F6-04"
+      ],
+      "urduSpecific": false,
+      "note": "UNTAUGHT, AND EVERY PIECE OF IT IS IN THE BOOK. میں (ch4) + نہیں (ch1) + سمجھنا (ch7) + the present-tense double agreement (ch6) is میں نہیں سمجھتا, and no lesson assembles it — see UR-A1-NEG-02, where the chapter-1 lesson explicitly defers the job and never returns. With no apology, no excuse-me and no please either, this track has NO REPAIR LANGUAGE AT ALL beyond شکریہ and نہیں. That is a functional hole a beginner hits in their first conversation and no coverage percentage surfaces it."
+    },
+    {
+      "id": "UR-A1-FUN-15",
+      "category": "Kaam (communicative functions)",
+      "label": "show that you are following what is said",
+      "probe": [
+        "UR-LEX-THIK"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "urduSpecific": false,
+      "note": "Covered thinly by ٹھیک, which does duty as an acknowledgement as well as an adjective. There is no اچھا, which is what an Urdu speaker actually says."
+    },
+    {
+      "id": "UR-A1-FUN-16",
+      "category": "Kaam (communicative functions)",
+      "label": "confirm or deny what was just said",
+      "probe": [
+        "UR-LEX-JI-HAN",
+        "UR-LEX-NAHIN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F1-05",
+        "A1-F2-06"
+      ],
+      "urduSpecific": false,
+      "note": "Covered, and جی ہاں carries its politeness with it."
+    },
+    {
+      "id": "UR-A1-FUN-17",
+      "category": "Kaam (communicative functions)",
+      "label": "agree and disagree with an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-F2-07",
+        "A1-NG6-06"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught beyond جی ہاں and نہیں, and blocked further by the missing لیکن."
+    },
+    {
+      "id": "UR-A1-FUN-18",
+      "category": "Kaam (communicative functions)",
+      "label": "say what you like",
+      "probe": [
+        "UR-LEX-PASAND",
+        "UR-GRAMMAR-DATIVE-EXPERIENCER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F3-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and it is the corpus's most sophisticated construction: مجھے … پسند ہے, taught with the pronoun, the postposition-derived dative and the copula all in place."
+    },
+    {
+      "id": "UR-A1-FUN-19",
+      "category": "Kaam (communicative functions)",
+      "label": "say what you want",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F3-04",
+        "A1-F3-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught — چاہیے returns zero occurrences. See UR-A1-V-09."
+    },
+    {
+      "id": "UR-A1-FUN-20",
+      "category": "Kaam (communicative functions)",
+      "label": "ask about and state a plan or an intention",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Urdu's future is a suffix on the present stem, so it would come cheaply off the tense the corpus already teaches, and no lesson takes it."
+    },
+    {
+      "id": "UR-A1-FUN-21",
+      "category": "Kaam (communicative functions)",
+      "label": "say what you do, or where you live",
+      "probe": [
+        "UR-LEX-KAAM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NE07-03",
+        "A1-NE10-01"
+      ],
+      "urduSpecific": false,
+      "note": "HALF COVERED. کام ('work') is taught in chapter 17 and there is no verb کرنا in its own right, no occupation, no place name and no locative postposition, so the noun sits in the book with nothing it can say."
+    },
+    {
+      "id": "UR-A1-FUN-22",
+      "category": "Kaam (communicative functions)",
+      "label": "say where you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG3-07"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and blocked three ways: no place name, no سے as a taught postposition, no nisba adjective."
+    },
+    {
+      "id": "UR-A1-FUN-23",
+      "category": "Kaam (communicative functions)",
+      "label": "give and ask for an age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG5-04",
+        "A1-NE03-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and blocked three ways: no numeral, no کتنا, no عمر or سال."
+    },
+    {
+      "id": "UR-A1-FUN-24",
+      "category": "Kaam (communicative functions)",
+      "label": "give a telephone number or an address",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01",
+        "A1-NE09-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and blocked on the numerals and the digits together."
+    },
+    {
+      "id": "UR-A1-FUN-25",
+      "category": "Kaam (communicative functions)",
+      "label": "ask for a thing, politely",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F4-02",
+        "A1-NE05-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Four foods are taught — پانی, چائے, دودھ, روٹی — and there is no please, no imperative and no quantifier, so none of them can be asked for."
+    },
+    {
+      "id": "UR-A1-FUN-26",
+      "category": "Kaam (communicative functions)",
+      "label": "ask for help",
+      "probe": [
+        "UR-LEX-MADAD-KARNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "urduSpecific": false,
+      "note": "Covered lexically. مدد کرنا is taught in chapter 8 with its conjunct-verb grammar; without an imperative, help still cannot be asked for."
+    },
+    {
+      "id": "UR-A1-FUN-27",
+      "category": "Kaam (communicative functions)",
+      "label": "offer and invite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. No offer is made anywhere in the corpus."
+    },
+    {
+      "id": "UR-A1-FUN-28",
+      "category": "Kaam (communicative functions)",
+      "label": "accept or decline an offer",
+      "probe": [
+        "UR-LEX-JI-HAN",
+        "UR-LEX-NAHIN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F4-08",
+        "A1-F4-09"
+      ],
+      "urduSpecific": false,
+      "note": "Covered at the bare-minimum level only."
+    },
+    {
+      "id": "UR-A1-FUN-29",
+      "category": "Kaam (communicative functions)",
+      "label": "give an order or an instruction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught — see UR-A1-V-06."
+    },
+    {
+      "id": "UR-A1-FUN-30",
+      "category": "Kaam (communicative functions)",
+      "label": "grant or refuse permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. No modal exists."
+    },
+    {
+      "id": "UR-A1-FUN-31",
+      "category": "Kaam (communicative functions)",
+      "label": "say you understand, or that you do not",
+      "probe": [
+        "UR-LEX-SAMAJHNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F2-14"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED FOR THE POSITIVE HALF ONLY, and the negative half is the one a beginner needs — see UR-A1-FUN-14 and UR-A1-NEG-02."
+    },
+    {
+      "id": "UR-A1-FUN-32",
+      "category": "Kaam (communicative functions)",
+      "label": "say you know something",
+      "probe": [
+        "UR-LEX-JANNA",
+        "UR-ETYMON-JANNA-KNOW"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F2-13",
+        "A1-NG7-01"
+      ],
+      "urduSpecific": false,
+      "note": "Covered. جاننا is taught in chapter 6, with its lesson pointing out it is the cousin of English know, Latin notice and Greek gnosis."
+    },
+    {
+      "id": "UR-A1-FUN-33",
+      "category": "Kaam (communicative functions)",
+      "label": "give an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F2-01",
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "urduSpecific": false,
+      "note": "BLOCKED, NOT MERELY MISSING. سوچنا ('to think') is taught in chapter 7, the present tense is taught in chapter 6, and there is no کہ to attach a clause with (UR-A1-JOIN-05). 'I think that …' fails on the connective alone."
+    },
+    {
+      "id": "UR-A1-FUN-34",
+      "category": "Kaam (communicative functions)",
+      "label": "ask for and give an evaluation",
+      "probe": [
+        "UR-LEX-THIK"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F2-03",
+        "A1-F2-04",
+        "A1-NG6-02",
+        "A1-NG6-04",
+        "A1-NG6-05"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by ٹھیک alone. With no اچھا and no برا, nothing can be called good or bad."
+    },
+    {
+      "id": "UR-A1-FUN-35",
+      "category": "Kaam (communicative functions)",
+      "label": "express approval or disapproval",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F2-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and blocked behind the same missing pair."
+    },
+    {
+      "id": "UR-A1-FUN-36",
+      "category": "Kaam (communicative functions)",
+      "label": "express certainty, doubt or possibility",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F2-08",
+        "A1-F2-10",
+        "A1-F2-12",
+        "A1-NG1-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. There is no شاید ('perhaps'), so every sentence a learner can build is a flat assertion."
+    },
+    {
+      "id": "UR-A1-FUN-37",
+      "category": "Kaam (communicative functions)",
+      "label": "ask about and state an ability",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09",
+        "A1-NG6-10"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught — see UR-A1-V-09."
+    },
+    {
+      "id": "UR-A1-FUN-38",
+      "category": "Kaam (communicative functions)",
+      "label": "read and write, as things you can say you do",
+      "probe": [
+        "UR-LEX-PARHNA",
+        "UR-LEX-LIKHNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "urduSpecific": false,
+      "note": "Covered. پڑھنا's lesson notes that it means to read, to study and to recite at once, because it never meant reading silently."
+    },
+    {
+      "id": "UR-A1-FUN-39",
+      "category": "Kaam (communicative functions)",
+      "label": "speak, and say which language",
+      "probe": [
+        "UR-LEX-BOLNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02",
+        "A1-F1-03"
+      ],
+      "urduSpecific": false,
+      "note": "HALF COVERED. بولنا is taught in chapter 6 and the corpus never writes اردو in Urdu script at all, so the learner has the verb for speaking and no name for the language they are speaking."
+    },
+    {
+      "id": "UR-A1-FUN-40",
+      "category": "Kaam (communicative functions)",
+      "label": "come and go",
+      "probe": [
+        "UR-LEX-JANA",
+        "UR-LEX-ANA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04",
+        "A1-NG3-05"
+      ],
+      "urduSpecific": false,
+      "note": "Covered as a deliberate pair in chapter 6, with آنا taught as 'go toward' built out of جانا."
+    },
+    {
+      "id": "UR-A1-FUN-41",
+      "category": "Kaam (communicative functions)",
+      "label": "take something",
+      "probe": [
+        "UR-LEX-LENA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01"
+      ],
+      "urduSpecific": false,
+      "note": "Covered in chapter 8."
+    },
+    {
+      "id": "UR-A1-FUN-42",
+      "category": "Kaam (communicative functions)",
+      "label": "ask a question, as a speech act",
+      "probe": [
+        "UR-LEX-PUCHHNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "urduSpecific": false,
+      "note": "Covered as a verb: پوچھنا, taught in chapter 8, in the lesson that is also the corpus's best register lesson."
+    },
+    {
+      "id": "UR-A1-FUN-43",
+      "category": "Kaam (communicative functions)",
+      "label": "say what colour something is",
+      "probe": [
+        "UR-LEX-LAL",
+        "UR-LEX-SAFED",
+        "UR-LEX-KALA",
+        "UR-LEX-NILA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED — four colours in chapter 13, taught in an order that makes the agreement rule land. No green and no yellow."
+    },
+    {
+      "id": "UR-A1-FUN-44",
+      "category": "Kaam (communicative functions)",
+      "label": "say what the weather is like",
+      "probe": [
+        "UR-LEX-BARISH",
+        "UR-LEX-DHOOP",
+        "UR-LEX-HAWA",
+        "UR-LEX-GARMI",
+        "UR-LEX-SARDI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, five words in chapter 15 — and this is the chapter whose recall prompt asks the learner to say اور, a word the book never taught (UR-A1-JOIN-01)."
+    },
+    {
+      "id": "UR-A1-FUN-45",
+      "category": "Kaam (communicative functions)",
+      "label": "point at something",
+      "probe": [
+        "UR-LEX-YIH",
+        "UR-LEX-VOH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-DEM-02",
+        "A1-F1-02"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and uniquely in this series. یہ کہاں؟ appears in چapter 17's own lesson as a pointing question."
+    },
+    {
+      "id": "UR-A1-FUN-46",
+      "category": "Kaam (communicative functions)",
+      "label": "address somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught — see UR-A1-SEN-06."
+    },
+    {
+      "id": "UR-A1-FUN-47",
+      "category": "Kaam (communicative functions)",
+      "label": "ask for a person, at a door or on the telephone",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F6-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and blocked on the untaught کون (UR-A1-QUE-04), which the corpus shows in a writing lesson without teaching."
+    },
+    {
+      "id": "UR-A1-FUN-48",
+      "category": "Kaam (communicative functions)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-FUN-49",
+      "category": "Kaam (communicative functions)",
+      "label": "congratulate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-10"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. مبارک is one of the first words a learner hears and it is not in the book."
+    },
+    {
+      "id": "UR-A1-FUN-50",
+      "category": "Kaam (communicative functions)",
+      "label": "propose a toast",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-09"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. The lowest-priority function here, and arguably not an A1 demand for this track at all."
+    },
+    {
+      "id": "UR-A1-FUN-51",
+      "category": "Kaam (communicative functions)",
+      "label": "offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F5-08"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-FUN-52",
+      "category": "Kaam (communicative functions)",
+      "label": "open and close a conversation",
+      "probe": [
+        "UR-DIALOGUE-TAKE-LEAVE",
+        "UR-DIALOGUE-NAME-EXCHANGE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-F6-01",
+        "A1-F6-06"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and by dialogue atoms rather than by inference: three practice lessons rehearse the name exchange, the wellbeing exchange and the whole take-leave shape."
+    },
+    {
+      "id": "UR-A1-FUN-53",
+      "category": "Kaam (communicative functions)",
+      "label": "count aloud",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG2-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught — see UR-A1-Q-01. Not one number exists."
+    },
+    {
+      "id": "UR-A1-FUN-54",
+      "category": "Kaam (communicative functions)",
+      "label": "name what you can see or hear",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. There is no دیکھنا and no سننا, which is a surprising pair to be missing from a track that teaches thirteen other verbs — and آنکھ ('eye') and کان ('ear') are both taught as nouns in chapter 10."
+    },
+    {
+      "id": "UR-A1-LEX-01",
+      "category": "Lughat (lexicon by domain)",
+      "label": "parts of the body",
+      "probe": [
+        "UR-LEX-KAAN",
+        "UR-LEX-NAAK",
+        "UR-LEX-AANKH",
+        "UR-LEX-MUNH",
+        "UR-LEX-DIL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, five words across chapters 10 and 11 — the fullest body set of the three tracks in this series."
+    },
+    {
+      "id": "UR-A1-LEX-02",
+      "category": "Lughat (lexicon by domain)",
+      "label": "physical characteristics",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and blocked behind the missing descriptive adjectives at UR-A1-ADJ-06."
+    },
+    {
+      "id": "UR-A1-LEX-03",
+      "category": "Lughat (lexicon by domain)",
+      "label": "actions and positions of the body",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE01-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-04",
+      "category": "Lughat (lexicon by domain)",
+      "label": "character and personality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-05",
+      "category": "Lughat (lexicon by domain)",
+      "label": "personal data: name, age, address, telephone",
+      "probe": [
+        "UR-LEX-MERA-NAAM-HAI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "urduSpecific": false,
+      "note": "Covered for the NAME only, which is one field of four."
+    },
+    {
+      "id": "UR-A1-LEX-06",
+      "category": "Lughat (lexicon by domain)",
+      "label": "documents: passport, identity card",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-07",
+      "category": "Lughat (lexicon by domain)",
+      "label": "personal objects",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE03-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-08",
+      "category": "Lughat (lexicon by domain)",
+      "label": "family relationships",
+      "probe": [
+        "UR-LEX-BHAI",
+        "UR-LEX-BAHAN",
+        "UR-LEX-KHANDAN",
+        "UR-LEX-MAAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "urduSpecific": false,
+      "note": "Covered — brother, sister, family and mother, across chapters 9 and 17. باپ ('father') is the missing one, which leaves the parent pair broken in the opposite direction from Bengali's."
+    },
+    {
+      "id": "UR-A1-LEX-09",
+      "category": "Lughat (lexicon by domain)",
+      "label": "social relationships: friend, colleague",
+      "probe": [
+        "UR-LEX-DOST"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by دوست, taught in chapter 9 as 'a Persian word that refuses to pick a gender, and exactly the relationship تم was made for' — which is the corpus tying its register column to its lexicon."
+    },
+    {
+      "id": "UR-A1-LEX-10",
+      "category": "Lughat (lexicon by domain)",
+      "label": "celebrations and family, social and religious occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. No عید, no شادی, no سالگرہ."
+    },
+    {
+      "id": "UR-A1-LEX-11",
+      "category": "Lughat (lexicon by domain)",
+      "label": "the meals of the day",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. No meal is named."
+    },
+    {
+      "id": "UR-A1-LEX-12",
+      "category": "Lughat (lexicon by domain)",
+      "label": "drink",
+      "probe": [
+        "UR-LEX-PANI",
+        "UR-LEX-CHAI",
+        "UR-LEX-DOODH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "urduSpecific": false,
+      "note": "Covered — water, tea and milk in chapter 12. پانی's lesson calls it 'the first word you would actually ask for', which is exactly right and exactly what UR-A1-FUN-25 says cannot be done."
+    },
+    {
+      "id": "UR-A1-LEX-13",
+      "category": "Lughat (lexicon by domain)",
+      "label": "foodstuffs",
+      "probe": [
+        "UR-LEX-ROTI",
+        "UR-LEX-AAM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03",
+        "A1-NE05-04"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by two words: روٹی in chapter 12 and آم in chapter 18."
+    },
+    {
+      "id": "UR-A1-LEX-14",
+      "category": "Lughat (lexicon by domain)",
+      "label": "the restaurant",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE05-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Nothing can be ordered or paid for."
+    },
+    {
+      "id": "UR-A1-LEX-15",
+      "category": "Lughat (lexicon by domain)",
+      "label": "educational institutions, staff and students",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-16",
+      "category": "Lughat (lexicon by domain)",
+      "label": "learning and teaching",
+      "probe": [
+        "UR-LEX-PARHNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE06-04"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by پڑھنا, which means both reading and studying."
+    },
+    {
+      "id": "UR-A1-LEX-17",
+      "category": "Lughat (lexicon by domain)",
+      "label": "the education system, examinations and marks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE06-03",
+        "A1-NE06-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-18",
+      "category": "Lughat (lexicon by domain)",
+      "label": "classroom language, and teaching materials",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE06-06",
+        "A1-NE06-07"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. کتاب returns zero occurrences, which for a book is worth noticing."
+    },
+    {
+      "id": "UR-A1-LEX-19",
+      "category": "Lughat (lexicon by domain)",
+      "label": "professions and posts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. وکیل ('lawyer') is used as a WRITING exercise in UR-W08-vao and introduces no lexical atom, so the corpus writes an occupation it does not teach."
+    },
+    {
+      "id": "UR-A1-LEX-20",
+      "category": "Lughat (lexicon by domain)",
+      "label": "working activity, workplaces and tools",
+      "probe": [
+        "UR-LEX-KAAM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE07-02",
+        "A1-NE07-03"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by کام alone, taught in chapter 17 with its Sanskrit karman etymology."
+    },
+    {
+      "id": "UR-A1-LEX-21",
+      "category": "Lughat (lexicon by domain)",
+      "label": "unemployment, rights at work, and the characteristics of a worker",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, merged into one point because at A1 the three PCIC subsections amount to one absent domain here."
+    },
+    {
+      "id": "UR-A1-LEX-22",
+      "category": "Lughat (lexicon by domain)",
+      "label": "free time and entertainment",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-23",
+      "category": "Lughat (lexicon by domain)",
+      "label": "sport and games",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-24",
+      "category": "Lughat (lexicon by domain)",
+      "label": "shows and exhibitions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE08-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-25",
+      "category": "Lughat (lexicon by domain)",
+      "label": "information and communication media",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-04",
+        "A1-NE09-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-26",
+      "category": "Lughat (lexicon by domain)",
+      "label": "written correspondence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE09-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-27",
+      "category": "Lughat (lexicon by domain)",
+      "label": "the telephone",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE09-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-28",
+      "category": "Lughat (lexicon by domain)",
+      "label": "the internet, and dictating an e-mail address",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE09-06"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and doubly blocked: neither the letter names nor the digits are taught, so nothing can be spelled out aloud."
+    },
+    {
+      "id": "UR-A1-LEX-29",
+      "category": "Lughat (lexicon by domain)",
+      "label": "types and parts of a dwelling",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE10-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. گھر returns zero occurrences."
+    },
+    {
+      "id": "UR-A1-LEX-30",
+      "category": "Lughat (lexicon by domain)",
+      "label": "domestic activities, objects and furniture",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE10-03",
+        "A1-NE10-04"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-31",
+      "category": "Lughat (lexicon by domain)",
+      "label": "housing: buying, selling, renting",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-32",
+      "category": "Lughat (lexicon by domain)",
+      "label": "the postal service and other public services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-04"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-33",
+      "category": "Lughat (lexicon by domain)",
+      "label": "financial services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE11-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-34",
+      "category": "Lughat (lexicon by domain)",
+      "label": "health services and centres of care",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE11-03",
+        "A1-NE13-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-35",
+      "category": "Lughat (lexicon by domain)",
+      "label": "shopping: places, people and activities",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-36",
+      "category": "Lughat (lexicon by domain)",
+      "label": "clothing, footwear and accessories",
+      "probe": [
+        "UR-LEX-QAMIZ",
+        "UR-LEX-JUTA",
+        "UR-LEX-TOPI",
+        "UR-LEX-KOAT"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE12-02"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, four garments in chapter 14 — and this is one of the fifty domains the SPANISH inventory itself reports uncovered, so Urdu is ahead of the proxy here. The chapter is also the corpus's cleanest register demonstration: an Arabic loan, an inherited word, a word Urdu gave English, and a word English gave Urdu, in four consecutive lessons."
+    },
+    {
+      "id": "UR-A1-LEX-37",
+      "category": "Lughat (lexicon by domain)",
+      "label": "payment, money and price",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE12-03",
+        "A1-NE15-01",
+        "A1-NG6-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. پیسے returns zero occurrences, and with no numeral nothing could be priced anyway."
+    },
+    {
+      "id": "UR-A1-LEX-38",
+      "category": "Lughat (lexicon by domain)",
+      "label": "health and illness",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-39",
+      "category": "Lughat (lexicon by domain)",
+      "label": "medicine and medicines",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE13-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-40",
+      "category": "Lughat (lexicon by domain)",
+      "label": "hygiene",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE13-04"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-41",
+      "category": "Lughat (lexicon by domain)",
+      "label": "travel objects and documents",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-42",
+      "category": "Lughat (lexicon by domain)",
+      "label": "accommodation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE14-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-43",
+      "category": "Lughat (lexicon by domain)",
+      "label": "the transport system",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE14-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-44",
+      "category": "Lughat (lexicon by domain)",
+      "label": "commerce, businesses, industry and energy",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE15-02",
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, merged for the same reason as UR-A1-LEX-21."
+    },
+    {
+      "id": "UR-A1-LEX-45",
+      "category": "Lughat (lexicon by domain)",
+      "label": "computing and new technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-46",
+      "category": "Lughat (lexicon by domain)",
+      "label": "government, politics and the law",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-47",
+      "category": "Lughat (lexicon by domain)",
+      "label": "artistic disciplines, music, dance and the visual arts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. For a language whose learners overwhelmingly arrive through its ghazals and its film songs, this is the domain whose absence is hardest to defend — and دل, the word every one of those songs turns on, IS taught, in chapter 11."
+    },
+    {
+      "id": "UR-A1-LEX-48",
+      "category": "Lughat (lexicon by domain)",
+      "label": "literature",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE18-04"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. No شعر, no کتاب, no کہانی."
+    },
+    {
+      "id": "UR-A1-LEX-49",
+      "category": "Lughat (lexicon by domain)",
+      "label": "cinema and theatre",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE18-06"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-50",
+      "category": "Lughat (lexicon by domain)",
+      "label": "religion",
+      "probe": [
+        "UR-LEX-KHUDA",
+        "UR-ETYMON-KHUDA-PERSIAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by one word, and a load-bearing one: خدا is taught in chapter 5 as the Persian half of the farewell, with حافظ as its Arabic partner — which is the register column and the lexicon column making the same point at once."
+    },
+    {
+      "id": "UR-A1-LEX-51",
+      "category": "Lughat (lexicon by domain)",
+      "label": "the universe and space",
+      "probe": [
+        "UR-LEX-AASMAAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by آسمان, taught in chapter 18 from a root that meant stone."
+    },
+    {
+      "id": "UR-A1-LEX-52",
+      "category": "Lughat (lexicon by domain)",
+      "label": "geography: country, town, city, capital",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught — the same hole as UR-A1-N-02, filed here so the domain walk is total."
+    },
+    {
+      "id": "UR-A1-LEX-53",
+      "category": "Lughat (lexicon by domain)",
+      "label": "urban and rural spaces",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-54",
+      "category": "Lughat (lexicon by domain)",
+      "label": "climate and weather",
+      "probe": [
+        "UR-LEX-BARISH",
+        "UR-LEX-GARMI",
+        "UR-LEX-SARDI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED, and it is one of only two tracks in this series that manages it. Chapter 15 teaches rain, sunshine, wind, heat and cold together."
+    },
+    {
+      "id": "UR-A1-LEX-55",
+      "category": "Lughat (lexicon by domain)",
+      "label": "fauna",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-56",
+      "category": "Lughat (lexicon by domain)",
+      "label": "flora",
+      "probe": [
+        "UR-LEX-AAM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by آم ('mango') alone, taught in chapter 18 as an inherited Indo-Aryan word that is NOT the ancestor of English mango."
+    },
+    {
+      "id": "UR-A1-LEX-57",
+      "category": "Lughat (lexicon by domain)",
+      "label": "the clock and the parts of the day",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught — see UR-A1-N-03. There is no time word in the corpus at all."
+    },
+    {
+      "id": "UR-A1-LEX-58",
+      "category": "Lughat (lexicon by domain)",
+      "label": "days of the week, months and seasons",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Arabic teaches all seven days, all twelve months and all four seasons; Urdu teaches none of the three sets."
+    },
+    {
+      "id": "UR-A1-LEX-59",
+      "category": "Lughat (lexicon by domain)",
+      "label": "before and after: ordering events in time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught, and downstream of the missing past tense as much as of the missing vocabulary."
+    },
+    {
+      "id": "UR-A1-LEX-60",
+      "category": "Lughat (lexicon by domain)",
+      "label": "relative position: near, far, right, left",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-03"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught. Nothing can be placed relative to anything else."
+    },
+    {
+      "id": "UR-A1-LEX-61",
+      "category": "Lughat (lexicon by domain)",
+      "label": "existence and presence",
+      "probe": [
+        "UR-LEX-HONA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by ہونا as a verb rather than by any existential sentence. See UR-A1-SEN-05."
+    },
+    {
+      "id": "UR-A1-LEX-62",
+      "category": "Lughat (lexicon by domain)",
+      "label": "general quality, and locating an event in time",
+      "probe": [
+        "UR-GRAMMAR-COPULA-FINAL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG1-03",
+        "A1-NG1-04"
+      ],
+      "urduSpecific": false,
+      "note": "Covered by the copula, which is what Urdu uses where Spanish uses ser."
+    },
+    {
+      "id": "UR-A1-LEX-63",
+      "category": "Lughat (lexicon by domain)",
+      "label": "age and old age",
+      "probe": [
+        "UR-LEX-PURANA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "urduSpecific": false,
+      "note": "Covered for THINGS and not for people: پرانا is 'old' of an object, and there is no بوڑھا and no عمر, so nobody's age can be given (UR-A1-FUN-23)."
+    },
+    {
+      "id": "UR-A1-LEX-64",
+      "category": "Lughat (lexicon by domain)",
+      "label": "accessibility: open and closed, way in and way out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-65",
+      "category": "Lughat (lexicon by domain)",
+      "label": "attractiveness and interest",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03",
+        "A1-NG6-08"
+      ],
+      "urduSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "UR-A1-LEX-66",
+      "category": "Lughat (lexicon by domain)",
+      "label": "reflection and knowledge as notions",
+      "probe": [
+        "UR-LEX-SOCHNA",
+        "UR-LEX-JANNA",
+        "UR-LEX-SAMAJHNA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "UR-CORPUS",
+        "ED-URDU"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01"
+      ],
+      "urduSpecific": false,
+      "note": "COVERED THREE TIMES — thinking, knowing and understanding, all in chapters 6 and 7 — and سمجھنا's lesson is the best of them: 'literally to wake up fully, on the root that named the Buddha'."
+    }
+  ]
+}
