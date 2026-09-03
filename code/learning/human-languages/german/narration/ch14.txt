@@ -1,69 +1,249 @@
-German, chapter 14: Family.
-2 lessons. All 2 can be done entirely by ear.
+German, chapter 14: When the Calendar Stopped Naming.
+7 lessons. All 7 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-der Vater, die Mutter — the family that proves Grimm's law.
-
-Warm-up.
-[pause 2 seconds]
-Back in the months chapter, German borrowed its calendar from Latin (Januar, März…). Family is the opposite story: Vater and Mutter are not borrowed — they are inherited Germanic words, blood cousins of English father and mother. And the sound-law that links them, Grimm's law, is written right on their faces.
-
-Taken apart.
-der Vater ("father") — note the spelling V, but it is pronounced f (FAH-ter). from PIE ph₂tḗr.
-die Mutter ("mother"). from PIE méh₂tēr.
-Articles: der Vater (masculine), die Mutter (feminine).
-
-Grimm's law, on display.
-Grimm's law is the great sound-shift that split the Germanic languages (English, German, Dutch…) off from the rest. Watch what it did to the same PIE words that Latin kept as pater/māter:
-[a table of 2 rows, read aloud]
-PIE: ph₂tḗr. Latin (French): pater (père). Germanic (English / German): father / Vater (V = f).
-PIE: méh₂tēr. Latin (French): māter (mère). Germanic (English / German): mother / Mutter.
-p becomes f: Latin kept the p (pater); Germanic turned it to f — English father, German Vater (the V is just an old spelling of that f sound).
-t becomes th becomes d: the middle consonant became English th (mother) and then, in German's later shift, d/t (Mutter).
-So German and English agree here (both f-, both m-) precisely because they are both Germanic — while French/Latin sit on the other side of Grimm's line. The month names were Latin tourists; Vater and Mutter are natives.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "der Vater, die Mutter" — Vater with an f sound]
-[pause 8 seconds for the answer]
-[your turn — say: the twin test — "Vater / father, Mutter / mother — both Germanic"]
-[pause 8 seconds for the answer]
-[your turn — say: contrast — "German months = Latin (Januar); German family = Germanic (Vater)"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give "father" and "mother" with articles, minding the pronunciation. (der Vater — f sound — die Mutter.) Why do German Vater and English father match, while French père differs? (German & English are both Germanic — Grimm's law shifted p becomes f in both; French kept Latin's p.) How does this chapter contrast with the months chapter? (Months were borrowed from Latin; family is inherited Germanic.) Next: Bruder and Schwester.
-
-
-Lesson 2 of 2.
-der Bruder, die Schwester — and the word for "siblings".
+Lesson 1 of 7.
+der Juli — "July".
 
 Warm-up.
 [pause 2 seconds]
-The parent pair proved German and English are Germanic twins. The sibling pair does it again: Bruder ("brother") and Schwester ("sister") are the near-identical cousins of the English words — no translation really needed, just an ear for the German sounds.
+Six months named for gods, festivals and guesses. From here the calendar changes what it is doing.
 
-Taken apart.
-der Bruder ("brother") from PIE bʰréh₂tēr — the same root as Latin frāter (French frère), but here kept with a b- (Grimm's law changed bʰ becomes b), exactly like English brother.
-die Schwester ("sister") from PIE swésōr. The German sch spells an sh sound; strip it back and Schwester is English sister and Latin soror, all one root.
+You'll want to know: der Juli.
+der Juli — "July."
+Latin Julius, and not a god: Julius Caesar. He rebuilt the Roman calendar into something that tracked the sun, and the month of his birth was renamed for him while he was alive to see it.
+Juni and Juli differ by one letter and one sound. Take them slowly as a pair: YOO-nee, YOO-lee.
 
-The collective — Geschwister.
-German has a tidy word English lacks: die Geschwister = "siblings," brothers-and-sisters together. It is built with the ge- prefix, an old collective marker ("a set of…") on Schwester — the same ge- that bundles mountains into a Gebirge ("range") and lets German gather a family in one word.
-The four family words now stand as a Germanic set beside the Romance ones:
-[a table of 2 rows, read aloud]
-German: Vater / Mutter. English: father / mother. (Romance cousin): père / mère.
-German: Bruder / Schwester. English: brother / sister. (Romance cousin): frère / sœur.
+Sounds you'll need.
+j-as-y — English y again, as in Januar and Juni.
+ie-long-ee — and a long ee at the end.
+Because the two are so close, German speakers arranging a date will often say Julei for July, stretching it away from Juni. You will hear it; you do not have to say it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "der Bruder, die Schwester" — Schw- = shv]
+[your turn — say: "der Juli" — YOO-lee]
 [pause 8 seconds for the answer]
-[your turn — say: the twin test — "Bruder / brother, Schwester / sister"]
+[your turn — say: the pair, slowly — "Juni, Juli"]
 [pause 8 seconds for the answer]
-[your turn — say: "die Geschwister — the ge- bundles them into 'siblings'"]
+[your turn — say: who it is — "Julius Caesar, not a god"]
 [pause 8 seconds for the answer]
+[repeat that twice]
+"Juni, Juli."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "brother" and "sister" with articles. (der Bruder, die Schwester.) Why do they match English so closely? (Both Germanic — same PIE roots, no Grimm's-law gap between them.) What does Geschwister mean, and what does the ge- do? ("Siblings"; ge- is a collective prefix, "a set of.") Next chapter: putting the family into sentences.
+Say "July." (Der Juli.) And "June"? (Der Juni.) Which one is a god? (Juni — Juno.) Which one is a man? (Juli — Caesar.) Next: the man who took the hint.
+
+
+Lesson 2 of 7.
+der August — "August".
+
+Warm-up.
+[pause 2 seconds]
+Caesar took a month. His heir noticed.
+
+You'll want to know: der August.
+der August — "August."
+The emperor Augustus, Caesar's adopted son, who had the next month renamed for himself. Two men in a row, side by side in the year, and then it stops: no month after this one is named for anybody at all.
+The weight falls on the second syllable in German — au-GUST — where English puts it on the first.
+
+Sounds you'll need.
+au-diphthong — au is one gliding vowel, the ow of English how.
+st-initial-scht — the st here is inside the word, not at the start, so it stays a plain st. German's sht happens at the beginning of a word, and this is the contrast that shows you where the boundary is.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der August" — au-GUST]
+[pause 8 seconds for the answer]
+[your turn — say: the two men, in order — "Juli, August"]
+[pause 8 seconds for the answer]
+[your turn — say: what happens next — "the naming stops"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Juli, August."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "August." (Der August.) Which syllable is stressed? (The second — au-GUST.) Who is it? (The emperor Augustus.) How many months are named for men? (Two — and they are next to each other.) Next: what the calendar does once it runs out of names.
+
+
+Lesson 3 of 7.
+der September — "September".
+
+Warm-up.
+[pause 2 seconds]
+You have the Latin number for seven from a chapter about counting. Here it is again, wearing a month.
+
+You'll want to know: der September.
+der September — "September."
+Latin september, from septem — seven. Count from März, where the Roman year started, and September lands seventh.
+The year was later moved to start in January. The name was not moved with it, so a word meaning "seventh" now sits in the ninth slot, in German exactly as in English, and has done for two thousand years.
+
+Sounds you'll need.
+vowel-e-german — three clear short es: sep-TEM-ber.
+r-final — closing on the soft r.
+The stress is on the middle syllable, as in English.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der September" — sep-TEM-ber]
+[pause 8 seconds for the answer]
+[your turn — say: the Latin number inside it — "septem, seven"]
+[pause 8 seconds for the answer]
+[your turn — say: the German seven beside it — "sieben"]
+[pause 8 seconds for the answer]
+[your turn — say: where the count starts — "März"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"September — septem — sieben."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "September." (Der September.) What number is inside it? (Septem — seven.) Which position does it actually hold now? (Ninth.) Why the mismatch? (The year used to start in März.) What is German's own seven? (Sieben.) Next: eight.
+
+
+Lesson 4 of 7.
+der Oktober — "October".
+
+Warm-up.
+[pause 2 seconds]
+The same trick as September, one number along.
+
+You'll want to know: der Oktober.
+der Oktober — "October."
+Latin october, from octo — eight. Eighth from März, tenth on the calendar you use.
+Notice the spelling. English writes Oc-, keeping the Latin c. German writes Ok-, because German spells that sound with a k and applies its own rule to a borrowed word. Same word, same origin, one letter of local habit.
+
+Sounds you'll need.
+vowel-o-german — a clean rounded o, held steady rather than gliding as English oh does.
+r-final — and the soft closing r.
+ok-TOH-ber, weight in the middle.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der Oktober" — ok-TOH-ber]
+[pause 8 seconds for the answer]
+[your turn — say: the Latin number — "octo, eight"]
+[pause 8 seconds for the answer]
+[your turn — say: the German eight — "acht"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair so far — "September, Oktober"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Oktober — octo — acht."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "October." (Der Oktober.) Which letter does German use where English keeps a c? (A k.) What number is inside? (Octo — eight.) German's own eight? (Acht.) Next: nine.
+
+
+Lesson 5 of 7.
+der November — "November".
+
+Warm-up.
+[pause 2 seconds]
+Spelled exactly as in English. Said differently, on one letter.
+
+You'll want to know: der November.
+der November — "November."
+Latin november, from novem — nine. Ninth from März, eleventh now.
+German and English write this month with the same eleven letters. That is rarer than it looks, and it happens here because both took the word from Latin without touching it.
+
+Sounds you'll need.
+v-as-f — German v is an f. The month is no-FEM-ber.
+r-final — soft closing r, as on the two before it.
+This is the one letter where the identical spelling stops being identical. A German reading November aloud produces something an English ear does not expect, and nothing about the page warns you.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der November" — no-FEM-ber]
+[pause 8 seconds for the answer]
+[your turn — say: the Latin number — "novem, nine"]
+[pause 8 seconds for the answer]
+[your turn — say: the German nine — "neun"]
+[pause 8 seconds for the answer]
+[your turn — say: three in order — "September, Oktober, November"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"November — no-FEM-ber."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "November." (Der November — no-FEM-ber.) How is German v said? (As an f.) What number is inside? (Novem — nine.) German's own nine? (Neun.) Next: ten, and the end of the year.
+
+
+Lesson 6 of 7.
+der Dezember — "December".
+
+Warm-up.
+[pause 2 seconds]
+The last month, and a letter whose sound you were given with a number.
+
+You'll want to know: der Dezember.
+der Dezember — "December."
+Latin december, from decem — ten. Tenth from März, twelfth now, and the last of the four months that are nothing but numbers.
+Where English writes De-c-, German writes De-z-.
+
+Sounds you'll need.
+z-ts — German z is ts, the sound you were given on zehn. So the month opens de-TSEM-, not de-SEM-.
+r-final — and it closes on the same soft r as the other three.
+That is the whole difference between the German and English versions of one Latin word: c became z, because German already had a letter for that sound.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der Dezember" — de-TSEM-ber]
+[pause 8 seconds for the answer]
+[your turn — say: the German ten, same opening sound — "zehn"]
+[pause 8 seconds for the answer]
+[your turn — say: the Latin number — "decem, ten"]
+[pause 8 seconds for the answer]
+[your turn — say: the four in order — "September, Oktober, November, Dezember"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Dezember — de-TSEM-ber."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "December." (Der Dezember.) How does German z sound? (Ts.) Which number gave you that? (Zehn.) What number is inside the month? (Decem — ten.) Next: the four of them together.
+
+
+Lesson 7 of 7.
+Practice — the second half of the year.
+
+Warm-up.
+[pause 2 seconds]
+No new words. Six names, of which four are not really names.
+
+Grammar Lens: the four that count in Latin.
+[a table of 4 rows, read aloud]
+the month: September. the Latin inside: septem. German's own word: sieben.
+the month: Oktober. the Latin inside: octo. German's own word: acht.
+the month: November. the Latin inside: novem. German's own word: neun.
+the month: Dezember. the Latin inside: decem. German's own word: zehn.
+Read across each row and hear that nothing rhymes. German counts in one language and dates in another, and never reconciled the two — because there was never any occasion to.
+
+Why it's said this way.
+The second half of the year is a record of a calendar running out of ideas.
+Juli — Julius Caesar, who rebuilt the calendar and took a month.
+August — Augustus, who took the next one.
+September to Dezember — nobody at all. Seven, eight, nine, ten, counted from März, where the year used to begin.
+Two men who could order a month renamed did so, one after the other, and then the practice stopped. What was left was arithmetic, and the arithmetic stopped being true the moment the year moved to January — which nobody thought worth fixing, and so it stands.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all six — "Juli, August, September, Oktober, November, Dezember"]
+[pause 8 seconds for the answer]
+[your turn — say: the two men — "Caesar, Augustus"]
+[pause 8 seconds for the answer]
+[your turn — say: each Latin number with its German twin — "septem, sieben; octo, acht; novem, neun; decem, zehn"]
+[pause 8 seconds for the answer]
+[your turn — say: the one that begins with a ts — "Dezember"]
+[pause 8 seconds for the answer]
+[your turn — say: the one whose v is an f — "November"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"September, Oktober, November, Dezember."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say the last four months. (September, Oktober, November, Dezember.) What are they named for? (Numbers — seven, eight, nine, ten.) Counted from where? (März.) Which two are named for men? (Juli and August.) Do German's own numbers sound like the Latin ones inside the months? (No — and they never had to.)

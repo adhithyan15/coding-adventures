@@ -1,18 +1,18 @@
 {
   "language": "german",
   "chapter": 36,
-  "sourceHash": "fnv1a64:b5bd9a21d14a1a0b",
+  "sourceHash": "fnv1a64:269e3bdca38657ff",
   "lessonIds": [
-    "GE-C27-gehen",
-    "GE-C27-laufen",
-    "GE-C27-oeffnen",
-    "GE-C27-schliessen"
+    "GE-C25-nehmen",
+    "GE-C25-fragen",
+    "GE-C25-helfen",
+    "GE-C25-moegen-lieben"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "german/narration/ch36.txt",
   "json": "german/narration/ch36.json",
-  "textHash": "fnv1a64:42e5b6b148cca0b9",
-  "jsonHash": "fnv1a64:d45611735c2f1211",
+  "textHash": "fnv1a64:83c2ba1f6e2ec1b2",
+  "jsonHash": "fnv1a64:a6af1253bb8c20d8",
   "findings": []
 }

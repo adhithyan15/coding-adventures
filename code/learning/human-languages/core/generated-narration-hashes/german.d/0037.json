@@ -1,17 +1,18 @@
 {
   "language": "german",
   "chapter": 37,
-  "sourceHash": "fnv1a64:f5d66f3f330431d3",
+  "sourceHash": "fnv1a64:2aca066f052b7b5f",
   "lessonIds": [
-    "GE-C28-kaffee",
-    "GE-C28-tee",
-    "GE-C28-milch"
+    "GE-C26-sitzen",
+    "GE-C26-stehen",
+    "GE-C26-schlafen",
+    "GE-C26-hoeren"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "german/narration/ch37.txt",
   "json": "german/narration/ch37.json",
-  "textHash": "fnv1a64:2da993bcb6eb33a8",
-  "jsonHash": "fnv1a64:0a539058e0d6a0a3",
+  "textHash": "fnv1a64:fe99b3f9e20b1696",
+  "jsonHash": "fnv1a64:319cfd8523fd1f4a",
   "findings": []
 }

@@ -1,7 +1,7 @@
 ---
 id: GE-C13-schwarz-weiss
-sequence: 295
-chapter: 17
+sequence: 315
+chapter: 19
 type: word
 headword: schwarz, weiß
 gloss: black and white — both native Germanic, and one of them German lent to half of Europe

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 21,
-  "title": "The Simple Past",
-  "drivablePrefix": 10,
-  "sourceHash": "fnv1a64:5e767f8981a785c4",
+  "title": "The Wrapped Participle",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:3c963ec35595d2d0",
   "lessons": [
     {
-      "id": "GE-C15-praeteritum",
-      "sequence": 400,
-      "title": "-te — the one-word past",
-      "headword": "-te",
-      "romanization": "-te",
-      "gloss": "the Präteritum — German's second past tense, made from one word and an ending",
+      "id": "GE-C15-sagen",
+      "sequence": 335,
+      "title": "sagen — \"to say\"",
+      "headword": "sagen",
+      "romanization": "sagen",
+      "gloss": "to say — the verb this chapter builds its past tense on",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:912df17aa73fb2f1",
+      "sourceHash": "fnv1a64:f83c2c3c5aac6df8",
       "notice": null,
       "blocks": [
         {
@@ -35,154 +35,26 @@
             },
             {
               "kind": "speech",
-              "text": "German has a second past tense. It needs no helper verb and no participle — just a stem and an ending."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: add -te to the stem",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Take a regular verb's stem and put -te on it."
-            },
-            {
-              "kind": "speech",
-              "text": "The tense that ending builds is called the Präteritum. Where the Perfekt spends two words and a bracket, this one spends a single word: sag- plus -te and the sentence is done."
-            },
-            {
-              "kind": "speech",
-              "text": "The two tenses report the same events. That is worth saying plainly, because a learner reasonably expects a language with two pasts to be drawing a distinction with them, the way English draws one between I said and I have said. German draws none. What separates its two pasts is something else entirely, and it takes a few more lessons to arrive at."
-            },
-            {
-              "kind": "speech",
-              "text": "The -te itself has a history reaching well beyond German, and that comes first."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the recipe — \"stem plus te\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the recipe — \"stem plus te\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the name — \"das Präteritum\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the name — \"das Präteritum\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "how many words it takes — \"one\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: how many words it takes — \"one\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"stem plus -te.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which ending builds the Präteritum on a regular verb? (-te.) How many words does it need? (One.) How many does the Perfekt need? (Two.) Do the two tenses mean different things? (No.) Next: the first verb through the new ending."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C15-sagte",
-      "sequence": 405,
-      "title": "ich sagte — \"I said,\" in one word",
-      "headword": "ich sagte",
-      "romanization": "ich sagte",
-      "gloss": "I said, in one word — the Präteritum of sagen, beside the Perfekt that means exactly the same",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:065bc373a5e7c9d7",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Run the new ending on the verb this chapter started from."
+              "text": "One more weak verb before the past tense starts, and it is the verb the whole chapter will be built on."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: ich sagte",
+          "title": "You'll want to know: sagen",
           "segments": [
             {
               "kind": "speech",
-              "text": "ich sagte — \"I said.\""
+              "text": "sagen — \"to say.\""
             },
             {
               "kind": "speech",
-              "text": "Stem sag-, ending -te. Two syllables and it is finished, where the Perfekt took three words to say the same thing:"
+              "text": "Two syllables, ZAH-gen. It behaves like machen and lernen in every respect: chop the -en and you have the stem sag-, and onto that stem go the endings you already own — ich sage, du sagst."
             },
             {
               "kind": "speech",
-              "text": "ich sagte, ich habe gesagt."
-            },
-            {
-              "kind": "speech",
-              "text": "Both are \"I said.\" Neither is more past than the other, neither is more polite, and neither is wrong. Hold that in mind while the differences that do exist arrive."
+              "text": "Nothing new is happening in those endings. Sagen is here so that when the past tense arrives in the next lesson, the only unfamiliar thing in it is the past."
             }
           ]
         },
@@ -193,279 +65,45 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "long-a — the stem vowel is the same long a as in sagen; the new ending does not shorten it."
+              "text": "long-a — the a of sagen is long and open, the vowel of English father, not the clipped a of hat."
             },
             {
               "kind": "speech",
-              "text": "final-te — the -te is a full unstressed syllable, tuh, not a bare t. Hear the difference against the participle: ge-SAHKT has one syllable at the end, SAHK-tuh has two."
+              "text": "ge-prefix — the -gen at the end is unstressed and swallowed, a soft gn more than a full syllable. The same mumble will open every participle in this chapter, so it is worth getting comfortable now."
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich sagte\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich sagte\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair back to back — \"ich sagte … ich habe gesagt\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair back to back — \"ich sagte … ich habe gesagt\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two endings apart — \"gesagt, sagte\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two endings apart — \"gesagt, sagte\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"ich sagte, ich habe gesagt.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I said\" in one word. (Ich sagte.) And in three. (Ich habe gesagt.) Which of them is further in the past? (Neither.) How many syllables does sagte have? (Two.) Next: the same ending on the verb for doing."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C15-machte",
-      "sequence": 410,
-      "title": "ich machte — \"I made,\" \"I did\"",
-      "headword": "ich machte",
-      "romanization": "ich machte",
-      "gloss": "I made, I did — the second verb through the -te ending",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:236c277e0c42264d",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You have gemacht. Build the other past of the same verb before reading on."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: ich machte",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ich machte — \"I made,\" \"I did.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Mach- plus -te. Notice what the two pasts of this verb have in common: the stem. Gemacht wrapped it and machte suffixed it, and neither touched a letter inside it."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the whole promise of a weak verb. Whatever German asks of it, the middle stays put — which is why the four participles of the last chapter and the -te forms of this one can be built from any regular verb you meet, on the spot, without a list."
-            },
-            {
-              "kind": "speech",
-              "text": "er machte das, er hat das gemacht."
-            },
-            {
-              "kind": "speech",
-              "text": "Same person, same event, two tenses."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich machte\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich machte\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — \"er machte das … er hat das gemacht\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"er machte das … er hat das gemacht\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "both new forms — \"sagte, machte\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: both new forms — \"sagte, machte\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"ich sagte, ich machte.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I did\" in one word. (Ich machte.) What do machte and gemacht share? (The stem mach-.) Does either change the stem? (No.) Say \"he did that\" both ways. (Er machte das; er hat das gemacht.) Next: where that -te came from, and the English ending that is the same thing."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C15-dentales-praeteritum",
-      "sequence": 415,
-      "title": "The dental preterite — a Germanic invention",
-      "headword": "das dentale Präteritum",
-      "romanization": "das dentale Präteritum",
-      "gloss": "the dental preterite — the Germanic invention that gives German -te and English -ed",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:64a18795c93b650b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say sagte, then say walked. Both endings are made with the tongue against the teeth, and that is not a coincidence."
-            }
-          ]
-        },
-        {
-          "index": 1,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The German -te is what linguists call the dental preterite: a past tense made by bolting a t or d sound onto a stem. Dental, because those sounds are made at the teeth."
+              "text": "Sagen and English say are the same word. Germanic sagjaną went to both, and then English quietly dropped the g out of the middle:"
             },
             {
               "kind": "table",
               "headers": [
-                "language",
-                "present",
-                "past"
+                "German",
+                "English"
               ],
-              "columns": 3,
+              "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "language: German. present: sag-. past: sagte.",
-                "language: English. present: walk. past: walked.",
-                "language: Dutch. present: werk-. past: werkte."
+                "sagen means say.",
+                "Tag means day.",
+                "Weg means way."
               ]
             },
             {
               "kind": "speech",
-              "text": "Three languages, one device, inherited rather than borrowed — this is a Germanic invention, and it is one of the features that identifies the family. Everything with a -t or -d past in Germanic comes from the same ancestor."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin built nothing of the kind. Its past came from inherited perfect endings and from reduplication, and its descendants carried that on: French parla, Spanish habló. So sagte and walked are one machine, and parla and habló are a different one — which is why an English speaker recognises the German ending on sight and a Spanish speaker does not."
+              "text": "Three pairs, one habit. Whenever a German g sits between vowels or at the end of a short word, English is likely to have thinned it to a y sound — so a German g you cannot place is often an English y in disguise."
             }
           ]
         },
         {
-          "index": 2,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -478,29 +116,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three together — \"sagte, walked, werkte\"",
+              "instruction": "\"sagen\" — long a, soft ending",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three together — \"sagte, walked, werkte\"]"
+              "source": "[YOU SAY: \"sagen\" — long *a*, soft ending]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the name — \"the dental preterite\"",
+              "instruction": "\"ich sage, du sagst, wir sagen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the name — \"the dental preterite\"]"
+              "source": "[YOU SAY: \"ich sage, du sagst, wir sagen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two machines — \"sagte and walked; parla and habló\"",
+              "instruction": "the three pairs — \"sagen–say, Tag–day, Weg–way\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two machines — \"sagte and walked; parla and habló\"]"
+              "source": "[YOU SAY: the three pairs — \"sagen–say, Tag–day, Weg–way\"]"
             },
             {
               "kind": "repeat",
@@ -509,12 +147,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"sagte, walked — the same ending.\""
+              "text": "\"sagen, sagen — to say.\""
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -526,26 +164,26 @@
             },
             {
               "kind": "speech",
-              "text": "What is the -te called? (The dental preterite.) Why dental? (It is made at the teeth.) Which English ending is the same thing? (-ed.) Did Latin have it? (No — Romance builds its past another way.) Next: the one verb whose -te form you will hear constantly."
+              "text": "Say \"to say.\" (Sagen.) Say \"I say.\" (Ich sage.) Is the a long or short? (Long — as in father.) Which English word is sagen? (Say.) Next: what happens to this verb when the saying is already over."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C15-hatte",
-      "sequence": 420,
-      "title": "ich hatte — \"I had\"",
-      "headword": "ich hatte",
-      "romanization": "ich hatte",
-      "gloss": "I had — haben's own Präteritum, and one of the handful that everybody says out loud",
+      "id": "GE-C15-gesagt",
+      "sequence": 340,
+      "title": "gesagt — \"said\"",
+      "headword": "gesagt",
+      "romanization": "gesagt",
+      "gloss": "said — the first past participle, and the first time a German ending arrives with a beginning attached",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83cfe54848c6c3a4",
+      "sourceHash": "fnv1a64:28390f17d3945ef7",
       "notice": null,
       "blocks": [
         {
@@ -561,30 +199,30 @@
             },
             {
               "kind": "speech",
-              "text": "The dental ending on the verb you have been leaning on for two chapters."
+              "text": "You have sagen. Now the form German uses when the saying is already finished — and it is longer at both ends than the word it came from."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: ich hatte",
+          "title": "You'll want to know: gesagt",
           "segments": [
             {
               "kind": "speech",
-              "text": "ich hatte — \"I had.\""
+              "text": "gesagt — \"said.\""
             },
             {
               "kind": "speech",
-              "text": "Haben drops its b — the same b that goes missing in du hast and er hat — and the dental ending lands on what is left, doubling the t in the spelling: hat-te. Two syllables, both short."
+              "text": "Hear where it grew. Sag- is still sitting in the middle, untouched. In front of it a ge- has appeared; behind it the -en has gone and a -t has taken its place:"
             },
             {
               "kind": "speech",
-              "text": "English did the identical thing to the identical verb and then wore the result down further: have lost its consonant and took a -d, giving had. So hatte and had are the same word doing the same job."
+              "text": "sagen — ge-sag-t."
             },
             {
               "kind": "speech",
-              "text": "Haben has a Perfekt of its own as well — ich habe gehabt, \"I have had\" — built by the ordinary recipe, since haben is a perfectly ordinary verb when it is not busy helping another one."
+              "text": "That is the word English calls a past participle: the form that goes with have in I have said. German's has a hat on as well as boots."
             }
           ]
         },
@@ -595,11 +233,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "d-t-final — the doubled tt is one sharp t, and the vowel in front of it is short and clipped. HAT-tuh, never HAH-tuh."
+              "text": "ge-prefix — unstressed, almost swallowed: guh, never gay. The stress stays on sagt, exactly where it was in sagen."
             },
             {
               "kind": "speech",
-              "text": "final-te — the ending is still a full unstressed syllable."
+              "text": "final-t — the closing t is crisp and fully released. The g in front of it hardens to a k on the way out, the same hardening you met when und came out as unt: say guh-ZAHKT."
             }
           ]
         },
@@ -617,29 +255,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich hatte\"",
+              "instruction": "\"gesagt\" — soft opening, hard ending",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich hatte\"]"
+              "source": "[YOU SAY: \"gesagt\" — soft opening, hard ending]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"ich hatte … ich habe gehabt\"",
+              "instruction": "the pair — \"sagen, gesagt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"ich hatte … ich habe gehabt\"]"
+              "source": "[YOU SAY: the pair — \"sagen, gesagt\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the English twin — \"hatte, had\"",
+              "instruction": "the three pieces — \"ge, sag, t\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the English twin — \"hatte, had\"]"
+              "source": "[YOU SAY: the three pieces — \"ge, sag, t\"]"
             },
             {
               "kind": "repeat",
@@ -648,7 +286,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich hatte, ich hatte.\""
+              "text": "\"sagen, gesagt. Sagen, gesagt.\""
             }
           ]
         },
@@ -665,26 +303,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I had.\" (Ich hatte.) Which letter of haben is missing? (The b.) Say the same thing in the Perfekt. (Ich habe gehabt.) Which English word is hatte? (Had.) Next: which of the two pasts a German actually reaches for, and where."
+              "text": "Say \"said.\" (Gesagt.) Which part of sagen survives inside it? (Sag-, the stem.) What appeared in front? (Ge-.) What replaced the -en? (-t.) Next: the same two additions, on any weak verb you like."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C15-register",
-      "sequence": 425,
-      "title": "Which past, and where",
-      "headword": "gesprochen oder geschrieben",
-      "romanization": "gesprochen oder geschrieben",
-      "gloss": "what separates the two pasts — not meaning, but speech against writing, and north against south",
+      "id": "GE-C15-partizip",
+      "sequence": 345,
+      "title": "ge-…-t — the wrap that makes a participle",
+      "headword": "ge-…-t",
+      "romanization": "ge-…-t",
+      "gloss": "the weak past participle — a circumfix, wrapped round the stem at both ends rather than stuck on one",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcaff1958e1052fe",
+      "sourceHash": "fnv1a64:f1bff57591536f8f",
       "notice": null,
       "blocks": [
         {
@@ -700,194 +338,464 @@
             },
             {
               "kind": "speech",
-              "text": "Two tenses, one meaning. Time to answer the question that has been waiting since the -te arrived: when does a German say which?"
+              "text": "Sagen, gesagt. One verb did that; the recipe behind it works on every regular verb you own."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: speech takes one, writing takes the other",
+          "title": "Grammar Lens: ge- in front, -t behind",
           "segments": [
             {
               "kind": "speech",
-              "text": "The Perfekt belongs to speech. The Präteritum belongs to narrative writing."
+              "text": "Take a regular verb. Strip the -en. Put ge- in front of what is left and -t on the end."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole operation for the regular verbs — the ones grammarians call weak, because they build their past out of endings rather than by changing the vowel inside."
+            },
+            {
+              "kind": "speech",
+              "text": "The thing worth noticing is that the ending has a beginning. English marks its participle in one place: walk becomes walk-ed, and the front of the word sits untouched. German marks it in two, one piece of grammar arriving at both ends of the stem at once."
+            },
+            {
+              "kind": "speech",
+              "text": "Grammar has a name for a piece that wraps like that: a circumfix. It is not a prefix plus a suffix that happen to co-occur — neither half means anything without the other. Gesag is not a word, and sagt on its own is \"he says.\" Only both together make \"said.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the recipe — \"ge in front, t behind\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the recipe — \"ge in front, t behind\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the wrap on its own — \"ge … t\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the wrap on its own — \"ge … t\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sagen, gesagt\" and hear both ends move",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sagen, gesagt\" and hear both ends move]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"ge- in front, -t behind.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two pieces make a weak participle? (Ge- in front, -t behind.) What is a piece of grammar that wraps a word called? (A circumfix.) Where does English put its own participle marker? (Only at the end — walked.) Build the participle of sagen. (Gesagt.) Next: the same wrap on a verb you met long before this one."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-gemacht",
+      "sequence": 350,
+      "title": "gemacht — \"made,\" \"done\"",
+      "headword": "gemacht",
+      "romanization": "gemacht",
+      "gloss": "made, done — the wrap applied to machen, and the one spelling surprise in it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee2d03769d04a460",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know the recipe. Run it on machen before reading on: strip the -en, wrap what is left."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gemacht",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gemacht — \"made,\" and also \"done.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Machen gives up its -en, leaving mach-. The wrap goes round it and out comes gemacht. No stem was harmed: the a is the same a, and the ch is the same ch."
+            },
+            {
+              "kind": "speech",
+              "text": "German uses this one participle where English chooses between two different words. Ich habe das gemacht is \"I made that\" and \"I did that\" alike; German never had to pick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ch-ach — after a, o or u, German ch is the scrape at the back of the throat, the sound in Bach and in Nacht. It sits in the middle of gemacht untouched."
+            },
+            {
+              "kind": "speech",
+              "text": "final-t — and the t on the end is crisp: guh-MAHKHT, three consonants landing together at the finish."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"machen, gemacht\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"machen, gemacht\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both participles together — \"gesagt, gemacht\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both participles together — \"gesagt, gemacht\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one word for two English ones — \"made, done — gemacht\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one word for two English ones — \"made, done — gemacht\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"machen, gemacht.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build the participle of machen. (Gemacht.) Which two English words does it cover? (Made and done.) What happened to the ch on the way? (Nothing — the wrap only touches the edges.) Next: the verb you have been doing to German itself."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-gelernt",
+      "sequence": 355,
+      "title": "gelernt — \"learned\"",
+      "headword": "gelernt",
+      "romanization": "gelernt",
+      "gloss": "learned — the wrap on lernen, and the sentence you can finally say about yourself",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cebfee48b3f2712",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Third time through the recipe, and this one describes what you have been doing since page one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gelernt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gelernt — \"learned.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Lernen loses its -en, leaving lern-; the wrap closes round it. The English cousin is doing the very same job with the very same stem — learn, learned — and differs only in where the marking sits. German puts a piece at each end; English puts both pieces at the back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "r-uvular-german — the r inside gelernt is made at the back of the mouth and, before a consonant, is barely a consonant at all: it colours the vowel more than it rolls. Guh-LEHRNT, with the r almost swallowed."
+            },
+            {
+              "kind": "speech",
+              "text": "final-t — -nt at the end, both consonants sounded, the t released."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"lernen, gelernt\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"lernen, gelernt\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English twin — \"learn, learned; lernen, gelernt\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English twin — \"learn, learned; lernen, gelernt\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all three so far — \"gesagt, gemacht, gelernt\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all three so far — \"gesagt, gemacht, gelernt\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"lernen, gelernt.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build the participle of lernen. (Gelernt.) Which English verb is its twin? (Learn.) Where does English put its marking? (All of it at the end.) Next: the fourth verb, and the last one before the recipe is yours."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-gewohnt",
+      "sequence": 360,
+      "title": "gewohnt — \"lived\"",
+      "headword": "gewohnt",
+      "romanization": "gewohnt",
+      "gloss": "lived, dwelt — the wrap on wohnen, and the English fossil that still means \"accustomed\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:749dbce709937a3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Fourth and last of the four. Run the recipe on wohnen yourself first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gewohnt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gewohnt — \"lived,\" in the sense of dwelt somewhere."
+            },
+            {
+              "kind": "speech",
+              "text": "Wohn- takes the wrap and nothing else changes. Four verbs, four participles, one recipe: it has not bent once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "w-is-v — the w buried in the middle is a German w, which is English v. Guh-VOHNT."
+            },
+            {
+              "kind": "speech",
+              "text": "final-t — -nt to close, exactly as in gelernt."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Wohnen began by meaning something closer to \"to be accustomed\" than \"to reside,\" and gewohnt still carries that older sense alongside the newer one: in modern German it is also the ordinary word for used to something."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the same word and only the old meaning:"
             },
             {
               "kind": "table",
               "headers": [
-                "tense",
-                "where it lives"
+                "word",
+                "meaning"
               ],
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "tense: Perfekt. where it lives: everyday conversation, and dominant there.",
-                "tense: Präteritum. where it lives: novels, reports, anything told on the page."
+                "German gewohnt means lived; accustomed.",
+                "English wont means accustomed, as in he was wont to sing."
               ]
             },
             {
               "kind": "speech",
-              "text": "Open a German novel and the story runs in Präteritum from the first page to the last. Stand in a German kitchen and you will barely hear it. Neither audience thinks it is choosing a tense; each is simply doing what that setting does."
-            },
-            {
-              "kind": "speech",
-              "text": "So the practical instruction for a speaker is lopsided and easy: produce the Perfekt, recognise the Präteritum. You will read far more of it than you will ever need to say."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "There is a second axis, and it is geographic. Spoken Präteritum has largely vanished from conversation in southern Germany, Austria and Switzerland; further north it survives noticeably better. A Hamburg speaker will use forms in conversation that a Munich speaker would find bookish."
-            },
-            {
-              "kind": "speech",
-              "text": "That map is not decoration — the next lessons turn out to explain it — and it means the honest answer to \"do Germans say ich sagte?\" is: some of them, some of the time, and it depends where you are standing."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the split — \"Perfekt for speech, Präteritum for writing\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the split — \"Perfekt for speech, Präteritum for writing\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "your own instruction — \"produce the Perfekt, recognise the Präteritum\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: your own instruction — \"produce the Perfekt, recognise the Präteritum\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the map — \"weaker in the south, stronger in the north\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the map — \"weaker in the south, stronger in the north\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"Perfekt spoken, Präteritum written.\""
+              "text": "Two languages split one word between them — Germany took the address and England took the habit."
             }
           ]
         },
         {
           "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which past does a novel use? (The Präteritum.) Which does a conversation use? (The Perfekt.) Which should you produce? (The Perfekt.) Where is spoken Präteritum weakest? (The south.) Next: the forms that ignore all of this and stay spoken everywhere."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C15-konnte",
-      "sequence": 430,
-      "title": "ich konnte — \"I could\"",
-      "headword": "ich konnte",
-      "romanization": "ich konnte",
-      "gloss": "I could — a Präteritum that survives in ordinary speech everywhere, north and south alike",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d92449d477adbaf9",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The last new form of the chapter, and a Präteritum nobody thinks twice about saying out loud."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: ich konnte",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ich konnte — \"I could,\" \"I was able to.\""
-            },
-            {
-              "kind": "speech",
-              "text": "The dental ending again, doubled in the spelling as it was in hatte: konn-te. It belongs to a small family of verbs German calls modal — the ones that lean on another verb, the way English can, must and may do."
-            },
-            {
-              "kind": "speech",
-              "text": "Those verbs are the Präteritum's stronghold in ordinary speech. Nobody in Munich says ich habe gekonnt over dinner; they say ich konnte."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Konnte and English could descend from one Germanic verb, kunnaną, which meant \"to know how\" rather than \"to be physically able.\" Ability arrived later, out of knowledge."
-            },
-            {
-              "kind": "speech",
-              "text": "That older sense is still visible in the English relatives: know, cunning (originally \"knowing\"), and uncouth, which began as \"unknown.\" The l that English wrote into could is pure accident — it was copied from would and should centuries after anyone stopped pronouncing it."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -900,29 +808,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich konnte\"",
+              "instruction": "\"wohnen, gewohnt\" — with a v in the middle",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich konnte\"]"
+              "source": "[YOU SAY: \"wohnen, gewohnt\" — with a *v* in the middle]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two doubled forms — \"hatte, konnte\"",
+              "instruction": "the fossil — \"gewohnt, wont\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two doubled forms — \"hatte, konnte\"]"
+              "source": "[YOU SAY: the fossil — \"gewohnt, wont\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the old meaning — \"konnte, could — knew how\"",
+              "instruction": "the whole set — \"gesagt, gemacht, gelernt, gewohnt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the old meaning — \"konnte, could — knew how\"]"
+              "source": "[YOU SAY: the whole set — \"gesagt, gemacht, gelernt, gewohnt\"]"
             },
             {
               "kind": "repeat",
@@ -931,12 +839,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich konnte, ich hatte.\""
+              "text": "\"wohnen, gewohnt.\""
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -948,26 +856,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I could.\" (Ich konnte.) What did the verb behind it originally mean? (\"To know how.\") Name an English cousin. (Know, cunning, or uncouth.) Is konnte bookish? (No — it is said out loud everywhere.) Next: why a handful of forms get that exemption."
+              "text": "Build the participle of wohnen. (Gewohnt.) How is the w sounded? (Like English v.) Which English word preserves its older sense? (Wont — accustomed.) Next: where that ge- came from, and the English word still hiding it."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C15-hochfrequent",
-      "sequence": 435,
-      "title": "The forms that stayed spoken",
-      "headword": "hatte, konnte",
-      "romanization": "hatte, konnte",
-      "gloss": "the short list of Präteritum forms that stay spoken everywhere, and the reason the list is short",
+      "id": "GE-C15-ge-praefix",
+      "sequence": 365,
+      "title": "The ge- that English lost",
+      "headword": "ge-",
+      "romanization": "ge-",
+      "gloss": "the prefix that means \"completely\" — and the English word that still has one hiding inside it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69edbccdc98e2ce2",
+      "sourceHash": "fnv1a64:4f22fbf8b6217b47",
       "notice": null,
       "blocks": [
         {
@@ -983,147 +891,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hatte. Konnte. Both are Präteritum, and both come out of a German mouth without a second thought. So the writing-only rule has holes in it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: a short list of survivors",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "A handful of very common verbs keep their one-word past in speech, everywhere in the German-speaking world."
-            },
-            {
-              "kind": "speech",
-              "text": "Three groups make up almost the whole list:"
-            },
-            {
-              "kind": "speech",
-              "text": "hatte — the past of haben;"
-            },
-            {
-              "kind": "speech",
-              "text": "konnte and its modal siblings — musste, wollte, durfte;"
-            },
-            {
-              "kind": "speech",
-              "text": "the past of the verb for \"to be,\" which arrives two chapters from now and is the most-said of them all."
-            },
-            {
-              "kind": "speech",
-              "text": "Everything else in the Präteritum obeys the split you learned last: written, not spoken."
-            },
-            {
-              "kind": "speech",
-              "text": "Why these? Because they are the verbs said most often, and frequency protects a form the way it protects an irregularity. A shape you produce fifty times a day is never up for replacement; a shape you produce once a month quietly gets swapped for the compound version and nobody notices the swap happening."
-            },
-            {
-              "kind": "speech",
-              "text": "So the practical list is genuinely short, and it is worth having by heart rather than by rule."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the survivors you own — \"hatte, konnte\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the survivors you own — \"hatte, konnte\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the modal siblings — \"musste, wollte, durfte\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the modal siblings — \"musste, wollte, durfte\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the reason — \"frequency protects a form\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the reason — \"frequency protects a form\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"hatte, konnte — spoken everywhere.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name two Präteritum forms a German says out loud. (Hatte, konnte.) Which family does konnte belong to? (The modals.) Why did these survive? (They are said most often.) Next: why the rest of the tense retreated, and where the retreat came from."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C15-praeteritum-map",
-      "sequence": 440,
-      "title": "The same retreat, three times over",
-      "headword": "areale Veränderung",
-      "romanization": "areale Veränderung",
-      "gloss": "an areal change — the same retreat happened in German, French and Italian at once, because their speakers are neighbours",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:add9aea724d4339e",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "German is not the only language that let a two-word past crowd out a one-word one. Two of its neighbours did the identical thing at the identical time."
+              "text": "Four participles, four ge-s. That syllable is not decoration, and English used to have it too."
             }
           ]
         },
@@ -1132,56 +900,39 @@
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "German ge- comes from Germanic ga-, a prefix meaning \"together, completely.\" Its job was to mark an action as finished — what grammarians call perfective — which is exactly the work a past participle does. A finished saying is gesagt."
+            },
+            {
+              "kind": "speech",
+              "text": "English inherited the same prefix and spelled it y-. Chaucer still wrote it. Then English let it go, and two fossils were left behind with the prefix welded on:"
+            },
             {
               "kind": "table",
               "headers": [
-                "language",
-                "one-word past",
-                "what took it over in speech"
+                "English word",
+                "what is hiding inside"
               ],
-              "columns": 3,
-              "rowCount": 3,
+              "columns": 2,
+              "rowCount": 2,
               "utterances": [
-                "language: German. one-word past: Präteritum. what took it over in speech: Perfekt.",
-                "language: French. one-word past: passé simple. what took it over in speech: passé composé.",
-                "language: Italian. one-word past: passato remoto. what took it over in speech: passato prossimo."
+                "English word: enough. what is hiding inside: Old English genōg — \"completely sufficient\".",
+                "English word: yclept (archaic, \"named\"). what is hiding inside: gecleopod — \"called,\" finished and done."
               ]
             },
             {
               "kind": "speech",
-              "text": "Two Romance languages and one Germanic one, doing the same thing over the same centuries — and not by coincidence. The dental -te and the Romance endings came from completely different ancestors, so nothing inherited can account for three languages arriving at the same answer."
+              "text": "Say the German wrap out loud — ge-sag-t — and then the English fossil: en-ough, from genōg. It is the same syllable, worn down to a vowel and carried inside a word nobody thinks of as a participle at all."
             },
             {
               "kind": "speech",
-              "text": "Geography can. Southern Germany, France and northern Italy are one connected block of territory, and the change spread through it by contact: speakers who live near each other borrow habits, and a habit of speech travels across a language boundary as easily as across a dialect one. Linguists call a change that spreads that way an areal change."
+              "text": "So English once wrapped its participles the same way German still does. German simply never stopped."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Two pieces of evidence make the contact story stick rather than merely sound good."
-            },
-            {
-              "kind": "speech",
-              "text": "The first is what did not happen at the western edge. Spanish and Portuguese kept their one-word past far more fully in speech, and they are the two languages furthest from that connected block."
-            },
-            {
-              "kind": "speech",
-              "text": "The second is the map inside German itself, which you already met: the Präteritum is weakest in the south, nearest the centre of the change, and strongest in the north, furthest from it. A change spreading outward from a region should thin as it goes, and that is exactly what German shows."
-            },
-            {
-              "kind": "speech",
-              "text": "Geography did not dictate any single sentence. But it explains why a Germanic language and two Romance ones moved in step, and why one end of Germany sounds older than the other."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1194,29 +945,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three languages — \"German, French, Italian: the same retreat\"",
+              "instruction": "what it meant — \"together, completely\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three languages — \"German, French, Italian: the same retreat\"]"
+              "source": "[YOU SAY: what it meant — \"together, completely\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the name — \"an areal change, spread by contact\"",
+              "instruction": "the fossil — \"enough, from genōg\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the name — \"an areal change, spread by contact\"]"
+              "source": "[YOU SAY: the fossil — \"enough, from genōg\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the inside map — \"south more Perfekt, north more Präteritum\"",
+              "instruction": "four finished actions — \"gesagt, gemacht, gelernt, gewohnt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the inside map — \"south more Perfekt, north more Präteritum\"]"
+              "source": "[YOU SAY: four finished actions — \"gesagt, gemacht, gelernt, gewohnt\"]"
             },
             {
               "kind": "repeat",
@@ -1225,12 +976,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"areal change — it spread by contact.\""
+              "text": "\"ge- means completely.\""
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1242,26 +993,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which two neighbours made the same change? (French and Italian.) Did German inherit it from Latin? (No — the two families build their pasts from different material.) What is a change that spreads by contact called? (An areal change.) Which two languages at the western edge kept their one-word past? (Spanish and Portuguese.) Next: the chapter run through end to end."
+              "text": "What did ge- originally mean? (\"Completely,\" marking an action finished.) How did English spell the same prefix? (Y-.) Which everyday English word still carries it? (Enough, from genōg.) And the archaic one? (Yclept.) Next: the four participles side by side, and then the verb that puts them to work."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C15-praeteritum-practice",
-      "sequence": 445,
-      "title": "Practice — the two pasts, side by side",
+      "id": "GE-C15-partizip-practice",
+      "sequence": 370,
+      "title": "Practice — four verbs, one wrap",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "chapter payoff — the two pasts said back to back until it is audible that nothing about the meaning has moved",
+      "gloss": "chapter payoff — the four participles side by side for the first time, built rather than memorised",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2ef86584b96cc84",
+      "sourceHash": "fnv1a64:a6be21203e939beb",
       "notice": null,
       "blocks": [
         {
@@ -1277,33 +1028,33 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. The point of this one is to hear, in your own voice, that two different-sounding sentences report the same event."
+              "text": "No new words. Every participle here has had its own lesson, so this is the first place they are safe to put side by side — as a recap of work already done, not as a list to swallow."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: one meaning, two shapes",
+          "title": "Grammar Lens: the four, assembled",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "meaning",
-                "Präteritum",
-                "Perfekt"
+                "infinitive",
+                "participle"
               ],
-              "columns": 3,
-              "rowCount": 3,
+              "columns": 2,
+              "rowCount": 4,
               "utterances": [
-                "meaning: I said. Präteritum: ich sagte. Perfekt: ich habe gesagt.",
-                "meaning: I made. Präteritum: ich machte. Perfekt: ich habe gemacht.",
-                "meaning: I had. Präteritum: ich hatte. Perfekt: ich habe gehabt."
+                "infinitive: sagen. participle: gesagt.",
+                "infinitive: machen. participle: gemacht.",
+                "infinitive: lernen. participle: gelernt.",
+                "infinitive: wohnen. participle: gewohnt."
               ]
             },
             {
               "kind": "speech",
-              "text": "Say each pair back to back — ich sagte … ich habe gesagt — and then er machte das … er hat das gemacht. Nothing about the meaning has moved. All that has changed is which room you are standing in."
+              "text": "Cover the right-hand side and rebuild it from the left. Then cover the left and work backwards: given gemacht, what was the infinitive? The recipe runs both ways, which is what makes it worth having."
             }
           ]
         },
@@ -1321,38 +1072,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"ich sagte … ich habe gesagt\"",
+              "instruction": "the four in order — \"gesagt, gemacht, gelernt, gewohnt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"ich sagte … ich habe gesagt\"]"
+              "source": "[YOU SAY: the four in order — \"gesagt, gemacht, gelernt, gewohnt\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the other pair — \"er machte das … er hat das gemacht\"",
+              "instruction": "the four infinitives back — \"sagen, machen, lernen, wohnen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the other pair — \"er machte das … er hat das gemacht\"]"
+              "source": "[YOU SAY: the four infinitives back — \"sagen, machen, lernen, wohnen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the survivors — \"ich hatte, ich konnte\"",
+              "instruction": "the recipe out loud — \"ge in front, t behind\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the survivors — \"ich hatte, ich konnte\"]"
+              "source": "[YOU SAY: the recipe out loud — \"ge in front, t behind\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "your own instruction — \"produce the Perfekt, recognise the Präteritum\"",
+              "instruction": "the fossil — \"enough, from genōg\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: your own instruction — \"produce the Perfekt, recognise the Präteritum\"]"
+              "source": "[YOU SAY: the fossil — \"enough, from genōg\"]"
             },
             {
               "kind": "repeat",
@@ -1361,7 +1112,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich sagte, ich habe gesagt.\""
+              "text": "\"gesagt, gemacht, gelernt, gewohnt.\""
             }
           ]
         },
@@ -1378,7 +1129,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I made\" both ways. (Ich machte; ich habe gemacht.) Which of the two would a novel use? (The Präteritum.) Which would you say out loud? (The Perfekt — except for the survivors.) What is the -te called? (The dental preterite.) What kind of change pushed the tense out of speech? (An areal one.) Next: the verb every one of these sentences has been waiting for."
+              "text": "Run the four participles without prompting. Which infinitive gives gemacht? (Machen.) What are the two pieces of the wrap? (Ge- and -t.) What did the front piece originally mean? (\"Completely.\") Next: the verb that carries all four of these into a sentence."
             }
           ]
         }

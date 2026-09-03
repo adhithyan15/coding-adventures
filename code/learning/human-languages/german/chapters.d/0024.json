@@ -1,24 +1,26 @@
 {
   "chapter": 24,
-  "title": "Three Verbs Under One Roof",
-  "label": "ch:ge-sein-drei-wurzeln",
-  "canDo": "I can put the German verb for “to be” into the past, and say why its forms look like three unrelated words — because they are.",
+  "title": "I Am, You Are",
+  "label": "ch:sein",
+  "canDo": "I can say what someone is in German, using any of the six present forms of the verb for “to be” — and say that I am tired.",
   "spineNodes": [
-    "SPINE-TALK-ABOUT-PAST"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GE-C16-war-practice",
+    "lesson": "GE-C16-praesens-practice",
     "kind": "task",
-    "summary": "The past of sein is the tidy half of the verb: one stem war-, ordinary endings, and ich war identical to er war. The chapter teaches those four cells one at a time and then answers the question the present tense raised — bin, ist and war come from three different Proto-Indo-European verbs, which is called suppletion, and it survives because the words you never have to guess at are the words analogy never reaches.",
+    "summary": "sein is the one German verb whose forms cannot be guessed from its infinitive, so this chapter meets them one at a time — bin, bist, ist, sind, seid, sind — and only assembles the grid once every cell has had its own lesson. It closes with müde, the adjective that finishes ich bin, and a short exchange that runs on nothing but this verb.",
     "assesses": [
-      "GE-GRAMMAR-SEIN-ICH-WAR-01",
-      "GE-GRAMMAR-SEIN-DU-WARST-01",
-      "GE-GRAMMAR-SEIN-ER-WAR-01",
-      "GE-GRAMMAR-SEIN-WIR-WAREN-01",
-      "GE-ETYMON-SEIN-DREI-WURZELN-01",
-      "GE-GRAMMAR-SUPPLETION-01",
-      "GE-GRAMMAR-HAEUFIG-UNREGELMAESSIG-01"
+      "GE-LEX-SEIN-01",
+      "GE-SOUND-SEIN-01",
+      "GE-GRAMMAR-SEIN-ICH-BIN-01",
+      "GE-GRAMMAR-SEIN-DU-BIST-01",
+      "GE-GRAMMAR-SEIN-ER-IST-01",
+      "GE-GRAMMAR-SEIN-WIR-SIND-01",
+      "GE-GRAMMAR-SEIN-IHR-SEID-01",
+      "GE-GRAMMAR-SEIN-SIE-SIND-01",
+      "GE-LEX-MUEDE-01"
     ],
-    "note": "Split out of the hand-written chapter 16, which carried the present, the past and the sein-perfect in one chapter and could not hold them inside maxNewAtomsPerChapter at one atom per grammar cell. The payoff claims all seven of this chapter's atoms: the practice lesson drills the four past cells and then asks for the three roots, the name suppletion, and the reason the verb was never tidied up."
+    "note": "Chapter 16 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces, because the practice lesson is where the six forms are first allowed to appear together: the grid there is a recap of six lessons, not an introduction, which is the only condition under which a paradigm table may be printed at all."
   }
 }

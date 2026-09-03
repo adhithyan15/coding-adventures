@@ -1,7 +1,7 @@
 ---
 id: GE-C12-elf-zwoelf
-sequence: 285
-chapter: 16
+sequence: 305
+chapter: 18
 type: word
 headword: elf, zwölf
 gloss: 11 and 12 — literally "one left over" and "two left over," the exact twins of eleven and twelve

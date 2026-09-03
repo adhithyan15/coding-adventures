@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C24-verstehen
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 730
-chapter: 33
+sequence: 750
+chapter: 35
 type: word
 headword: verstehen
 gloss: to understand — literally "to stand around a thing", the same picture English built independently in understand

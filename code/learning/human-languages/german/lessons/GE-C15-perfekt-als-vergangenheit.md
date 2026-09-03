@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-perfekt-als-vergangenheit
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 390
-chapter: 20
+sequence: 410
+chapter: 22
 type: grammar
 headword: ich habe gesagt = I said
 gloss: the Perfekt translates as the plain English past, not only as "I have said"

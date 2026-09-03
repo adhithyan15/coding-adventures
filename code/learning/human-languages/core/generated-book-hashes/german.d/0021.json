@@ -1,18 +1,16 @@
 {
   "language": "german",
   "chapter": 21,
-  "sourceHash": "fnv1a64:b738b0da45f8a140",
+  "sourceHash": "fnv1a64:e4d9fcbf4775800f",
   "lessonIds": [
-    "GE-C15-praeteritum",
-    "GE-C15-sagte",
-    "GE-C15-machte",
-    "GE-C15-dentales-praeteritum",
-    "GE-C15-hatte",
-    "GE-C15-register",
-    "GE-C15-konnte",
-    "GE-C15-hochfrequent",
-    "GE-C15-praeteritum-map",
-    "GE-C15-praeteritum-practice"
+    "GE-C15-sagen",
+    "GE-C15-gesagt",
+    "GE-C15-partizip",
+    "GE-C15-gemacht",
+    "GE-C15-gelernt",
+    "GE-C15-gewohnt",
+    "GE-C15-ge-praefix",
+    "GE-C15-partizip-practice"
   ],
-  "tex": "german/book/chapters/ch21-praeteritum.tex"
+  "tex": "german/book/chapters/ch21-partizip.tex"
 }

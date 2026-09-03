@@ -1,12 +1,9 @@
 {
   "language": "german",
   "chapter": 33,
-  "sourceHash": "fnv1a64:1213dadba3f2f5d0",
+  "sourceHash": "fnv1a64:1008265f58ccd0ce",
   "lessonIds": [
-    "GE-C24-denken",
-    "GE-C24-verstehen",
-    "GE-C24-lesen",
-    "GE-C24-schreiben"
+    "GE-C22-hund-katze"
   ],
-  "tex": "german/book/chapters/ch33-mind-verbs.tex"
+  "tex": "german/book/chapters/ch33-dog-and-cat.tex"
 }

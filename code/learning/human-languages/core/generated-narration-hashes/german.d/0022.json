@@ -1,23 +1,23 @@
 {
   "language": "german",
   "chapter": 22,
-  "sourceHash": "fnv1a64:450a3716c22f8015",
+  "sourceHash": "fnv1a64:076abfc2529e27ce",
   "lessonIds": [
-    "GE-C16-sein",
-    "GE-C16-ich-bin",
-    "GE-C16-du-bist",
-    "GE-C16-er-ist",
-    "GE-C16-wir-sind",
-    "GE-C16-ihr-seid",
-    "GE-C16-sie-sind",
-    "GE-C16-muede",
-    "GE-C16-praesens-practice"
+    "GE-C15-perfekt",
+    "GE-C15-ich-habe-gesagt",
+    "GE-C15-du-hast-gesagt",
+    "GE-C15-er-hat-gemacht",
+    "GE-C15-wir-haben-gesagt",
+    "GE-C15-partizip-am-ende",
+    "GE-C15-gestern",
+    "GE-C15-perfekt-als-vergangenheit",
+    "GE-C15-perfekt-practice"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 8,
+  "voiceLessons": 9,
+  "drivablePrefix": 9,
   "text": "german/narration/ch22.txt",
   "json": "german/narration/ch22.json",
-  "textHash": "fnv1a64:0a5cf0da502282f6",
-  "jsonHash": "fnv1a64:a3a49338012018b2",
+  "textHash": "fnv1a64:b34d0f26bb915439",
+  "jsonHash": "fnv1a64:95819a1ab6342563",
   "findings": []
 }

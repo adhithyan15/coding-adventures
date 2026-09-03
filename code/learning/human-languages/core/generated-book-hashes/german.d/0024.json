@@ -1,16 +1,17 @@
 {
   "language": "german",
   "chapter": 24,
-  "sourceHash": "fnv1a64:ecd585ea69c1360a",
+  "sourceHash": "fnv1a64:1b383bdb03d6b2d5",
   "lessonIds": [
-    "GE-C16-ich-war",
-    "GE-C16-du-warst",
-    "GE-C16-er-war",
-    "GE-C16-wir-waren",
-    "GE-C16-drei-wurzeln",
-    "GE-C16-suppletion",
-    "GE-C16-haeufig-unregelmaessig",
-    "GE-C16-war-practice"
+    "GE-C16-sein",
+    "GE-C16-ich-bin",
+    "GE-C16-du-bist",
+    "GE-C16-er-ist",
+    "GE-C16-wir-sind",
+    "GE-C16-ihr-seid",
+    "GE-C16-sie-sind",
+    "GE-C16-muede",
+    "GE-C16-praesens-practice"
   ],
-  "tex": "german/book/chapters/ch24-drei-wurzeln.tex"
+  "tex": "german/book/chapters/ch24-sein.tex"
 }

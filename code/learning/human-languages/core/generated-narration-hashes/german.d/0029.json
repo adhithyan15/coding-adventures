@@ -1,15 +1,16 @@
 {
   "language": "german",
   "chapter": 29,
-  "sourceHash": "fnv1a64:7441965a7e474532",
+  "sourceHash": "fnv1a64:839a1f2aeacd0cc8",
   "lessonIds": [
-    "GE-C20-entschuldigung"
+    "GE-C18-ja",
+    "GE-C18-nein"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "german/narration/ch29.txt",
   "json": "german/narration/ch29.json",
-  "textHash": "fnv1a64:b513358afe8f1b62",
-  "jsonHash": "fnv1a64:cc2e81d7bdc8ec96",
+  "textHash": "fnv1a64:d9b68705d7ac60f7",
+  "jsonHash": "fnv1a64:a48e02f9290635a4",
   "findings": []
 }

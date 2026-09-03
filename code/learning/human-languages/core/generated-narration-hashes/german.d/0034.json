@@ -1,18 +1,15 @@
 {
   "language": "german",
   "chapter": 34,
-  "sourceHash": "fnv1a64:a9231b010e39b5a8",
+  "sourceHash": "fnv1a64:c8d50d4fa054a01a",
   "lessonIds": [
-    "GE-C25-nehmen",
-    "GE-C25-fragen",
-    "GE-C25-helfen",
-    "GE-C25-moegen-lieben"
+    "GE-C23-gruen-gelb"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "german/narration/ch34.txt",
   "json": "german/narration/ch34.json",
-  "textHash": "fnv1a64:133fccdecbc647d8",
-  "jsonHash": "fnv1a64:4cd78d9c4bd63179",
+  "textHash": "fnv1a64:92d7ef3e35d914a4",
+  "jsonHash": "fnv1a64:1c638232b26b7527",
   "findings": []
 }

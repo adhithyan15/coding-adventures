@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 20,
-  "title": "The Past Built From Have",
-  "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:745558637c4c8bb5",
+  "title": "To Have",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:65a9bf3914836348",
   "lessons": [
     {
-      "id": "GE-C15-perfekt",
-      "sequence": 355,
-      "title": "haben plus a participle — the everyday past",
-      "headword": "haben plus Partizip",
-      "romanization": "haben plus Partizip",
-      "gloss": "the Perfekt recipe — a conjugated haben and a participle, which is how German says what happened",
+      "id": "GE-C14-haben",
+      "sequence": 325,
+      "title": "haben — \"to have\"",
+      "headword": "haben",
+      "romanization": "haben",
+      "gloss": "to have — the twin of English have, and the workhorse the rest of the book leans on",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:720675819cf1c9df",
+      "sourceHash": "fnv1a64:a0602d134788f59a",
       "notice": null,
       "blocks": [
         {
@@ -35,146 +35,26 @@
             },
             {
               "kind": "speech",
-              "text": "A participle on its own says nothing about who or when. It needs a partner, and German picks the same partner English does."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the recipe",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "haben, conjugated for whoever did it, plus the participle."
-            },
-            {
-              "kind": "speech",
-              "text": "That two-part past has a name in German: the Perfekt. Haben carries everything that changes — the person, and the fact that this is a finished action — while the participle sits there in one shape for everybody. Only one of the two words has to agree with anything, which is why the Perfekt costs far less to learn than its size suggests."
-            },
-            {
-              "kind": "speech",
-              "text": "English assembled the identical machine out of the identical parts: a verb meaning \"have,\" plus a finished-action participle. I have said and ich habe gesagt line up word for word. The next few lessons take haben's forms one at a time and hang a participle off each."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the recipe — \"haben, conjugated, plus the participle\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the recipe — \"haben, conjugated, plus the participle\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the name — \"das Perfekt\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the name — \"das Perfekt\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which half moves — \"haben changes, the participle does not\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: which half moves — \"haben changes, the participle does not\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"haben plus participle.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which two pieces make the Perfekt? (Haben plus the participle.) Which of the two changes for the person? (Haben.) Which English tense is built the same way? (I have said — have plus a participle.) Next: the first person, and the first whole sentence about the past."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C15-ich-habe-gesagt",
-      "sequence": 360,
-      "title": "ich habe gesagt — \"I said\"",
-      "headword": "ich habe gesagt",
-      "romanization": "ich habe gesagt",
-      "gloss": "I said — the first filled slot of the Perfekt, and a sentence you can use whole",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:78beef36a8030f68",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The recipe, filled in for the person you talk about most."
+              "text": "German's workhorse verb, and the twin of a word you have said every day of your life."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: ich habe gesagt",
+          "title": "You'll want to know: haben",
           "segments": [
             {
               "kind": "speech",
-              "text": "ich habe gesagt — \"I said.\""
+              "text": "haben — \"to have.\""
             },
             {
               "kind": "speech",
-              "text": "Three words, three jobs. Ich is who; habe is the form of haben that goes with ich; gesagt is what happened. Nothing here is new except the way the last two sit together."
+              "text": "Same word as English have, worn differently. Chop the -en the way you did with machen and the stem is hab-, which is where every form in this chapter starts."
             },
             {
               "kind": "speech",
-              "text": "Say it as one run rather than three separate words. The stress lands on gesagt, and habe shrinks in ordinary speech to something close to hab: ich HAB gezahkt. That contraction is not sloppy — it is how the sentence sounds when a German says it at speed."
+              "text": "Two syllables, and the first one carries the weight: HAH-ben."
             }
           ]
         },
@@ -185,11 +65,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ich-laut — ich still ends in the soft breathy sound from the very first chapter, not a k."
+              "text": "long-a — the a of haben is long and open, the vowel of English father, not the clipped a of hat."
             },
             {
               "kind": "speech",
-              "text": "ge-prefix — and the ge- that follows two words later is just as soft. The sentence has two unstressed mumbles in it and one loud syllable."
+              "text": "d-t-final — that long a does not survive into every form. Two of them coming up are short and clipped, and both end in a crisp, fully released t."
             }
           ]
         },
@@ -207,29 +87,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich habe gesagt\"",
+              "instruction": "\"haben\" — long a, soft second syllable",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich habe gesagt\"]"
+              "source": "[YOU SAY: \"haben\" — long *a*, soft second syllable]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it at speed — \"ich hab gesagt\"",
+              "instruction": "the stem on its own — \"hab-\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it at speed — \"ich hab gesagt\"]"
+              "source": "[YOU SAY: the stem on its own — \"hab-\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the English beside it — \"I said; ich habe gesagt\"",
+              "instruction": "the twins — \"haben, have\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the English beside it — \"I said; ich habe gesagt\"]"
+              "source": "[YOU SAY: the twins — \"haben, have\"]"
             },
             {
               "kind": "repeat",
@@ -238,7 +118,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich habe gesagt, ich habe gesagt.\""
+              "text": "\"haben, haben — to have.\""
             }
           ]
         },
@@ -255,26 +135,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I said.\" (Ich habe gesagt.) Which word carries the person? (Habe.) Which syllable is stressed? (Sagt.) Next: the same sentence, aimed at the person in front of you."
+              "text": "Say \"to have.\" (Haben.) What is its stem? (Hab-.) Is the a long or short? (Long — as in father.) Which English verb is it? (Have.) Next: the stem through the ending machine you already own."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C15-du-hast-gesagt",
-      "sequence": 365,
-      "title": "du hast gesagt — \"you said\"",
-      "headword": "du hast gesagt",
-      "romanization": "du hast gesagt",
-      "gloss": "you said — the second slot, where haben drops its b exactly as English have does",
+      "id": "GE-C14-hab-stamm",
+      "sequence": 326,
+      "title": "hab- through the machine",
+      "headword": "ich habe, wir haben, ihr habt",
+      "romanization": "ich habe, wir haben, ihr habt",
+      "gloss": "four of haben's six forms come out of the ending machine you already own, with nothing new to learn",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b7fd905da8d9fb9",
+      "sourceHash": "fnv1a64:454d06f9e76a63a9",
       "notice": null,
       "blocks": [
         {
@@ -290,30 +170,30 @@
             },
             {
               "kind": "speech",
-              "text": "Same sentence, different person — and haben loses a letter on the way."
+              "text": "You own an ending machine: a stem, and -e, -st, -t, -en. Run hab- through it before reading on, and keep what you get."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: du hast gesagt",
+          "type": "grammar",
+          "title": "Grammar Lens: four forms you already knew",
           "segments": [
             {
               "kind": "speech",
-              "text": "du hast gesagt — \"you said,\" to one person you are on familiar terms with."
+              "text": "On hab-, the machine is right four times out of six."
             },
             {
               "kind": "speech",
-              "text": "The b of haben has gone. Not worn away here and kept elsewhere — this is one of the two forms where German drops it, and you met both when you learned the verb."
+              "text": "Ich takes -e, so ich habe. Wir takes -en, so wir haben — which is the infinitive over again, the way the wir form goes throughout German. Ihr takes -t, so ihr habt. And sie takes -en like wir, so sie haben."
             },
             {
               "kind": "speech",
-              "text": "English does exactly the same thing to exactly the same verb: I have, but thou hast, and still today he has. Two languages, one shortcut, inherited together rather than invented twice."
+              "text": "Nothing there is new. Those four are the rule from your first verbs applied to one more stem — so do not read them off the page. Take each ending, put it on hab-, and hear that you already knew the answer."
             },
             {
               "kind": "speech",
-              "text": "The participle has not moved. Gesagt is gesagt whoever did the saying, so half of every sentence in this chapter is already yours."
+              "text": "The chapter is about the other two."
             }
           ]
         },
@@ -329,31 +209,53 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"du hast gesagt\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"du hast gesagt\"]"
+              "kind": "speech",
+              "text": "Build each one before you say it — take the ending first, then put it on hab-."
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"ich habe gesagt, du hast gesagt\"",
+              "instruction": "the ending ich takes, then the form — \"-e … ich habe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"ich habe gesagt, du hast gesagt\"]"
+              "source": "[YOU SAY: the ending *ich* takes, then the form — \"-e … ich habe\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the English echo — \"du hast, thou hast\"",
+              "instruction": "the ending wir takes, then the form — \"-en … wir haben\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the English echo — \"du hast, thou hast\"]"
+              "source": "[YOU SAY: the ending *wir* takes, then the form — \"-en … wir haben\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ending ihr takes, then the form — \"-t … ihr habt\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ending *ihr* takes, then the form — \"-t … ihr habt\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sie borrows wir's ending — \"sie haben\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sie* borrows *wir*'s ending — \"sie haben\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "now prove the machine is not about this verb — run wohn- through it: \"ich wohne, wir wohnen, ihr wohnt\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: now prove the machine is not about this verb — run *wohn-* through it: \"ich wohne, wir wohnen, ihr wohnt\"]"
             },
             {
               "kind": "repeat",
@@ -362,7 +264,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"du hast gesagt.\""
+              "text": "\"ich habe, wir haben, ihr habt, sie haben.\""
             }
           ]
         },
@@ -379,26 +281,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"you said,\" informally. (Du hast gesagt.) Which letter of haben disappeared? (The b.) Which English form does the same? (Thou hast, and he has.) Did the participle change? (No.) Next: the same sentence about somebody else."
+              "text": "Build \"we have\" without being given it. (Wir haben.) Build \"you all have.\" (Ihr habt.) Which other form does wir haben match? (The infinitive.) Did you have to learn any of those four, or work them out? (Work them out — the endings were already yours.) How many of the six does the rule get right? (Four.) Next: the first one it gets wrong."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C15-er-hat-gemacht",
-      "sequence": 370,
-      "title": "er hat das gemacht — \"he did that\"",
-      "headword": "er hat das gemacht",
-      "romanization": "er hat das gemacht",
-      "gloss": "he did that — the third slot, and the first Perfekt sentence with something in the middle",
+      "id": "GE-C14-du-hast",
+      "sequence": 327,
+      "title": "du hast — \"you have\"",
+      "headword": "du hast",
+      "romanization": "du hast",
+      "gloss": "you have — the first form where the b falls out and the rule stops working",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d30d8089f110d3c",
+      "sourceHash": "fnv1a64:0b7ed314a9c702cd",
       "notice": null,
       "blocks": [
         {
@@ -414,26 +316,26 @@
             },
             {
               "kind": "speech",
-              "text": "Third person, and the first sentence in this chapter with a word standing between haben and the participle."
+              "text": "The machine says du plus -st on the stem hab-. Say what that would give, and then hear what German actually says."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: er hat das gemacht",
+          "title": "You'll want to know: du hast",
           "segments": [
             {
               "kind": "speech",
-              "text": "er hat das gemacht — \"he did that.\""
+              "text": "du hast — \"you have,\" to one person you are on familiar terms with."
             },
             {
               "kind": "speech",
-              "text": "Hat is the second of haben's two b-less forms, the twin of English has. And das, the little word you met as an article, doubles as \"that\" — the thing he did."
+              "text": "The rule predicts hab-st. German says hast. The b is simply gone, and the long a goes with it: the vowel is short and clipped now, and the -st lands crisply on the end."
             },
             {
               "kind": "speech",
-              "text": "Notice where it went. Das did not follow gemacht; it slipped in before it. The participle stayed at the far end of the sentence and let the rest of the words file in ahead of it. That is not a quirk of this one sentence, and the next lesson but one is about it."
+              "text": "This is not a spelling convenience. It is one of exactly two places in the whole verb where the machine fails, and it is worth meeting on its own so that it is a form you know rather than a form you derive wrongly."
             }
           ]
         },
@@ -444,11 +346,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ch-ach — the throat scrape is back, in the middle of gemacht."
+              "text": "vowel-a — short and clipped, the a of English hat, not the long a of haben. The form is one syllable: hast, rhyming with English mast."
             },
             {
               "kind": "speech",
-              "text": "final-t — three of the four words in this sentence end in a t. Release each one; German does not let a final t go soft."
+              "text": "d-t-final — the -st is fully released; German does not soften it."
             }
           ]
         },
@@ -466,29 +368,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"er hat das gemacht\"",
+              "instruction": "\"du hast\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"er hat das gemacht\"]"
+              "source": "[YOU SAY: \"du hast\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the b-less pair — \"du hast, er hat\"",
+              "instruction": "the long against the short — \"ich habe, du hast\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the b-less pair — \"du hast, er hat\"]"
+              "source": "[YOU SAY: the long against the short — \"ich habe, du hast\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "with the other participle — \"er hat das gesagt\"",
+              "instruction": "what the rule wanted, then what German says — \"hab-st … hast\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: with the other participle — \"er hat das gesagt\"]"
+              "source": "[YOU SAY: what the rule wanted, then what German says — \"hab-st … hast\"]"
             },
             {
               "kind": "repeat",
@@ -497,7 +399,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"er hat das gemacht.\""
+              "text": "\"du hast, du hast.\""
             }
           ]
         },
@@ -514,26 +416,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"he did that.\" (Er hat das gemacht.) Which two forms of haben have no b? (Hast and hat.) Where did das land — before or after the participle? (Before.) Next: the same past, said about a group."
+              "text": "Say \"you have,\" informally. (Du hast.) Which letter went missing? (The b.) What happened to the vowel? (It shortened.) What would the rule have predicted? (Hab-st.) Next: the second place the machine fails, and it fails the same way."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C15-wir-haben-gesagt",
-      "sequence": 375,
-      "title": "wir haben gesagt — \"we said\"",
-      "headword": "wir haben gesagt",
-      "romanization": "wir haben gesagt",
-      "gloss": "we said — the fourth slot, where the helper is the infinitive itself",
+      "id": "GE-C14-er-hat",
+      "sequence": 328,
+      "title": "er hat — \"he has\"",
+      "headword": "er hat",
+      "romanization": "er hat",
+      "gloss": "he has — the second and last form where the b falls out",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d507886b7fe0571",
+      "sourceHash": "fnv1a64:678e11cebd9c300f",
       "notice": null,
       "blocks": [
         {
@@ -549,26 +451,26 @@
             },
             {
               "kind": "speech",
-              "text": "The fourth person, and the easiest of the four, because its form is one you have been saying since the verb was introduced."
+              "text": "One more break, and then the verb behaves for good. The machine says -t on hab-."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: wir haben gesagt",
+          "title": "You'll want to know: er hat",
           "segments": [
             {
               "kind": "speech",
-              "text": "wir haben gesagt — \"we said.\""
+              "text": "er hat — \"he has.\" Also sie hat, \"she has,\" and es hat, \"it has.\""
             },
             {
               "kind": "speech",
-              "text": "The helper here is haben itself, unchanged from the dictionary form. German does that everywhere: the wir form of any verb is the infinitive over again, which is one of the few completely free pieces of the ending system."
+              "text": "The rule predicts hab-t. German says hat: the same b gone, the same vowel shortened. One syllable, rhyming with English hut rather than hat — the German a sits further back than the English one."
             },
             {
               "kind": "speech",
-              "text": "So the sentence has haben in it twice over in a sense — as the recipe's helper and as its own plain shape — and the participle at the back is still gesagt."
+              "text": "One form covers er, sie and es, exactly as the third-person -t always does. So the two breaks in this verb are neighbours: du hast, er hat, and every other form is the machine."
             }
           ]
         },
@@ -586,29 +488,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"wir haben gesagt\"",
+              "instruction": "\"er hat, sie hat, es hat\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"wir haben gesagt\"]"
+              "source": "[YOU SAY: \"er hat, sie hat, es hat\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four helpers in order — \"habe, hast, hat, haben\"",
+              "instruction": "the two breaks together — \"du hast, er hat\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four helpers in order — \"habe, hast, hat, haben\"]"
+              "source": "[YOU SAY: the two breaks together — \"du hast, er hat\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"wir haben das gemacht\"",
+              "instruction": "the whole shape — \"habe … hast … hat … haben\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"wir haben das gemacht\"]"
+              "source": "[YOU SAY: the whole shape — \"habe … hast … hat … haben\"]"
             },
             {
               "kind": "repeat",
@@ -617,7 +519,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"wir haben gesagt.\""
+              "text": "\"du hast, er hat.\""
             }
           ]
         },
@@ -634,26 +536,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"we said.\" (Wir haben gesagt.) Which other form of the verb does wir haben match exactly? (The infinitive, haben.) Say \"we did that.\" (Wir haben das gemacht.) Next: why the participle keeps ending up at the back."
+              "text": "Say \"he has.\" (Er hat.) Say \"she has.\" (Sie hat.) Which two forms of this verb break the rule? (Hast and hat.) What do both of them drop? (The b.) Next: why they drop it, and the English verb that does the identical thing."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C15-partizip-am-ende",
-      "sequence": 380,
-      "title": "The participle waits at the back",
-      "headword": "das Partizip am Ende",
-      "romanization": "das Partizip am Ende",
-      "gloss": "the participle waits at the end of the clause while everything else piles up in front of it",
+      "id": "GE-C14-b-verlust",
+      "sequence": 329,
+      "title": "The b that fell out",
+      "headword": "der verlorene b",
+      "romanization": "der verlorene b",
+      "gloss": "why hast and hat lost their b — and the English verb that lost it in the same two places",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e10d642da2143eb3",
+      "sourceHash": "fnv1a64:6ffa205017bd2325",
       "notice": null,
       "blocks": [
         {
@@ -669,30 +571,45 @@
             },
             {
               "kind": "speech",
-              "text": "Er hat das gemacht. Something happened in that sentence that has not been named yet, and it is the one thing about the Perfekt English cannot copy."
+              "text": "Hast and hat both lost a b. That is not two accidents."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: where the participle goes",
+          "title": "Grammar Lens: one shortcut, in exactly two cells",
           "segments": [
             {
               "kind": "speech",
-              "text": "The participle goes to the end of the clause, not next to haben."
+              "text": "Haben keeps its b everywhere except before a -st or a -t ending, where the b drops and the vowel shortens with it."
             },
             {
               "kind": "speech",
-              "text": "You already know that the working verb takes the second position in a German sentence. The Perfekt splits the verb in two and puts the halves at opposite ends: haben in its usual second slot, the participle at the very back. Between them sits everything else the sentence has to say."
+              "text": "Say hab-st and hab-t at speed and you can feel why: a b squeezed between a vowel and a hard t is work, and centuries of speakers declined to do it. The consonant wore away and the two shortest forms are what is left."
             },
             {
               "kind": "speech",
-              "text": "Grammarians call that shape a bracket, and once you hear it you cannot unhear it — a German sentence opens a verb and does not close it until the last word. It is also why German listeners wait: until the bracket shuts, you do not yet know what was done."
+              "text": "Now listen to English, which is the same verb:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "English",
+                "German"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: infinitive. English: have. German: haben.",
+                "person: second person, older. English: thou hast. German: du hast.",
+                "person: third person. English: he has. German: er hat."
+              ]
             },
             {
               "kind": "speech",
-              "text": "English refuses this outright. I have German learned is not a sentence, and no amount of context rescues it, because English keeps its two verb pieces welded together and pushes everything else behind them."
+              "text": "English lost the same consonant, in the same two cells, of the same verb — and kept the archaic hast long enough for us to see it. Two languages, one shortcut, inherited together rather than invented twice."
             }
           ]
         },
@@ -710,29 +627,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the shape — \"haben second, participle last\"",
+              "instruction": "where the b survives — \"habe, haben, habt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the shape — \"haben second, participle last\"]"
+              "source": "[YOU SAY: where the b survives — \"habe, haben, habt\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"er hat das gemacht\" and hear the bracket close",
+              "instruction": "where it does not — \"hast, hat\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"er hat das gemacht\" and hear the bracket close]"
+              "source": "[YOU SAY: where it does not — \"hast, hat\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"wir haben das gesagt\"",
+              "instruction": "the English echo — \"thou hast, du hast; he has, er hat\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"wir haben das gesagt\"]"
+              "source": "[YOU SAY: the English echo — \"thou hast, du hast; he has, er hat\"]"
             },
             {
               "kind": "repeat",
@@ -741,7 +658,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"The participle waits at the back.\""
+              "text": "\"hast, hat — no b.\""
             }
           ]
         },
@@ -758,26 +675,26 @@
             },
             {
               "kind": "speech",
-              "text": "Where does the participle sit? (At the end of the clause.) Where does haben sit? (Second, as any working verb does.) What is between them? (Everything else.) Can English do this? (No.) Next: a word to put in that middle space."
+              "text": "In which two forms does the b drop? (Hast and hat.) What else changes with it? (The vowel shortens.) Which English form still shows the same loss? (He has — or archaic thou hast.) Next: something to actually have."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C15-gestern",
-      "sequence": 385,
-      "title": "gestern — \"yesterday\"",
-      "headword": "gestern",
-      "romanization": "gestern",
-      "gloss": "yesterday — the word that fills the middle of a Perfekt sentence, and morgen's opposite number",
+      "id": "GE-C14-einen",
+      "sequence": 330,
+      "title": "einen — \"a,\" when it is the thing you have",
+      "headword": "einen",
+      "romanization": "einen",
+      "gloss": "a, an — the form the word takes for a masculine thing you have, and the first sighting of a system taught later",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:863347261da069a2",
+      "sourceHash": "fnv1a64:6aee65f4bcb984b2",
       "notice": null,
       "blocks": [
         {
@@ -793,193 +710,200 @@
             },
             {
               "kind": "speech",
-              "text": "The bracket leaves a gap in the middle of every past sentence. Here is the first word worth putting in it."
+              "text": "Ich habe … wants something after it. The commonest thing to put there is \"a something,\" and German asks one small question first."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: gestern",
+          "title": "You'll want to know: einen",
           "segments": [
             {
               "kind": "speech",
-              "text": "gestern — \"yesterday.\""
+              "text": "einen — \"a,\" for a der-word that is the thing you have."
             },
             {
               "kind": "speech",
-              "text": "It pairs with morgen, which you already have for \"tomorrow.\" One word each side of today, and both of them slide into the middle of a sentence rather than onto its end."
+              "text": "Ein is the number one doing a second job, which is exactly what English a is — a worn-down one. German keeps the resemblance visible: ein, eins."
             },
             {
               "kind": "speech",
-              "text": "Now put it to work with a participle you own:"
+              "text": "The -en on the end is the part English threw away. German marks a der-word differently when it is the thing being had rather than the thing doing the having, and einen is that marked form:"
             },
             {
               "kind": "speech",
-              "text": "Ich habe gestern Deutsch gelernt. (word for word: I have yesterday German learned.)"
+              "text": "Ich habe einen Bruder. — \"I have a brother.\""
             },
             {
               "kind": "speech",
-              "text": "Three things stacked between habe and gelernt, and the participle still waiting at the back. Read the English gloss aloud and hear how badly it fails as an English sentence; that failure is the shape of German."
+              "text": "Der Bruder is a der-word, and he is what you have, so ein becomes einen. Nothing else in the sentence moves."
+            },
+            {
+              "kind": "speech",
+              "text": "Take this one as a word for now, not as a system. The system behind it — German's cases — gets a chapter of its own later; this is the first place the book cannot avoid it, because a sentence with haben in it needs something to have."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "ge-prefix — the opening ge- is the same unstressed mumble as in a participle, though here it is simply part of the word: GES-tern, stress on the first syllable."
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"einen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"einen\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich habe einen Bruder.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich habe einen Bruder.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it with the two broken forms — \"du hast einen Bruder; er hat einen Bruder\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it with the two broken forms — \"du hast einen Bruder; er hat einen Bruder\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "speech",
-              "text": "r-uvular-german — the r before n barely sounds; it colours the vowel and gets out of the way."
+              "text": "\"Ich habe einen Bruder.\""
             }
           ]
         },
         {
           "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I have a brother.\" (Ich habe einen Bruder.) Which word did ein become? (Einen.) Why? (Because der Bruder is the thing being had.) Which English word is ein underneath? (One.) Next: the trap this verb is famous for."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C14-habere",
+      "sequence": 331,
+      "title": "haben is not habēre",
+      "headword": "haben ist nicht habēre",
+      "romanization": "haben ist nicht habēre",
+      "gloss": "the famous false cognate — haben is a cousin of capture, and Latin habēre is a cousin of give",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c5c5c7e1076b6b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "German haben, Latin habēre. Same consonants, same meaning, and the best false cognate in the business."
+            }
+          ]
+        },
+        {
+          "index": 1,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Gestern and yesterday are the same word. Germanic gestra- meant \"the day before\"; German kept it as it was, and English glued day onto the end of it, which is why the English word is two syllables longer for no extra meaning."
+              "text": "Two verbs that look like one word:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "verb",
+                "meaning"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "language: German. verb: haben. meaning: to have.",
+                "language: Latin. verb: habēre. meaning: to have."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Latin took the same ancient root to heri, which is where French hier and Spanish ayer come from — so the word for yesterday is one of the oldest things in the room."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"gestern\" — stress on the front",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"gestern\" — stress on the front]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — \"gestern, morgen\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"gestern, morgen\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Ich habe gestern Deutsch gelernt.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich habe gestern Deutsch gelernt.\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "text": "They are not related. It is a coincidence, and one of the most famous in linguistics. Follow each one back and they go in opposite directions."
             },
             {
               "kind": "speech",
-              "text": "\"Ich habe gestern Deutsch gelernt.\""
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "text": "Haben comes from Germanic habjaną, from Proto-Indo-European kap-, \"to seize.\" That root's Latin child is capere — which is where English gets capture, captive, capable and accept."
             },
             {
               "kind": "speech",
-              "text": "Say \"yesterday.\" (Gestern.) Say \"I learned German yesterday.\" (Ich habe gestern Deutsch gelernt.) Which word comes last? (Gelernt.) Which English word is gestern? (Yesterday.) Next: what that sentence actually means in English, which is not what it looks like."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C15-perfekt-als-vergangenheit",
-      "sequence": 390,
-      "title": "It means \"I said,\" not only \"I have said\"",
-      "headword": "ich habe gesagt = I said",
-      "romanization": "ich habe gesagt = I said",
-      "gloss": "the Perfekt translates as the plain English past, not only as \"I have said\"",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:83237bdf1e433f24",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
+              "text": "Habēre comes from a different root entirely, gʰabʰ-, and its English descendant is … give."
             },
             {
               "kind": "speech",
-              "text": "The last thing about this tense is a translation trap, and it is the one that trips up English speakers hardest."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: one German past for two English ones",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Ich habe gesagt covers both \"I said\" and \"I have said.\""
-            },
-            {
-              "kind": "speech",
-              "text": "English keeps those apart and makes the difference do work: I said it yesterday against I have said it already. Pick the wrong one and an English speaker hears something slightly off."
-            },
-            {
-              "kind": "speech",
-              "text": "Spoken German mostly does not bother. The Perfekt took over the whole territory and answers both questions, so ich habe gestern Deutsch gelernt is \"I learned German yesterday\" — plain past, no \"have\" anywhere in the English."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the trap: the German sentence has a word that looks like have in it, and the English translation usually does not. Read the German for its meaning rather than its parts, and the sentence stops sounding stilted."
+              "text": "So German haben is a cousin of capture, and Latin habēre — the source of French avoir and Italian avere — is a cousin of give. Seizing and giving, which is about as far apart as two verbs get."
             }
           ]
         },
         {
           "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is worth carrying beyond one verb. Resemblance is not evidence. Two words can match in sound and sense and still have nothing to do with each other, and the only way to tell is to follow both back rather than to compare them where they stand."
+            },
+            {
+              "kind": "speech",
+              "text": "Most of this book's cousin pairs are real. This one is the control that proves the others were checked."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -992,29 +916,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich habe gesagt — I said\"",
+              "instruction": "the pair that is not a pair — \"haben, habēre\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich habe gesagt — I said\"]"
+              "source": "[YOU SAY: the pair that is not a pair — \"haben, habēre\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it the other way too — \"ich habe gesagt — I have said\"",
+              "instruction": "where German's goes — \"haben, kap-, capture\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it the other way too — \"ich habe gesagt — I have said\"]"
+              "source": "[YOU SAY: where German's goes — \"haben, kap-, capture\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Ich habe gestern Deutsch gelernt — I learned German yesterday\"",
+              "instruction": "where Latin's goes — \"habēre, gʰabʰ-, give\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich habe gestern Deutsch gelernt — I learned German yesterday\"]"
+              "source": "[YOU SAY: where Latin's goes — \"habēre, gʰabʰ-, give\"]"
             },
             {
               "kind": "repeat",
@@ -1023,12 +947,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich habe gesagt — I said.\""
+              "text": "\"haben is not habēre.\""
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1040,26 +964,26 @@
             },
             {
               "kind": "speech",
-              "text": "Translate ich habe gesagt into plain English. (\"I said.\") Does the English need the word \"have\"? (Usually not.) Which language keeps I said and I have said apart? (English.) Next: the whole chapter, said through."
+              "text": "Are haben and habēre related? (No — a coincidence.) Which English word is haben's cousin? (Capture, from capere.) And habēre's? (Give.) What did haben's root originally mean? (\"To seize.\") Next: the whole verb, said through."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C15-perfekt-practice",
-      "sequence": 395,
-      "title": "Practice — the Perfekt, all four persons",
+      "id": "GE-C14-practice",
+      "sequence": 332,
+      "title": "Practice — the whole of haben",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "chapter payoff — the four Perfekt slots on one page for the first time, and a sentence with something in the middle",
+      "gloss": "chapter payoff — the six forms on one page for the first time, four of them free and two of them earned",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4cc6df2772533abe",
+      "sourceHash": "fnv1a64:785ebcc03745cd67",
       "notice": null,
       "blocks": [
         {
@@ -1075,33 +999,32 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. Each of the four slots below has had a lesson of its own, so this is the first place it is safe to set them out together."
+              "text": "No new words. Four of the six forms below cost you nothing, and the other two have each had a lesson, so this is the first place it is safe to set them out together."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the four slots, assembled",
+          "title": "Grammar Lens: the six, assembled",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "German",
-                "English"
+                "singular",
+                "plural"
               ],
               "columns": 2,
-              "rowCount": 4,
+              "rowCount": 3,
               "utterances": [
-                "ich habe gesagt means I said.",
-                "du hast gesagt means you said.",
-                "er hat gesagt means he said.",
-                "wir haben gesagt means we said."
+                "singular: ich habe. plural: wir haben.",
+                "singular: du hast. plural: ihr habt.",
+                "singular: er/sie/es hat. plural: sie/Sie haben."
               ]
             },
             {
               "kind": "speech",
-              "text": "One half of the sentence moves and the other does not. Run the four aloud and hear that gesagt never budges."
+              "text": "Run it aloud and hear where the b goes missing: habe … hast … hat … haben. Four forms carry it, two do not, and the two that do not are the two shortest."
             }
           ]
         },
@@ -1119,16 +1042,16 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "Was hast du gestern gemacht? means What did you do yesterday?",
-                "Ich habe Deutsch gelernt. means I learned German.",
+                "Hast du einen Bruder? means Do you have a brother?",
                 "Und du? means And you?",
-                "Wir haben das auch gemacht. means We did that too.",
-                "Gut gemacht! means Well done!"
+                "Ich habe eine Schwester. means I have a sister.",
+                "Wir haben Brot und Wein. means We have bread and wine.",
+                "Gut! Dann haben wir alles. means Good! Then we have everything."
               ]
             },
             {
               "kind": "speech",
-              "text": "Two joining words slip in without lessons of their own, because the translation carries them: was (\"what\") and auch (\"too\"). And the last line is already an idiom — gut gemacht is exactly English well done, participle and all."
+              "text": "Two things slip in without lessons of their own, because the translation carries them: eine, which is what ein becomes for a die-word, and alles (\"everything\"). And notice Hast du …? — a question puts the verb first, which is the one move German makes that English needs do for."
             }
           ]
         },
@@ -1146,29 +1069,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four in order — \"ich habe, du hast, er hat, wir haben — gesagt\"",
+              "instruction": "the six in order — \"habe, hast, hat, haben, habt, haben\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four in order — \"ich habe, du hast, er hat, wir haben — gesagt\"]"
+              "source": "[YOU SAY: the six in order — \"habe, hast, hat, haben, habt, haben\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the same four with the other participle — \"…gemacht\"",
+              "instruction": "the two breaks alone — \"hast, hat\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the same four with the other participle — \"…gemacht\"]"
+              "source": "[YOU SAY: the two breaks alone — \"hast, hat\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Ich habe gestern Deutsch gelernt.\"",
+              "instruction": "\"Ich habe einen Bruder.\" \"Wir haben Brot und Wein.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich habe gestern Deutsch gelernt.\"]"
+              "source": "[YOU SAY: \"Ich habe einen Bruder.\" \"Wir haben Brot und Wein.\"]"
             },
             {
               "kind": "prompt",
@@ -1186,7 +1109,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich habe, du hast, er hat, wir haben.\""
+              "text": "\"habe, hast, hat, haben, habt, haben.\""
             }
           ]
         },
@@ -1203,7 +1126,7 @@
             },
             {
               "kind": "speech",
-              "text": "Run the four helpers without prompting. Say \"we did that.\" (Wir haben das gemacht.) Where is the participle in every one of those sentences? (Last.) Translate ich habe gesagt into plain English. (\"I said.\") Next: the other past tense German has, and why you meet it mostly in books."
+              "text": "Run the six without looking. Which two drop the b? (Hast and hat.) Say \"I have a brother.\" (Ich habe einen Bruder.) Is haben related to Latin habēre? (No.) Which English word is it related to? (Capture.) Next: the one everyday sentence where German refuses this verb altogether."
             }
           ]
         }

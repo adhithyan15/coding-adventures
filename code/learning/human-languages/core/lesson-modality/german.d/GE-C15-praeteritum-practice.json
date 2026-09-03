@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-praeteritum-practice",
     "language": "german",
-    "chapter": 21,
-    "sequence": 445,
+    "chapter": 23,
+    "sequence": 465,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d2ef86584b96cc84"
+    "sourceHash": "fnv1a64:4471d5a208135dd8"
   },
   "findings": []
 }

@@ -2,58 +2,57 @@
 schema_version: 2
 id: GE-C14-jahr
 spine_node: SPINE-TIME-OF-DAY
-sequence: 502
-chapter: 23
+sequence: 522
+chapter: 25
 type: word
-headword: das Jahr
-gloss: the year — and Jahre, its plural, which is the form the age sentence needs
-concept_tag: GE-TIME-YEAR
-prerequisites: [GE-C14-alt, GE-C09-jahreszeiten, GE-W03-capitalization, GE-C01-die-plural, GE-C03-gehen]
+headword: die Jahre
+gloss: the plural of das Jahr, which is the form the age sentence needs and the only form it uses
+concept_tag: GE-TIME-YEAR-PLURAL
+prerequisites: [GE-C14-alt, GE-C09-jahr, GE-C09-jahreszeiten, GE-W03-capitalization, GE-C01-die-plural, GE-C03-gehen]
 sounds: [j-as-y, long-a, h-silent-lengthening]
 roots: [germanic-jera]
-etymology_hook: "Jahr ← Germanic *jēra = English year; German writes the sound of English y with the letter j, which is why Jahr looks stranger than it sounds"
+etymology_hook: "the age sentence never says Jahr — it says Jahre, because you are counted in years and a count takes a plural, which is the one thing German and English agree on here"
 duration:
   max_seconds: 160
 requires:
-  knowledge: [GE-LEX-ALT-01, GE-GRAMMAR-GROSSSCHREIBUNG-01, GE-GRAMMAR-PLURAL-DIE-01, GE-SOUND-H-LENGTHEN-01]
+  knowledge: [GE-LEX-JAHR-01, GE-LEX-ALT-01, GE-GRAMMAR-GROSSSCHREIBUNG-01, GE-GRAMMAR-PLURAL-DIE-01, GE-SOUND-H-LENGTHEN-01]
 introduces:
-  knowledge: [GE-LEX-JAHR-01]
+  knowledge: [GE-LEX-JAHRE-PLURAL-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-JAHR-01, GE-LEX-ALT-01, GE-GRAMMAR-GROSSSCHREIBUNG-01, GE-GRAMMAR-PLURAL-DIE-01, GE-SOUND-H-LENGTHEN-01]
+  knowledge: [GE-LEX-JAHRE-PLURAL-01, GE-LEX-JAHR-01, GE-LEX-ALT-01, GE-GRAMMAR-GROSSSCHREIBUNG-01, GE-GRAMMAR-PLURAL-DIE-01, GE-SOUND-H-LENGTHEN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-contemporary
-reviews_of: [GE-C14-alt, GE-C09-jahreszeiten, GE-W03-capitalization]
+reviews_of: [GE-C14-alt, GE-C09-jahr, GE-C09-jahreszeiten, GE-W03-capitalization]
 ---
 
-# das Jahr — "the year"
+# die Jahre — the form the age sentence uses
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ALT-01, GE-GRAMMAR-GROSSSCHREIBUNG-01] -->
 
-[PAUSE 2s] A noun you have already met inside a longer word, now on its own.
+[PAUSE 2s] A noun you were given ten chapters ago. The age sentence wants it
+in a shape you have not used yet.
 
-## You'll want to know: das Jahr
-<!-- hl-knowledge: introduces=[GE-LEX-JAHR-01]; assesses=[GE-GRAMMAR-PLURAL-DIE-01, GE-GRAMMAR-GROSSSCHREIBUNG-01] -->
+## You'll want to know: die Jahre
+<!-- hl-knowledge: introduces=[GE-LEX-JAHRE-PLURAL-01]; assesses=[GE-LEX-JAHR-01, GE-GRAMMAR-PLURAL-DIE-01, GE-GRAMMAR-GROSSSCHREIBUNG-01] -->
 
-> **das Jahr** — "the year." Plural: **die Jahre**.
+> **die Jahre** — the plural of *das Jahr*.
 
-Capitalised, because it is a noun and German capitalises all of them. The plural
-adds *-e* and takes *die*, as plurals do.
+The plural adds *-e* and takes *die*, as plurals do, and it stays capitalised
+because German capitalises every noun in every number.
 
-You have seen it before without being told: *die **Jahres**zeiten*, the seasons,
-is "the year's times." The year was sitting inside that word the whole time.
-
-The age sentence wants the plural — you are so many *Jahre* old — so it is
-*Jahre* that will do the work from here.
+Here is why it matters. The age sentence counts, and a count takes a plural: you
+are so many *Jahre* old, never so many *Jahr*. From here on it is *Jahre* that
+does the work, and *das Jahr* that sits behind it.
 
 ## Sounds you'll need
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JAHR-01, GE-SOUND-H-LENGTHEN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JAHR-01, GE-LEX-JAHRE-PLURAL-01, GE-SOUND-H-LENGTHEN-01] -->
 
 - `j-as-y` — German *j* is the *y* of English *yes*. So *Jahr* opens like
   *year*, not like *jar*.
@@ -64,19 +63,19 @@ The age sentence wants the plural — you are so many *Jahre* old — so it is
   the two are almost the same noise.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JAHR-01, GE-GRAMMAR-PLURAL-DIE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JAHRE-PLURAL-01, GE-GRAMMAR-PLURAL-DIE-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "das Jahr" — *j* as *y*, *h* silent, *a* long]
 - [YOU SAY: singular and plural — "das Jahr, die Jahre"]
-- [YOU SAY: where you had already met it — "die Jahreszeiten"]
+- [YOU SAY: the plural alone, which is the one you need — "die Jahre"]
+- [YOU SAY: the two words the sentence will need — "Jahre, alt"]
 
 [REPEAT x2] "das Jahr, die Jahre."
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JAHR-01, GE-LEX-ALT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JAHRE-PLURAL-01, GE-LEX-JAHR-01, GE-LEX-ALT-01] -->
 
-[PAUSE 3s] Say "the year." (**Das Jahr**.) And the plural. (**Die Jahre**.) How
-is the *J* sounded? (**Like English *y***.) What is the *h* doing?
-(**Lengthening the vowel** — it is not pronounced.) Which longer word has
-*Jahr* inside? (***Jahreszeiten***.) Next: where *Jahr* and *alt* both come from.
+[PAUSE 3s] Say "the year." (**Das Jahr**.) And the plural. (**Die Jahre**.)
+Which of the two does an age sentence use? (**The plural** — you are counted.)
+What does the plural add? (**An** *-e*, **and** *die*.) Next: where *Jahr* and
+*alt* both come from.

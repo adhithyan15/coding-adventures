@@ -1,323 +1,289 @@
-German, chapter 22: I Am, You Are.
-9 lessons. You can do the first 8 of them in the car; after that you will want to have stopped.
+German, chapter 22: The Past Built From Have.
+9 lessons. All 9 can be done entirely by ear.
 
 
 Lesson 1 of 9.
-sein — "to be".
+haben plus a participle — the everyday past.
 
 Warm-up.
 [pause 2 seconds]
-You have met the German verb for to have. Here is its partner — the most irregular verb in German, and the one verb whose forms you will not be able to guess.
+A participle on its own says nothing about who or when. It needs a partner, and German picks the same partner English does.
 
-You'll want to know: sein.
-sein — "to be."
-The -en on the end is the infinitive ending you already own from gehen and sehen: the dictionary form of a German verb wears it, and sein wears it too.
-That is where the resemblance stops. Gehen and sehen keep their stem in every form — ich gehe, ich sehe. Sein keeps nothing. Not one of its present forms contains the letters s-e-i-n in that order.
-This is the only verb in the book that has to be met one form at a time, and the next several lessons do exactly that: one form each, said until it is automatic, before any of them are ever seen side by side.
-
-Sounds you'll need.
-s-voiced — a German s before a vowel buzzes like English z, exactly as it does in sehen. So sein opens with a z.
-diphthong-ei — German ei is the vowel of English eye, never "ee".
-final-t — worth having ready now, because two of the forms coming up end in a crisp, fully released t.
-Put together, sein sounds like English zine.
+Grammar Lens: the recipe.
+haben, conjugated for whoever did it, plus the participle.
+That two-part past has a name in German: the Perfekt. Haben carries everything that changes — the person, and the fact that this is a finished action — while the participle sits there in one shape for everybody. Only one of the two words has to agree with anything, which is why the Perfekt costs far less to learn than its size suggests.
+English assembled the identical machine out of the identical parts: a verb meaning "have," plus a finished-action participle. I have said and ich habe gesagt line up word for word. The next few lessons take haben's forms one at a time and hang a participle off each.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "sein" (zine) — buzzing z, ei as in eye]
+[your turn — say: the recipe — "haben, conjugated, plus the participle"]
 [pause 8 seconds for the answer]
-[your turn — say: "gehen, sehen, sein" — three infinitives, one ending]
+[your turn — say: the name — "das Perfekt"]
 [pause 8 seconds for the answer]
-[your turn — say: "sein — to be"]
+[your turn — say: which half moves — "haben changes, the participle does not"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"sein, sein — zine."
+"haben plus participle."
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does sein mean? ("To be.") Which ending does it share with gehen and sehen? (-en, the infinitive.) How does the s sound? (Like English z.) And the ei? (Like English eye.) Next: the first form, and it looks nothing like the word you just learned.
+Which two pieces make the Perfekt? (Haben plus the participle.) Which of the two changes for the person? (Haben.) Which English tense is built the same way? (I have said — have plus a participle.) Next: the first person, and the first whole sentence about the past.
 
 
 Lesson 2 of 9.
-ich bin — "I am".
+ich habe gesagt — "I said".
 
 Warm-up.
 [pause 2 seconds]
-You have ich, and you have the infinitive sein. Put them together and you get a form that shares no letters with either half of that sentence except the i.
+The recipe, filled in for the person you talk about most.
 
-You'll want to know: ich bin.
-ich bin — "I am."
-One syllable, short i, ordinary b, ordinary n. There is no rule behind it and nothing to derive it from: bin is simply the form that goes with ich, and it is learned the way you learned hallo.
-It rhymes with English bin, and that rhyme is not an accident — see below.
+You'll want to know: ich habe gesagt.
+ich habe gesagt — "I said."
+Three words, three jobs. Ich is who; habe is the form of haben that goes with ich; gesagt is what happened. Nothing here is new except the way the last two sit together.
+Say it as one run rather than three separate words. The stress lands on gesagt, and habe shrinks in ordinary speech to something close to hab: ich HAB gezahkt. That contraction is not sloppy — it is how the sentence sounds when a German says it at speed.
 
 Sounds you'll need.
-ich-laut — ich still ends in the soft breathy sound you met when you first said "I": tongue where it sits for ee, air pushed past it, no scrape.
-i-short — the i of bin is short and clipped, the vowel of English bin, not the long ee of ihm.
-
-The word, taken apart.
-Bin rhymes with English be for a reason, even though the vowels have drifted apart. Both come from Proto-Indo-European bʰuH- — "to grow, to become."
-So German kept that ancient root in the present tense and English kept it as the infinitive: be and bin are the same old word wearing different jobs. Hold on to that; two lessons from now it explains something about the whole verb.
+ich-laut — ich still ends in the soft breathy sound from the very first chapter, not a k.
+ge-prefix — and the ge- that follows two words later is just as soft. The sentence has two unstressed mumbles in it and one loud syllable.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich bin" — short i, soft ending on ich]
+[your turn — say: "ich habe gesagt"]
 [pause 8 seconds for the answer]
-[your turn — say: "ich bin Anna." "ich bin Peter."]
+[your turn — say: it at speed — "ich hab gesagt"]
 [pause 8 seconds for the answer]
-[your turn — say: "bin — be" — the same old root]
+[your turn — say: the English beside it — "I said; ich habe gesagt"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich bin, ich bin."
+"ich habe gesagt, ich habe gesagt."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I am." (Ich bin.) Is the i of bin long or short? (Short — English bin.) Which English word comes from the same root as bin? (Be.) Next: the same verb for the person you are talking to.
+Say "I said." (Ich habe gesagt.) Which word carries the person? (Habe.) Which syllable is stressed? (Sagt.) Next: the same sentence, aimed at the person in front of you.
 
 
 Lesson 3 of 9.
-du bist — "you are".
+du hast gesagt — "you said".
 
 Warm-up.
 [pause 2 seconds]
-Du is the familiar "you" — the one for a friend. Its verb ending is -st, and for once sein uses it.
+Same sentence, different person — and haben loses a letter on the way.
 
-You'll want to know: du bist.
-du bist — "you are."
-Take bin, drop the n, add the familiar -st: bi- plus -st is bist. That is the same ending as du gehst, du heißt, du siehst.
-Of the six present forms of sein, this is the only one that can be derived from another one. Enjoy it; it does not happen again.
-
-Sounds you'll need.
-u-long — du has a long, rounded oo, the vowel of English do, held.
-final-t — German releases a final t fully and audibly. Bist ends with a small puff of air; English tends to swallow it.
+You'll want to know: du hast gesagt.
+du hast gesagt — "you said," to one person you are on familiar terms with.
+The b of haben has gone. Not worn away here and kept elsewhere — this is one of the two forms where German drops it, and you met both when you learned the verb.
+English does exactly the same thing to exactly the same verb: I have, but thou hast, and still today he has. Two languages, one shortcut, inherited together rather than invented twice.
+The participle has not moved. Gesagt is gesagt whoever did the saying, so half of every sentence in this chapter is already yours.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "du bist" — long u, crisp final t]
+[your turn — say: "du hast gesagt"]
 [pause 8 seconds for the answer]
-[your turn — say: "ich bin … du bist" — the pair]
+[your turn — say: the pair — "ich habe gesagt, du hast gesagt"]
 [pause 8 seconds for the answer]
-[your turn — say: "du bist Peter."]
+[your turn — say: the English echo — "du hast, thou hast"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich bin, du bist."
+"du hast gesagt."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "you are," to a friend. (Du bist.) Which ending is that? (-st, the familiar one.) Which form is bist built on? (Bin.) Is the final t released or swallowed? (Released.) Next: the form for everybody else.
+Say "you said," informally. (Du hast gesagt.) Which letter of haben disappeared? (The b.) Which English form does the same? (Thou hast, and he has.) Did the participle change? (No.) Next: the same sentence about somebody else.
 
 
 Lesson 4 of 9.
-er ist — "he is".
+er hat das gemacht — "he did that".
 
 Warm-up.
 [pause 2 seconds]
-Bin and bist both start with b. The third form does not, and it is the one you will hear most.
+Third person, and the first sentence in this chapter with a word standing between haben and the participle.
 
-You'll want to know: er ist.
-er ist — "he is."
-er is "he." The same ist serves three more subjects without changing at all: sie ist ("she is"), es ist ("it is"), and das ist ("that is") — es and das both already yours.
-So one two-letter word covers everything that is not ich and not du, in the singular. It is the workhorse of the whole verb.
+You'll want to know: er hat das gemacht.
+er hat das gemacht — "he did that."
+Hat is the second of haben's two b-less forms, the twin of English has. And das, the little word you met as an article, doubles as "that" — the thing he did.
+Notice where it went. Das did not follow gemacht; it slipped in before it. The participle stayed at the far end of the sentence and let the rest of the words file in ahead of it. That is not a quirk of this one sentence, and the next lesson but one is about it.
 
 Sounds you'll need.
-r-final — the r at the end of er is not a full English r. It softens towards a vowel, close to air said without the tongue curling.
-final-t — ist ends in the same released t as bist.
-
-The word, taken apart.
-Ist is the one form of sein whose relatives you can name on sight:
-[a table of 4 rows, read aloud]
-language: German. "is": ist.
-language: English. "is": is.
-language: Latin. "is": est.
-language: French. "is": est.
-All from Proto-Indo-European h₁es-, "to be" — and the infinitive sein is built on that root too. So sein and ist really do belong to each other; it is bin and bist that came from somewhere else.
+ch-ach — the throat scrape is back, in the middle of gemacht.
+final-t — three of the four words in this sentence end in a t. Release each one; German does not let a final t go soft.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "er ist, sie ist, es ist"]
+[your turn — say: "er hat das gemacht"]
 [pause 8 seconds for the answer]
-[your turn — say: "Das ist gut." — "that is good"]
+[your turn — say: the b-less pair — "du hast, er hat"]
 [pause 8 seconds for the answer]
-[your turn — say: "ich bin, du bist, er ist"]
+[your turn — say: with the other participle — "er hat das gesagt"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Das ist gut."
+"er hat das gemacht."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "he is." (Er ist.) Which other subjects take the same form? (Sie, es, das.) Say "that is good." (Das ist gut.) Which Latin word is ist? (Est.) Next: the form for more than one.
+Say "he did that." (Er hat das gemacht.) Which two forms of haben have no b? (Hast and hat.) Where did das land — before or after the participle? (Before.) Next: the same past, said about a group.
 
 
 Lesson 5 of 9.
-wir sind — "we are".
+wir haben gesagt — "we said".
 
 Warm-up.
 [pause 2 seconds]
-Three singular forms down. The plural starts here, and after bin, bist, ist, this one will finally look like the verb it belongs to.
+The fourth person, and the easiest of the four, because its form is one you have been saying since the verb was introduced.
 
-You'll want to know: wir sind.
-wir sind — "we are."
-wir is "we." And sind shares its first two letters with the infinitive sein, which is the first visible family resemblance in this verb.
-Its Latin twin is sunt, "they are" — same s, same n, same closing stop, the same root wearing a different vowel.
-
-Sounds you'll need.
-w-as-v — German w is English v. Wir begins like veer.
-ie-long-ee — ie is a long ee. Wir is veer, not wire.
-d-t-final — the d at the end of sind is spoken as a t, the same final devoicing you met on und. Say zint.
+You'll want to know: wir haben gesagt.
+wir haben gesagt — "we said."
+The helper here is haben itself, unchanged from the dictionary form. German does that everywhere: the wir form of any verb is the infinitive over again, which is one of the few completely free pieces of the ending system.
+So the sentence has haben in it twice over in a sense — as the recipe's helper and as its own plain shape — and the participle at the back is still gesagt.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "wir sind" — veer zint, final d as t]
+[your turn — say: "wir haben gesagt"]
 [pause 8 seconds for the answer]
-[your turn — say: "wir sind gut."]
+[your turn — say: the four helpers in order — "habe, hast, hat, haben"]
 [pause 8 seconds for the answer]
-[your turn — say: "sein … sind" — the family resemblance]
+[your turn — say: "wir haben das gemacht"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"wir sind, wir sind."
+"wir haben gesagt."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "we are." (Wir sind.) How is the final d pronounced? (As a t.) How does wir begin? (Like English v.) Which Latin word is sind? (Sunt.) Next: the plural "you."
+Say "we said." (Wir haben gesagt.) Which other form of the verb does wir haben match exactly? (The infinitive, haben.) Say "we did that." (Wir haben das gemacht.) Next: why the participle keeps ending up at the back.
 
 
 Lesson 6 of 9.
-ihr seid — "you are," to several people.
+The participle waits at the back — the participle waits at the end of the clause while everything else piles up in front of it.
 
 Warm-up.
 [pause 2 seconds]
-Du is one friend. For two or more friends German has a separate word, and English used to have one as well.
+Er hat das gemacht. Something happened in that sentence that has not been named yet, and it is the one thing about the Perfekt English cannot copy.
 
-You'll want to know: ihr seid.
-ihr seid — "you are," said to more than one person you would each call du.
-ihr is the familiar plural "you" — a crowd of friends, a group of children, your own family. English once had ye here and let it go, which is why one English you now does the work of four German words.
-seid opens exactly like the infinitive: sei- is sein without its n. Both the s and the ei behave as they did there.
-
-Sounds you'll need.
-ie-long-ee — ihr is eer, one long vowel; the h only stretches it.
-s-voiced — seid opens with the buzzing z of sein.
-diphthong-ei — and carries the eye vowel through. Say zite.
-Wir sind and ihr seid are the two plural forms, and they sound nothing alike, which makes them easy to keep apart.
+Grammar Lens: where the participle goes.
+The participle goes to the end of the clause, not next to haben.
+You already know that the working verb takes the second position in a German sentence. The Perfekt splits the verb in two and puts the halves at opposite ends: haben in its usual second slot, the participle at the very back. Between them sits everything else the sentence has to say.
+Grammarians call that shape a bracket, and once you hear it you cannot unhear it — a German sentence opens a verb and does not close it until the last word. It is also why German listeners wait: until the bracket shuts, you do not yet know what was done.
+English refuses this outright. I have German learned is not a sentence, and no amount of context rescues it, because English keeps its two verb pieces welded together and pushes everything else behind them.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ihr seid" — eer zite]
+[your turn — say: the shape — "haben second, participle last"]
 [pause 8 seconds for the answer]
-[your turn — say: "wir sind … ihr seid"]
+[your turn — say: "er hat das gemacht" and hear the bracket close]
 [pause 8 seconds for the answer]
-[your turn — say: "sein … seid" — the same opening]
+[your turn — say: "wir haben das gesagt"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ihr seid, ihr seid."
+"The participle waits at the back."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "you are" to a group of friends. (Ihr seid.) Which English word did that job before English dropped it? (Ye.) Which part of seid comes straight out of sein? (sei-.) Next: the last form, and the one that does double duty.
+Where does the participle sit? (At the end of the clause.) Where does haben sit? (Second, as any working verb does.) What is between them? (Everything else.) Can English do this? (No.) Next: a word to put in that middle space.
 
 
 Lesson 7 of 9.
-sie sind / Sie sind — "they are," and "you are," politely.
+gestern — "yesterday".
 
 Warm-up.
 [pause 2 seconds]
-The polite Sie is literally the word for "they," worn as a courtesy. Its verb form follows from that, and costs you nothing new.
+The bracket leaves a gap in the middle of every past sentence. Here is the first word worth putting in it.
 
-You'll want to know: sie sind and Sie sind.
-sie sind — "they are." Sie sind — "you are," to someone you would address formally.
-The form is sind, the very same word you learned for wir. Nothing changes in the mouth at all: wir sind, sie sind, Sie sind are three subjects and one verb form.
+You'll want to know: gestern.
+gestern — "yesterday."
+It pairs with morgen, which you already have for "tomorrow." One word each side of today, and both of them slide into the middle of a sentence rather than onto its end.
+Now put it to work with a participle you own:
+Ich habe gestern Deutsch gelernt. (word for word: I have yesterday German learned.)
+Three things stacked between habe and gelernt, and the participle still waiting at the back. Read the English gloss aloud and hear how badly it fails as an English sentence; that failure is the shape of German.
 
-Grammar Lens: the capital carries the politeness.
-On the page, sie and Sie differ by exactly one capital letter — and German already spends capitals on grammar rather than decoration. In speech there is no difference at all; the context tells you which one is meant.
-[a table of 2 rows, read aloud]
-sie sind means they are.
-Sie sind means you are, formally.
-That is the whole of it. Six subjects, and you have now met every present form of the verb.
+Sounds you'll need.
+ge-prefix — the opening ge- is the same unstressed mumble as in a participle, though here it is simply part of the word: GES-tern, stress on the first syllable.
+r-uvular-german — the r before n barely sounds; it colours the vowel and gets out of the way.
+
+The word, taken apart.
+Gestern and yesterday are the same word. Germanic gestra- meant "the day before"; German kept it as it was, and English glued day onto the end of it, which is why the English word is two syllables longer for no extra meaning.
+Latin took the same ancient root to heri, which is where French hier and Spanish ayer come from — so the word for yesterday is one of the oldest things in the room.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "sie sind" — "they are"]
+[your turn — say: "gestern" — stress on the front]
 [pause 8 seconds for the answer]
-[your turn — say: "Sie sind Herr Peter Schmidt?" — politely]
+[your turn — say: the pair — "gestern, morgen"]
 [pause 8 seconds for the answer]
-[your turn — say: "wir sind, sie sind, Sie sind" — one form, three subjects]
+[your turn — say: "Ich habe gestern Deutsch gelernt."]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"sie sind, Sie sind."
+"Ich habe gestern Deutsch gelernt."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "they are." (Sie sind.) Say "you are" to a stranger. (Sie sind — same sound.) What separates the two on paper? (The capital S.) How many different present forms of this verb have you now met? (Five — bin, bist, ist, sind, seid.) Next: one adjective, so you can finally say something about yourself.
+Say "yesterday." (Gestern.) Say "I learned German yesterday." (Ich habe gestern Deutsch gelernt.) Which word comes last? (Gelernt.) Which English word is gestern? (Yesterday.) Next: what that sentence actually means in English, which is not what it looks like.
 
 
 Lesson 8 of 9.
-müde — "tired".
+It means "I said," not only "I have said" — the Perfekt translates as the plain English past, not only as "I have said".
 
 Warm-up.
 [pause 2 seconds]
-Ich bin is a sentence waiting for one more word. Here is the word that finishes it most often.
+The last thing about this tense is a translation trap, and it is the one that trips up English speakers hardest.
 
-You'll want to know: müde.
-müde — "tired."
-Ich bin müde. — "I am tired."
-Two syllables, stress on the first: mü-duh. It is an adjective, and after sein an adjective takes no ending at all — the same bare form serves every subject. Ich bin müde, du bist müde, wir sind müde.
-That is worth noticing, because German adjectives are famous for their endings. They only take them in front of a noun. Standing after sein, they stand still.
-
-Sounds you'll need.
-umlaut-ue — ü is the vowel you make by rounding your lips for oo and then saying ee without moving them. The dots are the fronting mark you already know: the mouth shifts forward, the lips stay round.
-The final -e is a soft uh, never silent. mü-duh, two beats, the weight on the first.
+Grammar Lens: one German past for two English ones.
+Ich habe gesagt covers both "I said" and "I have said."
+English keeps those apart and makes the difference do work: I said it yesterday against I have said it already. Pick the wrong one and an English speaker hears something slightly off.
+Spoken German mostly does not bother. The Perfekt took over the whole territory and answers both questions, so ich habe gestern Deutsch gelernt is "I learned German yesterday" — plain past, no "have" anywhere in the English.
+That is the trap: the German sentence has a word that looks like have in it, and the English translation usually does not. Read the German for its meaning rather than its parts, and the sentence stops sounding stilted.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "müde" — round the lips, say ee]
+[your turn — say: "ich habe gesagt — I said"]
 [pause 8 seconds for the answer]
-[your turn — say: "Ich bin müde."]
+[your turn — say: it the other way too — "ich habe gesagt — I have said"]
 [pause 8 seconds for the answer]
-[your turn — say: "Er ist müde. Wir sind müde." — the adjective never changes]
+[your turn — say: "Ich habe gestern Deutsch gelernt — I learned German yesterday"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Ich bin müde."
+"ich habe gesagt — I said."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I am tired." (Ich bin müde.) How do you make the ü? (Round for oo, say ee.) Does müde change after sein? (No — no ending.) Say "we are tired." (Wir sind müde.) Next: everything at once, on purpose.
+Translate ich habe gesagt into plain English. ("I said.") Does the English need the word "have"? (Usually not.) Which language keeps I said and I have said apart? (English.) Next: the whole chapter, said through.
 
 
 Lesson 9 of 9.
-Practice — the whole present of sein.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Practice — the Perfekt, all four persons.
 
 Warm-up.
 [pause 2 seconds]
-No new words. Every form below has had its own lesson, so this is the first time it is safe to put them all on one page — as a recap, not as something to memorise from cold.
+No new words. Each of the four slots below has had a lesson of its own, so this is the first place it is safe to set them out together.
 
-Grammar Lens: the six forms, assembled.
-[a table of 3 rows, read aloud]
-singular: ich bin. plural: wir sind.
-singular: du bist. plural: ihr seid.
-singular: er/sie/es ist. plural: sie/Sie sind.
-Six subjects, five different forms — sind does double duty. Look at that with fresh eyes now that you can say all of it: bin and ist do not look like forms of the same word, and the next chapter explains why they aren't.
+Grammar Lens: the four slots, assembled.
+[a table of 4 rows, read aloud]
+ich habe gesagt means I said.
+du hast gesagt means you said.
+er hat gesagt means he said.
+wir haben gesagt means we said.
+One half of the sentence moves and the other does not. Run the four aloud and hear that gesagt never budges.
 
 The exchange.
 [a table of 5 rows, read aloud]
-Hallo! Wie geht es dir? means Hello! How are you?
-Danke, ich bin müde. means Thanks — I am tired.
-Du bist müde? Ich auch. means You are tired? Me too.
-Dann sind wir müde. Aber das ist gut. means Then we are tired. But that is good.
-Bis morgen! means See you tomorrow!
-Three small joining words slip in there without needing lessons of their own, because each can be read straight off the translation: auch ("too"), dann ("then") and aber ("but").
+Was hast du gestern gemacht? means What did you do yesterday?
+Ich habe Deutsch gelernt. means I learned German.
+Und du? means And you?
+Wir haben das auch gemacht. means We did that too.
+Gut gemacht! means Well done!
+Two joining words slip in without lessons of their own, because the translation carries them: was ("what") and auch ("too"). And the last line is already an idiom — gut gemacht is exactly English well done, participle and all.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the six in order — "ich bin, du bist, er ist, wir sind, ihr seid, sie sind"]
+[your turn — say: the four in order — "ich habe, du hast, er hat, wir haben — gesagt"]
 [pause 8 seconds for the answer]
-[your turn — say: the same six backwards]
+[your turn — say: the same four with the other participle — "…gemacht"]
 [pause 8 seconds for the answer]
-[your turn — say: "Ich bin müde." "Du bist müde." "Wir sind müde."]
+[your turn — say: "Ich habe gestern Deutsch gelernt."]
 [pause 8 seconds for the answer]
 [your turn — say: the whole exchange, both voices]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich bin, du bist, er ist, wir sind, ihr seid, sie sind."
+"ich habe, du hast, er hat, wir haben."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Run the six forms without looking. Which one form covers wir, sie and Sie? (Sind.) Which is the only form built out of another one? (Bist, from bin.) Say "that is good." (Das ist gut.) Say "you are tired" to a group. (Ihr seid müde.) Next: where these forms came from — three different verbs, none of them each other.
+Run the four helpers without prompting. Say "we did that." (Wir haben das gemacht.) Where is the participle in every one of those sentences? (Last.) Translate ich habe gesagt into plain English. ("I said.") Next: the other past tense German has, and why you meet it mostly in books.

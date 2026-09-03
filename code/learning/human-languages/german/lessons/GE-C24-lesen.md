@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C24-lesen
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 740
-chapter: 33
+sequence: 760
+chapter: 35
 type: word
 headword: lesen
 gloss: to read — a verb that first meant "to gather", and the first one in this book whose vowel changes in the du and er forms

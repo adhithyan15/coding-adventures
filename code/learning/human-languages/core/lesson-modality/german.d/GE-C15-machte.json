@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-machte",
     "language": "german",
-    "chapter": 21,
-    "sequence": 410,
+    "chapter": 23,
+    "sequence": 430,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:236c277e0c42264d"
+    "sourceHash": "fnv1a64:808f4c438300ef01"
   },
   "findings": []
 }

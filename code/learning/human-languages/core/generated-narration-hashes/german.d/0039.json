@@ -1,18 +1,17 @@
 {
   "language": "german",
   "chapter": 39,
-  "sourceHash": "fnv1a64:f0241ff09b07abf3",
+  "sourceHash": "fnv1a64:3725108426eed17b",
   "lessonIds": [
-    "GE-C30-auge",
-    "GE-C30-ohr",
-    "GE-C30-mund",
-    "GE-C30-nase"
+    "GE-C28-kaffee",
+    "GE-C28-tee",
+    "GE-C28-milch"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "german/narration/ch39.txt",
   "json": "german/narration/ch39.json",
-  "textHash": "fnv1a64:2d81eedcbf3fa1f0",
-  "jsonHash": "fnv1a64:3086b54d04c214b1",
+  "textHash": "fnv1a64:34cc92140d01df3e",
+  "jsonHash": "fnv1a64:93604c025fa88096",
   "findings": []
 }

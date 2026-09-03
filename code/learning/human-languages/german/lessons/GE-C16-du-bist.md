@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-du-bist
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 470
-chapter: 22
+sequence: 490
+chapter: 24
 type: phrase
 headword: du bist
 gloss: you are — bin plus the -st ending you already know, and the one place sein behaves

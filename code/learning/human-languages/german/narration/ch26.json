@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 26,
-  "title": "Head and Hand",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a9d0b813ea0a99a9",
+  "title": "Three Verbs Under One Roof",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:20f88ab47a64c485",
   "lessons": [
     {
-      "id": "GE-C17-kopf",
-      "sequence": 620,
-      "title": "Der Kopf — “the head”",
-      "headword": "der Kopf",
-      "romanization": "der Kopf",
-      "gloss": "the head — masculine, capitalised, with final pf",
+      "id": "GE-C16-ich-war",
+      "sequence": 540,
+      "title": "ich war — \"I was\"",
+      "headword": "ich war",
+      "romanization": "ich war",
+      "gloss": "I was — the past of sein, and a third stem that shares nothing with the other two",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b42bb6f3adf60df0",
+      "sourceHash": "fnv1a64:6a0b84ce2b4739ee",
       "notice": null,
       "blocks": [
         {
@@ -35,76 +35,54 @@
             },
             {
               "kind": "speech",
-              "text": "Learn the first body part with its article and its characteristic final sound."
+              "text": "You know the simple past is mostly a written tense in German, and that a handful of very common verbs keep it in speech. This is the most common of them."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: der Kopf",
+          "title": "You'll want to know: ich war",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Kopf — the head."
+              "text": "ich war — \"I was.\""
             },
             {
               "kind": "speech",
-              "text": "It is masculine and capitalised because every German noun begins with a capital letter."
+              "text": "Nobody says ich bin gewesen in ordinary speech when ich war will do. This is the past-tense form Germans actually use, in every region, out loud."
+            },
+            {
+              "kind": "speech",
+              "text": "And hear the shape of it. Bin has a b. Ist has an s and a t. War has a w and an r, and no sound in common with either. That is now three completely unalike stems inside one verb."
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: Make the -pf sequence",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "At the end of Kopf, close for p and release directly into f. English has no identical native ending, so practise it slowly:"
+              "text": "w-as-v — German w is English v, so war begins like var."
             },
             {
               "kind": "speech",
-              "text": "Ko-p-f becomes Kopf."
+              "text": "vowel-a-long — the a is long and open, the a of English father."
+            },
+            {
+              "kind": "speech",
+              "text": "r-final — the final r softens towards a vowel rather than curling."
+            },
+            {
+              "kind": "speech",
+              "text": "The result sounds close to English var, and nothing like English war."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: Kopf + Schmerzen",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "A useful phrase is:"
-            },
-            {
-              "kind": "speech",
-              "text": "Ich habe Kopfschmerzen. — I have a headache."
-            },
-            {
-              "kind": "speech",
-              "text": "German compounds simply place nouns together: Kopf (head) + Schmerzen (pains)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart: The old cup",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Kopf originally meant a cup or bowl. It is related to English cup; both were early borrowings of Late Latin cuppa. A container word became slang for the skull and eventually took over the everyday job."
-            },
-            {
-              "kind": "speech",
-              "text": "German’s older inherited head-word did not disappear completely. The next micro-lesson follows it into compounds and compares the same container metaphor in French."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -117,29 +95,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“der Kopf” — release p into f",
+              "instruction": "\"ich war\" — var, long open a",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “der Kopf” — release *p* into *f*]"
+              "source": "[YOU SAY: \"ich war\" — *var*, long open *a*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Ich habe Kopfschmerzen.”",
+              "instruction": "\"ich bin … ich war\" — now and then",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Ich habe Kopfschmerzen.”]"
+              "source": "[YOU SAY: \"ich bin … ich war\" — now and then]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Kopf — cup or bowl”",
+              "instruction": "\"Ich war müde.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Kopf — cup or bowl”]"
+              "source": "[YOU SAY: \"Ich war müde.\"]"
             },
             {
               "kind": "repeat",
@@ -148,12 +126,12 @@
             },
             {
               "kind": "speech",
-              "text": "“Der Kopf — masculine, capitalised.”"
+              "text": "\"ich bin, ich war.\""
             }
           ]
         },
         {
-          "index": 6,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -165,26 +143,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say “the head.” (Der Kopf.) Give its gender. (Masculine.) Why the capital? (It is a noun.) What did Kopf first mean? (A cup or bowl.) Name the related English word. (Cup.) Next: find the inherited word Haupt."
+              "text": "Say \"I was.\" (Ich war.) How does the w sound? (Like English v.) Is this form used in speech or only in writing? (In speech, everywhere — it is one of the survivors.) How many unlike stems does this verb now have? (Three.) Next: the same form for du."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C17-kopf-haupt",
-      "sequence": 630,
-      "title": "Kopf / Haupt — two head-words",
-      "headword": "Kopf / Haupt",
-      "romanization": "Kopf / Haupt",
-      "gloss": "the cup-word and the inherited Germanic head-word",
+      "id": "GE-C16-du-warst",
+      "sequence": 545,
+      "title": "du warst — \"you were\"",
+      "headword": "du warst",
+      "romanization": "du warst",
+      "gloss": "you were — the familiar -st ending again, now on the past stem",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:325b2d76ce82f46b",
+      "sourceHash": "fnv1a64:4e6d67ce1268ec4c",
       "notice": null,
       "blocks": [
         {
@@ -200,73 +178,475 @@
             },
             {
               "kind": "speech",
-              "text": "Kopf began as “cup.” German’s inherited word for “head” is Haupt, a cousin of English head and Latin caput."
+              "text": "You have ich war. The familiar \"you\" wants the ending it always wants."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: du warst",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "du warst — \"you were.\""
+            },
+            {
+              "kind": "speech",
+              "text": "War plus -st, with nothing else moved. The same ending that made bist out of bin, and gehst out of gehen."
+            },
+            {
+              "kind": "speech",
+              "text": "So the past tense of this verb is better behaved than its present: you take one stem, war-, and add ordinary endings to it. Everything difficult about sein happens in the present."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "u-long — du keeps its long rounded oo."
+            },
+            {
+              "kind": "speech",
+              "text": "final-t — and warst ends on the fully released t German always gives you, after the s. Say the s and the t both: varst."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"du warst\" — varst, both consonants released",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"du warst\" — *varst*, both consonants released]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich war … du warst\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich war … du warst\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"du bist … du warst\" — now and then",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"du bist … du warst\" — now and then]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"ich war, du warst.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"you were,\" to a friend. (Du warst.) Which ending is that? (-st.) Which stem is it added to? (War-.) Is the past of this verb regular or irregular in its endings? (Regular — one stem, ordinary endings.) Next: the form for everyone else, and a surprise."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-er-war",
+      "sequence": 550,
+      "title": "er war — \"he was\"",
+      "headword": "er war",
+      "romanization": "er war",
+      "gloss": "he was — the same word as ich war, because the German simple past gives its third person no ending",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b20ee22277fa15e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In the present, ich and er took different words — bin against ist. In the past they take the same one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: er war",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "er war — \"he was.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Not a new form. It is war, unchanged, the very word you learned for ich. And as with ist, it covers sie war (\"she was\"), es war (\"it was\") and das war (\"that was\") as well."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a habit of the German simple past, not a quirk of this verb: the I-form and the he-form are always identical there. Ich sagte and er sagte. Ich hatte and er hatte. The present tense never does this; the past always does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "r-final — two softening r sounds in a row now, one closing er and one closing war. Neither curls."
+            },
+            {
+              "kind": "speech",
+              "text": "vowel-a-long — and the long open a between them carries the phrase."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"er war, sie war, es war\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"er war, sie war, es war\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Das war gut.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Das war gut.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich war … er war\" — the same word twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich war … er war\" — the same word twice]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Das war gut.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"he was.\" (Er war.) How is it different from ich war? (It isn't — same word.) Does the present do that? (No — bin against ist.) Say \"that was good.\" (Das war gut.) Next: the plural."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-wir-waren",
+      "sequence": 555,
+      "title": "wir waren — \"we were\"",
+      "headword": "wir waren",
+      "romanization": "wir waren",
+      "gloss": "we were — the plural past, and the last form of sein you need",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bba8436e2920e837",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One more form, and the verb is finished — present and past, all of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wir waren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wir waren — \"we were.\""
+            },
+            {
+              "kind": "speech",
+              "text": "War plus the plural ending -en, the one wir takes on every verb. And just as sind served three subjects at once, waren covers sie waren (\"they were\") and Sie waren (\"you were,\" politely) with no change."
+            },
+            {
+              "kind": "speech",
+              "text": "The one plural form left over is ihr wart, for a group of friends. It takes the plural-you -t, and it is the rarest form in the whole verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English does the identical thing and nobody notices:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "German",
+                "English"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "singular. German: war. English: was.",
+                "plural. German: waren. English: were."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "An s in the singular, an r in the plural, in both languages, inherited from the same ancestor. English was/were and German war/waren are the same pair of words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"wir waren, sie waren, Sie waren\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"wir waren, sie waren, Sie waren\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich war, du warst, er war, wir waren\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich war, du warst, er war, wir waren\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"war — was; waren — were\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"war — was; waren — were\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"ich war, wir waren.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"we were.\" (Wir waren.) Which English pair matches war/waren? (Was/were.) What is the plural ending on it? (-en.) Say \"they were.\" (Sie waren.) Next: why one verb needed three different stems."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-drei-wurzeln",
+      "sequence": 560,
+      "title": "bin, ist, war — three verbs under one roof",
+      "headword": "bin, ist, war",
+      "romanization": "bin, ist, war",
+      "gloss": "three ancient verbs, one paradigm — why the forms of sein look unrelated",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5df338ada4b591b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say bin, ist, war one after another. They do not look like forms of the same word — and they aren't."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: inherited Haupt",
+          "title": "The word, taken apart",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Three separate Proto-Indo-European verbs each handed German a slice of this paradigm, and each of them left cousins in languages you can check:"
+            },
             {
               "kind": "table",
               "headers": [
-                "language",
-                "inherited form"
+                "forms",
+                "from",
+                "which also gave"
               ],
-              "columns": 2,
+              "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "language: Latin. inherited form: caput.",
-                "language: German. inherited form: Haupt.",
-                "language: English. inherited form: head."
+                "forms: ist, sind, seid, sein. from: h₁es- — \"to be\". which also gave: Latin est, sunt; French est, sont.",
+                "forms: bin, bist. from: bʰuH- — \"to grow, become\". which also gave: English be; Latin fuī.",
+                "forms: war, waren. from: wes- — \"to dwell, remain\". which also gave: English was, were."
               ]
             },
             {
               "kind": "speech",
-              "text": "The initial k becomes h relationship reflects Grimm’s law, the same systematic Germanic sound shift seen in Latin pater beside English father. The later consonants have their own history; use the initial pair as the clear signal."
+              "text": "Read the middle row again. bʰuH- did not mean \"to be\" at all. It meant \"to grow\" — and the reason English says be and German says bin is that a verb about growing got promoted into a verb about existing, in both languages, before either of them existed."
             },
             {
               "kind": "speech",
-              "text": "Haupt survives in compounds and formal vocabulary:"
-            },
-            {
-              "kind": "speech",
-              "text": "Hauptstadt — capital, literally “head city”;"
-            },
-            {
-              "kind": "speech",
-              "text": "Hauptbahnhof — main station;"
-            },
-            {
-              "kind": "speech",
-              "text": "Hauptsache — main thing."
+              "text": "The bottom row is the same story with a different verb: wes- meant \"to dwell, to remain.\" Staying somewhere became having been."
             }
           ]
         },
         {
           "index": 2,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: Two container metaphors",
+          "title": "Why it's said this way",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "language",
-                "everyday word",
-                "older picture"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "language: German. everyday word: Kopf. older picture: cuppa, cup.",
-                "language: French. everyday word: tête. older picture: testa, pot."
-              ]
+              "kind": "speech",
+              "text": "Bin has a cousin further afield than English. Latin fuī, \"I was,\" is from the same bʰuH- — and fuī is the direct source of Spanish fui, \"I was / I went.\""
             },
             {
               "kind": "speech",
-              "text": "Both languages independently promoted a vessel-word to “head,” while keeping the older head-root in words for chiefs, capitals, or main things. The vocabulary sources are both Latin loans, but the metaphor was applied separately: heads look like bowls in many languages."
+              "text": "So German bin and Spanish fui are the same ancient word. One landed in the present tense, the other in the past, and the two languages now use it to mean opposite ends of time."
             }
           ]
         },
@@ -284,38 +664,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Kopf — everyday cup-word”",
+              "instruction": "the three roots — \"ist from h₁es-, bin from bʰuH-, war from wes-\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Kopf — everyday cup-word”]"
+              "source": "[YOU SAY: the three roots — \"ist from \\**h₁es-*, bin from \\**bʰuH-*, war from \\**wes-*\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Haupt — inherited head-word”",
+              "instruction": "\"ist — est — is\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Haupt — inherited head-word”]"
+              "source": "[YOU SAY: \"ist — est — is\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hauptstadt, Hauptbahnhof”",
+              "instruction": "\"war — was; waren — were\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hauptstadt, Hauptbahnhof”]"
+              "source": "[YOU SAY: \"war — was; waren — were\"]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "“Kopf took the job; Haupt stayed in compounds.”"
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousin abroad — \"German bin, Spanish fui, one root\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousin abroad — \"German bin, Spanish fui, one root\"]"
             }
           ]
         },
@@ -332,43 +712,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which word is everyday “head”? (Kopf.) Which inherited word survives in compounds? (Haupt.) Name two compounds. (Hauptstadt, Hauptbahnhof.) What parallel metaphor did French use? (Tête, originally a pot.) Next: the hand."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GE-C17-kopf-haupt-compound-word",
-              "prompt": "Which inherited German head-word survives in compounds such as Hauptstadt?",
-              "assesses": [
-                "GE-LEX-HAUPT-02"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "haupt"
-              ],
-              "feedback": {
-                "correct": "Correct: Haupt is the inherited head-word retained in compounds.",
-                "incorrect": "The inherited word is Haupt, as in Hauptstadt and Hauptbahnhof."
-              }
+              "text": "How many ancient roots is sein built from? (Three.) Which one gives ist — and which Latin word proves it? (h₁es-; Latin est.) What did the root behind bin originally mean? (\"To grow, to become.\") Which Spanish word shares it? (Fui.) Which root gives English was and were? (wes-, the same one as war.) Next: the name for what this verb is doing."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C17-hand",
-      "sequence": 640,
-      "title": "die Hand — \"the hand\"",
-      "headword": "die Hand",
-      "romanization": "die Hand",
-      "gloss": "the hand — the same word as English, and unrelated to Romance manus",
+      "id": "GE-C16-suppletion",
+      "sequence": 565,
+      "title": "Suppletion — filling a verb in from another verb",
+      "headword": "Suppletion",
+      "romanization": "Suppletion",
+      "gloss": "suppletion — when one verb's missing forms are filled in from a different verb",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d601e6106c06768",
+      "sourceHash": "fnv1a64:b1a5e92b6ba74e71",
       "notice": null,
       "blocks": [
         {
@@ -384,41 +747,313 @@
             },
             {
               "kind": "speech",
-              "text": "After the tangle of Kopf and Haupt, here is the easiest word in the chapter — and a useful lesson about when languages don't match."
+              "text": "Three roots, one verb. There is a name for that, and once you have it you will find the same thing in English."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: die Hand",
+          "type": "grammar",
+          "title": "Grammar Lens: what suppletion is",
           "segments": [
             {
               "kind": "speech",
-              "text": "die Hand — the hand. Feminine, and spelled exactly like English."
+              "text": "When one verb's forms are filled in from a different verb, that is suppletion."
+            },
+            {
+              "kind": "speech",
+              "text": "Sein has no forms of its own for \"I am\" or \"I was.\" It borrowed them, long ago, from two other verbs, and then all three grew together into a single paradigm that native speakers use without ever noticing the seam."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: Final devoicing",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "One pronunciation note: the final d is said as a t. German devoices a consonant at the end of a word, so Hand ends like English hunt — but with the open ah of Tag, not hunt's vowel. Add an ending and the d comes back: die Hände (\"the hands\")."
+              "text": "English does the identical thing with its own commonest verbs, and you have never thought twice about it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "present",
+                "past",
+                "where the past came from"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "present: go. past: went. where the past came from: wend, a different verb entirely.",
+                "present: am. past: was. where the past came from: the same wes- that gave German war.",
+                "present: good. past: better. where the past came from: a different word again."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Went belonged to wend — \"to make one's way,\" still alive in wend your way. English took it, gave it to go, and left wend with a regular past of its own. That is precisely what German did to build sein."
+            },
+            {
+              "kind": "speech",
+              "text": "Suppletion is not a German oddity, and it is not rare. It is simply what languages do to the words they use most — and every language you have looked at in this book has done it to its verb for \"to be.\""
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: It is the English word",
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the definition — \"one verb's forms, filled in from another verb\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the definition — \"one verb's forms, filled in from another verb\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"go, went\" — English doing it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"go, went\" — English doing it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bin, war\" — German doing it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bin, war\" — German doing it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is suppletion? (One verb's forms filled in from another verb.) Name the English example. (Go / went.) Which verb did went actually belong to? (Wend.) How many verbs are hiding inside sein? (Three.) Next: why this always happens to the commonest words."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-haeufig-unregelmaessig",
+      "sequence": 570,
+      "title": "Why \"to be\" is the messiest word in every language",
+      "headword": "warum sein unregelmäßig ist",
+      "romanization": "warum sein unregelmäßig ist",
+      "gloss": "why the most-used words are the most irregular — a rule, not bad luck",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6389264ccad9f73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every language you have ever met has a broken verb for \"to be.\" That is too consistent to be an accident, and it isn't one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: frequency protects irregularity",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hand is Germanic handuz, and English inherited it directly. Same word, same meaning, two thousand years apart. German and English are close relatives, and body parts are where you feel it most:"
+              "text": "The most-used words are the most irregular."
             },
+            {
+              "kind": "speech",
+              "text": "Regularity spreads by analogy. You meet an unfamiliar verb, you do not know its forms, so you guess them from the pattern — the -e, -st, -t, -en machine you learned early. Guess often enough and the guess becomes the form: the odd old shape is sanded down and the verb joins the regular crowd."
+            },
+            {
+              "kind": "speech",
+              "text": "But you never have to guess at \"to be.\" You hear it a hundred times a day, from the day you start speaking. Every one of those hearings reinforces the strange shape faster than analogy can wear it away."
+            },
+            {
+              "kind": "speech",
+              "text": "Rare words get regularised. Common words are protected fossils."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This also tells you where the irregularity will sit inside a verb, and sein proves it. Its present tense — the part you say constantly — is the wreckage: three roots, five unlike forms. Its past tense, which you say far less often, has quietly become well-behaved: one stem war-, ordinary endings, warst built exactly like bist was not."
+            },
+            {
+              "kind": "speech",
+              "text": "So the mess is not spread evenly. It clusters where the traffic is."
+            },
+            {
+              "kind": "speech",
+              "text": "The practical consequence is a comfort. There is no long list of verbs this strange, because a verb has to be this common to survive being this strange — and there are only a handful of words in any language that common."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rule — \"the most-used words are the most irregular\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rule — \"the most-used words are the most irregular\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why — \"you never have to guess at them\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why — \"you never have to guess at them\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bin, bist, ist\" against \"war, warst, waren\" — mess, then order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bin, bist, ist\" against \"war, warst, waren\" — mess, then order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "State the rule. (The most-used words are the most irregular.) What spreads regularity? (Analogy — guessing from the pattern.) Why does analogy never reach \"to be\"? (You never have to guess at it.) Which half of sein is the tidy half? (The past — one stem, ordinary endings.) Next: the chapter together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-war-practice",
+      "sequence": 575,
+      "title": "Practice — was, were, and why",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — the past of sein, and the three roots that explain the whole verb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:417cbfc39e98173c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. Present and past, side by side, and then the account of how one verb ended up like this."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the past, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Six forms, one stem, four endings, no surprises. Said in order:"
+            },
+            {
+              "kind": "speech",
+              "text": "ich war, du warst, er war — and the first and third are the same word, which the present tense would never allow;"
+            },
+            {
+              "kind": "speech",
+              "text": "wir waren, ihr wart, sie waren."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare that with the present, where five different shapes came from three different verbs. The past of sein is the part of the paradigm that behaved."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
             {
               "kind": "table",
               "headers": [
@@ -426,57 +1061,22 @@
                 "English"
               ],
               "columns": 2,
-              "rowCount": 5,
-              "utterances": [
-                "Hand means hand.",
-                "Arm means arm.",
-                "Finger means finger.",
-                "Fuß means foot.",
-                "Herz means heart."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: Where the family tree stops",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Now the interesting part. Every Romance language builds \"hand\" on Latin manus:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
               "rowCount": 4,
               "utterances": [
-                "French, la main.",
-                "Italian, la mano.",
-                "Portuguese, a mão.",
-                "Spanish, la mano."
+                "Wo warst du? means Where were you?",
+                "Ich war in Berlin. means I was in Berlin.",
+                "Wie war es? means How was it?",
+                "Es war gut. Aber ich bin müde. means It was good. But I am tired."
               ]
             },
             {
               "kind": "speech",
-              "text": "And Germanic — German, English — has handuz, which is not related to manus at all. The two families simply have different words here."
-            },
-            {
-              "kind": "speech",
-              "text": "That is worth noticing, because these connections keep turning up, and it can start to feel as though everything must connect. It doesn't. Indo-European languages share a great deal, and then diverge, and \"hand\" is one of the places where they diverged early and completely."
-            },
-            {
-              "kind": "speech",
-              "text": "The Latin word did reach German — but only as borrowed vocabulary: Manuskript, Maniküre, manuell. Learned imports, sitting beside the native word without displacing it."
+              "text": "Wo (\"where\") and in are read straight off the English here; neither is asked of you yet."
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -489,43 +1089,52 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"die Hand\" — final d said as t",
+              "instruction": "\"ich war, du warst, er war, wir waren, ihr wart, sie waren\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"die Hand\" — final **d** said as **t**]"
+              "source": "[YOU SAY: \"ich war, du warst, er war, wir waren, ihr wart, sie waren\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the plural, and hear the d return — \"die Hände\"",
+              "instruction": "the pairs — \"ich bin / ich war\", \"wir sind / wir waren\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the plural, and hear the *d* return — \"die Hän**d**e\"]"
+              "source": "[YOU SAY: the pairs — \"ich bin / ich war\", \"wir sind / wir waren\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the Germanic set — \"Hand, Arm, Finger, Fuß, Herz\"",
+              "instruction": "the three roots — \"ist, bin, war — three verbs\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the Germanic set — \"Hand, Arm, Finger, Fuß, Herz\"]"
+              "source": "[YOU SAY: the three roots — \"ist, bin, war — three verbs\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the gap — \"main, mano, mão … but Hand\"",
+              "instruction": "the whole exchange, both voices",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the gap — \"*main*, *mano*, *mão* … but **Hand**\"]"
+              "source": "[YOU SAY: the whole exchange, both voices]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Wie war es? Es war gut.\""
             }
           ]
         },
         {
-          "index": 6,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -537,7 +1146,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the hand.\" (Die Hand — feminine.) How is the final d pronounced, and why? (As a t — German devoices final consonants; the d returns in Hände.) Is Hand related to French main? (No — Germanic handuz against Latin manus; the families differ here.) How did manus reach German anyway? (As borrowed learned words — Manuskript, manuell.) Next: the rest of the body."
+              "text": "Run the six past forms. Which two are identical? (Ich war and er war.) Name the three roots this verb is built from, by their German forms. (Ist, bin, war.) What is the technical name for that? (Suppletion.) Why has nothing tidied this verb up? (It is too common — you never guess at it, so analogy never reaches it.) Next: the past tense that is built on this verb rather than out of it."
             }
           ]
         }

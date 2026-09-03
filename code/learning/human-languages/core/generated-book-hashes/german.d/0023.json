@@ -1,15 +1,18 @@
 {
   "language": "german",
   "chapter": 23,
-  "sourceHash": "fnv1a64:0f330808cc4d2b21",
+  "sourceHash": "fnv1a64:437e8e5b9604fb0f",
   "lessonIds": [
-    "GE-C14-alt",
-    "GE-C14-jahr",
-    "GE-C14-jahr-alt",
-    "GE-C14-wie-alt-bist-du",
-    "GE-C14-alter",
-    "GE-C14-alter-sein-haben",
-    "GE-C14-alter-practice"
+    "GE-C15-praeteritum",
+    "GE-C15-sagte",
+    "GE-C15-machte",
+    "GE-C15-dentales-praeteritum",
+    "GE-C15-hatte",
+    "GE-C15-register",
+    "GE-C15-konnte",
+    "GE-C15-hochfrequent",
+    "GE-C15-praeteritum-map",
+    "GE-C15-praeteritum-practice"
   ],
-  "tex": "german/book/chapters/ch23-alter.tex"
+  "tex": "german/book/chapters/ch23-praeteritum.tex"
 }

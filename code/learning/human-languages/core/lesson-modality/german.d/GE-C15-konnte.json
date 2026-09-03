@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-konnte",
     "language": "german",
-    "chapter": 21,
-    "sequence": 430,
+    "chapter": 23,
+    "sequence": 450,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d92449d477adbaf9"
+    "sourceHash": "fnv1a64:aeea8c8790950ac5"
   },
   "findings": []
 }

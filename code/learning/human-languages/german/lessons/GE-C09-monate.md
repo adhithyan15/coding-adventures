@@ -1,68 +1,82 @@
 ---
+schema_version: 2
 id: GE-C09-monate
+spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 255
 chapter: 13
 type: word
-headword: die Monate
-gloss: the months — Latin loans, like the clock-word Uhr
-concept_tag: GE-MONTHS
-prerequisites: [GE-C06-zahlen-6-10, GE-C08-uhr]
-sounds: [vowel-ae, ch-none]
-roots: [latin-months]
-etymology_hook: "German's months are Latin loans (Januar←Janus, März←Mars, like mardi!) — the same reach-for-Rome that gave it Uhr, while its numbers and seasons stay native"
-est_minutes: 4
-reviews_of: [GE-C06-zahlen-6-10, GE-C07-wochentage-1, GE-C08-uhr]
+headword: der Monat
+gloss: the month — and the word itself is the moon, before Rome supplied the names to put in it
+concept_tag: GE-MONTH
+prerequisites: [GE-C07-mond, GE-C06-monate-latein]
+sounds: [long-o, final-t]
+roots: [germanic-menoth]
+etymology_hook: "Monat is der Mond with a different ending, exactly as English month is moon — the unit is the moon's, in both languages, however the twelve names were acquired"
+duration:
+  max_seconds: 165
+requires:
+  knowledge: [GE-LEX-MOND-01, GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-LEX-DER-DIE-DAS-02]
+introduces:
+  knowledge: [GE-LEX-MONAT-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-MONAT-01, GE-LEX-MOND-01, GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-LEX-DER-DIE-DAS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C07-mond, GE-C06-monate-latein]
 ---
 
-# die Monate — Rome's calendar in German
+# der Monat — "the month"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MOND-01, GE-GRAMMAR-NATIVE-VS-LOAN-01] -->
 
-[PAUSE 2s] Here's the German pattern again. Its numbers are homegrown (*eins,
-zwei*), its weekday-gods are Germanic (*Donnerstag*). But its **months** — like its
-clock-word **Uhr** — are **borrowed straight from Latin**. Time-reckoning, again,
-came to the German world from Rome.
+[PAUSE 2s] Twelve names are coming, and every one of them is Latin. The word
+that holds them is not.
 
-## The months, taken apart
+## You'll want to know: der Monat
+<!-- hl-knowledge: introduces=[GE-LEX-MONAT-01]; assesses=[GE-LEX-MOND-01, GE-LEX-DER-DIE-DAS-02] -->
 
-| German | ← Latin | who / what |
-|---|---|---|
-| **Januar** | *Januarius* | **Janus**, god of doors & beginnings |
-| **Februar** | *Februarius* | the *Februa* purification festival |
-| **März** | *Martius* | **Mars**, the war-god — the same Mars as English *Tuesday* / French *mardi* |
-| **April** | *Aprilis* | perhaps *aperire* "to open" |
-| **Mai** | *Maius* | **Maia**, goddess of growth |
-| **Juni** | *Junius* | **Juno**, queen of the gods |
-| **Juli** | *Julius* | **Julius Caesar** |
-| **August** | *Augustus* | the emperor **Augustus** |
-| **September** | *september* | "**7th**" (*septem*) |
-| **Oktober** | *october* | "**8th**" (*octo*) |
-| **November** | *november* | "**9th**" (*novem*) |
-| **Dezember** | *december* | "**10th**" (*decem*) |
+> **der Monat** — "the month."
 
-Two familiar payoffs:
+Say *Mond* and then *Monat* and you have heard the whole etymology. They are the
+same word: a month is a **moon**, one turn of it. English does this too —
+*moon* and *month* — and neither language got the idea from the other, because
+both inherited it.
 
-- **März = Mars.** German borrowed the Roman war-god's month whole — the same god
-  behind English *March* and, as *Tuesday* (Tiw = Mars), behind German's own
-  *Dienstag*. The god came in twice, once by name, once by translation.
-- **September–Dezember = 7–10.** Even in German, these keep the Latin numbers
-  *septem…decem* (the Roman year began in March). So German's *own* numbers are
-  *sieben, acht, neun, zehn* — but its *month* names count in Latin.
+The plural is *die Monate*, "the months," and it is the form the chapter title
+uses.
 
-Three layers of the German calendar, three origins: **numbers** native, **weekdays**
-Germanic gods, **months** (and the clock, *Uhr*) Latin.
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-LEX-MONAT-01] -->
+
+Here is the shape of the next two chapters, in one sentence.
+
+The **unit** is German's own, inherited, older than any calendar: a moon.
+The **names** for the twelve are borrowed whole from Rome, along with the
+calendar that ordered them.
+
+You met that division in the numbers chapter, where the counting words stayed
+home and the month names came in. This is where you meet the month names.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MONAT-01, GE-LEX-MOND-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: the twelve — "Januar, Februar, März … November, Dezember"]
-- [YOU SAY: "März = Mars = Dienstag's god (Tiw)"]
-- [YOU SAY: "September = 7, Dezember = 10 — Latin numbers in German months"]
+- [YOU SAY: the pair — "der Mond, der Monat"]
+- [YOU SAY: the English pair — "moon, month"]
+- [YOU SAY: singular and plural — "der Monat, die Monate"]
+
+[REPEAT x2] "der Mond, der Monat."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MONAT-01, GE-GRAMMAR-NATIVE-VS-LOAN-01] -->
 
-[PAUSE 3s] Are German month names native or borrowed, and like which other German
-word? (Borrowed from **Latin** — like the clock-word *Uhr*.) What links *März* to
-*Dienstag*? (The war-god **Mars** = Germanic *Tiw*.) Why is *Dezember* Latin for
-"ten"? (The Roman year began in March.) Next: the **seasons** — where German goes
-native again.
+[PAUSE 3s] Say "the month." (**Der Monat**.) What German word is hiding in it?
+(***Mond***, the moon.) Is *Monat* borrowed? (**No** — it is inherited.) And the
+twelve names about to arrive? (**Latin**, all of them.) Next: the first one.

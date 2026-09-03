@@ -1,12 +1,9 @@
 {
   "language": "german",
   "chapter": 34,
-  "sourceHash": "fnv1a64:fda64e706684e635",
+  "sourceHash": "fnv1a64:d1ece36d474ed38b",
   "lessonIds": [
-    "GE-C25-nehmen",
-    "GE-C25-fragen",
-    "GE-C25-helfen",
-    "GE-C25-moegen-lieben"
+    "GE-C23-gruen-gelb"
   ],
-  "tex": "german/book/chapters/ch34-doing-verbs.tex"
+  "tex": "german/book/chapters/ch34-green-and-yellow.tex"
 }

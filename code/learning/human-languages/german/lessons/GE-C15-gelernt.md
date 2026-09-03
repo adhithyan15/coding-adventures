@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-gelernt
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 335
-chapter: 19
+sequence: 355
+chapter: 21
 type: word
 headword: gelernt
 gloss: learned — the wrap on lernen, and the sentence you can finally say about yourself

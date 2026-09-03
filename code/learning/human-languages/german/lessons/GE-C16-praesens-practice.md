@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-praesens-practice
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 500
-chapter: 22
+sequence: 520
+chapter: 24
 type: practice
 headword: (practice)
 gloss: chapter payoff — the six forms of sein side by side for the first time, and a conversation that uses them

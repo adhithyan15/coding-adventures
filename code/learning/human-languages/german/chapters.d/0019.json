@@ -1,24 +1,16 @@
 {
   "chapter": 19,
-  "title": "The Wrapped Participle",
-  "label": "ch:ge-partizip",
-  "canDo": "I can turn any regular German verb I know into its past participle, and hear that the marking arrives at both ends of the word at once.",
+  "title": "Colours",
+  "label": "ch:colours",
+  "canDo": "I can name basic colours in German and use them to describe something.",
   "spineNodes": [
-    "SPINE-TALK-ABOUT-PAST"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C15-partizip-practice",
+    "lesson": "GE-C13-rot-blau",
     "kind": "task",
-    "summary": "The weak participle is a circumfix, so it is met as one concrete word first — gesagt — and only then as the recipe behind it. Three more verbs run through that recipe one at a time, the ge- gets its own lesson because it is the half English threw away, and the infinitive-to-participle table appears only at the end, where it recaps six lessons instead of introducing four words.",
-    "assesses": [
-      "GE-LEX-SAGEN-01",
-      "GE-LEX-GESAGT-01",
-      "GE-GRAMMAR-PARTIZIP-GE-T-01",
-      "GE-LEX-GEMACHT-01",
-      "GE-LEX-GELERNT-01",
-      "GE-LEX-GEWOHNT-01",
-      "GE-ETYMON-GE-PRAEFIX-01"
-    ],
-    "note": "Chapter 15 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces, because the practice lesson is where the four participles are first allowed to stand together: the table there is a recap, which is the only condition under which it may be printed at all."
+    "summary": "Complete GE-C13-rot-blau, the canonical closing checkpoint, and demonstrate the chapter promise: name basic colours in German and use them to describe something.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
   }
 }

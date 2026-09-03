@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C29-familie
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 930
-chapter: 38
+sequence: 950
+chapter: 40
 type: word
 headword: die Familie
 gloss: family — the whole group the Eltern and Geschwister already named the members of, and this chapter's one Latin loan beside two native words

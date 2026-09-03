@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C09-frueh",
+    "language": "german",
+    "chapter": 15,
+    "sequence": 274,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1dea2373aa9c433"
+  },
+  "findings": []
+}

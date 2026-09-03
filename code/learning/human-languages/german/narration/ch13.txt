@@ -1,74 +1,306 @@
-German, chapter 13: Months and Seasons.
-2 lessons. All 2 can be done entirely by ear.
+German, chapter 13: The Roman Calendar.
+9 lessons. All 9 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-die Monate — Rome's calendar in German.
-
-Warm-up.
-[pause 2 seconds]
-Here's the German pattern again. Its numbers are homegrown (eins, zwei), its weekday-gods are Germanic (Donnerstag). But its months — like its clock-word Uhr — are borrowed straight from Latin. Time-reckoning, again, came to the German world from Rome.
-
-The months, taken apart.
-[a table of 12 rows, read aloud]
-German: Januar. from Latin: Januarius. who / what: Janus, god of doors & beginnings.
-German: Februar. from Latin: Februarius. who / what: the Februa purification festival.
-German: März. from Latin: Martius. who / what: Mars, the war-god — the same Mars as English Tuesday / French mardi.
-German: April. from Latin: Aprilis. who / what: perhaps aperire "to open".
-German: Mai. from Latin: Maius. who / what: Maia, goddess of growth.
-German: Juni. from Latin: Junius. who / what: Juno, queen of the gods.
-German: Juli. from Latin: Julius. who / what: Julius Caesar.
-German: August. from Latin: Augustus. who / what: the emperor Augustus.
-German: September. from Latin: september. who / what: "7th" (septem).
-German: Oktober. from Latin: october. who / what: "8th" (octo).
-German: November. from Latin: november. who / what: "9th" (novem).
-German: Dezember. from Latin: december. who / what: "10th" (decem).
-Two familiar payoffs:
-März = Mars. German borrowed the Roman war-god's month whole — the same god behind English March and, as Tuesday (Tiw = Mars), behind German's own Dienstag. The god came in twice, once by name, once by translation.
-September–Dezember = 7–10. Even in German, these keep the Latin numbers septem…decem (the Roman year began in March). So German's own numbers are sieben, acht, neun, zehn — but its month names count in Latin.
-Three layers of the German calendar, three origins: numbers native, weekdays Germanic gods, months (and the clock, Uhr) Latin.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the twelve — "Januar, Februar, März … November, Dezember"]
-[pause 8 seconds for the answer]
-[your turn — say: "März = Mars = Dienstag's god (Tiw)"]
-[pause 8 seconds for the answer]
-[your turn — say: "September = 7, Dezember = 10 — Latin numbers in German months"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Are German month names native or borrowed, and like which other German word? (Borrowed from Latin — like the clock-word Uhr.) What links März to Dienstag? (The war-god Mars = Germanic Tiw.) Why is Dezember Latin for "ten"? (The Roman year began in March.) Next: the seasons — where German goes native again.
-
-
-Lesson 2 of 2.
-die Jahreszeiten — the seasons go native.
+Lesson 1 of 9.
+der Monat — "the month".
 
 Warm-up.
 [pause 2 seconds]
-The months were Latin. The seasons swing back to native German — and one of them, Herbst, is the same word as English harvest. The word for "season" itself is transparent: Jahres-zeit = "year-time."
+Twelve names are coming, and every one of them is Latin. The word that holds them is not.
 
-The four seasons, taken apart.
-[a table of 4 rows, read aloud]
-German: der Frühling (spring). =: früh "early" + -ling. English twin: early-season (from früh, cousin of English early).
-German: der Sommer (summer). =: native Germanic. English twin: summer.
-German: der Herbst (autumn). =: native Germanic. English twin: harvest.
-German: der Winter (winter). =: native Germanic. English twin: winter.
-All four are homegrown Germanic, and three are the plain twins of English summer, winter, and — the surprise — harvest:
-Frühling is built from früh ("early") — literally the "early-season," the year's first. (German also uses Lenz, an old poetic word for spring.)
-Herbst corresponds to harvest. They're the same Germanic word: the reaping season. English kept harvest but narrowed it to the act of gathering and reached for Latin-derived autumn for the season; German kept the old word for the season itself. Two languages, one word, split in meaning.
-So the German year splits cleanly: Latin for the months (like Uhr, the clock), native Germanic for the seasons (like the numbers and Mittag/Mitternacht).
+You'll want to know: der Monat.
+der Monat — "the month."
+Say Mond and then Monat and you have heard the whole etymology. They are the same word: a month is a moon, one turn of it. English does this too — moon and month — and neither language got the idea from the other, because both inherited it.
+The plural is die Monate, "the months," and it is the form the chapter title uses.
+
+Why it's said this way.
+Here is the shape of the next two chapters, in one sentence.
+The unit is German's own, inherited, older than any calendar: a moon. The names for the twelve are borrowed whole from Rome, along with the calendar that ordered them.
+You met that division in the numbers chapter, where the counting words stayed home and the month names came in. This is where you meet the month names.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "der Frühling, der Sommer, der Herbst, der Winter"]
+[your turn — say: the pair — "der Mond, der Monat"]
 [pause 8 seconds for the answer]
-[your turn — say: the twins — "Sommer/summer, Winter/winter, Herbst/harvest"]
+[your turn — say: the English pair — "moon, month"]
 [pause 8 seconds for the answer]
-[your turn — say: "Frühling = früh (early) + -ling — the early season"]
+[your turn — say: singular and plural — "der Monat, die Monate"]
 [pause 8 seconds for the answer]
+[repeat that twice]
+"der Mond, der Monat."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Are German seasons native or Latin, unlike the months? (Native Germanic.) What English word is Herbst the twin of, and what happened to it? (Harvest — English narrowed it to the reaping act and took autumn from Latin for the season.) What is Frühling built from? (früh "early" — the early season.) Next chapter builds on this toward family and food.
+Say "the month." (Der Monat.) What German word is hiding in it? (Mond, the moon.) Is Monat borrowed? (No — it is inherited.) And the twelve names about to arrive? (Latin, all of them.) Next: the first one.
+
+
+Lesson 2 of 9.
+der Januar — "January".
+
+Warm-up.
+[pause 2 seconds]
+The first of the twelve borrowed names, and it is a doorway.
+
+You'll want to know: der Januar.
+der Januar — "January."
+Latin Januarius, the month of Janus — the Roman god of doors, gateways and beginnings, shown with two faces because a doorway looks both ways at once.
+A first month is exactly that: the year behind you and the year ahead, seen from the same spot.
+
+Sounds you'll need.
+j-as-y — German j is English y. Januar begins ya-, not ja-.
+vowel-a-long — and the a that follows is long and open.
+YA-nu-ar, with the weight on the first syllable.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der Januar" — YA-nu-ar]
+[pause 8 seconds for the answer]
+[your turn — say: the god in it — "Janus"]
+[pause 8 seconds for the answer]
+[your turn — say: what a first month is — "a door that looks both ways"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"der Januar."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "January." (Der Januar.) How does the j sound? (Like an English y.) Which god? (Janus, of doorways.) Why two faces? (A doorway looks both ways.) Next: a month named for a washing.
+
+
+Lesson 3 of 9.
+der Februar — "February".
+
+Warm-up.
+[pause 2 seconds]
+The second month, and the odd one out among the twelve.
+
+You'll want to know: der Februar.
+der Februar — "February."
+Latin Februarius, from the Februa — a purification festival the Romans held at that point in the year, a washing-clean before the new season.
+Every other month you will meet is named for a god, an emperor, or a number. This one is named for something people did.
+
+Sounds you'll need.
+vowel-e-german — the e of Fe- is a clear short e, not the English feb's flat vowel.
+r-final — and the ending is the same soft closing r you met on Uhr.
+FAY-bru-ar, four beats, weight on the first.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der Februar" — FAY-bru-ar]
+[pause 8 seconds for the answer]
+[your turn — say: the first two in order — "Januar, Februar"]
+[pause 8 seconds for the answer]
+[your turn — say: what it is named for — "a washing-clean"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Januar, Februar."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "February." (Der Februar.) Is it named for a god? (No — for a festival, the Februa.) Say the first two months together. (Januar, Februar.) Next: a god you have already met, arriving a second time.
+
+
+Lesson 4 of 9.
+der März — "March".
+
+Warm-up.
+[pause 2 seconds]
+You already know something about this month from the numbers chapter, though not its name.
+
+You'll want to know: der März.
+der März — "March."
+Latin Martius, the month of Mars, the war-god. Campaigning weather began here, and so did the Roman year.
+That second fact is the one you have already been given: the Roman year opened here. Four of the twelve names still count from this month, and you will meet them in the next chapter.
+
+Sounds you'll need.
+vowel-ae — ä is a bright open e, close to English bed. Not the ar of English March.
+tz-affricate — and -rz ends on a ts, so the word closes merts.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der März" — merts]
+[pause 8 seconds for the answer]
+[your turn — say: the god — "Mars"]
+[pause 8 seconds for the answer]
+[your turn — say: three in order — "Januar, Februar, März"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"der März."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "March." (Der März.) How does -rz end? (On a ts.) Which god? (Mars.) Where did the Roman year begin? (Here, in March.) Next: the same god, under a name you already own.
+
+
+Lesson 5 of 9.
+März and Dienstag — one god, two doors into German — borrowed by name in März, translated by name in Dienstag.
+
+Warm-up.
+[pause 2 seconds]
+Two German words you now own. They come from the same god, and neither of them looks like the other.
+
+The word, taken apart.
+Mars entered German twice, and by two different routes.
+[a table of 2 rows, read aloud]
+the route: his name, borrowed whole. what German got: Latin Martius. result: März.
+the route: his job, given to Tiw. what German got: Germanic Tiwaz. result: Dienstag.
+When the Romans met the Germanic gods, they matched them up by what they did: the war-god here answers the war-god there. Tuesday was Mars's day, so it became Tiw's day, and it still is — in German Dienstag, in English Tuesday.
+The month got no such treatment. Nobody translated Martius; German took it as it stood.
+
+Why it's said this way.
+The difference is worth holding onto, because it is the whole chapter in one example.
+The week was a thing Germanic speakers already had, so when the Roman scheme arrived they mapped it onto their own gods and kept their own words. The calendar of twelve months was not; it came in as an administrative object, name-plates and all, and German took the name-plates.
+Same god, same century, two outcomes — decided by whether German already had something to put in the slot.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "März, Dienstag"]
+[pause 8 seconds for the answer]
+[your turn — say: what each did with the god — "took his name; took his job"]
+[pause 8 seconds for the answer]
+[your turn — say: the reason — "German had a week already; it had no twelve months"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"März and Dienstag — one god, two doors."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two German words carry Mars? (März and Dienstag.) Which took his name? (März.) Which took his job? (Dienstag, through Tiw.) Why did the week get translated and the calendar not? (German already had a week.) Next: a month that may be named for an opening.
+
+
+Lesson 6 of 9.
+der April — "April".
+
+Warm-up.
+[pause 2 seconds]
+Three months in and every name has had an owner. This one does not.
+
+You'll want to know: der April.
+der April — "April."
+Latin Aprilis. Where that came from is genuinely unsettled — the Romans of the classical period were already guessing. The oldest and best guess is aperire, "to open," for the month when things do.
+Say it aloud and notice where the weight sits: German puts it on the second syllable, a-PRIL, where English puts it on the first.
+
+Sounds you'll need.
+r-uvular — the r in -pril is made at the back of the throat, closer to a soft scrape than an English roll.
+i-short — and the i is short and bright: pril, not preel.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der April" — a-PRIL, weight at the back]
+[pause 8 seconds for the answer]
+[your turn — say: the guess — "aperire, to open"]
+[pause 8 seconds for the answer]
+[your turn — say: four in order — "Januar, Februar, März, April"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"der April."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "April." (Der April.) Which syllable carries the weight? (The second — a-PRIL.) Who is it named for? (Nobody knows — perhaps aperire, "to open".) Next: a goddess of growing things.
+
+
+Lesson 7 of 9.
+der Mai — "May".
+
+Warm-up.
+[pause 2 seconds]
+One syllable, and its vowel is one you were given for a number.
+
+You'll want to know: der Mai.
+der Mai — "May."
+Latin Maius, the month of Maia — a goddess of growth and increase, which is a reasonable thing to call the month when everything is putting on size.
+
+Sounds you'll need.
+ai-as-eye — ai is the vowel of English eye.
+You already have that vowel under its commoner German spelling, ei, from the numbers. German writes the same sound two ways, and Mai is the rarer one: ei and ai both say eye.
+So Mai rhymes with English my.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der Mai" — rhymes with "my"]
+[pause 8 seconds for the answer]
+[your turn — say: the goddess — "Maia, of growing things"]
+[pause 8 seconds for the answer]
+[your turn — say: five in order — "Januar, Februar, März, April, Mai"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"der Mai."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "May." (Der Mai.) What does ai sound like? (English eye.) Which other spelling gives that sound? (Ei.) Which goddess? (Maia.) Next: the queen of the gods.
+
+
+Lesson 8 of 9.
+der Juni — "June".
+
+Warm-up.
+[pause 2 seconds]
+Its first letter behaves exactly as the first month's did.
+
+You'll want to know: der Juni.
+der Juni — "June."
+Latin Junius, the month of Juno — Jupiter's queen, and the goddess Romans married under, which is why June weddings are a Roman habit that never stopped.
+
+Sounds you'll need.
+j-as-y — the same j as Januar: English y. YOO-ni, never joon.
+ie-long-ee — and the final i is a long ee.
+Spoken German often lengthens this one to Juno when a date has to be clear over the phone, because the month after it sounds far too close. That is a real habit, not something you have to learn now.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der Juni" — YOO-nee]
+[pause 8 seconds for the answer]
+[your turn — say: the goddess — "Juno"]
+[pause 8 seconds for the answer]
+[your turn — say: six in order — "Januar, Februar, März, April, Mai, Juni"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"der Juni."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "June." (Der Juni.) How does the j sound? (Like English y.) Which other month opens the same way? (Januar.) Which goddess? (Juno.) Next: all six, said through.
+
+
+Lesson 9 of 9.
+Practice — half a Roman year.
+
+Warm-up.
+[pause 2 seconds]
+No new words. Six names and the container they sit in.
+
+Grammar Lens: what German owns and what it bought.
+[a table of 2 rows, read aloud]
+what: the unit. German: der Monat. where from: inherited — it is der Mond.
+what: the names. German: Januar … Juni. where from: Latin, taken whole.
+One line, and it is the chapter. German had a moon and needed no help naming the span. It had no twelve-month calendar, so when one arrived it took the labels that came with it.
+
+Why it's said this way.
+Notice what the six names are for, because they are not one kind of thing:
+Januar — a god, Janus of doorways.
+Februar — not a god at all, but a festival, the Februa.
+März — a god, Mars, who is also in Dienstag under another name.
+April — unknown, and unknown already in Rome.
+Mai — a goddess, Maia of growth.
+Juni — a goddess, Juno, queen of the gods.
+Four deities, one ritual, one shrug. A calendar is not a designed object; it is a pile of things people happened to call months, kept because nobody stopped.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all six in order — "Januar, Februar, März, April, Mai, Juni"]
+[pause 8 seconds for the answer]
+[your turn — say: the two that begin with an English y — "Januar, Juni"]
+[pause 8 seconds for the answer]
+[your turn — say: the one that ends on a ts — "März"]
+[pause 8 seconds for the answer]
+[your turn — say: the unit and its cousin — "der Monat, der Mond"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Januar, Februar, März, April, Mai, Juni."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say the first six months. (Januar, Februar, März, April, Mai, Juni.) Which word for the span is German's own? (Der Monat, from Mond.) Which month shares a god with Dienstag? (März.) Which one is named for a festival? (Februar.) Which one nobody can explain? (April.)

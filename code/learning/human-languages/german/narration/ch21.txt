@@ -1,328 +1,271 @@
-German, chapter 21: The Simple Past.
-10 lessons. All 10 can be done entirely by ear.
+German, chapter 21: The Wrapped Participle.
+8 lessons. All 8 can be done entirely by ear.
 
 
-Lesson 1 of 10.
--te — the one-word past.
-
-Warm-up.
-[pause 2 seconds]
-German has a second past tense. It needs no helper verb and no participle — just a stem and an ending.
-
-Grammar Lens: add -te to the stem.
-Take a regular verb's stem and put -te on it.
-The tense that ending builds is called the Präteritum. Where the Perfekt spends two words and a bracket, this one spends a single word: sag- plus -te and the sentence is done.
-The two tenses report the same events. That is worth saying plainly, because a learner reasonably expects a language with two pasts to be drawing a distinction with them, the way English draws one between I said and I have said. German draws none. What separates its two pasts is something else entirely, and it takes a few more lessons to arrive at.
-The -te itself has a history reaching well beyond German, and that comes first.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the recipe — "stem plus te"]
-[pause 8 seconds for the answer]
-[your turn — say: the name — "das Präteritum"]
-[pause 8 seconds for the answer]
-[your turn — say: how many words it takes — "one"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"stem plus -te."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which ending builds the Präteritum on a regular verb? (-te.) How many words does it need? (One.) How many does the Perfekt need? (Two.) Do the two tenses mean different things? (No.) Next: the first verb through the new ending.
-
-
-Lesson 2 of 10.
-ich sagte — "I said," in one word.
+Lesson 1 of 8.
+sagen — "to say".
 
 Warm-up.
 [pause 2 seconds]
-Run the new ending on the verb this chapter started from.
+One more weak verb before the past tense starts, and it is the verb the whole chapter will be built on.
 
-You'll want to know: ich sagte.
-ich sagte — "I said."
-Stem sag-, ending -te. Two syllables and it is finished, where the Perfekt took three words to say the same thing:
-ich sagte, ich habe gesagt.
-Both are "I said." Neither is more past than the other, neither is more polite, and neither is wrong. Hold that in mind while the differences that do exist arrive.
+You'll want to know: sagen.
+sagen — "to say."
+Two syllables, ZAH-gen. It behaves like machen and lernen in every respect: chop the -en and you have the stem sag-, and onto that stem go the endings you already own — ich sage, du sagst.
+Nothing new is happening in those endings. Sagen is here so that when the past tense arrives in the next lesson, the only unfamiliar thing in it is the past.
 
 Sounds you'll need.
-long-a — the stem vowel is the same long a as in sagen; the new ending does not shorten it.
-final-te — the -te is a full unstressed syllable, tuh, not a bare t. Hear the difference against the participle: ge-SAHKT has one syllable at the end, SAHK-tuh has two.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ich sagte"]
-[pause 8 seconds for the answer]
-[your turn — say: the pair back to back — "ich sagte … ich habe gesagt"]
-[pause 8 seconds for the answer]
-[your turn — say: the two endings apart — "gesagt, sagte"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ich sagte, ich habe gesagt."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I said" in one word. (Ich sagte.) And in three. (Ich habe gesagt.) Which of them is further in the past? (Neither.) How many syllables does sagte have? (Two.) Next: the same ending on the verb for doing.
-
-
-Lesson 3 of 10.
-ich machte — "I made," "I did".
-
-Warm-up.
-[pause 2 seconds]
-You have gemacht. Build the other past of the same verb before reading on.
-
-You'll want to know: ich machte.
-ich machte — "I made," "I did."
-Mach- plus -te. Notice what the two pasts of this verb have in common: the stem. Gemacht wrapped it and machte suffixed it, and neither touched a letter inside it.
-That is the whole promise of a weak verb. Whatever German asks of it, the middle stays put — which is why the four participles of the last chapter and the -te forms of this one can be built from any regular verb you meet, on the spot, without a list.
-er machte das, er hat das gemacht.
-Same person, same event, two tenses.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ich machte"]
-[pause 8 seconds for the answer]
-[your turn — say: the pair — "er machte das … er hat das gemacht"]
-[pause 8 seconds for the answer]
-[your turn — say: both new forms — "sagte, machte"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ich sagte, ich machte."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I did" in one word. (Ich machte.) What do machte and gemacht share? (The stem mach-.) Does either change the stem? (No.) Say "he did that" both ways. (Er machte das; er hat das gemacht.) Next: where that -te came from, and the English ending that is the same thing.
-
-
-Lesson 4 of 10.
-The dental preterite — a Germanic invention.
-
-Warm-up.
-[pause 2 seconds]
-Say sagte, then say walked. Both endings are made with the tongue against the teeth, and that is not a coincidence.
+long-a — the a of sagen is long and open, the vowel of English father, not the clipped a of hat.
+ge-prefix — the -gen at the end is unstressed and swallowed, a soft gn more than a full syllable. The same mumble will open every participle in this chapter, so it is worth getting comfortable now.
 
 The word, taken apart.
-The German -te is what linguists call the dental preterite: a past tense made by bolting a t or d sound onto a stem. Dental, because those sounds are made at the teeth.
+Sagen and English say are the same word. Germanic sagjaną went to both, and then English quietly dropped the g out of the middle:
 [a table of 3 rows, read aloud]
-language: German. present: sag-. past: sagte.
-language: English. present: walk. past: walked.
-language: Dutch. present: werk-. past: werkte.
-Three languages, one device, inherited rather than borrowed — this is a Germanic invention, and it is one of the features that identifies the family. Everything with a -t or -d past in Germanic comes from the same ancestor.
-Latin built nothing of the kind. Its past came from inherited perfect endings and from reduplication, and its descendants carried that on: French parla, Spanish habló. So sagte and walked are one machine, and parla and habló are a different one — which is why an English speaker recognises the German ending on sight and a Spanish speaker does not.
+sagen means say.
+Tag means day.
+Weg means way.
+Three pairs, one habit. Whenever a German g sits between vowels or at the end of a short word, English is likely to have thinned it to a y sound — so a German g you cannot place is often an English y in disguise.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the three together — "sagte, walked, werkte"]
+[your turn — say: "sagen" — long a, soft ending]
 [pause 8 seconds for the answer]
-[your turn — say: the name — "the dental preterite"]
+[your turn — say: "ich sage, du sagst, wir sagen"]
 [pause 8 seconds for the answer]
-[your turn — say: the two machines — "sagte and walked; parla and habló"]
+[your turn — say: the three pairs — "sagen–say, Tag–day, Weg–way"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"sagte, walked — the same ending."
+"sagen, sagen — to say."
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the -te called? (The dental preterite.) Why dental? (It is made at the teeth.) Which English ending is the same thing? (-ed.) Did Latin have it? (No — Romance builds its past another way.) Next: the one verb whose -te form you will hear constantly.
+Say "to say." (Sagen.) Say "I say." (Ich sage.) Is the a long or short? (Long — as in father.) Which English word is sagen? (Say.) Next: what happens to this verb when the saying is already over.
 
 
-Lesson 5 of 10.
-ich hatte — "I had".
+Lesson 2 of 8.
+gesagt — "said".
 
 Warm-up.
 [pause 2 seconds]
-The dental ending on the verb you have been leaning on for two chapters.
+You have sagen. Now the form German uses when the saying is already finished — and it is longer at both ends than the word it came from.
 
-You'll want to know: ich hatte.
-ich hatte — "I had."
-Haben drops its b — the same b that goes missing in du hast and er hat — and the dental ending lands on what is left, doubling the t in the spelling: hat-te. Two syllables, both short.
-English did the identical thing to the identical verb and then wore the result down further: have lost its consonant and took a -d, giving had. So hatte and had are the same word doing the same job.
-Haben has a Perfekt of its own as well — ich habe gehabt, "I have had" — built by the ordinary recipe, since haben is a perfectly ordinary verb when it is not busy helping another one.
+You'll want to know: gesagt.
+gesagt — "said."
+Hear where it grew. Sag- is still sitting in the middle, untouched. In front of it a ge- has appeared; behind it the -en has gone and a -t has taken its place:
+sagen — ge-sag-t.
+That is the word English calls a past participle: the form that goes with have in I have said. German's has a hat on as well as boots.
 
 Sounds you'll need.
-d-t-final — the doubled tt is one sharp t, and the vowel in front of it is short and clipped. HAT-tuh, never HAH-tuh.
-final-te — the ending is still a full unstressed syllable.
+ge-prefix — unstressed, almost swallowed: guh, never gay. The stress stays on sagt, exactly where it was in sagen.
+final-t — the closing t is crisp and fully released. The g in front of it hardens to a k on the way out, the same hardening you met when und came out as unt: say guh-ZAHKT.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich hatte"]
+[your turn — say: "gesagt" — soft opening, hard ending]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "ich hatte … ich habe gehabt"]
+[your turn — say: the pair — "sagen, gesagt"]
 [pause 8 seconds for the answer]
-[your turn — say: the English twin — "hatte, had"]
+[your turn — say: the three pieces — "ge, sag, t"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich hatte, ich hatte."
+"sagen, gesagt. Sagen, gesagt."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I had." (Ich hatte.) Which letter of haben is missing? (The b.) Say the same thing in the Perfekt. (Ich habe gehabt.) Which English word is hatte? (Had.) Next: which of the two pasts a German actually reaches for, and where.
+Say "said." (Gesagt.) Which part of sagen survives inside it? (Sag-, the stem.) What appeared in front? (Ge-.) What replaced the -en? (-t.) Next: the same two additions, on any weak verb you like.
 
 
-Lesson 6 of 10.
-Which past, and where — what separates the two pasts — not meaning, but speech against writing, and north against south.
+Lesson 3 of 8.
+ge-…-t — the wrap that makes a participle.
 
 Warm-up.
 [pause 2 seconds]
-Two tenses, one meaning. Time to answer the question that has been waiting since the -te arrived: when does a German say which?
+Sagen, gesagt. One verb did that; the recipe behind it works on every regular verb you own.
 
-Grammar Lens: speech takes one, writing takes the other.
-The Perfekt belongs to speech. The Präteritum belongs to narrative writing.
+Grammar Lens: ge- in front, -t behind.
+Take a regular verb. Strip the -en. Put ge- in front of what is left and -t on the end.
+That is the whole operation for the regular verbs — the ones grammarians call weak, because they build their past out of endings rather than by changing the vowel inside.
+The thing worth noticing is that the ending has a beginning. English marks its participle in one place: walk becomes walk-ed, and the front of the word sits untouched. German marks it in two, one piece of grammar arriving at both ends of the stem at once.
+Grammar has a name for a piece that wraps like that: a circumfix. It is not a prefix plus a suffix that happen to co-occur — neither half means anything without the other. Gesag is not a word, and sagt on its own is "he says." Only both together make "said."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the recipe — "ge in front, t behind"]
+[pause 8 seconds for the answer]
+[your turn — say: the wrap on its own — "ge … t"]
+[pause 8 seconds for the answer]
+[your turn — say: "sagen, gesagt" and hear both ends move]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ge- in front, -t behind."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two pieces make a weak participle? (Ge- in front, -t behind.) What is a piece of grammar that wraps a word called? (A circumfix.) Where does English put its own participle marker? (Only at the end — walked.) Build the participle of sagen. (Gesagt.) Next: the same wrap on a verb you met long before this one.
+
+
+Lesson 4 of 8.
+gemacht — "made," "done".
+
+Warm-up.
+[pause 2 seconds]
+You know the recipe. Run it on machen before reading on: strip the -en, wrap what is left.
+
+You'll want to know: gemacht.
+gemacht — "made," and also "done."
+Machen gives up its -en, leaving mach-. The wrap goes round it and out comes gemacht. No stem was harmed: the a is the same a, and the ch is the same ch.
+German uses this one participle where English chooses between two different words. Ich habe das gemacht is "I made that" and "I did that" alike; German never had to pick.
+
+Sounds you'll need.
+ch-ach — after a, o or u, German ch is the scrape at the back of the throat, the sound in Bach and in Nacht. It sits in the middle of gemacht untouched.
+final-t — and the t on the end is crisp: guh-MAHKHT, three consonants landing together at the finish.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "machen, gemacht"]
+[pause 8 seconds for the answer]
+[your turn — say: both participles together — "gesagt, gemacht"]
+[pause 8 seconds for the answer]
+[your turn — say: one word for two English ones — "made, done — gemacht"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"machen, gemacht."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Build the participle of machen. (Gemacht.) Which two English words does it cover? (Made and done.) What happened to the ch on the way? (Nothing — the wrap only touches the edges.) Next: the verb you have been doing to German itself.
+
+
+Lesson 5 of 8.
+gelernt — "learned".
+
+Warm-up.
+[pause 2 seconds]
+Third time through the recipe, and this one describes what you have been doing since page one.
+
+You'll want to know: gelernt.
+gelernt — "learned."
+Lernen loses its -en, leaving lern-; the wrap closes round it. The English cousin is doing the very same job with the very same stem — learn, learned — and differs only in where the marking sits. German puts a piece at each end; English puts both pieces at the back.
+
+Sounds you'll need.
+r-uvular-german — the r inside gelernt is made at the back of the mouth and, before a consonant, is barely a consonant at all: it colours the vowel more than it rolls. Guh-LEHRNT, with the r almost swallowed.
+final-t — -nt at the end, both consonants sounded, the t released.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "lernen, gelernt"]
+[pause 8 seconds for the answer]
+[your turn — say: the English twin — "learn, learned; lernen, gelernt"]
+[pause 8 seconds for the answer]
+[your turn — say: all three so far — "gesagt, gemacht, gelernt"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"lernen, gelernt."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Build the participle of lernen. (Gelernt.) Which English verb is its twin? (Learn.) Where does English put its marking? (All of it at the end.) Next: the fourth verb, and the last one before the recipe is yours.
+
+
+Lesson 6 of 8.
+gewohnt — "lived".
+
+Warm-up.
+[pause 2 seconds]
+Fourth and last of the four. Run the recipe on wohnen yourself first.
+
+You'll want to know: gewohnt.
+gewohnt — "lived," in the sense of dwelt somewhere.
+Wohn- takes the wrap and nothing else changes. Four verbs, four participles, one recipe: it has not bent once.
+
+Sounds you'll need.
+w-is-v — the w buried in the middle is a German w, which is English v. Guh-VOHNT.
+final-t — -nt to close, exactly as in gelernt.
+
+The word, taken apart.
+Wohnen began by meaning something closer to "to be accustomed" than "to reside," and gewohnt still carries that older sense alongside the newer one: in modern German it is also the ordinary word for used to something.
+English kept the same word and only the old meaning:
 [a table of 2 rows, read aloud]
-tense: Perfekt. where it lives: everyday conversation, and dominant there.
-tense: Präteritum. where it lives: novels, reports, anything told on the page.
-Open a German novel and the story runs in Präteritum from the first page to the last. Stand in a German kitchen and you will barely hear it. Neither audience thinks it is choosing a tense; each is simply doing what that setting does.
-So the practical instruction for a speaker is lopsided and easy: produce the Perfekt, recognise the Präteritum. You will read far more of it than you will ever need to say.
-
-Why it's said this way.
-There is a second axis, and it is geographic. Spoken Präteritum has largely vanished from conversation in southern Germany, Austria and Switzerland; further north it survives noticeably better. A Hamburg speaker will use forms in conversation that a Munich speaker would find bookish.
-That map is not decoration — the next lessons turn out to explain it — and it means the honest answer to "do Germans say ich sagte?" is: some of them, some of the time, and it depends where you are standing.
+German gewohnt means lived; accustomed.
+English wont means accustomed, as in he was wont to sing.
+Two languages split one word between them — Germany took the address and England took the habit.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the split — "Perfekt for speech, Präteritum for writing"]
+[your turn — say: "wohnen, gewohnt" — with a v in the middle]
 [pause 8 seconds for the answer]
-[your turn — say: your own instruction — "produce the Perfekt, recognise the Präteritum"]
+[your turn — say: the fossil — "gewohnt, wont"]
 [pause 8 seconds for the answer]
-[your turn — say: the map — "weaker in the south, stronger in the north"]
+[your turn — say: the whole set — "gesagt, gemacht, gelernt, gewohnt"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Perfekt spoken, Präteritum written."
+"wohnen, gewohnt."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which past does a novel use? (The Präteritum.) Which does a conversation use? (The Perfekt.) Which should you produce? (The Perfekt.) Where is spoken Präteritum weakest? (The south.) Next: the forms that ignore all of this and stay spoken everywhere.
+Build the participle of wohnen. (Gewohnt.) How is the w sounded? (Like English v.) Which English word preserves its older sense? (Wont — accustomed.) Next: where that ge- came from, and the English word still hiding it.
 
 
-Lesson 7 of 10.
-ich konnte — "I could".
+Lesson 7 of 8.
+The ge- that English lost — the prefix that means "completely" — and the English word that still has one hiding inside it.
 
 Warm-up.
 [pause 2 seconds]
-The last new form of the chapter, and a Präteritum nobody thinks twice about saying out loud.
-
-You'll want to know: ich konnte.
-ich konnte — "I could," "I was able to."
-The dental ending again, doubled in the spelling as it was in hatte: konn-te. It belongs to a small family of verbs German calls modal — the ones that lean on another verb, the way English can, must and may do.
-Those verbs are the Präteritum's stronghold in ordinary speech. Nobody in Munich says ich habe gekonnt over dinner; they say ich konnte.
+Four participles, four ge-s. That syllable is not decoration, and English used to have it too.
 
 The word, taken apart.
-Konnte and English could descend from one Germanic verb, kunnaną, which meant "to know how" rather than "to be physically able." Ability arrived later, out of knowledge.
-That older sense is still visible in the English relatives: know, cunning (originally "knowing"), and uncouth, which began as "unknown." The l that English wrote into could is pure accident — it was copied from would and should centuries after anyone stopped pronouncing it.
+German ge- comes from Germanic ga-, a prefix meaning "together, completely." Its job was to mark an action as finished — what grammarians call perfective — which is exactly the work a past participle does. A finished saying is gesagt.
+English inherited the same prefix and spelled it y-. Chaucer still wrote it. Then English let it go, and two fossils were left behind with the prefix welded on:
+[a table of 2 rows, read aloud]
+English word: enough. what is hiding inside: Old English genōg — "completely sufficient".
+English word: yclept (archaic, "named"). what is hiding inside: gecleopod — "called," finished and done.
+Say the German wrap out loud — ge-sag-t — and then the English fossil: en-ough, from genōg. It is the same syllable, worn down to a vowel and carried inside a word nobody thinks of as a participle at all.
+So English once wrapped its participles the same way German still does. German simply never stopped.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich konnte"]
+[your turn — say: what it meant — "together, completely"]
 [pause 8 seconds for the answer]
-[your turn — say: the two doubled forms — "hatte, konnte"]
+[your turn — say: the fossil — "enough, from genōg"]
 [pause 8 seconds for the answer]
-[your turn — say: the old meaning — "konnte, could — knew how"]
+[your turn — say: four finished actions — "gesagt, gemacht, gelernt, gewohnt"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich konnte, ich hatte."
+"ge- means completely."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I could." (Ich konnte.) What did the verb behind it originally mean? ("To know how.") Name an English cousin. (Know, cunning, or uncouth.) Is konnte bookish? (No — it is said out loud everywhere.) Next: why a handful of forms get that exemption.
+What did ge- originally mean? ("Completely," marking an action finished.) How did English spell the same prefix? (Y-.) Which everyday English word still carries it? (Enough, from genōg.) And the archaic one? (Yclept.) Next: the four participles side by side, and then the verb that puts them to work.
 
 
-Lesson 8 of 10.
-The forms that stayed spoken — the short list of Präteritum forms that stay spoken everywhere, and the reason the list is short.
+Lesson 8 of 8.
+Practice — four verbs, one wrap.
 
 Warm-up.
 [pause 2 seconds]
-Hatte. Konnte. Both are Präteritum, and both come out of a German mouth without a second thought. So the writing-only rule has holes in it.
+No new words. Every participle here has had its own lesson, so this is the first place they are safe to put side by side — as a recap of work already done, not as a list to swallow.
 
-Grammar Lens: a short list of survivors.
-A handful of very common verbs keep their one-word past in speech, everywhere in the German-speaking world.
-Three groups make up almost the whole list:
-hatte — the past of haben;
-konnte and its modal siblings — musste, wollte, durfte;
-the past of the verb for "to be," which arrives two chapters from now and is the most-said of them all.
-Everything else in the Präteritum obeys the split you learned last: written, not spoken.
-Why these? Because they are the verbs said most often, and frequency protects a form the way it protects an irregularity. A shape you produce fifty times a day is never up for replacement; a shape you produce once a month quietly gets swapped for the compound version and nobody notices the swap happening.
-So the practical list is genuinely short, and it is worth having by heart rather than by rule.
+Grammar Lens: the four, assembled.
+[a table of 4 rows, read aloud]
+infinitive: sagen. participle: gesagt.
+infinitive: machen. participle: gemacht.
+infinitive: lernen. participle: gelernt.
+infinitive: wohnen. participle: gewohnt.
+Cover the right-hand side and rebuild it from the left. Then cover the left and work backwards: given gemacht, what was the infinitive? The recipe runs both ways, which is what makes it worth having.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the survivors you own — "hatte, konnte"]
+[your turn — say: the four in order — "gesagt, gemacht, gelernt, gewohnt"]
 [pause 8 seconds for the answer]
-[your turn — say: the modal siblings — "musste, wollte, durfte"]
+[your turn — say: the four infinitives back — "sagen, machen, lernen, wohnen"]
 [pause 8 seconds for the answer]
-[your turn — say: the reason — "frequency protects a form"]
+[your turn — say: the recipe out loud — "ge in front, t behind"]
+[pause 8 seconds for the answer]
+[your turn — say: the fossil — "enough, from genōg"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"hatte, konnte — spoken everywhere."
+"gesagt, gemacht, gelernt, gewohnt."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Name two Präteritum forms a German says out loud. (Hatte, konnte.) Which family does konnte belong to? (The modals.) Why did these survive? (They are said most often.) Next: why the rest of the tense retreated, and where the retreat came from.
-
-
-Lesson 9 of 10.
-The same retreat, three times over — an areal change — the same retreat happened in German, French and Italian at once, because their speakers are neighbours.
-
-Warm-up.
-[pause 2 seconds]
-German is not the only language that let a two-word past crowd out a one-word one. Two of its neighbours did the identical thing at the identical time.
-
-The word, taken apart.
-[a table of 3 rows, read aloud]
-language: German. one-word past: Präteritum. what took it over in speech: Perfekt.
-language: French. one-word past: passé simple. what took it over in speech: passé composé.
-language: Italian. one-word past: passato remoto. what took it over in speech: passato prossimo.
-Two Romance languages and one Germanic one, doing the same thing over the same centuries — and not by coincidence. The dental -te and the Romance endings came from completely different ancestors, so nothing inherited can account for three languages arriving at the same answer.
-Geography can. Southern Germany, France and northern Italy are one connected block of territory, and the change spread through it by contact: speakers who live near each other borrow habits, and a habit of speech travels across a language boundary as easily as across a dialect one. Linguists call a change that spreads that way an areal change.
-
-Why it's said this way.
-Two pieces of evidence make the contact story stick rather than merely sound good.
-The first is what did not happen at the western edge. Spanish and Portuguese kept their one-word past far more fully in speech, and they are the two languages furthest from that connected block.
-The second is the map inside German itself, which you already met: the Präteritum is weakest in the south, nearest the centre of the change, and strongest in the north, furthest from it. A change spreading outward from a region should thin as it goes, and that is exactly what German shows.
-Geography did not dictate any single sentence. But it explains why a Germanic language and two Romance ones moved in step, and why one end of Germany sounds older than the other.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the three languages — "German, French, Italian: the same retreat"]
-[pause 8 seconds for the answer]
-[your turn — say: the name — "an areal change, spread by contact"]
-[pause 8 seconds for the answer]
-[your turn — say: the inside map — "south more Perfekt, north more Präteritum"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"areal change — it spread by contact."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which two neighbours made the same change? (French and Italian.) Did German inherit it from Latin? (No — the two families build their pasts from different material.) What is a change that spreads by contact called? (An areal change.) Which two languages at the western edge kept their one-word past? (Spanish and Portuguese.) Next: the chapter run through end to end.
-
-
-Lesson 10 of 10.
-Practice — the two pasts, side by side.
-
-Warm-up.
-[pause 2 seconds]
-No new words. The point of this one is to hear, in your own voice, that two different-sounding sentences report the same event.
-
-Grammar Lens: one meaning, two shapes.
-[a table of 3 rows, read aloud]
-meaning: I said. Präteritum: ich sagte. Perfekt: ich habe gesagt.
-meaning: I made. Präteritum: ich machte. Perfekt: ich habe gemacht.
-meaning: I had. Präteritum: ich hatte. Perfekt: ich habe gehabt.
-Say each pair back to back — ich sagte … ich habe gesagt — and then er machte das … er hat das gemacht. Nothing about the meaning has moved. All that has changed is which room you are standing in.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the pair — "ich sagte … ich habe gesagt"]
-[pause 8 seconds for the answer]
-[your turn — say: the other pair — "er machte das … er hat das gemacht"]
-[pause 8 seconds for the answer]
-[your turn — say: the survivors — "ich hatte, ich konnte"]
-[pause 8 seconds for the answer]
-[your turn — say: your own instruction — "produce the Perfekt, recognise the Präteritum"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ich sagte, ich habe gesagt."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I made" both ways. (Ich machte; ich habe gemacht.) Which of the two would a novel use? (The Präteritum.) Which would you say out loud? (The Perfekt — except for the survivors.) What is the -te called? (The dental preterite.) What kind of change pushed the tense out of speech? (An areal one.) Next: the verb every one of these sentences has been waiting for.
+Run the four participles without prompting. Which infinitive gives gemacht? (Machen.) What are the two pieces of the wrap? (Ge- and -t.) What did the front piece originally mean? ("Completely.") Next: the verb that carries all four of these into a sentence.

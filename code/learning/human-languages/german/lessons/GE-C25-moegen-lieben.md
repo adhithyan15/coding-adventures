@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C25-moegen-lieben
 spine_node: SPINE-SAY-WHAT-I-LIKE
-sequence: 790
-chapter: 34
+sequence: 810
+chapter: 36
 type: word
 headword: mögen, lieben
 gloss: to like and to love — plus gern, the adverb that lets any verb say "I like doing this" and has no English shape at all
