@@ -1,21 +1,24 @@
 {
   "language": "german",
   "chapter": 23,
-  "sourceHash": "fnv1a64:5ad848022d580fa5",
+  "sourceHash": "fnv1a64:39426c5f77ca0d21",
   "lessonIds": [
-    "GE-C14-alt",
-    "GE-C14-jahr",
-    "GE-C14-jahr-alt",
-    "GE-C14-wie-alt-bist-du",
-    "GE-C14-alter",
-    "GE-C14-alter-sein-haben",
-    "GE-C14-alter-practice"
+    "GE-C15-praeteritum",
+    "GE-C15-sagte",
+    "GE-C15-machte",
+    "GE-C15-dentales-praeteritum",
+    "GE-C15-hatte",
+    "GE-C15-register",
+    "GE-C15-konnte",
+    "GE-C15-hochfrequent",
+    "GE-C15-praeteritum-map",
+    "GE-C15-praeteritum-practice"
   ],
-  "voiceLessons": 7,
-  "drivablePrefix": 7,
+  "voiceLessons": 10,
+  "drivablePrefix": 10,
   "text": "german/narration/ch23.txt",
   "json": "german/narration/ch23.json",
-  "textHash": "fnv1a64:fc0818dc841abc90",
-  "jsonHash": "fnv1a64:09b0e7c3ae2a3bb6",
+  "textHash": "fnv1a64:eedeab6e01937b19",
+  "jsonHash": "fnv1a64:d7954039493b9a70",
   "findings": []
 }

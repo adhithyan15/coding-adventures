@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C19-bitte-requests
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 670
-chapter: 28
+sequence: 690
+chapter: 30
 type: phrase
 headword: bitte
 gloss: please — place the familiar courtesy word after a small request

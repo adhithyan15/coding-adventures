@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-partizip-attributiv
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 605
-chapter: 25
+sequence: 625
+chapter: 27
 type: grammar
 headword: der angekommene Zug
 gloss: the one place a German participle does take an ending — standing in front of a noun

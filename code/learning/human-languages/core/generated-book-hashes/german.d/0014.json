@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:cd249d55cd42a370",
+  "lessonIds": [
+    "GE-C09-juli",
+    "GE-C09-august",
+    "GE-C09-september",
+    "GE-C09-oktober",
+    "GE-C09-november",
+    "GE-C09-dezember",
+    "GE-C09-zahlmonate"
+  ],
+  "tex": "german/book/chapters/ch14-monate-zahlen.tex"
+}

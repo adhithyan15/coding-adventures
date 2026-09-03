@@ -31,8 +31,36 @@
 //
 // An import cannot be shadowed by a comment.
 
-/** How many chapters share one lazy lesson batch. */
-export const LESSON_BAND_CHAPTERS = 5;
+/**
+ * How many chapters share one lazy lesson batch.
+ *
+ * 5 -> 3, and the two steps are worth separating because only the second one is
+ * a judgement call.
+ *
+ * FIVE STOPPED WORKING. German's chapter-13 migration added 27 lessons whose ids
+ * all begin `GE-C09-`. Ids band by their OWN number, not by the book chapter the
+ * lesson was assigned to, so all 27 landed in one band and pushed German 5-9 past
+ * the 256 kB backstop in vite.config.ts. The bundler split it, that was the second
+ * split in the corpus, and `check-bundle.mjs` failed with the remedy in the
+ * message: reduce the band width, do not raise the allowed-split count.
+ *
+ * FOUR WOULD HAVE BEEN ENOUGH FOR TODAY AND NOT FOR MARCH. Measured at 4:
+ * 451 batches, zero splits, largest batch 211 kB. But German has four hand-written
+ * chapters left and every one of them is sized as a split, so their lessons are
+ * coming with `GE-C10-` through `GE-C13-` ids. Projected onto width 4 at the
+ * measured ~3.1 kB per lesson, band C12 (ids 12-15) lands at roughly 262 kB by the
+ * last of them -- exactly the backstop. That is a gate that fails again in two
+ * PRs' time, and re-tuning the same constant per tranche is the failure mode this
+ * grouping was built to end.
+ *
+ * THREE HAS ROOM FOR ALL FOUR. Measured: 589 batches, zero splits, largest batch
+ * 191 kB (German C15). The two German bands the remaining migrations feed --
+ * C9 at 91 kB over 31 lessons and C12 at 59 kB over 19 -- project to about 176 kB
+ * and 171 kB once all four chapters land, both with a third of the backstop still
+ * unused. 589 lazy batches over 4,100+ lessons is ~7 lessons a batch, nowhere near
+ * the one-request-per-lesson fan-out this grouping replaced.
+ */
+export const LESSON_BAND_CHAPTERS = 3;
 
 /**
  * Longest chapter number accepted.

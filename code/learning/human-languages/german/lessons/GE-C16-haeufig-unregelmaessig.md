@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-haeufig-unregelmaessig
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 550
-chapter: 24
+sequence: 570
+chapter: 26
 type: grammar
 headword: warum sein unregelmäßig ist
 gloss: why the most-used words are the most irregular — a rule, not bad luck

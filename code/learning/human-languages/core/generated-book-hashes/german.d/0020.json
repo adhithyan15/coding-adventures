@@ -1,17 +1,16 @@
 {
   "language": "german",
   "chapter": 20,
-  "sourceHash": "fnv1a64:6f16b159e4acc253",
+  "sourceHash": "fnv1a64:dbc51509b4cf5a0f",
   "lessonIds": [
-    "GE-C15-perfekt",
-    "GE-C15-ich-habe-gesagt",
-    "GE-C15-du-hast-gesagt",
-    "GE-C15-er-hat-gemacht",
-    "GE-C15-wir-haben-gesagt",
-    "GE-C15-partizip-am-ende",
-    "GE-C15-gestern",
-    "GE-C15-perfekt-als-vergangenheit",
-    "GE-C15-perfekt-practice"
+    "GE-C14-haben",
+    "GE-C14-hab-stamm",
+    "GE-C14-du-hast",
+    "GE-C14-er-hat",
+    "GE-C14-b-verlust",
+    "GE-C14-einen",
+    "GE-C14-habere",
+    "GE-C14-practice"
   ],
-  "tex": "german/book/chapters/ch20-perfekt.tex"
+  "tex": "german/book/chapters/ch20-haben.tex"
 }

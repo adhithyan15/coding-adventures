@@ -1,22 +1,23 @@
 {
   "language": "german",
   "chapter": 24,
-  "sourceHash": "fnv1a64:f1c410d493372609",
+  "sourceHash": "fnv1a64:d00db338451b90e0",
   "lessonIds": [
-    "GE-C16-ich-war",
-    "GE-C16-du-warst",
-    "GE-C16-er-war",
-    "GE-C16-wir-waren",
-    "GE-C16-drei-wurzeln",
-    "GE-C16-suppletion",
-    "GE-C16-haeufig-unregelmaessig",
-    "GE-C16-war-practice"
+    "GE-C16-sein",
+    "GE-C16-ich-bin",
+    "GE-C16-du-bist",
+    "GE-C16-er-ist",
+    "GE-C16-wir-sind",
+    "GE-C16-ihr-seid",
+    "GE-C16-sie-sind",
+    "GE-C16-muede",
+    "GE-C16-praesens-practice"
   ],
   "voiceLessons": 8,
   "drivablePrefix": 8,
   "text": "german/narration/ch24.txt",
   "json": "german/narration/ch24.json",
-  "textHash": "fnv1a64:d59be64a2081191b",
-  "jsonHash": "fnv1a64:0925bf0abce62027",
+  "textHash": "fnv1a64:b3d6fa3fad5fe248",
+  "jsonHash": "fnv1a64:7b5907c3e53e4167",
   "findings": []
 }

@@ -1,25 +1,16 @@
 {
   "chapter": 18,
-  "title": "To Have",
-  "label": "ch:haben",
-  "canDo": "I can use every present form of German's verb for “to have”, building the four the ending machine already gives me and knowing the two it gets wrong.",
+  "title": "Numbers Eleven to Twenty",
+  "label": "ch:numbers-11-20",
+  "canDo": "I can count from eleven to twenty in German and recognize how the number forms are built.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C14-practice",
+    "lesson": "GE-C12-zahlen-13-20",
     "kind": "task",
-    "summary": "haben is the weak ending machine on the stem hab-, and the chapter is organised around where that machine fails: it predicts four of the six forms correctly, so those get one lesson that makes the reader build them rather than read them, and du hast and er hat get a lesson each because nothing generates them. The b-drop, the einen that Ich habe einen Bruder needs, and the habēre false cognate follow; the grid is printed only in the practice lesson.",
-    "assesses": [
-      "GE-LEX-HABEN-01",
-      "GE-SOUND-HABEN-01",
-      "GE-GRAMMAR-HABEN-REGULAR-01",
-      "GE-GRAMMAR-HABEN-DU-HAST-01",
-      "GE-GRAMMAR-HABEN-ER-HAT-01",
-      "GE-GRAMMAR-HABEN-B-DROP-01",
-      "GE-LEX-EINEN-01",
-      "GE-ETYMON-HABEN-HABERE-01"
-    ],
-    "note": "Chapter 14 is generated from schema-v2 lessons, so the payoff is atom-scored. The four regular cells share one lesson because chapter 5's ending machine is an atom this chapter REQUIRES rather than assumes — applying an owned rule is not the inference maxNewGrammarCellsPerLesson exists to forbid. The two cells the rule gets wrong are met individually."
+    "summary": "Complete GE-C12-zahlen-13-20, the canonical closing checkpoint, and demonstrate the chapter promise: count from eleven to twenty in German and recognize how the number forms are built.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
   }
 }

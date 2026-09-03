@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-werden",
     "language": "german",
-    "chapter": 25,
-    "sequence": 585,
+    "chapter": 27,
+    "sequence": 605,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4a2e4c4de5168ae9"
+    "sourceHash": "fnv1a64:f20e3608aa9f335a"
   },
   "findings": []
 }

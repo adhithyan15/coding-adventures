@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Nine, Ten, and the Months That Are Numbers",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f8af8980ac361107",
+  "sourceHash": "fnv1a64:7110324f39866464",
   "lessons": [
     {
       "id": "GE-C06-neun",
@@ -423,7 +423,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a586d08c03b9a2f4",
+      "sourceHash": "fnv1a64:f04e45744bab69f2",
       "notice": null,
       "blocks": [
         {

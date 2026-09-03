@@ -1,16 +1,23 @@
 {
   "chapter": 14,
-  "title": "Family",
-  "label": "ch:family",
-  "canDo": "I can identify close family members in German and say who someone is.",
+  "title": "When the Calendar Stopped Naming",
+  "label": "ch:monate-zahlen",
+  "canDo": "I can name the last six German months and say which of them are numbers rather than names.",
   "spineNodes": [
     "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "GE-C10-geschwister",
+    "lesson": "GE-C09-zahlmonate",
     "kind": "task",
-    "summary": "Complete GE-C10-geschwister, the canonical closing checkpoint, and demonstrate the chapter promise: identify close family members in German and say who someone is.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Two months named for men who could order it -- Julius Caesar, who rebuilt the calendar, and Augustus, who took the next one -- and then the naming stops. September through Dezember are septem, octo, novem and decem, counted from Maerz where the Roman year began. German's own seven, eight, nine and ten sound like none of them, and never had to.",
+    "assesses": [
+      "GE-LEX-JULI-01",
+      "GE-LEX-AUGUST-01",
+      "GE-LEX-SEPTEMBER-01",
+      "GE-LEX-OKTOBER-01",
+      "GE-LEX-NOVEMBER-01",
+      "GE-LEX-DEZEMBER-01"
+    ],
+    "note": "Chapter 14 is generated from schema-v2 lessons and costs only six atoms, because chapter 9's GE-C06-monate-latein already taught GE-GRAMMAR-NATIVE-VS-LOAN-01, the Roman-year culture claim, and the septem/octo/novem/decem pairing. This chapter SPENDS all three rather than re-arguing them."
   }
 }

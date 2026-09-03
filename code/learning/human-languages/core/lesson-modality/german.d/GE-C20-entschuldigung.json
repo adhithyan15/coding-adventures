@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C20-entschuldigung",
     "language": "german",
-    "chapter": 29,
-    "sequence": 680,
+    "chapter": 31,
+    "sequence": 700,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2a5dcbb3b5a6eb24"
+    "sourceHash": "fnv1a64:de9a007befde9b78"
   },
   "findings": []
 }

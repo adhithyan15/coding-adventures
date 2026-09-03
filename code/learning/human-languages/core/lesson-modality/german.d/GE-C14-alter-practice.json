@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C14-alter-practice",
     "language": "german",
-    "chapter": 23,
-    "sequence": 507,
+    "chapter": 25,
+    "sequence": 527,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bb39f716d673ce32"
+    "sourceHash": "fnv1a64:6c136a3761421376"
   },
   "findings": []
 }

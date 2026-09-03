@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C27-gehen",
     "language": "german",
-    "chapter": 36,
-    "sequence": 840,
+    "chapter": 38,
+    "sequence": 860,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8b3769db87859480"
+    "sourceHash": "fnv1a64:3a910b97509a2900"
   },
   "findings": []
 }

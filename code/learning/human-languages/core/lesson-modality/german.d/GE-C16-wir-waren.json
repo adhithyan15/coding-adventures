@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-wir-waren",
     "language": "german",
-    "chapter": 24,
-    "sequence": 535,
+    "chapter": 26,
+    "sequence": 555,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f83a1172d1bcf7fb"
+    "sourceHash": "fnv1a64:bba8436e2920e837"
   },
   "findings": []
 }

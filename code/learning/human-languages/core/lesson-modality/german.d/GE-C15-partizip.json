@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-partizip",
     "language": "german",
-    "chapter": 19,
-    "sequence": 325,
+    "chapter": 21,
+    "sequence": 345,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9f154f3d5a4b9526"
+    "sourceHash": "fnv1a64:f1bff57591536f8f"
   },
   "findings": []
 }

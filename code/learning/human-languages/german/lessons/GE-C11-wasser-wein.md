@@ -1,7 +1,7 @@
 ---
 id: GE-C11-wasser-wein
-sequence: 280
-chapter: 15
+sequence: 300
+chapter: 17
 type: word
 headword: das Wasser, der Wein
 gloss: water and wine — one native Germanic, one ancient Latin loan

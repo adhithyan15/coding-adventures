@@ -1,22 +1,16 @@
 {
   "language": "german",
   "chapter": 19,
-  "sourceHash": "fnv1a64:9469116d088b422f",
+  "sourceHash": "fnv1a64:1505b76fc4528883",
   "lessonIds": [
-    "GE-C15-sagen",
-    "GE-C15-gesagt",
-    "GE-C15-partizip",
-    "GE-C15-gemacht",
-    "GE-C15-gelernt",
-    "GE-C15-gewohnt",
-    "GE-C15-ge-praefix",
-    "GE-C15-partizip-practice"
+    "GE-C13-schwarz-weiss",
+    "GE-C13-rot-blau"
   ],
-  "voiceLessons": 8,
-  "drivablePrefix": 8,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "german/narration/ch19.txt",
   "json": "german/narration/ch19.json",
-  "textHash": "fnv1a64:ed5d7efa9ae03bed",
-  "jsonHash": "fnv1a64:2920517f2354131f",
+  "textHash": "fnv1a64:200dae9947c1cc94",
+  "jsonHash": "fnv1a64:c7d4c46eefc0b161",
   "findings": []
 }

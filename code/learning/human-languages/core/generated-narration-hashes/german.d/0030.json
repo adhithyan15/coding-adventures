@@ -1,15 +1,15 @@
 {
   "language": "german",
   "chapter": 30,
-  "sourceHash": "fnv1a64:a61ca3d10df41370",
+  "sourceHash": "fnv1a64:e6e44f0197fece7a",
   "lessonIds": [
-    "GE-C21-das-wetter"
+    "GE-C19-bitte-requests"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "german/narration/ch30.txt",
   "json": "german/narration/ch30.json",
-  "textHash": "fnv1a64:cdbde5f28c409e67",
-  "jsonHash": "fnv1a64:e13a2ef81302543a",
+  "textHash": "fnv1a64:6a37ac8aa18de336",
+  "jsonHash": "fnv1a64:d333ece8dba769ce",
   "findings": []
 }

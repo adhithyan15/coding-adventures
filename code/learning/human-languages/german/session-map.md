@@ -9,7 +9,7 @@ authoritative order.
 Every chapter listed here is **generated from the lessons** rather than
 hand-written LaTeX, so these tables and the book are the same object seen twice:
 the order below is the `sequence:` order the generator reads. The gap between
-chapter 12 and chapter 18 is the hand-written stretch that has not been retired
+chapter 15 and chapter 20 is the hand-written stretch that has not been retired
 yet.
 
 ## Chapter 1 — Greetings
@@ -234,7 +234,55 @@ were always there and German built them out of what it owned.
 | die Mitternacht | *Mitte* + *Nacht*, and *-cht*/*-ght* paying off from *acht* |
 | practice | the counted hour and the two uncounted pivots, side by side |
 
-## Chapter 18 — To Have
+## Chapters 13, 14 and 15 — the months and the seasons
+
+Two lessons become twenty-seven. Old chapter 13 held twelve month names, four
+seasons and six more words — 24 atoms against a ceiling of 12 — so it becomes
+three chapters at 8, 6 and 10, cut at the seams the `.tex` itself argues.
+
+### Chapter 13 — The Roman Calendar
+
+| Session | What it adds |
+|---|---|
+| der Monat | the unit is *der Mond*: a month is a moon, as English *month* is *moon* |
+| der Januar | **Janus** of doorways, two-faced because a doorway looks both ways |
+| der Februar | the ***Februa***, a festival — the one month not named for anybody |
+| der März | **Mars**, and the month the Roman year used to open with |
+| März und Dienstag | one god, two doors: his *name* here, his *job* in *Dienstag* |
+| der April | nobody knows, and nobody knew in Rome either |
+| der Mai | **Maia**, of growth; *ai* is the *eye* vowel under its rarer spelling |
+| der Juni | **Juno**, and the *j* that behaves exactly as *Januar*'s did |
+| practice | four deities, one ritual, one shrug |
+
+### Chapter 14 — When the Calendar Stopped Naming
+
+| Session | What it adds |
+|---|---|
+| der Juli | **Julius Caesar**, who rebuilt the calendar and took a month |
+| der August | **Augustus**, who took the next one — and then it stops |
+| der September | *septem*, seven: seventh from *März*, ninth on your calendar |
+| der Oktober | *octo*; German writes *k* where English keeps the Latin *c* |
+| der November | *novem*; identical spelling, and a *v* that is said as an *f* |
+| der Dezember | *decem*; the *c* became *z*, which German says as *ts* |
+| practice | two men who could order it, then four months of arithmetic |
+
+### Chapter 15 — The Seasons Go Native
+
+| Session | What it adds |
+|---|---|
+| das Jahr | English *year*; the silent *h* stretches the *a* |
+| die Zeit | English **tide** — a stretch of time, before the sea took the word |
+| die Jahreszeit | *Jahr* + *Zeit* = year-time, where English bought *season* |
+| früh | early, and the *ü* English lost: say *ee*, then round the lips |
+| der Frühling | *früh* + *-ling*, "the early one" — built, not borrowed |
+| der Sommer | inherited whole, and one letter from English *summer* |
+| der Herbst | the reaping season, one syllable, no vowel before the *-st* |
+| Herbst und harvest | one word, two jobs: English kept the work and bought *autumn* |
+| der Winter | same six letters as English, and a *w* that is a *v* |
+| der Lenz | the old poetic spring, twin of English **Lent**: the days lengthening |
+| practice | the four, and the seam between what German bought and what it kept |
+
+## Chapter 20 — To Have
 
 Chapter 5 taught the ending machine, so *haben* is met as the place that machine
 **fails**. It predicts four of the six forms correctly, so those share one
@@ -255,7 +303,7 @@ each.
 The age half of the hand-written chapter is **not** here — it needs the copula,
 so it waits until after it.
 
-## Chapters 19, 20 and 21 — the participle, the Perfekt, and the Präteritum
+## Chapters 21, 22 and 23 — the participle, the Perfekt, and the Präteritum
 
 Split from one hand-written chapter. The material is a participle recipe, four
 person slots of a compound tense, and a second past tense that means the same
@@ -264,7 +312,7 @@ thing as the first — twenty-four atoms at one per lesson, twice
 this one, then 20 and 21, with the age chapter sitting between the first two so
 the present forms get used before the past arrives.
 
-### Chapter 19 — The Wrapped Participle
+### Chapter 21 — The Wrapped Participle
 
 | Session | What it adds |
 |---|---|
@@ -277,7 +325,7 @@ the present forms get used before the past arrives.
 | ge- | Germanic \**ga-* "completely"; the fossil inside *enough* and *yclept* |
 | practice | the four participles together for the first time, as a recap |
 
-### Chapter 20 — The Past Built From Have
+### Chapter 22 — The Past Built From Have
 
 | Session | What it adds |
 |---|---|
@@ -291,7 +339,7 @@ the present forms get used before the past arrives.
 | ich habe gesagt = I said | the translation trap: it is a plain past, not a perfect |
 | practice | the four slots together for the first time, as a recap |
 
-### Chapter 21 — The Simple Past
+### Chapter 23 — The Simple Past
 
 | Session | What it adds |
 |---|---|
@@ -306,7 +354,7 @@ the present forms get used before the past arrives.
 | areale Veränderung | German, French and Italian retreated together, by contact |
 | practice | both pasts, back to back, until nothing about the meaning moves |
 
-## Chapter 22 — I Am, You Are
+## Chapter 24 — I Am, You Are
 
 Split from one hand-written chapter. `sein` is the only German verb whose forms
 cannot be derived from its infinitive, so it is met one form per lesson and the
@@ -327,7 +375,7 @@ one atom per grammar cell the material is twenty-four atoms, which is twice
 | müde | tired — and an adjective after *sein* takes no ending |
 | practice | the six forms together for the first time, as a recap |
 
-## Chapter 23 — Being Your Years
+## Chapter 25 — Being Your Years
 
 Moved out of the hand-written *haben* chapter, because the sentence it teaches
 needs the copula. It sits directly after the chapter that supplies *ich bin* and
@@ -344,7 +392,7 @@ six forms of a verb should use them for something real before meeting its past.
 | sein, nicht haben | Germanic **is** its years; Romance **has** them |
 | practice | asking and answering, with *haben* never once needed |
 
-## Chapter 24 — Three Verbs Under One Roof
+## Chapter 26 — Three Verbs Under One Roof
 
 | Session | What it adds |
 |---|---|
@@ -357,7 +405,7 @@ six forms of a verb should use them for something real before meeting its past.
 | why sein is a mess | frequency protects irregularity; analogy never reaches "to be" |
 | practice | the past assembled, and the account of the three roots |
 
-## Chapter 25 — The Past That Takes To Be
+## Chapter 27 — The Past That Takes To Be
 
 | Session | What it adds |
 |---|---|
@@ -373,5 +421,5 @@ six forms of a verb should use them for something real before meeting its past.
 
 ## Next
 
-Chapter 13 — months and seasons. Chapters 13–17 are still hand-written LaTeX;
+Chapter 16 — family. Chapters 16–19 are still hand-written LaTeX;
 see `../BACKLOG.d/` for the retirement queue.

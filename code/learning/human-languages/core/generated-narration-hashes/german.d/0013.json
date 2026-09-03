@@ -1,16 +1,23 @@
 {
   "language": "german",
   "chapter": 13,
-  "sourceHash": "fnv1a64:884382d71662399d",
+  "sourceHash": "fnv1a64:cb2fceb0b972b8ed",
   "lessonIds": [
     "GE-C09-monate",
-    "GE-C09-jahreszeiten"
+    "GE-C09-januar",
+    "GE-C09-februar",
+    "GE-C09-maerz",
+    "GE-C09-maerz-mars",
+    "GE-C09-april",
+    "GE-C09-mai",
+    "GE-C09-juni",
+    "GE-C09-monate-praxis"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 9,
+  "drivablePrefix": 9,
   "text": "german/narration/ch13.txt",
   "json": "german/narration/ch13.json",
-  "textHash": "fnv1a64:ae3245610d14ae60",
-  "jsonHash": "fnv1a64:2b9e28c660329955",
+  "textHash": "fnv1a64:099734ddeb4e161f",
+  "jsonHash": "fnv1a64:5f67e253a003ac67",
   "findings": []
 }

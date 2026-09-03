@@ -1,16 +1,25 @@
 {
   "chapter": 13,
-  "title": "Months and Seasons",
-  "label": "ch:months-seasons",
-  "canDo": "I can name the months and seasons in German and say when something happens.",
+  "title": "The Roman Calendar",
+  "label": "ch:monate-roemisch",
+  "canDo": "I can name the first six German months and say why every one of the twelve came from Latin.",
   "spineNodes": [
     "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "GE-C09-jahreszeiten",
+    "lesson": "GE-C09-monate-praxis",
     "kind": "task",
-    "summary": "Complete GE-C09-jahreszeiten, the canonical closing checkpoint, and demonstrate the chapter promise: name the months and seasons in German and say when something happens.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "The unit is German's own -- der Monat IS der Mond, one turn of it, exactly as English month is moon. The twelve names inside it are Latin, taken whole with the calendar that ordered them. The chapter walks the first six and stops on the one that arrived twice: Maerz is Mars by name, and Dienstag is the same god by translation, because German already had a week to map onto and no twelve-month calendar at all.",
+    "assesses": [
+      "GE-LEX-MONAT-01",
+      "GE-LEX-JANUAR-01",
+      "GE-LEX-FEBRUAR-01",
+      "GE-LEX-MAERZ-01",
+      "GE-ETYMON-MAERZ-MARS-01",
+      "GE-LEX-APRIL-01",
+      "GE-LEX-MAI-01",
+      "GE-LEX-JUNI-01"
+    ],
+    "note": "Chapter 13 is generated from schema-v2 lessons, so the payoff is atom-scored, and it assesses all eight the chapter introduces. Old chapter 13 held twelve month names, four seasons and six more words -- 24 atoms against a ceiling of 12 -- so it becomes three chapters at 8, 6 and 10."
   }
 }

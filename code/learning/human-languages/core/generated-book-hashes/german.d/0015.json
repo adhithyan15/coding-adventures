@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:2e1ae30d092328cc",
+  "lessonIds": [
+    "GE-C09-jahr",
+    "GE-C09-zeit",
+    "GE-C09-jahreszeit",
+    "GE-C09-frueh",
+    "GE-C09-fruehling",
+    "GE-C09-sommer",
+    "GE-C09-herbst",
+    "GE-C09-herbst-harvest",
+    "GE-C09-winter",
+    "GE-C09-lenz",
+    "GE-C09-jahreszeiten"
+  ],
+  "tex": "german/book/chapters/ch15-jahreszeiten.tex"
+}

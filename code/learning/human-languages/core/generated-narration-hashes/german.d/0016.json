@@ -1,16 +1,16 @@
 {
   "language": "german",
   "chapter": 16,
-  "sourceHash": "fnv1a64:cc9604a81d11ed15",
+  "sourceHash": "fnv1a64:caa53a4ddcd6d498",
   "lessonIds": [
-    "GE-C12-elf-zwoelf",
-    "GE-C12-zahlen-13-20"
+    "GE-C10-eltern",
+    "GE-C10-geschwister"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "german/narration/ch16.txt",
   "json": "german/narration/ch16.json",
-  "textHash": "fnv1a64:1253529fe5b17110",
-  "jsonHash": "fnv1a64:45bc90eb36d1febf",
+  "textHash": "fnv1a64:ebb69e466d5d6c82",
+  "jsonHash": "fnv1a64:2c2bc824e739b514",
   "findings": []
 }

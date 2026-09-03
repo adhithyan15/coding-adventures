@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C14-alter
 spine_node: SPINE-TIME-OF-DAY
-sequence: 505
-chapter: 23
+sequence: 525
+chapter: 25
 type: phrase
 headword: ich bin zwanzig Jahre alt
 gloss: I am twenty years old — the answer, word for word the English sentence
