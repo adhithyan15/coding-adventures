@@ -42,6 +42,13 @@ on:
       # passed; without this path the same change would still not build
       # anything. See #13925.
       - code/packages/rust/mosaic-emit-react/**
+      # XAML is the one backend nobody can build on a non-Windows machine, so
+      # this lane is the ONLY place its emitted csproj and markup are ever
+      # compiled -- and engram-capi is the crate whose Windows exports nothing
+      # else verifies. Without these paths a change to either merges green and
+      # first surfaces when a release is dispatched.
+      - code/packages/rust/mosaic-emit-xaml/**
+      - code/packages/rust/engram-capi/**
   workflow_dispatch:
     inputs:
       version:
