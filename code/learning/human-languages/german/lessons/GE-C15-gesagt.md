@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-gesagt
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 340
-chapter: 21
+sequence: 360
+chapter: 22
 type: word
 headword: gesagt
 gloss: said — the first past participle, and the first time a German ending arrives with a beginning attached

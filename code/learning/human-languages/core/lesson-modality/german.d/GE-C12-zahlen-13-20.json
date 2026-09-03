@@ -2,22 +2,20 @@
   "lesson": {
     "id": "GE-C12-zahlen-13-20",
     "language": "german",
-    "chapter": 18,
-    "sequence": 310,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "chapter": 19,
+    "sequence": 317,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "sight-cue",
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue",
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:7245cd4a42c536a9"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0bff15b7048af4ef"
   },
   "findings": []
 }

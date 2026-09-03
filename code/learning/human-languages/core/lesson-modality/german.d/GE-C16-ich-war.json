@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-ich-war",
     "language": "german",
-    "chapter": 26,
-    "sequence": 540,
+    "chapter": 27,
+    "sequence": 560,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6a0b84ce2b4739ee"
+    "sourceHash": "fnv1a64:cc6bd66b7ac9252b"
   },
   "findings": []
 }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C31-finger
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1010
-chapter: 42
+sequence: 1030
+chapter: 43
 type: word
 headword: der Finger
 gloss: finger — identical to its English cousin, and possibly, though not certainly, built on the word for "five"

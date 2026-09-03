@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C14-er-hat
 spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
-sequence: 328
-chapter: 20
+sequence: 348
+chapter: 21
 type: phrase
 headword: er hat
 gloss: he has — the second and last form where the b falls out

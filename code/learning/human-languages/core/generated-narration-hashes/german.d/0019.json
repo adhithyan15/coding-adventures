@@ -1,16 +1,26 @@
 {
   "language": "german",
   "chapter": 19,
-  "sourceHash": "fnv1a64:1505b76fc4528883",
+  "sourceHash": "fnv1a64:c096febcd57fc975",
   "lessonIds": [
-    "GE-C13-schwarz-weiss",
-    "GE-C13-rot-blau"
+    "GE-C12-ziffer-plus-zehn",
+    "GE-C12-dreizehn",
+    "GE-C12-vierzehn",
+    "GE-C12-fuenfzehn",
+    "GE-C12-klippung",
+    "GE-C12-sechzehn",
+    "GE-C12-siebzehn",
+    "GE-C12-achtzehn",
+    "GE-C12-neunzehn",
+    "GE-C12-zwanzig",
+    "GE-C12-zwanzig-zwei-zehn",
+    "GE-C12-zahlen-13-20"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 12,
+  "drivablePrefix": 12,
   "text": "german/narration/ch19.txt",
   "json": "german/narration/ch19.json",
-  "textHash": "fnv1a64:200dae9947c1cc94",
-  "jsonHash": "fnv1a64:c7d4c46eefc0b161",
+  "textHash": "fnv1a64:12d231ef6e6b4281",
+  "jsonHash": "fnv1a64:f5db07393bf5399a",
   "findings": []
 }

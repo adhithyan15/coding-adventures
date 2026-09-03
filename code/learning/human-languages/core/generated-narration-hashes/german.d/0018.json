@@ -1,16 +1,18 @@
 {
   "language": "german",
   "chapter": 18,
-  "sourceHash": "fnv1a64:49fa731501984d4a",
+  "sourceHash": "fnv1a64:1a9d362263c8ea05",
   "lessonIds": [
-    "GE-C12-elf-zwoelf",
-    "GE-C12-zahlen-13-20"
+    "GE-C12-elf",
+    "GE-C12-zwoelf",
+    "GE-C12-lif",
+    "GE-C12-elf-zwoelf"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "german/narration/ch18.txt",
   "json": "german/narration/ch18.json",
-  "textHash": "fnv1a64:da5ba37df1f55216",
-  "jsonHash": "fnv1a64:5b11fd55c58529d9",
+  "textHash": "fnv1a64:471f09434cf899bd",
+  "jsonHash": "fnv1a64:02dadff40d3c5c8c",
   "findings": []
 }

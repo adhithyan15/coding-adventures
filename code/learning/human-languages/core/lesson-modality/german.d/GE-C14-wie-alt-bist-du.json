@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C14-wie-alt-bist-du",
     "language": "german",
-    "chapter": 25,
-    "sequence": 524,
+    "chapter": 26,
+    "sequence": 544,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f71400dfbe5dd129"
+    "sourceHash": "fnv1a64:573eb3b1f6fa9654"
   },
   "findings": []
 }

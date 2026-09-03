@@ -1,0 +1,12 @@
+{
+  "id": "GE-EXT-017-C-FARBEN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the basic colours in German.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C13-schwarz-weiss",
+    "GE-C13-rot-blau"
+  ]
+}

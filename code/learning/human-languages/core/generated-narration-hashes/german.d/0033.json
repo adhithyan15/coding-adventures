@@ -1,15 +1,15 @@
 {
   "language": "german",
   "chapter": 33,
-  "sourceHash": "fnv1a64:2d8a27abe0e42399",
+  "sourceHash": "fnv1a64:79a972d575027662",
   "lessonIds": [
-    "GE-C22-hund-katze"
+    "GE-C21-das-wetter"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "german/narration/ch33.txt",
   "json": "german/narration/ch33.json",
-  "textHash": "fnv1a64:6fad27b15d426aaf",
-  "jsonHash": "fnv1a64:87ca65ea9c603902",
+  "textHash": "fnv1a64:32f330694aa3c6ce",
+  "jsonHash": "fnv1a64:7c8c9dc9732679ab",
   "findings": []
 }

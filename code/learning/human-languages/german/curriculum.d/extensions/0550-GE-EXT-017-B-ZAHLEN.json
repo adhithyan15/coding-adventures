@@ -1,0 +1,22 @@
+{
+  "id": "GE-EXT-017-B-ZAHLEN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can count from thirteen to twenty in German and build every one of those numbers from a digit I already know.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C12-ziffer-plus-zehn",
+    "GE-C12-dreizehn",
+    "GE-C12-vierzehn",
+    "GE-C12-fuenfzehn",
+    "GE-C12-klippung",
+    "GE-C12-sechzehn",
+    "GE-C12-siebzehn",
+    "GE-C12-achtzehn",
+    "GE-C12-neunzehn",
+    "GE-C12-zwanzig",
+    "GE-C12-zwanzig-zwei-zehn",
+    "GE-C12-zahlen-13-20"
+  ]
+}

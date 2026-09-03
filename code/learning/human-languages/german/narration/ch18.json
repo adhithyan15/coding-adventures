@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 18,
-  "title": "Numbers Eleven to Twenty",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:49fa731501984d4a",
+  "title": "One Left Over",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:1a9d362263c8ea05",
   "lessons": [
     {
-      "id": "GE-C12-elf-zwoelf",
-      "sequence": 305,
-      "title": "elf und zwölf — \"one left over,\" \"two left over\"",
-      "headword": "elf, zwölf",
-      "romanization": "elf, zwölf",
-      "gloss": "11 and 12 — literally \"one left over\" and \"two left over,\" the exact twins of eleven and twelve",
+      "id": "GE-C12-elf",
+      "sequence": 302,
+      "title": "elf — \"eleven\"",
+      "headword": "elf",
+      "romanization": "elf",
+      "gloss": "eleven — and it is not irregular, it is a different rule",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62f12c6842615abb",
+      "sourceHash": "fnv1a64:b84233c8a4814b22",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,41 @@
             },
             {
               "kind": "speech",
-              "text": "Why are English eleven and twelve so strange — why not \"oneteen, twoteen\"? German has the identical oddity (elf, zwölf), and because the two languages are Germanic twins, learning one explains the other. The answer is one of the best number-stories anywhere."
+              "text": "You can count to ten. Both languages then do something odd for two numbers, and they do the same odd thing."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart",
+          "type": "input",
+          "title": "You'll want to know: elf",
           "segments": [
             {
               "kind": "speech",
-              "text": "elf (11) from old Germanic ainlif = ain (\"one\") + lif."
+              "text": "elf — \"eleven.\""
             },
             {
               "kind": "speech",
-              "text": "zwölf (12) from twalif = twa (\"two\") + lif."
-            },
-            {
-              "kind": "speech",
-              "text": "And -lif means \"to leave, to remain.\" So:"
-            },
-            {
-              "kind": "speech",
-              "text": "elf = \"one left over\"."
-            },
-            {
-              "kind": "speech",
-              "text": "zwölf = \"two left over\"."
-            },
-            {
-              "kind": "speech",
-              "text": "Left over from what? From ten — from your ten fingers. You count to ten, you run out of fingers, and you have one left. Eleven is literally the leftover."
-            },
-            {
-              "kind": "speech",
-              "text": "English says exactly the same thing: eleven from ain-lif, twelve from twa-lif. Not similar words — the same words, inherited side by side. (You met this Germanic-twin pattern with Vater/father and Wasser/water; here it reaches even the counting.)"
+              "text": "Not einszehn. Not \"oneteen\" in English either. Eleven is the first of two numbers that refuse the pattern, in German and in English alike."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "And then it stops",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "The leftover-trick covers only two numbers. From 13 on, German turns completely regular — and so does English. That's the next lesson."
+              "text": "herz-short-e — a short open e, the vowel of English bed."
+            },
+            {
+              "kind": "speech",
+              "text": "f-final — and a clean f to close."
+            },
+            {
+              "kind": "speech",
+              "text": "elf, one syllable, said as it looks. This is the rare German word an English reader can pronounce on sight."
             }
           ]
         },
@@ -99,29 +87,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"elf, zwölf\" — zwölf with the rounded ö",
+              "instruction": "\"elf\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"elf, zwölf\" — *zwölf* with the rounded **ö**]"
+              "source": "[YOU SAY: \"elf\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the meaning — \"one left over, two left over — after ten fingers\"",
+              "instruction": "the two in order — \"zehn, elf\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the meaning — \"one **left over**, two **left over** — after ten fingers\"]"
+              "source": "[YOU SAY: the two in order — \"zehn, elf\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twins — \"elf/eleven, zwölf/twelve — same word, both Germanic\"",
+              "instruction": "what it is not — \"not einszehn\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twins — \"elf/eleven, zwölf/twelve — same word, both Germanic\"]"
+              "source": "[YOU SAY: what it is not — \"not einszehn\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"zehn, elf.\""
             }
           ]
         },
@@ -138,38 +135,27 @@
             },
             {
               "kind": "speech",
-              "text": "What do elf and zwölf literally mean? (\"One left over\" and \"two left over\" — -lif = \"remain\".) Left over from what? (From ten — the ten fingers you just counted.) Why do English eleven/twelve look equally odd? (They are the same inherited Germanic words.) Next: 13 to 20, where German becomes perfectly regular."
+              "text": "Say \"eleven.\" (Elf.) Does it end in -zehn? (No.) Does English say \"oneteen\"? (No — eleven.) Next: the second of the two."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C12-zahlen-13-20",
-      "sequence": 310,
-      "title": "dreizehn becomes zwanzig — the pattern that never breaks",
-      "headword": "dreizehn — zwanzig",
-      "romanization": "dreizehn — zwanzig",
-      "gloss": "13–20 — perfectly regular digit+zehn compounds, step for step with English",
+      "id": "GE-C12-zwoelf",
+      "sequence": 303,
+      "title": "zwölf — \"twelve\"",
+      "headword": "zwölf",
+      "romanization": "zwölf",
+      "gloss": "twelve — the second and last number to refuse the pattern",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue",
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7245cd4a42c536a9",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down",
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The rule: digit + zehn"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The rule: digit + zehn until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:f75ae1dfe2aa5698",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -184,46 +170,49 @@
             },
             {
               "kind": "speech",
-              "text": "After the two leftovers (elf, zwölf), German settles into a rule so regular you can generate every number without being taught it. And English does the identical thing — because -teen is ten."
+              "text": "Short on the page, and three rules deep in the mouth. You own all three already."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The rule: digit + zehn",
+          "type": "input",
+          "title": "You'll want to know: zwölf",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 8,
-              "headers": [
-                "",
-                "German",
-                "English",
-                "build"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 8 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, German, English, build. Come back and look at it when you have stopped."
+              "kind": "speech",
+              "text": "zwölf — \"twelve.\""
             },
             {
               "kind": "speech",
-              "text": "Every one is your first-ten digit + zehn — and the English column is the same compound with -teen (which is just ten again: thir-teen = \"three-ten\"). Only two small wearings-down: sech(s)zehn and sieb(en)zehn clip a sound for easier speech, exactly as English thir- and fif- did to three and five."
+              "text": "The second number to refuse the pattern, and the last. After this one German turns regular and stays regular."
             },
             {
               "kind": "speech",
-              "text": "zwanzig (20) from twaintig, \"two tens\" — the -zig is another form of ten, matching English twen-ty (-ty = ten as well)."
+              "text": "You can hear zwei inside it if you listen for the opening: zw- is the same start."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The contrast worth noticing",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "The Romance sisters all break their pattern partway through the teens (Portuguese at 16, French and Italian at 17, swapping to \"ten-and-six\" style). German never breaks. Two leftovers, then one clean rule all the way to twenty — and English marches beside it the entire distance."
+              "text": "z-ts — German z is ts."
+            },
+            {
+              "kind": "speech",
+              "text": "w-as-v — German w is a v, as on Winter and Wasser."
+            },
+            {
+              "kind": "speech",
+              "text": "umlaut-oe — and ö is the rounded vowel from schön: shape your lips for oh and say eh."
+            },
+            {
+              "kind": "speech",
+              "text": "So the word opens tsv- and runs tsvölf. Three rules, one syllable, nothing new."
             }
           ]
         },
@@ -241,29 +230,47 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "13 becomes 20 — \"dreizehn, vierzehn, fünfzehn, sechzehn, siebzehn, achtzehn, neunzehn, zwanzig\"",
+              "instruction": "the opening alone — \"tsv\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: 13→20 — \"dreizehn, vierzehn, fünfzehn, sechzehn, siebzehn, achtzehn, neunzehn, zwanzig\"]"
+              "source": "[YOU SAY: the opening alone — \"tsv\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each beside its English twin — \"dreizehn / thirteen, vierzehn / fourteen…\"",
+              "instruction": "the vowel alone — lips for \"oh\", say \"eh\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each beside its English twin — \"dreizehn / thirteen, vierzehn / fourteen…\"]"
+              "source": "[YOU SAY: the vowel alone — lips for \"oh\", say \"eh\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole run, elf to zwanzig",
+              "instruction": "\"zwölf\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole run, elf to zwanzig]"
+              "source": "[YOU SAY: \"zwölf\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"elf, zwölf\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"elf, zwölf\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"elf, zwölf.\""
             }
           ]
         },
@@ -280,7 +287,323 @@
             },
             {
               "kind": "speech",
-              "text": "What's the rule from 13 to 19? (Digit + zehn — no exceptions.) Which two clip a sound, and what's the English parallel? (Sechzehn and siebzehn; English clipped three becomes thir-, five becomes fif-.) What does zwanzig literally mean? (\"Two tens\" — -zig, like English -ty.) How does this differ from the Romance sisters? (They break their pattern in the teens; German doesn't.) Next chapter: numbers in use."
+              "text": "Say \"twelve.\" (Zwölf.) How does it open? (Tsv-.) Why? (z is ts, w is v.) Which number is hiding at the front? (Zwei.) Next: what both of them actually mean."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C12-lif",
+      "sequence": 304,
+      "title": "-lif — \"left over\"",
+      "headword": "-lif",
+      "romanization": "-lif",
+      "gloss": "the ending that means \"left over\" — eleven is one left after your fingers run out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:511ca126e366ba5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words that look like exceptions. They are not exceptions. They are an older rule, and it is a rule about hands."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both words are compounds, and both end in the same piece:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "older form",
+                "the pieces"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "word: elf. older form: ainlif. the pieces: ain \"one\" + lif.",
+                "word: zwölf. older form: twalif. the pieces: twa \"two\" + lif."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And -lif means \"to leave, to remain.\" So elf is \"one left over\" and zwölf is \"two left over.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Left over from what? From ten — from your ten fingers."
+            },
+            {
+              "kind": "speech",
+              "text": "You count along them, you reach zehn, you run out of hand, and there is one left. That is eleven. Not a number in a sequence but a remainder, named by people counting on the only calculator they had."
+            },
+            {
+              "kind": "speech",
+              "text": "And English says the identical thing. Eleven is ain-lif; twelve is twa-lif. Not similar words — the same two words, inherited side by side, the way Vater and father are. The Germanic twinning you have been tracking through the household and the meal reaches all the way into the counting."
+            },
+            {
+              "kind": "speech",
+              "text": "It also explains why the trick stops at two. Ten fingers leave room for one and two before the hands are hopeless, and after that a language needs a real rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pieces of eleven — \"ain, lif\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pieces of eleven — \"ain, lif\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the ending means — \"left over\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the ending means — \"left over\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole idea — \"one left over from ten\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole idea — \"one left over from ten\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English pair that says the same — \"eleven, twelve\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English pair that says the same — \"eleven, twelve\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"elf, zwölf — one left, two left.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does -lif mean? (Left over.) Left over from what? (Ten — your fingers.) So what is elf? (One left over.) Are eleven and twelve the same words? (Yes — inherited, not borrowed.) Next: both of them together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C12-elf-zwoelf",
+      "sequence": 305,
+      "title": "Practice — one left, two left",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — two numbers that count what is left rather than counting on",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2dd116e7e863515",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. Two numbers, and the reason they look strange in both languages at once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: what the two are made of",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "is",
+                "and means"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "German: elf. is: ain + lif. and means: one left over.",
+                "German: zwölf. is: twa + lif. and means: two left over."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two words, one ending, and the ending is a verb: to leave, to remain. Neither number was ever irregular — they were built by a rule that only had room to run twice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Left over from zehn, from ten fingers. A counting system built on hands has to say something when the hands run out, and what Germanic said was and one is left."
+            },
+            {
+              "kind": "speech",
+              "text": "English inherited both words unchanged, which is why eleven and twelve are equally odd there, and odd in exactly the same way. When two languages share an irregularity this precisely, they did not agree on it — they were one language when it was made."
+            },
+            {
+              "kind": "speech",
+              "text": "From the next number on, both of them turn regular and never break again."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "count the last three — \"zehn, elf, zwölf\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: count the last three — \"zehn, elf, zwölf\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the opening of the second — \"tsv\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the opening of the second — \"tsv\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what each one means — \"one left over, two left over\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what each one means — \"one left over, two left over\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English pair — \"eleven, twelve\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English pair — \"eleven, twelve\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"zehn, elf, zwölf.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say eleven and twelve. (Elf, zwölf.) What does the ending mean? (Left over.) Left over from what? (Zehn — ten fingers.) Why are the English words odd in the same way? (They are the same two words.) How many numbers does this rule cover? (Two — and then it stops.)"
             }
           ]
         }

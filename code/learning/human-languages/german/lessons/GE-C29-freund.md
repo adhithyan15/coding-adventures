@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C29-freund
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 930
-chapter: 40
+sequence: 950
+chapter: 41
 type: word
 headword: der Freund
 gloss: friend — a Germanic cousin of English friend, both frozen out of the same old verb meaning "to love"

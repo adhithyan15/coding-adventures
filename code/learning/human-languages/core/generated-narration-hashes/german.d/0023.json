@@ -1,24 +1,23 @@
 {
   "language": "german",
   "chapter": 23,
-  "sourceHash": "fnv1a64:39426c5f77ca0d21",
+  "sourceHash": "fnv1a64:4939762ab838a78c",
   "lessonIds": [
-    "GE-C15-praeteritum",
-    "GE-C15-sagte",
-    "GE-C15-machte",
-    "GE-C15-dentales-praeteritum",
-    "GE-C15-hatte",
-    "GE-C15-register",
-    "GE-C15-konnte",
-    "GE-C15-hochfrequent",
-    "GE-C15-praeteritum-map",
-    "GE-C15-praeteritum-practice"
+    "GE-C15-perfekt",
+    "GE-C15-ich-habe-gesagt",
+    "GE-C15-du-hast-gesagt",
+    "GE-C15-er-hat-gemacht",
+    "GE-C15-wir-haben-gesagt",
+    "GE-C15-partizip-am-ende",
+    "GE-C15-gestern",
+    "GE-C15-perfekt-als-vergangenheit",
+    "GE-C15-perfekt-practice"
   ],
-  "voiceLessons": 10,
-  "drivablePrefix": 10,
+  "voiceLessons": 9,
+  "drivablePrefix": 9,
   "text": "german/narration/ch23.txt",
   "json": "german/narration/ch23.json",
-  "textHash": "fnv1a64:eedeab6e01937b19",
-  "jsonHash": "fnv1a64:d7954039493b9a70",
+  "textHash": "fnv1a64:5948380eb504c59c",
+  "jsonHash": "fnv1a64:2e6cd16e5e2e4052",
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C12-dreizehn",
+    "language": "german",
+    "chapter": 19,
+    "sequence": 307,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eba55efa7861085c"
+  },
+  "findings": []
+}

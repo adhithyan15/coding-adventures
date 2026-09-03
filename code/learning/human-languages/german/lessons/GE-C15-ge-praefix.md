@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-ge-praefix
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 365
-chapter: 21
+sequence: 385
+chapter: 22
 type: etymology
 headword: ge-
 gloss: the prefix that means "completely" — and the English word that still has one hiding inside it

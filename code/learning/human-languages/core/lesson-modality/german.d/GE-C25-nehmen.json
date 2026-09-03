@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C25-nehmen",
     "language": "german",
-    "chapter": 36,
-    "sequence": 780,
+    "chapter": 37,
+    "sequence": 800,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d7d09eb5f84ceb43"
+    "sourceHash": "fnv1a64:80d1f241ef263e8f"
   },
   "findings": []
 }

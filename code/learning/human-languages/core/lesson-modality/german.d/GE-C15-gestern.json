@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-gestern",
     "language": "german",
-    "chapter": 22,
-    "sequence": 405,
+    "chapter": 23,
+    "sequence": 425,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:59d1920b47b6a815"
+    "sourceHash": "fnv1a64:c81e4c00d8f1d3f8"
   },
   "findings": []
 }

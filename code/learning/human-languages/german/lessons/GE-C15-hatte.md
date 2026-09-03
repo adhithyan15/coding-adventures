@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-hatte
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 440
-chapter: 23
+sequence: 460
+chapter: 24
 type: word
 headword: ich hatte
 gloss: I had — haben's own Präteritum, and one of the handful that everybody says out loud

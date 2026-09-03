@@ -1,15 +1,17 @@
 {
   "language": "german",
   "chapter": 25,
-  "sourceHash": "fnv1a64:bec1b3919dbaf9e2",
+  "sourceHash": "fnv1a64:cbf662faca8e3f8e",
   "lessonIds": [
-    "GE-C14-alt",
-    "GE-C14-jahr",
-    "GE-C14-jahr-alt",
-    "GE-C14-wie-alt-bist-du",
-    "GE-C14-alter",
-    "GE-C14-alter-sein-haben",
-    "GE-C14-alter-practice"
+    "GE-C16-sein",
+    "GE-C16-ich-bin",
+    "GE-C16-du-bist",
+    "GE-C16-er-ist",
+    "GE-C16-wir-sind",
+    "GE-C16-ihr-seid",
+    "GE-C16-sie-sind",
+    "GE-C16-muede",
+    "GE-C16-praesens-practice"
   ],
-  "tex": "german/book/chapters/ch25-alter.tex"
+  "tex": "german/book/chapters/ch25-sein.tex"
 }

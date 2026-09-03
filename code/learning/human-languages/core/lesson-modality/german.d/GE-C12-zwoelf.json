@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C12-zwoelf",
+    "language": "german",
+    "chapter": 18,
+    "sequence": 303,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f75ae1dfe2aa5698"
+  },
+  "findings": []
+}

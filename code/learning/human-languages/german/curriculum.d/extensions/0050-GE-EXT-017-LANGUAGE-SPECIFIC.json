@@ -3,12 +3,12 @@
   "stage": "A1",
   "kind": "required",
   "category": "language-specific",
-  "canDo": "I can use the additional German material required at this point in the path.",
+  "canDo": "I can say eleven and twelve in German and explain why neither of them follows the counting pattern.",
   "prerequisites": [],
   "lessons": [
-    "GE-C12-elf-zwoelf",
-    "GE-C12-zahlen-13-20",
-    "GE-C13-schwarz-weiss",
-    "GE-C13-rot-blau"
+    "GE-C12-elf",
+    "GE-C12-zwoelf",
+    "GE-C12-lif",
+    "GE-C12-elf-zwoelf"
   ]
 }

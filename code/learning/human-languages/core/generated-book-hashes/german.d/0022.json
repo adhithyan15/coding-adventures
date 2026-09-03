@@ -1,17 +1,16 @@
 {
   "language": "german",
   "chapter": 22,
-  "sourceHash": "fnv1a64:ee482b16d39d7e67",
+  "sourceHash": "fnv1a64:b7911c943fc16a4d",
   "lessonIds": [
-    "GE-C15-perfekt",
-    "GE-C15-ich-habe-gesagt",
-    "GE-C15-du-hast-gesagt",
-    "GE-C15-er-hat-gemacht",
-    "GE-C15-wir-haben-gesagt",
-    "GE-C15-partizip-am-ende",
-    "GE-C15-gestern",
-    "GE-C15-perfekt-als-vergangenheit",
-    "GE-C15-perfekt-practice"
+    "GE-C15-sagen",
+    "GE-C15-gesagt",
+    "GE-C15-partizip",
+    "GE-C15-gemacht",
+    "GE-C15-gelernt",
+    "GE-C15-gewohnt",
+    "GE-C15-ge-praefix",
+    "GE-C15-partizip-practice"
   ],
-  "tex": "german/book/chapters/ch22-perfekt.tex"
+  "tex": "german/book/chapters/ch22-partizip.tex"
 }

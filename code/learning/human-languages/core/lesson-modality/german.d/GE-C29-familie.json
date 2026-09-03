@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C29-familie",
     "language": "german",
-    "chapter": 40,
-    "sequence": 950,
+    "chapter": 41,
+    "sequence": 970,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a8a430192587fa9d"
+    "sourceHash": "fnv1a64:66419867d304bba8"
   },
   "findings": []
 }

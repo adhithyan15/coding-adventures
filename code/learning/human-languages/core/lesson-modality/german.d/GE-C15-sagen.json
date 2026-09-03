@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-sagen",
     "language": "german",
-    "chapter": 21,
-    "sequence": 335,
+    "chapter": 22,
+    "sequence": 355,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f83c2c3c5aac6df8"
+    "sourceHash": "fnv1a64:1d3dd7e20646b1b5"
   },
   "findings": []
 }

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-perfekt-sein-agreement",
     "language": "german",
-    "chapter": 27,
-    "sequence": 620,
+    "chapter": 28,
+    "sequence": 640,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e1bb657e8915050b"
+    "sourceHash": "fnv1a64:ef7216ebbbb92274"
   },
   "findings": []
 }

@@ -1,9 +1,9 @@
 {
   "language": "german",
   "chapter": 34,
-  "sourceHash": "fnv1a64:d1ece36d474ed38b",
+  "sourceHash": "fnv1a64:8ec42a0a2162a792",
   "lessonIds": [
-    "GE-C23-gruen-gelb"
+    "GE-C22-hund-katze"
   ],
-  "tex": "german/book/chapters/ch34-green-and-yellow.tex"
+  "tex": "german/book/chapters/ch34-dog-and-cat.tex"
 }
