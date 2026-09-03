@@ -9,7 +9,7 @@ headword: دھوپ
 romanization: dhūp
 gloss: sunshine — inherited, and another honest dead end, like کان and روٹی before it
 concept_tag: UR-SUNSHINE
-prerequisites: [UR-C15-barish]
+prerequisites: [UR-C15-barish, UR-C10-munh]
 sounds: [rtl, do-chashmi-he, long-u]
 roots: [ashokan-prakrit-dhuppa]
 etymology_hook: dhūp is inherited from Ashokan Prakrit *dhuppā, "sunshine," and no further root is documented behind that -- an honest dead end on the inherited side, matching کان and روٹی rather than کالا, whose own root at least led somewhere else.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN, UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-LEX-AANKH]
+  knowledge: [UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN, UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-LEX-AANKH, UR-LEX-MUNH, UR-SCRIPT-NUN-NASAL-VOWEL, UR-ETYMON-MUNH-MYTH]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,7 +60,7 @@ side — the same shape **کان** and *roṭī* already showed, not every
 inherited word traces back to a tidy Indo-European root.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-LEX-BARISH] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-LEX-BARISH, UR-LEX-MUNH, UR-SCRIPT-NUN-NASAL-VOWEL, UR-ETYMON-MUNH-MYTH] -->
 
 - [YOU SAY: **dhūp** — sunshine; then **āj dhūp hai**]
 - [YOU CONTRAST: *bārish*, Persian dead end; **دھوپ**, inherited dead end
@@ -68,6 +68,7 @@ inherited word traces back to a tidy Indo-European root.
 - [YOU NAME: two other inherited dead ends already met — **کان** and
   *roṭī*]
 - [YOU SAY: *āj bārish hai yā dhūp?* — "Is it rain today, or sunshine?"]
+- [YOU RECALL: read **منہ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-LEX-AANKH] -->

@@ -9,7 +9,7 @@ headword: لال
 romanization: lāl
 gloss: red — Persian, and an adjective that never changes its ending
 concept_tag: UR-RED
-prerequisites: [UR-C12-roti]
+prerequisites: [UR-C12-roti, UR-C09-bhai, UR-C09-bahan]
 sounds: [rtl, long-a]
 roots: [persian-lal]
 etymology_hook: lāl is borrowed from Classical Persian لَال, "red." No further ancestor is documented for the Persian word itself, so the trail stops there — an honest Persian-side dead end, the mirror image of the Indo-Aryan dead ends this book has already met.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE, UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING, UR-SCRIPT-MERA-NAAM-HAI]
+  knowledge: [UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE, UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING, UR-SCRIPT-MERA-NAAM-HAI, UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER, UR-LEX-BAHAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-ETYMON-BAHAN-SHARE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -66,13 +66,14 @@ lesson, except this time on the Persian side of the book's two layers
 rather than the inherited one.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN, UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN, UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE, UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER, UR-LEX-BAHAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-ETYMON-BAHAN-SHARE] -->
 
 - [YOU SAY: **lāl** — red; then **merā koṭ lāl hai**]
 - [YOU NOTE: **لال** never changes its ending, unlike the colors still to
   come]
 - [YOU CONNECT: **lāl** ← Persian, no further root — like *roṭī*'s
   Sanskrit root, but on the other side of the book's two layers]
+- [YOU RECALL: say *bhāī*, then say *bahan*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING, UR-SCRIPT-MERA-NAAM-HAI] -->

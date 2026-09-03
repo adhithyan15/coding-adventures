@@ -9,7 +9,7 @@ headword: آم
 romanization: ām
 gloss: mango — the inherited Indo-Aryan name for the fruit, and not the ancestor of English mango
 concept_tag: UR-MANGO
-prerequisites: [UR-C17-practice]
+prerequisites: [UR-C17-practice, UR-C14-topi]
 sounds: [rtl, short-vowels-unwritten]
 roots: [sanskrit-amra]
 etymology_hook: ām descends from Sanskrit āmra through Prakrit amba, the fruit's inherited Indo-Aryan name; English mango does NOT come from it -- it came by sea from Tamil and Malayalam māṅkāy through Portuguese manga, so the fruit reached Europe under a Dravidian name while the Indo-Aryan name stayed home, and the two words are unrelated despite naming the same thing in the same country.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-AAM, UR-ETYMON-AAM-MANGO, UR-SCRIPT-READ-HAI-01, UR-LEX-CHAI, UR-LEX-PANI, UR-LEX-YIH]
+  knowledge: [UR-LEX-AAM, UR-ETYMON-AAM-MANGO, UR-SCRIPT-READ-HAI-01, UR-LEX-CHAI, UR-LEX-PANI, UR-LEX-YIH, UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -78,13 +78,14 @@ of nothing on its own, and here there is not even a resemblance — the
 relationship people assume is the one that does not exist.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AAM, UR-ETYMON-AAM-MANGO, UR-LEX-PANI] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AAM, UR-ETYMON-AAM-MANGO, UR-LEX-PANI, UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH] -->
 
 - [YOU SAY: **ām** — mango; then *yih ām hai*]
 - [YOU SAY: the food and drink words so far — **ām, pānī, chāy, dūdh, roṭī**]
 - [YOU TRACE: **ām** ← Prakrit *amba* ← Sanskrit *āmra*]
 - [YOU TRACE: English **mango** ← Portuguese *manga* ← Tamil and Malayalam
   *māṅkāy* — a different road, from a different family]
+- [YOU RECALL: say *ṭopī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AAM, UR-ETYMON-AAM-MANGO] -->

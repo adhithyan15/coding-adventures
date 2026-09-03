@@ -9,7 +9,7 @@ headword: کان
 romanization: kān
 gloss: ear — the first body word since Chapter 4 folded آپ کیسے ہیں؟ into a single wellbeing check
 concept_tag: UR-EAR
-prerequisites: [UR-C09-khandan]
+prerequisites: [UR-C09-khandan, UR-C07-sochna, UR-C07-samajhna, UR-C07-parhna]
 sounds: [rtl, long-a]
 roots: [sanskrit-karna]
 etymology_hook: kān continues Sanskrit karṇa by way of Prakrit and Apabhramsa kaṇṇa, but karṇa's own origin is unsettled — dictionaries note only a possible link to Persian kar, "deaf", nothing as clean as bhāī's cousin brother.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-KHANDAN, UR-ETYMON-KHANDAN-PERSIAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN]
+  knowledge: [UR-LEX-KHANDAN, UR-ETYMON-KHANDAN-PERSIAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN, UR-LEX-SOCHNA, UR-SCRIPT-CHE-LETTER, UR-ETYMON-SOCHNA-GRIEVE, UR-LEX-SAMAJHNA, UR-SCRIPT-DO-CHASHMI-HE, UR-ETYMON-SAMAJHNA-WAKE, UR-LEX-PARHNA, UR-SCRIPT-RRE-LETTER, UR-ETYMON-PARHNA-RECITE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -68,11 +68,12 @@ the word that closed that chapter, was Persian instead — the body's own
 words stay native even where their history goes quiet.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN, UR-GRAMMAR-MERA-GENDER-AGREEMENT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-LEX-SOCHNA, UR-SCRIPT-CHE-LETTER, UR-ETYMON-SOCHNA-GRIEVE, UR-LEX-SAMAJHNA, UR-SCRIPT-DO-CHASHMI-HE, UR-ETYMON-SAMAJHNA-WAKE, UR-LEX-PARHNA, UR-SCRIPT-RRE-LETTER, UR-ETYMON-PARHNA-RECITE] -->
 
 - [YOU SAY: **kān** — ear; then **merā kān**]
 - [YOU SAY: **khāndān**, then **kān** — one word ends, the body words begin]
 - [YOU NAME: what's uncertain about *karṇa*'s own origin]
+- [YOU RECALL: say *sochnā*, then say *samajhnā*, then say *paṛhnā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN] -->

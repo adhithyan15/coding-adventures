@@ -9,7 +9,7 @@ headword: خدا
 romanization: khudā
 gloss: God — the Persian-borrowed half of the standard Urdu farewell
 concept_tag: UR-C05-KHUDA
-prerequisites: [UR-C04-practice]
+prerequisites: [UR-C04-practice, UR-C04-kaise-kaisi]
 sounds: [rtl, kh, long-a, short-vowels-unwritten]
 roots: [persian-khoda]
 etymology_hook: Urdu khudā is borrowed from Persian khodā, which continues Middle Persian xwadāy “lord”; Urdu keeps the word inside a familiar parting formula.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN]
+  knowledge: [UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN, UR-LEX-KAISE-KAISI, UR-SCRIPT-KAISE-KAISI, UR-GRAMMAR-HOW-GENDER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -58,11 +58,12 @@ Persian connection then explains why both tracks will share the phrase's first
 historical layer.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN, UR-LEX-KAISE-KAISI, UR-SCRIPT-KAISE-KAISI, UR-GRAMMAR-HOW-GENDER] -->
 
 - [YOU SAY: **khudā** — God]
 - [YOU READ: **خدا** from the right edge]
 - [YOU CONNECT: Urdu **khudā** ← Persian **khodā**]
+- [YOU RECALL: say *kaise / kaisī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN] -->

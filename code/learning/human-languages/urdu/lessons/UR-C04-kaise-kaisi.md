@@ -9,7 +9,7 @@ headword: کیسے / کیسی
 romanization: kaise / kaisī
 gloss: how — addressing a man / addressing a woman
 concept_tag: QUESTION-HOW
-prerequisites: [UR-C03-practice]
+prerequisites: [UR-C03-practice, UR-C01-nahin]
 sounds: [rtl, ai-diphthong, long-i, final-ye]
 roots: [indo-aryan-k-question-family]
 etymology_hook: Kaise and kaisī belong to the inherited Indo-Aryan k-question family already visible in kyā; Urdu lets the form agree with the person addressed.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-DIALOGUE-NAME-EXCHANGE, UR-LEX-KYA, UR-LEX-KAISE-KAISI, UR-SCRIPT-KAISE-KAISI, UR-GRAMMAR-HOW-GENDER]
+  knowledge: [UR-DIALOGUE-NAME-EXCHANGE, UR-LEX-KYA, UR-LEX-KAISE-KAISI, UR-SCRIPT-KAISE-KAISI, UR-GRAMMAR-HOW-GENDER, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -61,11 +61,12 @@ pair today—not a table of adjective endings. Respectful **āp** itself remains
 the same for everyone.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAISE-KAISI, UR-SCRIPT-KAISE-KAISI, UR-GRAMMAR-HOW-GENDER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAISE-KAISI, UR-SCRIPT-KAISE-KAISI, UR-GRAMMAR-HOW-GENDER, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01] -->
 
 - [YOU SAY: addressing a man — **kaise**]
 - [YOU SAY: addressing a woman — **kaisī**]
 - [YOU POINT: broad final **ے** versus long-*ī* **ی**]
+- [YOU RECALL: say *nahī̃*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAISE-KAISI, UR-SCRIPT-KAISE-KAISI, UR-GRAMMAR-HOW-GENDER] -->

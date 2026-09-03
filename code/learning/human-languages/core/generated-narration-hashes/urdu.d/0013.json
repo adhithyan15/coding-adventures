@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 13,
-  "sourceHash": "fnv1a64:80ba835a808d79ce",
+  "sourceHash": "fnv1a64:af1c6caafb2a00ff",
   "lessonIds": [
     "UR-C13-lal",
     "UR-C13-safed",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "urdu/narration/ch13.txt",
   "json": "urdu/narration/ch13.json",
-  "textHash": "fnv1a64:bb1b11c2e58d9b77",
-  "jsonHash": "fnv1a64:dd772d1f07a5feb5",
+  "textHash": "fnv1a64:56c0fa3254fd1afa",
+  "jsonHash": "fnv1a64:aecbe3e67d8aa8fe",
   "findings": []
 }
