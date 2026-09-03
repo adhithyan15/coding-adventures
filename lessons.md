@@ -6059,3 +6059,166 @@ conflict, nothing in `git status` to notice afterwards.
 Uncommitted changes already follow you across `git checkout -b`. There was
 nothing to bring across; the command could only destroy. Commit first, or do
 nothing.
+
+## Git Bash on the Windows runner has no `zip`
+
+The Compose Desktop release job built the Windows app perfectly, then died in
+the next step:
+
+```
+zip: command not found
+##[error]Process completed with exit code 127
+```
+
+`zip` is on the Linux and macOS runners and not on the Windows one, so a step
+written and tested against two platforms lost the third at the very last
+moment — after the expensive part had already succeeded. The same shape as
+`choco install poppler`, which does not exist on `windows-2025` and broke the
+PDF oracle build: *assuming a Unix utility is a runner utility*.
+
+Worse, the job is not a required check, so the PR merged green-looking while
+one platform's payload was never produced. `main` then declared a Windows
+Compose artifact that nothing could build, and the publish job asserts the
+files on disk equal the declared set — so the next release would have failed
+at the very end, after every build had run.
+
+The fix is not a per-platform branch in the workflow. It is to do the work in
+the one tool that is already installed identically on all three runners —
+here Python, which the job sets up anyway — so there is a single code path
+that can be tested locally. `zipfile.ZipFile.write` also carries each file's
+mode into `external_attr`, so the launcher stays executable; an archiver that
+loses that extracts to an app that cannot be launched, and every structural
+check still passes.
+
+Two follow-ons worth stating separately:
+
+- **A verification that silently skips is not a verification.** The engine
+  symbol check in `build-native.sh` runs `nm`, which is absent on Windows, so
+  it fell through to `SHIPPED="unknown"` and passed. Windows was the one
+  platform shipping unverified. Checks that cannot run everywhere belong where
+  they can — the presence-and-non-empty assertion moved into the archiving
+  step, which is now identical on all three.
+- **Ask what a green PR did not run.** A non-required job that fails is a
+  merged PR with a hole in it. Look at the job list, not the merge button.
+
+## Replacing a shell tool with a library silently drops the flags it was given
+
+Fixing the above, I swapped `zip -qry` for Python's `zipfile`. I reasoned about
+the tool's *availability* and not about its *behaviour*, and the `-y` in that
+command is load-bearing: it means **store symbolic links as links**.
+`ZipFile.write` does the opposite — it opens the path, so a symlink is archived
+as its target's bytes under the link's own innocuous name. Demonstrated on a
+fixture:
+
+```
+ZipFile.write   sub/innocent.txt -> b'SECRET-TOKEN\n'     # the target's content
+zip -qry        sub/innocent.txt -> b'../../secret.txt'   # the link
+```
+
+These archives are published as public release assets. Anything able to place
+one symlink into the build tree — a committed file under a Gradle-copied
+resources directory, any plugin running during `createDistributable` — could
+have had the contents of any runner-readable file baked into a download. On a
+GitHub runner `.git/config` holds the checkout token as an `http.extraheader`.
+The member name looks entirely ordinary, and it needs no outbound network.
+
+The same mistake broke the payload in the other direction, which is what makes
+it worth remembering: `rglob` does **not** descend into a symlinked directory,
+and a symlinked directory is not `is_file()`, so following links also *drops*
+every file beneath one while reporting success. A macOS `.app` from jpackage
+bundles a runtime full of symlinked directories, so the fix that leaked secrets
+would also have shipped a gutted, unsignable bundle.
+
+Two things generalise:
+
+- **When you replace a command with a library, enumerate its flags and ask what
+  each one was doing.** `-y` was one character and the entire difference
+  between storing a link and publishing its target.
+- **The security bug and the correctness bug were the same bug.** Following the
+  link leaked a file *and* lost a directory tree. When a security review lands
+  a finding, check whether the safe behaviour is also the correct one — here,
+  storing links was required by both, so there was no trade-off to weigh.
+
+## A denylist over filename hazards is unwinnable; allowlist what you emit
+
+Four rounds of security review on one archiving function. Each round found one
+more filename-equivalence rule the previous fix had not modelled:
+
+1. Backslash — legal in a POSIX filename, a separator to some Windows
+   extractors, so `..\..\..\evil.exe` normalises to one harmless in-payload
+   component under the rules we validated with.
+2. Case folding — `source_commit` and `SOURCE_COMMIT` are two members on the
+   Linux runner and one file on the downloader's machine, where the second
+   silently wins.
+3. Win32 stripping **trailing dots and spaces** — `index.html.` and
+   `index.html`, same trick, no symlink and no code execution needed.
+4. Still waiting: NTFS `:` alternate data streams, reserved device names
+   (`CON`, `NUL`, `COM1`), and HFS/APFS Unicode normalisation, where NFC and
+   NFD are one file.
+
+That is not a run of unlucky misses. The rule set is defined by **other
+people's software**, so it only ever grows, and every miss is silent — the
+archive lists two plausible names and the reader gets one file.
+
+The inputs, by contrast, are a closed set: Vite emits hashed ASCII, jpackage
+emits ASCII plus the occasional space. Naming the safe shapes instead makes
+every one of those rules *unreachable* rather than individually patched:
+
+```python
+SAFE_COMPONENT = re.compile(r"[A-Za-z0-9_.][A-Za-z0-9._+ -]*")
+```
+
+Before tightening it I checked it against the filenames the real payloads
+actually contain rather than guessing — every one passes, including
+`_CodeSignature`, `.jpackage.xml`, and `ASSEMBLY_EXCEPTION`. The allowlist's
+cost is false positives; those fail loudly at release time, which is the right
+direction, and it can be widened once with evidence instead of tightened
+repeatedly under attack.
+
+The general rule: **when a check must predict how someone else's software will
+interpret your output, enumerate what you produce, not what they might
+mishandle.**
+
+Two smaller things from the same review:
+
+- **A comment that overstates what a check proves is a maintenance trap.** I
+  wrote that lexical normalisation was "sound here because `rglob` never
+  descends into a symlink". True of components *above* the link, false of the
+  target, which can traverse one — `normpath` collapses `L/..` to L's parent,
+  not L's target's parent. The physical `resolve()` caught it; the comment
+  invited someone to delete that as redundant.
+- **Test on a filesystem with the property you are testing.** The case-fold
+  guard could not even construct its fixture on macOS and skipped. A skipped
+  test reports green while checking nothing, so I created a case-sensitive APFS
+  volume, pointed `TMPDIR` at it, and ran the suite there: 58 tests, zero
+  skipped.
+
+## `Path.resolve()` disagrees with itself across platforms on a symlink loop
+
+CI caught a test that passed locally for the wrong reason. Given `a -> b` and
+`b -> a`, non-strict `Path.resolve()` raises `RuntimeError` on macOS and
+silently returns on Linux. I had written the guard as `except (OSError,
+RuntimeError)` and asserted only that *some* `ValueError` came out, so on my
+machine it passed via macOS's exception and on the Linux runner nothing was
+raised at all.
+
+The real defect was not the test. It was that the same payload would have been
+**refused on the macOS runner and published from the Linux one** — and a check
+whose verdict depends on where it ran is worse than no check, because it looks
+like one. The fix is to walk the symlink chain by hand with a hop limit and a
+seen-set, which is pure Python and gives the same answer everywhere. A dangling
+link still has to be accepted (jpackage bundles contain them), so the walk
+stops at anything that is not a symlink, which includes nothing at all.
+
+Two generalisations:
+
+- **Assert the message, not just the exception type**, when more than one code
+  path can raise that type. `assertRaises(ValueError)` was satisfied by a
+  completely different failure. Pinning the string is what proved my check was
+  the one firing — and mutation-testing it showed macOS's `resolve()` quietly
+  standing in for the guard I thought I was testing.
+- **Anything whose answer comes from the OS needs the same answer on every OS
+  you ship from.** Worth an explicit look when a repo builds the same artifact
+  on three runners: `nm` missing on Windows, `zip` missing on Windows, and now
+  `resolve()` behaving differently on macOS were all the same failure shape in
+  one afternoon.

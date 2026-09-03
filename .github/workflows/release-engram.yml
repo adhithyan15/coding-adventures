@@ -373,22 +373,30 @@ jobs:
       # `createDistributable` produces an application DIRECTORY -- a `.app`
       # bundle on macOS, a plain tree elsewhere -- so the payload is a zip of
       # it rather than a single installer file.
-      - name: Name the artifact for publication
+      #
+      # Archived through `engram_release.py` rather than the `zip` command:
+      # Git Bash on the Windows runner has no `zip`, so the Compose app built
+      # there perfectly and then failed to package. Python is already set up in
+      # this job on every platform, and `ZipFile.write` carries the executable
+      # bits through, which an app that has to launch needs.
+      - name: Archive the artifact for publication
         shell: bash
         env:
           RELEASE_VERSION: ${{ needs.validate.outputs.version }}
           PLATFORM: ${{ matrix.platform }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
         run: |
           set -euo pipefail
-          target="$(python code/scripts/engram_release.py compose-name \
-            --version "$RELEASE_VERSION" --platform "$PLATFORM")"
           dist="$RUNNER_TEMP/engram-compose/compose/build/compose/binaries/main/app"
           if [ ! -d "$dist" ]; then
             echo "no Compose distribution at $dist" >&2
             exit 1
           fi
           mkdir -p release-assets
-          ( cd "$dist" && zip -qry "$GITHUB_WORKSPACE/release-assets/$target" . )
+          python code/scripts/engram_release.py archive-compose \
+            --version "$RELEASE_VERSION" --platform "$PLATFORM" \
+            --source "$dist" --output-dir release-assets \
+            --commit "$RELEASE_COMMIT"
           ls -la release-assets
 
       - name: Upload the Compose payload

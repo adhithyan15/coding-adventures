@@ -17,8 +17,12 @@ diverge in how they validate identifiers or shape their payloads.
 from __future__ import annotations
 
 import argparse
+import os
+import posixpath
 import re
+import shutil
 import sys
+import unicodedata
 import zipfile
 from pathlib import Path
 
@@ -132,17 +136,349 @@ def _zip_tree(source: Path, output: Path, root_name: str, commit: str) -> None:
     tree produces the same bytes regardless of filesystem iteration order. The
     ``SOURCE_COMMIT`` member records exactly which commit produced the payload,
     so an artifact found later can be traced without relying on the release page.
+
+    Symlinks are **stored as links**, never followed -- see ``_write_symlink``
+    for why that is both the secure and the correct behaviour. Everything these
+    archives contain is published, so this function refuses a payload rather
+    than writing one it cannot vouch for.
     """
 
     if not source.is_dir():
         raise ValueError(f"archive source directory does not exist: {source}")
+    root = source.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr(f"{root_name}/SOURCE_COMMIT", f"{commit}\n")
-        for path in sorted(source.rglob("*")):
-            if path.is_file():
+
+    # Built beside the target and moved into place only on success. Opening
+    # `output` directly would leave a VALID, readable, truncated zip behind when
+    # a member is rejected mid-walk -- and a truncated payload satisfies both
+    # `if-no-files-found: error` and the publish job's "files on disk equal the
+    # declared set" check. Today the workflow's `set -e` stops before the
+    # upload; this makes it not depend on that.
+    partial = output.with_name(output.name + ".partial")
+    try:
+        with zipfile.ZipFile(partial, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            provenance = zipfile.ZipInfo(f"{root_name}/SOURCE_COMMIT")
+            provenance.create_system = 3
+            provenance.external_attr = 0o644 << 16  # else it extracts as 0600
+            provenance.compress_type = zipfile.ZIP_DEFLATED
+            archive.writestr(provenance, f"{commit}\n")
+            # Any two members that differ only by case are one file on the
+            # reader's macOS or Windows machine, and the second silently
+            # overwrites the first. `SOURCE_COMMIT` is the security-relevant
+            # instance -- it is seeded here so the general check covers it --
+            # but a payload that quietly loses a file on extraction is a bad
+            # payload whatever the file was.
+            # Keyed exactly as members are, or the seed silently stops
+            # matching: `SEMVER` permits an uppercase prerelease, so a tag like
+            # `engram-v0.3.0-RC.1` made this entry unreachable.
+            seen: dict[str, str] = {
+                _collision_key(f"{root_name}/SOURCE_COMMIT"): "SOURCE_COMMIT"
+            }
+            total = 0
+            for path in sorted(source.rglob("*")):
                 relative = path.relative_to(source).as_posix()
-                archive.write(path, f"{root_name}/{relative}")
+                _reject_unsafe_member(relative)
+                member = f"{root_name}/{relative}"
+                clash = seen.setdefault(_collision_key(member), relative)
+                if clash != relative:
+                    raise ValueError(
+                        f"two members collide when case is folded, so one would "
+                        f"overwrite the other on extraction: {relative!r} and "
+                        f"{clash!r}"
+                    )
+                if path.is_symlink():
+                    _write_symlink(archive, path, root, root_name, member)
+                    continue
+                if path.is_dir():
+                    # Stored explicitly: an empty directory is otherwise
+                    # dropped in silence, and a `.app` bundle can need one.
+                    archive.writestr(_directory_entry(f"{member}/"), b"")
+                    continue
+
+                status = path.stat()
+                if not path.is_file():
+                    # A FIFO, socket, or device node cannot be published, and
+                    # skipping it silently contradicts what this function
+                    # promises. Neither a Vite `dist/` nor a jpackage image
+                    # contains one, so this only ever fires on a surprise.
+                    raise ValueError(
+                        f"payload contains a non-regular file: {relative}"
+                    )
+                if status.st_nlink > 1:
+                    # `_write_symlink` refuses to follow a symlink out of the
+                    # payload; a hard link is the same reach with none of the
+                    # tells -- `is_symlink()` is False and the bytes are simply
+                    # embedded. Git cannot store one and neither build produces
+                    # one, so refusing costs nothing.
+                    raise ValueError(
+                        f"payload contains a hard link, which can reach outside "
+                        f"it without appearing to: {relative}"
+                    )
+
+                total += status.st_size
+                if total > MAX_PAYLOAD_BYTES:
+                    raise ValueError(
+                        f"payload exceeds {MAX_PAYLOAD_BYTES} uncompressed bytes; "
+                        f"refusing to publish an archive that expands without "
+                        f"bound"
+                    )
+                _write_file(archive, path, member, status.st_mode)
+    except BaseException:
+        partial.unlink(missing_ok=True)
+        raise
+    os.replace(partial, output)
+
+
+# A path component we are willing to publish. An ALLOWLIST, deliberately.
+#
+# The alternative -- enumerating unsafe shapes -- is unwinnable, and this file
+# learned that the expensive way: three review rounds each found one more
+# equivalence rule nobody had modelled. Backslash-as-separator. Case folding.
+# Win32 stripping trailing dots and spaces, so `index.html.` and `index.html`
+# are two members here and one file on the downloader's machine. Still waiting
+# were NTFS `:` alternate data streams, reserved device names, and HFS/APFS
+# Unicode normalisation. That rule set is defined by other people's extractors,
+# so it can only grow, and every miss is silent.
+#
+# What we archive, by contrast, is a *closed* set: Vite emits hashed ASCII
+# names, and jpackage emits ASCII plus the occasional space. So the safe shapes
+# are named instead, and every one of those equivalence rules becomes
+# unreachable rather than individually patched. A payload that falls outside
+# this fails loudly at release time, which is the right direction to fail; the
+# allowlist can then be widened once, with evidence, rather than tightened
+# repeatedly under attack.
+SAFE_COMPONENT = re.compile(r"[A-Za-z0-9_.][A-Za-z0-9._+ -]*")
+
+# Win32 resolves these as devices no matter the directory or extension.
+RESERVED_NAMES = frozenset(
+    {"CON", "PRN", "AUX", "NUL"}
+    | {f"COM{digit}" for digit in range(1, 10)}
+    | {f"LPT{digit}" for digit in range(1, 10)}
+)
+
+
+def _reject_unsafe_member(relative: str) -> None:
+    """Refuse a member name we are not certain every extractor reads the same.
+
+    Checked component by component, because the hazards are per-component:
+    Win32 strips a trailing dot from each one, and a reserved device name is
+    reserved at any depth.
+    """
+
+    for component in relative.split("/"):
+        if component in {"", ".", ".."}:
+            raise ValueError(f"unsafe archive member name: {relative!r}")
+        if SAFE_COMPONENT.fullmatch(component) is None:
+            raise ValueError(
+                f"unsafe archive member name: {relative!r} -- component "
+                f"{component!r} is outside the publishable character set"
+            )
+        # Win32 strips these, so `index.html.` and `index.html` are one file
+        # there and two members here: the later one silently wins.
+        if component.endswith((".", " ")):
+            raise ValueError(
+                f"unsafe archive member name: {relative!r} -- component "
+                f"{component!r} ends with a dot or space, which Windows strips"
+            )
+        if component.split(".")[0].upper() in RESERVED_NAMES:
+            raise ValueError(
+                f"unsafe archive member name: {relative!r} -- component "
+                f"{component!r} is a reserved Windows device name"
+            )
+
+    # Case-folded, because the collision is. On a case-sensitive build
+    # filesystem `source_commit` and `SOURCE_COMMIT` are two distinct members
+    # and nothing warns -- the shadowing then happens on the *downloader's*
+    # machine, where macOS and Windows collapse them and the planted value
+    # wins. Nested `sub/SOURCE_COMMIT` is still fine: it does not collide.
+    if _collision_key(relative) == _collision_key("SOURCE_COMMIT"):
+        raise ValueError(
+            "payload contains its own SOURCE_COMMIT, which would shadow the "
+            "commit recorded here"
+        )
+
+
+def _collision_key(relative: str) -> str:
+    """How the reader's filesystem will decide two members are one file.
+
+    Case folding is the familiar half. Normalisation is the other: macOS
+    case-insensitive volumes are normalisation-insensitive too, so a name in
+    NFD and the same name in NFC are one file there and two members in an
+    archive built on Linux. The allowlist above already confines names to
+    ASCII, where both rules are trivial -- this stays explicit so the guarantee
+    does not quietly depend on that.
+    """
+
+    return unicodedata.normalize("NFC", relative).casefold()
+
+
+def _reject_unsafe_target(path: Path, target: str) -> None:
+    """Refuse a symlink target we cannot vouch for on the reader's machine.
+
+    The same shapes as a member name, for the same reasons -- these were
+    written separately once and the target half was missing the checks
+    entirely, which is why they now share ``SAFE_COMPONENT``. A backslash is
+    the sharp one: `posixpath` treats it as an ordinary character, so a target
+    of ``..\\..\\..\\evil.exe`` normalises to a single harmless-looking
+    in-payload component under the rules we validate with, and splits to
+    ``../evil.exe`` under the rules that extract it.
+    """
+
+    if not target:
+        raise ValueError(f"unsafe symlink target: {path} -> empty")
+    for component in target.split("/"):
+        if component in {"", "."}:
+            continue
+        if component == "..":
+            continue  # Where it lands is checked below, not here.
+        if SAFE_COMPONENT.fullmatch(component) is None or component.endswith(
+            (".", " ")
+        ):
+            raise ValueError(
+                f"unsafe symlink target: {path} -> {target!r} -- component "
+                f"{component!r} is outside the publishable character set"
+            )
+
+
+# A ceiling on what one release payload may expand to. The Compose
+# distribution bundles a JDK runtime and is the largest thing here by far, at a
+# few hundred megabytes; this sits well above that so it only ever fires on
+# something absurd. Without it, one planted zero-filled file compresses at
+# ~1000:1 and the published asset is a decompression bomb aimed at downloaders.
+MAX_PAYLOAD_BYTES = 4 * 1024 * 1024 * 1024
+
+
+def _directory_entry(member: str) -> zipfile.ZipInfo:
+    """An explicit directory member, so empty directories survive."""
+
+    info = zipfile.ZipInfo(member)
+    info.create_system = 3
+    info.external_attr = (0o040755 << 16) | 0x10
+    return info
+
+
+def _write_file(
+    archive: zipfile.ZipFile, path: Path, member: str, mode: int
+) -> None:
+    """Copy one regular file in, with its mode narrowed to what we publish.
+
+    The executable bit is carried through -- an app that loses it extracts
+    unlaunchable -- but setuid, setgid, and group/other write are dropped
+    rather than published. Streamed rather than read whole: the JDK runtime in
+    a Compose distribution contains individual files of a hundred megabytes.
+    """
+
+    info = zipfile.ZipInfo.from_file(path, member)
+    info.compress_type = zipfile.ZIP_DEFLATED
+    info.create_system = 3
+    permissions = 0o755 if mode & 0o111 else 0o644
+    info.external_attr = permissions << 16
+    with path.open("rb") as source, archive.open(info, "w") as target:
+        shutil.copyfileobj(source, target)
+
+
+# Deep enough for any real bundle -- a jpackage framework chain is two or
+# three hops -- and shallow enough that a pathological chain fails fast.
+MAX_SYMLINK_HOPS = 40
+
+
+def _reject_symlink_loop(path: Path) -> None:
+    """Refuse a symlink that never reaches a real file.
+
+    Walked by hand because ``resolve()`` does not agree with itself across
+    platforms: a loop raises ``RuntimeError`` on macOS and is silently
+    tolerated on Linux. Left to it, the same payload would be refused on the
+    macOS runner and published from the Linux one -- and a check whose verdict
+    depends on where it ran is worse than no check, because it looks like one.
+
+    A *dangling* link is fine and stays accepted: the loop below stops as soon
+    as it reaches something that is not a symlink, which includes nothing at
+    all. jpackage bundles legitimately contain dangling links.
+    """
+
+    seen: set[str] = set()
+    probe = path
+    for _ in range(MAX_SYMLINK_HOPS):
+        try:
+            if not probe.is_symlink():
+                return
+        except OSError:
+            return
+        key = str(probe)
+        if key in seen:
+            raise ValueError(f"symlink loop, which never reaches a file: {path}")
+        seen.add(key)
+        probe = probe.parent / os.readlink(probe)
+    raise ValueError(f"symlink chain longer than {MAX_SYMLINK_HOPS} hops: {path}")
+
+
+def _write_symlink(
+    archive: zipfile.ZipFile, path: Path, root: Path, root_name: str, member: str
+) -> None:
+    """Store a symlink as a link, and only if it stays inside the payload.
+
+    Storing rather than following is not a detail. ``ZipFile.write`` opens the
+    path, so a symlink is archived as *its target's bytes* under an innocuous
+    in-tree name -- and these archives are published as public release assets.
+    Anything able to drop one symlink into the build tree could have the
+    contents of any runner-readable file (``.git/config`` holds the checkout
+    token) baked into a download, with a member name that looks ordinary. The
+    ``zip -qry`` this replaced passed ``-y``, which stores links, so following
+    them would have been a regression as well as a leak.
+
+    Storing is also the only correct behaviour for the payload: a macOS
+    ``.app`` from jpackage carries a bundled runtime full of symlinked
+    directories, and ``rglob`` does not descend into those -- so dereferencing
+    silently *drops* every file beneath them while appearing to succeed.
+
+    A link pointing outside the distribution is refused rather than stored:
+    inside the payload it would dangle at best, and it is the shape an
+    exfiltration attempt takes.
+    """
+
+    target = os.readlink(path)
+
+    _reject_unsafe_target(path, target)
+
+    # An absolute target cannot be right in a relocatable payload: it either
+    # dangles on the reader's machine or points somewhere unrelated, and it
+    # leaks the runner's filesystem layout into a public download.
+    if posixpath.isabs(target) or os.path.isabs(target):
+        raise ValueError(f"symlink target is absolute: {path} -> {target}")
+
+    # Checked twice, against two different roots, because they catch different
+    # things. The build-tree check below asks where the link points *now*. This
+    # one asks where it will point *after extraction*, which is what the reader
+    # actually gets -- and a link can satisfy the first while violating the
+    # second: from `dist/assets/`, `../../dist/evil` lands back inside the
+    # build tree, but from `<payload>/assets/` it escapes the payload root.
+    # This is a NECESSARY but NOT SUFFICIENT filter, and the physical
+    # `resolve()` below is load-bearing -- do not "simplify" by dropping it.
+    # `rglob` never descends into a symlink, so every component *above* the
+    # link is a real directory; the TARGET can still traverse one, and
+    # `normpath` collapses `L/..` to L's parent rather than L's target's
+    # parent. `legit/../../evil` is judged in-payload here and caught there.
+    landing = posixpath.normpath(posixpath.join(posixpath.dirname(member), target))
+    if landing != root_name and not landing.startswith(f"{root_name}/"):
+        raise ValueError(f"symlink escapes the payload: {path} -> {target}")
+
+    # Detected explicitly rather than left to `resolve()`, which disagrees
+    # across platforms: a loop raises `RuntimeError` on macOS and is silently
+    # tolerated on Linux, so the same payload would be refused on one runner
+    # and published on the other. A loop is never legitimate here.
+    _reject_symlink_loop(path)
+
+    try:
+        resolved = (path.parent / target).resolve()
+    except (OSError, RuntimeError) as error:
+        raise ValueError(f"cannot resolve symlink: {path} -> {target}") from error
+    if resolved != root and not resolved.is_relative_to(root):
+        raise ValueError(f"symlink escapes the payload: {path} -> {target}")
+
+    info = zipfile.ZipInfo(member)
+    info.create_system = 3  # Unix, so the mode below is read back as a mode.
+    info.external_attr = 0o120777 << 16  # S_IFLNK | 0777
+    archive.writestr(info, target)
 
 
 # `src="/assets/…"`, `href="/assets/…"`, and the bare engine path. Matching on
@@ -213,6 +549,70 @@ def archive_web(version: str, commit: str, source: Path, output_dir: Path) -> Pa
     return output
 
 
+def archive_compose(
+    version: str, platform: str, source: Path, output_dir: Path, commit: str
+) -> Path:
+    """Archive a Compose Desktop distribution for publication.
+
+    Python's `zipfile` rather than the `zip` command, because `zip` does not
+    exist in Git Bash on the Windows runner -- the Compose app built there
+    perfectly and then failed to package, which is a silly way to lose a
+    platform. Python is already set up in every one of these jobs, so this is
+    the one tool that behaves identically on all three.
+
+    `ZipFile.write` carries each file's mode into `external_attr`, so the
+    executable bits in the distribution survive the round trip. An archive that
+    loses them extracts to an app that cannot be launched.
+    """
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}", commit)
+    if not source.is_dir():
+        raise ValueError(f"Compose distribution does not exist: {source}")
+
+    # Same reasoning as the wasm check in `archive_web`, and the same bug this
+    # repository has already shipped once: Gradle's `createDistributable`
+    # succeeds whether or not the engine was copied in beside the jar, so a
+    # distribution missing `engram_capi` is a *runtime* failure behind a green
+    # build -- an app that launches and then cannot open a deck.
+    #
+    # Checked here rather than in `build-native.sh` because the shell script's
+    # symbol assertion runs `nm`, which does not exist on the Windows runner
+    # and is skipped there. This path runs identically on all three.
+    engine = next(
+        (
+            path
+            for path in source.rglob("*")
+            if not path.is_symlink()
+            and path.is_file()
+            and path.stem.removeprefix("lib") == "engram_capi"
+        ),
+        None,
+    )
+    if engine is None:
+        raise ValueError(
+            f"Compose distribution has no engram_capi engine: {source}"
+        )
+    if engine.stat().st_size == 0:
+        raise ValueError(f"engram_capi engine is empty: {engine}")
+
+    name = compose_artifact_name(version, platform)
+    output = output_dir / name
+    _zip_tree(source, output, f"engram-compose-{platform}-v{version}", commit)
+    return output
+
+
+def _cmd_archive_compose(args: argparse.Namespace) -> int:
+    output = archive_compose(
+        args.version,
+        args.platform,
+        Path(args.source),
+        Path(args.output_dir),
+        args.commit,
+    )
+    print(output)
+    return 0
+
+
 def _cmd_validate(args: argparse.Namespace) -> int:
     validate_identifiers(args.version, args.tag, args.commit)
     print(f"version={args.version}")
@@ -263,6 +663,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     names.add_argument("--version", required=True)
     names.set_defaults(handler=_cmd_artifact_names)
+
+    archive_compose_cmd = subcommands.add_parser(
+        "archive-compose", help="Archive a Compose distribution for publication"
+    )
+    archive_compose_cmd.add_argument("--version", required=True)
+    archive_compose_cmd.add_argument("--platform", required=True)
+    archive_compose_cmd.add_argument("--source", required=True)
+    archive_compose_cmd.add_argument("--output-dir", required=True)
+    archive_compose_cmd.add_argument("--commit", required=True)
+    archive_compose_cmd.set_defaults(handler=_cmd_archive_compose)
 
     compose = subcommands.add_parser(
         "compose-name", help="The published name for one platform's Compose build"
