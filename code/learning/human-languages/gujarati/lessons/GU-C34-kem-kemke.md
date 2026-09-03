@@ -47,8 +47,8 @@ position in its chapter, the sentence that admits you are lost.
 
 Both halves are yours, and they are the same three sounds twice over:
 
-> — **કેમ?** — *why?*
-> — **… કેમકે …** — *… because …*
+- — **કેમ?** — *why?*
+- — **… કેમકે …** — *… because …*
 
 Say them as a pair rather than as two lessons. The question word is *inside* the
 answer, which makes this one of the easiest exchanges in the language to hold:

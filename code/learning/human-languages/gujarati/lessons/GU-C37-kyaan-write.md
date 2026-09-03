@@ -44,8 +44,8 @@ reviews_of: [GU-C37-kyaan, GU-C36-te-write]
 
 Uncover **ક્યાં** and take it apart in order:
 
-> **ક** · the **્** that binds it to · **ય** · then the **ા** stroke · and the
-> **ં** dot above
+- **ક** · the **્** that binds it to · **ય** · then the **ા** stroke · and the
+  **ં** dot above
 
 Five signs, every one taught before chapter 30. This is the last word this run of
 chapters puts into the hand, and like every other one it spends nothing new.
