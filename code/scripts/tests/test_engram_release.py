@@ -644,12 +644,32 @@ class ArchiveComposeTests(unittest.TestCase):
             (app / "a").symlink_to("b")
             (app / "b").symlink_to("a")
 
-            # ValueError, not RuntimeError: `main` catches the former and
-            # prints one line, which is what the CI log should show.
-            with self.assertRaises(ValueError):
+            # The message is asserted, not just the type. `Path.resolve()`
+            # raises RuntimeError for a loop on macOS and silently tolerates it
+            # on Linux, so this test passed on a developer machine for the
+            # wrong reason and failed in CI. Naming the message pins that the
+            # explicit walk is what refuses it, on every platform.
+            with self.assertRaises(ValueError) as caught:
                 engram_release.archive_compose(
                     "0.4.0", "macos", dist, root / "out", COMMIT
                 )
+            self.assertIn("symlink loop", str(caught.exception))
+
+    def test_a_dangling_symlink_is_still_accepted(self) -> None:
+        # The false-positive direction for the loop check: a jpackage bundle
+        # legitimately contains links whose target is not present, and refusing
+        # those would break the macOS build.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (dist / "Engram.app" / "Fw").symlink_to("Versions/Current/Fw")
+
+            output = engram_release.archive_compose(
+                "0.4.0", "macos", dist, root / "out", COMMIT
+            )
+            with zipfile.ZipFile(output) as archive:
+                member = "engram-compose-macos-v0.4.0/Engram.app/Fw"
+                self.assertEqual(archive.read(member), b"Versions/Current/Fw")
 
     def test_a_symlink_cannot_satisfy_the_engine_check(self) -> None:
         # Otherwise a link named `libengram_capi.dylib` would pass the presence

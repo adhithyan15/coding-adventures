@@ -377,6 +377,41 @@ def _write_file(
         shutil.copyfileobj(source, target)
 
 
+# Deep enough for any real bundle -- a jpackage framework chain is two or
+# three hops -- and shallow enough that a pathological chain fails fast.
+MAX_SYMLINK_HOPS = 40
+
+
+def _reject_symlink_loop(path: Path) -> None:
+    """Refuse a symlink that never reaches a real file.
+
+    Walked by hand because ``resolve()`` does not agree with itself across
+    platforms: a loop raises ``RuntimeError`` on macOS and is silently
+    tolerated on Linux. Left to it, the same payload would be refused on the
+    macOS runner and published from the Linux one -- and a check whose verdict
+    depends on where it ran is worse than no check, because it looks like one.
+
+    A *dangling* link is fine and stays accepted: the loop below stops as soon
+    as it reaches something that is not a symlink, which includes nothing at
+    all. jpackage bundles legitimately contain dangling links.
+    """
+
+    seen: set[str] = set()
+    probe = path
+    for _ in range(MAX_SYMLINK_HOPS):
+        try:
+            if not probe.is_symlink():
+                return
+        except OSError:
+            return
+        key = str(probe)
+        if key in seen:
+            raise ValueError(f"symlink loop, which never reaches a file: {path}")
+        seen.add(key)
+        probe = probe.parent / os.readlink(probe)
+    raise ValueError(f"symlink chain longer than {MAX_SYMLINK_HOPS} hops: {path}")
+
+
 def _write_symlink(
     archive: zipfile.ZipFile, path: Path, root: Path, root_name: str, member: str
 ) -> None:
@@ -427,11 +462,15 @@ def _write_symlink(
     if landing != root_name and not landing.startswith(f"{root_name}/"):
         raise ValueError(f"symlink escapes the payload: {path} -> {target}")
 
+    # Detected explicitly rather than left to `resolve()`, which disagrees
+    # across platforms: a loop raises `RuntimeError` on macOS and is silently
+    # tolerated on Linux, so the same payload would be refused on one runner
+    # and published on the other. A loop is never legitimate here.
+    _reject_symlink_loop(path)
+
     try:
         resolved = (path.parent / target).resolve()
     except (OSError, RuntimeError) as error:
-        # A symlink loop raises RuntimeError, which `main` does not catch --
-        # a raw traceback instead of the one-line message CI is meant to show.
         raise ValueError(f"cannot resolve symlink: {path} -> {target}") from error
     if resolved != root and not resolved.is_relative_to(root):
         raise ValueError(f"symlink escapes the payload: {path} -> {target}")
