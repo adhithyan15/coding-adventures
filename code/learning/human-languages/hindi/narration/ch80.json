@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "The Eating House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:edc4b34ea388d99c",
+  "sourceHash": "fnv1a64:c1dbffce78546757",
   "lessons": [
     {
       "id": "HI-C73-eating-house",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62758dcb10811647",
+      "sourceHash": "fnv1a64:ecfbc97898a6eccc",
       "notice": null,
       "blocks": [
         {
@@ -123,6 +123,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *chāy hoṭal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āj, then read पैसा",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āj*, then read **पैसा**]"
             }
           ]
         },
@@ -158,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9666ea9f7425e37",
+      "sourceHash": "fnv1a64:45f2d8c8c9d1ba73",
       "notice": null,
       "blocks": [
         {
@@ -262,6 +271,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: होटल once more, then नाश्ता beside the printed model]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read भी, then say rupayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **भी**, then say *rupayā*]"
             }
           ]
         },
@@ -423,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2adfd5b450ccef83",
+      "sourceHash": "fnv1a64:5b6a82187518e31f",
       "notice": null,
       "blocks": [
         {
@@ -514,6 +532,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: वेटर, with व for the English w and ट for the English t]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read बहुत, then say mahãgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **बहुत**, then say *mahãgā*]"
             }
           ]
         },

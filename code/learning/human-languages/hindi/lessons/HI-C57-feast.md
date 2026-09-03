@@ -12,7 +12,7 @@ headword: "दावत"
 gloss: "a feast, an invitation"
 romanization: "dāvat"
 concept_tag: HI-NOUN-FEAST
-prerequisites: [HI-C57-present]
+prerequisites: [HI-C57-present, HI-C55-moon, HI-C56-village]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C57-GIFT-02]
 practises:
-  knowledge: [HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02]
+  knowledge: [HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C55-SKY-02, HI-LEX-C56-ROAD-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The meaning slid from the invitation to the meal you were invited to, which is a
 The second of five, and a word that means both the calling and the meal.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C55-SKY-02, HI-LEX-C56-ROAD-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dāvat*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dāvat*, and the *tohfā* you bring to it]
+- [YOU RECALL: read **चाँद**, then say *gā̃v*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02] -->

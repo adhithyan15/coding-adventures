@@ -12,7 +12,7 @@ headword: "दुकान"
 gloss: "a shop"
 romanization: "dukān"
 concept_tag: HI-NOUN-SHOP
-prerequisites: [HI-C56-market]
+prerequisites: [HI-C56-market, HI-C54-bird, HI-C55-cloud]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C56-ROAD-04]
 practises:
-  knowledge: [HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04]
+  knowledge: [HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04, HI-LEX-C54-ANIMAL-04, HI-LEX-C55-SKY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That is the same road that brought you शुक्रिया and मुला
 The fourth of five, and a well-travelled road you have walked before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04, HI-LEX-C54-ANIMAL-04, HI-LEX-C55-SKY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dukān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dukān*, in the *bāzār*]
+- [YOU RECALL: say *chiṛiyā*, then read **बादल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04] -->

@@ -12,7 +12,7 @@ headword: "आसमान"
 gloss: "the sky"
 romanization: "āsmān"
 concept_tag: HI-NOUN-SKY
-prerequisites: [HI-C55-cloud]
+prerequisites: [HI-C55-cloud, HI-C53-lip, HI-C54-goat]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C55-SKY-05]
 practises:
-  knowledge: [HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05]
+  knowledge: [HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05, HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Sanskrit's own everyday word for sky, आकाश (*ākāśa*), is a different 
 The fifth of five. The sky is furnished.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05, HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āsmān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āsmān*, and under it *sūraj*, *chā̃d*, *tārā*, *bādal*]
+- [YOU RECALL: say *hoṇṭh*, then read **बकरी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05] -->

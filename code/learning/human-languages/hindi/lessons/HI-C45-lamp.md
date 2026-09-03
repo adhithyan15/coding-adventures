@@ -12,7 +12,7 @@ headword: "दीया"
 gloss: "an oil lamp"
 romanization: "dīyā"
 concept_tag: HI-NOUN-LAMP
-prerequisites: [HI-C45-cloth]
+prerequisites: [HI-C45-cloth, HI-C43-speak, HI-C44-daughter]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C45-ASK-03]
 practises:
-  knowledge: [HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03]
+  knowledge: [HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03, HI-LEX-SPEAK, HI-LEX-DAUGHTER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The *p* softened away in everyday speech and left दीया behind, while the
 Three: a fruit, a cloth, and a lamp.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03, HI-LEX-SPEAK, HI-LEX-DAUGHTER] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dīyā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dīyā*, then *kapṛā*, so the two objects sit together]
+- [YOU RECALL: say *bolnā*, then read **बेटी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03] -->

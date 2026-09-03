@@ -12,7 +12,7 @@ headword: "तेल"
 gloss: "oil"
 romanization: "tel"
 concept_tag: HI-NOUN-OIL
-prerequisites: [HI-C52-lentils]
+prerequisites: [HI-C52-lentils, HI-C50-respect, HI-C51-courtyard]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C52-KITCHEN-03]
 practises:
-  knowledge: [HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03]
+  knowledge: [HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C50-COURTESY-03, HI-LEX-C51-WELCOME-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ English did the same thing by a different road: *oil* goes back to Latin *oleum*
 The third of five, and a word that still smells of one particular seed.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C50-COURTESY-03, HI-LEX-C51-WELCOME-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tel*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tel*, the thing the दाल is finished with]
+- [YOU RECALL: say *ādar*, then read **आँगन**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03] -->

@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "One Tea, Please",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:91d7209f531bdac4",
+  "sourceHash": "fnv1a64:b910656a0ac4a4ce",
   "lessons": [
     {
       "id": "HI-C37-chai",
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6beb858f4730d785",
+      "sourceHash": "fnv1a64:6b10ae9709edd06e",
       "notice": null,
       "blocks": [
         {
@@ -289,6 +289,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dūdh* and *dough* — and that they are not related]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lenā, then say pūchnā, then read मदद करना",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lenā*, then say *pūchnā*, then read **मदद करना**]"
             }
           ]
         },

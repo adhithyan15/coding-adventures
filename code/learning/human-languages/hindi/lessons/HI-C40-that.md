@@ -12,7 +12,7 @@ headword: "वह"
 gloss: "that one — the thing over there"
 romanization: "vah"
 concept_tag: HI-DEIXIS-THAT
-prerequisites: [HI-C40-this]
+prerequisites: [HI-C40-this, HI-C38-daant]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C40-DEIXIS-02]
 practises:
-  knowledge: [HI-LEX-C40-DEIXIS-01, HI-LEX-C40-DEIXIS-02]
+  knowledge: [HI-LEX-C40-DEIXIS-01, HI-LEX-C40-DEIXIS-02, HI-CONCEPT-C38-DAANT-01, HI-CONCEPT-C38-DAANT-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,11 +51,12 @@ differ by one sound at the front — **v-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-02, HI-CONCEPT-C38-DAANT-01, HI-CONCEPT-C38-DAANT-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "वह" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **दाँत**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-02] -->

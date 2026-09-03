@@ -12,7 +12,7 @@ headword: "यह"
 gloss: "this one — the thing near me"
 romanization: "yah"
 concept_tag: HI-DEIXIS-THIS
-prerequisites: []
+prerequisites: [HI-C37-dudh, HI-C38-aankh]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C40-DEIXIS-01]
 practises:
-  knowledge: [HI-LEX-C40-DEIXIS-01]
+  knowledge: [HI-LEX-C40-DEIXIS-01, HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02, HI-CONCEPT-C38-AANKH-01, HI-CONCEPT-C38-AANKH-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,11 +51,12 @@ differ by one sound at the front — **y-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-01, HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02, HI-CONCEPT-C38-AANKH-01, HI-CONCEPT-C38-AANKH-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "यह" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *dūdh*, then read **आँख**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-01] -->

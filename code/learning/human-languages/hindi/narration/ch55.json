@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fb4578b98c2ba1b3",
+  "sourceHash": "fnv1a64:50ecf5b5bf29da6a",
   "lessons": [
     {
       "id": "HI-C55-sun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ff542fae932c076",
+      "sourceHash": "fnv1a64:e30dcf2721515993",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sūraj*, and hear *sol* inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kandhā, then read गाय",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kandhā*, then read **गाय**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:493636256a53f7fa",
+      "sourceHash": "fnv1a64:7605402930f9c84c",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *chā̃d*, then *sūraj* — night first, then day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ghuṭnā, then say ghoṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ghuṭnā*, then say *ghoṛā*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed096aa2b546fd34",
+      "sourceHash": "fnv1a64:2fc2a8a92b422e14",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tārā*, and hear *star* in it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say māthā, then say machhlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *māthā*, then say *machhlī*]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ad73f7e78a746d2",
+      "sourceHash": "fnv1a64:ae07aa0226f8e94e",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bādal*, and let the doubt sit there]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read पीठ, then say chiṛiyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **पीठ**, then say *chiṛiyā*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5de78b9214241ec2",
+      "sourceHash": "fnv1a64:88498d22d9e230fe",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *āsmān*, and under it *sūraj*, *chā̃d*, *tārā*, *bādal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hoṇṭh, then read बकरी",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hoṇṭh*, then read **बकरी**]"
             }
           ]
         },

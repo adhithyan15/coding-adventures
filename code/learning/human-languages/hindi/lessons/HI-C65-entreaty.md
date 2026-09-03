@@ -12,7 +12,7 @@ headword: "विनती"
 gloss: "an entreaty"
 romanization: "vintī"
 concept_tag: HI-NOUN-ENTREATY
-prerequisites: [HI-C65-kindness]
+prerequisites: [HI-C65-kindness, HI-C63-thirst, HI-C64-quickly]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C65-GRACE-02]
 practises:
-  knowledge: [HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02]
+  knowledge: [HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C63-STATE-02, HI-LEX-C64-MEASURE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It sits above कृपया in weight. कृपया goes in front of a requ
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C63-STATE-02, HI-LEX-C64-MEASURE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vintī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vintī*, then *kṛpayā*, and say which one is the asking itself]
+- [YOU RECALL: read **प्यास**, then say *jaldī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02] -->

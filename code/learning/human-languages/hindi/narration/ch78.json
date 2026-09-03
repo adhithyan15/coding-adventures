@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Today, and How Much",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e02ad5ca302828e2",
+  "sourceHash": "fnv1a64:0670def2b77b123a",
   "lessons": [
     {
       "id": "HI-C71-today",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7947c9fd7a694d20",
+      "sourceHash": "fnv1a64:eade2efd3a13720e",
       "notice": null,
       "blocks": [
         {
@@ -119,6 +119,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *āj āp kaise haiṁ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gāṛī, then read रेल",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gāṛī*, then read **रेल**]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3ce3eabb9c87f2f",
+      "sourceHash": "fnv1a64:ca261f8353476368",
       "notice": null,
       "blocks": [
         {
@@ -254,6 +263,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: आज once more, then भी beside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read स्टेशन, then say ṭikaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **स्टेशन**, then say *ṭikaṭ*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4bf06a75e970115",
+      "sourceHash": "fnv1a64:e84a096d4cd341a5",
       "notice": null,
       "blocks": [
         {
@@ -384,6 +402,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONTRAST: *bahut* before its word, and *bhī* after its word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jānā*]"
             }
           ]
         },

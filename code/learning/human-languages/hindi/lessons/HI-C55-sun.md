@@ -12,7 +12,7 @@ headword: "सूरज"
 gloss: "the sun"
 romanization: "sūraj"
 concept_tag: HI-NOUN-SUN
-prerequisites: [HI-C54-goat]
+prerequisites: [HI-C54-goat, HI-C53-shoulder, HI-C54-cow]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C55-SKY-01]
 practises:
-  knowledge: [HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-01]
+  knowledge: [HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-01, HI-LEX-C53-BODY-01, HI-LEX-C54-ANIMAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That makes सूरज a cousin of *solar* and of *sun* at once — the Latin w
 The first of five things overhead.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-01, HI-LEX-C53-BODY-01, HI-LEX-C54-ANIMAL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sūraj*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūraj*, and hear *sol* inside it]
+- [YOU RECALL: say *kandhā*, then read **गाय**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-01] -->

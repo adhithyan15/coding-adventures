@@ -12,7 +12,7 @@ headword: "सड़क"
 gloss: "a road"
 romanization: "saṛak"
 concept_tag: HI-NOUN-ROAD
-prerequisites: [HI-C55-sky]
+prerequisites: [HI-C55-sky, HI-C54-cow, HI-C55-sun]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C56-ROAD-01]
 practises:
-  knowledge: [HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01]
+  knowledge: [HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01, HI-LEX-C54-ANIMAL-01, HI-LEX-C55-SKY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It sits oddly beside the four words after it in this chapter, which are all trac
 The first of five places along the way.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01, HI-LEX-C54-ANIMAL-01, HI-LEX-C55-SKY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *saṛak*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *saṛak*, the thing you set out along]
+- [YOU RECALL: say *gāy*, then read **सूरज**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01] -->

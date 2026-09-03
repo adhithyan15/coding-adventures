@@ -12,7 +12,7 @@ headword: "मिठास"
 gloss: "sweetness"
 romanization: "miṭhās"
 concept_tag: HI-NOUN-SWEETNESS
-prerequisites: [HI-C57-fragrance]
+prerequisites: [HI-C57-fragrance, HI-C55-sky, HI-C56-field]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C57-GIFT-05]
 practises:
-  knowledge: [HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05]
+  knowledge: [HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05, HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Built on मीठा (*mīṭhā*), 'sweet', from Sanskrit मिष्ट (*mi
 The fifth of five. That is what goes with thanks.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05, HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *miṭhās*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *miṭhās*, and मिठाई beside it]
+- [YOU RECALL: say *āsmān*, then read **खेत**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05] -->

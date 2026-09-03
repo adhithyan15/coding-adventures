@@ -12,7 +12,7 @@ headword: "गाँव"
 gloss: "a village"
 romanization: "gā̃v"
 concept_tag: HI-NOUN-VILLAGE
-prerequisites: [HI-C56-road]
+prerequisites: [HI-C56-road, HI-C54-horse, HI-C55-moon]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C56-ROAD-02]
 practises:
-  knowledge: [HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02]
+  knowledge: [HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C54-ANIMAL-02, HI-LEX-C55-SKY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ From Sanskrit ग्राम (*grāma*), 'village'. The *gr-* cluster simplifie
 The second of five, and the same nasal trade as पाँच.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C54-ANIMAL-02, HI-LEX-C55-SKY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gā̃v*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gā̃v*, and feel the nasal where the *m* used to be]
+- [YOU RECALL: say *ghoṛā*, then read **चाँद**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02] -->

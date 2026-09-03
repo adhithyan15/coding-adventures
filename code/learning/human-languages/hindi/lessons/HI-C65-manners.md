@@ -12,7 +12,7 @@ headword: "अदब"
 gloss: "good manners"
 romanization: "adab"
 concept_tag: HI-NOUN-MANNERS
-prerequisites: [HI-C65-trust]
+prerequisites: [HI-C65-trust, HI-C63-pain, HI-C64-more]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C65-GRACE-05]
 practises:
-  knowledge: [HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05]
+  knowledge: [HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05, HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Guard it against आदर, which you already own. *ādar* is respect you feel a
 Five: मेहरबानी, विनती, अनुमति, भरोसा, अदब. Enough to ask for a thing at the weight the room asks for.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05, HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *adab*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dhanyavād*]
+- [YOU RECALL: say *dard*, then read **ज़्यादा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05] -->

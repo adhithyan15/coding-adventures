@@ -12,7 +12,7 @@ headword: "बेटी"
 gloss: "daughter"
 romanization: "beṭī"
 concept_tag: HI-NOUN-DAUGHTER
-prerequisites: [HI-C44-son]
+prerequisites: [HI-C44-son, HI-C42-sit]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-DAUGHTER]
 practises:
-  knowledge: [HI-LEX-SON, HI-LEX-DAUGHTER]
+  knowledge: [HI-LEX-SON, HI-LEX-DAUGHTER, HI-LEX-SIT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ The same stem, with *-ī* in place of *-ā* — exactly the swap that turns ब�
 Two of four, and one vowel doing all the work.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SON, HI-LEX-DAUGHTER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SON, HI-LEX-DAUGHTER, HI-LEX-SIT] -->
 
 [PAUSE 1s]
 - [YOU SAY: *beṭī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *beṭā*, and hear only the last vowel move]
+- [YOU RECALL: read **बैठना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SON, HI-LEX-DAUGHTER] -->

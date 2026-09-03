@@ -12,7 +12,7 @@ headword: "अभी"
 gloss: "right now"
 romanization: "abhī"
 concept_tag: HI-WORD-NOW
-prerequisites: [HI-C48-absolutely]
+prerequisites: [HI-C48-absolutely, HI-C47-teacher, HI-C48-true]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C49-LEAVE-01]
 practises:
-  knowledge: [HI-LEX-C48-REPLY-04, HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01]
+  knowledge: [HI-LEX-C48-REPLY-04, HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01, HI-LEX-C47-ROLE-01, HI-LEX-C48-REPLY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That little *-hī* is one of the most useful pieces in the language. It narrows 
 The first of five words for leaving.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-04, HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-04, HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01, HI-LEX-C47-ROLE-01, HI-LEX-C48-REPLY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *abhī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *abhī*, then *bilkul*, so the timing and the emphasis sit together]
+- [YOU RECALL: say *śikṣak*, then read **सच**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-04, HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01] -->
