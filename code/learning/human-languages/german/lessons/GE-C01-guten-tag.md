@@ -56,7 +56,7 @@ polite "hello" for daytime. Said *GOO-ten tahk*.
 
 Like every Germanic and Romance adjective, German *gut* **agrees** with its
 noun — but German adjectives agree in *more* dimensions than Spanish or
-French: not just gender and number, but **case** (the noun's job in the
+French: not only gender and number, but **case** (the noun's job in the
 sentence). *Guten Tag* is a frozen piece of a longer wish — "I wish you a good
 day" — and in that fuller thought, "a good day" is the *object* of the wishing
 (the accusative case). For a masculine noun in that role, *gut* takes the

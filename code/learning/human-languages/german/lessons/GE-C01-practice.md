@@ -35,7 +35,7 @@ reviews_of: [GE-C01-hallo, GE-C01-guten-tag, GE-C01-guten-morgen, GE-C01-guten-a
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] No new words — just the day's arc, until the endings are automatic.
+[PAUSE 2s] No new words — only the day's arc, until the endings are automatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HALLO-01, GE-LEX-GUT-02, GE-LEX-DER-DIE-DAS-02, GE-LEX-GUTEN-MORGEN-01, GE-LEX-GUTEN-TAG-01, GE-LEX-GUTEN-ABEND-01, GE-LEX-GUTE-NACHT-01, GE-GRAMMAR-ADJ-ACC-FEM-02, GE-ETYMON-GUT-SHIFT-03] -->

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 10,
-  "sourceHash": "fnv1a64:44f8bbeac400dc13",
+  "sourceHash": "fnv1a64:6e95217a194d1bc9",
   "lessons": [
     {
       "id": "GE-C02-ich",
@@ -293,7 +293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7181c70f015e792",
+      "sourceHash": "fnv1a64:e2d693ee4299640a",
       "notice": null,
       "blocks": [
         {
@@ -320,7 +320,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "heißen = HY-ssen. The ß (Eszett) is just a sharp \"ss.\" ei is the vowel of English eye. So heiße = HY-ssuh."
+              "text": "heißen = HY-ssen. The ß (Eszett) is a sharp \"ss.\" ei is the vowel of English eye. So heiße = HY-ssuh."
             }
           ]
         },
