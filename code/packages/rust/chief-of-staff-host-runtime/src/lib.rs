@@ -160,6 +160,47 @@ pub struct OrchestratorProfile {
 }
 
 impl OrchestratorProfile {
+    /// Derive a whole orchestrator profile from verified agent manifests.
+    ///
+    /// **This does not by itself establish integrity, and an earlier version
+    /// of this comment claimed it did.** `AgentManifest`'s fields are all
+    /// `pub` and `parse_manifest` accepts any text, so a caller passing an
+    /// operator-authored manifest here gets exactly the trust level of
+    /// [`OrchestratorProfile::from_json`]. Binding a manifest to a verified
+    /// package is the caller's job, and
+    /// [`SupervisedOrchestratorRuntime::spawn_deno_from_package`] is the entry
+    /// point that does it.
+    ///
+    /// What this DOES give over `from_json` is real: `HostProfile::from_manifest`
+    /// runs `AgentManifest::validate` per host -- including the
+    /// version-to-field binding `HostProfile::validate` knows nothing about --
+    /// and this then runs `OrchestratorProfile::validate`, which `from_json`
+    /// never calls at all.
+    ///
+    /// One host per manifest, each derived by [`HostProfile::from_manifest`].
+    ///
+    /// `OrchestratorProfile::validate` already refuses two hosts claiming the
+    /// same tool, which matters more here than under `from_json`: two agents
+    /// independently declaring `artifact.write` is an ordinary authoring
+    /// mistake, and the supervisor must not silently route that tool to
+    /// whichever host it saw last.
+    pub fn from_manifests<'a, I>(
+        profile_id: impl Into<String>,
+        manifests: I,
+    ) -> Result<Self, HostRuntimeError>
+    where
+        I: IntoIterator<Item = &'a AgentManifest>,
+    {
+        let profile_id = profile_id.into();
+        let hosts = manifests
+            .into_iter()
+            .map(|manifest| HostProfile::from_manifest(profile_id.clone(), manifest))
+            .collect::<Result<Vec<_>, _>>()?;
+        let profile = Self { profile_id, hosts };
+        profile.validate()?;
+        Ok(profile)
+    }
+
     pub fn from_json(text: &str) -> Result<Self, HostRuntimeError> {
         let value = parse_json(text)
             .map_err(|error| HostRuntimeError::InvalidJson(error.message.to_string()))?;
@@ -619,6 +660,55 @@ pub struct SupervisedOrchestratorRuntime {
 }
 
 impl SupervisedOrchestratorRuntime {
+    /// Spawn a supervised tree whose profile comes from the package's OWN
+    /// signed manifest.
+    ///
+    /// Takes no manifest argument, and that is the point. A first version
+    /// accepted a caller-supplied `&[AgentManifest]` alongside the package and
+    /// verified only the package -- so the surface still came from whatever
+    /// the caller passed, at byte-for-byte the same trust level as
+    /// [`OrchestratorProfile::from_json`], under a name and a doc comment
+    /// claiming the opposite. The manifest is read from
+    /// `package.manifest_bytes()` instead, which is the pattern
+    /// `chief-of-staff-agent-discovery` and `chief-of-staff-skill-package`
+    /// already use.
+    ///
+    /// One package, one manifest, one host. The earlier
+    /// N-manifests-one-package shape let a caller pair a tool-rich manifest
+    /// with an unrelated package and route that agent's tools into that
+    /// package's process.
+    pub fn spawn_deno_from_package(
+        profile_id: impl Into<String>,
+        package_path: &std::path::Path,
+        keyring: &PackageKeyring,
+        deno_program: impl Into<String>,
+        restart_policy: StdioWorkerRestartPolicy,
+    ) -> Result<Self, HostRuntimeError> {
+        let package = verify_agent_package(package_path, keyring)
+            .map_err(|error| HostRuntimeError::PackageVerification(error.to_string()))?;
+        let source = std::str::from_utf8(package.manifest_bytes()).map_err(|_| {
+            HostRuntimeError::PackageVerification("manifest bytes are not UTF-8".to_string())
+        })?;
+        let manifest = chief_of_staff_agent_manifest::parse_manifest(source).map_err(|error| {
+            HostRuntimeError::PackageVerification(format!("signed manifest is invalid: {error}"))
+        })?;
+        let profile = OrchestratorProfile::from_manifests(profile_id, [&manifest])?;
+        let deno_program = deno_program.into();
+        let specs = profile
+            .hosts
+            .iter()
+            .map(|host| {
+                HostProcessSpec::deny_all_deno(
+                    host.host_id.clone(),
+                    deno_program.clone(),
+                    &package,
+                    restart_policy.clone(),
+                )
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        Self::spawn_verified(profile, specs, &package)
+    }
+
     pub fn spawn_deno_verified(
         profile: OrchestratorProfile,
         package_path: &std::path::Path,
@@ -1349,6 +1439,216 @@ fn validate_capability(value: &str) -> Result<(), HostRuntimeError> {
 
 #[cfg(test)]
 mod tests {
+
+    fn manifest_for(agent: &str, tool: &str, capability: &str, tier: u8) -> AgentManifest {
+        chief_of_staff_agent_manifest::parse_manifest(&format!(
+            r#"{{
+              "version": 4,
+              "agent": "{agent}",
+              "description": "A manifest built for the supervised-profile tests.",
+              "privilege_tier": {tier},
+              "channels": {{"reads": {{"{agent}-in": 1}}, "writes": {{"{agent}-out": 1}}}},
+              "capabilities": [],
+              "allowed_tools": ["{tool}"],
+              "tool_capabilities": ["{capability}"],
+              "justification": "Exercises manifest-driven orchestrator profiles."
+            }}"#
+        ))
+        .expect("fixture manifest parses")
+    }
+
+    #[test]
+    fn a_supervised_tree_spawned_from_manifests_serves_a_call() {
+        // The point of P1.2, and the thing the earlier entry points alone did
+        // not establish: a supervised tree whose surface came from SIGNED
+        // MANIFESTS, spawning a real subprocess, answering a real RPC.
+        //
+        // Everything before this made the supervised path manifest-DRIVABLE.
+        // Nothing drove it. Given how often in this arc a boundary turned out
+        // to sit on a path nothing takes, an entry point with no caller is not
+        // evidence that the path works.
+        let script = r#"
+import json, sys
+for line in sys.stdin:
+    frame = json.loads(line)
+    body = frame["body"]
+    payload = body["payload"]
+    out = {"output_json": json.dumps({"served": True, "tool": payload["tool_id"]})}
+    response = {"version": 1, "kind": "response", "body": {"id": body["id"], "result": {"status": "ok", "payload": out}, "metadata": body["metadata"]}}
+    print(json.dumps(response), flush=True)
+"#;
+        let Some(command) = scripted_worker(script) else {
+            eprintln!("skipping test because no Python interpreter was found");
+            return;
+        };
+
+        // The surface comes from a manifest, not from operator JSON.
+        let manifest = manifest_for("note-taker", "context.append_entry", "context:write", 0);
+        let profile = OrchestratorProfile::from_manifests("orchestrator-1", [&manifest])
+            .expect("a manifest derives the orchestrator profile");
+        assert_eq!(profile.hosts[0].host_id, "note-taker");
+
+        let package = VerifiedAgentPackage {
+            path: std::env::temp_dir(),
+            digest: [0; 32],
+            manifest_bytes: Vec::new(),
+            key_id: "dev-1".to_string(),
+            key_type: PackageKeyType::Developer,
+            maximum_tier: PrivilegeTier::Tier1,
+            runtime: AgentPackageRuntime::Deno,
+            skill_source_bytes: None,
+        };
+        let runtime = SupervisedOrchestratorRuntime::spawn_verified(
+            profile,
+            vec![HostProcessSpec::new(
+                // The host id came from `manifest.agent`; naming it by hand
+                // here would let the derivation drift without the test
+                // noticing.
+                "note-taker",
+                command,
+                StdioWorkerRestartPolicy::Bounded {
+                    max_restarts: 1,
+                    window: Duration::from_secs(60),
+                },
+            )],
+            &package,
+        )
+        .expect("a manifest-derived profile spawns a supervised tree");
+
+        // Routing came from the manifest too: `submit` resolves the owning
+        // host through `tool_owners`, which `from_manifests` populated from
+        // `manifest.allowed_tools`.
+        runtime
+            .submit(HostRpcRequest {
+                call_id: "call_1".to_string(),
+                tool_id: "context.append_entry".to_string(),
+                arguments_json: "{}".to_string(),
+            })
+            .expect("the declared tool routes to its manifest-derived host");
+        let response = runtime
+            .recv_for_host("note-taker", Duration::from_secs(5))
+            .unwrap()
+            .expect("the spawned host answers");
+        match response.result {
+            // Assert the echoed tool id, not just a constant the script would
+            // print regardless -- that is what proves the RIGHT tool routed to
+            // the right host.
+            JobResult::Ok { payload } => {
+                assert!(payload.output_json.contains("served"));
+                assert!(payload.output_json.contains("context.append_entry"));
+            }
+            other => panic!("expected the worker to answer, got {other:?}"),
+        }
+
+        // A tool no manifest declared has no owner, so it cannot be routed.
+        // Pinned to the variant: `artifact.read` is a valid tool id and
+        // `call_2` a valid label, so a bare `is_err()` would still pass if a
+        // future change to either validator started rejecting them instead.
+        assert!(matches!(
+            runtime.submit(HostRpcRequest {
+                call_id: "call_2".to_string(),
+                tool_id: "artifact.read".to_string(),
+                arguments_json: "{}".to_string(),
+            }),
+            Err(HostRuntimeError::ToolNotAllowed(ref tool)) if tool == "artifact.read"
+        ));
+    }
+
+    #[test]
+    fn an_orchestrator_profile_derives_from_signed_manifests() {
+        // The supervised path could previously only be configured by
+        // `from_json` -- operator config that can disagree with the signed
+        // bytes governing the code it launches.
+        let first = manifest_for("note-taker", "context.append_entry", "context:write", 0);
+        let second = manifest_for("librarian", "artifact.read", "artifacts:read", 0);
+
+        let profile = OrchestratorProfile::from_manifests("orchestrator-1", [&first, &second])
+            .expect("two manifests derive a profile");
+
+        assert_eq!(profile.profile_id, "orchestrator-1");
+        assert_eq!(profile.hosts.len(), 2);
+        // Every host carries the orchestrator's own id, which `validate`
+        // requires and which a hand-written JSON profile gets wrong easily.
+        assert!(profile
+            .hosts
+            .iter()
+            .all(|host| host.profile_id == "orchestrator-1"));
+        let owners = profile
+            .hosts
+            .iter()
+            .map(|host| (host.host_id.as_str(), host.allowed_tools.as_slice()))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            owners,
+            vec![
+                ("note-taker", &["context.append_entry".to_string()][..]),
+                ("librarian", &["artifact.read".to_string()][..]),
+            ]
+        );
+    }
+
+    #[test]
+    fn two_manifests_claiming_the_same_tool_are_refused() {
+        // An ordinary authoring mistake, and the supervisor must not silently
+        // route the tool to whichever host it saw last.
+        let first = manifest_for("note-taker", "artifact.read", "artifacts:read", 0);
+        let second = manifest_for("librarian", "artifact.read", "artifacts:read", 0);
+
+        assert!(matches!(
+            OrchestratorProfile::from_manifests("orchestrator-1", [&first, &second]),
+            Err(HostRuntimeError::DuplicateToolOwner { ref tool_id, .. })
+                if tool_id == "artifact.read"
+        ));
+    }
+
+    #[test]
+    fn a_manifest_that_cannot_back_a_host_fails_the_whole_profile() {
+        // A v1 manifest declares no tools, so `from_manifest` refuses it with
+        // EmptyToolCatalog. The profile must fail rather than quietly building
+        // a tree with one fewer host than the operator asked for.
+        let good = manifest_for("note-taker", "context.append_entry", "context:write", 0);
+        let legacy = chief_of_staff_agent_manifest::parse_manifest(
+            r#"{
+              "version": 1,
+              "agent": "legacy-agent",
+              "description": "A legacy manifest with no declared tool surface.",
+              "privilege_tier": 0,
+              "channels": {"reads": ["legacy-in"], "writes": ["legacy-out"]},
+              "capabilities": [],
+              "justification": "Exercises the fail-closed path for pre-v3 manifests."
+            }"#,
+        )
+        .expect("legacy manifest parses");
+
+        assert!(matches!(
+            OrchestratorProfile::from_manifests("orchestrator-1", [&good, &legacy]),
+            Err(HostRuntimeError::EmptyToolCatalog)
+        ));
+    }
+
+    #[test]
+    fn each_hosts_tier_ceiling_comes_from_its_own_manifest() {
+        // Not from a single orchestrator-wide setting: two agents in one tree
+        // can legitimately sit at different tiers, and a JSON profile makes it
+        // easy to give them the same one by accident.
+        let low = manifest_for("note-taker", "context.append_entry", "context:write", 0);
+        let high = manifest_for("installer", "job.install", "jobs:install", 1);
+
+        let profile = OrchestratorProfile::from_manifests("orchestrator-1", [&low, &high])
+            .expect("profile derives");
+        let tiers = profile
+            .hosts
+            .iter()
+            .map(|host| (host.host_id.as_str(), host.max_tier))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            tiers,
+            vec![
+                ("note-taker", PrivilegeTier::Tier0),
+                ("installer", PrivilegeTier::Tier1),
+            ]
+        );
+    }
 
     #[test]
     fn host_profile_derives_from_a_signed_manifest() {
