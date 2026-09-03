@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-hochfrequent",
     "language": "german",
-    "chapter": 23,
-    "sequence": 455,
+    "chapter": 24,
+    "sequence": 475,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9b9d1b421341d7ce"
+    "sourceHash": "fnv1a64:da25ecb9d84680f9"
   },
   "findings": []
 }

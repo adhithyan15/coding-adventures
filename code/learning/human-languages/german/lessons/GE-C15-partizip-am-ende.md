@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-partizip-am-ende
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 400
-chapter: 22
+sequence: 420
+chapter: 23
 type: grammar
 headword: das Partizip am Ende
 gloss: the participle waits at the end of the clause while everything else piles up in front of it

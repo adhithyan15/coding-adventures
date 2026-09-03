@@ -1,26 +1,26 @@
 {
   "chapter": 24,
-  "title": "I Am, You Are",
-  "label": "ch:sein",
-  "canDo": "I can say what someone is in German, using any of the six present forms of the verb for “to be” — and say that I am tired.",
+  "title": "The Simple Past",
+  "label": "ch:ge-praeteritum",
+  "canDo": "I can recognise the one-word past German uses in writing, produce the handful of its forms that people actually say out loud, and explain why the rest of it retreated.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-DO"
+    "SPINE-TALK-ABOUT-PAST"
   ],
   "payoff": {
-    "lesson": "GE-C16-praesens-practice",
+    "lesson": "GE-C15-praeteritum-practice",
     "kind": "task",
-    "summary": "sein is the one German verb whose forms cannot be guessed from its infinitive, so this chapter meets them one at a time — bin, bist, ist, sind, seid, sind — and only assembles the grid once every cell has had its own lesson. It closes with müde, the adjective that finishes ich bin, and a short exchange that runs on nothing but this verb.",
+    "summary": "German's second past means exactly what the first one means, so this chapter separates the two by register rather than by tense: produce the Perfekt, recognise the Präteritum, and learn the short list of forms that ignore the rule. It ends with the reason the tense retreated at all — the same change ran through French and Italian over the same centuries, because their speakers are neighbours.",
     "assesses": [
-      "GE-LEX-SEIN-01",
-      "GE-SOUND-SEIN-01",
-      "GE-GRAMMAR-SEIN-ICH-BIN-01",
-      "GE-GRAMMAR-SEIN-DU-BIST-01",
-      "GE-GRAMMAR-SEIN-ER-IST-01",
-      "GE-GRAMMAR-SEIN-WIR-SIND-01",
-      "GE-GRAMMAR-SEIN-IHR-SEID-01",
-      "GE-GRAMMAR-SEIN-SIE-SIND-01",
-      "GE-LEX-MUEDE-01"
+      "GE-GRAMMAR-PRAETERITUM-TE-01",
+      "GE-LEX-SAGTE-01",
+      "GE-LEX-MACHTE-01",
+      "GE-ETYMON-DENTALES-PRAETERITUM-01",
+      "GE-LEX-HATTE-01",
+      "GE-GRAMMAR-PRAETERITUM-SCHRIFTSPRACHE-01",
+      "GE-LEX-KONNTE-01",
+      "GE-GRAMMAR-PRAETERITUM-GESPROCHEN-01",
+      "GE-ETYMON-AREALE-VERAENDERUNG-01"
     ],
-    "note": "Chapter 16 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces, because the practice lesson is where the six forms are first allowed to appear together: the grid there is a recap of six lessons, not an introduction, which is the only condition under which a paradigm table may be printed at all."
+    "note": "Chapter 17 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces; the Präteritum-against-Perfekt table in the practice lesson pairs forms that have each had a lesson, and its first column is a meaning rather than a person, so it is a comparison rather than a paradigm."
   }
 }

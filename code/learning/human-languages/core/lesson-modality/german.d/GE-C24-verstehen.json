@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C24-verstehen",
     "language": "german",
-    "chapter": 35,
-    "sequence": 750,
+    "chapter": 36,
+    "sequence": 770,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7a8ab1860493ed0b"
+    "sourceHash": "fnv1a64:76c191e1bee23e58"
   },
   "findings": []
 }

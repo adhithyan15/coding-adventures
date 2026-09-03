@@ -1,16 +1,20 @@
 {
   "chapter": 18,
-  "title": "Numbers Eleven to Twenty",
-  "label": "ch:numbers-11-20",
-  "canDo": "I can count from eleven to twenty in German and recognize how the number forms are built.",
+  "title": "One Left Over",
+  "label": "ch:elf-zwoelf",
+  "canDo": "I can say eleven and twelve in German and explain why neither of them follows the counting pattern.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C12-zahlen-13-20",
+    "lesson": "GE-C12-elf-zwoelf",
     "kind": "task",
-    "summary": "Complete GE-C12-zahlen-13-20, the canonical closing checkpoint, and demonstrate the chapter promise: count from eleven to twenty in German and recognize how the number forms are built.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "elf and zwoelf are not irregular numbers, they are a different rule, and it is a rule about hands. ainlif is one-left and twalif is two-left: left over from ten, because ten is where your fingers stop. English inherited both words unchanged, which is why eleven and twelve are odd there in exactly the same way -- when two languages share an irregularity this precisely they did not agree on it, they were one language when it was made. The rule covers two numbers and then stops.",
+    "assesses": [
+      "GE-LEX-ELF-01",
+      "GE-LEX-ZWOELF-01",
+      "GE-ETYMON-LIF-LEFTOVER-01"
+    ],
+    "note": "Chapter 18 is generated from schema-v2 lessons. Three atoms is German's FLOOR rather than below it -- the track already has chapters at three -- and the section earns a chapter on its own terms. Old chapter 18 held fourteen atoms against a ceiling of twelve, so it splits at the .tex's own section seam into 3 and 11."
   }
 }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C24-denken
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 740
-chapter: 35
+sequence: 760
+chapter: 36
 type: word
 headword: denken
 gloss: to think — the verb you already met hiding inside danke, and the same inherited word as English think

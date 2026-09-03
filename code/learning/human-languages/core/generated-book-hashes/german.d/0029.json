@@ -1,10 +1,11 @@
 {
   "language": "german",
   "chapter": 29,
-  "sourceHash": "fnv1a64:4216b56b5a1005ce",
+  "sourceHash": "fnv1a64:179f73ad3a1bf0e7",
   "lessonIds": [
-    "GE-C18-ja",
-    "GE-C18-nein"
+    "GE-C17-kopf",
+    "GE-C17-kopf-haupt",
+    "GE-C17-hand"
   ],
-  "tex": "german/book/chapters/ch29-yes-and-no.tex"
+  "tex": "german/book/chapters/ch29-head-and-hand.tex"
 }

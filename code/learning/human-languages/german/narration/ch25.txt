@@ -1,236 +1,323 @@
-German, chapter 25: Being Your Years.
-7 lessons. All 7 can be done entirely by ear.
+German, chapter 25: I Am, You Are.
+9 lessons. You can do the first 8 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 7.
-alt — "old".
+Lesson 1 of 9.
+sein — "to be".
 
 Warm-up.
 [pause 2 seconds]
-You can say ich bin müde. Here is a second adjective to put in the same slot, and it opens a sentence you will be asked for constantly.
+You have met the German verb for to have. Here is its partner — the most irregular verb in German, and the one verb whose forms you will not be able to guess.
 
-You'll want to know: alt.
-alt — "old."
-One syllable. It behaves exactly as müde did: after sein an adjective takes no ending at all, so ich bin alt needs nothing added.
-It is the same word as English old, and you can nearly hear it — German kept the a where English rounded it.
+You'll want to know: sein.
+sein — "to be."
+The -en on the end is the infinitive ending you already own from gehen and sehen: the dictionary form of a German verb wears it, and sein wears it too.
+That is where the resemblance stops. Gehen and sehen keep their stem in every form — ich gehe, ich sehe. Sein keeps nothing. Not one of its present forms contains the letters s-e-i-n in that order.
+This is the only verb in the book that has to be met one form at a time, and the next several lessons do exactly that: one form each, said until it is automatic, before any of them are ever seen side by side.
 
 Sounds you'll need.
-vowel-a — short and clipped, the a of English hat.
-d-t-final — the -lt closes crisply, both consonants sounded.
+s-voiced — a German s before a vowel buzzes like English z, exactly as it does in sehen. So sein opens with a z.
+diphthong-ei — German ei is the vowel of English eye, never "ee".
+final-t — worth having ready now, because two of the forms coming up end in a crisp, fully released t.
+Put together, sein sounds like English zine.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "alt"]
+[your turn — say: "sein" (zine) — buzzing z, ei as in eye]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "alt, old"]
+[your turn — say: "gehen, sehen, sein" — three infinitives, one ending]
 [pause 8 seconds for the answer]
-[your turn — say: with the verb — "ich bin alt", "ich bin müde"]
+[your turn — say: "sein — to be"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"alt, alt — old."
+"sein, sein — zine."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "old." (Alt.) Does it take an ending after bin? (No.) Which English word is it? (Old.) Next: the noun that goes with it.
+What does sein mean? ("To be.") Which ending does it share with gehen and sehen? (-en, the infinitive.) How does the s sound? (Like English z.) And the ei? (Like English eye.) Next: the first form, and it looks nothing like the word you just learned.
 
 
-Lesson 2 of 7.
-die Jahre — the form the age sentence uses.
+Lesson 2 of 9.
+ich bin — "I am".
 
 Warm-up.
 [pause 2 seconds]
-A noun you were given ten chapters ago. The age sentence wants it in a shape you have not used yet.
+You have ich, and you have the infinitive sein. Put them together and you get a form that shares no letters with either half of that sentence except the i.
 
-You'll want to know: die Jahre.
-die Jahre — the plural of das Jahr.
-The plural adds -e and takes die, as plurals do, and it stays capitalised because German capitalises every noun in every number.
-Here is why it matters. The age sentence counts, and a count takes a plural: you are so many Jahre old, never so many Jahr. From here on it is Jahre that does the work, and das Jahr that sits behind it.
+You'll want to know: ich bin.
+ich bin — "I am."
+One syllable, short i, ordinary b, ordinary n. There is no rule behind it and nothing to derive it from: bin is simply the form that goes with ich, and it is learned the way you learned hallo.
+It rhymes with English bin, and that rhyme is not an accident — see below.
 
 Sounds you'll need.
-j-as-y — German j is the y of English yes. So Jahr opens like year, not like jar.
-h-silent-lengthening — that h is not pronounced. It is the silent lengthening h you met inside gehen, and Jahr was named there as one of the three words that hide it, beside sehr and Ihnen. Here it is.
-long-a — so the vowel runs long: YAAR. Say it beside English year and the two are almost the same noise.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: singular and plural — "das Jahr, die Jahre"]
-[pause 8 seconds for the answer]
-[your turn — say: the plural alone, which is the one you need — "die Jahre"]
-[pause 8 seconds for the answer]
-[your turn — say: the two words the sentence will need — "Jahre, alt"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"das Jahr, die Jahre."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "the year." (Das Jahr.) And the plural. (Die Jahre.) Which of the two does an age sentence use? (The plural — you are counted.) What does the plural add? (An -e, and die.) Next: where Jahr and alt both come from.
-
-
-Lesson 3 of 7.
-Jahr and alt, taken apart — both words are English wearing German spelling, and alt has a Latin cousin hiding in adult.
-
-Warm-up.
-[pause 2 seconds]
-Two words, both inherited rather than borrowed, and one of them has a Latin cousin you would never guess.
+ich-laut — ich still ends in the soft breathy sound you met when you first said "I": tongue where it sits for ee, air pushed past it, no scrape.
+i-short — the i of bin is short and clipped, the vowel of English bin, not the long ee of ihm.
 
 The word, taken apart.
+Bin rhymes with English be for a reason, even though the vowels have drifted apart. Both come from Proto-Indo-European bʰuH- — "to grow, to become."
+So German kept that ancient root in the present tense and English kept it as the infinitive: be and bin are the same old word wearing different jobs. Hold on to that; two lessons from now it explains something about the whole verb.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ich bin" — short i, soft ending on ich]
+[pause 8 seconds for the answer]
+[your turn — say: "ich bin Anna." "ich bin Peter."]
+[pause 8 seconds for the answer]
+[your turn — say: "bin — be" — the same old root]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich bin, ich bin."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I am." (Ich bin.) Is the i of bin long or short? (Short — English bin.) Which English word comes from the same root as bin? (Be.) Next: the same verb for the person you are talking to.
+
+
+Lesson 3 of 9.
+du bist — "you are".
+
+Warm-up.
+[pause 2 seconds]
+Du is the familiar "you" — the one for a friend. Its verb ending is -st, and for once sein uses it.
+
+You'll want to know: du bist.
+du bist — "you are."
+Take bin, drop the n, add the familiar -st: bi- plus -st is bist. That is the same ending as du gehst, du heißt, du siehst.
+Of the six present forms of sein, this is the only one that can be derived from another one. Enjoy it; it does not happen again.
+
+Sounds you'll need.
+u-long — du has a long, rounded oo, the vowel of English do, held.
+final-t — German releases a final t fully and audibly. Bist ends with a small puff of air; English tends to swallow it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "du bist" — long u, crisp final t]
+[pause 8 seconds for the answer]
+[your turn — say: "ich bin … du bist" — the pair]
+[pause 8 seconds for the answer]
+[your turn — say: "du bist Peter."]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich bin, du bist."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "you are," to a friend. (Du bist.) Which ending is that? (-st, the familiar one.) Which form is bist built on? (Bin.) Is the final t released or swallowed? (Released.) Next: the form for everybody else.
+
+
+Lesson 4 of 9.
+er ist — "he is".
+
+Warm-up.
+[pause 2 seconds]
+Bin and bist both start with b. The third form does not, and it is the one you will hear most.
+
+You'll want to know: er ist.
+er ist — "he is."
+er is "he." The same ist serves three more subjects without changing at all: sie ist ("she is"), es ist ("it is"), and das ist ("that is") — es and das both already yours.
+So one two-letter word covers everything that is not ich and not du, in the singular. It is the workhorse of the whole verb.
+
+Sounds you'll need.
+r-final — the r at the end of er is not a full English r. It softens towards a vowel, close to air said without the tongue curling.
+final-t — ist ends in the same released t as bist.
+
+The word, taken apart.
+Ist is the one form of sein whose relatives you can name on sight:
+[a table of 4 rows, read aloud]
+language: German. "is": ist.
+language: English. "is": is.
+language: Latin. "is": est.
+language: French. "is": est.
+All from Proto-Indo-European h₁es-, "to be" — and the infinitive sein is built on that root too. So sein and ist really do belong to each other; it is bin and bist that came from somewhere else.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "er ist, sie ist, es ist"]
+[pause 8 seconds for the answer]
+[your turn — say: "Das ist gut." — "that is good"]
+[pause 8 seconds for the answer]
+[your turn — say: "ich bin, du bist, er ist"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Das ist gut."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "he is." (Er ist.) Which other subjects take the same form? (Sie, es, das.) Say "that is good." (Das ist gut.) Which Latin word is ist? (Est.) Next: the form for more than one.
+
+
+Lesson 5 of 9.
+wir sind — "we are".
+
+Warm-up.
+[pause 2 seconds]
+Three singular forms down. The plural starts here, and after bin, bist, ist, this one will finally look like the verb it belongs to.
+
+You'll want to know: wir sind.
+wir sind — "we are."
+wir is "we." And sind shares its first two letters with the infinitive sein, which is the first visible family resemblance in this verb.
+Its Latin twin is sunt, "they are" — same s, same n, same closing stop, the same root wearing a different vowel.
+
+Sounds you'll need.
+w-as-v — German w is English v. Wir begins like veer.
+ie-long-ee — ie is a long ee. Wir is veer, not wire.
+d-t-final — the d at the end of sind is spoken as a t, the same final devoicing you met on und. Say zint.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "wir sind" — veer zint, final d as t]
+[pause 8 seconds for the answer]
+[your turn — say: "wir sind gut."]
+[pause 8 seconds for the answer]
+[your turn — say: "sein … sind" — the family resemblance]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"wir sind, wir sind."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "we are." (Wir sind.) How is the final d pronounced? (As a t.) How does wir begin? (Like English v.) Which Latin word is sind? (Sunt.) Next: the plural "you."
+
+
+Lesson 6 of 9.
+ihr seid — "you are," to several people.
+
+Warm-up.
+[pause 2 seconds]
+Du is one friend. For two or more friends German has a separate word, and English used to have one as well.
+
+You'll want to know: ihr seid.
+ihr seid — "you are," said to more than one person you would each call du.
+ihr is the familiar plural "you" — a crowd of friends, a group of children, your own family. English once had ye here and let it go, which is why one English you now does the work of four German words.
+seid opens exactly like the infinitive: sei- is sein without its n. Both the s and the ei behave as they did there.
+
+Sounds you'll need.
+ie-long-ee — ihr is eer, one long vowel; the h only stretches it.
+s-voiced — seid opens with the buzzing z of sein.
+diphthong-ei — and carries the eye vowel through. Say zite.
+Wir sind and ihr seid are the two plural forms, and they sound nothing alike, which makes them easy to keep apart.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ihr seid" — eer zite]
+[pause 8 seconds for the answer]
+[your turn — say: "wir sind … ihr seid"]
+[pause 8 seconds for the answer]
+[your turn — say: "sein … seid" — the same opening]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ihr seid, ihr seid."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "you are" to a group of friends. (Ihr seid.) Which English word did that job before English dropped it? (Ye.) Which part of seid comes straight out of sein? (sei-.) Next: the last form, and the one that does double duty.
+
+
+Lesson 7 of 9.
+sie sind / Sie sind — "they are," and "you are," politely.
+
+Warm-up.
+[pause 2 seconds]
+The polite Sie is literally the word for "they," worn as a courtesy. Its verb form follows from that, and costs you nothing new.
+
+You'll want to know: sie sind and Sie sind.
+sie sind — "they are." Sie sind — "you are," to someone you would address formally.
+The form is sind, the very same word you learned for wir. Nothing changes in the mouth at all: wir sind, sie sind, Sie sind are three subjects and one verb form.
+
+Grammar Lens: the capital carries the politeness.
+On the page, sie and Sie differ by exactly one capital letter — and German already spends capitals on grammar rather than decoration. In speech there is no difference at all; the context tells you which one is meant.
 [a table of 2 rows, read aloud]
-German: Jahr. from: Germanic jēra. English: year.
-German: alt. from: Germanic aldaz. English: old.
-Neither line passes through Latin, which is worth noticing in a chapter about age: German borrowed its month names wholesale from Latin, and kept its own words for the year and for being old.
-Now the cousin. The root behind aldaz also went into Latin, as alere — "to nourish, to grow." From alere English took adult, which is literally "grown up."
-So alt and adult are the same idea taken down two roads: something that has been fed and has grown. Ageing as growth rather than as decay, which is a kinder picture than English usually admits to.
+sie sind means they are.
+Sie sind means you are, formally.
+That is the whole of it. Six subjects, and you have now met every present form of the verb.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the two twins — "Jahr, year; alt, old"]
+[your turn — say: "sie sind" — "they are"]
 [pause 8 seconds for the answer]
-[your turn — say: the Latin cousin — "alt, alere, adult"]
+[your turn — say: "Sie sind Herr Peter Schmidt?" — politely]
 [pause 8 seconds for the answer]
-[your turn — say: what the root meant — "to nourish, to grow"]
+[your turn — say: "wir sind, sie sind, Sie sind" — one form, three subjects]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Jahr, year. Alt, old."
+"sie sind, Sie sind."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which English word is Jahr? (Year.) And alt? (Old.) Which English word comes from alt's Latin cousin? (Adult.) What did that cousin mean? ("To nourish, to grow.") Next: the question you will be asked with these two words.
+Say "they are." (Sie sind.) Say "you are" to a stranger. (Sie sind — same sound.) What separates the two on paper? (The capital S.) How many different present forms of this verb have you now met? (Five — bin, bist, ist, sind, seid.) Next: one adjective, so you can finally say something about yourself.
 
 
-Lesson 4 of 7.
-Wie alt bist du? — how old are you — word for word the English question, built from four words you own.
+Lesson 8 of 9.
+müde — "tired".
 
 Warm-up.
 [pause 2 seconds]
-You have wie, you have alt, and you have du bist. That is the whole question.
+Ich bin is a sentence waiting for one more word. Here is the word that finishes it most often.
 
-You'll want to know: Wie alt bist du?
-Wie alt bist du? — "How old are you?"
-Four words, and every one of them is already yours. Read it against the English and nothing has moved: how — old — are — you.
-That is not a coincidence to be grateful for; it is inheritance. Neither language borrowed this question from the other. They have been asking it the same way since before either was called German or English.
-The verb sits second, as it does in every German statement and question with a question word in front — Wie first, bist second, and the rest behind.
-To someone you would address formally, it is Wie alt sind Sie? — the same question with the polite form of the verb.
+You'll want to know: müde.
+müde — "tired."
+Ich bin müde. — "I am tired."
+Two syllables, stress on the first: mü-duh. It is an adjective, and after sein an adjective takes no ending at all — the same bare form serves every subject. Ich bin müde, du bist müde, wir sind müde.
+That is worth noticing, because German adjectives are famous for their endings. They only take them in front of a noun. Standing after sein, they stand still.
+
+Sounds you'll need.
+umlaut-ue — ü is the vowel you make by rounding your lips for oo and then saying ee without moving them. The dots are the fronting mark you already know: the mouth shifts forward, the lips stay round.
+The final -e is a soft uh, never silent. mü-duh, two beats, the weight on the first.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Wie alt bist du?"]
+[your turn — say: "müde" — round the lips, say ee]
 [pause 8 seconds for the answer]
-[your turn — say: it against the English — "how old are you; wie alt bist du"]
+[your turn — say: "Ich bin müde."]
 [pause 8 seconds for the answer]
-[your turn — say: the formal one — "Wie alt sind Sie?"]
+[your turn — say: "Er ist müde. Wir sind müde." — the adjective never changes]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Wie alt bist du?"
+"Ich bin müde."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask how old someone is, informally. (Wie alt bist du?) And formally. (Wie alt sind Sie?) Which word sits second? (Bist.) How many of the four words were new? (None.) Next: how to answer it.
+Say "I am tired." (Ich bin müde.) How do you make the ü? (Round for oo, say ee.) Does müde change after sein? (No — no ending.) Say "we are tired." (Wir sind müde.) Next: everything at once, on purpose.
 
 
-Lesson 5 of 7.
-ich bin zwanzig Jahre alt — I am twenty years old — the answer, word for word the English sentence.
+Lesson 9 of 9.
+Practice — the whole present of sein.
 
-Warm-up.
-[pause 2 seconds]
-The answer, and it is as English as the question was.
-
-You'll want to know: ich bin zwanzig Jahre alt.
-Ich bin zwanzig Jahre alt. — "I am twenty years old."
-Word for word, that is the English sentence: I — am — twenty — years — old. Put any number you own in the middle and the sentence is yours.
-And German shortens it the same way English does. Ich bin zwanzig is complete and ordinary, exactly as "I'm twenty" is — the Jahre alt can go, and in speech usually does.
-Notice which verb is doing the work: bin. Not habe. Hold on to that, because it is the whole point of the next lesson.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "Ich bin zwanzig Jahre alt."]
-[pause 8 seconds for the answer]
-[your turn — say: the short form — "Ich bin zwanzig."]
-[pause 8 seconds for the answer]
-[your turn — say: your own age, in both lengths]
-[pause 8 seconds for the answer]
-[your turn — say: the question and the answer together]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"Ich bin zwanzig Jahre alt."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I am twenty years old." (Ich bin zwanzig Jahre alt.) Shorten it. (Ich bin zwanzig.) Which verb does it use? (Bin.) Which does it not use? (Habe.) Next: why that choice puts German and English on one side and every Romance language on the other.
-
-
-Lesson 6 of 7.
-sein, not haben — Germanic IS its years where Romance HAS them — the one place German refuses haben.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-You spent a whole chapter on haben. Here is the everyday sentence where German refuses to let you use it.
+No new words. Every form below has had its own lesson, so this is the first time it is safe to put them all on one page — as a recap, not as something to memorise from cold.
 
-Grammar Lens: you ARE your years.
-German states age with sein, never with haben.
-Ich habe zwanzig Jahre is not German. It is not a clumsy way of putting it; it is not a sentence.
-Look what happens when you line the languages up:
-[a table of 6 rows, read aloud]
-language: German. how age works: ich bin … Jahre alt. literally: I am …
-language: English. how age works: I am twenty. literally: I am …
-language: French. how age works: j'ai vingt ans. literally: I have …
-language: Spanish. how age works: tengo veinte años. literally: I have …
-language: Italian. how age works: ho venti anni. literally: I have …
-language: Portuguese. how age works: tenho vinte anos. literally: I have …
-Two on one side, four on the other, and the line falls exactly where the families do.
-
-Why it's said this way.
-Romance has its years; Germanic is its years. Age as something you carry against age as something you are — two pictures of the same fact, and each family committed to one of them long ago.
-What makes German's choice worth pointing at is that German did not hold the Latin line out generally. Its month names are Latin borrowings wholesale; Januar, Februar and the rest came in and stayed. But on this sentence, said several times a week for a lifetime, German kept its own logic.
-The words a language uses most are the ones it is least willing to trade — which is the same force that keeps its commonest verbs irregular.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the rule — "age takes sein, not haben"]
-[pause 8 seconds for the answer]
-[your turn — say: the two sides — "ich bin zwanzig; j'ai vingt ans"]
-[pause 8 seconds for the answer]
-[your turn — say: the picture — "Romance has its years, Germanic is its years"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"Ich bin zwanzig Jahre alt — bin, not habe."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which verb does German use for age? (Sein.) Which does French use? (Avoir — "to have".) Which two languages sit together here? (German and English.) Did German borrow its month names from Latin? (Yes — which is what makes keeping this sentence its own worth noticing.) Next: the chapter said through.
-
-
-Lesson 7 of 7.
-Practice — asking and answering an age.
-
-Warm-up.
-[pause 2 seconds]
-No new words. One question, one answer, and one thing to keep hearing: which verb carries it.
+Grammar Lens: the six forms, assembled.
+[a table of 3 rows, read aloud]
+singular: ich bin. plural: wir sind.
+singular: du bist. plural: ihr seid.
+singular: er/sie/es ist. plural: sie/Sie sind.
+Six subjects, five different forms — sind does double duty. Look at that with fresh eyes now that you can say all of it: bin and ist do not look like forms of the same word, and the next chapter explains why they aren't.
 
 The exchange.
 [a table of 5 rows, read aloud]
-Wie alt bist du? means How old are you?
-Zwanzig Jahre alt. Und du? means Twenty years old. And you?
-Ich bin achtzehn. means I am eighteen.
-Und du bist müde. means And you are tired.
-Aber nicht alt! means But not old!
-Every line runs on the same verb, and two of them drop it the way speech does — zwanzig Jahre alt answers the question on its own. Nothing here needs haben, and the last two lines put müde and alt side by side in the slot they share.
+Hallo! Wie geht es dir? means Hello! How are you?
+Danke, ich bin müde. means Thanks — I am tired.
+Du bist müde? Ich auch. means You are tired? Me too.
+Dann sind wir müde. Aber das ist gut. means Then we are tired. But that is good.
+Bis morgen! means See you tomorrow!
+Three small joining words slip in there without needing lessons of their own, because each can be read straight off the translation: auch ("too"), dann ("then") and aber ("but").
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the question, then your own answer]
+[your turn — say: the six in order — "ich bin, du bist, er ist, wir sind, ihr seid, sie sind"]
 [pause 8 seconds for the answer]
-[your turn — say: the answer short, then long]
+[your turn — say: the same six backwards]
 [pause 8 seconds for the answer]
-[your turn — say: the two sides — "ich bin zwanzig; j'ai vingt ans"]
-[pause 8 seconds for the answer]
-[your turn — say: the twins — "Jahr, year; alt, old; alt, adult"]
+[your turn — say: "Ich bin müde." "Du bist müde." "Wir sind müde."]
 [pause 8 seconds for the answer]
 [your turn — say: the whole exchange, both voices]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Wie alt bist du? Ich bin zwanzig Jahre alt."
+"ich bin, du bist, er ist, wir sind, ihr seid, sie sind."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask someone's age. (Wie alt bist du?) Answer with your own, both long and short. Which verb does German use, and which does it refuse? (Sein; not haben.) Which English word shares a root with alt? (Adult.) Which four languages say "I have twenty years"? (French, Spanish, Italian, Portuguese.)
+Run the six forms without looking. Which one form covers wir, sie and Sie? (Sind.) Which is the only form built out of another one? (Bist, from bin.) Say "that is good." (Das ist gut.) Say "you are tired" to a group. (Ihr seid müde.) Next: where these forms came from — three different verbs, none of them each other.

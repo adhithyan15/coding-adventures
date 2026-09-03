@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C14-einen",
     "language": "german",
-    "chapter": 20,
-    "sequence": 330,
+    "chapter": 21,
+    "sequence": 350,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6aee65f4bcb984b2"
+    "sourceHash": "fnv1a64:bf55b19f57a7c95b"
   },
   "findings": []
 }

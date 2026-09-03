@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:18922240eac5cbaa",
+  "lessonIds": [
+    "GE-C12-elf",
+    "GE-C12-zwoelf",
+    "GE-C12-lif",
+    "GE-C12-elf-zwoelf"
+  ],
+  "tex": "german/book/chapters/ch18-elf-zwoelf.tex"
+}

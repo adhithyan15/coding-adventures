@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C12-siebzehn",
+    "language": "german",
+    "chapter": 19,
+    "sequence": 312,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82800b0effdb8759"
+  },
+  "findings": []
+}

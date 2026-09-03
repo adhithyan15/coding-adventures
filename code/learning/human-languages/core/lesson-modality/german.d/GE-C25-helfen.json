@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C25-helfen",
     "language": "german",
-    "chapter": 36,
-    "sequence": 800,
+    "chapter": 37,
+    "sequence": 820,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:64e0d025ed093f35"
+    "sourceHash": "fnv1a64:1f2cffc3ffc9b5d4"
   },
   "findings": []
 }

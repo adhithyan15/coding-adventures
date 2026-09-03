@@ -1,17 +1,18 @@
 {
   "language": "german",
   "chapter": 24,
-  "sourceHash": "fnv1a64:1b383bdb03d6b2d5",
+  "sourceHash": "fnv1a64:d2f805a75a6ff2ff",
   "lessonIds": [
-    "GE-C16-sein",
-    "GE-C16-ich-bin",
-    "GE-C16-du-bist",
-    "GE-C16-er-ist",
-    "GE-C16-wir-sind",
-    "GE-C16-ihr-seid",
-    "GE-C16-sie-sind",
-    "GE-C16-muede",
-    "GE-C16-praesens-practice"
+    "GE-C15-praeteritum",
+    "GE-C15-sagte",
+    "GE-C15-machte",
+    "GE-C15-dentales-praeteritum",
+    "GE-C15-hatte",
+    "GE-C15-register",
+    "GE-C15-konnte",
+    "GE-C15-hochfrequent",
+    "GE-C15-praeteritum-map",
+    "GE-C15-praeteritum-practice"
   ],
-  "tex": "german/book/chapters/ch24-sein.tex"
+  "tex": "german/book/chapters/ch24-praeteritum.tex"
 }

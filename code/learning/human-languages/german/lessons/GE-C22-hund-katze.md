@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C22-hund-katze
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 720
-chapter: 33
+sequence: 740
+chapter: 34
 type: word
 headword: Hund, Katze
 gloss: dog and cat — Hund is native Germanic, cognate with English's OWN discarded word "hound"; Katze, surprisingly, is NOT native — it's the same borrowed Latin word behind French chat and Spanish gato (though not every European language shares it)

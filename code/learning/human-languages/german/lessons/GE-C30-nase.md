@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C30-nase
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 990
-chapter: 41
+sequence: 1010
+chapter: 42
 type: word
 headword: die Nase
 gloss: nose — the fourth face-part, cousin of English nose and of Latin nasus, and the payoff that completes the face *Kopf* only started

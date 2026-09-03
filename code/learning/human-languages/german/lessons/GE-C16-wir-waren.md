@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-wir-waren
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 555
-chapter: 26
+sequence: 575
+chapter: 27
 type: phrase
 headword: wir waren
 gloss: we were — the plural past, and the last form of sein you need

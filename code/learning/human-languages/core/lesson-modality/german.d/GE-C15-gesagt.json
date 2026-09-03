@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-gesagt",
     "language": "german",
-    "chapter": 21,
-    "sequence": 340,
+    "chapter": 22,
+    "sequence": 360,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:28390f17d3945ef7"
+    "sourceHash": "fnv1a64:dffa0c7c06630672"
   },
   "findings": []
 }

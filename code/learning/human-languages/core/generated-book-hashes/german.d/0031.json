@@ -1,9 +1,9 @@
 {
   "language": "german",
   "chapter": 31,
-  "sourceHash": "fnv1a64:e07d8091b1c549e7",
+  "sourceHash": "fnv1a64:3257bfbb26c98d45",
   "lessonIds": [
-    "GE-C20-entschuldigung"
+    "GE-C19-bitte-requests"
   ],
-  "tex": "german/book/chapters/ch31-sorry.tex"
+  "tex": "german/book/chapters/ch31-please.tex"
 }

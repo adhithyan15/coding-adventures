@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C15-sagte",
     "language": "german",
-    "chapter": 23,
-    "sequence": 425,
+    "chapter": 24,
+    "sequence": 445,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:10ae5db563429473"
+    "sourceHash": "fnv1a64:69e0b08fa4bda3a4"
   },
   "findings": []
 }

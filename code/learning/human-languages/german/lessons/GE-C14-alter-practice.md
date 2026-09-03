@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C14-alter-practice
 spine_node: SPINE-TIME-OF-DAY
-sequence: 527
-chapter: 25
+sequence: 547
+chapter: 26
 type: practice
 headword: (practice)
 gloss: chapter payoff — asking and answering an age, and hearing which verb German reaches for

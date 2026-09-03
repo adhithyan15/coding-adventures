@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-er-hat-gemacht
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 390
-chapter: 22
+sequence: 410
+chapter: 23
 type: phrase
 headword: er hat das gemacht
 gloss: he did that — the third slot, and the first Perfekt sentence with something in the middle

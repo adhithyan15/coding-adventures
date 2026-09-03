@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C16-haben-oder-sein
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 630
-chapter: 27
+sequence: 650
+chapter: 28
 type: practice
 headword: (practice)
 gloss: chapter payoff — choosing between haben and sein until the choice is a reflex

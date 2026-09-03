@@ -1,63 +1,84 @@
 ---
+schema_version: 2
 id: GE-C12-elf-zwoelf
+spine_node: SPINE-TIME-OF-DAY
 sequence: 305
 chapter: 18
-type: word
-headword: elf, zwölf
-gloss: 11 and 12 — literally "one left over" and "two left over," the exact twins of eleven and twelve
-concept_tag: GE-NUM-11-12
-prerequisites: [GE-C06-zahlen-6-10, GE-C11-wasser-wein]
-sounds: [umlaut-oe, f-final]
-roots: [germanic-ainlif, germanic-twalif]
-etymology_hook: "elf ← ainlif, zwölf ← twalif — the -lif is 'leave/remain', so they mean 'ONE left [over ten]' and 'TWO left'; English eleven/twelve are the same words, same meaning — you counted ten fingers and had one left"
-est_minutes: 4
-reviews_of: [GE-C06-zahlen-6-10, GE-C11-wasser-wein]
+type: practice
+headword: (practice)
+gloss: chapter payoff — two numbers that count what is left rather than counting on
+concept_tag: CH18-PRACTICE
+prerequisites: [GE-C12-elf, GE-C12-zwoelf, GE-C12-lif]
+sounds: []
+roots: []
+duration:
+  max_seconds: 185
+requires:
+  knowledge: [GE-LEX-ELF-01, GE-LEX-ZWOELF-01, GE-ETYMON-LIF-LEFTOVER-01, GE-LEX-ZEHN-01, GE-LEX-EINS-01, GE-LEX-ZWEI-01, GE-SOUND-UMLAUT-OE-01, GE-SOUND-W-AS-V-01]
+introduces:
+  knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-ELF-01, GE-LEX-ZWOELF-01, GE-ETYMON-LIF-LEFTOVER-01, GE-LEX-ZEHN-01, GE-LEX-EINS-01, GE-LEX-ZWEI-01, GE-SOUND-UMLAUT-OE-01, GE-SOUND-W-AS-V-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-output, fluency]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C12-lif, GE-C12-zwoelf, GE-C12-elf]
 ---
 
-# elf und zwölf — "one left over," "two left over"
+# Practice — one left, two left
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ELF-01, GE-LEX-ZWOELF-01] -->
 
-[PAUSE 2s] Why are English **eleven** and **twelve** so strange — why not
-"oneteen, twoteen"? German has the identical oddity (**elf**, **zwölf**), and
-because the two languages are Germanic twins, learning one *explains* the other.
-The answer is one of the best number-stories anywhere.
+[PAUSE 2s] No new words. Two numbers, and the reason they look strange in both
+languages at once.
 
-## The words, taken apart
+## Grammar Lens: what the two are made of
+<!-- hl-knowledge: introduces=[]; assesses=[GE-ETYMON-LIF-LEFTOVER-01, GE-LEX-EINS-01, GE-LEX-ZWEI-01] -->
 
-- **elf** (11) ← old Germanic **ainlif** = **ain** ("one") + **lif**.
-- **zwölf** (12) ← **twalif** = **twa** ("two") + **lif**.
+| German | is | and means |
+|---|---|---|
+| *elf* | *ain* + *lif* | one left over |
+| *zwölf* | *twa* + *lif* | two left over |
 
-And **-lif** means "**to leave, to remain**." So:
+Two words, one ending, and the ending is a verb: to leave, to remain. Neither
+number was ever irregular — they were built by a rule that only had room to run
+twice.
 
-- **elf** = "**one left over**"
-- **zwölf** = "**two left over**"
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[GE-ETYMON-LIF-LEFTOVER-01, GE-LEX-ZEHN-01, GE-LEX-ELF-01, GE-LEX-ZWOELF-01] -->
 
-Left over from **what**? From **ten** — from your ten fingers. You count to ten,
-you run out of fingers, and you have **one left**. Eleven is literally the
-leftover.
+Left over from *zehn*, from ten fingers. A counting system built on hands has to
+say something when the hands run out, and what Germanic said was *and one is
+left*.
 
-**English says exactly the same thing**: *eleven* ← *ain-lif*, *twelve* ←
-*twa-lif*. Not similar words — *the same words*, inherited side by side. (You met
-this Germanic-twin pattern with *Vater/father* and *Wasser/water*; here it reaches
-even the counting.)
+English inherited both words unchanged, which is why *eleven* and *twelve* are
+equally odd there, and odd in exactly the same way. When two languages share an
+irregularity this precisely, they did not agree on it — they were one language
+when it was made.
 
-## And then it stops
-
-The leftover-trick covers only **two** numbers. From **13** on, German turns
-completely regular — and so does English. That's the next lesson.
+From the next number on, both of them turn regular and never break again.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ELF-01, GE-LEX-ZWOELF-01, GE-SOUND-UMLAUT-OE-01, GE-SOUND-W-AS-V-01, GE-LEX-ZEHN-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "elf, zwölf" — *zwölf* with the rounded **ö**]
-- [YOU SAY: the meaning — "one **left over**, two **left over** — after ten fingers"]
-- [YOU SAY: the twins — "elf/eleven, zwölf/twelve — same word, both Germanic"]
+- [YOU SAY: count the last three — "zehn, elf, zwölf"]
+- [YOU SAY: the opening of the second — "tsv"]
+- [YOU SAY: what each one means — "one left over, two left over"]
+- [YOU SAY: the English pair — "eleven, twelve"]
+
+[REPEAT x2] "zehn, elf, zwölf."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ELF-01, GE-LEX-ZWOELF-01, GE-ETYMON-LIF-LEFTOVER-01, GE-LEX-ZEHN-01] -->
 
-[PAUSE 3s] What do **elf** and **zwölf** literally mean? ("**One left over**" and
-"**two left over**" — *-lif* = "remain".) Left over from what? (From **ten** — the
-ten fingers you just counted.) Why do English *eleven/twelve* look equally odd?
-(They are the **same inherited Germanic words**.) Next: 13 to 20, where German
-becomes perfectly regular.
+[PAUSE 3s] Say eleven and twelve. (***Elf, zwölf***.) What does the ending mean?
+(**Left over**.) Left over from what? (***Zehn*** — **ten fingers**.) Why are
+the English words odd in the same way? (**They are the same two words**.) How
+many numbers does this rule cover? (**Two** — **and then it stops**.)

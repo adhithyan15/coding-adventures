@@ -2,10 +2,10 @@
   "id": "GE-PATH-017",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "GE-C12-elf-zwoelf",
-    "GE-C12-zahlen-13-20",
-    "GE-C13-schwarz-weiss",
-    "GE-C13-rot-blau"
+    "GE-C12-elf",
+    "GE-C12-zwoelf",
+    "GE-C12-lif",
+    "GE-C12-elf-zwoelf"
   ],
   "before": [],
   "inline": [
