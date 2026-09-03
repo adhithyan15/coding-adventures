@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: [GE-LEX-HERBST-01, GE-LEX-SOMMER-01, GE-LEX-JAHRESZEIT-01]
 introduces:
-  knowledge: [GE-LEX-WINTER-01]
+  knowledge: [GE-LEX-WINTER-01, GE-SOUND-W-AS-V-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-WINTER-01, GE-LEX-HERBST-01, GE-LEX-SOMMER-01, GE-LEX-JAHRESZEIT-01]
+  knowledge: [GE-LEX-WINTER-01, GE-SOUND-W-AS-V-01, GE-LEX-HERBST-01, GE-LEX-SOMMER-01, GE-LEX-JAHRESZEIT-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -48,7 +48,7 @@ Same six letters as English, same inherited Germanic word, and like *Sommer* it
 was never worth replacing.
 
 ## Sounds you'll need
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WINTER-01] -->
+<!-- hl-knowledge: introduces=[GE-SOUND-W-AS-V-01]; assesses=[GE-LEX-WINTER-01] -->
 
 - `w-as-v` — German *w* is an English **v**. The season is *VIN-ter*.
 - `i-short` — and the *i* is short and bright.
@@ -58,18 +58,19 @@ and *w* have swapped the jobs an English reader expects of them, and these two
 words put both halves of the swap on one page.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WINTER-01, GE-LEX-HERBST-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WINTER-01, GE-SOUND-W-AS-V-01, GE-LEX-HERBST-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "der Winter" — VIN-ter]
+- [YOU SAY: the rule you will need again — "German w is an English v"]
 - [YOU SAY: the swap — "w is v, v is f"]
 - [YOU SAY: all four — "der Frühling, der Sommer, der Herbst, der Winter"]
 
 [REPEAT x2] "der Winter."
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WINTER-01, GE-LEX-JAHRESZEIT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WINTER-01, GE-SOUND-W-AS-V-01, GE-LEX-JAHRESZEIT-01] -->
 
 [PAUSE 3s] Say "winter." (**Der Winter** — VIN-ter.) How is German *w* said?
-(**As a** *v*.) And German *v*? (**As an** *f*.) How many *Jahreszeiten* have
+(**As a** *v*, **every time**.) And German *v*? (**As an** *f*.) How many *Jahreszeiten* have
 you now? (**Four**.) Next: a fifth name for a season you already have.

@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "GE-C09-winter",
+    "id": "GE-C11-wein",
     "language": "german",
-    "chapter": 15,
-    "sequence": 279,
+    "chapter": 17,
+    "sequence": 299,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:906f09f5253936c8"
+    "sourceHash": "fnv1a64:394dab052cf78e5c"
   },
   "findings": []
 }

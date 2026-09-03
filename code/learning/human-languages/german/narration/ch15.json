@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Seasons Go Native",
   "drivablePrefix": 11,
-  "sourceHash": "fnv1a64:70e5c956c4f239e6",
+  "sourceHash": "fnv1a64:a2a5b605f5d8553c",
   "lessons": [
     {
       "id": "GE-C09-jahr",
@@ -1156,7 +1156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c499f42f8d6258ce",
+      "sourceHash": "fnv1a64:906f09f5253936c8",
       "notice": null,
       "blocks": [
         {
@@ -1233,6 +1233,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "the rule you will need again — \"German w is an English v\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rule you will need again — \"German w is an English v\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "the swap — \"w is v, v is f\"",
               "spoken": true,
               "scored": false,
@@ -1272,7 +1281,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"winter.\" (Der Winter — VIN-ter.) How is German w said? (As a v.) And German v? (As an f.) How many Jahreszeiten have you now? (Four.) Next: a fifth name for a season you already have."
+              "text": "Say \"winter.\" (Der Winter — VIN-ter.) How is German w said? (As a v, every time.) And German v? (As an f.) How many Jahreszeiten have you now? (Four.) Next: a fifth name for a season you already have."
             }
           ]
         }

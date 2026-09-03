@@ -3,10 +3,15 @@
   "stage": "pre-A1",
   "kind": "required",
   "category": "language-specific",
-  "canDo": "I can name bread, water and wine in German, the inherited word beside the two borrowed ones.",
+  "canDo": "I can name bread, water and wine in German with their articles, and say which two the language inherited and which one Rome supplied.",
   "prerequisites": [],
   "lessons": [
     "GE-C11-brot",
+    "GE-C11-brot-bread",
+    "GE-C11-wasser",
+    "GE-C11-wasser-water",
+    "GE-C11-wein",
+    "GE-C11-wein-vinum",
     "GE-C11-wasser-wein"
   ]
 }

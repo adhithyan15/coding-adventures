@@ -291,6 +291,8 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "der Winter" — VIN-ter]
 [pause 8 seconds for the answer]
+[your turn — say: the rule you will need again — "German w is an English v"]
+[pause 8 seconds for the answer]
 [your turn — say: the swap — "w is v, v is f"]
 [pause 8 seconds for the answer]
 [your turn — say: all four — "der Frühling, der Sommer, der Herbst, der Winter"]
@@ -300,7 +302,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "winter." (Der Winter — VIN-ter.) How is German w said? (As a v.) And German v? (As an f.) How many Jahreszeiten have you now? (Four.) Next: a fifth name for a season you already have.
+Say "winter." (Der Winter — VIN-ter.) How is German w said? (As a v, every time.) And German v? (As an f.) How many Jahreszeiten have you now? (Four.) Next: a fifth name for a season you already have.
 
 
 Lesson 10 of 11.
