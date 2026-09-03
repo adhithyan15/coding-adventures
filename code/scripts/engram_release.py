@@ -511,6 +511,14 @@ def qt_artifact_name(version: str, platform: str) -> str:
 # The XAML / WinUI 3 backend. Windows only, and not as a scoping decision:
 # WinUI's markup compiler is a Windows-native tool, so `dotnet` restores and
 # type-checks elsewhere and then stops. There is nowhere else for this to run.
+#
+# NOT YET IN `artifact_names`, and deliberately so. `--backend xaml --build`
+# cannot currently compile this package at all: the emitter writes an event
+# type for BOTH layout variants into one namespace, and C# rejects the
+# duplicate (#14230). A `build-xaml` job that cannot pass would sit in the
+# publish job's `needs` and block every release, so the archiver below is
+# finished and tested but unwired. Adding the payload here and the job to the
+# workflow is the whole remaining step once #14230 lands.
 XAML_TARGETS = {"windows": "zip"}
 
 
@@ -644,9 +652,6 @@ def artifact_names(version: str) -> list[str]:
     )
     names.extend(
         qt_artifact_name(version, platform) for platform in sorted(QT_TARGETS)
-    )
-    names.extend(
-        xaml_artifact_name(version, platform) for platform in sorted(XAML_TARGETS)
     )
     return names
 

@@ -82,7 +82,6 @@ class ArtifactNamesTests(unittest.TestCase):
                 "engram-flutter-macos-v0.4.0.zip",
                 "engram-flutter-windows-v0.4.0.zip",
                 "engram-qt-macos-v0.4.0.zip",
-                "engram-xaml-windows-v0.4.0.zip",
             ],
         )
 
@@ -1780,7 +1779,10 @@ class ArchiveXamlTests(unittest.TestCase):
                 "0.4.0", "windows", publish, root / "out", COMMIT
             )
             self.assertEqual(output.name, "engram-xaml-windows-v0.4.0.zip")
-            self.assertIn(output.name, engram_release.artifact_names("0.4.0"))
+            # Deliberately NOT in `artifact_names` yet -- see #14230. The
+            # archiver is finished; wiring it into the release lane would put a
+            # job that cannot pass into the publish job's `needs`.
+            self.assertNotIn(output.name, engram_release.artifact_names("0.4.0"))
             with zipfile.ZipFile(output) as archive:
                 self.assertIn(
                     "engram-xaml-windows-v0.4.0/Engram/engram_capi.dll",
