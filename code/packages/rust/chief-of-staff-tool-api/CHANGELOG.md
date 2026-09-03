@@ -4,6 +4,20 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Treat an ABSENT output schema as `Any` on an agent surface. `output_schema:
+  None` skipped output validation entirely -- not the shape check, not the
+  identity walk -- and `check_registration` pins canonical definitions for
+  BUILT-IN ids only, so a host-local tool could register schemaless and return
+  anything. A one-field opt-out of the control.
+- Add the by-whom forms (`requested_by`, `requester`, `started_by`,
+  `created_by`, `initiated_by`, `owned_by`) to the peer vocabulary for SCHEMA
+  positions. `RuntimePairingSession.requested_by` is typed `AgentId` and was
+  declared on two tools already on the production model surface; both gates
+  reported them clean.
+- Those forms are excluded from VALUE positions, where they are usually the
+  blob author's own annotation -- pairing metadata carrying
+  `initiated_by: "chief-of-staff-test"` is a label, not a peer reference.
+
 - Add `InMemoryToolRuntime::as_agent_surface`, which extends the S-I7 identity
   walk to tool OUTPUTS. This closes the first clause -- the agent's view
   contains no agent identity -- where the registration gate could not reach it:
