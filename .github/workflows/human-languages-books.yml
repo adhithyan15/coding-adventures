@@ -369,8 +369,7 @@ jobs:
       - name: Install focused TeX toolchain
         run: |
           setup_started_at=$(date +%s)
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
+          bash code/scripts/ci/apt-install.sh --no-install-recommends \
             fontconfig latexmk lmodern texlive-fonts-recommended \
             librsvg2-bin texlive-lang-arabic texlive-xetex
 

@@ -1295,8 +1295,7 @@ jobs:
       - name: Install Clang alongside GCC (Linux C/C++)
         if: needs.detect.outputs.needs_cpp == 'true' && runner.os == 'Linux'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y clang
+          bash code/scripts/ci/apt-install.sh clang
           gcc --version | head -1
           clang --version | head -1
 
@@ -1342,8 +1341,7 @@ jobs:
         # dependencies" below already uses.
         if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libcairo2-dev
+          bash code/scripts/ci/apt-install.sh libcairo2-dev
 
       # The `pdf` crate is verified against qpdf, an independent
       # implementation: a PDF writer checked only by reading its own output
@@ -1378,8 +1376,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$RUNNER_OS" = "Linux" ]; then
-            sudo apt-get update
-            sudo apt-get install -y qpdf
+            bash code/scripts/ci/apt-install.sh qpdf
           elif [ "$RUNNER_OS" = "macOS" ]; then
             brew install qpdf
           else
@@ -1427,8 +1424,7 @@ jobs:
       - name: Install native HID dependencies (vault-webauthn-ctap2-hid)
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libudev-dev
+          bash code/scripts/ci/apt-install.sh libudev-dev
 
       - name: Install Venture Qt acceptance dependencies
         if: (needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
