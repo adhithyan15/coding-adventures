@@ -6500,3 +6500,99 @@ debug symbols and passes. It now checks the platform's container magic and
 matches on `name`. The release note text was corrected too: it claimed the lane
 "carries the engine", where the code proves "a shared library of the right kind
 is in the right directory". **Prose outruns code — say what the check proves.**
+
+## "No absolute paths" and "actually launches" are two different claims
+
+Publishing the Qt app needed proof the bundle would work on someone else's
+machine. `qt_add_executable` links the frameworks by absolute path
+(`/opt/homebrew/opt/qtbase/lib/QtCore.framework/...`), so the binary runs
+perfectly for whoever built it and fails for everyone else — the "runnable is
+not working" trap one level down from a missing engine.
+
+So I wrote a real check: parse the Mach-O load commands, collect every
+`LC_LOAD_DYLIB` path, refuse anything not under `@executable_path`,
+`@loader_path`, `@rpath`, or a system prefix. It was properly controlled — the
+undeployed binary reported 8 absolute Homebrew paths, matching `otool` exactly;
+`/bin/ls` and the SwiftUI app reported zero. After `macdeployqt` the bundle
+reported **zero non-relocatable dependencies**.
+
+Then I copied it somewhere else and ran it, and it exited instantly with no
+output at all.
+
+`macdeployqt` **invalidates every code signature it touches** when it rewrites
+install names, and on arm64 the loader refuses a dylib whose signature does not
+verify. `codesign --force --deep --sign -` fixed it. The dependency check was
+correct and complete and told me nothing about this, because it answers a
+different question.
+
+What I'd otherwise have shipped: a payload that passed a thorough, well-
+controlled, mutation-tested check and did not start.
+
+- **A check answers the question it asks.** Mine asked "would every dependency
+  resolve"; the user's question is "does it launch". Those coincide often
+  enough to be mistaken for each other, and the only way to tell is to run the
+  artifact — moved, extracted, from where a user would have it.
+- **Two failure modes in the same step need two assertions.** Relocatability
+  and signature validity are both properties of "deployed by macdeployqt", and
+  one passing says nothing about the other. They are checked separately now.
+- **Run it from where the user gets it.** Every payload this session was
+  launched from an extraction of the actual published zip, in a different
+  directory. For Qt that is what caught this; for the others it is what made
+  "it works" mean anything.
+
+Also worth recording: the Qt payload preserved **186 symlinks**, and the earlier
+Compose macOS payload had zero. The symlink-storing work looked, at the time,
+like a fix for a hypothetical — the bundle that motivated it turned out not to
+contain any. Three payloads later it was load-bearing.
+
+## A check that examines one file cannot vouch for a bundle of 159
+
+Security review of the Qt payload found that the relocatability and signature
+gates ran on `Contents/MacOS/<executable>` and nothing else. The failure they
+were written for is that `macdeployqt` rewrites **the dylibs'** install names
+and invalidates **their** signatures — so the check examined the one file least
+likely to be wrong. The bundle holds 159 Mach-O files; one of them still
+pointing at `/opt/homebrew/opt/qtbase/...` passes every gate and fails to launch
+for every downloader. The commit message said "the archiver refuses any payload
+that still carries an absolute dependency"; what it refused was a payload whose
+*top-level executable* did. Prose outrunning code, again.
+
+Three more from the same review, all verified before fixing:
+
+- **`is_code_signed` returned `True` for any universal binary without looking
+  inside** — a fat header followed by zeros passed. A Qt build for
+  `arm64;x86_64` *is* universal, which is the normal shape for a public macOS
+  release, so the gate would have silently stopped asserting anything the
+  moment the build went universal. The comment justified it by citing a "bundle
+  check" that did not exist.
+- **Prefix matching without normalisation is a spelling check, not a resolution
+  check.** `@executable_path/../../../../opt/homebrew/...`,
+  `/usr/lib/../../opt/homebrew/...`, and even `@executable_pathological/` all
+  passed a plain `startswith`.
+- **Unvalidated Mach-O headers are a resource attack.** A chain of fat headers
+  turned a 2 MB file into 2 GB of RSS; a `cmdsize` of zero never advances the
+  cursor, so a 64-byte file stalled the parser for minutes.
+
+But the fix for the second one **rejected every valid Qt bundle**, and only
+running it against a real deployed app caught that: the standard macdeployqt
+install name is `@executable_path/../Frameworks/QtCore.framework/QtCore`, which
+climbs one level from `Contents/MacOS` and lands *inside* the bundle. Treating
+any `..` as an escape is wrong; the bound is how deep the binary sits in the
+bundle. **A hardening change needs its false-positive direction tested against
+real data as carefully as its true-positive direction against fixtures** — a
+release lane that refuses correct payloads fails just as completely as one that
+accepts broken ones.
+
+Same lesson again on `LC_RPATH`: refusing any run path pointing outside the
+bundle failed the real bundle over
+`/opt/homebrew/Cellar/dbus/1.16.2_1/lib` in `libdbus-1.3.dylib`. Measuring
+settled it — 4 binaries carry an outside run path and **none** has an `@rpath`
+dependency, so dyld never consults it. The rule now fires only when something
+actually resolves through it.
+
+And one on method: a mutation test that reports OK proves nothing until you
+confirm the mutation applied. Mine used the wrong indentation, silently matched
+nothing, and "passed". When redone properly the guard turned out to be
+redundant in `dylib_dependencies` (a second check caught the same input) and
+load-bearing in `is_code_signed`, where its removal hung on a 64-byte file. Two
+different answers that the vacuous run had collapsed into one false one.

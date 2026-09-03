@@ -234,8 +234,96 @@ case "$BACKEND" in
       BIN_DIR="$(dirname "$FOUND")"
     fi
     echo "  engine verified beside the binary in $BIN_DIR"
-    echo ""
-    echo "Built: $BIN_DIR"
+
+    # On macOS, turn the bare executable into a relocatable `.app`.
+    #
+    # This is the step without which a Qt payload is worthless. `qt_add_executable`
+    # links the frameworks by ABSOLUTE path -- `/opt/homebrew/opt/qtbase/lib/
+    # QtCore.framework/...` on a Homebrew machine -- so the binary runs perfectly
+    # for whoever built it and fails to launch for everyone else. Nothing about
+    # the build says so; it is the same "runnable is not working" trap as an app
+    # shipped without the engine, one layer down.
+    #
+    # `macdeployqt` copies the frameworks in and rewrites those paths to
+    # `@executable_path`. It needs a bundle to work on, which is why the bundle
+    # is built here rather than left to the packaging step.
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+      APP_NAME="Engram"
+      APP_VERSION="${ENGRAM_VERSION:-0.0.0-dev}"
+      BUNDLE="$APP/$APP_NAME.app"
+      rm -rf "$BUNDLE"
+      mkdir -p "$BUNDLE/Contents/MacOS" "$BUNDLE/Contents/Resources"
+      cp "$BIN_DIR/EngramApp" "$BUNDLE/Contents/MacOS/$APP_NAME"
+      # The host does `QDir(appDir).filePath("libengram_capi.dylib")`, and for a
+      # bundled app `appDir` is `Contents/MacOS` -- so the engine goes beside the
+      # executable, not into `Frameworks`.
+      cp "$BIN_DIR/$LIB_NAME" "$BUNDLE/Contents/MacOS/$LIB_NAME"
+      printf 'APPL????' > "$BUNDLE/Contents/PkgInfo"
+      cat > "$BUNDLE/Contents/Info.plist" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleExecutable</key><string>$APP_NAME</string>
+  <key>CFBundleIdentifier</key><string>dev.mosaic.engram.qt</string>
+  <key>CFBundleName</key><string>$APP_NAME</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleShortVersionString</key><string>$APP_VERSION</string>
+  <key>CFBundleVersion</key><string>$APP_VERSION</string>
+  <key>LSMinimumSystemVersion</key><string>12.0</string>
+  <key>NSHighResolutionCapable</key><true/>
+</dict>
+</plist>
+PLIST
+
+      MACDEPLOYQT="$(command -v macdeployqt || true)"
+      if [[ -z "$MACDEPLOYQT" ]]; then
+        QT_PREFIX="$(brew --prefix qt 2>/dev/null || true)"
+        [[ -n "$QT_PREFIX" && -x "$QT_PREFIX/bin/macdeployqt" ]] && \
+          MACDEPLOYQT="$QT_PREFIX/bin/macdeployqt"
+      fi
+      if [[ -z "$MACDEPLOYQT" ]]; then
+        echo "error: macdeployqt not found; the bundle would link Qt by" >&2
+        echo "       absolute path and fail to launch on any other machine." >&2
+        exit 1
+      fi
+
+      # `-qmldir` matters: the app is QML, and without it macdeployqt bundles
+      # the frameworks but not the QML modules, producing a bundle that passes
+      # a dependency check and then shows an empty window.
+      "$MACDEPLOYQT" "$BUNDLE" -qmldir="$APP" || {
+        echo "error: macdeployqt failed" >&2
+        exit 1
+      }
+
+      # Re-sign, ad hoc. Rewriting install names invalidates every signature
+      # macdeployqt touched, and on arm64 the loader REFUSES a dylib whose
+      # signature does not verify -- so the app exits immediately, silently,
+      # with no output at all.
+      #
+      # This is worth stating plainly because the dependency check below passes
+      # on the broken bundle: every path is relocatable, and the app still does
+      # not start. "No absolute paths" and "actually launches" are two
+      # different claims, and only the second one is what a user gets.
+      codesign --force --deep --sign - "$BUNDLE" 2>/dev/null || {
+        echo "error: could not ad-hoc sign $BUNDLE; on arm64 macOS the app" >&2
+        echo "       would exit immediately with no output." >&2
+        exit 1
+      }
+      if ! codesign --verify --deep "$BUNDLE" 2>/dev/null; then
+        echo "error: $BUNDLE does not pass signature verification after" >&2
+        echo "       signing; it would not launch." >&2
+        exit 1
+      fi
+      echo "  signed ad hoc and verified"
+
+      echo "  macdeployqt bundled Qt into $BUNDLE"
+      echo ""
+      echo "Built: $BUNDLE"
+    else
+      echo ""
+      echo "Built: $BIN_DIR"
+    fi
     ;;
   flutter)
     # `flutter create` adds the platform runner directories the emitted project

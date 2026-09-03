@@ -181,6 +181,244 @@ def linked_engine_symbols(binary: bytes) -> tuple[set[str], set[str]]:
     raise ValueError("Mach-O binary has no symbol table")
 
 
+# More Mach-O load commands, from <mach-o/loader.h>. `LC_REQ_DYLD` is set on
+# commands the loader must understand, and is part of the stored value.
+LC_REQ_DYLD = 0x80000000
+LC_LOAD_DYLIB = 0x0C
+LC_LOAD_WEAK_DYLIB = 0x18 | LC_REQ_DYLD
+LC_REEXPORT_DYLIB = 0x1F | LC_REQ_DYLD
+DYLIB_COMMANDS = (LC_LOAD_DYLIB, LC_LOAD_WEAK_DYLIB, LC_REEXPORT_DYLIB)
+LC_RPATH = 0x1C | LC_REQ_DYLD
+
+# Prefixes that make a dependency relocatable: resolved relative to the binary
+# or the bundle, so the app works wherever the user unzipped it.
+RELOCATABLE_PREFIXES = ("@executable_path", "@loader_path", "@rpath")
+
+# Absolute paths that are fine because they are part of macOS itself and are
+# present on every machine.
+SYSTEM_LIBRARY_PREFIXES = ("/usr/lib/", "/System/Library/")
+
+
+# A fat binary has a handful of slices. A header claiming more, or slices that
+# do not lie inside the file, is malformed -- and left unchecked it is a
+# resource attack: each recursion holds a live copy of its slice, so a chain of
+# fat headers turned a 2 MB file into 2 GB of RSS before hitting Python's
+# recursion limit. A nested fat header is never legitimate.
+MAX_FAT_SLICES = 32
+
+
+def _fat_slices(binary: bytes) -> list[bytes] | None:
+    """The slices of a universal binary, or ``None`` if this is not one."""
+
+    if len(binary) < 8:
+        return None
+    magic = struct.unpack_from(">I", binary, 0)[0]
+    if magic not in (FAT_MAGIC, FAT_MAGIC_64):
+        return None
+
+    count = struct.unpack_from(">I", binary, 4)[0]
+    if count > MAX_FAT_SLICES:
+        raise ValueError(f"implausible fat architecture count: {count}")
+    width = 32 if magic == FAT_MAGIC_64 else 20
+
+    slices: list[bytes] = []
+    for index in range(count):
+        base = 8 + index * width
+        if base + width > len(binary):
+            raise ValueError("fat architecture table runs past the file")
+        if magic == FAT_MAGIC_64:
+            offset, size = struct.unpack_from(">QQ", binary, base + 8)
+        else:
+            offset, size = struct.unpack_from(">II", binary, base + 8)
+        if offset < 8 or size < 32 or offset + size > len(binary):
+            raise ValueError("fat architecture entry lies outside the file")
+        chunk = binary[offset : offset + size]
+        if struct.unpack_from(">I", chunk, 0)[0] in (FAT_MAGIC, FAT_MAGIC_64):
+            raise ValueError("nested fat header")
+        slices.append(chunk)
+    return slices
+
+
+def _load_commands(binary: bytes):
+    """Yield ``(cmd, offset, cmdsize)`` for each load command, or refuse.
+
+    Every bound is checked. `cmdsize` of zero never advances the cursor, and
+    `ncmds` is read straight from the header, so an unvalidated walk can be
+    stalled by its own input -- 50 million iterations measured on a 64-byte
+    file. A short `cmdsize` also makes the parser read the NEXT command's bytes
+    as a name offset.
+    """
+
+    if len(binary) < 32:
+        raise ValueError("file is too short to be a Mach-O binary")
+    if struct.unpack_from("<I", binary, 0)[0] != MH_MAGIC_64:
+        raise ValueError("not a 64-bit little-endian Mach-O binary")
+
+    ncmds, sizeofcmds = struct.unpack_from("<II", binary, 16)
+    offset = 32
+    end = min(len(binary), 32 + sizeofcmds)
+    try:
+        for _ in range(ncmds):
+            if offset + 8 > end:
+                break
+            cmd, cmdsize = struct.unpack_from("<II", binary, offset)
+            if cmdsize < 8 or offset + cmdsize > end:
+                raise ValueError(f"malformed load command at offset {offset}")
+            yield cmd, offset, cmdsize
+            offset += cmdsize
+    except struct.error as error:
+        # Otherwise a truncated table raises `struct.error`, which `main` does
+        # not catch -- a traceback where the module's one-line refusal belongs.
+        raise ValueError(f"truncated Mach-O load commands: {error}") from error
+
+
+def dylib_dependencies(binary: bytes) -> list[str]:
+    """Every dynamic library a Mach-O file asks the loader for.
+
+    Read from the load commands rather than by running `otool`, for the same
+    reason the symbol table is: a toolchain check is one that can be absent.
+    """
+
+    slices = _fat_slices(binary)
+    if slices is not None:
+        paths: list[str] = []
+        for chunk in slices:
+            for path in dylib_dependencies(chunk):
+                if path not in paths:
+                    paths.append(path)
+        return paths
+
+    paths = []
+    for cmd, offset, cmdsize in _load_commands(binary):
+        if cmd not in DYLIB_COMMANDS:
+            continue
+        name_offset = struct.unpack_from("<I", binary, offset + 8)[0]
+        if name_offset < 8 or name_offset >= cmdsize:
+            raise ValueError(f"dylib name offset outside its command: {name_offset}")
+        start = offset + name_offset
+        end = binary.find(b"\x00", start, offset + cmdsize)
+        if end > start:
+            paths.append(binary[start:end].decode("utf-8", "replace"))
+    return paths
+
+
+def load_rpaths(binary: bytes) -> list[str]:
+    """The `LC_RPATH` entries `@rpath` is resolved against.
+
+    Parsed because without them `@rpath/QtCore.framework/...` says nothing: an
+    `@rpath` dependency plus an `LC_RPATH` of `/opt/homebrew/opt/qtbase/lib` is
+    a machine-local binary wearing a relocatable-looking install name.
+    """
+
+    slices = _fat_slices(binary)
+    if slices is not None:
+        found: list[str] = []
+        for chunk in slices:
+            for path in load_rpaths(chunk):
+                if path not in found:
+                    found.append(path)
+        return found
+
+    found = []
+    for cmd, offset, cmdsize in _load_commands(binary):
+        if cmd != LC_RPATH:
+            continue
+        path_offset = struct.unpack_from("<I", binary, offset + 8)[0]
+        if path_offset < 8 or path_offset >= cmdsize:
+            raise ValueError("rpath offset outside its command")
+        start = offset + path_offset
+        end = binary.find(b"\x00", start, offset + cmdsize)
+        if end > start:
+            found.append(binary[start:end].decode("utf-8", "replace"))
+    return found
+
+
+def non_relocatable_dependencies(
+    binary: bytes, *, depth_in_bundle: int = 0
+) -> list[str]:
+    """The dependencies that would not resolve on someone else's machine.
+
+    This is THE check for a Qt payload. A Qt app builds and runs perfectly on
+    the machine that built it while linking its frameworks by absolute path --
+    `/opt/homebrew/opt/qtbase/lib/QtCore.framework/...` -- so the artifact is
+    broken for every user who does not happen to have Qt installed at that
+    exact path, and nothing about the build says so. `macdeployqt` copies the
+    frameworks in and rewrites these paths; this asserts that it actually did.
+
+    Paths are NORMALISED and the prefix must be followed by a separator, so
+    `@executable_path/../../../../opt/homebrew/...` and
+    `/usr/lib/../../opt/homebrew/...` are refused -- both were accepted by a
+    plain `startswith`, which made this a spelling check rather than a
+    resolution one. `@executable_pathological/evil.dylib` was accepted too.
+
+    ``depth_in_bundle`` is how many directories separate this binary from the
+    bundle root, and it is what makes `..` judgeable rather than guessed at.
+    The standard macdeployqt install name is
+    `@executable_path/../Frameworks/QtCore.framework/QtCore`: from
+    `Contents/MacOS` that climbs one level and lands INSIDE the bundle. A rule
+    that treated any `..` as an escape rejected the correct, universal shape --
+    caught here only by running it against a real deployed bundle, which is the
+    difference between a check and a check that can ship.
+    """
+
+    bad: list[str] = []
+
+    # An `@rpath` dependency is only as relocatable as the run paths it
+    # resolves against, so an `LC_RPATH` pointing outside the bundle matters --
+    # but ONLY if something actually resolves through it.
+    #
+    # This distinction was not theoretical. Applied unconditionally, the check
+    # refused the real deployed bundle over
+    # `LC_RPATH /opt/homebrew/Cellar/dbus/1.16.2_1/lib` in `libdbus-1.3.dylib`.
+    # Measuring the bundle settled it: 4 binaries carry an outside run path and
+    # NONE of them has a single `@rpath` dependency, so dyld never consults it
+    # -- which is why the bundle launches. Rejecting there would have failed
+    # every Qt release for a path that does nothing.
+    #
+    # It is still leaked build-machine detail in a public artifact, but that is
+    # not what this function is for, and refusing a working payload to tidy it
+    # would be the wrong trade.
+    rpath_dependencies = [
+        path for path in dylib_dependencies(binary) if path.startswith("@rpath")
+    ]
+    if rpath_dependencies:
+        run_paths = load_rpaths(binary)
+        inside = [
+            rpath
+            for rpath in run_paths
+            if any(
+                rpath == prefix or rpath.startswith(prefix + "/")
+                for prefix in ("@executable_path", "@loader_path")
+            )
+        ]
+        if not inside:
+            bad.extend(
+                f"@rpath dependency {path} with no in-bundle LC_RPATH "
+                f"(run paths: {', '.join(run_paths) or 'none'})"
+                for path in rpath_dependencies
+            )
+
+    for path in dylib_dependencies(binary):
+        matched = False
+        for prefix in RELOCATABLE_PREFIXES:
+            if path == prefix or path.startswith(prefix + "/"):
+                matched = True
+                rest = posixpath.normpath(path[len(prefix) :].lstrip("/"))
+                hops = 0
+                while rest.startswith("../") or rest == "..":
+                    hops += 1
+                    rest = rest[3:] if rest.startswith("../") else ""
+                if hops > depth_in_bundle:
+                    bad.append(path)
+                break
+        if matched:
+            continue
+        normalised = posixpath.normpath(path)
+        if not normalised.startswith(SYSTEM_LIBRARY_PREFIXES):
+            bad.append(path)
+    return bad
+
+
 def _read_symtab(
     binary: bytes, symoff: int, nsyms: int, stroff: int, strsize: int
 ) -> tuple[set[str], set[str]]:
@@ -247,6 +485,29 @@ def flutter_artifact_name(version: str, platform: str) -> str:
     return f"engram-flutter-{platform}-v{version}.{FLUTTER_TARGETS[platform]}"
 
 
+# The Qt backend. macOS only FOR NOW, and the reason is deployment tooling
+# rather than the app: `macdeployqt` ships with Qt and makes a bundle
+# relocatable, `windeployqt` does the same on Windows, and Linux has no
+# official equivalent -- so each platform is its own piece of work. Declaring
+# only what is actually verified keeps the publish job's set-equality check
+# honest; see the follow-up issues.
+QT_TARGETS = {"macos": "zip"}
+
+LC_CODE_SIGNATURE = 0x1D
+
+# Thin 64-bit little-endian, and both universal spellings.
+MACH_O_MAGICS = (b"\xcf\xfa\xed\xfe", b"\xca\xfe\xba\xbe", b"\xca\xfe\xba\xbf")
+
+
+def qt_artifact_name(version: str, platform: str) -> str:
+    """The published name for one platform's Qt build."""
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}")
+    if platform not in QT_TARGETS:
+        raise ValueError(f"unknown Qt platform: {platform}")
+    return f"engram-qt-{platform}-v{version}.{QT_TARGETS[platform]}"
+
+
 def artifact_names(version: str) -> list[str]:
     """Every payload this release publishes.
 
@@ -273,6 +534,9 @@ def artifact_names(version: str) -> list[str]:
     names.extend(
         flutter_artifact_name(version, platform)
         for platform in sorted(FLUTTER_TARGETS)
+    )
+    names.extend(
+        qt_artifact_name(version, platform) for platform in sorted(QT_TARGETS)
     )
     return names
 
@@ -407,13 +671,27 @@ def _zip_tree(source: Path, output: Path, root_name: str, commit: str) -> None:
 # this fails loudly at release time, which is the right direction to fail; the
 # allowlist can then be widened once, with evidence, rather than tightened
 # repeatedly under attack.
-SAFE_COMPONENT = re.compile(r"[A-Za-z0-9_.][A-Za-z0-9._+ -]*")
+#
+# `@` and a leading `+` were added that way. The Qt payload refused to archive
+# on Qt's own QML resources, and the measurement had to be redone before it was
+# right: the first pass counted CHARACTERS outside the set and reported only
+# `@` (Apple retina naming, `close_big@2x.png`, 566 times). It missed
+# `+Fusion`, `+Material`, `+Imagine`, `+Universal` -- QML file-selector
+# directories -- because `+` was already legal in the body and the violation
+# was the LEADING-character rule. Measuring the failing COMPONENTS instead of
+# the offending characters gave the real population: 4 distinct names across
+# 17,689 components, with the Flutter and SwiftUI payloads clean.
+#
+# Both characters are safe where they were added: neither is a separator, a
+# Windows-reserved character, or a metacharacter to any extractor. A leading
+# `-` stays rejected, because that is the one that reads as an option.
+SAFE_COMPONENT = re.compile(r"[A-Za-z0-9_.+@][A-Za-z0-9._+@ -]*")
 
 # Win32 resolves these as devices no matter the directory or extension.
 RESERVED_NAMES = frozenset(
     {"CON", "PRN", "AUX", "NUL"}
-    | {f"COM{digit}" for digit in range(1, 10)}
-    | {f"LPT{digit}" for digit in range(1, 10)}
+    | {f"COM{digit}" for digit in range(0, 10)}
+    | {f"LPT{digit}" for digit in range(0, 10)}
 )
 
 
@@ -440,7 +718,7 @@ def _reject_unsafe_member(relative: str) -> None:
                 f"unsafe archive member name: {relative!r} -- component "
                 f"{component!r} ends with a dot or space, which Windows strips"
             )
-        if component.split(".")[0].upper() in RESERVED_NAMES:
+        if component.split(".")[0].rstrip(" ").upper() in RESERVED_NAMES:
             raise ValueError(
                 f"unsafe archive member name: {relative!r} -- component "
                 f"{component!r} is a reserved Windows device name"
@@ -1058,6 +1336,150 @@ def _cmd_archive_flutter(args: argparse.Namespace) -> int:
     return 0
 
 
+def is_code_signed(binary: bytes) -> bool:
+    """Whether a Mach-O file carries a code-signature load command.
+
+    Presence, not validity -- validity needs `codesign`, which exists on the
+    macOS runner and is checked there at build time. This catches the case that
+    actually happens: `macdeployqt` rewrites install names, which INVALIDATES
+    every signature it touched, and on arm64 the loader then refuses the
+    dylibs and the app exits immediately with no output whatsoever.
+
+    Worth having as a separate assertion because the relocatability check
+    passes on that broken bundle. Every path is relocatable and the app still
+    does not start; they are two different claims.
+    """
+
+    if len(binary) < 32:
+        return False
+    slices = _fat_slices(binary)
+    if slices is not None:
+        # EVERY slice, not "it is fat so assume so". The earlier form returned
+        # True for a fat header followed by zeros -- and a Qt build for
+        # `arm64;x86_64` is universal, which is the normal shape for a public
+        # macOS release, so this gate would have silently stopped asserting
+        # anything the moment the build went universal.
+        return bool(slices) and all(is_code_signed(chunk) for chunk in slices)
+
+    if len(binary) < 32 or struct.unpack_from("<I", binary, 0)[0] != MH_MAGIC_64:
+        return False
+    return any(cmd == LC_CODE_SIGNATURE for cmd, _, _ in _load_commands(binary))
+
+
+def archive_qt(
+    version: str, platform: str, source: Path, output_dir: Path, commit: str
+) -> Path:
+    """Archive the Qt `.app` bundle for publication.
+
+    Three separate claims are checked, because a Qt payload can fail each one
+    while satisfying the others:
+
+    1. **It carries the engine.** Qt resolves `engram-capi` at runtime via
+       `QDir(appDir).filePath(...)`, and for a bundled app `appDir` is
+       `Contents/MacOS` -- so the engine goes beside the executable, not into
+       `Frameworks`.
+    2. **It is relocatable.** `qt_add_executable` links the frameworks by
+       ABSOLUTE path, so an undeployed binary runs perfectly for whoever built
+       it and fails to launch for everyone else. This is the check that makes a
+       Qt release worth publishing at all.
+    3. **It is signed.** `macdeployqt` invalidates signatures when it rewrites
+       install names, and on arm64 the loader refuses such a dylib -- the app
+       exits instantly with no output. Verified the hard way: a bundle that
+       passed check 2 completely still would not start.
+    """
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}", commit)
+    if platform not in QT_TARGETS:
+        raise ValueError(f"unknown Qt platform: {platform}")
+    if not source.is_dir() or source.suffix != ".app":
+        raise ValueError(f"expected a .app bundle, got: {source}")
+
+    info_plist = source / "Contents" / "Info.plist"
+    if not info_plist.is_file():
+        raise ValueError(f"bundle has no Info.plist: {source}")
+    try:
+        declared = plistlib.loads(info_plist.read_bytes()).get("CFBundleExecutable")
+    except Exception as error:  # noqa: BLE001 - any malformed plist is a refusal
+        raise ValueError(f"bundle has an unreadable Info.plist: {error}") from error
+    if not declared or "/" in declared:
+        raise ValueError(f"bundle has no usable CFBundleExecutable: {source}")
+
+    macos_dir = source / "Contents" / "MacOS"
+    if macos_dir.is_symlink() or not macos_dir.is_dir():
+        raise ValueError(f"Contents/MacOS is not a real directory: {source}")
+
+    binary = macos_dir / declared
+    if binary.is_symlink() or not binary.is_file():
+        raise ValueError(f"bundle executable is not a regular file: {binary}")
+
+    engine = _find_engine(macos_dir, platform)
+    if engine is None:
+        raise ValueError(
+            "the Qt bundle has no engine beside its executable in "
+            "Contents/MacOS; the app would launch with every deck operation "
+            "silently unavailable"
+        )
+
+    # EVERY Mach-O in the bundle, not just the executable. The failure being
+    # guarded against is that `macdeployqt` rewrites the DYLIBS' install names
+    # and invalidates their signatures -- so checking only the top-level binary
+    # examines the one file least likely to be wrong, while a bundled framework
+    # still pointing at `/opt/homebrew/opt/qtbase/...` passes every gate and
+    # fails to launch for every downloader. This bundle holds 159 Mach-O files.
+    checked = 0
+    for candidate in sorted(source.rglob("*")):
+        if candidate.is_symlink() or not candidate.is_file():
+            continue
+        with candidate.open("rb") as handle:
+            head = handle.read(4)
+        if head not in MACH_O_MAGICS:
+            continue
+        blob = candidate.read_bytes()
+        where = candidate.relative_to(source)
+        # How far this binary sits from the bundle root, which bounds how many
+        # `..` hops can still land inside it.
+        stray = non_relocatable_dependencies(
+            blob, depth_in_bundle=len(where.parent.parts)
+        )
+        if stray:
+            raise ValueError(
+                f"{where} links {len(stray)} librar(ies) by a path that will "
+                f"not resolve elsewhere, so the app would not launch on a "
+                f"machine without them: {', '.join(stray)}"
+            )
+        if not is_code_signed(blob):
+            raise ValueError(
+                f"{where} carries no code signature; macdeployqt invalidates "
+                f"signatures when it rewrites install names, and on arm64 the "
+                f"loader refuses such a binary -- the app exits with no output"
+            )
+        checked += 1
+    if checked == 0:
+        raise ValueError(f"the Qt bundle contains no Mach-O binaries: {source}")
+
+    name = qt_artifact_name(version, platform)
+    output = output_dir / name
+    with tempfile.TemporaryDirectory() as staging:
+        _reject_hard_links(source)
+        staged = Path(staging) / source.name
+        shutil.copytree(source, staged, symlinks=True)
+        _reject_links_out_of(staged)
+        _zip_tree(Path(staging), output, f"engram-qt-{platform}-v{version}", commit)
+    return output
+
+
+def _cmd_archive_qt(args: argparse.Namespace) -> int:
+    output = archive_qt(
+        args.version,
+        args.platform,
+        Path(args.source),
+        Path(args.output_dir),
+        args.commit,
+    )
+    print(output)
+    return 0
+
+
 def _cmd_validate(args: argparse.Namespace) -> int:
     validate_identifiers(args.version, args.tag, args.commit)
     print(f"version={args.version}")
@@ -1108,6 +1530,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     names.add_argument("--version", required=True)
     names.set_defaults(handler=_cmd_artifact_names)
+
+    archive_qt_cmd = subcommands.add_parser(
+        "archive-qt", help="Archive the Qt .app bundle for publication"
+    )
+    archive_qt_cmd.add_argument("--version", required=True)
+    archive_qt_cmd.add_argument("--platform", required=True)
+    archive_qt_cmd.add_argument("--source", required=True)
+    archive_qt_cmd.add_argument("--output-dir", required=True)
+    archive_qt_cmd.add_argument("--commit", required=True)
+    archive_qt_cmd.set_defaults(handler=_cmd_archive_qt)
 
     archive_flutter_cmd = subcommands.add_parser(
         "archive-flutter", help="Archive a Flutter desktop bundle for publication"
