@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import posixpath
 import re
 import sys
 import zipfile
@@ -139,15 +140,29 @@ def _zip_tree(source: Path, output: Path, root_name: str, commit: str) -> None:
         raise ValueError(f"archive source directory does not exist: {source}")
     root = source.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr(f"{root_name}/SOURCE_COMMIT", f"{commit}\n")
-        for path in sorted(source.rglob("*")):
-            relative = path.relative_to(source).as_posix()
-            _reject_unsafe_member(relative)
-            if path.is_symlink():
-                _write_symlink(archive, path, root, f"{root_name}/{relative}")
-            elif path.is_file():
-                archive.write(path, f"{root_name}/{relative}")
+
+    # Built beside the target and moved into place only on success. Opening
+    # `output` directly would leave a VALID, readable, truncated zip behind when
+    # a member is rejected mid-walk -- and a truncated payload satisfies both
+    # `if-no-files-found: error` and the publish job's "files on disk equal the
+    # declared set" check. Today the workflow's `set -e` stops before the
+    # upload; this makes it not depend on that.
+    partial = output.with_name(output.name + ".partial")
+    try:
+        with zipfile.ZipFile(partial, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr(f"{root_name}/SOURCE_COMMIT", f"{commit}\n")
+            for path in sorted(source.rglob("*")):
+                relative = path.relative_to(source).as_posix()
+                _reject_unsafe_member(relative)
+                member = f"{root_name}/{relative}"
+                if path.is_symlink():
+                    _write_symlink(archive, path, root, root_name, member)
+                elif path.is_file():
+                    archive.write(path, member)
+    except BaseException:
+        partial.unlink(missing_ok=True)
+        raise
+    os.replace(partial, output)
 
 
 def _reject_unsafe_member(relative: str) -> None:
@@ -164,9 +179,20 @@ def _reject_unsafe_member(relative: str) -> None:
     if "\\" in relative or any(ord(ch) < 0x20 for ch in relative):
         raise ValueError(f"unsafe archive member name: {relative!r}")
 
+    # `SOURCE_COMMIT` is written first, so a payload carrying its own copy
+    # produces two members with the same name -- and readers take the LAST, so
+    # the planted value wins. That defeats the one thing this member exists to
+    # do. Python only warns, and CI does not fail on warnings. The precondition
+    # is not hypothetical: Vite copies `public/` into `dist/` verbatim.
+    if relative == "SOURCE_COMMIT":
+        raise ValueError(
+            "payload contains its own SOURCE_COMMIT, which would shadow the "
+            "commit recorded here"
+        )
+
 
 def _write_symlink(
-    archive: zipfile.ZipFile, path: Path, root: Path, member: str
+    archive: zipfile.ZipFile, path: Path, root: Path, root_name: str, member: str
 ) -> None:
     """Store a symlink as a link, and only if it stays inside the payload.
 
@@ -190,7 +216,31 @@ def _write_symlink(
     """
 
     target = os.readlink(path)
-    resolved = (path.parent / target).resolve()
+
+    # An absolute target cannot be right in a relocatable payload: it either
+    # dangles on the reader's machine or points somewhere unrelated, and it
+    # leaks the runner's filesystem layout into a public download.
+    if posixpath.isabs(target) or os.path.isabs(target):
+        raise ValueError(f"symlink target is absolute: {path} -> {target}")
+
+    # Checked twice, against two different roots, because they catch different
+    # things. The build-tree check below asks where the link points *now*. This
+    # one asks where it will point *after extraction*, which is what the reader
+    # actually gets -- and a link can satisfy the first while violating the
+    # second: from `dist/assets/`, `../../dist/evil` lands back inside the
+    # build tree, but from `<payload>/assets/` it escapes the payload root.
+    # Lexical normalisation is sound here because every component above the
+    # link is a real directory: `rglob` never descends into a symlink.
+    landing = posixpath.normpath(posixpath.join(posixpath.dirname(member), target))
+    if landing != root_name and not landing.startswith(f"{root_name}/"):
+        raise ValueError(f"symlink escapes the payload: {path} -> {target}")
+
+    try:
+        resolved = (path.parent / target).resolve()
+    except (OSError, RuntimeError) as error:
+        # A symlink loop raises RuntimeError, which `main` does not catch --
+        # a raw traceback instead of the one-line message CI is meant to show.
+        raise ValueError(f"cannot resolve symlink: {path} -> {target}") from error
     if resolved != root and not resolved.is_relative_to(root):
         raise ValueError(f"symlink escapes the payload: {path} -> {target}")
 

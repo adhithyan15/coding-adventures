@@ -462,13 +462,97 @@ class ArchiveComposeTests(unittest.TestCase):
             root = Path(tmp)
             dist = _write_compose_dist(root)
             (root / "secret.txt").write_text("SENSITIVE\n", encoding="utf-8")
-            (dist / "Engram.app" / "escape.txt").symlink_to(root / "secret.txt")
+            (dist / "Engram.app" / "escape.txt").symlink_to("../../secret.txt")
 
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_compose(
                     "0.4.0", "macos", dist, root / "out", COMMIT
                 )
             self.assertIn("escapes the payload", str(caught.exception))
+
+    def test_refuses_an_absolute_symlink_target(self) -> None:
+        # An absolute target cannot be right in a relocatable payload, and it
+        # publishes the runner's filesystem layout in a public download.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (root / "secret.txt").write_text("SENSITIVE\n", encoding="utf-8")
+            (dist / "Engram.app" / "escape.txt").symlink_to(root / "secret.txt")
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("absolute", str(caught.exception))
+
+    def test_refuses_a_link_that_escapes_only_after_extraction(self) -> None:
+        # The subtle one. `Contents/app/../../../evil` lands back inside the
+        # BUILD tree (which has a directory above the distribution root), so a
+        # check asking "where does this point now" accepts it. After extraction
+        # the same link resolves outside the payload root, which is what the
+        # reader actually gets. Verified end-to-end before this guard existed.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (root / "evil.txt").write_text("EVIL\n", encoding="utf-8")
+            (dist / "Engram.app" / "Contents" / "app" / "sneaky").symlink_to(
+                "../../../../evil.txt"
+            )
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("escapes the payload", str(caught.exception))
+
+    def test_refuses_a_payload_carrying_its_own_source_commit(self) -> None:
+        # Two members with the same name: readers take the LAST, so a planted
+        # SOURCE_COMMIT wins over the real one and the provenance guarantee is
+        # gone. Python only warns, and CI does not fail on warnings.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (dist / "SOURCE_COMMIT").write_text(f"{'b' * 40}\n", encoding="utf-8")
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("SOURCE_COMMIT", str(caught.exception))
+
+    def test_a_rejected_payload_leaves_no_archive_behind(self) -> None:
+        # A member rejected mid-walk used to leave a valid, readable, truncated
+        # zip on disk -- which would satisfy both `if-no-files-found: error` and
+        # the publish job's "files on disk equal the declared set" check.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            (root / "secret.txt").write_text("SENSITIVE\n", encoding="utf-8")
+            (dist / "Engram.app" / "zzz-late").symlink_to("../../secret.txt")
+
+            out = root / "out"
+            with self.assertRaises(ValueError):
+                engram_release.archive_compose("0.4.0", "macos", dist, out, COMMIT)
+            self.assertEqual(
+                sorted(p.name for p in out.iterdir()) if out.exists() else [],
+                [],
+                "a partial archive survived a rejection",
+            )
+
+    def test_a_symlink_loop_fails_with_a_message_not_a_traceback(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            app = dist / "Engram.app"
+            (app / "a").symlink_to("b")
+            (app / "b").symlink_to("a")
+
+            # ValueError, not RuntimeError: `main` catches the former and
+            # prints one line, which is what the CI log should show.
+            with self.assertRaises(ValueError):
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
 
     def test_a_symlink_cannot_satisfy_the_engine_check(self) -> None:
         # Otherwise a link named `libengram_capi.dylib` would pass the presence
