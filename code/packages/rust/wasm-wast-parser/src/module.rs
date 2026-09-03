@@ -3119,6 +3119,19 @@ fn encode_stream_instr(
         out.push(0xD1);
         return Ok(0);
     }
+    // `ref.eq` (W39 slice 1: `code/specs/W39-wasm-gc-ref-eq-cast-br-on-
+    // cast.md`) -- like `ref.null`/`ref.is_null` above, not registered in
+    // `wasm_opcodes::OPCODES` (a genuinely base-opcode-space byte, `0xD3`,
+    // that just happens to sit right after `ref.func`'s `0xD2` -- NOT
+    // `0xFB`-prefixed like most other GC instructions, per the spec's own
+    // cross-checked binary-format table), so it must be intercepted here
+    // too. Takes two stack operands (already on the stack by the time this
+    // flat/stream instruction runs, same as `ref.is_null` takes one) and no
+    // immediate at all.
+    if name == "ref.eq" {
+        out.push(0xD3);
+        return Ok(0);
+    }
     // `ref.i31` / `i31.get_s` / `i31.get_u` (WasmGC's `0xFB`-prefixed i31
     // family, W20): like `ref.null`/`ref.is_null` above, none of these are
     // registered in `wasm_opcodes::OPCODES` (a two-byte prefix encoding
@@ -4843,6 +4856,16 @@ fn encode_flat_instr(
     if name == "ref.is_null" {
         encode_instr_list(args, icx, out)?;
         out.push(0xD1);
+        return Ok(());
+    }
+    // `ref.eq` (W39 slice 1): see the matching comment in
+    // `encode_stream_instr`. Takes exactly TWO stack operands (both
+    // recursed into via `encode_instr_list`, same machinery every other
+    // multi-operand instruction -- e.g. `i32.add` -- already uses to encode
+    // its own two folded sub-expressions in source order) and no immediate.
+    if name == "ref.eq" {
+        encode_instr_list(args, icx, out)?;
+        out.push(0xD3);
         return Ok(());
     }
     // `ref.i31` / `i31.get_s` / `i31.get_u` (W20): see the matching comment

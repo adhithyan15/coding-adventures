@@ -1,77 +1,73 @@
 ---
+schema_version: 2
 id: GE-C14-alter
-sequence: 300
-chapter: 14
+spine_node: SPINE-TIME-OF-DAY
+sequence: 495
+chapter: 19
 type: phrase
 headword: ich bin zwanzig Jahre alt
-gloss: "age — the one place German refuses haben, siding with English against every Romance sister"
+gloss: I am twenty years old — the answer, word for word the English sentence
 concept_tag: GE-AGE
-prerequisites: [GE-C14-haben, GE-C12-zahlen-13-20]
-sounds: [long-a, ch-ich]
-roots: [germanic-jera, germanic-alda]
-etymology_hook: "German+English say 'I AM twenty years old' where French/Spanish/Italian/Portuguese all say 'I HAVE twenty years' — age as identity vs age as possession; Jahr ← *jēra = English year, alt ← *aldaz = English old (and 'adult', from Latin's cousin alere 'to nourish')"
-est_minutes: 4
-reviews_of: [GE-C14-haben, GE-C12-zahlen-13-20, GE-C09-jahreszeiten]
+prerequisites: [GE-C14-wie-alt-bist-du, GE-C12-zahlen-13-20]
+sounds: [long-a]
+roots: [germanic-jera, germanic-aldaz]
+etymology_hook: "German and English both say I AM my years; the sentence survives in both because both inherited it, and German lets you drop Jahre alt exactly as English drops years old"
+duration:
+  max_seconds: 170
+requires:
+  knowledge: [GE-LEX-WIE-ALT-BIST-DU-01, GE-GRAMMAR-SEIN-ICH-BIN-01, GE-LEX-JAHR-01, GE-LEX-ALT-01]
+introduces:
+  knowledge: [GE-LEX-ICH-BIN-JAHRE-ALT-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [GE-LEX-ICH-BIN-JAHRE-ALT-01, GE-LEX-WIE-ALT-BIST-DU-01, GE-GRAMMAR-SEIN-ICH-BIN-01, GE-LEX-JAHR-01, GE-LEX-ALT-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C14-wie-alt-bist-du, GE-C14-jahr, GE-C12-zahlen-13-20]
 ---
 
-# ich bin zwanzig Jahre alt — being your years
+# ich bin zwanzig Jahre alt
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WIE-ALT-BIST-DU-01, GE-GRAMMAR-SEIN-ICH-BIN-01] -->
 
-[PAUSE 2s] You just learned **haben**. Here is the everyday sentence where German
-**won't** let you use it — and where German and English stand alone against all
-four Romance languages.
+[PAUSE 2s] The answer, and it is as English as the question was.
 
-## The phrase
+## You'll want to know: ich bin zwanzig Jahre alt
+<!-- hl-knowledge: introduces=[GE-LEX-ICH-BIN-JAHRE-ALT-01]; assesses=[GE-LEX-JAHR-01, GE-LEX-ALT-01] -->
 
-> **Wie alt bist du?** — literally "**How old** are you?"
-> **Ich bin zwanzig Jahre alt.** — "I **am** twenty years old."
+> **Ich bin zwanzig Jahre alt.** — "I am twenty years old."
 
-Word for word, that is the **English sentence**. Not a coincidence — both
-languages inherited the same way of saying it.
+Word for word, that is the English sentence: *I* — *am* — *twenty* — *years* —
+*old*. Put any number you own in the middle and the sentence is yours.
 
-You can shorten it to **Ich bin zwanzig**, exactly as English drops "years old."
+And German shortens it the same way English does. *Ich bin zwanzig* is complete
+and ordinary, exactly as "I'm twenty" is — the *Jahre alt* can go, and in speech
+usually does.
 
-## The words
-
-| word | ← | English twin |
-|---|---|---|
-| **Jahr** | Germanic *\*jēra* | **year** |
-| **alt** | Germanic *\*aldaz* | **old** |
-
-*Alt* has a Latin cousin too: *alere*, "to nourish, grow" — which gives English
-**adult** ("grown up") and **old** itself. Growing and ageing, one idea.
-
-Note **Jahre** is the plural (Ch. 9's *Jahreszeiten*, "year's-times" = seasons,
-already had it), and German capitalises it as a noun.
-
-## The split, laid out
-
-| language | how age works | literally |
-|---|---|---|
-| **German** | *ich **bin** … Jahre alt* | I **am** … |
-| **English** | *I **am** twenty* | I **am** … |
-| French | *j'**ai** vingt ans* | I **have** … |
-| Spanish | *t**engo** veinte años* | I **have** … |
-| Italian | *h**o** venti anni* | I **have** … |
-| Portuguese | *t**enho** vinte anos* | I **have** … |
-
-**Romance has its years; Germanic is its years.** Age as something you carry
-versus age as something you are — and German, which borrowed its months from
-Latin (Ch. 9), keeps its **own** logic here.
+Notice which verb is doing the work: *bin*. Not *habe*. Hold on to that, because
+it is the whole point of the next lesson.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ICH-BIN-JAHRE-ALT-01, GE-GRAMMAR-SEIN-ICH-BIN-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "Wie alt bist du?"]
-- [YOU SAY: "Ich bin zwanzig Jahre alt"]
-- [YOU SAY: your own age, using Ch. 12's numbers]
-- [YOU SAY: the contrast — "ich **bin** … / j'**ai** …"]
+- [YOU SAY: "Ich bin zwanzig Jahre alt."]
+- [YOU SAY: the short form — "Ich bin zwanzig."]
+- [YOU SAY: your own age, in both lengths]
+- [YOU SAY: the question and the answer together]
+
+[REPEAT x2] "Ich bin zwanzig Jahre alt."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ICH-BIN-JAHRE-ALT-01, GE-LEX-JAHR-01] -->
 
-[PAUSE 3s] Which verb does German use for age? (**Sein** — *bin* — **not**
-*haben*.) What does *wie alt* literally ask? ("**How old**.") What are *Jahr* and
-*alt* in English? (**Year** and **old** — direct twins.) Which languages say "I
-**have** twenty years"? (**All four Romance ones** — French, Spanish, Italian,
-Portuguese.) So who does German side with? (**English**, alone.)
+[PAUSE 3s] Say "I am twenty years old." (**Ich bin zwanzig Jahre alt**.) Shorten
+it. (**Ich bin zwanzig**.) Which verb does it use? (***Bin***.) Which does it
+**not** use? (***Habe***.) Next: why that choice puts German and English on one
+side and every Romance language on the other.

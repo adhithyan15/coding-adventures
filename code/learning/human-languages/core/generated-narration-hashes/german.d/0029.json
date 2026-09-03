@@ -1,18 +1,18 @@
 {
   "language": "german",
   "chapter": 29,
-  "sourceHash": "fnv1a64:33eb2df7661109b2",
+  "sourceHash": "fnv1a64:b3b022a98b072c50",
   "lessonIds": [
-    "GE-C25-nehmen",
-    "GE-C25-fragen",
-    "GE-C25-helfen",
-    "GE-C25-moegen-lieben"
+    "GE-C24-denken",
+    "GE-C24-verstehen",
+    "GE-C24-lesen",
+    "GE-C24-schreiben"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "german/narration/ch29.txt",
   "json": "german/narration/ch29.json",
-  "textHash": "fnv1a64:2cad708ff66c2c82",
-  "jsonHash": "fnv1a64:60ac1d8fb94aa7ac",
+  "textHash": "fnv1a64:88c3d31ef96c5d77",
+  "jsonHash": "fnv1a64:8b836e0189eaf3ad",
   "findings": []
 }

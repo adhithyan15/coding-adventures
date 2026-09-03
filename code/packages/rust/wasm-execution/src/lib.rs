@@ -1515,6 +1515,22 @@ pub enum TableElement {
     /// one), matching `FuncRefTarget`'s own "per-call scratch, always
     /// re-mintable" contract.
     Func(FuncRefTarget),
+    /// A boxed `i31ref` payload (W39 slice 1 follow-on, needed by `ref_eq.
+    /// wast`'s own fixture, which stores `ref.i31` values directly into an
+    /// `eqref`-typed table via `table.set`/reads them back via `table.get`
+    /// for `ref.eq` to compare). An i31ref is carried on the VALUE STACK as
+    /// a plain `WasmValue::I32` (see `pop_i31_payload`'s doc comment and
+    /// `ref.i31`'s own handler) -- never as a `WasmValue::Ref` -- so
+    /// collapsing it into `Raw(u32)` the way a funcref/externref/struct
+    /// handle already is would make `table.get` unable to tell "this slot
+    /// holds the i31 payload `7`" apart from "this slot holds `gc_heap`
+    /// handle `7`" on the way back out, silently corrupting the value's
+    /// own kind (an `i32.const 7` handle vs. struct/array handle `7` are
+    /// NOT the same value for `ref.eq`'s reference-identity comparison).
+    /// A dedicated variant preserves the value's real representation
+    /// through a table round-trip, matching the value stack's own
+    /// disambiguation exactly.
+    I31(i32),
 }
 
 /// The mutable part of a [`Table`]'s state: just the element Vec. Lives
@@ -7254,6 +7270,9 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 let init = match pop_wasm(vm)? {
                     WasmValue::Ref(None) => None,
                     WasmValue::Ref(Some(raw)) => Some(resolve_table_write_value(ctx, raw)?),
+                    // W39 slice 1 follow-on: see `TableElement::I31`'s doc
+                    // comment -- an i31ref init value is a plain `I32`.
+                    WasmValue::I32(v) => Some(TableElement::I31(v)),
                     other => return Err(VMError::GenericError(format!("type mismatch: table.grow expected a reference, got {other:?}"))),
                 };
                 // Security review (task #98, round 2): `Table::grow`'s own
@@ -7314,6 +7333,9 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 let value = match pop_wasm(vm)? {
                     WasmValue::Ref(None) => None,
                     WasmValue::Ref(Some(raw)) => Some(resolve_table_write_value(ctx, raw)?),
+                    // W39 slice 1 follow-on: see `TableElement::I31`'s doc
+                    // comment -- an i31ref fill value is a plain `I32`.
+                    WasmValue::I32(v) => Some(TableElement::I31(v)),
                     other => return Err(VMError::GenericError(format!("type mismatch: table.fill expected a reference, got {other:?}"))),
                 };
                 let dest = pop_table_operand(vm, is64)?;
@@ -7367,6 +7389,51 @@ fn register_numeric_i64(vm: &mut GenericVM) {
         let target = ctx.resolve_function_ref_for_dispatch(func_index as u32)?;
         let handle = push_func_ref(ctx, target)?;
         push_wasm(vm, WasmValue::Ref(Some(handle)));
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // ref.eq (0xD3) -- W39 slice 1 (`code/specs/
+    // W39-wasm-gc-ref-eq-cast-br-on-cast.md`). Real, independently-
+    // cross-checked opcode: a single base-opcode-space byte, NOT under the
+    // `0xFB` GC prefix like most of this repo's other GC instructions
+    // (`0xD0` = ref.null, `0xD1` = ref.is_null, `0xD2` = ref.func are the
+    // only other base-space reference opcodes; `0xD3` sits right after
+    // them). No immediates.
+    //
+    // Real spec semantics: `[(ref null eq) (ref null eq)] -> [i32]`,
+    // reference-IDENTITY equality (not structural/deep equality), and it
+    // is well-defined -- never a trap -- for every combination of eqref
+    // representations this engine has:
+    //   * two nulls (`Ref(None)`/`Ref(None)`) are equal;
+    //   * two `i31ref`s are carried as plain `WasmValue::I32` payloads
+    //     (see `pop_i31_payload`'s own doc comment just below, and
+    //     `ref.i31`'s handler) -- equal iff their unboxed i32s are equal;
+    //   * two `gc_heap`-handle values (`Ref(Some(h))`, struct or array --
+    //     see `GcObject`) are equal iff they are literally the SAME
+    //     handle -- this crate's `Vec`-index handle scheme already gives
+    //     real reference identity for free, no new machinery needed;
+    //   * a null compared against a non-null `Ref(Some(_))` is never
+    //     equal.
+    // Cross-KIND comparisons (an i31 `I32` payload against a `Ref`
+    // handle, null or otherwise) are always `0`, never a panic or a trap:
+    // this repo's validator is loose enough (`pop_val` takes no
+    // expected-type argument, mirroring `ref.is_null`'s own `0xD1` arm)
+    // that a genuinely ill-typed module could reach this handler with
+    // mismatched operand kinds, and a defensive runtime `false` is the
+    // same discipline `ref_matches_concrete_type`'s own `_ => false`
+    // already follows for a non-reference payload -- never a runtime
+    // panic for any operand-kind combination.
+    vm.register_context_opcode(0xD3, |vm, _instr, _code, _ctx| {
+        let b = pop_wasm(vm)?;
+        let a = pop_wasm(vm)?;
+        let equal = match (a, b) {
+            (WasmValue::Ref(None), WasmValue::Ref(None)) => true,
+            (WasmValue::Ref(Some(h1)), WasmValue::Ref(Some(h2))) => h1 == h2,
+            (WasmValue::I32(v1), WasmValue::I32(v2)) => v1 == v2,
+            _ => false,
+        };
+        push_wasm(vm, WasmValue::I32(if equal { 1 } else { 0 }));
         vm.advance_pc();
         Ok(None)
     });
@@ -8217,12 +8284,19 @@ fn register_variable(vm: &mut GenericVM) {
         let elem_index = pop_table_operand(vm, is64)?;
         let table = get_table(ctx, table_idx)?;
         let element = table.get(elem_index).map_err(VMError::from)?;
+        // W39 slice 1 follow-on: an `I31` slot round-trips as a plain
+        // `WasmValue::I32`, NOT wrapped in `Ref(Some(_))` -- see
+        // `TableElement::I31`'s own doc comment for why collapsing it into
+        // a raw handle would corrupt `ref.eq`'s ability to tell an i31
+        // payload apart from a struct/array handle of the same numeric
+        // value.
         let value = match element {
-            Some(TableElement::Raw(raw)) => Some(raw),
-            Some(TableElement::Func(target)) => Some(push_func_ref(ctx, target)?),
-            None => None,
+            Some(TableElement::Raw(raw)) => WasmValue::Ref(Some(raw)),
+            Some(TableElement::Func(target)) => WasmValue::Ref(Some(push_func_ref(ctx, target)?)),
+            Some(TableElement::I31(v)) => WasmValue::I32(v),
+            None => WasmValue::Ref(None),
         };
-        push_wasm(vm, WasmValue::Ref(value));
+        push_wasm(vm, value);
         vm.advance_pc();
         Ok(None)
     });
@@ -8241,6 +8315,11 @@ fn register_variable(vm: &mut GenericVM) {
         let value = match pop_wasm(vm)? {
             WasmValue::Ref(None) => None,
             WasmValue::Ref(Some(raw)) => Some(resolve_table_write_value(ctx, raw)?),
+            // W39 slice 1 follow-on: an i31ref value is a plain `I32` on
+            // the value stack (see `TableElement::I31`'s own doc comment)
+            // -- a real, in-corpus case (`ref_eq.wast` stores `ref.i31`
+            // values into an `eqref`-typed table).
+            WasmValue::I32(v) => Some(TableElement::I31(v)),
             other => return Err(VMError::GenericError(format!("type mismatch: expected funcref, got {other:?}"))),
         };
         let elem_index = pop_table_operand(vm, is64)?;
@@ -13341,6 +13420,15 @@ fn register_control(vm: &mut GenericVM) {
         let target = match element {
             TableElement::Func(t) => t,
             TableElement::Raw(raw) => ctx.resolve_function_ref_for_dispatch(raw)?,
+            // `wasm-validator` already guarantees `call_indirect` only
+            // ever targets an actual funcref-typed table (see this arm's
+            // enclosing doc comment), so a real, validated module can
+            // never reach this arm -- but defensively erroring (never
+            // panicking) here matches this engine's own established
+            // discipline for a genuinely unreachable-per-validation case
+            // (see `TableElement::I31`'s own doc comment for why an i31
+            // payload is a distinct variant in the first place).
+            TableElement::I31(_) => return Err(VMError::GenericError("call_indirect: table element is an i31ref, not a funcref".into())),
         };
 
         // Type check: `type_idx` indexes the module's TYPE SECTION (what the
@@ -13417,6 +13505,15 @@ fn register_control(vm: &mut GenericVM) {
         let target = match element {
             TableElement::Func(t) => t,
             TableElement::Raw(raw) => ctx.resolve_function_ref_for_dispatch(raw)?,
+            // `wasm-validator` already guarantees `call_indirect` only
+            // ever targets an actual funcref-typed table (see this arm's
+            // enclosing doc comment), so a real, validated module can
+            // never reach this arm -- but defensively erroring (never
+            // panicking) here matches this engine's own established
+            // discipline for a genuinely unreachable-per-validation case
+            // (see `TableElement::I31`'s own doc comment for why an i31
+            // payload is a distinct variant in the first place).
+            TableElement::I31(_) => return Err(VMError::GenericError("call_indirect: table element is an i31ref, not a funcref".into())),
         };
 
         if ctx.types.get(type_idx).is_some() {
@@ -16388,6 +16485,141 @@ mod tests {
         ];
         let mut engine = gc_engine(code, vec![ValueType::I32], vec![2]);
         assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    // ── W39 slice 1 (`code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`):
+    // `ref.eq` (0xD3) -- reference-IDENTITY equality, never structural/deep
+    // equality, and never a trap for any operand-kind combination. Each
+    // test below exercises exactly one of the representation pairs
+    // `ref_matches_concrete_type`'s own doc comment and `ref.eq`'s own
+    // runtime handler enumerate: two handles to the SAME heap object, two
+    // handles to DIFFERENT objects of the SAME concrete type (proving the
+    // comparison discriminates by handle, not just "any struct matches"),
+    // two equal/unequal i31 payloads, null-vs-null, null-vs-non-null, and
+    // a cross-kind i31-vs-struct comparison that must produce `0`, not
+    // panic.
+
+    #[test]
+    fn test_ref_eq_same_struct_object_is_true() {
+        // Build ONE struct instance, stash it in a local, then compare the
+        // SAME handle against itself -- must be true (reference identity),
+        // not a coincidence of "any live struct matches any struct."
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![ValueType::Anyref],
+            code: vec![
+                0xFB, 0x00, 0x00, // struct.new 0 (0 fields -- pops nothing)
+                0x21, 0x00, // local.set 0
+                0x20, 0x00, // local.get 0
+                0x20, 0x00, // local.get 0
+                0xD3, // ref.eq
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_struct_field_counts(vec![0]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "the SAME struct handle compared with itself must be ref.eq-true");
+    }
+
+    #[test]
+    fn test_ref_eq_different_struct_objects_same_type_is_false() {
+        // TWO separate `struct.new_default` calls against the SAME
+        // concrete type -- must be false. This is the discriminating case
+        // `ref_matches_concrete_type`'s own pre-W39 struct/array stub
+        // ("any live struct-heap object matches any concrete struct type")
+        // would get WRONG if `ref.eq` naively reused that stub instead of
+        // real handle equality.
+        let code = vec![
+            0xFB, 0x00, 0x00, // struct.new 0 (object A, 0 fields)
+            0xFB, 0x00, 0x00, // struct.new 0 (object B, same type, different instance)
+            0xD3, // ref.eq
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "two DIFFERENT struct instances of the same type must not be ref.eq");
+    }
+
+    #[test]
+    fn test_ref_eq_equal_i31_payloads_is_true() {
+        let code = vec![
+            0x41, 7, 0xFB, 0x1C, // i32.const 7; ref.i31
+            0x41, 7, 0xFB, 0x1C, // i32.const 7; ref.i31
+            0xD3, // ref.eq
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "two i31refs with the SAME unboxed value must be ref.eq");
+    }
+
+    #[test]
+    fn test_ref_eq_different_i31_payloads_is_false() {
+        let code = vec![
+            0x41, 7, 0xFB, 0x1C, // i32.const 7; ref.i31
+            0x41, 8, 0xFB, 0x1C, // i32.const 8; ref.i31
+            0xD3, // ref.eq
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "two i31refs with DIFFERENT unboxed values must not be ref.eq");
+    }
+
+    #[test]
+    fn test_ref_eq_null_vs_null_is_true() {
+        // Real spec semantics: two nulls are always equal, regardless of
+        // their declared heap type (this engine's null is a single
+        // untyped sentinel, `WasmValue::Ref(None)`, either way).
+        let code = vec![
+            0xD0, 0x70, // ref.null func
+            0xD0, 0x70, // ref.null func
+            0xD3, // ref.eq
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "null must be ref.eq to null");
+    }
+
+    #[test]
+    fn test_ref_eq_null_vs_non_null_is_false() {
+        let code = vec![
+            0xD0, 0x70, // ref.null func
+            0xFB, 0x00, 0x00, // struct.new 0 (a real, non-null object, 0 fields)
+            0xD3, // ref.eq
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "null must never be ref.eq to a non-null reference");
+    }
+
+    #[test]
+    fn test_ref_eq_i31_vs_struct_handle_is_false_never_a_panic() {
+        // Security-relevant case (spec's own "Trap conditions" section):
+        // an i31 payload (plain `I32`) compared against a struct/array
+        // `gc_heap` handle (`Ref(Some(_))`) is a genuine cross-KIND
+        // comparison a fully-typed engine's validator would reject
+        // statically, but this crate's own validator is loose (`pop_val`,
+        // no expected-type check) -- so this handler itself must produce a
+        // defensive, correct `false`, never panic, when it happens to see
+        // one of each.
+        let code = vec![
+            0x41, 7, 0xFB, 0x1C, // i32.const 7; ref.i31 -- an I32(7) payload
+            0xFB, 0x00, 0x00, // struct.new 0 -- a Ref(Some(handle)), 0 fields
+            0xD3, // ref.eq
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(0)],
+            "an i31 payload compared against a struct handle must be false, and must not panic"
+        );
     }
 
     // ── W33 fourth slice: struct.new_default / struct.get_s / struct.get_u ──

@@ -1,9 +1,10 @@
 {
   "language": "german",
   "chapter": 23,
-  "sourceHash": "fnv1a64:78d7969308b7d618",
+  "sourceHash": "fnv1a64:5fca83d30632f7df",
   "lessonIds": [
-    "GE-C19-bitte-requests"
+    "GE-C18-ja",
+    "GE-C18-nein"
   ],
-  "tex": "german/book/chapters/ch23-please.tex"
+  "tex": "german/book/chapters/ch23-yes-and-no.tex"
 }

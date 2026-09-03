@@ -109,14 +109,43 @@ describe("the plan CLI", () => {
     // it has no external steer to answer; the file measures the corpus's own
     // register fields instead and claims a borrowed-against-inherited lexical
     // split rather than importing Tamil's diglossia column.
-    // 11 -> 12 partial: `exam-inventory-punjabi-a1.json`. Partial for the usual
-    // proxy reason plus one of its own: Punjabi is written in two scripts and
-    // this track covers only Gurmukhi, which the file records as a point rather
-    // than leaving in a spec.
-    // 12 -> 13 partial: `exam-inventory-gujarati-a1.json`. Partial for the usual
-    // proxy reason plus one of its own: the track has a pre-A1 task shape and no
-    // A1 one, so nothing here can be checked against a paper.
-    expect(out).toMatch(/0 complete and 13 partial of 138/);
+    // 11 -> 12 partial: `exam-inventory-french-a2.json` lands. It is the SECOND
+    // A2 file and only the second file at any level above A1, and it is partial
+    // in all four dimensions for a reason the German A2 file does not share:
+    // Goethe publishes a finite ~1,300-item A2 word list to close a lexicon
+    // against, and there is no published French equivalent. So its fifteen
+    // lexical points are enumerated at the level of the DOMAIN, and every
+    // covered one carries a note naming the exact set the corpus holds.
+    //
+    // AND THAT IS THE LAST TIME THIS NUMBER IS WRITTEN DOWN. HL-C315.
+    //
+    // The two entries above landed from branches that were open at the same
+    // time. Each raised the literal from 10 to 11 and each was correct when it
+    // was written, so git merged the assertion CLEANLY -- both sides said 11 --
+    // and the agreed value was one short of the truth. A conflict would have
+    // been the safe outcome; agreement was the dangerous one, and no gate can
+    // see it, because the test still passes against a corpus it under-counts by
+    // one file. HL-C310 removed the sibling `uncovered point(s)` literal for a
+    // milder version of the same problem and left this one standing.
+    //
+    // A ratchet is not available: the number rises whenever an inventory lands,
+    // which is the work we most want. So assert what the test actually owns --
+    // NOTHING is complete, and EVERY written inventory is counted exactly once
+    // as partial -- against a count derived from the directory listing, which
+    // the plan engine does not produce. Two authors landing two inventories now
+    // both pass, and an inventory that goes missing from the report fails.
+    const written = new Set(
+      readdirSync(join(defaultCurriculumRoot(), "core"))
+        .filter((file) => /^exam-inventory-.*\.json$/.test(file))
+        .map((file) => {
+          const doc = JSON.parse(
+            readFileSync(join(defaultCurriculumRoot(), "core", file), "utf8"),
+          ) as { language?: string; level?: string };
+          return `${doc.language}/${doc.level}`;
+        }),
+    );
+    expect(written.size).toBeGreaterThan(0);
+    expect(out).toMatch(new RegExp(`0 complete and ${written.size} partial of 138`));
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -146,11 +175,24 @@ describe("the plan CLI", () => {
     // 7 -> 8: Sanskrit A1 joins it as well. French is still the only file this
     // test corrupts, so this number stays the written total minus exactly one.
     // 8 -> 9: Kannada A1 joins it, on the same rule.
-    // 9 -> 10: Malayalam A1 joins it too. French is still the only file this
-    // test corrupts, so this number stays the written total minus exactly one.
-    // 10 -> 11: Punjabi A1 joins it too.
-    // 11 -> 12: Gujarati A1 joins it as well.
-    expect(out).toMatch(/0 complete and 12 partial of 138/);
+    // 9 -> 10: Malayalam A1 joins it too, and 10 -> 11: French A2. Both landed
+    // from branches open at the same time and both raised this literal to 10,
+    // so it merged cleanly at a value one short of the truth -- the same silent
+    // agreement described at length above. Derived from the same listing for
+    // the same reason. `- 1` because this test corrupts exactly one file, which
+    // is the property the sentence above has been asserting in prose since the
+    // fourth entry; it is now asserted in code.
+    const readable = new Set(
+      readdirSync(join(defaultCurriculumRoot(), "core"))
+        .filter((file) => /^exam-inventory-.*\.json$/.test(file))
+        .map((file) => {
+          const doc = JSON.parse(
+            readFileSync(join(defaultCurriculumRoot(), "core", file), "utf8"),
+          ) as { language?: string; level?: string };
+          return `${doc.language}/${doc.level}`;
+        }),
+    ).size - 1;
+    expect(out).toMatch(new RegExp(`0 complete and ${readable} partial of 138`));
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 

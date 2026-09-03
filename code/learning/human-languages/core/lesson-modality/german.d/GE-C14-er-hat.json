@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C14-er-hat",
+    "language": "german",
+    "chapter": 14,
+    "sequence": 298,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0c8ac19a96b0f12"
+  },
+  "findings": []
+}

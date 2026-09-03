@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-72-COST",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "HI-C72-money",
+    "HI-C72-rupee",
+    "HI-C72-price",
+    "HI-C72-expensive",
+    "HI-C72-buy"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-72-COST"
+  ],
+  "after": []
+}

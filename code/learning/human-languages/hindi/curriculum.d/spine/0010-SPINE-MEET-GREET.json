@@ -6,7 +6,8 @@
     "HI-PATH-030",
     "HI-PATH-51-WELCOME",
     "HI-PATH-58-HOUSE",
-    "HI-PATH-60-YARD"
+    "HI-PATH-60-YARD",
+    "HI-PATH-68-ORIGIN"
   ],
   "omits": [
     "GREETING-PEACE",

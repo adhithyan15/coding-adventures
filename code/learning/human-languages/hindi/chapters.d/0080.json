@@ -1,0 +1,21 @@
+{
+  "chapter": 80,
+  "title": "The Eating House",
+  "label": "ch:hi-the-eating-house",
+  "canDo": "I can name the place I eat, the meal, the bill and the person who brings it, and say that I eat and drink.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "HI-C73-drink",
+    "kind": "production",
+    "summary": "Complete HI-C73-drink and say all five words in order, then say the eating-and-drinking pair and what each half can mean.",
+    "assesses": [
+      "HI-LEX-C73-EATING-01",
+      "HI-LEX-C73-EATING-02",
+      "HI-LEX-C73-EATING-03",
+      "HI-LEX-C73-EATING-04",
+      "HI-LEX-C73-EATING-05"
+    ]
+  }
+}

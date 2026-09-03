@@ -1,0 +1,21 @@
+{
+  "chapter": 77,
+  "title": "After the Work Is Done",
+  "label": "ch:hi-after-the-work-is-done",
+  "canDo": "I can say what game I play and how I rest when somebody I have just met asks what I do.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C70-rest",
+    "kind": "production",
+    "summary": "Complete HI-C70-rest and say all five words in order, then say what game you play.",
+    "assesses": [
+      "HI-LEX-C70-LEISURE-01",
+      "HI-LEX-C70-LEISURE-02",
+      "HI-LEX-C70-LEISURE-03",
+      "HI-LEX-C70-LEISURE-04",
+      "HI-LEX-C70-LEISURE-05"
+    ]
+  }
+}

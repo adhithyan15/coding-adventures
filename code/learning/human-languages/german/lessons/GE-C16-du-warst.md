@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C16-du-warst
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 515
-chapter: 19
+chapter: 20
 type: phrase
 headword: du warst
 gloss: you were — the familiar -st ending again, now on the past stem

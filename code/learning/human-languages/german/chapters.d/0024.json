@@ -1,19 +1,19 @@
 {
   "chapter": 24,
-  "title": "Sorry",
-  "label": "ch:ge-sorry",
-  "canDo": "I can apologise or excuse myself in German with Entschuldigung, and reach for es tut mir leid when I mean it more.",
+  "title": "Please",
+  "label": "ch:ge-please",
+  "canDo": "I can ask politely for something in German by putting bitte after the thing I want — Wasser, bitte.",
   "spineNodes": [
     "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "GE-C20-entschuldigung",
-    "kind": "production",
-    "summary": "Say Schuld, then Entschuldigung as the 'un-guilting' built on it, and switch to es tut mir leid for real regret rather than a bump in the hallway. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "lesson": "GE-C19-bitte-requests",
+    "kind": "task",
+    "summary": "Assemble a complete polite request out of two words already learned — Wasser, bitte — and hear the request still living inside bitte via bitten, English bid and bead. The chapter's only lesson, so the payoff covers everything it introduces.",
     "assesses": [
-      "GE-LEX-ENTSCHULDIGUNG-02",
-      "GE-ETYMON-ENTSCHULDIGUNG-03",
-      "GE-PRAGMATICS-SORRY-04"
+      "GE-LEX-BITTE-PLEASE-02",
+      "GE-PHRASE-WASSER-BITTE-03",
+      "GE-ETYMON-BITTE-04"
     ]
   }
 }

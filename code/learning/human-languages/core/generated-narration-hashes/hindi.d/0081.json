@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:5681a8acd05ac501",
+  "lessonIds": [
+    "HI-C74-open",
+    "HI-C74-closed",
+    "HI-C74-entrance",
+    "HI-C74-exit",
+    "HI-C74-late"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch81.txt",
+  "json": "hindi/narration/ch81.json",
+  "textHash": "fnv1a64:129a5a348c03bf93",
+  "jsonHash": "fnv1a64:eb3c14646c2d8e75",
+  "findings": []
+}

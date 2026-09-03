@@ -1,22 +1,21 @@
 {
   "chapter": 22,
-  "title": "Yes and No",
-  "label": "ch:ge-yes-and-no",
-  "canDo": "I can answer yes or no in German and take nein apart into ni + ein, the same 'not one' English froze into none.",
+  "title": "Head and Hand",
+  "label": "ch:ge-head-and-hand",
+  "canDo": "I can name the head and the hand in German, devoice the final d of Hand, and say where the Germanic and Latin families stop matching.",
   "spineNodes": [
-    "SPINE-RESPOND-BASIC"
+    "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "GE-C18-nein",
+    "lesson": "GE-C17-hand",
     "kind": "production",
-    "summary": "Say nein to rhyme with nine, split it into ni + ein and match it to English none, then run the PIE \\*ne chain — nōn, non, nein, nahīṃ.",
+    "summary": "Say die Hand with its final d spoken as t, bring the d back in die Hände, run the Germanic body set Hand/Arm/Finger/Fuß/Herz, and name the gap: main, mano, mão — but Hand.",
     "assesses": [
-      "GE-LEX-JA-02",
-      "GE-LEX-NEIN-02",
-      "GE-SOUND-NEIN-03",
-      "GE-ETYMON-NEIN-04",
-      "GE-ETYMON-NEGATION-05"
+      "GE-LEX-HAND-02",
+      "GE-SOUND-HAND-03",
+      "GE-ETYMON-HAND-04",
+      "GE-ETYMON-HAND-MANUS-05"
     ],
-    "note": "Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess ja."
+    "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence and reaches only its own third of the chapter (4 of 12 atoms, below the 0.5 floor)."
   }
 }

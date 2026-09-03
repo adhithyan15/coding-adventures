@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:c304fc7d8fc8fd2e",
+  "lessonIds": [
+    "HI-C70-game",
+    "HI-C70-play",
+    "HI-C70-cricket",
+    "HI-C70-song",
+    "HI-C70-rest"
+  ],
+  "tex": "hindi/book/chapters/ch77-after-the-work-is-done.tex"
+}

@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C26-schlafen",
     "language": "german",
-    "chapter": 30,
+    "chapter": 31,
     "sequence": 810,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ad48ac72ef57002d"
+    "sourceHash": "fnv1a64:6b3ed44a2ab6a76c"
   },
   "findings": []
 }

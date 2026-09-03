@@ -1,0 +1,411 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 78,
+  "title": "Today, and How Much",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:e02ad5ca302828e2",
+  "lessons": [
+    {
+      "id": "HI-C71-today",
+      "sequence": 2980,
+      "title": "आज (āj) — today",
+      "headword": "आज",
+      "romanization": "āj",
+      "gloss": "today",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7947c9fd7a694d20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words back: what does gānā mean, and what is आराम? The next five words are the small ones that hold a conversation together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आज (āj) — \"today\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit अद्य (adya), \"today\", built from \"this\" and \"day\". Latin did exactly the same thing with hōc diē, \"on this day\", which wore down to hodiē and then to French aujourd'hui and Spanish hoy. Two families, the same idea, the same squeezing."
+            },
+            {
+              "kind": "speech",
+              "text": "You already own कल and परसों, which reach forward and back. आज (āj) is the missing middle of that set, and it is the one you will say most."
+            },
+            {
+              "kind": "speech",
+              "text": "आज (āj) आप कैसे हैं? is the greeting you have been making, with one word added that makes it about now rather than in general."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five small words that do a great deal of work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gānā, then read आराम and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gānā*, then read **आराम** and say what it means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "āj, then kal, then parsoṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *āj*, then *kal*, then *parsoṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj āp kaise haiṁ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj āp kaise haiṁ?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आज (āj) mean? (\"today\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C71-also",
+      "sequence": 2990,
+      "title": "भी (bhī) — also, too",
+      "headword": "भी",
+      "romanization": "bhī",
+      "gloss": "also, too",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3ce3eabb9c87f2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say āj, then write आज. Two letters, no matras: आ, then ज."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भी (bhī) — \"also, too\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit अपि (api), \"also\", is the ancestor. The Prakrits dropped the opening vowel and left a bare vi; that hardened on the way into Hindi and came out as भी (bhī). Two letters at the end of two thousand years, and the meaning has not moved at all."
+            },
+            {
+              "kind": "speech",
+              "text": "The thing to hold on to is where it stands: भी (bhī) comes after the word it adds to, never before. मैं भी (bhī) is \"me too\". आज (āj) भी (bhī) is \"today as well\". Put it first and a Hindi ear hears nothing."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch out for one collision. You already own अभी, \"right now\", and भी (bhī) is sitting inside it — but they are separate words with separate jobs, the way अब and अभी were. The eye will confuse them long before the ear does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आज (āj) and भी (bhī), and a pair to keep apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read आराम, then say it without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **आराम**, then say it without looking]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ bhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ bhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āj bhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āj bhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "आज (āj) once more, then भी (bhī) beside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: आज once more, then भी beside it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does भी (bhī) stand, before or after the word it adds to? (After.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C71-very",
+      "sequence": 3000,
+      "title": "बहुत (bahut) — very, a lot",
+      "headword": "बहुत",
+      "romanization": "bahut",
+      "gloss": "very, a lot",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4bf06a75e970115",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"me too\" in Hindi, and then \"today as well\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बहुत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहुत (bahut) — \"very, a lot, much\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit बहु (bahu), \"much, many\". The same ancient root gave Greek pakhús, \"thick\", so the family has always been about quantity of stuff."
+            },
+            {
+              "kind": "speech",
+              "text": "बहुत (bahut) goes before what it strengthens, which is the opposite of भी (bhī). You now have one small word that leans forward and one that leans back, and putting each on the wrong side is the commonest mistake a beginner makes with them."
+            },
+            {
+              "kind": "speech",
+              "text": "Three you can say immediately, from words you already hold: बहुत (bahut) बड़ा, बहुत (bahut) धन्यवाद, बहुत (bahut) जल्दी. That last one means \"very soon\" as readily as \"very fast\", which is how बहुत (bahut) behaves throughout: it takes the colour of whatever it is standing in front of."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it against कम and ज़्यादा, which you learnt for measuring. बहुत (bahut) is not a comparison; it is an intensity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three: आज (āj), भी (bhī), बहुत (bahut). One that places the day, one that adds, one that raises."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahut baṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahut baṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahut dhanyavād",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahut dhanyavād*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "bahut before its word, and bhī after its word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *bahut* before its word, and *bhī* after its word]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बहुत (bahut) mean? (\"very\".) Say that something is very big."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

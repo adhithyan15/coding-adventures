@@ -6,7 +6,8 @@
     "HI-PATH-025",
     "HI-PATH-49-LEAVE",
     "HI-PATH-56-ROAD",
-    "HI-PATH-66-FIELD"
+    "HI-PATH-66-FIELD",
+    "HI-PATH-74-SIGNS"
   ],
   "omits": [
     "FAREWELL-SOON"

@@ -1,0 +1,11 @@
+{
+  "id": "GE-EXT-019-CONSOLIDATION",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can hold a short exchange about age, asking and answering, without reaching for haben.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C14-alter-practice"
+  ]
+}

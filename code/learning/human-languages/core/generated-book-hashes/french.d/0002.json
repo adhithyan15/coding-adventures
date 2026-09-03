@@ -1,0 +1,17 @@
+{
+  "language": "french",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:648cd7804f278be6",
+  "lessonIds": [
+    "FR-C02-je",
+    "FR-C02-me",
+    "FR-C02-appeler",
+    "FR-C02-je-mappelle",
+    "FR-C02-tu-vous",
+    "FR-C02-comment",
+    "FR-C02-comment-vous-appelez-vous",
+    "FR-C02-enchante",
+    "FR-C02-practice"
+  ],
+  "tex": "french/book/chapters/ch02-introductions.tex"
+}

@@ -1,0 +1,677 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 77,
+  "title": "After the Work Is Done",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:cd9e186e73b3c78c",
+  "lessons": [
+    {
+      "id": "HI-C70-game",
+      "sequence": 2930,
+      "title": "खेल (khel) — a game",
+      "headword": "खेल",
+      "romanization": "khel",
+      "gloss": "a game",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f8a081dbda17263",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words back: what does ṭikaṭ mean, and what is जाना? The next five words are what you do when you are not going anywhere."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खेल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खेल (khel) — \"a game\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit खेल (khela), \"play, sport\", from a root that meant shaking or moving about. The final vowel dropped away by the schwa rule and left the bare consonant ending Hindi likes."
+            },
+            {
+              "kind": "speech",
+              "text": "खेल (khel) covers more than a sport with rules. A child's game is a खेल (khel), a match is a खेल (khel), and a thing somebody is not taking seriously is a खेल (khel) too. When somebody you have just met asks what you do with your evenings, this is the word the answer starts from."
+            },
+            {
+              "kind": "speech",
+              "text": "The ख is the aspirated one — a real puff of breath after the k, which is what separates खेल (khel) from क, and the difference changes the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five words for the hours after work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ṭikaṭ, then read जाना and say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ṭikaṭ*, then read **जाना** and say what it means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "khel, with the breath on the first sound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *khel*, with the breath on the first sound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "khel said with the puff, and the same shape said without it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *khel* said with the puff, and the same shape said without it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खेल (khel) mean? (\"a game\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C70-play",
+      "sequence": 2940,
+      "title": "खेलना (khelnā) — to play",
+      "headword": "खेलना",
+      "romanization": "khelnā",
+      "gloss": "to play",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13d3606b20217cf9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say khel, then write खेल: ख, then े above it, then ल."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खेलना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खेलना (khelnā) — \"to play\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The same खेल (khel) you learnt in the last lesson, with -ना on the end. That is the whole of it: Hindi makes a doing word out of a naming word by adding those two letters, and you have now watched it happen once."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what that gives you. जाना was built the same way, and so were बोलना, लिखना, सुनना. Four you already own and one you have just made — the ending is a tool, not a list to memorise."
+            },
+            {
+              "kind": "speech",
+              "text": "मैं खेलता हूँ is \"I play\", in the frame you have used since मैं हिंदी बोलता हूँ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A game, and the doing word that comes out of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read जाना, then say it without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **जाना**, then say it without looking]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khel, then khelnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khel*, then *khelnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ kheltā hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ kheltā hūṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "खेल (khel), then add ना to the end of it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: खेल, then add ना to the end of it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खेलना (khelnā) mean? (\"to play\".) And खेल? (\"a game\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C70-cricket",
+      "sequence": 2950,
+      "title": "क्रिकेट (krikeṭ) — cricket, the game",
+      "headword": "क्रिकेट",
+      "romanization": "krikeṭ",
+      "gloss": "cricket, the game",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5fa9336e2278a1ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of your two words is the game, and which is the doing word made out of it?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्रिकेट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रिकेट (krikeṭ) — \"cricket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "English, borrowed whole, and written with two things you have already met. The opening क्र is क stacked on र by the same vowel-killer ् that stacks स्ट in स्टेशन. The final ट is retroflex, because an English t always lands there."
+            },
+            {
+              "kind": "speech",
+              "text": "The ि after the stack is the short i matra, and it sits to the left of the whole cluster even though it is sounded after it — the same preposed matra you first met in a name."
+            },
+            {
+              "kind": "speech",
+              "text": "If you learn one game word in Hindi, learn this one. मैं क्रिकेट (krikeṭ) खेलता हूँ puts three of this chapter's ideas into a single sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three: खेल, खेलना (khelnā), क्रिकेट (krikeṭ). A game, playing it, and one to name."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "क्रिकेट (krikeṭ), and find the ि sitting to the left of the stack",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: क्रिकेट, and find the ि sitting to the left of the stack]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krikeṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krikeṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ krikeṭ kheltā hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ krikeṭ kheltā hūṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क्रिकेट (krikeṭ) mean? (\"cricket\".) Say that you play it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C70-song",
+      "sequence": 2960,
+      "title": "गाना (gānā) — a song",
+      "headword": "गाना",
+      "romanization": "gānā",
+      "gloss": "a song",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5041a8a2e393bfca",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write क्रिकेट (krikeṭ) from memory, starting with the ि you put down first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाना (gānā) — \"a song\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit गान (gāna), \"singing\", from गै (gai-), \"to sing\". The root is one of the oldest in the language and it has never stopped working."
+            },
+            {
+              "kind": "speech",
+              "text": "Now notice the shape. गाना (gānā) ends in -ना, exactly like खेलना (khelnā) — and that is not an accident. गाना (gānā) is also the doing word \"to sing\". One spelling, two jobs: the song, and the singing of it. Which one is meant is settled by the sentence around it and never by the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Hindi does this often enough that it is worth expecting rather than being surprised by. You will meet another word with the same double life before this run of chapters is out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and the first word you have met that is two words at once."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "gānā as the song, and gānā as the singing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *gānā* as the song, and *gānā* as the singing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "गाना (gānā), then खेलना (khelnā) under it, and look at the ending they share",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: गाना, then खेलना under it, and look at the ending they share]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two things can गाना (gānā) mean? (\"a song\", and \"to sing\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C70-rest",
+      "sequence": 2970,
+      "title": "आराम (ārām) — rest, ease",
+      "headword": "आराम",
+      "romanization": "ārām",
+      "gloss": "rest, ease",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b5e2bb2b735df57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four words of this chapter so far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आराम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आराम (ārām) — \"rest, ease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Persian آرام (ārām), \"quiet, calm, repose\". It came in with the Persian half of the vocabulary and settled deep: आरामकुर्सी is an easy chair, built from आराम and the कुर्सी you already own."
+            },
+            {
+              "kind": "speech",
+              "text": "आराम (ārām) is not sleep. नींद is sleep, and you have that word. आराम (ārām) is the state of not being pushed — sitting down, breathing out, nothing owed to anybody for an hour. आराम (ārām) करना is what you say for taking that hour."
+            },
+            {
+              "kind": "speech",
+              "text": "It is also an answer. When somebody asks आप कैसे हैं?, one ordinary reply is that you are at आराम (ārām), and it says more warmly than ठीक does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: खेल, खेलना (khelnā), क्रिकेट (krikeṭ), गाना (gānā), आराम (ārām). Enough to say what you do when the day lets go of you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārām karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārām karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "गाना (gānā) and then आराम (ārām), both from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: गाना and then आराम, both from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आराम (ārām) mean? (\"rest\".) And गाना (gānā)? (\"a song\", or \"to sing\".)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
