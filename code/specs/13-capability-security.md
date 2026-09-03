@@ -1002,13 +1002,19 @@ kernel cannot be bypassed by application code.
 hardware-key gate before anything is signed.
 
 **What "refused" means here, and what it does not.** Layers 3-5 detect an
-undeclared capability and decline to sign it. They do not prevent the code from
-executing if it is run some other way — a linter is not a boundary, and a CI
-gate is not present at runtime. Under D18S S-B1 the only things that make an
-operation *impossible* are the OS sandbox and the broker. These layers make the
-declaration honest and the review tractable, which is what stops this attack
-from reaching a signed artifact in the first place; they are not what would stop
-already-running code.
+undeclared capability and decline to sign it, which is a hard stop *on this
+document's axis* — the supply chain. Nothing merges and nothing publishes. That
+is what stops this attack.
+
+They are not a runtime boundary, and this document says so itself: the Overview
+states "The system is not a runtime sandbox", and Honest Limitations records
+that Layer 6's sandbox is CI-only and Linux-only. A linter is not present when
+code runs.
+
+The two axes are easy to conflate, so keep them separate. For a **running
+agent**, D18S S-B1 puts the boundary at its own Layer 7 — the OS sandbox and
+the broker. Within **this** document's supply-chain model the hard stop remains
+the Layer 5 hardware key. Neither claim covers the other's ground.
 
 ### Scenario 2: Create a new malicious package
 
