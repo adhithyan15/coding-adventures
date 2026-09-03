@@ -124,3 +124,9 @@ deps/
 compile.*
 ebin/
 erl_crash.dump
+
+# `build-native.sh` emits here by default (dist-native-qt, dist-native-swiftui,
+# and so on). These are build outputs -- an emitted project plus a compiled app
+# -- and one of them is a bundled JDK. Left untracked and unignored, a careless
+# `git add -A` commits hundreds of megabytes of it.
+code/programs/mosaic/*/dist-native-*/

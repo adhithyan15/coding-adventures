@@ -292,13 +292,75 @@ case "$BACKEND" in
     # The engine is LINKED here rather than loaded at runtime, so the check is
     # that its symbols actually made it into the binary -- the equivalent of
     # Qt's "is the library beside the executable", one layer earlier.
-    if ! nm -u "$BIN" 2>/dev/null | grep -q "_eg_" && ! nm "$BIN" 2>/dev/null | grep -q " T _eg_"; then
-      echo "error: no eg_* symbols in $BIN; the engine did not link" >&2
+    #
+    # DEFINED symbols specifically. The earlier form accepted an UNDEFINED
+    # `_eg_` symbol too, which is exactly the binary that does not contain the
+    # engine -- it expects to find it elsewhere at load time. Demonstrated with
+    # a two-line C program: `nm -u` reports `_eg_snapshot`, and the old
+    # condition passed it. A check that accepts the failure it exists to catch
+    # is worse than no check, because the build says "verified".
+    DEFINED="$(nm "$BIN" 2>/dev/null | grep -c ' T _eg_' || true)"
+    UNDEFINED="$(nm -u "$BIN" 2>/dev/null | grep -c '_eg_' || true)"
+    if [[ "$DEFINED" -eq 0 ]]; then
+      echo "error: no DEFINED eg_* symbols in $BIN; the engine did not link" >&2
+      echo "       ($UNDEFINED undefined eg_* symbols -- the engine is expected" >&2
+      echo "        from somewhere else at load time, which will not be there)" >&2
       exit 1
     fi
-    echo "  engine symbols verified in the binary"
+    if [[ "$UNDEFINED" -gt 0 ]]; then
+      echo "error: $UNDEFINED eg_* symbols in $BIN are undefined; the engine" >&2
+      echo "       linked only partially and the app will fail at load" >&2
+      exit 1
+    fi
+    # Static linking pulls only the objects actually referenced, so this is the
+    # handful the SwiftUI host calls -- not the ~47 the cdylib exports. Counting
+    # up to the full export list here would fail on a correct build.
+    echo "  $DEFINED engine symbols linked into the binary"
+
+    # Wrap it as a `.app`. `swift build` leaves a bare Mach-O executable, which
+    # runs from a terminal but is not something a person can be handed: macOS
+    # needs the bundle to give it a name, an icon slot, and a Dock identity.
+    #
+    # The version is only cosmetic here -- it shows in Finder's Get Info -- and
+    # there is no version file in the repo to read, so the release lane passes
+    # the tag it is publishing and a local build says so plainly.
+    APP_NAME="Engram"
+    APP_VERSION="${ENGRAM_VERSION:-0.0.0-dev}"
+    BUNDLE="$APP/$APP_NAME.app"
+    rm -rf "$BUNDLE"
+    mkdir -p "$BUNDLE/Contents/MacOS" "$BUNDLE/Contents/Resources"
+    cp "$BIN" "$BUNDLE/Contents/MacOS/$APP_NAME"
+    printf 'APPL????' > "$BUNDLE/Contents/PkgInfo"
+    cat > "$BUNDLE/Contents/Info.plist" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleExecutable</key><string>$APP_NAME</string>
+  <key>CFBundleIdentifier</key><string>dev.mosaic.engram</string>
+  <key>CFBundleName</key><string>$APP_NAME</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleShortVersionString</key><string>$APP_VERSION</string>
+  <key>CFBundleVersion</key><string>$APP_VERSION</string>
+  <key>LSMinimumSystemVersion</key><string>13.0</string>
+  <key>NSHighResolutionCapable</key><true/>
+</dict>
+</plist>
+PLIST
+
+    # The bundled copy is the one that ships, and copying is a second chance to
+    # lose the engine -- the Compose backend shipped a distribution with no
+    # engine in it exactly this way. So the assertion is repeated against the
+    # artifact rather than inherited from the binary it came from.
+    SHIPPED="$(nm "$BUNDLE/Contents/MacOS/$APP_NAME" 2>/dev/null | grep -c ' T _eg_' || true)"
+    if [[ "$SHIPPED" -ne "$DEFINED" ]]; then
+      echo "error: the bundled executable has $SHIPPED engine symbols, the" >&2
+      echo "       built one had $DEFINED" >&2
+      exit 1
+    fi
+    echo "  $BUNDLE"
     echo ""
-    echo "Built: $BIN"
+    echo "Built: $BUNDLE"
     ;;
   xaml)
     # WinUI 3, targeting net9.0-windows10.0.19041.0. The XAML markup compiler is
