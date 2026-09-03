@@ -81,6 +81,7 @@ class ArtifactNamesTests(unittest.TestCase):
                 "engram-flutter-linux-v0.4.0.zip",
                 "engram-flutter-macos-v0.4.0.zip",
                 "engram-flutter-windows-v0.4.0.zip",
+                "engram-qt-macos-v0.4.0.zip",
             ],
         )
 
@@ -868,16 +869,19 @@ class ArchiveComposeTests(unittest.TestCase):
                     )
 
 
-def _mach_o(defined: list[str], undefined: list[str] = []) -> bytes:
-    """A minimal 64-bit Mach-O carrying exactly these symbols.
+def _mach_o(
+    defined: list[str],
+    undefined: list[str] = [],
+    *,
+    dylibs: list[str] | None = None,
+    signed: bool = False,
+) -> bytes:
+    """A minimal 64-bit Mach-O carrying these symbols, dependencies, and signature.
 
-    Synthesised rather than compiled, so the test runs on the Linux runner too
+    Synthesised rather than compiled, so the tests run on the Linux runner too
     -- there is no Mach-O toolchain there, and a fixture that could only be
-    built on macOS would silently skip exactly where CI runs most.
-
-    Built to the real layout (`mach_header_64`, `LC_SYMTAB`, `nlist_64`, string
-    table) because the parser reads that layout. A fixture that faked it some
-    other way would exercise nothing.
+    built on macOS would skip exactly where CI runs most. Built to the real
+    layout, because the parser reads that layout.
     """
 
     names = [(name, N_SECT) for name in defined] + [
@@ -890,29 +894,46 @@ def _mach_o(defined: list[str], undefined: list[str] = []) -> bytes:
         offsets.append(len(strings))
         strings += f"_{name}".encode() + b"\x00"
 
-    header_size, cmd_size = 32, 24
-    symoff = header_size + cmd_size
+    commands = b""
+    for path in dylibs or []:
+        raw = path.encode() + b"\x00"
+        size = 24 + len(raw)
+        size += (-size) % 8  # commands are 8-byte aligned
+        body = struct.pack("<IIIIII", 0x0C, size, 24, 0, 0, 0) + raw
+        commands += body.ljust(size, b"\x00")
+    if signed:
+        commands += struct.pack("<IIII", 0x1D, 16, 0, 0)
+
+    symtab_size = 24
+    symoff = 32 + len(commands) + symtab_size
     stroff = symoff + len(names) * 16
+    commands += struct.pack(
+        "<IIIIII", 0x2, symtab_size, symoff, len(names), stroff, len(strings)
+    )
+    ncmds = len(dylibs or []) + (1 if signed else 0) + 1
 
     header = struct.pack(
-        "<IiiIIIII",
-        0xFEEDFACF,  # MH_MAGIC_64
-        0x0100000C,  # CPU_TYPE_ARM64
-        0,
-        2,  # MH_EXECUTE
-        1,  # ncmds
-        cmd_size,
-        0,
-        0,
-    )
-    command = struct.pack(
-        "<IIIIII", 0x2, cmd_size, symoff, len(names), stroff, len(strings)
+        "<IiiIIIII", 0xFEEDFACF, 0x0100000C, 0, 2, ncmds, len(commands), 0, 0
     )
     table = b"".join(
         struct.pack("<IBBHQ", offset, kind | 0x01, 1, 0, 0x1000)
         for offset, (_, kind) in zip(offsets, names)
     )
-    return header + command + table + strings
+    return header + commands + table + strings
+
+
+def _fat_mach_o(slices: list[bytes]) -> bytes:
+    """A universal binary wrapping the given thin slices."""
+
+    header = struct.pack(">II", 0xCAFEBABE, len(slices))
+    offset = 8 + 20 * len(slices)
+    offset += (-offset) % 4096
+    body = b""
+    for index, thin in enumerate(slices):
+        start = offset + len(body)
+        header += struct.pack(">iiIII", 0x0100000C, 0, start, len(thin), 12)
+        body += thin
+    return header.ljust(offset, b"\x00") + body
 
 
 N_SECT = 0x0E
@@ -1421,6 +1442,137 @@ class ArchiveFlutterTests(unittest.TestCase):
     def test_rejects_an_unknown_platform(self) -> None:
         with self.assertRaises(ValueError):
             engram_release.flutter_artifact_name("0.4.0", "solaris")
+
+
+def _write_qt_bundle(
+    root: Path, *, engine: bool = True, relocatable: bool = True, signed: bool = True
+) -> Path:
+    """A stand-in for the Qt `.app` after macdeployqt."""
+
+    bundle = root / "qt" / "Engram.app"
+    (bundle / "Contents" / "MacOS").mkdir(parents=True)
+    (bundle / "Contents" / "Frameworks").mkdir(parents=True)
+    (bundle / "Contents" / "Info.plist").write_bytes(
+        plistlib.dumps({"CFBundleExecutable": "Engram", "CFBundlePackageType": "APPL"})
+    )
+    deps = ["@executable_path/../Frameworks/QtCore.framework/Versions/A/QtCore"]
+    if not relocatable:
+        deps.append("/opt/homebrew/opt/qtbase/lib/QtGui.framework/Versions/A/QtGui")
+    (bundle / "Contents" / "MacOS" / "Engram").write_bytes(
+        _mach_o(["main"], dylibs=deps, signed=signed)
+    )
+    if engine:
+        (bundle / "Contents" / "MacOS" / "libengram_capi.dylib").write_bytes(
+            b"\xcf\xfa\xed\xfe" + b"\x00engine\x00"
+        )
+    return bundle
+
+
+class ArchiveQtTests(unittest.TestCase):
+    def test_archives_a_deployed_bundle(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_qt_bundle(root)
+            output = engram_release.archive_qt(
+                "0.4.0", "macos", bundle, root / "out", COMMIT
+            )
+            self.assertEqual(output.name, "engram-qt-macos-v0.4.0.zip")
+            self.assertIn(output.name, engram_release.artifact_names("0.4.0"))
+
+    def test_refuses_a_bundle_that_links_qt_by_absolute_path(self) -> None:
+        # THE check for a Qt payload. `qt_add_executable` links the frameworks
+        # at absolute paths, so an undeployed binary runs perfectly for whoever
+        # built it and fails to launch for everyone else -- and nothing about
+        # the build says so. Measured against the real binary before
+        # macdeployqt ran: 17 dependencies, 8 of them absolute Homebrew paths.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_qt_bundle(root, relocatable=False)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_qt(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            message = str(caught.exception)
+            self.assertIn("absolute path", message)
+            self.assertIn("/opt/homebrew", message)
+
+    def test_refuses_an_unsigned_bundle(self) -> None:
+        # Separate from relocatability, because a bundle can pass that check
+        # completely and still not start: macdeployqt INVALIDATES signatures
+        # when it rewrites install names, and on arm64 the loader refuses such
+        # a binary. Found the hard way -- the dependency check reported zero
+        # absolute paths on a bundle that exited instantly with no output.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_qt_bundle(root, signed=False)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_qt(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("no code signature", str(caught.exception))
+
+    def test_refuses_a_bundle_without_the_engine(self) -> None:
+        # Qt does `QDir(appDir).filePath(...)`, and for a bundled app `appDir`
+        # is Contents/MacOS -- so the engine belongs beside the executable, not
+        # in Frameworks.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_qt_bundle(root, engine=False)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_qt(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("no engine beside its executable", str(caught.exception))
+
+    def test_an_engine_in_frameworks_does_not_count(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_qt_bundle(root, engine=False)
+            (bundle / "Contents" / "Frameworks" / "libengram_capi.dylib").write_bytes(
+                b"\xcf\xfa\xed\xfe" + b"\x00engine\x00"
+            )
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_qt(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("no engine beside its executable", str(caught.exception))
+
+    def test_qt_declares_only_what_is_verified(self) -> None:
+        # macOS only for now: `macdeployqt` and `windeployqt` ship with Qt and
+        # Linux has no official equivalent, so each platform is its own piece of
+        # work. Declaring more than is built would fail the publish job's
+        # set-equality check at the very end of a release.
+        self.assertEqual(sorted(engram_release.QT_TARGETS), ["macos"])
+        with self.assertRaises(ValueError):
+            engram_release.qt_artifact_name("0.4.0", "linux")
+
+
+class MachOReaderTests(unittest.TestCase):
+    def test_reports_absolute_dependencies_and_ignores_system_ones(self) -> None:
+        binary = _mach_o(
+            ["main"],
+            dylibs=[
+                "/usr/lib/libSystem.B.dylib",
+                "/System/Library/Frameworks/AppKit.framework/AppKit",
+                "@executable_path/../Frameworks/QtCore.framework/QtCore",
+                "@rpath/libthing.dylib",
+                "/opt/homebrew/opt/qtbase/lib/QtGui.framework/QtGui",
+            ],
+        )
+        self.assertEqual(
+            engram_release.non_relocatable_dependencies(binary),
+            ["/opt/homebrew/opt/qtbase/lib/QtGui.framework/QtGui"],
+        )
+
+    def test_reads_every_slice_of_a_universal_binary(self) -> None:
+        # Omitting this was not hypothetical: `/bin/ls` is universal, so the
+        # first control reached for could not be parsed at all.
+        thin = _mach_o(["main"], dylibs=["/opt/homebrew/lib/libx.dylib"])
+        fat = _fat_mach_o([thin])
+        self.assertEqual(
+            engram_release.non_relocatable_dependencies(fat),
+            ["/opt/homebrew/lib/libx.dylib"],
+        )
 
 
 class CommandLineTests(unittest.TestCase):
