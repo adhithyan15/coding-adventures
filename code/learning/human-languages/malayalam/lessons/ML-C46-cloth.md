@@ -9,7 +9,7 @@ headword: "തുണി"
 gloss: "cloth"
 romanization: "tuṇi"
 concept_tag: ML-NOUN-CLOTH
-prerequisites: [ML-C46-fruit]
+prerequisites: [ML-C46-fruit, ML-C43-give]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C46-ASK-02]
 practises:
-  knowledge: [ML-LEX-WIFE, ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02]
+  knowledge: [ML-LEX-WIFE, ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-GIVE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ That division of labour is worth watching for, because it repeats through this b
 Two: a fruit and a cloth.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-WIFE, ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-WIFE, ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-GIVE] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tuṇi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *paḻaṁ*, then *tuṇi*, and ask for each one with *dayavāyi*]
+- [YOU RECALL: read **തരൂ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-WIFE, ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02] -->

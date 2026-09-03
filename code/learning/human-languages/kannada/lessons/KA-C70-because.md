@@ -9,7 +9,7 @@ headword: "ಏಕೆಂದರೆ"
 gloss: "because"
 romanization: "ēkendare"
 concept_tag: KA-CONJ-BECAUSE
-prerequisites: [KA-S138-vowel-sign-ee, KA-C70-quotative, KA-C67-but, KA-C54-root, KA-C54-leaf, KA-C40-oota, KA-C38-hrudaya]
+prerequisites: [KA-S138-vowel-sign-ee, KA-C70-quotative, KA-C67-but, KA-C54-root, KA-C54-leaf, KA-C40-oota, KA-C38-hrudaya, KA-C68-dont-know, KA-C68-me-neither]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C70-TELL-04, KA-GRAMMAR-C70-TELL-05]
 practises:
-  knowledge: [KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C70-TELL-03, KA-GRAMMAR-C70-TELL-05, KA-LEX-C38-HRUDAYA-01, KA-LEX-C40-OOTA-01, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C67-LINK-03, KA-LEX-C69-ASK-03, KA-LEX-C69-ASK-05, KA-LEX-C70-TELL-02, KA-LEX-C70-TELL-04, KA-PRAGMATICS-C69-ASK-04, KA-SCRIPT-RECOG-138]
+  knowledge: [KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C70-TELL-03, KA-GRAMMAR-C70-TELL-05, KA-LEX-C38-HRUDAYA-01, KA-LEX-C40-OOTA-01, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C67-LINK-03, KA-LEX-C69-ASK-03, KA-LEX-C69-ASK-05, KA-LEX-C70-TELL-02, KA-LEX-C70-TELL-04, KA-PRAGMATICS-C69-ASK-04, KA-SCRIPT-RECOG-138, KA-LEX-C68-DENY-05, KA-GRAMMAR-C68-DENY-06]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -71,7 +71,7 @@ Ask why, and answer it. With ಮತ್ತು, ಅಥವಾ, ಆದರೆ and the
 already in hand, a Kannada sentence can now hold two ideas and a reason.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C70-TELL-03, KA-GRAMMAR-C70-TELL-05, KA-LEX-C38-HRUDAYA-01, KA-LEX-C40-OOTA-01, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C67-LINK-03, KA-LEX-C69-ASK-03, KA-LEX-C69-ASK-05, KA-LEX-C70-TELL-02, KA-LEX-C70-TELL-04, KA-PRAGMATICS-C69-ASK-04, KA-SCRIPT-RECOG-138] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C70-TELL-03, KA-GRAMMAR-C70-TELL-05, KA-LEX-C38-HRUDAYA-01, KA-LEX-C40-OOTA-01, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C67-LINK-03, KA-LEX-C69-ASK-03, KA-LEX-C69-ASK-05, KA-LEX-C70-TELL-02, KA-LEX-C70-TELL-04, KA-PRAGMATICS-C69-ASK-04, KA-SCRIPT-RECOG-138, KA-LEX-C68-DENY-05, KA-GRAMMAR-C68-DENY-06] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ēkendare*]
@@ -80,6 +80,7 @@ already in hand, a Kannada sentence can now hold two ideas and a reason.
 - [YOU RECALL: say *ādare*, then say *hāgādare*, and name the ending both share]
 - [YOU RECALL: say *alvā* once more]
 - [YOU RECALL: from much earlier — say *bēru*, *ele*, *ūṭa*, *hṛdaya*, and say what each one means]
+- [YOU RECALL: say *gottilla*, then read **ನನಗೂ ಗೊತ್ತಿಲ್ಲ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C70-TELL-03, KA-GRAMMAR-C70-TELL-05, KA-LEX-C38-HRUDAYA-01, KA-LEX-C40-OOTA-01, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C67-LINK-03, KA-LEX-C69-ASK-03, KA-LEX-C69-ASK-05, KA-LEX-C70-TELL-02, KA-LEX-C70-TELL-04, KA-PRAGMATICS-C69-ASK-04, KA-SCRIPT-RECOG-138] -->

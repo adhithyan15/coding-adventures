@@ -9,7 +9,7 @@ headword: "സൂര്യൻ"
 gloss: "the sun"
 romanization: "sūryan"
 concept_tag: ML-NOUN-SUN
-prerequisites: [ML-C53-sky]
+prerequisites: [ML-C53-sky, ML-C51-favour]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C53-SKY-02]
 practises:
-  knowledge: [ML-LEX-C52-WELCOME-05, ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02]
+  knowledge: [ML-LEX-C52-WELCOME-05, ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C51-COURTESY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Malayalam's own sun-word is ഞായർ (*ñāyaṟ*), and it survives mostly i
 Two: the sky, and the thing that crosses it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-05, ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-05, ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C51-COURTESY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sūryan*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākāśaṁ*, then *sūryan*, and say which of the two is the container]
+- [YOU RECALL: read **ഉപകാരം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-05, ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02] -->

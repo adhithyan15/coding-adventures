@@ -9,7 +9,7 @@ headword: "ಹಾಗಾದರೆ"
 gloss: "in that case, then"
 romanization: "hāgādare"
 concept_tag: KA-WORD-IN-THAT-CASE
-prerequisites: [KA-C64-soon]
+prerequisites: [KA-C64-soon, KA-C62-umbrella]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C64-JOIN-05]
 practises:
-  knowledge: [KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C64-JOIN-04, KA-LEX-C64-JOIN-05]
+  knowledge: [KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C64-JOIN-04, KA-LEX-C64-JOIN-05, KA-LEX-C62-MADE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is the word that lets you answer a fact with a decision. Somebody says the sh
 Five: ಆಮೇಲೆ, ಕೂಡ, ಇನ್ನೂ, ಬೇಗ, ಹಾಗಾದರೆ. Enough to keep a conversation moving without answering yes or no.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C64-JOIN-04, KA-LEX-C64-JOIN-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C64-JOIN-04, KA-LEX-C64-JOIN-05, KA-LEX-C62-MADE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hāgādare*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *hāge*, then *hāgādare*, and say which came from which]
+- [YOU RECALL: say *koḍe*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C64-JOIN-04, KA-LEX-C64-JOIN-05] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 37,
-  "sourceHash": "fnv1a64:1d2b959adaf95179",
+  "sourceHash": "fnv1a64:4bdd4efed50ca649",
   "lessonIds": [
     "KA-C37-kannu",
     "KA-C37-kivi",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "kannada/narration/ch37.txt",
   "json": "kannada/narration/ch37.json",
-  "textHash": "fnv1a64:21b5ad2e420b2aba",
-  "jsonHash": "fnv1a64:8abbe186475a86f6",
+  "textHash": "fnv1a64:e0aa39572150782b",
+  "jsonHash": "fnv1a64:f13746b257ba2149",
   "findings": []
 }

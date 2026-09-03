@@ -9,7 +9,7 @@ headword: "ಗಂಡ"
 gloss: "husband"
 romanization: "gaṇḍa"
 concept_tag: KA-NOUN-HUSBAND
-prerequisites: [KA-C45-grandmother]
+prerequisites: [KA-C45-grandmother, KA-C43-come]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-HUSBAND]
 practises:
-  knowledge: [KA-LEX-GRANDMOTHER, KA-LEX-HUSBAND]
+  knowledge: [KA-LEX-GRANDMOTHER, KA-LEX-HUSBAND, KA-LEX-COME]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ The everyday word, and a native one. Its own stem also gives ಗಂಡು (*ga�
 Three of the four. The last one is built the same way, from the other half of the pair.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-GRANDMOTHER, KA-LEX-HUSBAND] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-GRANDMOTHER, KA-LEX-HUSBAND, KA-LEX-COME] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gaṇḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *ajji*, so the two sit together]
+- [YOU RECALL: say *bā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-GRANDMOTHER, KA-LEX-HUSBAND] -->

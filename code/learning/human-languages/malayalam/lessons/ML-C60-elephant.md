@@ -9,7 +9,7 @@ headword: "ആന"
 gloss: "an elephant"
 romanization: "āna"
 concept_tag: ML-NOUN-ELEPHANT
-prerequisites: [ML-C60-crow]
+prerequisites: [ML-C60-crow, ML-C58-that-will-do]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C60-ANIMAL-05]
 practises:
-  knowledge: [ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C60-ANIMAL-04, ML-LEX-C60-ANIMAL-05]
+  knowledge: [ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C60-ANIMAL-04, ML-LEX-C60-ANIMAL-05, ML-LEX-C58-ANSWER-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ In Kerala the ആന belongs to a festival before it belongs to a forest. A capa
 Five, and the yard is full: the cow, the goat, the hen, the crow, and the one that walks in a festival.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C60-ANIMAL-04, ML-LEX-C60-ANIMAL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C60-ANIMAL-04, ML-LEX-C60-ANIMAL-05, ML-LEX-C58-ANSWER-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āna*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *paśu*, *āṭŭ*, *kōḻi*, *kākka*, *āna*]
+- [YOU RECALL: say *pōruṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C60-ANIMAL-04, ML-LEX-C60-ANIMAL-05] -->

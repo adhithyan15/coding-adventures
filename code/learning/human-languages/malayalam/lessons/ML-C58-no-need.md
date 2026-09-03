@@ -9,7 +9,7 @@ headword: "വേണ്ട"
 gloss: "no need, no thank you"
 romanization: "vēṇṭa"
 concept_tag: ML-WORD-NO-NEED
-prerequisites: [ML-C58-a-little]
+prerequisites: [ML-C58-a-little, ML-C56-vessel]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C58-ANSWER-04]
 practises:
-  knowledge: [ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C58-ANSWER-04]
+  knowledge: [ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C58-ANSWER-04, ML-LEX-C56-HOUSE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Note that it declines the offer rather than the person. Malayalam has warmer way
 Four, and this one gets you through a meal.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C58-ANSWER-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C58-ANSWER-04, ML-LEX-C56-HOUSE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vēṇṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vēṇṭa*, gently, then *vēṇṭa* again, firmly, and hear the difference the tone makes]
+- [YOU RECALL: read **പാത്രം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C58-ANSWER-04] -->

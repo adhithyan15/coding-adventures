@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 55,
-  "sourceHash": "fnv1a64:11754f9ff606df3c",
+  "sourceHash": "fnv1a64:7b99c46734d15bdc",
   "lessonIds": [
     "KA-C55-river",
     "KA-C55-tank",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch55.txt",
   "json": "kannada/narration/ch55.json",
-  "textHash": "fnv1a64:49d5c2d52583047a",
-  "jsonHash": "fnv1a64:cad589118c0e7548",
+  "textHash": "fnv1a64:d32a75fdd9bb0829",
+  "jsonHash": "fnv1a64:07cfdfcd113cd72f",
   "findings": []
 }

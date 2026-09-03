@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "The Tree",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:817313e9f3d74cfa",
+  "sourceHash": "fnv1a64:2b380fb18f38dc5a",
   "lessons": [
     {
       "id": "KA-C54-tree",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8989ad959b671dcc",
+      "sourceHash": "fnv1a64:4be068303d5ebee4",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *doḍḍa mara* — \"a big tree\" — with the describing word in front, where Kannada keeps it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bāgilu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bāgilu*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b17aa27f07e6862",
+      "sourceHash": "fnv1a64:1dd93c491f1efb24",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mara*, then *kombe*, and say which one holds the other up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಕುರ್ಚಿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಕುರ್ಚಿ**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03f183f802ed029b",
+      "sourceHash": "fnv1a64:93122ee21ea14143",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *hasiru ele* — \"a green leaf\" — and *ele*, *kombe*, *mara* upward in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say raṅgōli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *raṅgōli*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ad946f96bc9186c",
+      "sourceHash": "fnv1a64:4bc90c0309131f80",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bēru*, then *bāgilu*, and hear the same *b* opening both]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಹೂವು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಹೂವು**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:948ebdedc76e6763",
+      "sourceHash": "fnv1a64:e8381a025b3891de",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say which one of them Kannada borrowed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hūmāle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hūmāle*]"
             }
           ]
         },

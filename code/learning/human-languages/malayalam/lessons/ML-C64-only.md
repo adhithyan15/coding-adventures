@@ -9,7 +9,7 @@ headword: "മാത്രം"
 gloss: "only, that much and no more"
 romanization: "mātraṁ"
 concept_tag: ML-WORD-ONLY
-prerequisites: [ML-C64-sometimes]
+prerequisites: [ML-C64-sometimes, ML-C62-broom]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C64-SMALL-04]
 practises:
-  knowledge: [ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C64-SMALL-04]
+  knowledge: [ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C64-SMALL-04, ML-LEX-C62-HAND-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Beside *kuṟaccŭ*, which says a small amount, മാത്രം says an exact
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C64-SMALL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C64-SMALL-04, ML-LEX-C62-HAND-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mātraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kuṟaccŭ*, then *mātraṁ*, and say which one sets a limit]
+- [YOU RECALL: read **ചൂല്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C64-SMALL-04] -->

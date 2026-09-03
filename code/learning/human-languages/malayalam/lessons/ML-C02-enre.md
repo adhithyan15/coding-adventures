@@ -9,7 +9,7 @@ headword: എന്റെ
 gloss: my
 romanization: "enṟe"
 concept_tag: PRONOUN-MY
-prerequisites: [ML-C02-peru]
+prerequisites: [ML-C02-peru, ML-C01-nandi]
 sounds: [nre-conjunct]
 roots: [njaan-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-ENRE-01]
 practises:
-  knowledge: [ML-LEX-ENRE-01]
+  knowledge: [ML-LEX-ENRE-01, ML-LEX-NANDI-01, ML-ETYMON-NANDI-NAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -50,11 +50,12 @@ You will meet the related word for "I" in its own lesson; today you only need
 *enṟe*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENRE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENRE-01, ML-LEX-NANDI-01, ML-ETYMON-NANDI-NAL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "enṟe"]
 - [YOU SAY: *enṟe* once with its meaning, "my"]
+- [YOU RECALL: read **നന്ദി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENRE-01] -->

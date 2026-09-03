@@ -9,7 +9,7 @@ headword: "നല്ല"
 gloss: "good"
 romanization: "nalla"
 concept_tag: ML-ADJ-GOOD
-prerequisites: [ML-C42-small]
+prerequisites: [ML-C42-small, ML-C40-oon]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C42-ADJ-03]
 practises:
-  knowledge: [ML-LEX-C42-ADJ-01, ML-LEX-C42-ADJ-02, ML-LEX-C42-ADJ-03]
+  knowledge: [ML-LEX-C42-ADJ-01, ML-LEX-C42-ADJ-02, ML-LEX-C42-ADJ-03, ML-CONCEPT-C40-OON-01, ML-CONCEPT-C40-OON-02, ML-CONCEPT-C40-OON-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -49,11 +49,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-03, ML-CONCEPT-C40-OON-01, ML-CONCEPT-C40-OON-02, ML-CONCEPT-C40-OON-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "നല്ല" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *ūṇ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-03] -->

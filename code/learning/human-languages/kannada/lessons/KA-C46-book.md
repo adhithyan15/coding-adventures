@@ -9,7 +9,7 @@ headword: "ಪುಸ್ತಕ"
 gloss: "a book"
 romanization: "pustaka"
 concept_tag: KA-NOUN-BOOK
-prerequisites: [KA-C46-salt]
+prerequisites: [KA-C46-salt, KA-C44-speak]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C46-ASK-05]
 practises:
-  knowledge: [KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-C46-ASK-05]
+  knowledge: [KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-C46-ASK-05, KA-LEX-SPEAK]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Two of these five came from outside; three were here already.
 Five things you might ask for: a fruit, a cloth, a lamp, salt, a book.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-C46-ASK-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-C46-ASK-05, KA-LEX-SPEAK] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pustaka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then sort them into the inherited and the borrowed]
+- [YOU RECALL: say *mātāḍu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-C46-ASK-03, KA-LEX-C46-ASK-04, KA-LEX-C46-ASK-05] -->

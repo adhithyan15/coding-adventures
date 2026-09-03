@@ -9,7 +9,7 @@ headword: ಮಾತನಾಡು
 gloss: to speak
 romanization: "mātanāḍu"
 concept_tag: KA-VERB-MATANADU
-prerequisites: [KA-C03-naanu]
+prerequisites: [KA-C03-naanu, KA-C03-cennaagi]
 sounds: [long-aa]
 roots: [maatu-word-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C05-MATANADU-01, KA-GRAMMAR-C05-MATANADU-02]
 practises:
-  knowledge: [KA-LEX-C05-MATANADU-01, KA-GRAMMAR-C05-MATANADU-02]
+  knowledge: [KA-LEX-C05-MATANADU-01, KA-GRAMMAR-C05-MATANADU-02, KA-LEX-C03-NAANU-01, KA-ETYMON-C03-NAANU-02, KA-GRAMMAR-C03-NAANU-03, KA-LEX-C03-CENNAAGI-01, KA-ETYMON-C03-CENNAAGI-02, KA-LEX-C03-CENNAAGI-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -64,12 +64,13 @@ And, like Tamil and Telugu, Kannada marks **no gender in the first person**:
 *mātanāḍuttēne* is the same for a man or a woman.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C05-MATANADU-01, KA-GRAMMAR-C05-MATANADU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C05-MATANADU-01, KA-GRAMMAR-C05-MATANADU-02, KA-LEX-C03-NAANU-01, KA-ETYMON-C03-NAANU-02, KA-GRAMMAR-C03-NAANU-03, KA-LEX-C03-CENNAAGI-01, KA-ETYMON-C03-CENNAAGI-02, KA-LEX-C03-CENNAAGI-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "mātanāḍu" (speak)]
 - [YOU SAY: "I speak" — *mātanāḍuttēne*]
 - [YOU SAY: the word "speech" inside it (*mātu*)]
+- [YOU RECALL: say *nānu*, then read **ಚೆನ್ನಾಗಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C05-MATANADU-01, KA-GRAMMAR-C05-MATANADU-02] -->

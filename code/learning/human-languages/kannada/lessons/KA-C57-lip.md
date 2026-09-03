@@ -9,7 +9,7 @@ headword: "ತುಟಿ"
 gloss: "a lip"
 romanization: "tuṭi"
 concept_tag: KA-NOUN-LIP
-prerequisites: [KA-C57-back]
+prerequisites: [KA-C57-back, KA-C55-hill]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C57-BODY-03]
 practises:
-  knowledge: [KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03]
+  knowledge: [KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C55-ROAD-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ And it is the piece of the face that Kannada uses for keeping quiet. To say noth
 Three, and this one edges a word you already had.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03, KA-LEX-C55-ROAD-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tuṭi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bāyi*, then *tuṭi*, and say which one is the edge of the other]
+- [YOU RECALL: say *beṭṭa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C57-BODY-03] -->

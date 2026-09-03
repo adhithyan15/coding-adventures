@@ -9,7 +9,7 @@ headword: "പിന്നെ"
 gloss: "then, after that"
 romanization: "pinne"
 concept_tag: ML-WORD-THEN
-prerequisites: [ML-C63-fever]
+prerequisites: [ML-C63-fever, ML-C62-rope]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C64-SMALL-01]
 practises:
-  knowledge: [ML-LEX-C63-FEEL-04, ML-LEX-C63-FEEL-05, ML-LEX-C64-SMALL-01]
+  knowledge: [ML-LEX-C63-FEEL-04, ML-LEX-C63-FEEL-05, ML-LEX-C64-SMALL-01, ML-LEX-C62-HAND-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ After *śari*, it turns an agreement into a continuation: right, and then.
 The first of five small words that join one thing to the next.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-04, ML-LEX-C63-FEEL-05, ML-LEX-C64-SMALL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-04, ML-LEX-C63-FEEL-05, ML-LEX-C64-SMALL-01, ML-LEX-C62-HAND-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pinne*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śari*, then *pinne*, as though agreeing and going on]
+- [YOU RECALL: say *kayaṟ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-04, ML-LEX-C63-FEEL-05, ML-LEX-C64-SMALL-01] -->

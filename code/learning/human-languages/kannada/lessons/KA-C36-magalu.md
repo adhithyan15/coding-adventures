@@ -9,7 +9,7 @@ headword: ಮಗಳು
 gloss: daughter — one more ending on the same root, where Chapter 12 needed four whole words to do a similar job
 romanization: magaḷu
 concept_tag: KA-DAUGHTER
-prerequisites: [KA-C36-maga, KA-C12-kutumba]
+prerequisites: [KA-C36-maga, KA-C12-kutumba, KA-C33-oodu]
 sounds: [retroflex-la, u-vowel-sign]
 roots: [proto-dravidian-makal-daughter]
 etymology_hook: "ಮಗಳು continues Proto-Dravidian *makaḷ, 'daughter' — Tamil மகள் makaḷ and Malayalam മകൾ makaḷ are close to identical; so the family that split ಅಣ್ಣ from ತಮ್ಮ with two unrelated words solves 'son' against 'daughter' with one root and a suffix instead — gender by ending here, age by wholly separate vocabulary there"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03]
 practises:
-  knowledge: [KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03]
+  knowledge: [KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03, KA-LEX-C33-OODU-01, KA-ETYMON-C33-OODU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -69,7 +69,7 @@ Kannada's own form — this branch of the family barely touched the word at
 all.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03, KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02, KA-ETYMON-C12-KUTUMBA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03, KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C33-OODU-01, KA-ETYMON-C33-OODU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ivaḷu nanna magaḷu" — she is my daughter]
@@ -77,6 +77,7 @@ all.
 - [YOU SAY: one root three endings, then four words no root — "maga,
   magaḷu … aṇṇa, tamma, akka, tangi"]
 - [YOU SAY: the sisters, near-identical — "magaḷu … makaḷ … makaḷ"]
+- [YOU RECALL: say *ōdu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03, KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02, KA-ETYMON-C12-KUTUMBA-02] -->

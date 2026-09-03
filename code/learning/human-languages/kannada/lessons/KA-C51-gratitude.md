@@ -9,7 +9,7 @@ headword: "ಕೃತಜ್ಞತೆ"
 gloss: "gratitude"
 romanization: "kṛtajñate"
 concept_tag: KA-NOUN-GRATITUDE
-prerequisites: [KA-C50-farewell]
+prerequisites: [KA-C50-farewell, KA-C49-true]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C51-COURTESY-01]
 practises:
-  knowledge: [KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01]
+  knowledge: [KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C49-REPLY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Two Sanskrit pieces once more: *kṛta*, 'done', and *jña*, 'knowing'. Gratitud
 The first of five courtesies.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C49-REPLY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kṛtajñate*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kṛtajñate*, then *dhanyavāda*, and say which of the two you would write rather than speak]
+- [YOU RECALL: say *nija*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01] -->

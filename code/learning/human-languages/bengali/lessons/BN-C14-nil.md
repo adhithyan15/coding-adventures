@@ -9,7 +9,7 @@ headword: নীল
 romanization: nil
 gloss: blue — Sanskrit's word for indigo, one form for every noun it describes
 concept_tag: BN-COLOR-BLUE
-prerequisites: [BN-C14-lal]
+prerequisites: [BN-C14-lal, BN-C12-hridoy]
 sounds: [long-ii]
 roots: [nila-indigo]
 etymology_hook: "নীল is Sanskrit নীল nIla, 'dark blue', also the name of the indigo plant and its dye -- the identical root behind Hindi's niilaa, though Bengali marks no gender on it where Hindi's niilaa/niilii does; English 'indigo' is NOT this word by sound change, it is Greek indikon, 'the Indian thing', naming where the dye came from rather than descending from nIla itself -- two separate words linked by trade, not by descent"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C14-NIL-01]
 practises:
-  knowledge: [BN-LEX-C14-LAL-01, BN-LEX-C13-SBAGOTOM-01, BN-LEX-C14-NIL-01]
+  knowledge: [BN-LEX-C14-LAL-01, BN-LEX-C13-SBAGOTOM-01, BN-LEX-C14-NIL-01, BN-LEX-C12-HRIDOY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -70,12 +70,13 @@ and "indigo" are not the same word wearing two disguises; they are two
 descent from a shared root.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-NIL-01, BN-LEX-C14-LAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-NIL-01, BN-LEX-C14-LAL-01, BN-LEX-C12-HRIDOY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nīl" — blue]
 - [YOU SAY: "nīl jôl" — blue water]
 - [YOU SAY: one form, always — "nīl," never *nīlā* or *nīlī*]
+- [YOU RECALL: read **হৃদয়**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-NIL-01, BN-LEX-C13-SBAGOTOM-01] -->

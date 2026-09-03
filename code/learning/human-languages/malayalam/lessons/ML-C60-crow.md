@@ -9,7 +9,7 @@ headword: "കാക്ക"
 gloss: "a crow"
 romanization: "kākka"
 concept_tag: ML-NOUN-CROW
-prerequisites: [ML-C60-hen]
+prerequisites: [ML-C60-hen, ML-C58-no-need]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C60-ANIMAL-04]
 practises:
-  knowledge: [ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C60-ANIMAL-04]
+  knowledge: [ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C60-ANIMAL-04, ML-LEX-C58-ANSWER-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kerala also gives the bird a job at a funeral rite, where a ball of rice is set 
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C60-ANIMAL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C60-ANIMAL-04, ML-LEX-C58-ANSWER-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kākka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kākka*, then *kōḻi*, and say which of the two is kept and which turns up]
+- [YOU RECALL: read **വേണ്ട**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C60-ANIMAL-04] -->

@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "On the Kitchen Shelf",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b6d27421e7e7de16",
+  "sourceHash": "fnv1a64:a8b6720edb3a76bc",
   "lessons": [
     {
       "id": "ML-C61-coconut",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a67a90271f58d96",
+      "sourceHash": "fnv1a64:0cf6bf4d32b0c06a",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *maraṁ*, then *tēṅṅa*, and say which one grows on the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kāṟṟŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kāṟṟŭ*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66d4a35e0677e696",
+      "sourceHash": "fnv1a64:99d8d6bb3fa01297",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tēṅṅa*, then *eṇṇa*, and say which one is pressed out of the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read മണൽ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **മണൽ**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d574bcf0c1acde1d",
+      "sourceHash": "fnv1a64:cfcf3b672fe85b59",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pāl*, then *tairŭ*, and say which one is made from the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ceḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ceḷi*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b86ed085cb7874e",
+      "sourceHash": "fnv1a64:fe1de5dfbb55e916",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śarkkara*, then the English word *sugar*, and hear one word twice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read പുക",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **പുക**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26175bda90358a81",
+      "sourceHash": "fnv1a64:2ad24034b37b28b2",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *tēṅṅa*, *eṇṇa*, *tairŭ*, *śarkkara*, *muḷakŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kanal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kanal*]"
             }
           ]
         },

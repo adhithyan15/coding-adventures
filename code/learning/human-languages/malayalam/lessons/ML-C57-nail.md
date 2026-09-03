@@ -9,7 +9,7 @@ headword: "നഖം"
 gloss: "a nail, a claw"
 romanization: "nakhaṁ"
 concept_tag: ML-NOUN-NAIL
-prerequisites: [ML-C57-lip]
+prerequisites: [ML-C57-lip, ML-C55-path]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C57-FRAME-04]
 practises:
-  knowledge: [ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C57-FRAME-04]
+  knowledge: [ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C57-FRAME-04, ML-LEX-C55-GROUND-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A word for a fingernail surviving intact across that distance is worth noticing.
 Four, and this one has cousins across half the world.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C57-FRAME-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C57-FRAME-04, ML-LEX-C55-GROUND-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nakhaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nakhaṁ*, then the English word for it, and hear how far apart they have drifted]
+- [YOU RECALL: read **വഴി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C57-FRAME-04] -->

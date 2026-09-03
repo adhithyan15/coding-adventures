@@ -9,7 +9,7 @@ headword: নাক
 romanization: nāk
 gloss: nose — the direct cousin of English "nose," worn down by Bengali's own sound changes rather than Latin's or English's
 concept_tag: BN-BODY-NOSE
-prerequisites: [BN-C12-mukh]
+prerequisites: [BN-C12-mukh, BN-C11-bondhu, BN-C11-poribar]
 sounds: [na-review]
 roots: [nas-nose]
 etymology_hook: "নাক is Sanskrit *nas* through Prakrit ṇakka — a tadbhava — from PIE néh₂s-, the direct ancestor of English nose and Latin nasus (English nasal): three languages, one word, worn down three different ways"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C12-NAK-01]
 practises:
-  knowledge: [BN-LEX-C12-MUKH-01, BN-LEX-C12-CHOKH-01, BN-LEX-C12-NAK-01]
+  knowledge: [BN-LEX-C12-MUKH-01, BN-LEX-C12-CHOKH-01, BN-LEX-C12-NAK-01, BN-LEX-C11-BONDHU-01, BN-LEX-C11-PORIBAR-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -62,13 +62,14 @@ Bengali's road ran the vowel through Prakrit's *a*, dropped Sanskrit's final
 *-s*, and doubled the *k* along the way.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C12-NAK-01, BN-LEX-C12-MUKH-01, BN-LEX-C12-CHOKH-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C12-NAK-01, BN-LEX-C12-MUKH-01, BN-LEX-C12-CHOKH-01, BN-LEX-C11-BONDHU-01, BN-LEX-C11-PORIBAR-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nāk" — nose]
 - [YOU SAY: "āmār nāk" — my nose]
 - [YOU SAY: the three cousins — "nāk … nose … nāsus"]
 - [YOU SAY: three of this chapter's words — "chokh … mukh … nāk"]
+- [YOU RECALL: say *bôndhu*, then read **পরিবার**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C12-NAK-01, BN-LEX-C12-MUKH-01] -->

@@ -9,7 +9,7 @@ headword: "ಪೊರಕೆ"
 gloss: "a broom"
 romanization: "porake"
 concept_tag: KA-NOUN-BROOM
-prerequisites: [KA-C62-rope]
+prerequisites: [KA-C62-rope, KA-C60-crow]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C62-MADE-04]
 practises:
-  knowledge: [KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C62-MADE-04]
+  knowledge: [KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C62-MADE-04, KA-LEX-C60-ANIMAL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is the first object of the day. The ground outside the ಬಾಗಿಲು is 
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C62-MADE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C62-MADE-04, KA-LEX-C60-ANIMAL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *porake*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *porake*, then *raṅgōli*, and say which one comes first]
+- [YOU RECALL: read **ಕಾಗೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C62-MADE-04] -->

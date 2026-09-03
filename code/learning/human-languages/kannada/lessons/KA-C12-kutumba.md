@@ -9,7 +9,7 @@ headword: ಅಪ್ಪ ಅಮ್ಮ ಅಣ್ಣ ತಮ್ಮ ಅಕ್ಕ ತ�
 gloss: father, mother, and four age-graded sibling words — nearly identical to Tamil's own set
 romanization: "appa amma aṇṇa tamma akka taṅgi"
 concept_tag: KA-FAMILY-BASIC
-prerequisites: [KA-C11-bannagalu]
+prerequisites: [KA-C11-bannagalu, KA-C08-dayavittu, KA-C09-kshamisi]
 sounds: [kannada-retroflex-nna, kannada-anusvara]
 roots: [dravidian-appa-amma, dravidian-age-graded-siblings]
 etymology_hook: "ಅಪ್ಪ appa/ಅಮ್ಮ amma and the four sibling words (ಅಣ್ಣ/ತಮ್ಮ, ಅಕ್ಕ/ತಂಗಿ) match Tamil's set almost word-for-word — Kannada splits siblings by age too"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02]
 practises:
-  knowledge: [KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02]
+  knowledge: [KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,12 +60,13 @@ their gender. This age-first system runs across the whole Dravidian family,
 not just one language.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "appa, amma" — father, mother]
 - [YOU SAY: "aṇṇa, tamma" — older/younger brother]
 - [YOU SAY: "akka, tangi" — older/younger sister]
+- [YOU RECALL: say *dayaviṭṭu*, then read **ಕ್ಷಮಿಸಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->

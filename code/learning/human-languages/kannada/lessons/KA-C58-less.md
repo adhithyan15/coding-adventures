@@ -9,7 +9,7 @@ headword: "ಕಡಿಮೆ"
 gloss: "less, fewer"
 romanization: "kaḍime"
 concept_tag: KA-WORD-LESS
-prerequisites: [KA-C58-more]
+prerequisites: [KA-C58-more, KA-C56-knife]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C58-REPLY-03]
 practises:
-  knowledge: [KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03]
+  knowledge: [KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C56-HOUSE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ That is three of the five now, and none of them names a thing. This chapter is a
 Three, and two of them make a phrase together.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C56-HOUSE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kaḍime*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *heccu kaḍime*, and say what the pair means when it travels as one]
+- [YOU RECALL: say *cāku*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03] -->

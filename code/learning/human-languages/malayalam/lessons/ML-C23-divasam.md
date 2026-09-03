@@ -9,7 +9,7 @@ headword: ദിവസം
 gloss: "day" — everyday Sanskrit divasam beside the more literary Sanskrit dinam
 romanization: "divasam"
 concept_tag: TIME-DAY
-prerequisites: [ML-C04-naale-kaanaam, ML-C17-paathira]
+prerequisites: [ML-C04-naale-kaanaam, ML-C17-paathira, ML-C18-mani]
 sounds: [malayalam-vowel-sign-i, malayalam-anusvara]
 roots: [sanskrit-divasa-day, sanskrit-dina]
 etymology_hook: "divasam and dinam share PIE *dyew- through two different Sanskrit formations; Malayalam assigns them everyday and formal jobs"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02]
 practises:
-  knowledge: [ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02]
+  knowledge: [ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02, ML-CONCEPT-C17-PAATHIRA-01, ML-CONCEPT-C18-MANI-01, ML-CONCEPT-C18-MANI-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -63,11 +63,12 @@ tatsama word as Kannada's plain, everyday *dina*. But in Malayalam,
 the everyday counting work instead.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02, ML-CONCEPT-C17-PAATHIRA-01, ML-CONCEPT-C18-MANI-01, ML-CONCEPT-C18-MANI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "divasam" — "day," the everyday counting word]
 - [YOU SAY: "dinam" — the same Sanskrit word as Kannada's dina, but formal here]
+- [YOU RECALL: say *pāthirā*, then read **മണി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02] -->

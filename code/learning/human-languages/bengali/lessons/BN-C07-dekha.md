@@ -9,7 +9,7 @@ headword: দেখা
 romanization: dækhā
 gloss: to see, to look — and the vowel that changes while the spelling stands still
 concept_tag: VERB-SEE
-prerequisites: [BN-C07-khaowa, BN-C04-dekha-hobe]
+prerequisites: [BN-C07-khaowa, BN-C04-dekha-hobe, BN-C05-bola]
 sounds: [e-vs-ae, kha-aspirate]
 roots: [drish-see]
 etymology_hook: "দেখা traces to Sanskrit √dṛś 'to see' through Prakrit dekkha-, PIE *derḱ- — the root behind Greek dérkomai and drákōn, so Bengali 'see' and English dragon are the same word; and it is the cleanest place to hear Bengali vowel harmony, দেখি dekhi against দেখে dækhe, where the letter দে never changes"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C07-DEKHA-01, BN-GRAMMAR-C07-DEKHA-02]
 practises:
-  knowledge: [BN-LEX-C07-DEKHA-01, BN-GRAMMAR-C07-DEKHA-02]
+  knowledge: [BN-LEX-C07-DEKHA-01, BN-GRAMMAR-C07-DEKHA-02, BN-CONCEPT-C05-BOLA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -80,12 +80,13 @@ verb of the first lesson does it too — আমি হই (*hôi*, closed) again
 budges.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C07-DEKHA-01, BN-GRAMMAR-C07-DEKHA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C07-DEKHA-01, BN-GRAMMAR-C07-DEKHA-02, BN-CONCEPT-C05-BOLA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "dækhā" — then the pair, "dekhi … dækhe"]
 - [YOU SAY: the same shift on the be-verb — "hôi … hôy"]
 - [YOU SAY: the root and its odd English relative — "dṛś … dragon"]
+- [YOU RECALL: say *bôlā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C07-DEKHA-01, BN-GRAMMAR-C07-DEKHA-02] -->

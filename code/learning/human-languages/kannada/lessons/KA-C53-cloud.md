@@ -9,7 +9,7 @@ headword: "ಮೋಡ"
 gloss: "a cloud"
 romanization: "mōḍa"
 concept_tag: KA-NOUN-CLOUD
-prerequisites: [KA-C53-star]
+prerequisites: [KA-C53-star, KA-C51-salutation]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C53-SKY-05]
 practises:
-  knowledge: [KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C53-SKY-04, KA-LEX-C53-SKY-05]
+  knowledge: [KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C53-SKY-04, KA-LEX-C53-SKY-05, KA-LEX-C51-COURTESY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ With that, the sky is furnished.
 Five: ಆಕಾಶ, ಬಿಸಿಲು, ಚಂದ್ರ, ಚುಕ್ಕಿ, ಮೋಡ. You can say what is overhead.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C53-SKY-04, KA-LEX-C53-SKY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C53-SKY-04, KA-LEX-C53-SKY-05, KA-LEX-C51-COURTESY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mōḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say which two of them Kannada borrowed]
+- [YOU RECALL: say *vandane*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C53-SKY-04, KA-LEX-C53-SKY-05] -->

@@ -9,7 +9,7 @@ headword: আমি
 romanization: "āmi"
 gloss: I
 concept_tag: PRONOUN-I
-prerequisites: [BN-C02-amar]
+prerequisites: [BN-C02-amar, BN-C02-ki, BN-C02-tumi-apni]
 sounds: [independent-aa, i-sign]
 roots: [asmi-first-person]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [BN-CONCEPT-C03-AMI-01]
 practises:
-  knowledge: [BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C03-AMI-01]
+  knowledge: [BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C02-KI-01, BN-CONCEPT-C02-TUMIAPNI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -59,12 +59,13 @@ Bengali verbs carry the person in their ending — *āchhi* already means "**I**
 the answer to *kēmon āchho?* begins with it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C03-AMI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C02-KI-01, BN-CONCEPT-C02-TUMIAPNI-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "āmi"]
 - [YOU SAY: the pair — *āmi* (I), *āmār* (my)]
 - [YOU SAY: the English cousin hidden in it (*am* — from the same *asmi*)]
+- [YOU RECALL: say *ki*, then say *tumi / āpni*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C03-AMI-01] -->

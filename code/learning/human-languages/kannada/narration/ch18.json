@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:464d4ee899637f9b",
+  "sourceHash": "fnv1a64:862f93c1fbff065e",
   "lessons": [
     {
       "id": "KA-C18-gante",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c0078edb9547165",
+      "sourceHash": "fnv1a64:37c16b6fab60074d",
       "notice": null,
       "blocks": [
         {
@@ -117,6 +117,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"eraḍu gaṇṭe\" — two o'clock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nīru akki anna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nīru akki anna*]"
             }
           ]
         },

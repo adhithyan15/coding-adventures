@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 9,
-  "sourceHash": "fnv1a64:3f91db024ff9cd69",
+  "sourceHash": "fnv1a64:5482a02c112ae13f",
   "lessonIds": [
     "KA-C09-kshamisi",
     "KA-S118-letter-dda",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch09.txt",
   "json": "kannada/narration/ch09.json",
-  "textHash": "fnv1a64:34a477bcd0789c67",
-  "jsonHash": "fnv1a64:f774fd1c017a3edd",
+  "textHash": "fnv1a64:48d827a5dd720bcd",
+  "jsonHash": "fnv1a64:875408363513dbf9",
   "findings": []
 }

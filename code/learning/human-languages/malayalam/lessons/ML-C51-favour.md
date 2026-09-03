@@ -9,7 +9,7 @@ headword: "ഉപകാരം"
 gloss: "a favour, a good turn"
 romanization: "upakāraṁ"
 concept_tag: ML-NOUN-FAVOUR
-prerequisites: [ML-C51-gratitude]
+prerequisites: [ML-C51-gratitude, ML-C49-enough]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C51-COURTESY-02]
 practises:
-  knowledge: [ML-LEX-C50-LEAVE-05, ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02]
+  knowledge: [ML-LEX-C50-LEAVE-05, ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C49-REPLY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada has ಉಪಕಾರ (*upakāra*), the same word once more.
 Two: gratitude, and a favour.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-05, ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-05, ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C49-REPLY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *upakāraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *upakāraṁ*, then *dayavāyi*, two courtesies made the same way]
+- [YOU RECALL: read **മതി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-05, ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02] -->

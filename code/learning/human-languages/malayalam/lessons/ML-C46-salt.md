@@ -9,7 +9,7 @@ headword: "ഉപ്പ്"
 gloss: "salt"
 romanization: "uppŭ"
 concept_tag: ML-NOUN-SALT
-prerequisites: [ML-C46-lamp]
+prerequisites: [ML-C46-lamp, ML-C44-listen]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C46-ASK-04]
 practises:
-  knowledge: [ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-C46-ASK-04]
+  knowledge: [ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-C46-ASK-04, ML-LEX-LISTEN]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The final ് here is the half-vowel this book romanizes *-ŭ*: a consonant let 
 Four. Salt, and the fruit, and the cloth, and the lamp.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-C46-ASK-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-C46-ASK-04, ML-LEX-LISTEN] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uppŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *uppŭ*, then *paḻaṁ*, and notice the *p* the cousins kept in one word and lost in the other]
+- [YOU RECALL: read **കേൾക്കൂ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-C46-ASK-04] -->

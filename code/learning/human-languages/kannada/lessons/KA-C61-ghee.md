@@ -9,7 +9,7 @@ headword: "ತುಪ್ಪ"
 gloss: "ghee"
 romanization: "tuppa"
 concept_tag: KA-NOUN-GHEE
-prerequisites: [KA-C61-curd]
+prerequisites: [KA-C61-curd, KA-C59-mist]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C61-KITCHEN-02]
 practises:
-  knowledge: [KA-LEX-C60-ANIMAL-05, KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02]
+  knowledge: [KA-LEX-C60-ANIMAL-05, KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C59-GROUND-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ A spoonful goes on hot ಅನ್ನ, and a ದೀಪ will burn on it as readily 
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-05, KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-05, KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C59-GROUND-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tuppa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mosaru*, then *tuppa*, and say which one is poured]
+- [YOU RECALL: read **ಮಂಜು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-05, KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02] -->

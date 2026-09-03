@@ -9,7 +9,7 @@ headword: "ಬಾಗಿಲು"
 gloss: "a door"
 romanization: "bāgilu"
 concept_tag: KA-NOUN-DOOR
-prerequisites: [KA-C51-salutation]
+prerequisites: [KA-C51-salutation, KA-C50-now]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C52-WELCOME-01]
 practises:
-  knowledge: [KA-LEX-C51-COURTESY-04, KA-LEX-C51-COURTESY-05, KA-LEX-C52-WELCOME-01]
+  knowledge: [KA-LEX-C51-COURTESY-04, KA-LEX-C51-COURTESY-05, KA-LEX-C52-WELCOME-01, KA-LEX-C50-LEAVE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Beside it sits Tamil வாயில் (*vāyil*), a gateway, and that word is 
 The first of the five things a welcome puts in a guest's way.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-04, KA-LEX-C51-COURTESY-05, KA-LEX-C52-WELCOME-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-04, KA-LEX-C51-COURTESY-05, KA-LEX-C52-WELCOME-01, KA-LEX-C50-LEAVE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bāgilu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bāgilu*, then *bāyi*, and hear the *b* and the *v* trade places]
+- [YOU RECALL: say *īga*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-04, KA-LEX-C51-COURTESY-05, KA-LEX-C52-WELCOME-01] -->

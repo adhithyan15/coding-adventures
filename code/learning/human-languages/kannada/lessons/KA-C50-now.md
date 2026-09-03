@@ -9,7 +9,7 @@ headword: "ಈಗ"
 gloss: "now"
 romanization: "īga"
 concept_tag: KA-WORD-NOW
-prerequisites: [KA-C49-just-so]
+prerequisites: [KA-C49-just-so, KA-C48-teacher]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C50-LEAVE-01]
 practises:
-  knowledge: [KA-LEX-C49-REPLY-04, KA-LEX-C49-REPLY-05, KA-LEX-C50-LEAVE-01]
+  knowledge: [KA-LEX-C49-REPLY-04, KA-LEX-C49-REPLY-05, KA-LEX-C50-LEAVE-01, KA-LEX-C48-ROLE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ So Kannada names this moment and that moment by the same means it names this thi
 The first of five words for going.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-04, KA-LEX-C49-REPLY-05, KA-LEX-C50-LEAVE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-04, KA-LEX-C49-REPLY-05, KA-LEX-C50-LEAVE-01, KA-LEX-C48-ROLE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *īga*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *īga*, then *āga*, and point at the near one and the far one]
+- [YOU RECALL: say *śikṣaka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-04, KA-LEX-C49-REPLY-05, KA-LEX-C50-LEAVE-01] -->

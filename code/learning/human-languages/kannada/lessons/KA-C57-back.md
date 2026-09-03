@@ -9,7 +9,7 @@ headword: "ಬೆನ್ನು"
 gloss: "the back"
 romanization: "bennu"
 concept_tag: KA-NOUN-BACK
-prerequisites: [KA-C57-neck]
+prerequisites: [KA-C57-neck, KA-C55-tank]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C57-BODY-02]
 practises:
-  knowledge: [KA-LEX-C56-HOUSE-05, KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02]
+  knowledge: [KA-LEX-C56-HOUSE-05, KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C55-ROAD-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ And ಬೆನ್ನು ತಟ್ಟು, to pat the back, means to praise or enco
 Two, and this one has a hand on it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-05, KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-05, KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02, KA-LEX-C55-ROAD-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bennu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bennu*, then *bēru*, then *beṭṭa*, and hear the one letter they share]
+- [YOU RECALL: read **ಕೆರೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-05, KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02] -->

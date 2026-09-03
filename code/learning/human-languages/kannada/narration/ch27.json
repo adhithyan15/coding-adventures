@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c09f7860a5c9b52d",
+  "sourceHash": "fnv1a64:52b7318732aaf9b7",
   "lessons": [
     {
       "id": "KA-C27-sanje",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72a485ed0029a2cf",
+      "sourceHash": "fnv1a64:ec6506a73e294b67",
       "notice": null,
       "blocks": [
         {
@@ -98,6 +98,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the striking convergence — Hindi's साँझ, same Sanskrit root, different Prakrit path, nearly the same sound today]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hasiru haḷadi, then read ದಿನ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hasiru haḷadi*, then read **ದಿನ**]"
             }
           ]
         },

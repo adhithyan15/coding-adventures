@@ -9,7 +9,7 @@ headword: ಮೂಗು
 gloss: nose — matching Tamil and Malayalam closely, with Telugu the odd one out this time
 romanization: mūgu
 concept_tag: KA-NOSE
-prerequisites: [KA-C37-kivi]
+prerequisites: [KA-C37-kivi, KA-C34-keelu]
 sounds: [kannada-vowel-sign-oo]
 roots: [proto-dravidian-munkku-nose]
 etymology_hook: "ಮೂಗು continues Proto-Dravidian *mūnk(k)u, 'nose' — Tamil மூக்கு (mūkku) and Malayalam മൂക്ക് (mūkkŭ) sit close beside it; Telugu is the one that drifts here, its ముక్కు (mukku) reckoned a slightly irregular reflex, likely blended with a separate word for 'face' — the same family, agreeing on ear and disagreeing on nose"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02]
 practises:
-  knowledge: [KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02, KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02]
+  knowledge: [KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02, KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02, KA-LEX-C34-KEELU-01, KA-GRAMMAR-C34-KEELU-02, KA-ETYMON-C34-KEELU-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -55,13 +55,14 @@ Ear put Telugu with the group and split Tamil's registers; nose does the
 opposite — Telugu drifts, and Tamil and Malayalam hold the line.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02, KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02, KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02, KA-LEX-C34-KEELU-01, KA-GRAMMAR-C34-KEELU-02, KA-ETYMON-C34-KEELU-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nanna mūgu" — my nose]
 - [YOU SAY: the close sisters, then the drifting one — "mūkku, mūkkŭ …
   mukku"]
 - [YOU SAY: ear, then nose — "kivi … mūgu"]
+- [YOU RECALL: say *kēḷu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02, KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02] -->

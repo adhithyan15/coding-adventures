@@ -9,7 +9,7 @@ headword: ಕಾಫಿ
 gloss: coffee — a word that crossed Arabic, Turkish, Dutch and English before it ever reached Kannada, the longest chain of loans in this book
 romanization: kāphi
 concept_tag: KA-COFFEE
-prerequisites: [KA-C39-chaha, KA-C20-hannondu-ippattu]
+prerequisites: [KA-C39-chaha, KA-C20-hannondu-ippattu, KA-C36-magu]
 sounds: [kannada-pha, long-aa]
 roots: [arabic-qahwa, dutch-koffie]
 etymology_hook: "ಕಾಫಿ traces to Arabic قهوة qahwa, into Ottoman Turkish kahve, into Dutch koffie, into English coffee, into Kannada kāphi — five languages deep, the longest chain of loans in this book, longer even than chai's China-Persia-Kannada road; South India's own filter kāphi tradition is comparatively recent, arriving through colonial-era trade, unlike chā's much older overland path"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02]
 practises:
-  knowledge: [KA-LEX-C39-CHAHA-01, KA-ETYMON-C39-CHAHA-02, KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02]
+  knowledge: [KA-LEX-C39-CHAHA-01, KA-ETYMON-C39-CHAHA-02, KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02, KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,13 +67,14 @@ through colonial-era sea trade — the newer drink, on the older-sounding
 name.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02, KA-LEX-C39-CHAHA-01, KA-ETYMON-C39-CHAHA-02, KA-ETYMON-C20-HANNONDU-IPPATTU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02, KA-LEX-C39-CHAHA-01, KA-ETYMON-C39-CHAHA-02, KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "dayaviṭṭu kāphi" — coffee, please]
 - [YOU SAY: plain and aspirated — "pa … pha"]
 - [YOU SAY: the chain — "qahwa … kahve … koffie … coffee … kāphi"]
 - [YOU SAY: two drinks, two roads — "cahā, three languages … kāphi, five"]
+- [YOU RECALL: read **ಮಗು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02, KA-LEX-C39-CHAHA-01, KA-ETYMON-C39-CHAHA-02, KA-ETYMON-C20-HANNONDU-IPPATTU-01] -->

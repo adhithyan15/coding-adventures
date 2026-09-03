@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Things People Make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ed2c11072cb1e8d8",
+  "sourceHash": "fnv1a64:d5b5e0dc79cba4ed",
   "lessons": [
     {
       "id": "KA-C62-thread",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e2c122125b095bb",
+      "sourceHash": "fnv1a64:daf97657facb5c0e",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nūlu*, then *baṭṭe*, and say which one comes first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hasu*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85393ba96aca5a71",
+      "sourceHash": "fnv1a64:84d7f116f356b117",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nūlu*, then *sūji*, and say which one goes through the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಮೇಕೆ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಮೇಕೆ**]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a40eefecf614164",
+      "sourceHash": "fnv1a64:2dd9bf7507a3b5b9",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nūlu*, then *hagga*, and say which one holds a cow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kōḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kōḷi*]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ca7597a23f4a6b5",
+      "sourceHash": "fnv1a64:111b6e3d721853bf",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *porake*, then *raṅgōli*, and say which one comes first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಕಾಗೆ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಕಾಗೆ**]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55dad51ef6346e41",
+      "sourceHash": "fnv1a64:edcd95bbb2cba072",
       "notice": null,
       "blocks": [
         {
@@ -598,6 +634,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *dayaviṭṭu* in front of the one you want]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hakki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hakki*]"
             }
           ]
         },

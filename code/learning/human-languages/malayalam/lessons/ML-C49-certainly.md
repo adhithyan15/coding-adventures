@@ -9,7 +9,7 @@ headword: "തീർച്ചയായും"
 gloss: "certainly, for sure"
 romanization: "tīrccayāyuṁ"
 concept_tag: ML-WORD-CERTAINLY
-prerequisites: [ML-C49-enough]
+prerequisites: [ML-C49-enough, ML-C47-hair]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C49-REPLY-03]
 practises:
-  knowledge: [ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03]
+  knowledge: [ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C47-BODY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ There is a chillu ർ inside, the third chapter running to end up leaning on one
 Three. True, enough, certainly.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C47-BODY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tīrccayāyuṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tīrccayāyuṁ*, slowly, then *satyaṁ*, and put the long word beside the short one]
+- [YOU RECALL: say *muṭi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03] -->

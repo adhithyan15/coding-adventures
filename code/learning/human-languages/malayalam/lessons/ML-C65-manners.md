@@ -9,7 +9,7 @@ headword: "മര്യാദ"
 gloss: "good manners"
 romanization: "maryāda"
 concept_tag: ML-NOUN-MANNERS
-prerequisites: [ML-C65-consent]
+prerequisites: [ML-C65-consent, ML-C63-cough]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C65-ASK-04]
 practises:
-  knowledge: [ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04]
+  knowledge: [ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04, ML-LEX-C63-FEEL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Beside *bahumānaṁ*, respect, which is something a person shows another, this 
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04, ML-LEX-C63-FEEL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maryāda*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bahumānaṁ*, then *maryāda*, and say which of the two you show and which you keep]
+- [YOU RECALL: read **ചുമ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04] -->

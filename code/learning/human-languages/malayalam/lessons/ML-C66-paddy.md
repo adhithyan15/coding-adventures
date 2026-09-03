@@ -9,7 +9,7 @@ headword: "നെല്ല്"
 gloss: "unhusked rice, rice still in the husk"
 romanization: "nellŭ"
 concept_tag: ML-NOUN-PADDY
-prerequisites: [ML-C65-trust]
+prerequisites: [ML-C65-trust, ML-C64-then]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C66-PADDY-01]
 practises:
-  knowledge: [ML-LEX-C65-ASK-04, ML-LEX-C65-ASK-05, ML-LEX-C66-PADDY-01]
+  knowledge: [ML-LEX-C65-ASK-04, ML-LEX-C65-ASK-05, ML-LEX-C66-PADDY-01, ML-LEX-C64-SMALL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It sounds like *ellŭ*, the bone-word, with an *n* set in front. The two have no
 The first of five words from the paddy.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-04, ML-LEX-C65-ASK-05, ML-LEX-C66-PADDY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-04, ML-LEX-C65-ASK-05, ML-LEX-C66-PADDY-01, ML-LEX-C64-SMALL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nellŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ellŭ*, then *nellŭ*, and say which of the two you can eat]
+- [YOU RECALL: say *pinne*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-04, ML-LEX-C65-ASK-05, ML-LEX-C66-PADDY-01] -->

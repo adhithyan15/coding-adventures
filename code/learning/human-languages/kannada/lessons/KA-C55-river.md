@@ -9,7 +9,7 @@ headword: "ನದಿ"
 gloss: "a river"
 romanization: "nadi"
 concept_tag: KA-NOUN-RIVER
-prerequisites: [KA-C54-seed]
+prerequisites: [KA-C54-seed, KA-C53-sky]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C55-ROAD-01]
 practises:
-  knowledge: [KA-LEX-C54-TREE-04, KA-LEX-C54-TREE-05, KA-LEX-C55-ROAD-01]
+  knowledge: [KA-LEX-C54-TREE-04, KA-LEX-C54-TREE-05, KA-LEX-C55-ROAD-01, KA-LEX-C53-SKY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Kannada's own river-word is ಹೊಳೆ (*hoḷe*), and it opens with the *h* y
 The first of five things you would have to name to ask your way.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-04, KA-LEX-C54-TREE-05, KA-LEX-C55-ROAD-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-04, KA-LEX-C54-TREE-05, KA-LEX-C55-ROAD-01, KA-LEX-C53-SKY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nadi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nadi elli?* — "where is the river?" — with the asking word at the end]
+- [YOU RECALL: say *ākāśa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-04, KA-LEX-C54-TREE-05, KA-LEX-C55-ROAD-01] -->

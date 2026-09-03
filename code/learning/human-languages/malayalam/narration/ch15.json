@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a61a482fceb0b26c",
+  "sourceHash": "fnv1a64:58ad0b5fd55ddcf6",
   "lessons": [
     {
       "id": "ML-C15-vellam-ari",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c072377bc1d3a3c5",
+      "sourceHash": "fnv1a64:d58853a1673ebfb2",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"cōṟu\" — cooked rice, Malayalam's own word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say thiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *thiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar*]"
             }
           ]
         },

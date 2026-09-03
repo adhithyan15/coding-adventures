@@ -9,7 +9,7 @@ headword: "വയൽ"
 gloss: "a paddy field"
 romanization: "vayal"
 concept_tag: ML-NOUN-FIELD
-prerequisites: [ML-C55-path]
+prerequisites: [ML-C55-path, ML-C53-sunshine]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C55-GROUND-05]
 practises:
-  knowledge: [ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C55-GROUND-04, ML-LEX-C55-GROUND-05]
+  knowledge: [ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C55-GROUND-04, ML-LEX-C55-GROUND-05, ML-LEX-C53-SKY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The chillu ൽ closing it is the one you met on the door-word and the leg-word, 
 Five, and the ground is furnished: a river, a rock, the home place, a way, a paddy field.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C55-GROUND-04, ML-LEX-C55-GROUND-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C55-GROUND-04, ML-LEX-C55-GROUND-05, ML-LEX-C53-SKY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vayal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *puḻa*, *pāṟa*, *nāṭŭ*, *vaḻi*, *vayal*]
+- [YOU RECALL: say *veyil*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02, ML-LEX-C55-GROUND-03, ML-LEX-C55-GROUND-04, ML-LEX-C55-GROUND-05] -->

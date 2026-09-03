@@ -9,7 +9,7 @@ headword: "ಪ್ರಯಾಣ"
 gloss: "a journey"
 romanization: "prayāṇa"
 concept_tag: KA-NOUN-JOURNEY
-prerequisites: [KA-C50-day-after]
+prerequisites: [KA-C50-day-after, KA-C48-doctor]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C50-LEAVE-03]
 practises:
-  knowledge: [KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03]
+  knowledge: [KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C48-ROLE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ That *pra-* is very old and very widely travelled. It is the *pro-* of Latin, th
 Three: now, the day after tomorrow, a journey.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C48-ROLE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *prayāṇa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śubha prayāṇa* to someone leaving, then *prayāṇa* on its own]
+- [YOU RECALL: say *vaidya*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03] -->

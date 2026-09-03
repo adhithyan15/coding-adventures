@@ -9,7 +9,7 @@ headword: "ರಂಗೋಲಿ"
 gloss: "the pattern drawn at a doorway"
 romanization: "raṅgōli"
 concept_tag: KA-NOUN-RANGOLI
-prerequisites: [KA-C52-chair]
+prerequisites: [KA-C52-chair, KA-C50-journey]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C52-WELCOME-03]
 practises:
-  knowledge: [KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03]
+  knowledge: [KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C50-LEAVE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The name is *raṅga*, 'colour', and *āvalī*, 'a row': a row of colour. That *
 Three: a door, a chair, and the pattern on the ground before both.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C50-LEAVE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *raṅgōli*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *raṅgōli*, then *dīpa*, and name the row inside each]
+- [YOU RECALL: say *prayāṇa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03] -->

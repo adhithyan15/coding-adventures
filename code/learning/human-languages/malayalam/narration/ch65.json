@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Asking Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ecd1b2f3960ba9f8",
+  "sourceHash": "fnv1a64:a4bc6f4ee00dd456",
   "lessons": [
     {
       "id": "ML-C65-request",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2421b2f64f2a78dd",
+      "sourceHash": "fnv1a64:ac258488848e6648",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dayavāyi*, then *apēkṣa*, and say which of the two is the asking itself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say viśappŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *viśappŭ*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81531cf484416559",
+      "sourceHash": "fnv1a64:514b5cb674528459",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *apēkṣa*, then *anuvādaṁ*, and say which one comes first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ക്ഷീണം",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ക്ഷീണം**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cdba8f132834820f",
+      "sourceHash": "fnv1a64:f5bc9c62071b842b",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *anuvādaṁ*, then *sammataṁ*, and say which of the two is given from above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vēdana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vēdana*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a322ab8518c206ac",
+      "sourceHash": "fnv1a64:cf19e3e998f62e6d",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bahumānaṁ*, then *maryāda*, and say which of the two you show and which you keep]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ചുമ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ചുമ**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b343f50b587c174",
+      "sourceHash": "fnv1a64:42ef9240183412f4",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *apēkṣa*, *anuvādaṁ*, *sammataṁ*, *maryāda*, *viśvāsaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pani",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pani*]"
             }
           ]
         },

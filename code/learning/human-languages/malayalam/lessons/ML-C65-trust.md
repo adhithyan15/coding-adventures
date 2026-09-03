@@ -9,7 +9,7 @@ headword: "വിശ്വാസം"
 gloss: "trust"
 romanization: "viśvāsaṁ"
 concept_tag: ML-NOUN-TRUST
-prerequisites: [ML-C65-manners]
+prerequisites: [ML-C65-manners, ML-C63-fever]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C65-ASK-05]
 practises:
-  knowledge: [ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04, ML-LEX-C65-ASK-05]
+  knowledge: [ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04, ML-LEX-C65-ASK-05, ML-LEX-C63-FEEL-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It also carries belief in the religious sense, so the everyday and the weightier
 Five, and asking has its vocabulary: a request, permission, consent, good manners, and the trust the other four rest on.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04, ML-LEX-C65-ASK-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04, ML-LEX-C65-ASK-05, ML-LEX-C63-FEEL-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *viśvāsaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *apēkṣa*, *anuvādaṁ*, *sammataṁ*, *maryāda*, *viśvāsaṁ*]
+- [YOU RECALL: say *pani*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04, ML-LEX-C65-ASK-05] -->

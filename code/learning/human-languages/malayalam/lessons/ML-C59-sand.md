@@ -9,7 +9,7 @@ headword: "മണൽ"
 gloss: "sand"
 romanization: "maṇal"
 concept_tag: ML-NOUN-SAND
-prerequisites: [ML-C59-wind]
+prerequisites: [ML-C59-wind, ML-C57-back]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C59-AIR-02]
 practises:
-  knowledge: [ML-LEX-C58-ANSWER-05, ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02]
+  knowledge: [ML-LEX-C58-ANSWER-05, ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C57-FRAME-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The retroflex *ṇ* is what separates this from a different word altogether, so 
 Two: the wind, and something it moves.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-05, ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-05, ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C57-FRAME-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maṇal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāṟṟŭ*, then *maṇal*, and curl the tongue back for the middle of the second]
+- [YOU RECALL: read **മുതുക്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-05, ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02] -->

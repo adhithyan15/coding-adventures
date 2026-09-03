@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Five Colors",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f32f75cccc8cb3c9",
+  "sourceHash": "fnv1a64:18657ff6f97ed151",
   "lessons": [
     {
       "id": "BN-C14-lal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:65651cb9aa24f37e",
+      "sourceHash": "fnv1a64:331d8a66f3f7ed4a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -122,6 +122,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: what it named first — \"a ruby, not a color\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chokh, then read মুখ, then say nāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chokh*, then read **মুখ**, then say *nāk*]"
             }
           ]
         },
@@ -157,7 +166,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:db1ee7265ed7722a",
+      "sourceHash": "fnv1a64:c31c5bd03fbc883c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -264,6 +273,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: one form, always — \"nīl,\" never *nīlā* or *nīlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read হৃদয়",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **হৃদয়**]"
             }
           ]
         },
@@ -299,7 +317,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e5ee84830540739b",
+      "sourceHash": "fnv1a64:6f043236401e26b5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -402,6 +420,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: what else কাল means — \"time,\" and by extension, death]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dukkhito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dukkhito*]"
             }
           ]
         },
@@ -437,7 +464,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7a72fff2edc8ef5e",
+      "sourceHash": "fnv1a64:36d29674c39854fe",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -544,6 +571,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the compound cousin — \"śveto … śvetāngo\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read দয়া করে",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **দয়া করে**]"
             }
           ]
         },

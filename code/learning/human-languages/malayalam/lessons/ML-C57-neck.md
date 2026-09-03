@@ -9,7 +9,7 @@ headword: "കഴുത്ത്"
 gloss: "the neck"
 romanization: "kaḻuttŭ"
 concept_tag: ML-NOUN-NECK
-prerequisites: [ML-C56-box]
+prerequisites: [ML-C56-box, ML-C55-river]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C57-FRAME-01]
 practises:
-  knowledge: [ML-LEX-C56-HOUSE-04, ML-LEX-C56-HOUSE-05, ML-LEX-C57-FRAME-01]
+  knowledge: [ML-LEX-C56-HOUSE-04, ML-LEX-C56-HOUSE-05, ML-LEX-C57-FRAME-01, ML-LEX-C55-GROUND-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The held *tt* and the closing ŭ are both here as well, which makes this word a 
 The first of five more, and it holds the garland.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-04, ML-LEX-C56-HOUSE-05, ML-LEX-C57-FRAME-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-04, ML-LEX-C56-HOUSE-05, ML-LEX-C57-FRAME-01, ML-LEX-C55-GROUND-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kaḻuttŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *peṭṭi*, then *kaḻuttŭ*, and hold the ഴ in the middle]
+- [YOU RECALL: say *puḻa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-04, ML-LEX-C56-HOUSE-05, ML-LEX-C57-FRAME-01] -->

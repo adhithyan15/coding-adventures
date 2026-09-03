@@ -9,7 +9,7 @@ headword: "ಸೂಜಿ"
 gloss: "a needle"
 romanization: "sūji"
 concept_tag: KA-NOUN-NEEDLE
-prerequisites: [KA-C62-thread]
+prerequisites: [KA-C62-thread, KA-C60-goat]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C62-MADE-02]
 practises:
-  knowledge: [KA-LEX-C61-KITCHEN-05, KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02]
+  knowledge: [KA-LEX-C61-KITCHEN-05, KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C60-ANIMAL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is also the hand of a clock. A ಗಂಟೆ has two ಸೂಜಿ on its face,
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-05, KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-05, KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C60-ANIMAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sūji*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nūlu*, then *sūji*, and say which one goes through the other]
+- [YOU RECALL: read **ಮೇಕೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-05, KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 5,
-  "sourceHash": "fnv1a64:21ae27d970cf9ed1",
+  "sourceHash": "fnv1a64:afb9696826b6f2b7",
   "lessonIds": [
     "BN-C03-ami",
     "BN-C03-kemon",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch05.txt",
   "json": "bengali/narration/ch05.json",
-  "textHash": "fnv1a64:e37bd71516b2f386",
-  "jsonHash": "fnv1a64:82f3eea29ba581e1",
+  "textHash": "fnv1a64:c4afc45cdfbfae0f",
+  "jsonHash": "fnv1a64:ab152129cfdcfd6c",
   "findings": []
 }

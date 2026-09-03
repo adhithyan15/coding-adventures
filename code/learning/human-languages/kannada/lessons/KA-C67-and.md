@@ -9,7 +9,7 @@ headword: "ಮತ್ತು"
 gloss: "and"
 romanization: "mattu"
 concept_tag: KA-CONJ-AND
-prerequisites: [KA-C66-harvest, KA-C39-kaapi, KA-C51-gratitude, KA-C50-farewell, KA-C50-set-out, KA-C50-journey]
+prerequisites: [KA-C66-harvest, KA-C39-kaapi, KA-C51-gratitude, KA-C50-farewell, KA-C50-set-out, KA-C50-journey, KA-C65-request, KA-C65-permission]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C67-LINK-01]
 practises:
-  knowledge: [KA-LEX-C39-CHAHA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C66-FIELD-04, KA-LEX-C66-FIELD-05, KA-LEX-C67-LINK-01]
+  knowledge: [KA-LEX-C39-CHAHA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C66-FIELD-04, KA-LEX-C66-FIELD-05, KA-LEX-C67-LINK-01, KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -59,7 +59,7 @@ wrong.
 The first join. Two things, one sentence.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-CHAHA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C66-FIELD-04, KA-LEX-C66-FIELD-05, KA-LEX-C67-LINK-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-CHAHA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C66-FIELD-04, KA-LEX-C66-FIELD-05, KA-LEX-C67-LINK-01, KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mattu*]
@@ -67,6 +67,7 @@ The first join. Two things, one sentence.
 - [YOU SAY: join two words you already know with *mattu*]
 - [YOU RECALL: say *beḷe*, then say *suggi*]
 - [YOU RECALL: from much earlier — say *kṛtajñate*, *bīḷkoḍuge*, *horaḍu*, *prayāṇa*, and say what each one means]
+- [YOU RECALL: say *vinanti*, then read **ಅನುಮತಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-CHAHA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C66-FIELD-04, KA-LEX-C66-FIELD-05, KA-LEX-C67-LINK-01] -->

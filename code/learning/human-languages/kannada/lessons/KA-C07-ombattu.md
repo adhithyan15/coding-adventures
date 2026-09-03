@@ -9,7 +9,7 @@ headword: ಒಂಬತ್ತು
 gloss: nine — one mark, whichever nasal the next letter needs
 romanization: "ombattu"
 concept_tag: KA-NUMBER-NINE
-prerequisites: [KA-C07-entu]
+prerequisites: [KA-C07-entu, KA-C07-ondu]
 sounds: [kannada-anusvara-o, gemination-tt]
 roots: [proto-dravidian-numbers]
 etymology_hook: "One anusvara, three nasals: ondu takes n, entu takes nn, ombattu takes m, each from the letter that follows"
@@ -50,12 +50,13 @@ one decided by the letter after it and never by the mark itself.
 That is the whole rule, and it holds everywhere in Kannada: read the ಂ forwards.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-OMBATTU-01, KA-SCRIPT-RECOG-110, KA-SCRIPT-RECOG-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-OMBATTU-01, KA-SCRIPT-RECOG-110, KA-SCRIPT-RECOG-05, KA-LEX-C07-ONDU-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ombattu" — the m comes from the ಬ]
 - [YOU LOOK: at ಒಂಬತ್ತು and find the ಂ — the same mark *ondu* and *eṇṭu* carry]
 - [YOU SAY: the count so far — "…ēḷu, eṇṭu, ombattu"]
+- [YOU RECALL: say *ondu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-OMBATTU-01, KA-LEX-C07-ONDU-01] -->

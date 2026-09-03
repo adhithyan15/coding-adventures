@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d0111a71335606c9",
+  "sourceHash": "fnv1a64:e1ed053751c5c3b4",
   "lessons": [
     {
       "id": "KA-C17-madhyaahna-madhyaraatri",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3cd6c08f92c685e",
+      "sourceHash": "fnv1a64:1794b2de653ce58c",
       "notice": null,
       "blocks": [
         {
@@ -109,6 +109,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the shared piece — \"madhya,\" middle, in both words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vasanta ṛtu bēsige maḷegāla caḷigāla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vasanta ṛtu bēsige maḷegāla caḷigāla*]"
             }
           ]
         },

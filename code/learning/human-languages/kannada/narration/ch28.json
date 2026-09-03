@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e5dbf3de0891bc7d",
+  "sourceHash": "fnv1a64:5076762af5f5498e",
   "lessons": [
     {
       "id": "KA-C28-aparahna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91a260dba281a7fa",
+      "sourceHash": "fnv1a64:d54b8e2340bb6b88",
       "notice": null,
       "blocks": [
         {
@@ -98,6 +98,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the honest hedge — madhyāhna MAY also loosely cover \"afternoon\" in casual speech, but this is far less certain than Hindi's dopahar-widening story]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nāyi, bekku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nāyi, bekku*]"
             }
           ]
         },

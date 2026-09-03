@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5936318c61f6751b",
+  "sourceHash": "fnv1a64:bda94a980a50ecf7",
   "lessons": [
     {
       "id": "ML-C21-naaya-poocha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23607412c0612200",
+      "sourceHash": "fnv1a64:09ebab61149293af",
       "notice": null,
       "blocks": [
         {
@@ -89,6 +89,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"pūcha\" — cat, matching Tamil's everyday word closely]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ciṅṅaṁ kanni tulāṁ vṛścikaṁ dhanu makaraṁ kuṁbhaṁ mīnaṁ mēṭaṁ iṭavaṁ mithunaṁ karkkaṭakaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ciṅṅaṁ kanni tulāṁ vṛścikaṁ dhanu makaraṁ kuṁbhaṁ mīnaṁ mēṭaṁ iṭavaṁ mithunaṁ karkkaṭakaṁ*]"
             }
           ]
         },

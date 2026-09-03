@@ -9,7 +9,7 @@ headword: "ಬೇರು"
 gloss: "a root"
 romanization: "bēru"
 concept_tag: KA-NOUN-ROOT
-prerequisites: [KA-C54-leaf]
+prerequisites: [KA-C54-leaf, KA-C52-flower]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C54-TREE-04]
 practises:
-  knowledge: [KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04]
+  knowledge: [KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C52-WELCOME-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Two sound laws now separate Kannada from its sisters, and both of them are visib
 Four, and the lowest one shows the law.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C52-WELCOME-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bēru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bēru*, then *bāgilu*, and hear the same *b* opening both]
+- [YOU RECALL: read **ಹೂವು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04] -->

@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Your Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d47d05e11d6581aa",
+  "sourceHash": "fnv1a64:5483e53d31ff6726",
   "lessons": [
     {
       "id": "KA-C50-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae5d8360d35cfecb",
+      "sourceHash": "fnv1a64:2dfdf38cdd02c1ab",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *īga*, then *āga*, and point at the near one and the far one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śikṣaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śikṣaka*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:676b4189817e86ae",
+      "sourceHash": "fnv1a64:c69114eac8b9551a",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *īga*, *nāḷe*, *nāḍiddu* — today's moment, then one day out, then two]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ವಿದ್ಯಾರ್ಥಿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ವಿದ್ಯಾರ್ಥಿ**]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b1af66f7544fed5",
+      "sourceHash": "fnv1a64:3f3cc1437e482618",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *śubha prayāṇa* to someone leaving, then *prayāṇa* on its own]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vaidya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vaidya*]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b7c0d0249091fc8",
+      "sourceHash": "fnv1a64:4750c8b0caa87b00",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *horaḍu*, then *hōgu*, and say which of the two has a destination in it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ರೈತ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ರೈತ**]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c464c94650d6909",
+      "sourceHash": "fnv1a64:001970422c09d15b",
       "notice": null,
       "blocks": [
         {
@@ -598,6 +634,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *bīḷkoḍuge* and the *koḍu* hiding inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say atithi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *atithi*]"
             }
           ]
         },

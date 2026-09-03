@@ -9,7 +9,7 @@ headword: "ನನಗೂ ಗೊತ್ತಿಲ್ಲ"
 gloss: "I don't know either"
 romanization: "nanagū gottilla"
 concept_tag: KA-PHRASE-MENEITHER
-prerequisites: [KA-C68-dont-know, KA-C52-garland, KA-C45-wife, KA-C45-husband, KA-C45-grandmother]
+prerequisites: [KA-C68-dont-know, KA-C52-garland, KA-C45-wife, KA-C45-husband, KA-C45-grandmother, KA-C66-harvest, KA-C67-and]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-GRAMMAR-C68-DENY-06]
 practises:
-  knowledge: [KA-GRAMMAR-C67-LINK-06, KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C68-DENY-06, KA-LEX-C06-DATIVE-SUBJECT-01, KA-LEX-C52-WELCOME-05, KA-LEX-C67-LINK-05, KA-LEX-C68-DENY-01, KA-LEX-C68-DENY-05, KA-LEX-GRANDMOTHER, KA-LEX-HUSBAND, KA-LEX-WIFE, KA-PRAGMATICS-C68-DENY-03, KA-SCRIPT-RECOG-135]
+  knowledge: [KA-GRAMMAR-C67-LINK-06, KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C68-DENY-06, KA-LEX-C06-DATIVE-SUBJECT-01, KA-LEX-C52-WELCOME-05, KA-LEX-C67-LINK-05, KA-LEX-C68-DENY-01, KA-LEX-C68-DENY-05, KA-LEX-GRANDMOTHER, KA-LEX-HUSBAND, KA-LEX-WIFE, KA-PRAGMATICS-C68-DENY-03, KA-SCRIPT-RECOG-135, KA-LEX-C66-FIELD-05, KA-LEX-C67-LINK-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -59,7 +59,7 @@ Five ways of joining, and the first that joins you to another person's
 answer.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-06, KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C68-DENY-06, KA-LEX-C06-DATIVE-SUBJECT-01, KA-LEX-C52-WELCOME-05, KA-LEX-C67-LINK-05, KA-LEX-C68-DENY-01, KA-LEX-C68-DENY-05, KA-LEX-GRANDMOTHER, KA-LEX-HUSBAND, KA-LEX-WIFE, KA-PRAGMATICS-C68-DENY-03, KA-SCRIPT-RECOG-135] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-06, KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C68-DENY-06, KA-LEX-C06-DATIVE-SUBJECT-01, KA-LEX-C52-WELCOME-05, KA-LEX-C67-LINK-05, KA-LEX-C68-DENY-01, KA-LEX-C68-DENY-05, KA-LEX-GRANDMOTHER, KA-LEX-HUSBAND, KA-LEX-WIFE, KA-PRAGMATICS-C68-DENY-03, KA-SCRIPT-RECOG-135, KA-LEX-C66-FIELD-05, KA-LEX-C67-LINK-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nanage gottilla*, then *nanagū gottilla*]
@@ -67,6 +67,7 @@ answer.
 - [YOU SAY: somebody says *nanage gottilla* — reply]
 - [YOU RECALL: say *alla*, then disagree with something out loud]
 - [YOU RECALL: from much earlier — say *hūmāle*, *heṇḍati*, *gaṇḍa*, *ajji*, and say what each one means]
+- [YOU RECALL: read **ಸುಗ್ಗಿ**, then say *mattu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-06, KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C68-DENY-06, KA-LEX-C06-DATIVE-SUBJECT-01, KA-LEX-C52-WELCOME-05, KA-LEX-C67-LINK-05, KA-LEX-C68-DENY-01, KA-LEX-C68-DENY-05, KA-LEX-GRANDMOTHER, KA-LEX-HUSBAND, KA-LEX-WIFE, KA-PRAGMATICS-C68-DENY-03, KA-SCRIPT-RECOG-135] -->

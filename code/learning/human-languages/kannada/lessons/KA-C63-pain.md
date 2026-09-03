@@ -9,7 +9,7 @@ headword: "ನೋವು"
 gloss: "pain"
 romanization: "nōvu"
 concept_tag: KA-NOUN-PAIN
-prerequisites: [KA-C63-fever]
+prerequisites: [KA-C63-fever, KA-C61-jaggery]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C63-HEALTH-04]
 practises:
-  knowledge: [KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C63-HEALTH-04]
+  knowledge: [KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C63-HEALTH-04, KA-LEX-C61-KITCHEN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Every part of the body this book has taught you can be put in that slot. That is
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C63-HEALTH-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C63-HEALTH-04, KA-LEX-C61-KITCHEN-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nōvu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nōvu*, then *tale nōvu*, then *hoṭṭe nōvu*, and say where it hurts]
+- [YOU RECALL: read **ಬೆಲ್ಲ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C63-HEALTH-04] -->

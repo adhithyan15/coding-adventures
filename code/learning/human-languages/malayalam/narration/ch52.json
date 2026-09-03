@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d8cd3c4ebee60e11",
+  "sourceHash": "fnv1a64:b1f567b97e7d7812",
   "lessons": [
     {
       "id": "ML-C52-door",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f14b9091b1f0936",
+      "sourceHash": "fnv1a64:45dc3bd039915319",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vātil*, then *vāy*, and hear what a doorway is named for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ippōḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ippōḷ*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4aaf18e45d38fbe2",
+      "sourceHash": "fnv1a64:853347be1cbc74bd",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kasēra*, then *vātil*, the way in and the seat beyond it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read മറ്റന്നാൾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **മറ്റന്നാൾ**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a23651d4045dde1a",
+      "sourceHash": "fnv1a64:356bad99242f6b7b",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kōlaṁ*, then *vātil*, and put the drawing back where it is drawn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yātra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yātra*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1363ee22eaec31ff",
+      "sourceHash": "fnv1a64:e044d1bbf0576abe",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pūvŭ*, then *kōlaṁ*, the two things laid at a doorway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read പുറപ്പെടുക",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **പുറപ്പെടുക**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f079cb976899ef2a",
+      "sourceHash": "fnv1a64:35b170c1dbb7fe11",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *vātil*, *kasēra*, *kōlaṁ*, *pūvŭ*, *māla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say viṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *viṭa*]"
             }
           ]
         },

@@ -9,7 +9,7 @@ headword: "ಪಾತ್ರೆ"
 gloss: "a vessel, a cooking pot"
 romanization: "pātre"
 concept_tag: KA-NOUN-VESSEL
-prerequisites: [KA-C56-knife]
+prerequisites: [KA-C56-knife, KA-C54-root]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C56-HOUSE-04]
 practises:
-  knowledge: [KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C56-HOUSE-04]
+  knowledge: [KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C56-HOUSE-04, KA-LEX-C54-TREE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada carries the whole set. ಪಾತ್ರೆ in the kitchen is the vessel; 
 Four, and this one keeps three meanings in one shape.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C56-HOUSE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C56-HOUSE-04, KA-LEX-C54-TREE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pātre*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pātre*, then *nīru*, and say which one holds the other]
+- [YOU RECALL: read **ಬೇರು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C56-HOUSE-04] -->

@@ -9,7 +9,7 @@ headword: "എണ്ണ"
 gloss: "oil"
 romanization: "eṇṇa"
 concept_tag: ML-NOUN-OIL
-prerequisites: [ML-C61-coconut]
+prerequisites: [ML-C61-coconut, ML-C59-sand]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C61-SHELF-02]
 practises:
-  knowledge: [ML-LEX-C60-ANIMAL-05, ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02]
+  knowledge: [ML-LEX-C60-ANIMAL-05, ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C59-AIR-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The doubled ണ in the middle is a long consonant: hold it, the way *katti*, the
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-05, ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-05, ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C59-AIR-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *eṇṇa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tēṅṅa*, then *eṇṇa*, and say which one is pressed out of the other]
+- [YOU RECALL: read **മണൽ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-05, ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02] -->

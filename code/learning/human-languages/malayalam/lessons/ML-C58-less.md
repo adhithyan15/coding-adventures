@@ -9,7 +9,7 @@ headword: "കുറവ്"
 gloss: "less, a shortage"
 romanization: "kuṟavŭ"
 concept_tag: ML-WORD-LESS
-prerequisites: [ML-C58-more]
+prerequisites: [ML-C58-more, ML-C56-basket]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C58-ANSWER-02]
 practises:
-  knowledge: [ML-LEX-C57-FRAME-05, ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02]
+  knowledge: [ML-LEX-C57-FRAME-05, ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C56-HOUSE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The റ here is the hard trilled one you met in the rock-word, and the ŭ closes
 Two, and they are opposites built from the same parts.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-05, ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-05, ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C56-HOUSE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kuṟavŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kūṭutal*, then *kuṟavŭ*, and hear the two tails matching]
+- [YOU RECALL: read **കൊട്ട**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-05, ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02] -->

@@ -9,7 +9,7 @@ headword: দুঃখিত
 romanization: dukkhito
 gloss: sorry — built on a word two dictionaries explain two different ways, and a prefix with a real Greek cousin
 concept_tag: COURTESY-SORRY
-prerequisites: [BN-C13-doya-kore]
+prerequisites: [BN-C13-doya-kore, BN-C11-bhai]
 sounds: [visarga-breath]
 roots: [dus-bad, kha-disputed]
 etymology_hook: "দুঃখিত is Sanskrit দুঃখিত duHkhita, built on দুঃখ duHkha, 'sorrow, suffering' = দুঃ/দুস্ dus- 'bad, difficult' plus খ kha; dus- is secure, PIE dus-, the same prefix inside Greek dys- (dystopia, dysfunctional); what kha itself contributed is genuinely disputed — grammarians' tradition says 'a bad axle-hole', an uncomfortable ride, set against sukha's 'good axle-hole', but modern Sanskritists including Mayrhofer treat that story with real skepticism"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C13-DUKKHITO-01]
 practises:
-  knowledge: [BN-LEX-C13-DOYAKORE-01, BN-GRAMMAR-C13-KORE-02, BN-LEX-C12-HRIDOY-01, BN-LEX-C13-DUKKHITO-01]
+  knowledge: [BN-LEX-C13-DOYAKORE-01, BN-GRAMMAR-C13-KORE-02, BN-LEX-C12-HRIDOY-01, BN-LEX-C13-DUKKHITO-01, BN-LEX-C11-BHAI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -71,13 +71,14 @@ grafted onto a word whose real root is lost. দুঃ's cousin is real; খ's i
 story, reported and not settled.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C13-DUKKHITO-01, BN-LEX-C13-DOYAKORE-01, BN-GRAMMAR-C13-KORE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C13-DUKKHITO-01, BN-LEX-C13-DOYAKORE-01, BN-GRAMMAR-C13-KORE-02, BN-LEX-C11-BHAI-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "dukkhito" — sorry]
 - [YOU SAY: "āmi dukkhito" — I'm sorry]
 - [YOU SAY: the secure half and its Greek cousin — "dus- … dystopia"]
 - [YOU SAY: last lesson's request again — "doya kore bôshun"]
+- [YOU RECALL: read **ভাই**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C13-DUKKHITO-01, BN-GRAMMAR-C13-KORE-02, BN-LEX-C12-HRIDOY-01] -->

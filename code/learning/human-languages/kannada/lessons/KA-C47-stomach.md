@@ -9,7 +9,7 @@ headword: "ಹೊಟ್ಟೆ"
 gloss: "the stomach, the belly"
 romanization: "hoṭṭe"
 concept_tag: KA-NOUN-STOMACH
-prerequisites: [KA-C47-finger]
+prerequisites: [KA-C47-finger, KA-C45-wife]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C47-BODY-05]
 practises:
-  knowledge: [KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05]
+  knowledge: [KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-WIFE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Five body words, and three of them — ಹಲ್ಲು, ಹೊಟ್ಟೆ, and 
 Five more body words: a leg, a tooth, hair, a finger, the belly.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05, KA-LEX-WIFE] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hoṭṭe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then the three that begin with *h*]
+- [YOU RECALL: say *heṇḍati*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C47-BODY-04, KA-LEX-C47-BODY-05] -->

@@ -9,7 +9,7 @@ headword: "ಇನ್ನೂ"
 gloss: "still, yet"
 romanization: "innū"
 concept_tag: KA-WORD-STILL
-prerequisites: [KA-C64-also]
+prerequisites: [KA-C64-also, KA-C62-rope]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C64-JOIN-03]
 practises:
-  knowledge: [KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03]
+  knowledge: [KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C62-MADE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It stacks with the measuring words from the replies chapter. ಇನ್ನೂ ಸ
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C62-MADE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *innū*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *svalpa*, then *innū svalpa*, and say which one asks for more]
+- [YOU RECALL: say *hagga*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 68,
-  "sourceHash": "fnv1a64:164f955b35a78941",
+  "sourceHash": "fnv1a64:b4819d0273010819",
   "lessonIds": [
     "KA-S135-letter-a",
     "KA-C68-is-not",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "kannada/narration/ch68.txt",
   "json": "kannada/narration/ch68.json",
-  "textHash": "fnv1a64:dbfa7303515a6f07",
-  "jsonHash": "fnv1a64:c28420b97a9ac822",
+  "textHash": "fnv1a64:15f515430ceff430",
+  "jsonHash": "fnv1a64:9b0e2b3a1649b079",
   "findings": []
 }

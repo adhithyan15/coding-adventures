@@ -9,7 +9,7 @@ headword: "ಇನ್ನೊಂದು"
 gloss: "another one"
 romanization: "innondu"
 concept_tag: KA-DET-ANOTHER
-prerequisites: [KA-C70-i-think, KA-C07-ondu, KA-C64-still, KA-C55-river, KA-C37-kannu, KA-C36-magalu, KA-C36-maga]
+prerequisites: [KA-C70-i-think, KA-C07-ondu, KA-C64-still, KA-C55-river, KA-C37-kannu, KA-C36-magalu, KA-C36-maga, KA-C69-is-it]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C71-MORE-01, KA-GRAMMAR-C71-MORE-02]
 practises:
-  knowledge: [KA-GRAMMAR-C71-MORE-02, KA-LEX-C07-ONDU-01, KA-LEX-C36-MAGA-01, KA-LEX-C36-MAGALU-01, KA-LEX-C37-KANNU-01, KA-LEX-C39-CHAHA-01, KA-LEX-C55-ROAD-01, KA-LEX-C64-JOIN-03, KA-LEX-C67-LINK-01, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-06, KA-LEX-C71-MORE-01, KA-PRAGMATICS-C70-TELL-07]
+  knowledge: [KA-GRAMMAR-C71-MORE-02, KA-LEX-C07-ONDU-01, KA-LEX-C36-MAGA-01, KA-LEX-C36-MAGALU-01, KA-LEX-C37-KANNU-01, KA-LEX-C39-CHAHA-01, KA-LEX-C55-ROAD-01, KA-LEX-C64-JOIN-03, KA-LEX-C67-LINK-01, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-06, KA-LEX-C71-MORE-01, KA-PRAGMATICS-C70-TELL-07, KA-LEX-C69-ASK-01, KA-GRAMMAR-C69-ASK-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -65,7 +65,7 @@ thing out of the first rather than name it fresh.
 A second helping, and a way to talk about two things one at a time.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C71-MORE-02, KA-LEX-C07-ONDU-01, KA-LEX-C36-MAGA-01, KA-LEX-C36-MAGALU-01, KA-LEX-C37-KANNU-01, KA-LEX-C39-CHAHA-01, KA-LEX-C55-ROAD-01, KA-LEX-C64-JOIN-03, KA-LEX-C67-LINK-01, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-06, KA-LEX-C71-MORE-01, KA-PRAGMATICS-C70-TELL-07] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C71-MORE-02, KA-LEX-C07-ONDU-01, KA-LEX-C36-MAGA-01, KA-LEX-C36-MAGALU-01, KA-LEX-C37-KANNU-01, KA-LEX-C39-CHAHA-01, KA-LEX-C55-ROAD-01, KA-LEX-C64-JOIN-03, KA-LEX-C67-LINK-01, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-06, KA-LEX-C71-MORE-01, KA-PRAGMATICS-C70-TELL-07, KA-LEX-C69-ASK-01, KA-GRAMMAR-C69-ASK-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ondu*, then *innondu*]
@@ -75,6 +75,7 @@ A second helping, and a way to talk about two things one at a time.
 - [YOU RECALL: say *mattu* once more]
 - [YOU RECALL: say *hēḷu* once more]
 - [YOU RECALL: from much earlier — say *nadi*, *kaṇṇu*, *magaḷu*, *maga*, and say what each one means]
+- [YOU RECALL: say *gottā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C71-MORE-02, KA-LEX-C07-ONDU-01, KA-LEX-C36-MAGA-01, KA-LEX-C36-MAGALU-01, KA-LEX-C37-KANNU-01, KA-LEX-C39-CHAHA-01, KA-LEX-C55-ROAD-01, KA-LEX-C64-JOIN-03, KA-LEX-C67-LINK-01, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-06, KA-LEX-C71-MORE-01, KA-PRAGMATICS-C70-TELL-07] -->

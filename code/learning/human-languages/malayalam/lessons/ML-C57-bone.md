@@ -9,7 +9,7 @@ headword: "എല്ല്"
 gloss: "a bone"
 romanization: "ellŭ"
 concept_tag: ML-NOUN-BONE
-prerequisites: [ML-C57-nail]
+prerequisites: [ML-C57-nail, ML-C55-field]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C57-FRAME-05]
 practises:
-  knowledge: [ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C57-FRAME-04, ML-LEX-C57-FRAME-05]
+  knowledge: [ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C57-FRAME-04, ML-LEX-C57-FRAME-05, ML-LEX-C55-GROUND-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The doubled *ll* is held, and the ŭ closes it, so the whole word is over in abo
 Five, and the frame is done: the neck, the back, a lip, a nail, a bone.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C57-FRAME-04, ML-LEX-C57-FRAME-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C57-FRAME-04, ML-LEX-C57-FRAME-05, ML-LEX-C55-GROUND-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ellŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *kaḻuttŭ*, *mutukŭ*, *cuṇṭŭ*, *nakhaṁ*, *ellŭ*]
+- [YOU RECALL: say *vayal*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C57-FRAME-04, ML-LEX-C57-FRAME-05] -->

@@ -9,7 +9,7 @@ headword: "വയറ്"
 gloss: "the stomach, the belly"
 romanization: "vayaṟŭ"
 concept_tag: ML-NOUN-STOMACH
-prerequisites: [ML-C47-finger]
+prerequisites: [ML-C47-finger, ML-C45-wife]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C47-BODY-05]
 practises:
-  knowledge: [ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-C47-BODY-04, ML-LEX-C47-BODY-05]
+  knowledge: [ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-C47-BODY-04, ML-LEX-C47-BODY-05, ML-LEX-WIFE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The ends of these words are worth a moment as well. This one closes on റ് , 
 Five, and the run is closed: a leg, a tooth, hair, a finger, a belly.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-C47-BODY-04, ML-LEX-C47-BODY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-C47-BODY-04, ML-LEX-C47-BODY-05, ML-LEX-WIFE] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vayaṟŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *kāl*, *pallŭ*, *muṭi*, *viral*, *vayaṟŭ*]
+- [YOU RECALL: say *bhārya*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-C47-BODY-04, ML-LEX-C47-BODY-05] -->

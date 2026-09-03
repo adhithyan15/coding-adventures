@@ -9,7 +9,7 @@ headword: "ഇത്"
 gloss: "this one — the thing near me"
 romanization: "itŭ"
 concept_tag: ML-DEIXIS-THIS
-prerequisites: []
+prerequisites: [ML-C37-chevi, ML-C37-mookku]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C41-DEIXIS-01]
 practises:
-  knowledge: [ML-LEX-C41-DEIXIS-01]
+  knowledge: [ML-LEX-C41-DEIXIS-01, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-01, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ഇത്" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *cevi*, then read **മൂക്ക്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-01] -->

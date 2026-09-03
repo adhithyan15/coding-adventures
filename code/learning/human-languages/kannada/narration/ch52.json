@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:56ad40831f48d2aa",
+  "sourceHash": "fnv1a64:a48961a12bc9330f",
   "lessons": [
     {
       "id": "KA-C52-door",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:521ac95c213d8344",
+      "sourceHash": "fnv1a64:a25eb361a14e52f3",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bāgilu*, then *bāyi*, and hear the *b* and the *v* trade places]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say īga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *īga*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:130f375f4a387635",
+      "sourceHash": "fnv1a64:6a4cf3eec0a30786",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kuḷitukō*, then *kurci* — the command, then the thing it needs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ನಾಡಿದ್ದು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ನಾಡಿದ್ದು**]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cabb79e20ff58623",
+      "sourceHash": "fnv1a64:29f6aeee600258d2",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *raṅgōli*, then *dīpa*, and name the row inside each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say prayāṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *prayāṇa*]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62f5c8fd7e13b013",
+      "sourceHash": "fnv1a64:daecaf3ce887b07e",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *hūvu*, then *haṇṇu* and *hallu*, three inherited words with one *h* each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಹೊರಡು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಹೊರಡು**]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54a4194d7cabe4fe",
+      "sourceHash": "fnv1a64:d4d7ada7fd2c469d",
       "notice": null,
       "blocks": [
         {
@@ -598,6 +634,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *hūvu* and *hūmāle* one after the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bīḷkoḍuge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bīḷkoḍuge*]"
             }
           ]
         },

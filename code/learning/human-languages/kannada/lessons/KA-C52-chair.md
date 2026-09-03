@@ -9,7 +9,7 @@ headword: "ಕುರ್ಚಿ"
 gloss: "a chair"
 romanization: "kurci"
 concept_tag: KA-NOUN-CHAIR
-prerequisites: [KA-C52-door]
+prerequisites: [KA-C52-door, KA-C50-day-after]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C52-WELCOME-02]
 practises:
-  knowledge: [KA-LEX-C51-COURTESY-05, KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02]
+  knowledge: [KA-LEX-C51-COURTESY-05, KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C50-LEAVE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The word was borrowed because the object was. A Kannada household ate, and to a 
 Two: a door and a chair.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-05, KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-05, KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C50-LEAVE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kurci*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kuḷitukō*, then *kurci* — the command, then the thing it needs]
+- [YOU RECALL: read **ನಾಡಿದ್ದು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-05, KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02] -->

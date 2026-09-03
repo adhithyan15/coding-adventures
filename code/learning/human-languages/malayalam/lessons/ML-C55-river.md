@@ -9,7 +9,7 @@ headword: "പുഴ"
 gloss: "a river"
 romanization: "puḻa"
 concept_tag: ML-NOUN-RIVER
-prerequisites: [ML-C54-seed]
+prerequisites: [ML-C54-seed, ML-C53-sky]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C55-GROUND-01]
 practises:
-  knowledge: [ML-LEX-C54-TREE-04, ML-LEX-C54-TREE-05, ML-LEX-C55-GROUND-01]
+  knowledge: [ML-LEX-C54-TREE-04, ML-LEX-C54-TREE-05, ML-LEX-C55-GROUND-01, ML-LEX-C53-SKY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The borrowed നദി (*nadi*) is the formal one, and it is what a textbook pri
 The first of five things underfoot.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-04, ML-LEX-C54-TREE-05, ML-LEX-C55-GROUND-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-04, ML-LEX-C54-TREE-05, ML-LEX-C55-GROUND-01, ML-LEX-C53-SKY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *puḻa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vittŭ*, then *puḻa*, and hold the ഴ a moment longer than feels natural]
+- [YOU RECALL: say *ākāśaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-04, ML-LEX-C54-TREE-05, ML-LEX-C55-GROUND-01] -->

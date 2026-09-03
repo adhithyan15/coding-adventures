@@ -9,7 +9,7 @@ headword: কালো
 romanization: kalo
 gloss: black — the same word Sanskrit uses for time, and for death
 concept_tag: BN-COLOR-BLACK
-prerequisites: [BN-C14-nil]
+prerequisites: [BN-C14-nil, BN-C13-dukkhito]
 sounds: [o-vowel-sign]
 roots: [kala-time-black-death]
 etymology_hook: "কালো is built on Sanskrit কাল kAla, a word that covers both 'black/dark' and 'time' -- the identical root Hindi's kaalaa carries, tied in both languages to the same cultural story: time devours everything, so that devouring is imagined as dark, and the same word names the goddess KAlI and stands as an epithet of Yama, the god of death; whether 'black' and 'time' are truly one root or two ancient words later fused by poetry and theology is a real, still-debated question, reported here rather than settled"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C14-KALO-01]
 practises:
-  knowledge: [BN-LEX-C14-NIL-01, BN-LEX-C14-KALO-01]
+  knowledge: [BN-LEX-C14-NIL-01, BN-LEX-C14-KALO-01, BN-LEX-C13-DUKKHITO-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -66,12 +66,13 @@ linguists — the cultural connection is certain; the precise etymology
 underneath it is not.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-KALO-01, BN-LEX-C14-NIL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-KALO-01, BN-LEX-C14-NIL-01, BN-LEX-C13-DUKKHITO-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kālo" — black]
 - [YOU SAY: "kālo chā" — black tea]
 - [YOU SAY: what else কাল means — "time," and by extension, death]
+- [YOU RECALL: say *dukkhito*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-KALO-01] -->

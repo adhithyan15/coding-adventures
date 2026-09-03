@@ -9,7 +9,7 @@ headword: ನಾಲ್ಕು
 gloss: four — and the first stacked consonant you can read
 romanization: "nālku"
 concept_tag: KA-NUMBER-FOUR
-prerequisites: [KA-C07-muuru, KA-S07-letter-ra]
+prerequisites: [KA-C07-muuru, KA-S07-letter-ra, KA-C06-dative-ge]
 sounds: [long-aa, kannada-virama-ottu]
 roots: [proto-dravidian-numbers]
 etymology_hook: "Tamil nanku and Kannada naalku differ in one consonant, and the virama you already read is what holds naalku together"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C07-NAALKU-01]
 practises:
-  knowledge: [KA-LEX-C07-NAALKU-01, KA-LEX-C07-MUURU-01, KA-SCRIPT-RECOG-01, KA-SCRIPT-RECOG-03]
+  knowledge: [KA-LEX-C07-NAALKU-01, KA-LEX-C07-MUURU-01, KA-SCRIPT-RECOG-01, KA-SCRIPT-RECOG-03, KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -50,12 +50,13 @@ the vowel away) · **ಕು** (*ku*). Four is where the virama earns its keep �
 what lets *l* and *k* sit together with no vowel between them.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-NAALKU-01, KA-SCRIPT-RECOG-01, KA-SCRIPT-RECOG-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-NAALKU-01, KA-SCRIPT-RECOG-01, KA-SCRIPT-RECOG-03, KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nālku"]
 - [YOU LOOK: at ನಾಲ್ಕು and find the ್ that joins ಲ to ಕ]
 - [YOU SAY: the count so far — "ondu, eraḍu, mūru, nālku"]
+- [YOU RECALL: read **-ಗೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-NAALKU-01, KA-SCRIPT-RECOG-03] -->

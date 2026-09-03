@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 60,
-  "sourceHash": "fnv1a64:2ceb8a7f27805d9c",
+  "sourceHash": "fnv1a64:167dd526895b21dc",
   "lessonIds": [
     "ML-C60-cow",
     "ML-C60-goat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch60.txt",
   "json": "malayalam/narration/ch60.json",
-  "textHash": "fnv1a64:524be6bbab45810e",
-  "jsonHash": "fnv1a64:c9be5c5a61226a32",
+  "textHash": "fnv1a64:c981215d4e2df30f",
+  "jsonHash": "fnv1a64:aaacd423a7ed285c",
   "findings": []
 }

@@ -9,7 +9,7 @@ headword: "മുതുക്"
 gloss: "the back"
 romanization: "mutukŭ"
 concept_tag: ML-NOUN-BACK
-prerequisites: [ML-C57-neck]
+prerequisites: [ML-C57-neck, ML-C55-rock]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C57-FRAME-02]
 practises:
-  knowledge: [ML-LEX-C56-HOUSE-05, ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02]
+  knowledge: [ML-LEX-C56-HOUSE-05, ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C55-GROUND-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It shows up in the ordinary phrase for carrying a child astride the hip or the b
 Two: the neck, and what runs down from it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-05, ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-05, ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C55-GROUND-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mutukŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kaḻuttŭ*, then *mutukŭ*, and place each one with a hand]
+- [YOU RECALL: read **പാറ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-05, ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02] -->

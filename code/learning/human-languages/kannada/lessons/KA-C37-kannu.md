@@ -9,7 +9,7 @@ headword: ಕಣ್ಣು
 gloss: eye — matching Telugu almost letter for letter, and Tamil and Malayalam nearly as closely
 romanization: kaṇṇu
 concept_tag: KA-EYE
-prerequisites: [KA-C36-magalu, KA-C13-dehada-bhagagalu]
+prerequisites: [KA-C36-magalu, KA-C13-dehada-bhagagalu, KA-C33-bare]
 sounds: [kannada-retroflex-nna, u-vowel-sign]
 roots: [proto-dravidian-kan-eye]
 etymology_hook: "ಕಣ್ಣು continues Proto-Dravidian *kaṇ, 'eye' — Tamil கண் (kaṇ), Malayalam കണ്ണ് (kaṇṇŭ) and, closest of all, Telugu కన్ను (kannu), nearly the same word letter for letter across a family whose sisters otherwise diverge sharply; this is the first body word since Chapter 13's ತಲೆ and ಕೈ"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02]
 practises:
-  knowledge: [KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03, KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02]
+  knowledge: [KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03, KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02, KA-LEX-C33-BARE-01, KA-ETYMON-C33-BARE-02, KA-GRAMMAR-C33-BARE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -57,7 +57,7 @@ on this one, the same closeness the last chapter found between Kannada's
 *magaḷu* and Tamil and Malayalam's own *makaḷ*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02, KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03, KA-LEX-C13-DEHADA-BHAGAGALU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02, KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03, KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C33-BARE-01, KA-ETYMON-C33-BARE-02, KA-GRAMMAR-C33-BARE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nanna kaṇṇu" — my eye]
@@ -65,6 +65,7 @@ on this one, the same closeness the last chapter found between Kannada's
   kannu"]
 - [YOU SAY: two more near-matches — "magaḷu, makaḷ … kaṇṇu, kaṇ"]
 - [YOU SAY: three body words now — "tale, kai, kaṇṇu"]
+- [YOU RECALL: say *bare*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02, KA-LEX-C36-MAGALU-01, KA-GRAMMAR-C36-MAGALU-02, KA-ETYMON-C36-MAGALU-03, KA-LEX-C13-DEHADA-BHAGAGALU-01] -->

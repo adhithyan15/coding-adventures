@@ -9,7 +9,7 @@ headword: "പോരും"
 gloss: "that will do, that is enough"
 romanization: "pōruṁ"
 concept_tag: ML-WORD-THAT-WILL-DO
-prerequisites: [ML-C58-no-need]
+prerequisites: [ML-C58-no-need, ML-C56-box]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C58-ANSWER-05]
 practises:
-  knowledge: [ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C58-ANSWER-04, ML-LEX-C58-ANSWER-05]
+  knowledge: [ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C58-ANSWER-04, ML-LEX-C58-ANSWER-05, ML-LEX-C56-HOUSE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The ം at the end is the anusvara, the humming close you have met on the sky-wo
 Five, and you can answer a served plate five ways: more, less, a little, no need, that will do.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C58-ANSWER-04, ML-LEX-C58-ANSWER-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C58-ANSWER-04, ML-LEX-C58-ANSWER-05, ML-LEX-C56-HOUSE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pōruṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *kūṭutal*, *kuṟavŭ*, *kuṟaccŭ*, *vēṇṭa*, *pōruṁ*]
+- [YOU RECALL: say *peṭṭi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02, ML-LEX-C58-ANSWER-03, ML-LEX-C58-ANSWER-04, ML-LEX-C58-ANSWER-05] -->

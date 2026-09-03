@@ -9,7 +9,7 @@ headword: "പെട്ടി"
 gloss: "a box"
 romanization: "peṭṭi"
 concept_tag: ML-NOUN-BOX
-prerequisites: [ML-C56-vessel]
+prerequisites: [ML-C56-vessel, ML-C54-seed]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C56-HOUSE-05]
 practises:
-  knowledge: [ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C56-HOUSE-04, ML-LEX-C56-HOUSE-05]
+  knowledge: [ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C56-HOUSE-04, ML-LEX-C56-HOUSE-05, ML-LEX-C54-TREE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A word that keeps accepting new referents without changing shape is a sign of a 
 Five, and the house is furnished: a mat, a basket, a knife, a vessel, a box.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C56-HOUSE-04, ML-LEX-C56-HOUSE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C56-HOUSE-04, ML-LEX-C56-HOUSE-05, ML-LEX-C54-TREE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *peṭṭi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *pāya*, *koṭṭa*, *katti*, *pātraṁ*, *peṭṭi*]
+- [YOU RECALL: say *vittŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C56-HOUSE-04, ML-LEX-C56-HOUSE-05] -->

@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Asking, and Asking Why",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e14bf03269260379",
+  "sourceHash": "fnv1a64:40e3616231060b8d",
   "lessons": [
     {
       "id": "KA-S136-vowel-sign-uu",
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c00097da4fffde6",
+      "sourceHash": "fnv1a64:03999865d059df4a",
       "notice": null,
       "blocks": [
         {
@@ -494,6 +494,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *candra*, *kēḷu*, *nōḍu*, *koḍu*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಅಥವಾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಅಥವಾ**]"
             }
           ]
         },
@@ -529,7 +538,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:275d9052e636dcce",
+      "sourceHash": "fnv1a64:411e58754b44ea95",
       "notice": null,
       "blocks": [
         {
@@ -656,6 +665,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *cukki*, *nillu*, *kuḷitukō*, *bā*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ādare, then read ನಾನೂ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ādare*, then read **ನಾನೂ**]"
             }
           ]
         },

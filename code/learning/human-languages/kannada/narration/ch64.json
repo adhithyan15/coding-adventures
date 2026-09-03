@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Joining Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dfd1cafce09fbe7c",
+  "sourceHash": "fnv1a64:91b44e0683628510",
   "lessons": [
     {
       "id": "KA-C64-after",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1cac07daeee31cf3",
+      "sourceHash": "fnv1a64:d49c2df79e7b02fc",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *āmēle*, then *matte sigōṇa*, and say which one leaves the time open]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nūlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nūlu*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fb9dc974c8675e0",
+      "sourceHash": "fnv1a64:dec21860b8a0135f",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nānu*, then *nānu kūḍa*, and say which one adds somebody]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಸೂಜಿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಸೂಜಿ**]"
             }
           ]
         },
@@ -267,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d0a960e80ca180f",
+      "sourceHash": "fnv1a64:58c3d6d6b065c8d8",
       "notice": null,
       "blocks": [
         {
@@ -354,6 +372,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *svalpa*, then *innū svalpa*, and say which one asks for more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hagga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hagga*]"
             }
           ]
         },
@@ -389,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8e3de41782ce0a2",
+      "sourceHash": "fnv1a64:71f3ef39edec86ab",
       "notice": null,
       "blocks": [
         {
@@ -476,6 +503,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *īga*, then *bēga*, and say which one has not happened yet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಪೊರಕೆ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಪೊರಕೆ**]"
             }
           ]
         },
@@ -511,7 +547,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:203a717725c5721e",
+      "sourceHash": "fnv1a64:33dec9b748be9ecd",
       "notice": null,
       "blocks": [
         {
@@ -598,6 +634,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *hāge*, then *hāgādare*, and say which came from which]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say koḍe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *koḍe*]"
             }
           ]
         },

@@ -9,7 +9,7 @@ headword: "പഴം"
 gloss: "a fruit"
 romanization: "paḻaṁ"
 concept_tag: ML-NOUN-FRUIT
-prerequisites: [ML-C45-wife]
+prerequisites: [ML-C45-wife, ML-C43-stand]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C46-ASK-01]
 practises:
-  knowledge: [ML-LEX-HUSBAND, ML-LEX-WIFE, ML-LEX-C46-ASK-01]
+  knowledge: [ML-LEX-HUSBAND, ML-LEX-WIFE, ML-LEX-C46-ASK-01, ML-LEX-STAND]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The ഴ in the middle is the letter this book has already called Malayalam's own
 The first of five things you might ask someone for.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-HUSBAND, ML-LEX-WIFE, ML-LEX-C46-ASK-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-HUSBAND, ML-LEX-WIFE, ML-LEX-C46-ASK-01, ML-LEX-STAND] -->
 
 [PAUSE 1s]
 - [YOU SAY: *paḻaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *paḻaṁ*, then *dayavāyi paḻaṁ tarū* — "please give a fruit"]
+- [YOU RECALL: say *nilkkū*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-HUSBAND, ML-LEX-WIFE, ML-LEX-C46-ASK-01] -->

@@ -9,7 +9,7 @@ headword: "ಖಂಡಿತ"
 gloss: "certainly"
 romanization: "khaṇḍita"
 concept_tag: KA-WORD-CERTAINLY
-prerequisites: [KA-C49-enough]
+prerequisites: [KA-C49-enough, KA-C47-hair]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C49-REPLY-03]
 practises:
-  knowledge: [KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03]
+  knowledge: [KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C47-BODY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The road from there to 'certainly' is worth walking. A matter that has been cut 
 Three: true, enough, certainly.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C47-BODY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *khaṇḍita*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *khaṇḍita* as an answer to an invitation, then *nija* as an answer to a claim]
+- [YOU RECALL: say *kūdalu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03] -->

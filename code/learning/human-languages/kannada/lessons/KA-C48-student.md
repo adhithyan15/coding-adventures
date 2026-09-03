@@ -9,7 +9,7 @@ headword: "ವಿದ್ಯಾರ್ಥಿ"
 gloss: "a student"
 romanization: "vidyārthi"
 concept_tag: KA-NOUN-STUDENT
-prerequisites: [KA-C48-teacher]
+prerequisites: [KA-C48-teacher, KA-C46-cloth]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C48-ROLE-02]
 practises:
-  knowledge: [KA-LEX-C47-BODY-05, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02]
+  knowledge: [KA-LEX-C47-BODY-05, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C46-ASK-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Two Sanskrit pieces: *vidyā*, knowledge, and *arthin*, one who seeks a thing. A
 Two: a teacher and a student.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-05, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-05, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C46-ASK-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vidyārthi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śikṣaka*, then *vidyārthi*, and say which of the two is doing the seeking]
+- [YOU RECALL: read **ಬಟ್ಟೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-05, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02] -->

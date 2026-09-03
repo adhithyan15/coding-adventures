@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:498b8217e561b143",
+  "sourceHash": "fnv1a64:2200f62eb17c6716",
   "lessons": [
     {
       "id": "ML-C50-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70ca79adc36e2858",
+      "sourceHash": "fnv1a64:f6ef0773b8b46c44",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ippōḷ*, then *aṅṅane*, and hear the near and the far openers side by side]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say adhyāpakan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *adhyāpakan*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b760f8670f01261",
+      "sourceHash": "fnv1a64:1af3e03a08216b59",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ippōḷ*, then *maṟṟannāḷ*, the nearest time and a far one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read വിദ്യാർത്ഥി",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **വിദ്യാർത്ഥി**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6901fdb3330fb867",
+      "sourceHash": "fnv1a64:7a9b3e3853847f7e",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *yātra*, then *yātra paṟayuka*, the noun and the leave-taking built on it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vaidyan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vaidyan*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:125759b6ea4941b6",
+      "sourceHash": "fnv1a64:4eed4abbbadabf18",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *puṟappeṭuka*, then *jōli ceyyuka*, two verbs built the same way]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read കർഷകൻ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **കർഷകൻ**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80d39f144098a12d",
+      "sourceHash": "fnv1a64:a90d2563583653ed",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *ippōḷ*, *maṟṟannāḷ*, *yātra*, *puṟappeṭuka*, *viṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say atithi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *atithi*]"
             }
           ]
         },

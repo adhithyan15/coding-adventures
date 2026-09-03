@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Green and Yellow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9e3cd4dacd1d5e35",
+  "sourceHash": "fnv1a64:21b774ca664a2d5b",
   "lessons": [
     {
       "id": "ML-C22-paccha-manja",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7dbdf28cac8d241",
+      "sourceHash": "fnv1a64:10e33ced4ae5cf7e",
       "notice": null,
       "blocks": [
         {
@@ -98,6 +98,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the contrast — paccha and mañña are NOT doublets of each other, unlike Telugu's pacca/pasupu]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ucca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ucca*]"
             }
           ]
         },

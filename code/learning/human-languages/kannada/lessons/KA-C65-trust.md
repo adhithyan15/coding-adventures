@@ -9,7 +9,7 @@ headword: "ನಂಬಿಕೆ"
 gloss: "trust"
 romanization: "nambike"
 concept_tag: KA-NOUN-TRUST
-prerequisites: [KA-C65-hesitancy]
+prerequisites: [KA-C65-hesitancy, KA-C63-pain]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C65-MANNERS-04]
 practises:
-  knowledge: [KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C65-MANNERS-04]
+  knowledge: [KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C65-MANNERS-04, KA-LEX-C63-HEALTH-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Set it beside ಗೌರವ from the courtesy chapter. ಗೌರವ can be given 
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C65-MANNERS-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C65-MANNERS-04, KA-LEX-C63-HEALTH-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nambike*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gaurava*, then *nambike*, and say which one is earned slowly]
+- [YOU RECALL: read **ನೋವು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C65-MANNERS-04] -->

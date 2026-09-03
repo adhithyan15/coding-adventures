@@ -9,7 +9,7 @@ headword: "വിരൽ"
 gloss: "a finger"
 romanization: "viral"
 concept_tag: ML-NOUN-FINGER
-prerequisites: [ML-C47-hair]
+prerequisites: [ML-C47-hair, ML-C45-husband]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C47-BODY-04]
 practises:
-  knowledge: [ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-C47-BODY-04]
+  knowledge: [ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-C47-BODY-04, ML-LEX-HUSBAND]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word ends in the same chillu ൽ as the leg-word, two chapters' worth of bod
 Four. A leg, a tooth, hair, a finger.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-C47-BODY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-C47-BODY-04, ML-LEX-HUSBAND] -->
 
 [PAUSE 1s]
 - [YOU SAY: *viral*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *viral*, then *kāl*, and hear the same chillu close both]
+- [YOU RECALL: read **ഭർത്താവ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-C47-BODY-04] -->

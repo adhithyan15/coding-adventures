@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 27,
-  "sourceHash": "fnv1a64:1614ca3f0cadb12e",
+  "sourceHash": "fnv1a64:e4cb08d4d3217576",
   "lessonIds": [
     "ML-C27-vaikunneram"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch27.txt",
   "json": "malayalam/narration/ch27.json",
-  "textHash": "fnv1a64:3a25be03cc8cc308",
-  "jsonHash": "fnv1a64:26c2550718118c90",
+  "textHash": "fnv1a64:0ca85386bd84037e",
+  "jsonHash": "fnv1a64:34e0f556081d94e9",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 9,
-  "sourceHash": "fnv1a64:3e27667e1b1fb2d3",
+  "sourceHash": "fnv1a64:e06cc365aeed0d51",
   "lessonIds": [
     "ML-C09-kshamikkanam",
     "ML-S04-vowel-sign-aa"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch09.txt",
   "json": "malayalam/narration/ch09.json",
-  "textHash": "fnv1a64:dd037ec9506802e4",
-  "jsonHash": "fnv1a64:a4b07b2db817b602",
+  "textHash": "fnv1a64:4132514d36d086e7",
+  "jsonHash": "fnv1a64:c71014be36bf0a35",
   "findings": []
 }

@@ -9,7 +9,7 @@ headword: ಸ್ನೇಹಿತ
 gloss: friend — built on the Sanskrit word for oil, sitting beside a native Dravidian word that means exactly the same thing
 romanization: snēhita
 concept_tag: KA-FRIEND
-prerequisites: [KA-C35-kutumba]
+prerequisites: [KA-C35-kutumba, KA-C32-tinnu, KA-C32-noodu, KA-C32-gottu]
 sounds: [conjunct-sna, kannada-vowel-sign-ee]
 roots: [sanskrit-sneha-oil-affection, dravidian-gel-friend]
 etymology_hook: "ಸ್ನೇಹಿತ is Sanskrit स्नेहित snēhita, built on स्नेह snēha — whose FIRST meaning is 'oil, unctuousness, smoothness,' and only from there 'affection, love,' the way a substance that lubricates became a word for whatever binds people smoothly together; Kannada also keeps a native Dravidian word for the same idea, ಗೆಳೆಯ geḷeya (male) and ಗೆಳತಿ geḷati (female), the everyday choice beside the Sanskrit one"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02]
 practises:
-  knowledge: [KA-LEX-C35-KUTUMBA-01, KA-ETYMON-C35-KUTUMBA-02, KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02]
+  knowledge: [KA-LEX-C35-KUTUMBA-01, KA-ETYMON-C35-KUTUMBA-02, KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02, KA-LEX-C32-TINNU-01, KA-GRAMMAR-C32-TINNU-02, KA-LEX-C32-NOODU-01, KA-GRAMMAR-C32-NOODU-02, KA-LEX-C32-GOTTU-01, KA-GRAMMAR-C32-GOTTU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,13 +60,14 @@ retire when the Sanskrit one arrived: **ಗೆಳೆಯ** (*geḷeya*, a male fr
 sitting right beside *snēhita* the way **ನೆರವು** sits beside *sahāya*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02, KA-LEX-C35-KUTUMBA-01, KA-ETYMON-C35-KUTUMBA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02, KA-LEX-C35-KUTUMBA-01, KA-ETYMON-C35-KUTUMBA-02, KA-LEX-C32-TINNU-01, KA-GRAMMAR-C32-TINNU-02, KA-LEX-C32-NOODU-01, KA-GRAMMAR-C32-NOODU-02, KA-LEX-C32-GOTTU-01, KA-GRAMMAR-C32-GOTTU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ivanu nanna snēhita" — he is my friend]
 - [YOU SAY: the loan, then the native pair — "snēhita … geḷeya, geḷati"]
 - [YOU SAY: oil, then affection — "snēha: oil … snēha: love"]
 - [YOU SAY: family, then friend — "kuṭumba … snēhita"]
+- [YOU RECALL: read **ತಿನ್ನು**, then say *nōḍu*, then read **ಗೊತ್ತು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02, KA-LEX-C35-KUTUMBA-01, KA-ETYMON-C35-KUTUMBA-02] -->

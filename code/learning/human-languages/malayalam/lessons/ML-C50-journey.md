@@ -9,7 +9,7 @@ headword: "യാത്ര"
 gloss: "a journey"
 romanization: "yātra"
 concept_tag: ML-NOUN-JOURNEY
-prerequisites: [ML-C50-day-after]
+prerequisites: [ML-C50-day-after, ML-C48-doctor]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C50-LEAVE-03]
 practises:
-  knowledge: [ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03]
+  knowledge: [ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C48-ROLE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada's ಪ್ರಯಾಣ (*prayāṇa*) is the same root with a prefix in fr
 Three. Now, the day after tomorrow, a journey.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C48-ROLE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *yātra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *yātra*, then *yātra paṟayuka*, the noun and the leave-taking built on it]
+- [YOU RECALL: say *vaidyan*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03] -->

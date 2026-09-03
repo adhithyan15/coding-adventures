@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "In Order To, and Being Able",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f2414eb1d7de8dea",
+  "sourceHash": "fnv1a64:de3f7811214c69d0",
   "lessons": [
     {
       "id": "KA-C73-very",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a80276f16f12fe1e",
+      "sourceHash": "fnv1a64:ea559ad4b122dd0a",
       "notice": null,
       "blocks": [
         {
@@ -146,6 +146,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *kuttige*, *āru*, *aidu*, *nālku*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ēkendare, then read ಇನ್ನೊಂದು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ēkendare*, then read **ಇನ್ನೊಂದು**]"
             }
           ]
         },
@@ -181,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5337661d4276c1f7",
+      "sourceHash": "fnv1a64:53c69fcee3392c34",
       "notice": null,
       "blocks": [
         {
@@ -319,6 +328,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *bennu*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಯಾವಾಗ, then say yāva, then read ಬಂದಾಗ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಯಾವಾಗ**, then say *yāva*, then read **ಬಂದಾಗ**]"
             }
           ]
         },

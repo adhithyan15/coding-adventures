@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Cloth, Shirt, Sari, and Glasses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e7db213a9c8ec31f",
+  "sourceHash": "fnv1a64:bda239609eaa106e",
   "lessons": [
     {
       "id": "BN-C15-kapor",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:704b3a20750b5aa6",
+      "sourceHash": "fnv1a64:3c774c47d354dd2c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -131,6 +131,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the family sharing this root — \"kāpoṛ … kapṛā … kapaḍā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say maf korben, then read স্বাগতম",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *maf korben*, then read **স্বাগতম**]"
             }
           ]
         },
@@ -166,7 +175,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c87b22abd770ead6",
+      "sourceHash": "fnv1a64:4c18b15275814259",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -269,6 +278,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the three Persian loans so far — \"lāl … shôbuj … jāmā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read লাল, then say nil, then read কালো",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **লাল**, then say *nil*, then read **কালো**]"
             }
           ]
         },
@@ -304,7 +322,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3d559db4bd8d361e",
+      "sourceHash": "fnv1a64:ea222e46e02000e0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -416,6 +434,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: three garments so far — \"kāpoṛ … jāmā … shāṛi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shada, then read সবুজ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shada*, then read **সবুজ**]"
             }
           ]
         },

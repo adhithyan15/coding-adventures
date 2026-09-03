@@ -9,7 +9,7 @@ headword: "ಕುತ್ತಿಗೆ"
 gloss: "the neck"
 romanization: "kuttige"
 concept_tag: KA-NOUN-NECK
-prerequisites: [KA-C56-box]
+prerequisites: [KA-C56-box, KA-C55-river]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C57-BODY-01]
 practises:
-  knowledge: [KA-LEX-C56-HOUSE-04, KA-LEX-C56-HOUSE-05, KA-LEX-C57-BODY-01]
+  knowledge: [KA-LEX-C56-HOUSE-04, KA-LEX-C56-HOUSE-05, KA-LEX-C57-BODY-01, KA-LEX-C55-ROAD-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ This chapter picks up where the leg and the tooth left off, and the run gets les
 The first of five more pieces of a person.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-04, KA-LEX-C56-HOUSE-05, KA-LEX-C57-BODY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-04, KA-LEX-C56-HOUSE-05, KA-LEX-C57-BODY-01, KA-LEX-C55-ROAD-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kuttige*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nanna kuttige* — "my neck" — with the possessing word in front]
+- [YOU RECALL: say *nadi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-04, KA-LEX-C56-HOUSE-05, KA-LEX-C57-BODY-01] -->

@@ -9,7 +9,7 @@ headword: "കോലം"
 gloss: "the pattern drawn at a doorway"
 romanization: "kōlaṁ"
 concept_tag: ML-NOUN-KOLAM
-prerequisites: [ML-C52-chair]
+prerequisites: [ML-C52-chair, ML-C50-journey]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C52-WELCOME-03]
 practises:
-  knowledge: [ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03]
+  knowledge: [ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C50-LEAVE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada names the same threshold drawing ರಂಗೋಲಿ (*raṅgōli*), a wo
 Three. A door, a chair, the pattern at the threshold.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C50-LEAVE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kōlaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kōlaṁ*, then *vātil*, and put the drawing back where it is drawn]
+- [YOU RECALL: say *yātra*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03] -->

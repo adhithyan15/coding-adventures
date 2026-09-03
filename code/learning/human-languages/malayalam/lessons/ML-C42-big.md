@@ -9,7 +9,7 @@ headword: "വലിയ"
 gloss: "big"
 romanization: "valiya"
 concept_tag: ML-ADJ-BIG
-prerequisites: []
+prerequisites: [ML-C39-paal]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C42-ADJ-01]
 practises:
-  knowledge: [ML-LEX-C42-ADJ-01]
+  knowledge: [ML-LEX-C42-ADJ-01, ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -47,11 +47,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-01, ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "വലിയ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *paal*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-01] -->

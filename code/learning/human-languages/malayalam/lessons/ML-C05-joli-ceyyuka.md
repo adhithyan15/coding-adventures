@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01]
 practises:
-  knowledge: [ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01]
+  knowledge: [ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01, ML-LEX-SAMSAARIKKUKA-01, ML-CONCEPT-C05-VERB-NEVER-AGREES-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,12 +65,13 @@ This "noun + *ceyyuka*" pattern is the twin of Hindi's "noun + *karnā*," Tamil'
 languages, two of them from an unrelated family, all landed on the same trick.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01, ML-LEX-SAMSAARIKKUKA-01, ML-CONCEPT-C05-VERB-NEVER-AGREES-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "jōli ceyyuka" (to work)]
 - [YOU SAY: "I work" — *ñān jōli ceyyunnu*]
 - [YOU SAY: the Tamil verb that is the *same word* as *ceyyuka* (*sey*)]
+- [YOU RECALL: say *saṁsārikkuka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 22,
-  "sourceHash": "fnv1a64:9e3cd4dacd1d5e35",
+  "sourceHash": "fnv1a64:21b774ca664a2d5b",
   "lessonIds": [
     "ML-C22-paccha-manja"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch22.txt",
   "json": "malayalam/narration/ch22.json",
-  "textHash": "fnv1a64:68e836fdd080f264",
-  "jsonHash": "fnv1a64:958a0ba593a83c72",
+  "textHash": "fnv1a64:1b2bf8b00e25cf75",
+  "jsonHash": "fnv1a64:e2fa93c1abf43295",
   "findings": []
 }

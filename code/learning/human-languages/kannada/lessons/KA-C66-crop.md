@@ -9,7 +9,7 @@ headword: "ಬೆಳೆ"
 gloss: "a crop"
 romanization: "beḷe"
 concept_tag: KA-NOUN-CROP
-prerequisites: [KA-C66-paddy]
+prerequisites: [KA-C66-paddy, KA-C64-soon]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C66-FIELD-04]
 practises:
-  knowledge: [KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C66-FIELD-04]
+  knowledge: [KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C66-FIELD-04, KA-LEX-C64-JOIN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The chain runs the length of this book by now. A ಬೀಜ goes into the ground,
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C66-FIELD-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C66-FIELD-04, KA-LEX-C64-JOIN-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *beḷe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bīja*, then *beḷe*, and say which one comes first]
+- [YOU RECALL: read **ಬೇಗ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C66-FIELD-04] -->

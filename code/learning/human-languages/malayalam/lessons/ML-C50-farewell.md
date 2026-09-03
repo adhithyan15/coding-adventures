@@ -9,7 +9,7 @@ headword: "വിട"
 gloss: "leave, a farewell"
 romanization: "viṭa"
 concept_tag: ML-NOUN-FAREWELL
-prerequisites: [ML-C50-set-out]
+prerequisites: [ML-C50-set-out, ML-C48-guest]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C50-LEAVE-05]
 practises:
-  knowledge: [ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C50-LEAVE-04, ML-LEX-C50-LEAVE-05]
+  knowledge: [ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C50-LEAVE-04, ML-LEX-C50-LEAVE-05, ML-LEX-C48-ROLE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada's word here, ಬೀಳ್ಕೊಡುಗೆ (*bīḷkoḍuge*), is longe
 Five, and the run is closed: now, the day after tomorrow, a journey, setting out, a farewell.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C50-LEAVE-04, ML-LEX-C50-LEAVE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C50-LEAVE-04, ML-LEX-C50-LEAVE-05, ML-LEX-C48-ROLE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *viṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *ippōḷ*, *maṟṟannāḷ*, *yātra*, *puṟappeṭuka*, *viṭa*]
+- [YOU RECALL: say *atithi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C50-LEAVE-04, ML-LEX-C50-LEAVE-05] -->

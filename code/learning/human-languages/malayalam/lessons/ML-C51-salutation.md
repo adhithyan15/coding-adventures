@@ -9,7 +9,7 @@ headword: "വന്ദനം"
 gloss: "a salutation"
 romanization: "vandanaṁ"
 concept_tag: ML-NOUN-SALUTATION
-prerequisites: [ML-C51-blessing]
+prerequisites: [ML-C51-blessing, ML-C49-just-so]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C51-COURTESY-05]
 practises:
-  knowledge: [ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C51-COURTESY-04, ML-LEX-C51-COURTESY-05]
+  knowledge: [ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C51-COURTESY-04, ML-LEX-C51-COURTESY-05, ML-LEX-C49-REPLY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada has ವಂದನೆ (*vandane*), and its own everyday greeting is built 
 Five, and the run is closed: gratitude, a favour, respect, a blessing, a salutation.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C51-COURTESY-04, ML-LEX-C51-COURTESY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C51-COURTESY-04, ML-LEX-C51-COURTESY-05, ML-LEX-C49-REPLY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vandanaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *kṛtajñata*, *upakāraṁ*, *bahumānaṁ*, *anugrahaṁ*, *vandanaṁ*]
+- [YOU RECALL: say *aṅṅane*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C51-COURTESY-04, ML-LEX-C51-COURTESY-05] -->

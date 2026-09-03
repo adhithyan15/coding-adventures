@@ -9,7 +9,7 @@ headword: "ಆಮೇಲೆ"
 gloss: "afterwards, later"
 romanization: "āmēle"
 concept_tag: KA-WORD-AFTERWARDS
-prerequisites: [KA-C63-health]
+prerequisites: [KA-C63-health, KA-C62-thread]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C64-JOIN-01]
 practises:
-  knowledge: [KA-LEX-C63-HEALTH-04, KA-LEX-C63-HEALTH-05, KA-LEX-C64-JOIN-01]
+  knowledge: [KA-LEX-C63-HEALTH-04, KA-LEX-C63-HEALTH-05, KA-LEX-C64-JOIN-01, KA-LEX-C62-MADE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Put it in front of a farewell you already own and you have a new one. ಆಮೇ�
 The first of five words that join one thing to the next.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-04, KA-LEX-C63-HEALTH-05, KA-LEX-C64-JOIN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-04, KA-LEX-C63-HEALTH-05, KA-LEX-C64-JOIN-01, KA-LEX-C62-MADE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *āmēle*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āmēle*, then *matte sigōṇa*, and say which one leaves the time open]
+- [YOU RECALL: say *nūlu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-04, KA-LEX-C63-HEALTH-05, KA-LEX-C64-JOIN-01] -->

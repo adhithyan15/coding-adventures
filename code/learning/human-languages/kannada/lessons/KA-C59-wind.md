@@ -9,7 +9,7 @@ headword: "ಗಾಳಿ"
 gloss: "wind, air"
 romanization: "gāḷi"
 concept_tag: KA-NOUN-WIND
-prerequisites: [KA-C58-thats-all]
+prerequisites: [KA-C58-thats-all, KA-C57-neck]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C59-GROUND-01]
 practises:
-  knowledge: [KA-LEX-C58-REPLY-04, KA-LEX-C58-REPLY-05, KA-LEX-C59-GROUND-01]
+  knowledge: [KA-LEX-C58-REPLY-04, KA-LEX-C58-REPLY-05, KA-LEX-C59-GROUND-01, KA-LEX-C57-BODY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Now put it beside the weather-word you already have. ಹವಾಮಾನ was buil
 The first of five things the weather does to the ground.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-04, KA-LEX-C58-REPLY-05, KA-LEX-C59-GROUND-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-04, KA-LEX-C58-REPLY-05, KA-LEX-C59-GROUND-01, KA-LEX-C57-BODY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gāḷi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gāḷi*, then *havāmāna*, and say which of the two you can feel]
+- [YOU RECALL: say *kuttige*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-04, KA-LEX-C58-REPLY-05, KA-LEX-C59-GROUND-01] -->

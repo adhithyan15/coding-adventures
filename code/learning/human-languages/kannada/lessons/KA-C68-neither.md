@@ -9,7 +9,7 @@ headword: "ಹಾಲೂ ಇಲ್ಲ, ನೀರೂ ಇಲ್ಲ"
 gloss: "neither milk nor water"
 romanization: "hālū illa, nīrū illa"
 concept_tag: KA-CONJ-NEITHER
-prerequisites: [KA-C68-is-not, KA-C67-and-too, KA-C52-rangoli, KA-C47-hair, KA-C47-tooth, KA-C47-leg]
+prerequisites: [KA-C68-is-not, KA-C67-and-too, KA-C52-rangoli, KA-C47-hair, KA-C47-tooth, KA-C47-leg, KA-C66-paddy]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-GRAMMAR-C68-DENY-04]
 practises:
-  knowledge: [KA-GRAMMAR-C67-LINK-06, KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-LEX-C01-ILLA-01, KA-LEX-C39-HAALU-01, KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C52-WELCOME-03, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-05, KA-LEX-C68-DENY-01]
+  knowledge: [KA-GRAMMAR-C67-LINK-06, KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-LEX-C01-ILLA-01, KA-LEX-C39-HAALU-01, KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C52-WELCOME-03, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-05, KA-LEX-C68-DENY-01, KA-LEX-C66-FIELD-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -58,7 +58,7 @@ And, or, but, both — and now neither. The whole of the joining ending's
 range in two lessons.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-06, KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-LEX-C01-ILLA-01, KA-LEX-C39-HAALU-01, KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C52-WELCOME-03, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-05, KA-LEX-C68-DENY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-06, KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-LEX-C01-ILLA-01, KA-LEX-C39-HAALU-01, KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C52-WELCOME-03, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-05, KA-LEX-C68-DENY-01, KA-LEX-C66-FIELD-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hālū nīrū* — both]
@@ -67,6 +67,7 @@ range in two lessons.
 - [YOU RECALL: say *alla*, then say what it denies that *illa* does not]
 - [YOU RECALL: say *athavā* once more]
 - [YOU RECALL: from much earlier — say *raṅgōli*, *kūdalu*, *hallu*, *kālu*, and say what each one means]
+- [YOU RECALL: read **ಭತ್ತ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-06, KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-LEX-C01-ILLA-01, KA-LEX-C39-HAALU-01, KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C52-WELCOME-03, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-05, KA-LEX-C68-DENY-01] -->

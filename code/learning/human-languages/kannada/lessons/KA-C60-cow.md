@@ -9,7 +9,7 @@ headword: "ಹಸು"
 gloss: "a cow"
 romanization: "hasu"
 concept_tag: KA-NOUN-COW
-prerequisites: [KA-C59-fire]
+prerequisites: [KA-C59-fire, KA-C58-a-little]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C60-ANIMAL-01]
 practises:
-  knowledge: [KA-LEX-C59-GROUND-04, KA-LEX-C59-GROUND-05, KA-LEX-C60-ANIMAL-01]
+  knowledge: [KA-LEX-C59-GROUND-04, KA-LEX-C59-GROUND-05, KA-LEX-C60-ANIMAL-01, KA-LEX-C58-REPLY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It belongs to the ರೈತ before it belongs to anybody, and in a ಹಳ್ಳ�
 The first of five animals.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-04, KA-LEX-C59-GROUND-05, KA-LEX-C60-ANIMAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-04, KA-LEX-C59-GROUND-05, KA-LEX-C60-ANIMAL-01, KA-LEX-C58-REPLY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hasu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hasu*, then *hālu*, and say which one comes out of the other]
+- [YOU RECALL: say *svalpa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-04, KA-LEX-C59-GROUND-05, KA-LEX-C60-ANIMAL-01] -->

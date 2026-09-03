@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Not That, and Neither",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:164f955b35a78941",
+  "sourceHash": "fnv1a64:b4819d0273010819",
   "lessons": [
     {
       "id": "KA-S135-letter-a",
@@ -208,7 +208,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbaa4138922b65d5",
+      "sourceHash": "fnv1a64:0a87a60a1d479522",
       "notice": null,
       "blocks": [
         {
@@ -369,6 +369,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *kurci*, *bāgilu*, *hoṭṭe*, *beraḷu*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hullu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hullu*]"
             }
           ]
         },
@@ -404,7 +413,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0194b0749007dbc",
+      "sourceHash": "fnv1a64:8807e99f8c139982",
       "notice": null,
       "blocks": [
         {
@@ -522,6 +531,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *raṅgōli*, *kūdalu*, *hallu*, *kālu*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಭತ್ತ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಭತ್ತ**]"
             }
           ]
         },
@@ -557,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70c0203810edce68",
+      "sourceHash": "fnv1a64:ee2b634c19788c87",
       "notice": null,
       "blocks": [
         {
@@ -675,6 +693,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *uppu*, *dīpa*, *baṭṭe*, *haṇṇu*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say beḷe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *beḷe*]"
             }
           ]
         },
@@ -710,7 +737,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:026555eca8ddb11c",
+      "sourceHash": "fnv1a64:a2838dea70fee5ea",
       "notice": null,
       "blocks": [
         {
@@ -819,6 +846,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *hūmāle*, *heṇḍati*, *gaṇḍa*, *ajji*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಸುಗ್ಗಿ, then say mattu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಸುಗ್ಗಿ**, then say *mattu*]"
             }
           ]
         },

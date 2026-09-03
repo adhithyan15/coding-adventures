@@ -9,7 +9,7 @@ headword: "ചെളി"
 gloss: "mud"
 romanization: "ceḷi"
 concept_tag: ML-NOUN-MUD
-prerequisites: [ML-C59-sand]
+prerequisites: [ML-C59-sand, ML-C57-lip]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C59-AIR-03]
 practises:
-  knowledge: [ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03]
+  knowledge: [ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C57-FRAME-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The ള at the end is the retroflex *ḷ*, tongue curled back again, and it is a
 Three, and the monsoon is doing the work.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C57-FRAME-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ceḷi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maṇal*, then *ceḷi*, and hear the two different l-sounds at the end]
+- [YOU RECALL: say *cuṇṭŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03] -->

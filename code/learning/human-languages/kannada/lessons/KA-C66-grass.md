@@ -9,7 +9,7 @@ headword: "ಹುಲ್ಲು"
 gloss: "grass"
 romanization: "hullu"
 concept_tag: KA-NOUN-GRASS
-prerequisites: [KA-C66-field]
+prerequisites: [KA-C66-field, KA-C64-also]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C66-FIELD-02]
 practises:
-  knowledge: [KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02]
+  knowledge: [KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C64-JOIN-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Say it carefully against ಹಲ್ಲು, the tooth-word. One vowel sign separat
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C64-JOIN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hullu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hallu*, then *hullu*, and say which one is in your mouth]
+- [YOU RECALL: read **ಕೂಡ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02] -->

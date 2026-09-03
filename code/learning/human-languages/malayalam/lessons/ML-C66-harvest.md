@@ -9,7 +9,7 @@ headword: "കൊയ്ത്ത്"
 gloss: "the harvest, the reaping"
 romanization: "koyttŭ"
 concept_tag: ML-NOUN-HARVEST
-prerequisites: [ML-C66-plough]
+prerequisites: [ML-C66-plough, ML-C64-but, ML-C65-request, ML-C65-permission]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C66-PADDY-05]
 practises:
-  knowledge: [ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04, ML-LEX-C66-PADDY-05]
+  knowledge: [ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04, ML-LEX-C66-PADDY-05, ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ So the run closes where the year does: the grain, the grass, the ripe ear, the p
 Five, and the paddy year is whole: *nellŭ*, *pullŭ*, *katirŭ*, *kalappa*, *koyttŭ*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04, ML-LEX-C66-PADDY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04, ML-LEX-C66-PADDY-05, ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *koyttŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *nellŭ*, *pullŭ*, *katirŭ*, *kalappa*, *koyttŭ*]
+- [YOU RECALL: say *ennāl*, then read **അപേക്ഷ**, then say *anuvādaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04, ML-LEX-C66-PADDY-05] -->

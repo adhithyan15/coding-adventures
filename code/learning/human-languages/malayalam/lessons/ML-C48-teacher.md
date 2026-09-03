@@ -9,7 +9,7 @@ headword: "അധ്യാപകൻ"
 gloss: "a teacher"
 romanization: "adhyāpakan"
 concept_tag: ML-NOUN-TEACHER
-prerequisites: [ML-C47-stomach]
+prerequisites: [ML-C47-stomach, ML-C46-fruit]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C48-ROLE-01]
 practises:
-  knowledge: [ML-LEX-C47-BODY-04, ML-LEX-C47-BODY-05, ML-LEX-C48-ROLE-01]
+  knowledge: [ML-LEX-C47-BODY-04, ML-LEX-C47-BODY-05, ML-LEX-C48-ROLE-01, ML-LEX-C46-ASK-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada picked a different Sanskrit word for the same job, ಶಿಕ್ಷಕ (*
 The first of five words for who someone is.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-04, ML-LEX-C47-BODY-05, ML-LEX-C48-ROLE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-04, ML-LEX-C47-BODY-05, ML-LEX-C48-ROLE-01, ML-LEX-C46-ASK-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *adhyāpakan*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *adhyāpakan*, then *makan*, and hear the same chillu close both]
+- [YOU RECALL: say *paḻaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-04, ML-LEX-C47-BODY-05, ML-LEX-C48-ROLE-01] -->

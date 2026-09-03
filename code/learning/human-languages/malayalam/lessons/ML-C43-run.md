@@ -9,7 +9,7 @@ headword: "ഓടൂ"
 gloss: "run"
 romanization: "ōṭū"
 concept_tag: ML-VERB-RUN
-prerequisites: []
+prerequisites: [ML-C41-there]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-RUN]
 practises:
-  knowledge: [ML-LEX-RUN]
+  knowledge: [ML-LEX-RUN, ML-LEX-C41-DEIXIS-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,12 @@ The long final *ū* softens a command into an invitation — Malayalam marks cou
 One more everyday action. Three more follow, and each reuses the ones before it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-RUN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-RUN, ML-LEX-C41-DEIXIS-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ōṭū*]
 - [YOU SAY: it again, to someone standing in a doorway]
-
+- [YOU RECALL: say *aviṭe*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-RUN] -->

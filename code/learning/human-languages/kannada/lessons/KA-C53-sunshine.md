@@ -9,7 +9,7 @@ headword: "ಬಿಸಿಲು"
 gloss: "sunshine, the sun's heat"
 romanization: "bisilu"
 concept_tag: KA-NOUN-SUNSHINE
-prerequisites: [KA-C53-sky]
+prerequisites: [KA-C53-sky, KA-C51-favour]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C53-SKY-02]
 practises:
-  knowledge: [KA-LEX-C52-WELCOME-05, KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02]
+  knowledge: [KA-LEX-C52-WELCOME-05, KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C51-COURTESY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada has two sun-words even so. ನೇಸರು (*nēsaru*) is its own, kept 
 Two: the sky, and what comes down out of it by day.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-05, KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-05, KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C51-COURTESY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bisilu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bisi*, then *bisilu*, and hear the shorter word standing inside the longer one]
+- [YOU RECALL: read **ಉಪಕಾರ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-05, KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02] -->

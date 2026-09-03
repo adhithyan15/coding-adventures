@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3c38f4f0aaff96db",
+  "sourceHash": "fnv1a64:76cbf5960e718a1e",
   "lessons": [
     {
       "id": "KA-C21-naayi-bekku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dd514d1807d30f9",
+      "sourceHash": "fnv1a64:153065c6bc344e3e",
       "notice": null,
       "blocks": [
         {
@@ -89,6 +89,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"bekku\" — cat, a different Dravidian root than Tamil's everyday word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say caitra vaiśākha jyēṣṭha āṣāḍha śrāvaṇa bhādrapada āśvayuja kārtīka mārgaśira puṣya māgha phālguṇa, then read ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *caitra vaiśākha jyēṣṭha āṣāḍha śrāvaṇa bhādrapada āśvayuja kārtīka mārgaśira puṣya māgha phālguṇa*, then read **ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ**]"
             }
           ]
         },

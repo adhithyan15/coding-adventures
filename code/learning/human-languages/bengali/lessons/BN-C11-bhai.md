@@ -9,7 +9,7 @@ headword: ভাই
 romanization: bhāi
 gloss: brother — not borrowed, not a cousin, but the same word as English "brother," worn down by six thousand years and two different roads
 concept_tag: BN-PEOPLE-BROTHER
-prerequisites: [BN-C11-poribar]
+prerequisites: [BN-C11-poribar, BN-C10-cha, BN-C10-jol]
 sounds: [bha-aspirate, ai-diphthong]
 roots: [bhratr-brother]
 etymology_hook: "ভাই is Sanskrit *bhrātṛ*, worn down through Magadhi Prakrit bhāi — a tadbhava, unlike this chapter's two tatsamas — from PIE bʰréh₂tēr, the direct ancestor of English brother, Latin frater and Greek phratēr: ভাই and 'brother' are the same word, not cousins of it"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C11-BHAI-01]
 practises:
-  knowledge: [BN-LEX-C11-PORIBAR-01, BN-LEX-C11-BONDHU-01, BN-LEX-C11-BHAI-01]
+  knowledge: [BN-LEX-C11-PORIBAR-01, BN-LEX-C11-BONDHU-01, BN-LEX-C11-BHAI-01, BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-LEX-C10-JOL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -70,13 +70,14 @@ this chapter will not turn into a system — but it is worth naming, since it
 means বন্ধু and ভাই are not always as far apart as they look.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-BHAI-01, BN-LEX-C11-PORIBAR-01, BN-LEX-C11-BONDHU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-BHAI-01, BN-LEX-C11-PORIBAR-01, BN-LEX-C11-BONDHU-01, BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-LEX-C10-JOL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bhāi" — brother]
 - [YOU SAY: "āmār bhāi" — my brother]
 - [YOU SAY: the same word, two languages — "bhrātṛ … brother"]
 - [YOU SAY: friend, family, brother — "bôndhu … pôribār … bhāi"]
+- [YOU RECALL: say *chā*, then read **জল**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-BHAI-01, BN-LEX-C11-PORIBAR-01] -->

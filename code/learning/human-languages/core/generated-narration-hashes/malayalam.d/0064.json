@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 64,
-  "sourceHash": "fnv1a64:c4ed631ecfa6984a",
+  "sourceHash": "fnv1a64:e597b119dce00b3a",
   "lessonIds": [
     "ML-C64-then",
     "ML-C64-soon",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch64.txt",
   "json": "malayalam/narration/ch64.json",
-  "textHash": "fnv1a64:4e7cc6a57c1c3cfd",
-  "jsonHash": "fnv1a64:0a4b27efb77cb6d4",
+  "textHash": "fnv1a64:25bedab5a24586c9",
+  "jsonHash": "fnv1a64:11f30e33c643694b",
   "findings": []
 }

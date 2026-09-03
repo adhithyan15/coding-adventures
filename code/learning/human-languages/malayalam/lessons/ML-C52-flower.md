@@ -9,7 +9,7 @@ headword: "പൂവ്"
 gloss: "a flower"
 romanization: "pūvŭ"
 concept_tag: ML-NOUN-FLOWER
-prerequisites: [ML-C52-kolam]
+prerequisites: [ML-C52-kolam, ML-C50-set-out]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C52-WELCOME-04]
 practises:
-  knowledge: [ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C52-WELCOME-04]
+  knowledge: [ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C52-WELCOME-04, ML-LEX-C50-LEAVE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Malayalam's own form adds a *v* and the half-vowel, which is why it looks longer
 Four. A door, a chair, the pattern at the threshold, a flower.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C52-WELCOME-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C52-WELCOME-04, ML-LEX-C50-LEAVE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pūvŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pūvŭ*, then *kōlaṁ*, the two things laid at a doorway]
+- [YOU RECALL: read **പുറപ്പെടുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C52-WELCOME-04] -->

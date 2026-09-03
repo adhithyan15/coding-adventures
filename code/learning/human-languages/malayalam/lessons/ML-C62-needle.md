@@ -9,7 +9,7 @@ headword: "സൂചി"
 gloss: "a needle"
 romanization: "sūci"
 concept_tag: ML-NOUN-NEEDLE
-prerequisites: [ML-C62-thread]
+prerequisites: [ML-C62-thread, ML-C60-hen]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C62-HAND-03]
 practises:
-  knowledge: [ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03]
+  knowledge: [ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C60-ANIMAL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ With *nūlŭ* through the eye of it, a സൂചി is what turns cloth back int
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C60-ANIMAL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sūci*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nūlŭ*, then *sūci*, and say which one goes through the other]
+- [YOU RECALL: say *kōḻi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03] -->

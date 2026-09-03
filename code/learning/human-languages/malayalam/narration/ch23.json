@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ade1bd41b380ab86",
+  "sourceHash": "fnv1a64:b231028cc8404005",
   "lessons": [
     {
       "id": "ML-C23-divasam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4123f286c50e264a",
+      "sourceHash": "fnv1a64:d71918580f5c0424",
       "notice": null,
       "blocks": [
         {
@@ -89,6 +89,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"dinam\" — the same Sanskrit word as Kannada's dina, but formal here]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pāthirā, then read മണി",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pāthirā*, then read **മണി**]"
             }
           ]
         },

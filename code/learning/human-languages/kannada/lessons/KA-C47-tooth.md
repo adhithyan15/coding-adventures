@@ -9,7 +9,7 @@ headword: "ಹಲ್ಲು"
 gloss: "a tooth"
 romanization: "hallu"
 concept_tag: KA-NOUN-TOOTH
-prerequisites: [KA-C47-leg]
+prerequisites: [KA-C47-leg, KA-C45-grandfather]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C47-BODY-02]
 practises:
-  knowledge: [KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02]
+  knowledge: [KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-GRANDFATHER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ That makes ಹಣ್ಣು and ಹಲ್ಲು a matched pair: two inherited wor
 Two: a leg and a tooth.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-GRANDFATHER] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hallu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kālu*, then *hallu*, and say which of the two also names a fraction]
+- [YOU RECALL: read **ಅಜ್ಜ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C46-ASK-05, KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02] -->

@@ -9,7 +9,7 @@ headword: "എന്നാൽ"
 gloss: "but, on the other hand"
 romanization: "ennāl"
 concept_tag: ML-WORD-BUT
-prerequisites: [ML-C64-only]
+prerequisites: [ML-C64-only, ML-C62-winnowing-tray]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C64-SMALL-05]
 practises:
-  knowledge: [ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C64-SMALL-04, ML-LEX-C64-SMALL-05]
+  knowledge: [ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C64-SMALL-04, ML-LEX-C64-SMALL-05, ML-LEX-C62-HAND-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ So the word grants the previous sentence before it turns on it, which is a gentl
 Five, and a sentence can now go on, hurry, hedge, stop short or turn.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C64-SMALL-04, ML-LEX-C64-SMALL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C64-SMALL-04, ML-LEX-C64-SMALL-05, ML-LEX-C62-HAND-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ennāl*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *pinne*, *uṭane*, *cilappōḷ*, *mātraṁ*, *ennāl*]
+- [YOU RECALL: say *muṟaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C64-SMALL-04, ML-LEX-C64-SMALL-05] -->

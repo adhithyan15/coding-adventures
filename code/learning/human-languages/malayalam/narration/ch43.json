@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:75ab1fe5b5adbb4f",
+  "sourceHash": "fnv1a64:9f44b5e192847622",
   "lessons": [
     {
       "id": "ML-C43-run",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82fd1470a121dd9f",
+      "sourceHash": "fnv1a64:c0bd35951b8dc02c",
       "notice": null,
       "blocks": [
         {
@@ -93,6 +93,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it again, to someone standing in a doorway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aviṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aviṭe*]"
             }
           ]
         },
@@ -128,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8f5d6425fafc0a8",
+      "sourceHash": "fnv1a64:5b5030aca8500580",
       "notice": null,
       "blocks": [
         {
@@ -211,6 +220,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *ōṭū*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ആര്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ആര്**]"
             }
           ]
         },
@@ -246,7 +264,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d300e8bf70669577",
+      "sourceHash": "fnv1a64:74323f630f448d23",
       "notice": null,
       "blocks": [
         {
@@ -329,6 +347,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *uṟaṅṅū*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eviṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eviṭe*]"
             }
           ]
         },

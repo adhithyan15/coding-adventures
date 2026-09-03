@@ -9,7 +9,7 @@ headword: "ಬಟ್ಟೆ"
 gloss: "cloth"
 romanization: "baṭṭe"
 concept_tag: KA-NOUN-CLOTH
-prerequisites: [KA-C46-fruit]
+prerequisites: [KA-C46-fruit, KA-C43-give]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C46-ASK-02]
 practises:
-  knowledge: [KA-LEX-WIFE, KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02]
+  knowledge: [KA-LEX-WIFE, KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-GIVE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Older Kannada also used ಬಟ್ಟೆ for a road — the way you go — a sens
 Two: a fruit and a cloth.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-WIFE, KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-WIFE, KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02, KA-LEX-GIVE] -->
 
 [PAUSE 1s]
 - [YOU SAY: *baṭṭe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *haṇṇu*, then *baṭṭe*, and ask for each one with *dayaviṭṭu*]
+- [YOU RECALL: read **ಕೊಡು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-WIFE, KA-LEX-C46-ASK-01, KA-LEX-C46-ASK-02] -->
