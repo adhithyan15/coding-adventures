@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C17-main
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 730
-chapter: 20
+chapter: 21
 type: word
 headword: la main
 gloss: the hand — feminine despite ending in a consonant, and the root of half the words you know

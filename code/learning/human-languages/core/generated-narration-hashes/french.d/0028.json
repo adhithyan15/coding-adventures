@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 28,
-  "sourceHash": "fnv1a64:03986ef5a4aa68b7",
+  "sourceHash": "fnv1a64:7162857ddf3ba262",
   "lessonIds": [
-    "FR-C25-comprendre",
-    "FR-C25-penser",
-    "FR-C25-lire",
-    "FR-C25-ecrire"
+    "FR-C24-prendre",
+    "FR-C24-demander",
+    "FR-C24-aider",
+    "FR-C24-aimer"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch28.txt",
   "json": "french/narration/ch28.json",
-  "textHash": "fnv1a64:9ded29fcc5639f21",
-  "jsonHash": "fnv1a64:501372c415ae4a79",
+  "textHash": "fnv1a64:11b5f1e39b46a92a",
+  "jsonHash": "fnv1a64:06c248a46d22fe79",
   "findings": []
 }

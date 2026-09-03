@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C28-the
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 980
-chapter: 31
+chapter: 32
 type: word
 headword: le thé
 gloss: tea — masculine, and the drink whose name split in two depending which Chinese port a trader dealt with

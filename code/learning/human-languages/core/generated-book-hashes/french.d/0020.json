@@ -1,10 +1,18 @@
 {
   "language": "french",
   "chapter": 20,
-  "sourceHash": "fnv1a64:9f11e9bdd3f07d56",
+  "sourceHash": "fnv1a64:001f4b1f520f9fd5",
   "lessonIds": [
-    "FR-C17-tete",
-    "FR-C17-main"
+    "FR-C16-suis-alle",
+    "FR-C16-famille-etre",
+    "FR-C16-pas-tout-mouvement",
+    "FR-C16-bascule",
+    "FR-C16-accord-sujet",
+    "FR-C16-accord-unifie",
+    "FR-C16-pronominal-etre",
+    "FR-C16-pronominal-accord",
+    "FR-C16-pronominal-seul",
+    "FR-C16-practice-etre-past"
   ],
-  "tex": "french/book/chapters/ch20-head-and-hand.tex"
+  "tex": "french/book/chapters/ch20-passe-compose-etre.tex"
 }

@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C20-je-suis-desole",
     "language": "french",
-    "chapter": 23,
+    "chapter": 24,
     "sequence": 770,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:62ef3d3c3444fc60"
+    "sourceHash": "fnv1a64:c8436ea2578d1435"
   },
   "findings": []
 }

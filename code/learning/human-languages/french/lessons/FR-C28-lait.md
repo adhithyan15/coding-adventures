@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C28-lait
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 990
-chapter: 31
+chapter: 32
 type: word
 headword: le lait
 gloss: milk — masculine, and the one drink in this chapter French did not have to borrow

@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 30,
-  "sourceHash": "fnv1a64:c40923eb78cda0b3",
+  "sourceHash": "fnv1a64:3bca0aa475afadf9",
   "lessonIds": [
-    "FR-C27-sasseoir",
-    "FR-C27-se-lever",
-    "FR-C27-ouvrir",
-    "FR-C27-fermer"
+    "FR-C26-entendre",
+    "FR-C26-dormir",
+    "FR-C26-marcher",
+    "FR-C26-courir"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch30.txt",
   "json": "french/narration/ch30.json",
-  "textHash": "fnv1a64:ec634470628ba19f",
-  "jsonHash": "fnv1a64:38b46d963b65ec4d",
+  "textHash": "fnv1a64:108925949728778b",
+  "jsonHash": "fnv1a64:d64bf1ecc1d2c361",
   "findings": []
 }

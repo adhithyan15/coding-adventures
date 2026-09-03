@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C31-oeil",
     "language": "french",
-    "chapter": 34,
+    "chapter": 35,
     "sequence": 1090,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a0f544ec935d40c6"
+    "sourceHash": "fnv1a64:120868020cff56c3"
   },
   "findings": []
 }

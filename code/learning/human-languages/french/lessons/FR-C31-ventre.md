@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C31-ventre
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 1120
-chapter: 34
+chapter: 35
 type: word
 headword: le ventre
 gloss: stomach — masculine, nasal like la main but through a different vowel, and the word that closes four chapters of everyday nouns

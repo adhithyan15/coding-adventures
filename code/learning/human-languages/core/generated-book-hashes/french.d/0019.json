@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:091d4eb91efb0bdd",
+  "lessonIds": [
+    "FR-C16-suis",
+    "FR-C16-es",
+    "FR-C16-est",
+    "FR-C16-sommes",
+    "FR-C16-etes",
+    "FR-C16-sont",
+    "FR-C16-esse",
+    "FR-C16-fu",
+    "FR-C16-stare",
+    "FR-C16-suppletion",
+    "FR-C16-ser-estar",
+    "FR-C16-practice"
+  ],
+  "tex": "french/book/chapters/ch19-etre.tex"
+}

@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C27-ouvrir",
     "language": "french",
-    "chapter": 30,
+    "chapter": 31,
     "sequence": 950,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:495ab34f72fbbc0b"
+    "sourceHash": "fnv1a64:d3765684c1921a8e"
   },
   "findings": []
 }

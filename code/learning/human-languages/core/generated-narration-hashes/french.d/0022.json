@@ -1,15 +1,16 @@
 {
   "language": "french",
   "chapter": 22,
-  "sourceHash": "fnv1a64:e8864e22d3892185",
+  "sourceHash": "fnv1a64:b17685bc6f95432e",
   "lessonIds": [
-    "FR-C19-sil-vous-plait"
+    "FR-C18-oui",
+    "FR-C18-non"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "french/narration/ch22.txt",
   "json": "french/narration/ch22.json",
-  "textHash": "fnv1a64:1b8a9062fdd6d197",
-  "jsonHash": "fnv1a64:dbc6f341e4d95e8c",
+  "textHash": "fnv1a64:5e6f7e7f6384bbff",
+  "jsonHash": "fnv1a64:4a2a302e5550800c",
   "findings": []
 }

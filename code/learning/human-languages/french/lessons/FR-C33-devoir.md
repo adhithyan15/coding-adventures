@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C33-devoir
 spine_node: SPINE-SAY-WHAT-I-WANT
 sequence: 1310
-chapter: 36
+chapter: 37
 type: word
 headword: devoir
 gloss: "must — the third of the set, and the one with a debt inside it"

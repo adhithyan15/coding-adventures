@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 32,
-  "sourceHash": "fnv1a64:b481576cef9acf45",
+  "sourceHash": "fnv1a64:018a9a0efe26a8d7",
   "lessonIds": [
-    "FR-C29-ami",
-    "FR-C29-famille",
-    "FR-C29-enfant",
-    "FR-C29-personne"
+    "FR-C28-cafe",
+    "FR-C28-the",
+    "FR-C28-lait",
+    "FR-C28-sucre"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch32.txt",
   "json": "french/narration/ch32.json",
-  "textHash": "fnv1a64:acb07762db9c5be8",
-  "jsonHash": "fnv1a64:951e72b38c7fa80e",
+  "textHash": "fnv1a64:a59ad4dd118ccba6",
+  "jsonHash": "fnv1a64:45796f4d5b56f5b7",
   "findings": []
 }

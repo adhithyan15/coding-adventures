@@ -1,9 +1,9 @@
 {
   "language": "french",
   "chapter": 26,
-  "sourceHash": "fnv1a64:831a390d83bf52f3",
+  "sourceHash": "fnv1a64:0af5804404ed1cc4",
   "lessonIds": [
-    "FR-C23-vert-jaune"
+    "FR-C22-chien-chat"
   ],
-  "tex": "french/book/chapters/ch26-green-and-yellow.tex"
+  "tex": "french/book/chapters/ch26-dog-and-cat.tex"
 }

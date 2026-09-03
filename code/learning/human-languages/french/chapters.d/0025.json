@@ -1,20 +1,20 @@
 {
   "chapter": 25,
-  "title": "Dog and Cat",
-  "label": "ch:fr-dog-and-cat",
-  "canDo": "I can name a dog and a cat in French and say why chien is the regular descendant of canis while chat is a word that travelled out of Egypt.",
+  "title": "Weather",
+  "label": "ch:fr-weather",
+  "canDo": "I can talk about the weather in French — quel temps fait-il, il fait chaud, il fait froid, il pleut.",
   "spineNodes": [
-    "SPINE-DEFINITE-REFERENCE"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C22-chien-chat",
+    "lesson": "FR-C21-le-temps",
     "kind": "production",
-    "summary": "Say chien and check its ca- → cha- shift against champ and chanter, then say chat and place it beside Spanish gato and Italian gatto as one inherited cattus. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "Use le temps in both its senses, build the weather with faire (il fait chaud / il fait froid), and say il pleut with the Latin pl- cluster French kept intact. The chapter's only lesson, so the payoff covers everything it introduces.",
     "assesses": [
-      "FR-LEX-CHIEN-02",
-      "FR-ETYMON-CHIEN-03",
-      "FR-LEX-CHAT-04",
-      "FR-ETYMON-CHAT-05"
+      "FR-LEX-TEMPS-02",
+      "FR-GRAMMAR-IL-FAIT-03",
+      "FR-LEX-IL-PLEUT-04",
+      "FR-ETYMON-PLEUVOIR-05"
     ]
   }
 }

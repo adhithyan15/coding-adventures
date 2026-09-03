@@ -1,19 +1,21 @@
 {
   "chapter": 22,
-  "title": "Please",
-  "label": "ch:fr-please",
-  "canDo": "I can say please in French and choose between s'il vous plaît and s'il te plaît depending on who I am speaking to.",
+  "title": "Yes and No",
+  "label": "ch:fr-yes-and-no",
+  "canDo": "I can answer yes or no in French, send non through my nose as a nasal vowel, and recognise the ne … pas pair that carries negation inside a sentence.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-RESPOND-BASIC"
   ],
   "payoff": {
-    "lesson": "FR-C19-sil-vous-plait",
+    "lesson": "FR-C18-non",
     "kind": "production",
-    "summary": "Say s'il vous plaît with its silent final -t, take it apart into 'if it pleases you', then switch to s'il te plaît for a friend. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "The oui / non pair said back to back, non's -on nasal placed against bon and bonjour, and the ne … pas frame named as the sentence-level negation to come.",
     "assesses": [
-      "FR-LEX-PLEASE-02",
-      "FR-ETYMON-PLAIRE-03",
-      "FR-GRAMMAR-PLEASE-REGISTER-04"
-    ]
+      "FR-LEX-OUI-02",
+      "FR-LEX-NON-02",
+      "FR-SOUND-NON-03",
+      "FR-GRAMMAR-NEGATION-04"
+    ],
+    "note": "Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess oui."
   }
 }

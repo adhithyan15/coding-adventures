@@ -136,12 +136,25 @@ it("pins French modality", () => expectLanguageModality("french"));
 // one change spreading by contact across a connected block -- while Spanish and
 // Portuguese at the western edge kept theirs. That was a `culture` block owned
 // by nobody.
+// 201 -> 223 lessons: retiring handwritten chapter 19, To Be and the Past That
+// Takes It -- the THIRD French chapter split, and the one HL-C286 flagged in
+// advance. Four schema-v1 lessons held a six-cell paradigm, three stem
+// etymologies, the etre-verb list with two exceptions, two agreement rules and
+// the whole pronominal system: about nineteen atoms against a ceiling of twelve.
+// The chapter's own structure supplies the seam -- the verb, then the past built
+// on it -- so chapter 19 keeps etre (10 atoms) and a new chapter 20 takes the
+// past that selects it, pronominals included (9 atoms). Every later French
+// chapter renumbered by +1 (old 20-36 -> 21-37). Twenty-two lessons replace four.
+// 25 -> 26 culture claims: Spanish kept ser and estar apart as two verbs and
+// made every speaker choose, where French kept one verb and swallowed stare's
+// whole et- limb. Same two Latin sources, opposite solutions -- a `culture`
+// block that no lesson owned.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 201,
+    lessons: 223,
     idioms: 3,
     senses: 7,
-    cultureClaims: 25,
+    cultureClaims: 26,
     unitPrefix: "FR",
   }));
 

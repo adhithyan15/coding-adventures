@@ -1,18 +1,26 @@
 {
   "language": "french",
   "chapter": 19,
-  "sourceHash": "fnv1a64:9ecd5d73166ea074",
+  "sourceHash": "fnv1a64:b63f663eed9ad73c",
   "lessonIds": [
-    "FR-C16-etre",
-    "FR-C16-etre-roots",
-    "FR-C16-passe-compose-etre",
-    "FR-C16-pronominal-past"
+    "FR-C16-suis",
+    "FR-C16-es",
+    "FR-C16-est",
+    "FR-C16-sommes",
+    "FR-C16-etes",
+    "FR-C16-sont",
+    "FR-C16-esse",
+    "FR-C16-fu",
+    "FR-C16-stare",
+    "FR-C16-suppletion",
+    "FR-C16-ser-estar",
+    "FR-C16-practice"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 12,
+  "drivablePrefix": 12,
   "text": "french/narration/ch19.txt",
   "json": "french/narration/ch19.json",
-  "textHash": "fnv1a64:b2561c0ecc265854",
-  "jsonHash": "fnv1a64:11e6e54e9921abbc",
+  "textHash": "fnv1a64:d84e461089b73605",
+  "jsonHash": "fnv1a64:831e9cd77cb2a7a0",
   "findings": []
 }

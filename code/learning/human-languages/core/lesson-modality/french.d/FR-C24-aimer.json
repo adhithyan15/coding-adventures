@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C24-aimer",
     "language": "french",
-    "chapter": 27,
+    "chapter": 28,
     "sequence": 840,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:94cb996684b89077"
+    "sourceHash": "fnv1a64:4cc5cea1c5584cd2"
   },
   "findings": []
 }

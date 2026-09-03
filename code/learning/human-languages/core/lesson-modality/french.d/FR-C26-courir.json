@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C26-courir",
     "language": "french",
-    "chapter": 29,
+    "chapter": 30,
     "sequence": 920,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1cc9f040b99fe90e"
+    "sourceHash": "fnv1a64:d98e6e854b49d250"
   },
   "findings": []
 }

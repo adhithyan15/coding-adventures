@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C25-lire
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 870
-chapter: 28
+chapter: 29
 type: word
 headword: lire
 gloss: to read — from a Latin verb that first meant "to gather," which is why reading, electing, collecting and being elegant all turn out to be the same act

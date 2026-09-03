@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C30-beurre
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1060
-chapter: 33
+chapter: 34
 type: word
 headword: le beurre
 gloss: butter — masculine, and the same borrowed word as English butter, not two separate coinages

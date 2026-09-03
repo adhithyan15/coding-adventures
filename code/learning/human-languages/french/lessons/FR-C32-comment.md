@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C32-comment
 spine_node: SPINE-ASK-LOCATION
 sequence: 1240
-chapter: 35
+chapter: 36
 type: word
 headword: comment
 gloss: "how — a word you have been using since your first lesson"
