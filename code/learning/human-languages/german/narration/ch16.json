@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Pair That Proves Grimm's Law",
   "drivablePrefix": 13,
-  "sourceHash": "fnv1a64:a2f146574616b85e",
+  "sourceHash": "fnv1a64:acf5a4dfb8fcd708",
   "lessons": [
     {
       "id": "GE-C10-vater",
@@ -1012,7 +1012,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2fe640b61130e30",
+      "sourceHash": "fnv1a64:2932e7d20a496a61",
       "notice": null,
       "blocks": [
         {
@@ -1043,7 +1043,7 @@
             },
             {
               "kind": "speech",
-              "text": "w-as-v — and German w is a v, which you have from Winter."
+              "text": "w-as-v — and German w is a v, the rule you were given on Winter."
             },
             {
               "kind": "speech",

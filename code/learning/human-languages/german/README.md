@@ -85,7 +85,14 @@ French *nuit* — one Indo-European word, split four ways.
   Closes on German's two plural-only collectives — *die Eltern*, "the older ones",
   and *die Geschwister*, built with the gathering **Ge-** on a stem that means
   *sister* and covering the brothers anyway.
-- **Chapter 17 — Bread, Water, Wine**: Brot, Wasser/Wein.
+- **Chapter 17 — Bread, Water, Wine**: three things on one table and two
+  histories. *das Brot* is Germanic *\*braudam*, English **bread**, where French
+  took Latin *pānis* and German did not; *das Wasser* is Germanic *\*watar* with
+  German's own later shift turning the *t* into *ss*, the same shift that put the
+  *tt* into *Mutter*; and *der Wein* is Latin *vīnum*, borrowed whole with the
+  grapevine the legions carried north. The reader can tell which is which without
+  being told: **the inherited pair have drifted from their English twins and the
+  loan has not.** Also where the neuter *das* finally gets nouns to sit on.
 - **Chapter 18 — Numbers Eleven to Twenty**: elf/zwölf (the *-lif* "left over"
   story), 13–20.
 - **Chapter 19 — Colours**: schwarz/weiß, rot/blau.

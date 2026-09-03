@@ -3,7 +3,7 @@
     "id": "GE-C11-wasser-wein",
     "language": "german",
     "chapter": 17,
-    "sequence": 300,
+    "sequence": 301,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bfc8a0c07994b706"
+    "sourceHash": "fnv1a64:79ec49d4e7b53931"
   },
   "findings": []
 }
