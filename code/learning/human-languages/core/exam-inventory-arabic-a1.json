@@ -1,0 +1,4404 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO AVANT, TO THE ILR, TO ACTFL OR TO ANY ARABIC EXAMINING BODY. Arabic differs from the Indic tracks in this series in having a real external target -- core/exam-levels.json records exam 'ALPT / ILR / ACTFL', basis 'research', and maps A1 to ILR 0+ -- but a SCALE is not a SYLLABUS. None of those bodies publishes a finite content inventory of the kind the PCIC publishes for Spanish, so what an A1 candidate must HOLD is still this project's judgement.\n\nEXAM ENVELOPE: AN EXTERNALLY-SOURCED A1 TASK SHAPE EXISTS AND PRESCRIBES NO CONTENT. arabic/task-shapes/a1.json carries basis 'external' with five cited Avant STAMP 4S sources, administration times and a pass rule -- the only external envelope any track in this series has. But STAMP is a computer-adaptive test over authentic real-world texts and audio, so the file describes a delivery mechanism and names no item, no word list and no grammar point. There is no arabic/mocks/ and no arabic/assessment.json. Where a file with mocks could write 'the paper asks for X', this one can only write 'an A1 learner needs X'. That is a weaker claim and is stated as one.\n\nTHE TRACK OWNS NO HAND-WRITTEN CHAPTERS, WHICH MAKES THESE NUMBERS TRUSTWORTHY. core/book-generation.d/handwritten.d/ contains eight entries and all eight are German. A hand-written chapter owns no atom and therefore cannot be probed, so an inventory measured against a track that has them reports its hand-written content as absent -- the caveat recorded on French. Arabic is clear of it: every one of its 36 chapters is generated from the lessons this file probes.\n\nTHE DIGLOSSIA CAVEAT WAS MEASURED, NOT REPEATED. tracks.arabic in exam-levels.json warns that the scales test Modern Standard Arabic 'while the corpus also teaches greetings a learner would hear in dialect'. Measured against the corpus: all 102 lessons declare variety 'modern-standard-arabic' -- the field has no second value -- 101 of 102 declare register 'neutral', and there are exactly TWO dialect remarks in the whole track, aywa in chapter 5 and a colloquial bare day-name in chapter 25, neither of which introduces an atom. The caveat's first half is right and its second half overstates what is here. AR-A1-REG-02 records that rather than quietly agreeing with it.\n\nSEARCH FOR AN EXTERNAL SOURCE: NOT REPEATED, BY INSTRUCTION. The task-shape work already searched and cited what Avant publishes, and the project settled at HL-C287/HL-C290 that the proxy derivation is the method where no content syllabus exists. Saying so is what keeps 'we did not look again' from reading as 'there is nothing to find'.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is the Instituto Cervantes Plan Curricular inventories. EXTERNAL ENVELOPE, FOR THE ADMINISTRATION AND NOT FOR THE CONTENT: arabic/task-shapes/a1.json, sourced from Avant STAMP 4S. The proxy supplies the LEVEL and the shape of the columns; every Arabic exponent is this project's choice, and every point records which Spanish point or points it was derived from.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Spanish is a proxy for LEVEL, never for grammar: each point was read as 'what must an A1 learner be able to do here', and the Arabic exponent that carries the same load was then chosen. Where Arabic carries the load with machinery Spanish has not got -- a discontinuous root, a broken plural, a derived verb form, an idafa, a verbless sentence -- the point is restated around the Arabic machinery and its Spanish origin recorded in derivedFrom. Restating IS deriving; only two Spanish points yield nothing at all and both are in proxy.notTransferred."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "core/spine.json declares pre-A1 through C2 and core/exam-levels.json maps arabic onto CEFR via ILR. Used for the functional and register columns, where the proxy's exponents are too Spanish-specific to transfer."
+    },
+    {
+      "id": "AVANT-STAMP-A1",
+      "kind": "external-framework",
+      "title": "arabic/task-shapes/a1.json -- Avant STAMP 4S Arabic, Level 3 / Novice-High, mapped to A1",
+      "note": "THE ONLY EXTERNALLY-SOURCED EXAM ENVELOPE ANY TRACK IN THIS SERIES HAS. It carries `basis: external`, five cited Avant sources with access dates, administration times, and a pass rule. What it does NOT carry is content: STAMP is computer-adaptive over authentic real-world texts and audio, so the task shape describes a delivery mechanism and prescribes no item, no word list and no grammar point. This file therefore still cannot say 'the paper asks for X' -- it can say the paper exists, is sourced, and will draw its texts from real-world Arabic, which is why the media and signage domains matter more here than their PCIC weighting suggests."
+    },
+    {
+      "id": "AR-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/arabic/ -- 102 lessons, 36 chapters, 199 schema-v2 knowledge atoms",
+      "note": "Coverage is measured, not asserted. A point counts as covered only when every atom named in its probe is introduced by a lesson in this track. The atom set was re-derived from the merged tree with the package's own trackIntroducedAtoms, and every probe was checked against it before this file was committed. Eighteen of the 102 lessons are script lessons and every one of them sits in chapters 1 to 4."
+    },
+    {
+      "id": "AR-EXAM-LEVELS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/core/exam-levels.json, tracks.arabic",
+      "note": "Records arabic as exam 'ALPT / ILR / ACTFL', basis 'research', A1 -> ILR 0+, WITH a caveat about diglossia: 'ALPT and the ILR/ACTFL scales test Modern Standard Arabic, while the corpus also teaches greetings a learner would hear in dialect. The mapping is for MSA.' The register column below answers that caveat by MEASUREMENT, and finds the second half of it overstated -- see AR-A1-REG-02."
+    },
+    {
+      "id": "ED-ARABIC",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Arabic",
+      "note": "No Arabic examining body publishes an A1 content syllabus. Avant publishes a scale and a delivery mechanism, not an inventory. Every judgement about WHICH Arabic exponent carries an A1 load is the project's own and is attributable to nobody else."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [
+      {
+        "spanishPoints": [
+          "A1-PRON-07"
+        ],
+        "why": "The exclamative que with an adjective (que bonito!). Arabic exclaims with ما أجمل plus a fixed pattern, which is a wholly separate construction from the interrogative ما already enumerated at AR-A1-PRON-06 and AR-A1-QUE-01 — and it is a construction no A1 syllabus for Arabic would ask for, since it requires a verb form the level does not reach. It yields no Arabic point, rather than an untaught one."
+      }
+    ]
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points), the CEFR Companion Volume A1 descriptors, and arabic/task-shapes/a1.json",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Arabic is this project's choice every time. Arabic has an external task shape, which no other track in this series does, and it still cannot pin an exponent: STAMP is adaptive and prescribes no item, so no note here can say which paper item needs a word."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence, coordination and subordination columns)",
+      "note": "THE DIMENSION THE PROXY HELPS MOST AND STILL DOES NOT CLOSE. Walking the Spanish grammar column surfaced demands no reading of the Arabic corpus alone would have raised -- a vocative particle before every name, a nisba for 'where you are from', a preposition fusing with the article, agreement in definiteness inside the noun phrase. But eight points have no Spanish origin at all and are flagged arabicSpecific: the broken plural, the root-and-pattern engine, the weak root, the derived verb forms, and four register facts. The proxy also OVER-asks in one place, recorded at AR-A1-V-09: Spanish spends three A1 points on an imperfect/preterite split Arabic does not make."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "the proxy's orthography columns, plus a direct character census of the corpus taken with the package's own measureScriptClosure",
+      "note": "The census was TAKEN rather than assumed and it is the worst in this series: 30 glyphs taught against 45 shown, 15 never taught, 57 closure violations across 102 lessons, and headwordsWithoutRomanization 37 -- against 0 for both Bengali and Urdu. One letter, fa, is shown in 34 lessons and taught in none. The cause is structural rather than editorial: all eighteen writing lessons sit in chapters 1-4 while eighty vocabulary lessons follow them. Stroke order is NOT the blocker here -- script-ductus holds 32 sourced Arabic glyph records, including nine of the fifteen never-taught letters -- so unlike Bengali this dimension can be closed by authoring."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "the proxy's twenty notional-specific domains (A1-NE01 to A1-NE20) and its seven general-notion blocks",
+      "note": "The domain list is the proxy's and it transfers cleanly, because what a beginner talks about is not language-specific. Which words fill each domain is entirely this project's choice. The distribution is the most lopsided in this series: time, family, food, drink, colour, weather, fauna and religion are complete or nearly so -- two of them, clothing aside, are domains the SPANISH file itself reports uncovered -- while everything transactional is empty. Thirteen words a beginner would order with are taught and there is no way to order."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, and its `note` names what is missing so the file reads as a work queue rather than a score. Every atom named in a probe was checked to exist before this file was committed: a probe naming an atom that does not exist would report 'not covered' forever and would be indistinguishable from real debt.",
+  "points": [
+    {
+      "id": "AR-A1-N-01",
+      "category": "Al-ism (the noun)",
+      "label": "proper nouns: a personal name, given in an introduction",
+      "probe": [
+        "AR-CONCEPT-C02-ISM-01",
+        "AR-CONCEPT-C02-ISMII-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "arabicSpecific": false,
+      "note": "اسم and the frame اسمي … are both taught in chapter 2, and the frame is what an introduction actually uses."
+    },
+    {
+      "id": "AR-A1-N-02",
+      "category": "Al-ism (the noun)",
+      "label": "place names: the town or the country you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-N-01",
+        "A1-NE20-02"
+      ],
+      "arabicSpecific": false,
+      "note": "UNTAUGHT. Not one settlement, country or region is named anywhere in 102 lessons, and there is no word for بلد ('country') or مدينة ('city'). With no preposition من in its 'from' use either (AR-A1-PRE-03), a learner cannot say where they come from at all — which is the second question of every A1 speaking test."
+    },
+    {
+      "id": "AR-A1-N-03",
+      "category": "Al-ism (the noun)",
+      "label": "common nouns naming periods of time",
+      "probe": [
+        "AR-CONCEPT-C25-YAWM-01",
+        "AR-CONCEPT-C26-LAYL-01",
+        "AR-CONCEPT-C16-AL-SAA-01",
+        "AR-CONCEPT-C12-AL-FUSUL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, AND IT IS THIS TRACK'S BEST-SERVED CORNER. يوم (chapter 25), ليل (26), ساعة (16) and the four seasons (12) are all taught, and the weekdays and Gregorian months have chapters of their own. Arabic's time lexicon is far ahead of any Indic track measured in this series."
+    },
+    {
+      "id": "AR-A1-N-04",
+      "category": "Al-ism (the noun)",
+      "label": "grammatical gender, and the ة that marks it",
+      "probe": [
+        "AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02",
+        "AR-CONCEPT-C33-QAHWA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED TWICE, from the script side and the word side. The tied tāʾ is taught as a letter in chapter 4 and then earns its keep in chapter 33, where قهوة is the payoff that makes it Arabic's visible gender marker."
+    },
+    {
+      "id": "AR-A1-N-05",
+      "category": "Al-ism (the noun)",
+      "label": "gender by heteronymy, and gender by an added ت",
+      "probe": [
+        "AR-CONCEPT-C10-AKH-UKHT-02",
+        "AR-CONCEPT-C35-IBN-BINT-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and restated. Spanish's point is about padre/madre — two unrelated words. Arabic's answer is different and the corpus teaches it twice: أخ/أخت and ابن/بنت are one root gendered by a single added letter, and the second lesson explicitly points back at the first."
+    },
+    {
+      "id": "AR-A1-N-06",
+      "category": "Al-ism (the noun)",
+      "label": "number: the sound plural, formed by a suffix",
+      "probe": [
+        "AR-CONCEPT-C36-MILAQA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered thinly and only as a contrast. ملعقة's lesson sorts sound plurals against broken ones; no lesson teaches the sound plural on its own, and no other noun in the corpus is ever pluralised."
+    },
+    {
+      "id": "AR-A1-N-07",
+      "category": "Al-ism (the noun)",
+      "label": "the broken plural: more than one is a re-poured word, not a suffixed one",
+      "probe": [
+        "AR-CONCEPT-C36-KUB-02",
+        "AR-CONCEPT-C36-TABAQ-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [],
+      "arabicSpecific": true,
+      "note": "NO SPANISH ORIGIN: Spanish forms every plural by suffix, so no A1 point asks about a plural made by re-vowelling the stem. Arabic's broken plural is the single hardest thing about its noun for a European learner, and chapter 36 teaches it twice — كوب/أكواب then طبق/أطباق — precisely so that a surprise becomes a pattern. Arabic-specific and covered."
+    },
+    {
+      "id": "AR-A1-N-08",
+      "category": "Al-ism (the noun)",
+      "label": "the root-and-pattern engine, which is how Arabic builds nouns at all",
+      "probe": [
+        "AR-CONCEPT-C28-DHAHABA-02",
+        "AR-CONCEPT-C34-TAAM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [],
+      "arabicSpecific": true,
+      "note": "NO SPANISH ORIGIN: Spanish derives by prefix and suffix, so no point asks about a discontinuous root. This is the organising idea of the whole Arabic track — ذهب's lesson opens it and طعام's closes it by handing the learner 'restaurant' free of charge — and it deserves to be measured rather than assumed. Arabic-specific and covered."
+    },
+    {
+      "id": "AR-A1-ADJ-01",
+      "category": "As-sifa (the adjective)",
+      "label": "qualifying adjectives in predicative use",
+      "probe": [
+        "AR-CONCEPT-C18-AL-TAQS-02",
+        "AR-CONCEPT-C09-ASWAD-ABYAD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered. الجو حار is a whole predicative sentence in chapter 18 and the colours are taught as adjectives in chapter 9."
+    },
+    {
+      "id": "AR-A1-ADJ-02",
+      "category": "As-sifa (the adjective)",
+      "label": "the adjective agrees with its noun in gender",
+      "probe": [
+        "AR-CONCEPT-C07-ASIF-01",
+        "AR-CONCEPT-C09-ASWAD-ABYAD-02",
+        "AR-CONCEPT-C09-AHMAR-AZRAQ-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03",
+        "A1-ADJ-04",
+        "A1-SV-03"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, AND TAUGHT THREE TIMES ON PURPOSE. آسف/آسفة in chapter 7 is the first gendered adjective, and chapters 9 and 22 then run the same أ‑‑‑ / ‑‑‑اء colour template past it twice more. This is the corpus's most deliberate piece of grammatical sequencing."
+    },
+    {
+      "id": "AR-A1-ADJ-03",
+      "category": "As-sifa (the adjective)",
+      "label": "position: the adjective FOLLOWS its noun and repeats its definiteness",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05",
+        "A1-SN-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Arabic agrees with Spanish here and disagrees with English, so a learner coming from the proxy gets this free and a learner coming from English does not. No lesson puts an adjective after a noun and names the order, and none teaches that البيت الكبير needs al- twice."
+    },
+    {
+      "id": "AR-A1-ADJ-04",
+      "category": "As-sifa (the adjective)",
+      "label": "relational adjectives: the nisba -ي, which turns a place into a person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02",
+        "A1-NG3-07"
+      ],
+      "arabicSpecific": false,
+      "note": "UNTAUGHT, and it is one of the cheapest structural wins in the file. The nisba suffix is one letter and it turns every place name into 'a person from there' — but there is no place name to attach it to either (AR-A1-N-02), so the two nulls have to be closed together."
+    },
+    {
+      "id": "AR-A1-ADJ-05",
+      "category": "As-sifa (the adjective)",
+      "label": "degree: جدا ('very') after an adjective",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01",
+        "A1-NG2-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Nothing in the corpus can be intensified, so the eight adjectives it owns all sit at one strength."
+    },
+    {
+      "id": "AR-A1-ADJ-06",
+      "category": "As-sifa (the adjective)",
+      "label": "everyday descriptive adjectives: big, small, new, beautiful",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01",
+        "A1-NG6-03",
+        "A1-NE01-02"
+      ],
+      "arabicSpecific": false,
+      "note": "UNTAUGHT AS A CLASS: كبير, صغير and جميل all return zero occurrences in 102 files. The adjectives the corpus does own are six colours, hot, cold and 'sorry' — so nothing can be described by size, age, or quality, and nobody can be described at all."
+    },
+    {
+      "id": "AR-A1-DEF-01",
+      "category": "At-tarif (definiteness, and the article al-)",
+      "label": "the definite article ال, written attached to its noun",
+      "probe": [
+        "AR-CONCEPT-AL-09",
+        "AR-SCRIPT-AL-08"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ART-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED IN CHAPTER 1, which is unusually early and is the right call: al- is inside as-salāmu ʿalaykum, ṣabāḥ al-khayr and half the headwords that follow, so a learner meets it before they can avoid it."
+    },
+    {
+      "id": "AR-A1-DEF-02",
+      "category": "At-tarif (definiteness, and the article al-)",
+      "label": "sun letters and moon letters: when the ل of ال is not pronounced",
+      "probe": [
+        "AR-CONCEPT-SUN-MOON-10"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-O1-07"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and it is the fact that makes as-salām rather than al-salām make sense. Taught in the same chapter-1 lesson as the article itself."
+    },
+    {
+      "id": "AR-A1-DEF-03",
+      "category": "At-tarif (definiteness, and the article al-)",
+      "label": "the indefinite: a bare noun, and the tanwīn that marks it",
+      "probe": [
+        "AR-CONCEPT-W06-FATHATAN-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ART-03",
+        "A1-ART-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered from the script side only. The -an ending is taught in chapter 2 as a mark to recognise, inside شكرا; no lesson says that a noun WITHOUT al- is the indefinite, which is the half a learner needs in order to produce rather than to read."
+    },
+    {
+      "id": "AR-A1-DEF-04",
+      "category": "At-tarif (definiteness, and the article al-)",
+      "label": "the article fuses with a preceding preposition: بـ + ال, لـ + ال",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ART-02"
+      ],
+      "arabicSpecific": false,
+      "note": "UNTAUGHT, and this is the one point in the whole Spanish article column that transfers to Arabic literally rather than by restatement — Arabic contracts exactly as Spanish does with al and del. بخير is taught in chapter 3 and shows بـ attached to a noun; the fusion with the article is never named."
+    },
+    {
+      "id": "AR-A1-DEM-01",
+      "category": "Al-ishara (demonstratives and deixis)",
+      "label": "the demonstratives هذا and هذه",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-02"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT ENTIRELY: هذا returns zero occurrences in 102 files and هذه returns zero. Nothing can be pointed at, and 'what is this?' — the sentence a beginner uses to acquire every other word — cannot be said even though ما is taught in chapter 2."
+    },
+    {
+      "id": "AR-A1-DEM-02",
+      "category": "Al-ishara (demonstratives and deixis)",
+      "label": "the demonstrative agrees for gender, and the noun after it keeps its article",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03",
+        "A1-SN-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, and downstream of AR-A1-DEM-01. Arabic's rule is the opposite of Spanish's — هذا البيت keeps al- where este libro drops the article — so this is a restatement rather than a transfer, and it is a restatement of something absent."
+    },
+    {
+      "id": "AR-A1-DEM-03",
+      "category": "Al-ishara (demonstratives and deixis)",
+      "label": "place deixis: هنا and هناك",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-DEM-02",
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT: هناك returns zero occurrences. With no في either (AR-A1-PRE-04), nothing in this corpus can be located anywhere."
+    },
+    {
+      "id": "AR-A1-IDF-01",
+      "category": "Al-idafa (possession and the genitive construction)",
+      "label": "the possessive suffix, first person: اسمي",
+      "probe": [
+        "AR-CONCEPT-C02-II-MY-01",
+        "AR-CONCEPT-C02-II-MY-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and taught as a suffix in its own right before the phrase that uses it — the same shape the whole track uses well."
+    },
+    {
+      "id": "AR-A1-IDF-02",
+      "category": "Al-idafa (possession and the genitive construction)",
+      "label": "the possessive suffix, second person, gendered: -ك / -كِ",
+      "probe": [
+        "AR-CONCEPT-C02-MAA-ISMUKA-02",
+        "AR-CONCEPT-C03-KAYFA-HALUKA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED TWICE. ما اسمك؟ teaches the matched suffixes and كيف حالك؟ re-teaches them a chapter later, which is why the two questions the book can ask both come out right."
+    },
+    {
+      "id": "AR-A1-IDF-03",
+      "category": "Al-idafa (possession and the genitive construction)",
+      "label": "possessive suffixes for the remaining persons: -ه, -ها, -نا",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-POS-02",
+        "A1-POS-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Two of the eight persons are available. كم عمرك؟ and كيف حالك؟ can be asked and never answered about a third party."
+    },
+    {
+      "id": "AR-A1-IDF-04",
+      "category": "Al-idafa (possession and the genitive construction)",
+      "label": "the iḍāfa: two nouns in a row, the second in the genitive",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "arabicSpecific": false,
+      "note": "UNTAUGHT AS A NAMED CONSTRUCTION, AND SHOWN CONSTANTLY. صباح الخير, مساء الخير, منتصف الليل, مع السلامة and إلى اللقاء are all iḍāfas, taught as fixed phrases in five different chapters, and no lesson ever says that this is one construction with a rule. The word iḍāfa returns zero occurrences in 102 files. Naming it once would convert five memorised phrases into a productive pattern — the single highest-leverage grammar lesson this track could add."
+    },
+    {
+      "id": "AR-A1-Q-01",
+      "category": "Al-adad (numerals and quantity)",
+      "label": "cardinal numerals one to five",
+      "probe": [
+        "AR-CONCEPT-C19-WAHID-KHAMSA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered, in chapter 19."
+    },
+    {
+      "id": "AR-A1-Q-02",
+      "category": "Al-adad (numerals and quantity)",
+      "label": "the teens and the tens: eleven to fifteen, and twenty",
+      "probe": [
+        "AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01",
+        "AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, AND ARABIC IS THE ONLY TRACK IN THIS SERIES OF THREE THAT GETS PAST FIVE. Chapter 20 teaches the 'X-and-ten' compounds and then twenty as its own plural form. Six to ten are skipped, which is a real hole inside an otherwise strong column."
+    },
+    {
+      "id": "AR-A1-Q-03",
+      "category": "Al-adad (numerals and quantity)",
+      "label": "six to ten",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ],
+      "arabicSpecific": false,
+      "note": "UNTAUGHT, AND THE GAP IS IN THE MIDDLE. Chapter 19 stops at five and chapter 20 starts at eleven, so ستة through عشرة are missing from between two lessons that both exist. This is the cheapest single fix in the file."
+    },
+    {
+      "id": "AR-A1-Q-04",
+      "category": "Al-adad (numerals and quantity)",
+      "label": "the Arabic-Indic digits ٠ ١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩",
+      "probe": [
+        "AR-CONCEPT-C19-WAHID-KHAMSA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-06",
+        "A1-NE16-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered as HISTORY, not as shapes. The chapter-19 lesson is titled 'Be honest: Arabic numerals are actually Indian' and tells the story well; it does not teach the reader to recognise or write the ten digit shapes, and no other lesson does. A price, a clock face or a page number in an Arabic newspaper is still unreadable."
+    },
+    {
+      "id": "AR-A1-Q-05",
+      "category": "Al-adad (numerals and quantity)",
+      "label": "ordinal numerals",
+      "probe": [
+        "AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED SIDEWAYS, and elegantly. Arabic counts its weekdays rather than naming them for planets, so the chapter-8 lesson teaches 'the first', 'the second' … as the days themselves. The ordinals are therefore taught, though never detached from the week."
+    },
+    {
+      "id": "AR-A1-Q-06",
+      "category": "Al-adad (numerals and quantity)",
+      "label": "quantifiers: كثير ('much') and قليل ('a little')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-Q-04",
+        "A1-ADV-03",
+        "A1-NG2-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Nothing can be asked for in an amount, which with a food chapter of eight words and a drinks chapter of four is a real block."
+    },
+    {
+      "id": "AR-A1-Q-07",
+      "category": "Al-adad (numerals and quantity)",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-PRON-01",
+      "category": "Ad-damir (pronouns)",
+      "label": "the first-person pronoun أنا",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT: أنا returns ZERO occurrences in 102 lessons. A learner cannot say 'I'. The possessive suffix -ي is taught, so they can say 'my name', and the pronoun that would let them say anything else about themselves is not in the book. For a 36-chapter track this is the most surprising single omission in the file."
+    },
+    {
+      "id": "AR-A1-PRON-02",
+      "category": "Ad-damir (pronouns)",
+      "label": "the second-person pronouns أنتَ and أنتِ, and that Arabic genders 'you'",
+      "probe": [
+        "AR-CONCEPT-C02-ANTA-ANTI-01",
+        "AR-CONCEPT-C02-ANTA-ANTI-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and taught as the axis it is: the lesson's own heading is 'a different axis of you' — Arabic splits the second person by gender where Spanish splits it by respect."
+    },
+    {
+      "id": "AR-A1-PRON-03",
+      "category": "Ad-damir (pronouns)",
+      "label": "third-person pronouns: هو and هي",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Nobody can be talked about, which also blocks AR-A1-FUN-43 and every third-person possessive."
+    },
+    {
+      "id": "AR-A1-PRON-04",
+      "category": "Ad-damir (pronouns)",
+      "label": "plural and dual pronouns",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Arabic has a DUAL as well as a plural, which no Spanish point asks about; it is folded in here rather than given its own point because neither is taught and one lesson would introduce both."
+    },
+    {
+      "id": "AR-A1-PRON-05",
+      "category": "Ad-damir (pronouns)",
+      "label": "object pronouns, which in Arabic are the same suffixes again",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02",
+        "A1-PRON-08",
+        "A1-SV-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, and NEARLY free: the suffix set is already taught for possession (AR-A1-IDF-01, AR-A1-IDF-02), and Arabic reuses it unchanged on verbs and prepositions. One sentence saying so would double its value."
+    },
+    {
+      "id": "AR-A1-PRON-06",
+      "category": "Ad-damir (pronouns)",
+      "label": "the interrogative pronoun ما ('what')",
+      "probe": [
+        "AR-CONCEPT-C02-MAA-01",
+        "AR-CONCEPT-C02-MAA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered in chapter 2, taught as a word before the question that uses it."
+    },
+    {
+      "id": "AR-A1-PRON-07",
+      "category": "Ad-damir (pronouns)",
+      "label": "the relative pronoun الذي / التي",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05",
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Arabic's relative pronoun agrees for gender and number and is required only after a definite antecedent, so it is a restatement of Spanish's que rather than a transfer — and it is absent."
+    },
+    {
+      "id": "AR-A1-PRON-08",
+      "category": "Ad-damir (pronouns)",
+      "label": "the reflexive نفس",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. The lowest-priority null in this column."
+    },
+    {
+      "id": "AR-A1-ADV-01",
+      "category": "Az-zarf (adverbs)",
+      "label": "polarity: نعم and لا as complete answers",
+      "probe": [
+        "AR-CONCEPT-C05-NAAM-01",
+        "AR-CONCEPT-C05-LA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05",
+        "A1-F1-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered, both in chapter 5, and each with a lesson of its own."
+    },
+    {
+      "id": "AR-A1-ADV-02",
+      "category": "Az-zarf (adverbs)",
+      "label": "manner: بخير ('well') as an answer about state",
+      "probe": [
+        "AR-CONCEPT-C03-BI-KHAYR-01",
+        "AR-CONCEPT-C03-BI-KHAYR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04",
+        "A1-NG6-01",
+        "A1-NG6-07"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered. بخير is taught as a phrase and taken apart into بـ + خير, which also previews the preposition."
+    },
+    {
+      "id": "AR-A1-ADV-03",
+      "category": "Az-zarf (adverbs)",
+      "label": "time deixis: اليوم ('today'), أمس ('yesterday'), غدا ('tomorrow')",
+      "probe": [
+        "AR-CONCEPT-C24-ILA-AL-GHAD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered for TOMORROW ONLY, and only inside a farewell: إلى الغد is taught in chapter 24 and its lesson takes the two pieces apart. There is no اليوم and no أمس, so of the three deictic days the corpus owns the one that points forward."
+    },
+    {
+      "id": "AR-A1-ADV-04",
+      "category": "Az-zarf (adverbs)",
+      "label": "the parts of the day, as points to locate an event at",
+      "probe": [
+        "AR-CONCEPT-SABAH-15",
+        "AR-CONCEPT-MASA-18",
+        "AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-01",
+        "AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and richly: morning and evening in chapter 1, noon and midnight in chapter 15, with الظهر taught alongside the midday prayer it names."
+    },
+    {
+      "id": "AR-A1-ADV-05",
+      "category": "Az-zarf (adverbs)",
+      "label": "quantity adverbs, and degree",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, on the same footing as AR-A1-Q-06."
+    },
+    {
+      "id": "AR-A1-ADV-06",
+      "category": "Az-zarf (adverbs)",
+      "label": "connective adverbs: أيضا ('also')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. 'Me too' is not sayable."
+    },
+    {
+      "id": "AR-A1-ADV-07",
+      "category": "Az-zarf (adverbs)",
+      "label": "the interrogative adverbs كيف and كم",
+      "probe": [
+        "AR-CONCEPT-C03-KAYFA-01",
+        "AR-CONCEPT-C17-KAM-UMRUKA-01",
+        "AR-CONCEPT-C16-AL-SAA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED. كيف is taught in chapter 3 and كم appears twice — كم عمرك؟ in chapter 17 and كم الساعة؟ in chapter 16 — which is two of the three questions an A1 candidate is asked first."
+    },
+    {
+      "id": "AR-A1-ADV-08",
+      "category": "Az-zarf (adverbs)",
+      "label": "لماذا ('why') against لأن ('because')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08",
+        "A1-SUB-06"
+      ],
+      "arabicSpecific": false,
+      "note": "NEITHER EXISTS: لماذا returns zero occurrences and لأن returns zero. A learner cannot ask for a reason or give one."
+    },
+    {
+      "id": "AR-A1-V-01",
+      "category": "Al-fil (the verb, and the root-and-pattern engine)",
+      "label": "the citation form of an Arabic verb is the third-person masculine PAST",
+      "probe": [
+        "AR-CONCEPT-C28-DHAHABA-01",
+        "AR-CONCEPT-C28-DHAHABA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and it is a genuine A1 demand rather than a curiosity: Arabic has no infinitive, so the form a dictionary lists is a finite past-tense verb, and a learner who does not know that mis-reads every entry. ذهب's lesson is built on it."
+    },
+    {
+      "id": "AR-A1-V-02",
+      "category": "Al-fil (the verb, and the root-and-pattern engine)",
+      "label": "the past tense, third person masculine, across a stock of verbs",
+      "probe": [
+        "AR-CONCEPT-C28-DHAHABA-01",
+        "AR-CONCEPT-C28-JAA-01",
+        "AR-CONCEPT-C29-QALA-01",
+        "AR-CONCEPT-C29-RAA-01",
+        "AR-CONCEPT-C30-ARAFA-01",
+        "AR-CONCEPT-C30-AKALA-01",
+        "AR-CONCEPT-C31-FAHIMA-01",
+        "AR-CONCEPT-C31-QARAA-01",
+        "AR-CONCEPT-C31-SAALA-01",
+        "AR-CONCEPT-C31-KATABA-01",
+        "AR-CONCEPT-C32-AKHADHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-V-06"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, ELEVEN TIMES, AND IN EXACTLY ONE PERSON. Chapters 28 to 32 build a verb stock a learner can recognise and cannot use, because every verb is given as 'he went', 'he said', 'he ate' and no other form of any of them appears. See AR-A1-V-04, which is the missing half."
+    },
+    {
+      "id": "AR-A1-V-03",
+      "category": "Al-fil (the verb, and the root-and-pattern engine)",
+      "label": "the weak root: a middle letter that vanishes",
+      "probe": [
+        "AR-CONCEPT-C28-JAA-02",
+        "AR-CONCEPT-C29-QALA-02",
+        "AR-CONCEPT-C35-JAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [],
+      "arabicSpecific": true,
+      "note": "NO SPANISH ORIGIN: Spanish irregularity is stem-vowel alternation, not a consonant that disappears. Arabic's hollow roots are the commonest 'irregularity' a beginner meets and the corpus treats them as patterned rather than exceptional, teaching them three times. Arabic-specific and covered."
+    },
+    {
+      "id": "AR-A1-V-04",
+      "category": "Al-fil (the verb, and the root-and-pattern engine)",
+      "label": "the past tense in any person other than the third masculine",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-V-06",
+        "A1-V-08"
+      ],
+      "arabicSpecific": false,
+      "note": "COMPLETELY ABSENT, AND IT IS THE LARGEST STRUCTURAL GAP IN THIS FILE. Eleven verbs are taught and not one of them can be conjugated for 'I'. The past-tense person suffixes are a single closed table; one lesson would turn the whole of chapters 28-32 from a reading list into a speaking stock."
+    },
+    {
+      "id": "AR-A1-V-05",
+      "category": "Al-fil (the verb, and the root-and-pattern engine)",
+      "label": "the present tense",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-02",
+        "A1-V-03"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT, WITH ONE ACCIDENTAL EXCEPTION. The only present-tense verb form anywhere in the corpus is لا أعرف ('I do not know'), given as an EXAMPLE inside the chapter-5 negation lesson and never taught as a form. Arabic marks the present with prefixes, not suffixes, so this does not come free with AR-A1-V-04 and needs a lesson of its own."
+    },
+    {
+      "id": "AR-A1-V-06",
+      "category": "Al-fil (the verb, and the root-and-pattern engine)",
+      "label": "the derived verb forms II, III and IV",
+      "probe": [
+        "AR-CONCEPT-C32-FAKKARA-02",
+        "AR-CONCEPT-C32-SAADA-02",
+        "AR-CONCEPT-C32-AHABBA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [],
+      "arabicSpecific": true,
+      "note": "NO SPANISH ORIGIN: Spanish has no equivalent of a verb rebuilt by doubling, lengthening or prefixing its own root. Chapter 32 walks the ladder of four shapes in four consecutive lessons with أخذ kept as the plain control, which is the most systematic teaching in the whole track. Arabic-specific and covered."
+    },
+    {
+      "id": "AR-A1-V-07",
+      "category": "Al-fil (the verb, and the root-and-pattern engine)",
+      "label": "the imperative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. No verb in the corpus appears in any command form, so no instruction can be given."
+    },
+    {
+      "id": "AR-A1-V-08",
+      "category": "Al-fil (the verb, and the root-and-pattern engine)",
+      "label": "the participle, and the compound tenses",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-V-09",
+        "A1-V-10",
+        "A1-V-13",
+        "A1-V-14"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. The مُ- doer noun IS taught, inside فكّر's lesson, but as a noun-building pattern rather than as a participle in a verb phrase, so nothing here is reachable."
+    },
+    {
+      "id": "AR-A1-V-09",
+      "category": "Al-fil (the verb, and the root-and-pattern engine)",
+      "label": "the imperfect/past distinction, and describing a habit",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05",
+        "A1-V-07"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, and this is where the proxy over-asks: Spanish spends three A1 points on an imperfect/preterite split that Arabic does not make. What Arabic asks of an A1 learner instead is the past/present split at AR-A1-V-04 and AR-A1-V-05, and neither exists."
+    },
+    {
+      "id": "AR-A1-V-10",
+      "category": "Al-fil (the verb, and the root-and-pattern engine)",
+      "label": "verbs that need no verb: the verbless nominal sentence",
+      "probe": [
+        "AR-CONCEPT-C02-ISMII-02",
+        "AR-CONCEPT-C17-KAM-UMRUKA-02",
+        "AR-CONCEPT-C18-AL-TAQS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02",
+        "A1-OS-05",
+        "A1-SV-03"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED THREE TIMES, and it is the corpus's most-repeated grammatical idea: اسمي … in chapter 2, كم عمرك؟ in 17 and الجو حار in 18 all say 'no verb to be at all', each time pointing back at the last. Restated around Arabic's machinery — Spanish needs ser, estar and haber where Arabic needs nothing."
+    },
+    {
+      "id": "AR-A1-V-11",
+      "category": "Al-fil (the verb, and the root-and-pattern engine)",
+      "label": "transitive and intransitive verbs side by side",
+      "probe": [
+        "AR-CONCEPT-C30-AKALA-01",
+        "AR-CONCEPT-C28-DHAHABA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-OS-06",
+        "A1-SV-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered by the verb stock rather than by a lesson about it. Arabic marks its object with a case ending rather than with Spanish's personal a, and no lesson names either."
+    },
+    {
+      "id": "AR-A1-PRE-01",
+      "category": "Huruf al-jarr (prepositions)",
+      "label": "مع ('with')",
+      "probe": [
+        "AR-CONCEPT-C04-MAA-WITH-01",
+        "AR-CONCEPT-C04-MAA-WITH-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG1-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered, taught as a word of its own in chapter 4 before مع السلامة uses it."
+    },
+    {
+      "id": "AR-A1-PRE-02",
+      "category": "Huruf al-jarr (prepositions)",
+      "label": "إلى ('to, until')",
+      "probe": [
+        "AR-CONCEPT-C04-ILA-LIQAA-02",
+        "AR-CONCEPT-C24-ILA-AL-GHAD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG3-05"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and re-used deliberately: إلى اللقاء in chapter 4 and إلى الغد in chapter 24, with the second lesson pointing back at the first."
+    },
+    {
+      "id": "AR-A1-PRE-03",
+      "category": "Huruf al-jarr (prepositions)",
+      "label": "من ('from')",
+      "probe": [
+        "AR-CONCEPT-C06-MIN-FADLIK-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED ONLY INSIDE A FIXED PHRASE. من فضلك is taught whole in chapter 6 and the preposition is glossed there as 'from your grace'; no lesson uses من to say where anything comes from, which is the use an A1 candidate needs."
+    },
+    {
+      "id": "AR-A1-PRE-04",
+      "category": "Huruf al-jarr (prepositions)",
+      "label": "في ('in'), and على ('on')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01",
+        "A1-NG3-02",
+        "A1-NG3-03"
+      ],
+      "arabicSpecific": false,
+      "note": "في RETURNS ZERO OCCURRENCES in 102 files, and على appears only welded into تصبح على خير. Arabic's commonest preposition is not in the book, so nothing can be located anywhere — the whole spatial column below fails on this one word."
+    },
+    {
+      "id": "AR-A1-PRE-05",
+      "category": "Huruf al-jarr (prepositions)",
+      "label": "بـ ('with, in'), written attached to its noun",
+      "probe": [
+        "AR-CONCEPT-C03-BI-KHAYR-02",
+        "AR-CONCEPT-W09-KHAYR-BIKHAYR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG1-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered, from the meaning side and the writing side. It is the corpus's only demonstration that some Arabic prepositions are prefixes."
+    },
+    {
+      "id": "AR-A1-SEN-01",
+      "category": "Al-jumla (the sentence)",
+      "label": "the nominal sentence: two nouns side by side",
+      "probe": [
+        "AR-CONCEPT-C02-ISMII-01",
+        "AR-CONCEPT-C18-AL-TAQS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-OS-01",
+        "A1-OS-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered, and it is the only sentence type the corpus can build productively."
+    },
+    {
+      "id": "AR-A1-SEN-02",
+      "category": "Al-jumla (the sentence)",
+      "label": "the verbal sentence, which puts the verb first",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-OS-01",
+        "A1-SV-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Arabic's default word order is verb-subject-object and no lesson says so, which matters more than it would for a European language because the eleven taught verbs are all citation forms with no sentence around them."
+    },
+    {
+      "id": "AR-A1-SEN-03",
+      "category": "Al-jumla (the sentence)",
+      "label": "the yes-or-no question, with هل or أ",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Arabic marks a yes-or-no question with a particle rather than with intonation, so unlike the Indic tracks in this series this cannot be done by prosody alone — it needs the word, and the word is not there. نعم and لا are taught in chapter 5 as answers to a question the book cannot ask."
+    },
+    {
+      "id": "AR-A1-SEN-04",
+      "category": "Al-jumla (the sentence)",
+      "label": "the content question, with the asking word fronted",
+      "probe": [
+        "AR-CONCEPT-C02-MAA-ISMUKA-01",
+        "AR-CONCEPT-C03-KAYFA-HALUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered by the two questions the corpus owns, both of which front their asking word as Spanish does."
+    },
+    {
+      "id": "AR-A1-SEN-05",
+      "category": "Al-jumla (the sentence)",
+      "label": "the existential: هناك / يوجد ('there is')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, and blocked on the same missing هناك as AR-A1-DEM-03."
+    },
+    {
+      "id": "AR-A1-SEN-06",
+      "category": "Al-jumla (the sentence)",
+      "label": "the vocative يا, which Arabic puts before every name it calls",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-SN-04",
+        "A1-F5-03"
+      ],
+      "arabicSpecific": false,
+      "note": "UNTAUGHT, and it is one letter. Arabic does not address a person by a bare name — يا محمد, not محمد — so a learner who has been taught how to give their own name still cannot call anybody by theirs."
+    },
+    {
+      "id": "AR-A1-SEN-07",
+      "category": "Al-jumla (the sentence)",
+      "label": "agreement inside the noun phrase, and subject-verb agreement",
+      "probe": [
+        "AR-CONCEPT-C09-ASWAD-ABYAD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-SN-02",
+        "A1-SN-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered for the adjective only, in the colour lessons. Subject-verb agreement cannot be shown at all while every verb stands in one person (AR-A1-V-04)."
+    },
+    {
+      "id": "AR-A1-QUE-01",
+      "category": "Al-istifham (questions)",
+      "label": "ما ('what')",
+      "probe": [
+        "AR-CONCEPT-C02-MAA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06",
+        "A1-F1-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered in chapter 2."
+    },
+    {
+      "id": "AR-A1-QUE-02",
+      "category": "Al-istifham (questions)",
+      "label": "كيف ('how')",
+      "probe": [
+        "AR-CONCEPT-C03-KAYFA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered in chapter 3."
+    },
+    {
+      "id": "AR-A1-QUE-03",
+      "category": "Al-istifham (questions)",
+      "label": "كم ('how much, how many')",
+      "probe": [
+        "AR-CONCEPT-C17-KAM-UMRUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered, and used for both age and the clock."
+    },
+    {
+      "id": "AR-A1-QUE-04",
+      "category": "Al-istifham (questions)",
+      "label": "أين ('where')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-NG3-01"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT: zero occurrences in 102 files. With no في and no place name, the whole 'where are you from / where do you live' exchange is unreachable three ways over."
+    },
+    {
+      "id": "AR-A1-QUE-05",
+      "category": "Al-istifham (questions)",
+      "label": "من ('who')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT. Every raw match for من in the corpus was checked in context and all three are the preposition inside من فضلك. The question word is not taught."
+    },
+    {
+      "id": "AR-A1-QUE-06",
+      "category": "Al-istifham (questions)",
+      "label": "متى ('when')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-NG4-01"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT: zero occurrences — which is striking in a track that teaches the weekdays, the months, the seasons, noon and midnight. Every answer is in the book and the question is not."
+    },
+    {
+      "id": "AR-A1-QUE-07",
+      "category": "Al-istifham (questions)",
+      "label": "the tag question",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-NEG-01",
+      "category": "An-nafy (negation)",
+      "label": "لا as a complete answer",
+      "probe": [
+        "AR-CONCEPT-C05-LA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered in chapter 5."
+    },
+    {
+      "id": "AR-A1-NEG-02",
+      "category": "An-nafy (negation)",
+      "label": "لا as the negator of a present-tense verb",
+      "probe": [
+        "AR-CONCEPT-C05-LA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, AND THIS IS WHERE ARABIC IS AHEAD OF ITS INDIC SIBLINGS. The chapter-5 lesson does not stop at the answer: it teaches لا as 'the sentence's not', quotes لا إله إلا الله, and gives لا أعرف — 'I do not know' — as its example. Bengali's corresponding point is null. The catch is that لا أفهم ('I do not understand') still cannot be BUILT, because the present tense it negates is untaught (AR-A1-V-05); the learner has one negated verb as a memorised phrase and no way to make a second."
+    },
+    {
+      "id": "AR-A1-NEG-03",
+      "category": "An-nafy (negation)",
+      "label": "ليس, the negator of a verbless sentence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-OS-05"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT: ليس returns zero occurrences. The nominal sentence is the one thing this corpus teaches productively (AR-A1-SEN-01) and it cannot be denied — الجو حار can be said and 'it is not hot' cannot."
+    },
+    {
+      "id": "AR-A1-NEG-04",
+      "category": "An-nafy (negation)",
+      "label": "ما, the negator of a past-tense verb",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Arabic uses a different word to negate the past from the one it uses for the present, so this does not come free with AR-A1-NEG-02 — and the past is the only tense the corpus teaches."
+    },
+    {
+      "id": "AR-A1-NEG-05",
+      "category": "An-nafy (negation)",
+      "label": "negative coordination: لا … ولا",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, and downstream of the empty joining column."
+    },
+    {
+      "id": "AR-A1-JOIN-01",
+      "category": "Ar-rabt (joining and subordination)",
+      "label": "و, the prefixed 'and'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "arabicSpecific": false,
+      "note": "GLOSSED ONCE, TAUGHT NEVER — and this is the headline of the file. و is the commonest word in written Arabic. Chapter 1's as-salāmu ʿalaykum lesson says, of the fixed reply, 'hear the little wa- at the front; it means and' — and that sentence introduces NO atom, so nothing in the corpus is probeable for it and nothing later builds on it. A learner who owns 36 chapters of vocabulary — six colours, eight foods, four family words, the weekdays, the months — cannot say 'bread and water'."
+    },
+    {
+      "id": "AR-A1-JOIN-02",
+      "category": "Ar-rabt (joining and subordination)",
+      "label": "أو ('or')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-CO-03",
+        "A1-F3-02"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT. The one raw match for أو was checked in context and is the middle of الأول ('the first') in the months lesson. No alternative can be offered."
+    },
+    {
+      "id": "AR-A1-JOIN-03",
+      "category": "Ar-rabt (joining and subordination)",
+      "label": "لكن ('but')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT: zero occurrences. Nothing can be qualified or contradicted."
+    },
+    {
+      "id": "AR-A1-JOIN-04",
+      "category": "Ar-rabt (joining and subordination)",
+      "label": "distributive joining",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-JOIN-05",
+      "category": "Ar-rabt (joining and subordination)",
+      "label": "أنّ / أن, the complementiser: 'I think THAT …'",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT: zero occurrences as a word. No opinion can be reported, which is why the whole opinion block of the functional column below is null."
+    },
+    {
+      "id": "AR-A1-JOIN-06",
+      "category": "Ar-rabt (joining and subordination)",
+      "label": "the relative clause with الذي",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught — the same absence recorded from the pronoun side at AR-A1-PRON-07, filed here so the joining column is a complete work queue on its own."
+    },
+    {
+      "id": "AR-A1-JOIN-07",
+      "category": "Ar-rabt (joining and subordination)",
+      "label": "لأن ('because')",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT: zero occurrences, on both halves of Spanish's why/because pair."
+    },
+    {
+      "id": "AR-A1-JOIN-08",
+      "category": "Ar-rabt (joining and subordination)",
+      "label": "عندما ('when') as a clause joiner",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "arabicSpecific": false,
+      "note": "ABSENT: zero occurrences."
+    },
+    {
+      "id": "AR-A1-JOIN-09",
+      "category": "Ar-rabt (joining and subordination)",
+      "label": "لـ ('in order to') plus a verb",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Arabic expresses purpose with a prefixed particle and a subjunctive verb; neither piece exists."
+    },
+    {
+      "id": "AR-A1-JOIN-10",
+      "category": "Ar-rabt (joining and subordination)",
+      "label": "the maṣdar, Arabic's verbal noun, as a clause substitute",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-SUB-01",
+        "A1-SUB-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught as a construction, and half-present as vocabulary: اللقاء in إلى اللقاء is a maṣdar and its lesson takes it apart without naming the class. Arabic replaces a great many subordinate clauses with a maṣdar, so this is the same missing lever as the iḍāfa at AR-A1-IDF-04 — a pattern shown repeatedly and never named."
+    },
+    {
+      "id": "AR-A1-JOIN-11",
+      "category": "Ar-rabt (joining and subordination)",
+      "label": "إلا ('except'), and the exceptive frame",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "arabicSpecific": false,
+      "note": "SHOWN AND NOT TAUGHT. لا إله إلا الله is quoted in full in the chapter-5 negation lesson, which is the corpus's only exceptive sentence; the frame is not named and no atom carries it."
+    },
+    {
+      "id": "AR-A1-REG-01",
+      "category": "Al-fusha wa-l-ammiyya (register, and the diglossia the caveat names)",
+      "label": "the corpus teaches Modern Standard Arabic, uniformly and by declaration",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [],
+      "arabicSpecific": true,
+      "note": "NO SPANISH ORIGIN, AND MEASURED RATHER THAN ASSUMED. All 102 lessons declare `variety: modern-standard-arabic` — there is no second value in the field — and 101 of 102 declare `register: neutral`. That is consistent with core/exam-levels.json, whose caveat says the ALPT and ILR/ACTFL mapping is for MSA. It is also something no lesson SAYS: a learner is never told that the language they are learning is nobody's mother tongue and is not what they will hear in a Cairo taxi. One paragraph, in chapter 1."
+    },
+    {
+      "id": "AR-A1-REG-02",
+      "category": "Al-fusha wa-l-ammiyya (register, and the diglossia the caveat names)",
+      "label": "the dialect a learner will actually hear: العامية",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [],
+      "arabicSpecific": true,
+      "note": "NO SPANISH ORIGIN, AND THE exam-levels CAVEAT OVERSTATES WHAT IS HERE. That caveat reads 'the corpus also teaches greetings a learner would hear in dialect'. Measured: exactly two dialect remarks exist in 102 lessons — أيوة (aywa, 'yeah') in a single bullet of chapter 5, and a note in chapter 25 that a bare day-name is the colloquial form — and NEITHER introduces an atom, so neither is taught in any sense a gate can see. The greetings the corpus does teach are pan-Arabic MSA. Recorded as a point rather than as a correction to exam-levels.json because the fix is content, not a caveat rewrite."
+    },
+    {
+      "id": "AR-A1-REG-03",
+      "category": "Al-fusha wa-l-ammiyya (register, and the diglossia the caveat names)",
+      "label": "regional variation INSIDE the standard: the month names, and the Islamic calendar",
+      "probe": [
+        "AR-CONCEPT-C14-ASHHUR-02",
+        "AR-CONCEPT-C12-AL-FUSUL-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [],
+      "arabicSpecific": true,
+      "note": "NO SPANISH ORIGIN, AND COVERED, WHICH IS THE ONE PLACE THIS COLUMN IS STRONG. The months lesson teaches that the Gregorian names are the convention in Egypt and the Gulf while the Levant and Iraq use another set entirely, and both it and the seasons lesson are honest that the Islamic lunar calendar runs alongside. That is a real register fact, taught deliberately. Arabic-specific and covered."
+    },
+    {
+      "id": "AR-A1-REG-04",
+      "category": "Al-fusha wa-l-ammiyya (register, and the diglossia the caveat names)",
+      "label": "religious register: the phrases a secular learner still has to be able to say",
+      "probe": [
+        "AR-CONCEPT-C03-AL-HAMDU-LILLAH-01",
+        "AR-C01-FULL-GREETING-11"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [],
+      "arabicSpecific": true,
+      "note": "NO SPANISH ORIGIN: the PCIC has one A1 point about religion as a NOTION and none about religious register, because Spanish does not require it of a beginner. Arabic does — الحمد لله is the everyday answer to 'how are you' and السلام عليكم is the everyday greeting — and the corpus teaches both, with الظهر's prayer named beside it in chapter 15. Arabic-specific and covered."
+    },
+    {
+      "id": "AR-A1-REG-05",
+      "category": "Al-fusha wa-l-ammiyya (register, and the diglossia the caveat names)",
+      "label": "formality: how the same exchange changes between a stranger and a friend",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. 101 of 102 lessons declare `register: neutral` and the single exception is not a taught contrast. Arabic's second person is split by GENDER rather than by respect (AR-A1-PRON-02), so this track has no equivalent of the tu/usted or tumi/apni ladder — which is exactly why the formality that DOES exist, in the choice of greeting and of leave-taking, needs saying explicitly and is not said."
+    },
+    {
+      "id": "AR-A1-SND-01",
+      "category": "An-nutq (pronunciation)",
+      "label": "the short vowels, which are marks rather than letters",
+      "probe": [
+        "AR-CONCEPT-W06-HARAKAT-01",
+        "AR-CONCEPT-W06-HARAKAT-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and taught with the best possible payoff: one tiny dash is the whole difference between أنتَ and أنتِ, which the lesson makes its own worked example."
+    },
+    {
+      "id": "AR-A1-SND-02",
+      "category": "An-nutq (pronunciation)",
+      "label": "the emphatic consonants ص ض ط ظ",
+      "probe": [
+        "AR-SCRIPT-SAD-KHA-14"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered only for ص, taught inside صباح in chapter 1. ض, ط and ظ are shown in seven, seven and one lesson respectively and never taught — see AR-A1-KHT-05. The emphatic series is the hardest thing in Arabic phonology for a European ear and three quarters of it is untaught."
+    },
+    {
+      "id": "AR-A1-SND-03",
+      "category": "An-nutq (pronunciation)",
+      "label": "ع, the sound with no European equivalent",
+      "probe": [
+        "AR-CONCEPT-W10-AYN-01",
+        "AR-CONCEPT-W10-AYN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and given a lesson of its own in chapter 4 — 'the most Arabic sound of all'. Correctly prioritised."
+    },
+    {
+      "id": "AR-A1-SND-04",
+      "category": "An-nutq (pronunciation)",
+      "label": "the glottal stop, and the hamza that writes it",
+      "probe": [
+        "AR-CONCEPT-W06-HAMZA-01",
+        "AR-SCRIPT-HAMZA-17"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered in chapters 1 and 2. Its three SEATS are sorted out later, in قرأ's lesson in chapter 31, which is the right order."
+    },
+    {
+      "id": "AR-A1-SND-05",
+      "category": "An-nutq (pronunciation)",
+      "label": "the doubled consonant, and the shadda",
+      "probe": [
+        "AR-CONCEPT-W06-SHADDA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-03",
+        "A1-O1-07"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered in chapter 2 and used productively in chapter 32, where doubling the middle root letter is what makes فكّر out of a root."
+    },
+    {
+      "id": "AR-A1-SND-06",
+      "category": "An-nutq (pronunciation)",
+      "label": "a consonant with no vowel after it: the sukūn",
+      "probe": [
+        "AR-CONCEPT-W06-SUKUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered in chapter 2."
+    },
+    {
+      "id": "AR-A1-SND-07",
+      "category": "An-nutq (pronunciation)",
+      "label": "long vowels, written with ا و ي",
+      "probe": [
+        "AR-CONCEPT-W05-YA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered for ي only, whose lesson teaches all three of its jobs at once. The long/short vowel contrast is phonemic in Arabic and is never stated as a rule."
+    },
+    {
+      "id": "AR-A1-SND-08",
+      "category": "An-nutq (pronunciation)",
+      "label": "stress and phrase rhythm",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O2-01",
+        "A1-O2-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. arabic/pronunciation-reference.md exists and carries no atom, so no probe can reach whatever it contains — the same measurement gap Telugu's inventory recorded."
+    },
+    {
+      "id": "AR-A1-KHT-01",
+      "category": "Al-khatt (script and orthography)",
+      "label": "the page runs right to left, and letters join",
+      "probe": [
+        "AR-SCRIPT-JOINING-FORMS-04",
+        "AR-SCRIPT-SIN-LAM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered in the first chapter, and taught by tracing سلام rather than by assertion."
+    },
+    {
+      "id": "AR-A1-KHT-02",
+      "category": "Al-khatt (script and orthography)",
+      "label": "one skeleton, several letters, told apart by dots",
+      "probe": [
+        "AR-SCRIPT-BA-FAMILY-07",
+        "AR-CONCEPT-W04-DOTS-FAMILY-01",
+        "AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01",
+        "AR-CONCEPT-W10-AYN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED FOUR TIMES, and it is the corpus's best script idea: the bowl family, the hook family and the ʿayn family are each taught as a family rather than as three unrelated letters, with a truth-table in chapter 2."
+    },
+    {
+      "id": "AR-A1-KHT-03",
+      "category": "Al-khatt (script and orthography)",
+      "label": "a letter changes shape by position, and some letters never join left",
+      "probe": [
+        "AR-SCRIPT-JOINING-FORMS-04",
+        "AR-CONCEPT-W08-KAF-AND-RA-02",
+        "AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered. هـ is taught as 'the loop that never looks the same', which is the hardest case, and ر and ا are both named as non-joiners."
+    },
+    {
+      "id": "AR-A1-KHT-04",
+      "category": "Al-khatt (script and orthography)",
+      "label": "assembling a whole taught word out of taught letters",
+      "probe": [
+        "AR-SCRIPT-WRITE-SALAM-03",
+        "AR-SCRIPT-WRITE-FULL-GREETING-13",
+        "AR-CONCEPT-W09-KHAYR-BIKHAYR-01",
+        "AR-CONCEPT-W12-MAA-SALAMA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered, in eighteen writing lessons — every one of which sits in chapters 1 to 4."
+    },
+    {
+      "id": "AR-A1-KHT-05",
+      "category": "Al-khatt (script and orthography)",
+      "label": "every letter a lesson puts in front of the reader has been taught first",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "arabicSpecific": false,
+      "note": "MEASURED AND BADLY OPEN: 30 glyphs taught against 45 shown, 15 never taught, and 57 of the 102 lessons ask a reader to decode a shape nobody gave them. It is the worst script closure of the three tracks measured in this series — Bengali is 34 of 45 with 21 violations, Urdu 15 of 35 with 4. The never-taught fifteen, by how many lessons want each: ف 34 · د 21 · ق 15 · آ 11 · ذ 9 · ض 7 · ز 7 · ط 7 · إ 6 · ى 5 · ئ 5 · ؤ 3 · ظ 1 · چ 1 · ی 1. ف alone is wanted by a THIRD OF THE CORPUS. The cause is structural: all eighteen writing lessons sit in chapters 1-4 and the alphabet is not finished there, while chapters 5-36 add eighty vocabulary lessons that spend letters nobody taught."
+    },
+    {
+      "id": "AR-A1-KHT-06",
+      "category": "Al-khatt (script and orthography)",
+      "label": "stroke order: how each letter is actually written by hand",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "arabicSpecific": false,
+      "note": "SOURCED BUT UNUSED, which is the opposite of Bengali's problem. script-ductus holds 32 sourced Arabic glyph records — including ف, د, ق, ذ, ض, ز, ط, ظ and ى, nine of the fifteen never-taught letters — so the data for a filmstrip exists and no lesson consumes it for these letters. This is authoring, not research."
+    },
+    {
+      "id": "AR-A1-KHT-07",
+      "category": "Al-khatt (script and orthography)",
+      "label": "every headword shows how it is said",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "arabicSpecific": false,
+      "note": "MEASURED AND FAILING: `headwordsWithoutRomanization` is 37 for Arabic, against 0 for Bengali and 0 for Urdu. Thirty-seven lessons put an Arabic headword in front of a reader with no romanisation, so a learner who cannot yet read the script — which, given AR-A1-KHT-05, is every learner past chapter 4 — cannot say the word at all. It is also the reason the closure figure above is as bad as it is: a romanised headword is exempt from the closure rule, and these 37 are not."
+    },
+    {
+      "id": "AR-A1-KHT-08",
+      "category": "Al-khatt (script and orthography)",
+      "label": "the Arabic-Indic digits as written shapes",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught — see AR-A1-Q-04. Filed in both columns because closing it once closes it in both."
+    },
+    {
+      "id": "AR-A1-KHT-09",
+      "category": "Al-khatt (script and orthography)",
+      "label": "Arabic has no letter case, so there is nothing to capitalise",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Recorded because a learner must be TOLD, not because a paradigm is owed. One sentence in the first script lesson."
+    },
+    {
+      "id": "AR-A1-KHT-10",
+      "category": "Al-khatt (script and orthography)",
+      "label": "Arabic punctuation, and the marks that are mirrored: ؟ ، ؛",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-04",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "arabicSpecific": false,
+      "note": "UNTAUGHT, and visually the most obvious thing about a page of Arabic after the direction of the script: the question mark and the comma are reversed. The corpus writes its example sentences with Latin marks throughout. One lesson covers the whole of Spanish's nine-point punctuation column."
+    },
+    {
+      "id": "AR-A1-KHT-11",
+      "category": "Al-khatt (script and orthography)",
+      "label": "abbreviations, initialisms and symbols",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02",
+        "A1-O4-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, merged into one point because Arabic does not divide them as the PCIC does."
+    },
+    {
+      "id": "AR-A1-KHT-12",
+      "category": "Al-khatt (script and orthography)",
+      "label": "the alphabet in order, and the names of the letters",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-EXAM-LEVELS",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "arabicSpecific": false,
+      "note": "UNTAUGHT AS AN ORDERED SET. The corpus teaches letters as it needs them, which is the right pedagogy and leaves a real gap: a learner who cannot recite أ ب ت ث cannot use a dictionary, an index or a form. Thirty of the twenty-eight letters' worth of teaching exists; the ORDER does not."
+    },
+    {
+      "id": "AR-A1-FUN-01",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "greet",
+      "probe": [
+        "AR-C01-SALAM-01",
+        "AR-C01-MARHABA-05",
+        "AR-C01-FULL-GREETING-11"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F6-02"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED THREE WAYS in the first chapter — سلام, مرحبا and السلام عليكم — which is more greeting than any other track in this series teaches at all."
+    },
+    {
+      "id": "AR-A1-FUN-02",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "respond to a greeting",
+      "probe": [
+        "AR-C01-FULL-GREETING-11",
+        "AR-CULTURE-SABAH-REPLY-16"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered, and the reply is taught as a reply: وعليكم السلام for the full greeting, and صباح النور for صباح الخير, which its own lesson gives."
+    },
+    {
+      "id": "AR-A1-FUN-03",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "greet by time of day",
+      "probe": [
+        "AR-CONCEPT-SABAH-15",
+        "AR-CONCEPT-MASA-18",
+        "AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-NG4-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED for morning, evening and night, with تصبح على خير taught in chapter 27 and its lesson honest that the 'good night' wish points forward to the morning."
+    },
+    {
+      "id": "AR-A1-FUN-04",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "take leave",
+      "probe": [
+        "AR-CONCEPT-C04-MAA-SALAMA-01",
+        "AR-CONCEPT-C04-ILA-LIQAA-01",
+        "AR-CONCEPT-C24-ILA-AL-GHAD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-11",
+        "A1-F6-06"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED three ways, and the chapter-4 lesson closes the greeting arc on the same root that opened it."
+    },
+    {
+      "id": "AR-A1-FUN-05",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "introduce oneself by name",
+      "probe": [
+        "AR-CONCEPT-C02-ISMII-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-04",
+        "A1-F1-01",
+        "A1-F1-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered by the frame, and by two lessons that teach its pieces first."
+    },
+    {
+      "id": "AR-A1-FUN-06",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "ask somebody's name",
+      "probe": [
+        "AR-CONCEPT-C02-MAA-ISMUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered, and gendered: the lesson gives اسمك and اسمكِ together."
+    },
+    {
+      "id": "AR-A1-FUN-07",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "respond to an introduction",
+      "probe": [
+        "AR-CONCEPT-C02-TASHARRAFNA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ],
+      "arabicSpecific": false,
+      "note": "تشرفنا is taught whole in chapter 2, with its literal 'we have been honoured' given."
+    },
+    {
+      "id": "AR-A1-FUN-08",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "ask how somebody is",
+      "probe": [
+        "AR-CONCEPT-C03-KAYFA-HALUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F6-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered, and again gendered: كيف حالك / كيف حالكِ."
+    },
+    {
+      "id": "AR-A1-FUN-09",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "say how you are",
+      "probe": [
+        "AR-CONCEPT-C03-BI-KHAYR-01",
+        "AR-CONCEPT-C03-AL-HAMDU-LILLAH-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F2-04",
+        "A1-NG6-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED TWICE, and the second is the one that matters: الحمد لله is what an Arabic speaker actually answers, and the corpus teaches it rather than only the textbook بخير."
+    },
+    {
+      "id": "AR-A1-FUN-10",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "thank",
+      "probe": [
+        "AR-CONCEPT-SHUKRAN-21"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "arabicSpecific": false,
+      "note": "شكرا, taught in chapter 1 with its grammar — the -an ending — taken apart."
+    },
+    {
+      "id": "AR-A1-FUN-11",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "reply to thanks",
+      "probe": [
+        "AR-CONCEPT-C23-AFWAN-01",
+        "AR-CONCEPT-C23-AFWAN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F4-04"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and the lesson is honest that عفوا does more than one job — 'you're welcome', 'excuse me' and 'pardon' at once."
+    },
+    {
+      "id": "AR-A1-FUN-12",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "apologise",
+      "probe": [
+        "AR-CONCEPT-C07-ASIF-01",
+        "AR-CONCEPT-C07-ASIF-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and the repair column is this track's strongest: آسف/آسفة is taught in chapter 7, gendered, with معذرة named beside it as the alternative."
+    },
+    {
+      "id": "AR-A1-FUN-13",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "say excuse me, and get somebody's attention",
+      "probe": [
+        "AR-CONCEPT-C23-AFWAN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-06",
+        "A1-F6-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered by عفوا, whose lesson names this use explicitly."
+    },
+    {
+      "id": "AR-A1-FUN-14",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "say please",
+      "probe": [
+        "AR-CONCEPT-C06-MIN-FADLIK-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "arabicSpecific": false,
+      "note": "من فضلك, taught in chapter 6 with its literal 'from your grace'."
+    },
+    {
+      "id": "AR-A1-FUN-15",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "say you do not understand, and ask for a repeat",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F2-15",
+        "A1-F6-04"
+      ],
+      "arabicSpecific": false,
+      "note": "UNTAUGHT, AND IT IS THE ONE HOLE IN AN OTHERWISE STRONG REPAIR KIT. فهم is taught in chapter 31 — as فَهِمَ, 'he understood' — and لا is taught in chapter 5 as a verb negator, so لا أفهم is one present-tense form away and that form does not exist anywhere (AR-A1-V-05). Nor is there any way to ask somebody to repeat or to slow down: 'repeat' and 'slowly' appear in two lessons as English prose and قال is taught only as 'he said'. Everything else a beginner needs when a conversation goes wrong — sorry, excuse me, pardon, please, thank you — this corpus has."
+    },
+    {
+      "id": "AR-A1-FUN-16",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "show that you are following what is said",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. There is no طيب, no ماشي and no MSA equivalent taught as a backchannel, which is the one everyday conversational move Bengali covers and Arabic does not."
+    },
+    {
+      "id": "AR-A1-FUN-17",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "confirm or deny what was just said",
+      "probe": [
+        "AR-CONCEPT-C05-NAAM-01",
+        "AR-CONCEPT-C05-LA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F1-05",
+        "A1-F2-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered at the minimum. The lesson also gives أيوة as a dialect aside, which is the corpus's only colloquial word (AR-A1-REG-02)."
+    },
+    {
+      "id": "AR-A1-FUN-18",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "agree and disagree with an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-F2-07",
+        "A1-NG6-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught beyond نعم and لا, and blocked further by the missing لكن."
+    },
+    {
+      "id": "AR-A1-FUN-19",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "give and ask for an age",
+      "probe": [
+        "AR-CONCEPT-C17-KAM-UMRUKA-01",
+        "AR-CONCEPT-C17-KAM-UMRUKA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG5-04",
+        "A1-NE03-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED FOR THE QUESTION, and the answer is one word short: كم عمرك؟ is taught with its verbless grammar, the numbers reach twenty, and there is no possessive suffix for 'my age' beyond the -ي taught in chapter 2 — which in fact makes عمري reachable. This is the closest thing in the file to a complete A1 exchange built out of separately-taught parts."
+    },
+    {
+      "id": "AR-A1-FUN-20",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "ask and tell the time",
+      "probe": [
+        "AR-CONCEPT-C16-AL-SAA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED FOR THE QUESTION. كم الساعة؟ is taught in chapter 16; the answer needs a digit or a numeral in a construction the corpus never builds."
+    },
+    {
+      "id": "AR-A1-FUN-21",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "say what the weather is like",
+      "probe": [
+        "AR-CONCEPT-C18-AL-TAQS-01",
+        "AR-CONCEPT-C18-AL-TAQS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, which no other track in this series manages. الجو حار and الجو بارد are taught as whole sentences, and the lesson notes that rain gets a personal verb of its own."
+    },
+    {
+      "id": "AR-A1-FUN-22",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "name the day, the month and the season",
+      "probe": [
+        "AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-01",
+        "AR-CONCEPT-C08-AL-JUMUA-AS-SABT-01",
+        "AR-CONCEPT-C14-ASHHUR-01",
+        "AR-CONCEPT-C12-AL-FUSUL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED COMPLETELY — all seven weekdays, all twelve months, all four seasons — and it is the single strongest lexical block in any of the three inventories in this series."
+    },
+    {
+      "id": "AR-A1-FUN-23",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "say what you do, or where you live",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NE07-03",
+        "A1-NE10-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. There is no occupation word, no verb for working or living, and no أنا to attach one to. After the name and the age, an A1 self-introduction stops."
+    },
+    {
+      "id": "AR-A1-FUN-24",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "say where you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG3-07"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, and blocked four ways: no أنا, no place name, no من in its 'from' use, no nisba."
+    },
+    {
+      "id": "AR-A1-FUN-25",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "give a telephone number or an address",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01",
+        "A1-NE09-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, and blocked on the digits."
+    },
+    {
+      "id": "AR-A1-FUN-26",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "ask for a thing in a shop or a restaurant",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F4-02",
+        "A1-NE05-05"
+      ],
+      "arabicSpecific": false,
+      "note": "UNTAUGHT, AND EXPENSIVELY SO. The corpus teaches tea, coffee, milk, sugar, bread, water, salt, meat, cheese, food, a cup, a plate and a spoon — thirteen words a beginner would order with — and there is no أريد ('I want'), no imperative, and no من فضلك attached to any of them. The vocabulary for the commonest A1 transaction is fully present and the frame to use it in is absent."
+    },
+    {
+      "id": "AR-A1-FUN-27",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "ask for help",
+      "probe": [
+        "AR-CONCEPT-C32-SAADA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered lexically only: ساعد is taught in chapter 32 as 'he helped'. With no imperative and no first person, help cannot actually be asked for."
+    },
+    {
+      "id": "AR-A1-FUN-28",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "offer and invite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. No offer of any kind is made anywhere in the corpus."
+    },
+    {
+      "id": "AR-A1-FUN-29",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "accept or decline an offer",
+      "probe": [
+        "AR-CONCEPT-C05-NAAM-01",
+        "AR-CONCEPT-C05-LA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F4-08",
+        "A1-F4-09"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered at the bare-minimum level only. There is no softened decline, which is what A1 politeness consists of."
+    },
+    {
+      "id": "AR-A1-FUN-30",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "give an order or an instruction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught — see AR-A1-V-07."
+    },
+    {
+      "id": "AR-A1-FUN-31",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "grant or refuse permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. No modal exists."
+    },
+    {
+      "id": "AR-A1-FUN-32",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "say what you like or want",
+      "probe": [
+        "AR-CONCEPT-C32-AHABBA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-F3-03",
+        "A1-F3-04",
+        "A1-SV-01",
+        "A1-PRON-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered lexically and not usably: أحبّ is taught in chapter 32 as 'he loved', and its lesson names the حبيبي of every second Arabic song. Without a first person the learner can recognise love and not declare it. Restated: Spanish spends two grammar points on gustar's inverted argument structure and its indirect-object clitic, and Arabic answers the same demand with an ordinary transitive verb, so the demand transfers and the machinery does not."
+    },
+    {
+      "id": "AR-A1-FUN-33",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "ask about and state a plan",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Arabic marks the future with a prefix on the present, and the present is untaught."
+    },
+    {
+      "id": "AR-A1-FUN-34",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "say what you know",
+      "probe": [
+        "AR-CONCEPT-C30-ARAFA-01",
+        "AR-CONCEPT-C05-LA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F2-13",
+        "A1-F2-14",
+        "A1-NG7-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, AND UNIQUELY SO: عرف is taught in chapter 30, and لا أعرف — 'I do not know' — is given inside the chapter-5 negation lesson. It is the only first-person verb form in the entire corpus, and it arrives twenty-five chapters before the verb it is built on."
+    },
+    {
+      "id": "AR-A1-FUN-35",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "give an opinion",
+      "probe": [
+        "AR-CONCEPT-C32-FAKKARA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F2-01",
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "arabicSpecific": false,
+      "note": "Blocked, not merely missing. فكّر ('he thought') is taught in chapter 32 and there is no أنّ to attach a clause to it (AR-A1-JOIN-05) and no first person to say it in, so 'I think that …' fails twice over on a verb that IS in the book."
+    },
+    {
+      "id": "AR-A1-FUN-36",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "ask for and give an evaluation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F2-03",
+        "A1-F2-04",
+        "A1-NG6-02",
+        "A1-NG6-04",
+        "A1-NG6-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. There is no جيد, no سيئ and no price word, so nothing can be judged good, bad or worth anything."
+    },
+    {
+      "id": "AR-A1-FUN-37",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "express approval or disapproval",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F2-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-FUN-38",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "express certainty, doubt or possibility",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F2-08",
+        "A1-F2-10",
+        "A1-F2-12",
+        "A1-NG1-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. There is no ربما ('perhaps'), so every sentence a learner can build is a flat assertion."
+    },
+    {
+      "id": "AR-A1-FUN-39",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "ask about and state an ability",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09",
+        "A1-NG6-10"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. أستطيع returns zero occurrences."
+    },
+    {
+      "id": "AR-A1-FUN-40",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "read and write, as things you can say you do",
+      "probe": [
+        "AR-CONCEPT-C31-QARAA-01",
+        "AR-CONCEPT-C31-KATABA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered lexically. كتب's lesson is the corpus's showpiece: one root plus patterns the learner already owns hands them a book, a writer, an office and a library with nothing new to memorise."
+    },
+    {
+      "id": "AR-A1-FUN-41",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "come and go",
+      "probe": [
+        "AR-CONCEPT-C28-DHAHABA-01",
+        "AR-CONCEPT-C28-JAA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04",
+        "A1-NG3-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered as a deliberate pair in chapter 28."
+    },
+    {
+      "id": "AR-A1-FUN-42",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "say what colour something is",
+      "probe": [
+        "AR-CONCEPT-C09-ASWAD-ABYAD-01",
+        "AR-CONCEPT-C09-AHMAR-AZRAQ-01",
+        "AR-CONCEPT-C22-AKHDAR-ASFAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED — six colours across chapters 9 and 22, every one of them taught with its gendered pair."
+    },
+    {
+      "id": "AR-A1-FUN-43",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "ask for a person, at a door or on the telephone",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F6-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, and blocked on the missing third person."
+    },
+    {
+      "id": "AR-A1-FUN-44",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "address somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught — see AR-A1-SEN-06. Arabic needs يا before a name and it is not there."
+    },
+    {
+      "id": "AR-A1-FUN-45",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-FUN-46",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "congratulate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-10"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. مبروك is one of the first words a learner hears in any Arabic-speaking country and it is not in the book."
+    },
+    {
+      "id": "AR-A1-FUN-47",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "propose a toast",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-09"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. The lowest-priority function here."
+    },
+    {
+      "id": "AR-A1-FUN-48",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F5-08"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-FUN-49",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "count aloud",
+      "probe": [
+        "AR-CONCEPT-C19-WAHID-KHAMSA-01",
+        "AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG2-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered to five and again from eleven to twenty, with six to ten missing in between — see AR-A1-Q-03."
+    },
+    {
+      "id": "AR-A1-FUN-50",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "name what you can see or hear",
+      "probe": [
+        "AR-CONCEPT-C29-RAA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered for sight only: رأى is taught in chapter 29 and there is no verb for hearing."
+    },
+    {
+      "id": "AR-A1-FUN-51",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "ask a question, as a speech act",
+      "probe": [
+        "AR-CONCEPT-C31-SAALA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered as a verb: سأل is taught in chapter 31, with the lesson noting that one root builds a question, a problem and an asker."
+    },
+    {
+      "id": "AR-A1-FUN-52",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "open and close a conversation",
+      "probe": [
+        "AR-C01-FULL-GREETING-11",
+        "AR-CONCEPT-C04-MAA-SALAMA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-F6-01",
+        "A1-F6-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered at both ends, and chapter 4's practice lesson rehearses the whole shape — hello to goodbye."
+    },
+    {
+      "id": "AR-A1-FUN-53",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "eat and drink, as things you can say you do",
+      "probe": [
+        "AR-CONCEPT-C30-AKALA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered lexically. أكل is taught in chapter 30 and there is no verb for drinking."
+    },
+    {
+      "id": "AR-A1-FUN-54",
+      "category": "Al-wazaif (communicative functions)",
+      "label": "take something",
+      "probe": [
+        "AR-CONCEPT-C32-AKHADHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered lexically. أخذ is taught in chapter 32 as the plain-shaped control against the three rebuilt verbs that follow it."
+    },
+    {
+      "id": "AR-A1-LEX-01",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "parts of the body",
+      "probe": [
+        "AR-CONCEPT-C11-RAS-01",
+        "AR-CONCEPT-C11-YAD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Two words, both in chapter 11. Thinner than Bengali's four and Urdu's five."
+    },
+    {
+      "id": "AR-A1-LEX-02",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "physical characteristics",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, and blocked on the missing descriptive adjectives (AR-A1-ADJ-06)."
+    },
+    {
+      "id": "AR-A1-LEX-03",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "actions and positions of the body",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE01-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-04",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "character and personality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-05",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "personal data: name, age, address, telephone",
+      "probe": [
+        "AR-CONCEPT-C02-ISM-01",
+        "AR-CONCEPT-C17-KAM-UMRUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered for two fields of four — the name and the age — which is one more than either sibling track in this series manages."
+    },
+    {
+      "id": "AR-A1-LEX-06",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "documents: passport, identity card",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-07",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "personal objects",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE03-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-08",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "family relationships",
+      "probe": [
+        "AR-CONCEPT-C10-AB-UMM-01",
+        "AR-CONCEPT-C10-AKH-UKHT-01",
+        "AR-CONCEPT-C35-IBN-BINT-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, AND THE MOST COMPLETE FAMILY SET OF THE THREE: father, mother, brother, sister, son and daughter, across chapters 10 and 35. Bengali teaches neither parent."
+    },
+    {
+      "id": "AR-A1-LEX-09",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "social relationships: friend, neighbour",
+      "probe": [
+        "AR-CONCEPT-C35-SADIQ-01",
+        "AR-CONCEPT-C35-JAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered, both in chapter 35, with جار taught as 'the person you introduce most often'."
+    },
+    {
+      "id": "AR-A1-LEX-10",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "celebrations and family, social and religious occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. No عيد, no wedding, no birthday — which in a track that teaches the Islamic calendar's existence is a conspicuous stop."
+    },
+    {
+      "id": "AR-A1-LEX-11",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "the meals of the day",
+      "probe": [
+        "AR-CONCEPT-C34-TAAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered obliquely by طعام ('food'), whose lesson hands the learner 'restaurant' from the same root. No meal is named as a meal."
+    },
+    {
+      "id": "AR-A1-LEX-12",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "drink",
+      "probe": [
+        "AR-CONCEPT-C33-SHAY-01",
+        "AR-CONCEPT-C33-HALIB-01",
+        "AR-CONCEPT-C33-QAHWA-01",
+        "AR-CONCEPT-C13-MAA-KHUBZ-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED and the best-served drinks domain in this series: tea, milk, coffee and water, with sugar beside them."
+    },
+    {
+      "id": "AR-A1-LEX-13",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "foodstuffs",
+      "probe": [
+        "AR-CONCEPT-C13-MAA-KHUBZ-02",
+        "AR-CONCEPT-C34-LAHM-01",
+        "AR-CONCEPT-C34-JUBN-01",
+        "AR-CONCEPT-C34-MILH-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03",
+        "A1-NE05-04"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED: bread, meat, cheese and salt, across chapters 13 and 34, plus sugar and oil elsewhere. جبن's lesson is notable for setting an honest limit on the root system — the same three letters also spell cowardice, and the two are not one idea."
+    },
+    {
+      "id": "AR-A1-LEX-14",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "the restaurant, and tableware",
+      "probe": [
+        "AR-CONCEPT-C36-KUB-01",
+        "AR-CONCEPT-C36-TABAQ-01",
+        "AR-CONCEPT-C36-MILAQA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE05-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered for the OBJECTS — cup, plate, spoon, all in chapter 36 — and not for the transaction. See AR-A1-FUN-26: the words to order with are here and the frame is not."
+    },
+    {
+      "id": "AR-A1-LEX-15",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "educational institutions, staff and students",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. مدرسة returns zero occurrences, which is striking because مذهب — 'a school of law', from the same root as ذهب — IS taught, in chapter 28."
+    },
+    {
+      "id": "AR-A1-LEX-16",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "learning and teaching",
+      "probe": [
+        "AR-CONCEPT-C31-QARAA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE06-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered by قرأ, whose lesson notes it is the one root in its chapter that really did give English a word."
+    },
+    {
+      "id": "AR-A1-LEX-17",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "the education system, examinations and marks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE06-03",
+        "A1-NE06-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-18",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "classroom language, and teaching materials",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE06-06",
+        "A1-NE06-07"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. كتاب returns zero occurrences as a headword, although كتب's lesson derives the word in prose — a glossed-not-taught case worth one lesson."
+    },
+    {
+      "id": "AR-A1-LEX-19",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "professions and posts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Not one occupation is named, which is the commonest A1 self-introduction after the name and the age."
+    },
+    {
+      "id": "AR-A1-LEX-20",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "working activity, workplaces and tools",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE07-02",
+        "A1-NE07-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. مكتب ('office') is derived in prose in كتب's lesson and never taught as a word."
+    },
+    {
+      "id": "AR-A1-LEX-21",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "unemployment, rights at work, and the characteristics of a worker",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, merged into one point because at A1 the three PCIC subsections amount to one absent domain here."
+    },
+    {
+      "id": "AR-A1-LEX-22",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "free time and entertainment",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-23",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "sport and games",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-24",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "shows and exhibitions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE08-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-25",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "information and communication media",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-04",
+        "A1-NE09-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, which for a track whose exam target is an adaptive test over authentic real-world texts is the domain closest to what the paper will actually show."
+    },
+    {
+      "id": "AR-A1-LEX-26",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "written correspondence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE09-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-27",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "the telephone",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE09-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-28",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "the internet, and dictating an e-mail address",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE09-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, and doubly blocked: neither the Arabic letter names nor the digits are taught, so nothing can be spelled out aloud."
+    },
+    {
+      "id": "AR-A1-LEX-29",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "types and parts of a dwelling",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE10-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. بيت appears once, inside Bethlehem's etymology in لحم's lesson, and is never taught as a word — a one-lesson fix that the corpus has already half-written."
+    },
+    {
+      "id": "AR-A1-LEX-30",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "domestic activities, objects and furniture",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE10-03",
+        "A1-NE10-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-31",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "housing: buying, selling, renting",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-32",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "the postal service and other public services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-33",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "financial services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE11-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-34",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "health services and centres of care",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE11-03",
+        "A1-NE13-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-35",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "shopping: places, people and activities",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-36",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "clothing, footwear and accessories",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE12-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Bengali and Urdu both teach four garments; Arabic teaches none."
+    },
+    {
+      "id": "AR-A1-LEX-37",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "payment, money and price",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE12-03",
+        "A1-NE15-01",
+        "A1-NG6-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. نقود returns zero occurrences."
+    },
+    {
+      "id": "AR-A1-LEX-38",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "health and illness",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-39",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "medicine and medicines",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE13-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-40",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "hygiene",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE13-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-41",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "travel objects and documents",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-42",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "accommodation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE14-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-43",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "the transport system",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE14-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-44",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "commerce, businesses, industry and energy",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE15-02",
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, merged for the same reason as AR-A1-LEX-21."
+    },
+    {
+      "id": "AR-A1-LEX-45",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "computing and new technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-46",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "government, politics and the law",
+      "probe": [
+        "AR-CONCEPT-C11-RAS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered by ONE derivation rather than by a word: رأس's lesson teaches that the root for 'head' gives Arabic its word for a president. رئيس itself is not a headword."
+    },
+    {
+      "id": "AR-A1-LEX-47",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "artistic disciplines, music, dance and the visual arts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, merged."
+    },
+    {
+      "id": "AR-A1-LEX-48",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "literature",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE18-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-49",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "cinema and theatre",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE18-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-50",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "religion",
+      "probe": [
+        "AR-CONCEPT-C03-AL-HAMDU-LILLAH-02",
+        "AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and it is the only track in this series where it is: الحمد لله is taken apart into its pieces, and الظهر is taught as both the hour and the prayer. See AR-A1-REG-04."
+    },
+    {
+      "id": "AR-A1-LEX-51",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "the universe and space",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-52",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "geography: country, town, city, capital",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught — the same hole as AR-A1-N-02, filed here so the domain walk is total."
+    },
+    {
+      "id": "AR-A1-LEX-53",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "urban and rural spaces",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-54",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "climate and weather",
+      "probe": [
+        "AR-CONCEPT-C18-AL-TAQS-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, uniquely in this series. طقس is taught in chapter 18 with hot and cold as whole verbless sentences."
+    },
+    {
+      "id": "AR-A1-LEX-55",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "fauna",
+      "probe": [
+        "AR-CONCEPT-C21-KALB-QITT-01",
+        "AR-CONCEPT-C21-KALB-QITT-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED, and this is the domain the SPANISH inventory itself reports as uncovered — Arabic is ahead of the proxy here. كلب and قط are taught in chapter 21."
+    },
+    {
+      "id": "AR-A1-LEX-56",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "flora",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. أخضر's lesson notes in passing that its root also gives 'vegetables', which is the nearest the corpus comes."
+    },
+    {
+      "id": "AR-A1-LEX-57",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "existence and presence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught, and blocked on the missing هناك and في."
+    },
+    {
+      "id": "AR-A1-LEX-58",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "general quality, and locating an event in time",
+      "probe": [
+        "AR-CONCEPT-C18-AL-TAQS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG1-03",
+        "A1-NG1-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered by the verbless sentence, which is what Arabic uses where Spanish uses ser."
+    },
+    {
+      "id": "AR-A1-LEX-59",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "relative position: near, far, right, left",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-03",
+        "A1-NG3-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. Nothing can be placed relative to anything else."
+    },
+    {
+      "id": "AR-A1-LEX-60",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "before and after: ordering events in time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught. قبل and بعد both return zero occurrences, which is a surprising hole in the strongest time column in this series."
+    },
+    {
+      "id": "AR-A1-LEX-61",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "age and old age",
+      "probe": [
+        "AR-CONCEPT-C17-KAM-UMRUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered by عمر, taught as a noun you possess rather than a verb you conjugate."
+    },
+    {
+      "id": "AR-A1-LEX-62",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "accessibility: open and closed, way in and way out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-63",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "attractiveness and interest",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03",
+        "A1-NG6-08"
+      ],
+      "arabicSpecific": false,
+      "note": "Untaught."
+    },
+    {
+      "id": "AR-A1-LEX-64",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "reflection and knowledge as notions",
+      "probe": [
+        "AR-CONCEPT-C30-ARAFA-01",
+        "AR-CONCEPT-C32-FAKKARA-01",
+        "AR-CONCEPT-C31-FAHIMA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01"
+      ],
+      "arabicSpecific": false,
+      "note": "COVERED THREE TIMES — knowing, thinking and understanding — and فهم's lesson is the one that teaches that a middle vowel other than a marks a STATE rather than a deed."
+    },
+    {
+      "id": "AR-A1-LEX-65",
+      "category": "Al-mujam (lexicon by domain)",
+      "label": "verbal expression: speaking and writing",
+      "probe": [
+        "AR-CONCEPT-C29-QALA-01",
+        "AR-CONCEPT-C31-KATABA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "AR-CORPUS",
+        "ED-ARABIC"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "arabicSpecific": false,
+      "note": "Covered. قال is where the letter qāf is finally named, twenty-eight chapters in."
+    }
+  ]
+}
