@@ -12,7 +12,7 @@ headword: "पीतः"
 gloss: "yellow"
 romanization: "pītaḥ"
 concept_tag: SA-COLOUR-PITA
-prerequisites: [SA-C44-dark]
+prerequisites: [SA-C44-dark, SA-C42-mostly, SA-C43-humility]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C44-COLOUR-03]
 practises:
-  knowledge: [SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03]
+  knowledge: [SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C42-REPLY-03, SA-LEX-C43-COURTESY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Hindi *pīlā* is the same word with an ending on it, and it is the yellow of ev
 Yellow, understood as a thing that was dyed.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C42-REPLY-03, SA-LEX-C43-COURTESY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pītaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śyāmaḥ*, then *pītaḥ*]
+- [YOU RECALL: say *prāyaḥ*, then read **नम्रता**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03] -->

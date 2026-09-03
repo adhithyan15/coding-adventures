@@ -2,8 +2,10 @@
   "id": "GE-PATH-015",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "GE-C06-zahlen-1-5",
-    "GE-C06-zahlen-6-10"
+    "GE-C06-eins",
+    "GE-C06-zwei",
+    "GE-C06-drei",
+    "GE-C06-grimm"
   ],
   "before": [],
   "inline": [

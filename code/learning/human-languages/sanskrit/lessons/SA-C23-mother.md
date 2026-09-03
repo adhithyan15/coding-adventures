@@ -12,7 +12,7 @@ headword: "माता"
 gloss: "mother"
 romanization: "mātā"
 concept_tag: SA-NOUN-MOTHER
-prerequisites: [SA-C23-father]
+prerequisites: [SA-C23-father, SA-C21-laugh, SA-C22-lead]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-MOTHER]
 practises:
-  knowledge: [SA-LEX-FATHER, SA-LEX-MOTHER]
+  knowledge: [SA-LEX-FATHER, SA-LEX-MOTHER, SA-LEX-LAUGH, SA-LEX-LEAD]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ The stem is **मातृ** (*mātṛ-*) — the same *-ṛ* family as पि�
 Two of the four, and one ending family carrying both.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-FATHER, SA-LEX-MOTHER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-FATHER, SA-LEX-MOTHER, SA-LEX-LAUGH, SA-LEX-LEAD] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mātā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *pitā*, and name the ending they share]
+- [YOU RECALL: read **हसति**, then say *nayati*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-FATHER, SA-LEX-MOTHER] -->

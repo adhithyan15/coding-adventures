@@ -12,7 +12,7 @@ headword: "नदी"
 gloss: "a river"
 romanization: "nadī"
 concept_tag: SA-LAND-NADI
-prerequisites: [SA-C32-wood]
+prerequisites: [SA-C32-wood, SA-C31-sky, SA-C32-tree]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C33-LAND-01]
 practises:
-  knowledge: [SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01]
+  knowledge: [SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01, SA-LEX-C31-SKY-01, SA-LEX-C32-TREE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It ends in long *-ī*, like **नारी** and **भगिनी**, and it has
 A river, and a word that survived every one of its neighbours.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01, SA-LEX-C31-SKY-01, SA-LEX-C32-TREE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nadī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dāru*, then *nadī*]
+- [YOU RECALL: say *ākāśaḥ*, then read **तरुः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01] -->

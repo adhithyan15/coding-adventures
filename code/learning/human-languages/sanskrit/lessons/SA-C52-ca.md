@@ -54,7 +54,7 @@ a moon — you have named alone.
 
 English puts *and* in the gap. Sanskrit puts **च** at the end and leaves the gap
 empty. Read the phrase again and notice that nothing sits between the two nouns
-at all: they are simply placed side by side, and **च** at the back is what tells
+at all: they stand side by side, and **च** at the back is what tells
 you they were a pair.
 
 **च** can never begin a sentence. A word that must lean on the word before it is

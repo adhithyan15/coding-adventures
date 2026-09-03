@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "The Stick at the End",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:743380db5aa6fbdc",
+  "sourceHash": "fnv1a64:9f3e5a7a94818773",
   "lessons": [
     {
       "id": "SA-C60-danda",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fefa37c59853dc08",
+      "sourceHash": "fnv1a64:c5b4d4e9e1c23ba4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -90,7 +90,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. draw a single vertical stroke top-to-bottom, the height of a letter, just after the last letter of the sentence."
+              "text": "1. draw a single vertical stroke top-to-bottom, the height of a letter, immediately after the last letter of the sentence."
             },
             {
               "kind": "speech",

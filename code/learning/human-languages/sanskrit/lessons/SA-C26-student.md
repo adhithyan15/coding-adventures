@@ -12,7 +12,7 @@ headword: "शिष्यः"
 gloss: "a student, a disciple"
 romanization: "śiṣyaḥ"
 concept_tag: SA-PERSON-STUDENT
-prerequisites: [SA-C26-teacher]
+prerequisites: [SA-C26-teacher, SA-C24-rice, SA-C25-foot]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C26-ROLE-02]
 practises:
-  knowledge: [SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02]
+  knowledge: [SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C24-ASK-02, SA-LEX-C25-BODY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ English arrived at the same idea by another road: *disciple* is from Latin *disc
 The pair: the one with weight, and the one who is owed teaching.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C24-ASK-02, SA-LEX-C25-BODY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *śiṣyaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *guruḥ*, then *śiṣyaḥ*, and say which one is owed something]
+- [YOU RECALL: read **ओदनः**, then say *pādaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02] -->

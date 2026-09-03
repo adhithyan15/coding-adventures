@@ -12,7 +12,7 @@ headword: "द्वारम्"
 gloss: "a door, a gate"
 romanization: "dvāram"
 concept_tag: SA-WELCOME-DOOR
-prerequisites: [SA-C29-fortunate]
+prerequisites: [SA-C29-fortunate, SA-C28-now, SA-C29-please]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C30-WELCOME-01]
 practises:
-  knowledge: [SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01]
+  knowledge: [SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01, SA-LEX-C28-LEAVE-01, SA-LEX-C29-COURTESY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ This is one of the securest cousins in the book. Latin *foris* and *forēs*, "do
 A door, and a word that reached every branch of the family.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01, SA-LEX-C28-LEAVE-01, SA-LEX-C29-COURTESY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dvāram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dvāram*, and name two of its cousins outside India]
+- [YOU RECALL: say *idānīm*, then read **कृपया**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01] -->

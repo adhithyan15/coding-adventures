@@ -12,7 +12,7 @@ headword: "जनः"
 gloss: "people, folk"
 romanization: "janaḥ"
 concept_tag: SA-NOUN-PEOPLE
-prerequisites: [SA-C20-old-person]
+prerequisites: [SA-C20-old-person, SA-C19-ten]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C20-PERSON-05]
 practises:
-  knowledge: [SA-LEX-C20-PERSON-04, SA-LEX-C20-PERSON-05]
+  knowledge: [SA-LEX-C20-PERSON-04, SA-LEX-C20-PERSON-05, SA-LEX-C19-NUM-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -58,12 +58,13 @@ Five people: man, woman, child, elder, folk — and every one of them arrived wi
 its ending legible and a European cousin attached.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-04, SA-LEX-C20-PERSON-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-04, SA-LEX-C20-PERSON-05, SA-LEX-C19-NUM-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *janaḥ* — "people"]
 - [YOU SAY: three English words from its Latin cousin]
 - [YOU SAY: all five people, in order]
+- [YOU RECALL: say *daśa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-04, SA-LEX-C20-PERSON-05] -->

@@ -1,7 +1,7 @@
 ---
 id: GE-C07-wochentage-2
 sequence: 230
-chapter: 7
+chapter: 10
 type: word
 headword: Samstag, Sonntag
 gloss: the weekend (Saturday, Sunday) — the Sabbath and the Sun

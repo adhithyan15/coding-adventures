@@ -116,7 +116,7 @@ describe("HL10 §7.4 — banned words in learner-facing prose", () => {
     // LOWER this as prose is rewritten; never raise it. A tranche that needs it
     // raised has written "just" or "simply" into a lesson, and the fix is the
     // sentence, not the number.
-    expect(total).toBeLessThanOrEqual(1077);
+    expect(total).toBeLessThanOrEqual(1076); // 1077 -> 1076: German chapter 6 arrived carrying six banned words and left with none, so the corpus debt FELL rather than the ceiling rising
     expect(lessonsAffected).toBeLessThanOrEqual(875);
   });
 

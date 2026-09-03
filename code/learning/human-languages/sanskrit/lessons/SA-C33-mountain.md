@@ -12,7 +12,7 @@ headword: "पर्वतः"
 gloss: "a mountain"
 romanization: "parvataḥ"
 concept_tag: SA-LAND-PARVATA
-prerequisites: [SA-C33-bridge]
+prerequisites: [SA-C33-bridge, SA-C31-star, SA-C32-grass]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C33-LAND-03]
 practises:
-  knowledge: [SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03]
+  knowledge: [SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C31-SKY-03, SA-LEX-C32-TREE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Hindi, Marathi and Nepali keep *parvat*. You met one range of them last chapter,
 A mountain, named for the knots in it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C31-SKY-03, SA-LEX-C32-TREE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *parvataḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *setuḥ*, then *parvataḥ*]
+- [YOU RECALL: say *tārā*, then read **तृणम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03] -->

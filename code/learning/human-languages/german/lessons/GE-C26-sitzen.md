@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C26-sitzen
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 790
-chapter: 31
+chapter: 34
 type: word
 headword: sitzen
 gloss: to sit — the same inherited word as English sit, respelt by the other branch of the shift that separated helfen from help

@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C15-wir-haben-gesagt
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 365
-chapter: 16
+chapter: 19
 type: phrase
 headword: wir haben gesagt
 gloss: we said — the fourth slot, where the helper is the infinitive itself

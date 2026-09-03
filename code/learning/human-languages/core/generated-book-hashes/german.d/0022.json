@@ -1,11 +1,15 @@
 {
   "language": "german",
   "chapter": 22,
-  "sourceHash": "fnv1a64:dc5e980765733d60",
+  "sourceHash": "fnv1a64:e98d854235cc1385",
   "lessonIds": [
-    "GE-C17-kopf",
-    "GE-C17-kopf-haupt",
-    "GE-C17-hand"
+    "GE-C14-alt",
+    "GE-C14-jahr",
+    "GE-C14-jahr-alt",
+    "GE-C14-wie-alt-bist-du",
+    "GE-C14-alter",
+    "GE-C14-alter-sein-haben",
+    "GE-C14-alter-practice"
   ],
-  "tex": "german/book/chapters/ch22-head-and-hand.tex"
+  "tex": "german/book/chapters/ch22-alter.tex"
 }

@@ -12,7 +12,7 @@ headword: "सादरम्"
 gloss: "respectfully, with respect"
 romanization: "sādaram"
 concept_tag: SA-COURTESY-SADARA
-prerequisites: [SA-C37-peace]
+prerequisites: [SA-C37-peace, SA-C35-honey, SA-C36-all]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C37-COURTESY-02]
 practises:
-  knowledge: [SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02]
+  knowledge: [SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C35-HOUSE-02, SA-LEX-C36-REPLY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It goes at the front of a request, where English would put its politeness at the
 A politeness that goes at the front rather than the end.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C35-HOUSE-02, SA-LEX-C36-REPLY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sādaram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śāntiḥ*, then *sādaram kṛpayā*]
+- [YOU RECALL: read **मधु**, then say *sarvam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02] -->

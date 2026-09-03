@@ -1,29 +1,33 @@
-German, chapter 28: Green and Yellow.
+German, chapter 28: Sorry.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-grün, gelb — English's own cousin, and a secret cousin of French.
+Entschuldigung — “sorry” / “excuse me”.
 
 Warm-up.
 [pause 2 seconds]
-German's green word is a direct cousin of English's own word. Its yellow word has a cousin too — but a much more surprising one, sitting inside French.
+You already know bitte does triple duty for "please," "you're welcome," and "here you go." German's word for sorry is just as hard-working: Entschuldigung covers both "excuse me" and "I'm sorry."
 
-The word, taken apart: grün.
-grün ("green") is native Germanic, from Proto-Germanic grōniz, ultimately from Proto-Indo-European ǵʰreh₁-, "to grow, to become green" — the exact same root as English's own green. Be careful, though: this is a completely different root from Latin's viridis (source of Spanish's verde, French's vert), which traces to its own, separate "to grow/flourish" root, weis-. Two unrelated language families each independently built a "green" word out of a verb meaning "to grow" — a real coincidence of logic, not a shared word.
+The word, taken apart.
+ent- = a "removal / undoing" prefix — the same shape as in entdecken ("un-cover" becomes discover) or entfernen ("un-distance" becomes remove).
+Schuld = "guilt, fault, blame" (also, separately, "debt" — a Schuld can be money owed or wrong done).
+-igung = a noun-forming suffix, roughly "-ing/-ation."
+So Entschuldigung is literally "an un-guilting" — the act of removing blame. Saying it hands the guilt back: I release you from any fault (when getting someone's attention or brushing past) or I ask you to release me from mine (when apologizing).
+Schuld has a striking cousin: it traces to the same ancient Germanic root as English shall and should — a verb that originally meant "to owe." Schuld (what is owed, guilt) and shall (what one is obliged to do) are, at root, the same idea of an obligation outstanding.
 
-The word, taken apart: gelb.
-gelb ("yellow") is native too, from Proto-Germanic gelwaz — and the same word as English's yellow. Trace it back far enough, to Proto-Indo-European ghel- ("to shine," with derivatives covering yellow, green, and gold), and it is usually said to land on the same ancient root behind Latin's galbus/galbinus — the source of French's jaune. Honesty check, though: that particular link is less secure than it looks — some modern Latin scholarship treats galbus's origin as genuinely unknown rather than confirming the ghel- connection. So gelb and jaune are probably PIE-level cousins, despite belonging to completely different language families and reaching German and French by entirely separate paths — just don't treat the link as airtight.
+Why it's said this way: Everyday repair and deeper regret.
+For deeper regret — real sorrow, not a bump in the hallway — German often reaches for es tut mir leid, literally "it does to-me sorrow":
+es = "it," tut = "does" (from tun, "to do"), mir = "to me," Leid = "sorrow, suffering" (a cousin of English loath, both from a root meaning "hateful, painful").
+Use Entschuldigung for the everyday sorry/excuse-me (stepping on a foot, interrupting), and es tut mir leid when you mean it more — condolences, a real regret. The two overlap; native speakers move between them by feel.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "grün" — green, direct cousin of English's own "green"]
+[your turn — say: "Schuld" — guilt/fault — then "Entschuldigung," sorry / excuse me]
 [pause 8 seconds for the answer]
-[your turn — say: "gelb" — yellow, probable hidden cousin of French's jaune]
-[pause 8 seconds for the answer]
-[your turn — say: the contrast — grün's root is unrelated to Latin's viridis, but gelb's root is PROBABLY shared with French's jaune]
+[your turn — say: the deeper phrase — "es tut mir leid," it pains me / I'm so sorry]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is grün related to Latin's viridis? (No — a completely different root, though both independently mean "grow" becomes "green"; grün IS a direct cousin of English's own "green.") What French word is gelb's probable PIE cousin, and how solid is that link? (Jaune — both usually traced to PIE ghel-, "to shine," though modern Latin scholarship treats galbus's origin as genuinely unknown, so the connection is probable, not certain.)
+What does Entschuldigung literally mean, piece by piece? ("Un-guilting" — ent- "away" + Schuld "guilt/fault.") What English word shares Schuld's ancient root? (Shall/should — both from a root meaning "to owe.") What's the deeper phrase for real regret? (Es tut mir leid, "it does to me sorrow.")

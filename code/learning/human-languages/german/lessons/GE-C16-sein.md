@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C16-sein
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 450
-chapter: 18
+chapter: 21
 type: word
 headword: sein
 gloss: to be — the partner of haben, and the most irregular verb German has

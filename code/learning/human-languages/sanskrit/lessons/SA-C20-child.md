@@ -12,7 +12,7 @@ headword: "बालः"
 gloss: "child, boy"
 romanization: "bālaḥ"
 concept_tag: SA-NOUN-CHILD
-prerequisites: [SA-C20-woman]
+prerequisites: [SA-C20-woman, SA-C18-how-many, SA-C19-eight]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C20-PERSON-03]
 practises:
-  knowledge: [SA-LEX-C20-PERSON-02, SA-LEX-C20-PERSON-03]
+  knowledge: [SA-LEX-C20-PERSON-02, SA-LEX-C20-PERSON-03, SA-LEX-C18-ASK-03, SA-LEX-C19-NUM-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -57,12 +57,13 @@ Three people, and an honest complication: the feminine endings are not a single
 rule.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-02, SA-LEX-C20-PERSON-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-02, SA-LEX-C20-PERSON-03, SA-LEX-C18-ASK-03, SA-LEX-C19-NUM-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bālaḥ* — "child"]
 - [YOU SAY: the feminine — *bālā*]
 - [YOU SAY: the two different feminine endings you have now seen]
+- [YOU RECALL: say *kati*, then read **अष्ट**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-02, SA-LEX-C20-PERSON-03] -->

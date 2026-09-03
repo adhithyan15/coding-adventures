@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 28,
-  "sourceHash": "fnv1a64:e3d72775d62e3fcb",
+  "sourceHash": "fnv1a64:05c8856e6b3c34ff",
   "lessonIds": [
     "SA-C28-now",
     "SA-C28-day-after",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "sanskrit/narration/ch28.txt",
   "json": "sanskrit/narration/ch28.json",
-  "textHash": "fnv1a64:356067ef94d1e3f8",
-  "jsonHash": "fnv1a64:b2d5591cf19c26eb",
+  "textHash": "fnv1a64:5b8b7272effdad68",
+  "jsonHash": "fnv1a64:34e3347e60d81164",
   "findings": []
 }

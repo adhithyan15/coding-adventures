@@ -1,328 +1,270 @@
-German, chapter 17: The Simple Past.
-10 lessons. All 10 can be done entirely by ear.
+German, chapter 17: To Have.
+8 lessons. All 8 can be done entirely by ear.
 
 
-Lesson 1 of 10.
--te — the one-word past.
-
-Warm-up.
-[pause 2 seconds]
-German has a second past tense. It needs no helper verb and no participle — just a stem and an ending.
-
-Grammar Lens: add -te to the stem.
-Take a regular verb's stem and put -te on it.
-The tense that ending builds is called the Präteritum. Where the Perfekt spends two words and a bracket, this one spends a single word: sag- plus -te and the sentence is done.
-The two tenses report the same events. That is worth saying plainly, because a learner reasonably expects a language with two pasts to be drawing a distinction with them, the way English draws one between I said and I have said. German draws none. What separates its two pasts is something else entirely, and it takes a few more lessons to arrive at.
-The -te itself has a history reaching well beyond German, and that comes first.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the recipe — "stem plus te"]
-[pause 8 seconds for the answer]
-[your turn — say: the name — "das Präteritum"]
-[pause 8 seconds for the answer]
-[your turn — say: how many words it takes — "one"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"stem plus -te."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which ending builds the Präteritum on a regular verb? (-te.) How many words does it need? (One.) How many does the Perfekt need? (Two.) Do the two tenses mean different things? (No.) Next: the first verb through the new ending.
-
-
-Lesson 2 of 10.
-ich sagte — "I said," in one word.
+Lesson 1 of 8.
+haben — "to have".
 
 Warm-up.
 [pause 2 seconds]
-Run the new ending on the verb this chapter started from.
+German's workhorse verb, and the twin of a word you have said every day of your life.
 
-You'll want to know: ich sagte.
-ich sagte — "I said."
-Stem sag-, ending -te. Two syllables and it is finished, where the Perfekt took three words to say the same thing:
-ich sagte, ich habe gesagt.
-Both are "I said." Neither is more past than the other, neither is more polite, and neither is wrong. Hold that in mind while the differences that do exist arrive.
+You'll want to know: haben.
+haben — "to have."
+Same word as English have, worn differently. Chop the -en the way you did with machen and the stem is hab-, which is where every form in this chapter starts.
+Two syllables, and the first one carries the weight: HAH-ben.
 
 Sounds you'll need.
-long-a — the stem vowel is the same long a as in sagen; the new ending does not shorten it.
-final-te — the -te is a full unstressed syllable, tuh, not a bare t. Hear the difference against the participle: ge-SAHKT has one syllable at the end, SAHK-tuh has two.
+long-a — the a of haben is long and open, the vowel of English father, not the clipped a of hat.
+d-t-final — that long a does not survive into every form. Two of them coming up are short and clipped, and both end in a crisp, fully released t.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich sagte"]
+[your turn — say: "haben" — long a, soft second syllable]
 [pause 8 seconds for the answer]
-[your turn — say: the pair back to back — "ich sagte … ich habe gesagt"]
+[your turn — say: the stem on its own — "hab-"]
 [pause 8 seconds for the answer]
-[your turn — say: the two endings apart — "gesagt, sagte"]
+[your turn — say: the twins — "haben, have"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich sagte, ich habe gesagt."
+"haben, haben — to have."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I said" in one word. (Ich sagte.) And in three. (Ich habe gesagt.) Which of them is further in the past? (Neither.) How many syllables does sagte have? (Two.) Next: the same ending on the verb for doing.
+Say "to have." (Haben.) What is its stem? (Hab-.) Is the a long or short? (Long — as in father.) Which English verb is it? (Have.) Next: the stem through the ending machine you already own.
 
 
-Lesson 3 of 10.
-ich machte — "I made," "I did".
+Lesson 2 of 8.
+hab- through the machine — four of haben's six forms come out of the ending machine you already own, with nothing new to learn.
 
 Warm-up.
 [pause 2 seconds]
-You have gemacht. Build the other past of the same verb before reading on.
+You own an ending machine: a stem, and -e, -st, -t, -en. Run hab- through it before reading on, and keep what you get.
 
-You'll want to know: ich machte.
-ich machte — "I made," "I did."
-Mach- plus -te. Notice what the two pasts of this verb have in common: the stem. Gemacht wrapped it and machte suffixed it, and neither touched a letter inside it.
-That is the whole promise of a weak verb. Whatever German asks of it, the middle stays put — which is why the four participles of the last chapter and the -te forms of this one can be built from any regular verb you meet, on the spot, without a list.
-er machte das, er hat das gemacht.
-Same person, same event, two tenses.
+Grammar Lens: four forms you already knew.
+On hab-, the machine is right four times out of six.
+Ich takes -e, so ich habe. Wir takes -en, so wir haben — which is the infinitive over again, the way the wir form goes throughout German. Ihr takes -t, so ihr habt. And sie takes -en like wir, so sie haben.
+Nothing there is new. Those four are the rule from your first verbs applied to one more stem — so do not read them off the page. Take each ending, put it on hab-, and hear that you already knew the answer.
+The chapter is about the other two.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ich machte"]
+Build each one before you say it — take the ending first, then put it on hab-.
+[your turn — say: the ending ich takes, then the form — "-e … ich habe"]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "er machte das … er hat das gemacht"]
+[your turn — say: the ending wir takes, then the form — "-en … wir haben"]
 [pause 8 seconds for the answer]
-[your turn — say: both new forms — "sagte, machte"]
+[your turn — say: the ending ihr takes, then the form — "-t … ihr habt"]
+[pause 8 seconds for the answer]
+[your turn — say: sie borrows wir's ending — "sie haben"]
+[pause 8 seconds for the answer]
+[your turn — say: now prove the machine is not about this verb — run wohn- through it: "ich wohne, wir wohnen, ihr wohnt"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich sagte, ich machte."
+"ich habe, wir haben, ihr habt, sie haben."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I did" in one word. (Ich machte.) What do machte and gemacht share? (The stem mach-.) Does either change the stem? (No.) Say "he did that" both ways. (Er machte das; er hat das gemacht.) Next: where that -te came from, and the English ending that is the same thing.
+Build "we have" without being given it. (Wir haben.) Build "you all have." (Ihr habt.) Which other form does wir haben match? (The infinitive.) Did you have to learn any of those four, or work them out? (Work them out — the endings were already yours.) How many of the six does the rule get right? (Four.) Next: the first one it gets wrong.
 
 
-Lesson 4 of 10.
-The dental preterite — a Germanic invention.
+Lesson 3 of 8.
+du hast — "you have".
 
 Warm-up.
 [pause 2 seconds]
-Say sagte, then say walked. Both endings are made with the tongue against the teeth, and that is not a coincidence.
+The machine says du plus -st on the stem hab-. Say what that would give, and then hear what German actually says.
+
+You'll want to know: du hast.
+du hast — "you have," to one person you are on familiar terms with.
+The rule predicts hab-st. German says hast. The b is simply gone, and the long a goes with it: the vowel is short and clipped now, and the -st lands crisply on the end.
+This is not a spelling convenience. It is one of exactly two places in the whole verb where the machine fails, and it is worth meeting on its own so that it is a form you know rather than a form you derive wrongly.
+
+Sounds you'll need.
+vowel-a — short and clipped, the a of English hat, not the long a of haben. The form is one syllable: hast, rhyming with English mast.
+d-t-final — the -st is fully released; German does not soften it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "du hast"]
+[pause 8 seconds for the answer]
+[your turn — say: the long against the short — "ich habe, du hast"]
+[pause 8 seconds for the answer]
+[your turn — say: what the rule wanted, then what German says — "hab-st … hast"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"du hast, du hast."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "you have," informally. (Du hast.) Which letter went missing? (The b.) What happened to the vowel? (It shortened.) What would the rule have predicted? (Hab-st.) Next: the second place the machine fails, and it fails the same way.
+
+
+Lesson 4 of 8.
+er hat — "he has".
+
+Warm-up.
+[pause 2 seconds]
+One more break, and then the verb behaves for good. The machine says -t on hab-.
+
+You'll want to know: er hat.
+er hat — "he has." Also sie hat, "she has," and es hat, "it has."
+The rule predicts hab-t. German says hat: the same b gone, the same vowel shortened. One syllable, rhyming with English hut rather than hat — the German a sits further back than the English one.
+One form covers er, sie and es, exactly as the third-person -t always does. So the two breaks in this verb are neighbours: du hast, er hat, and every other form is the machine.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "er hat, sie hat, es hat"]
+[pause 8 seconds for the answer]
+[your turn — say: the two breaks together — "du hast, er hat"]
+[pause 8 seconds for the answer]
+[your turn — say: the whole shape — "habe … hast … hat … haben"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"du hast, er hat."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "he has." (Er hat.) Say "she has." (Sie hat.) Which two forms of this verb break the rule? (Hast and hat.) What do both of them drop? (The b.) Next: why they drop it, and the English verb that does the identical thing.
+
+
+Lesson 5 of 8.
+The b that fell out — why hast and hat lost their b — and the English verb that lost it in the same two places.
+
+Warm-up.
+[pause 2 seconds]
+Hast and hat both lost a b. That is not two accidents.
+
+Grammar Lens: one shortcut, in exactly two cells.
+Haben keeps its b everywhere except before a -st or a -t ending, where the b drops and the vowel shortens with it.
+Say hab-st and hab-t at speed and you can feel why: a b squeezed between a vowel and a hard t is work, and centuries of speakers declined to do it. The consonant wore away and the two shortest forms are what is left.
+Now listen to English, which is the same verb:
+[a table of 3 rows, read aloud]
+person: infinitive. English: have. German: haben.
+person: second person, older. English: thou hast. German: du hast.
+person: third person. English: he has. German: er hat.
+English lost the same consonant, in the same two cells, of the same verb — and kept the archaic hast long enough for us to see it. Two languages, one shortcut, inherited together rather than invented twice.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: where the b survives — "habe, haben, habt"]
+[pause 8 seconds for the answer]
+[your turn — say: where it does not — "hast, hat"]
+[pause 8 seconds for the answer]
+[your turn — say: the English echo — "thou hast, du hast; he has, er hat"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"hast, hat — no b."
+
+Wrap-up Recall.
+[pause 3 seconds]
+In which two forms does the b drop? (Hast and hat.) What else changes with it? (The vowel shortens.) Which English form still shows the same loss? (He has — or archaic thou hast.) Next: something to actually have.
+
+
+Lesson 6 of 8.
+einen — "a," when it is the thing you have.
+
+Warm-up.
+[pause 2 seconds]
+Ich habe … wants something after it. The commonest thing to put there is "a something," and German asks one small question first.
+
+You'll want to know: einen.
+einen — "a," for a der-word that is the thing you have.
+Ein is the number one doing a second job, which is exactly what English a is — a worn-down one. German keeps the resemblance visible: ein, eins.
+The -en on the end is the part English threw away. German marks a der-word differently when it is the thing being had rather than the thing doing the having, and einen is that marked form:
+Ich habe einen Bruder. — "I have a brother."
+Der Bruder is a der-word, and he is what you have, so ein becomes einen. Nothing else in the sentence moves.
+Take this one as a word for now, not as a system. The system behind it — German's cases — gets a chapter of its own later; this is the first place the book cannot avoid it, because a sentence with haben in it needs something to have.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "einen"]
+[pause 8 seconds for the answer]
+[your turn — say: "Ich habe einen Bruder."]
+[pause 8 seconds for the answer]
+[your turn — say: it with the two broken forms — "du hast einen Bruder; er hat einen Bruder"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Ich habe einen Bruder."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I have a brother." (Ich habe einen Bruder.) Which word did ein become? (Einen.) Why? (Because der Bruder is the thing being had.) Which English word is ein underneath? (One.) Next: the trap this verb is famous for.
+
+
+Lesson 7 of 8.
+haben is not habēre — the famous false cognate — haben is a cousin of capture, and Latin habēre is a cousin of give.
+
+Warm-up.
+[pause 2 seconds]
+German haben, Latin habēre. Same consonants, same meaning, and the best false cognate in the business.
 
 The word, taken apart.
-The German -te is what linguists call the dental preterite: a past tense made by bolting a t or d sound onto a stem. Dental, because those sounds are made at the teeth.
-[a table of 3 rows, read aloud]
-language: German. present: sag-. past: sagte.
-language: English. present: walk. past: walked.
-language: Dutch. present: werk-. past: werkte.
-Three languages, one device, inherited rather than borrowed — this is a Germanic invention, and it is one of the features that identifies the family. Everything with a -t or -d past in Germanic comes from the same ancestor.
-Latin built nothing of the kind. Its past came from inherited perfect endings and from reduplication, and its descendants carried that on: French parla, Spanish habló. So sagte and walked are one machine, and parla and habló are a different one — which is why an English speaker recognises the German ending on sight and a Spanish speaker does not.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the three together — "sagte, walked, werkte"]
-[pause 8 seconds for the answer]
-[your turn — say: the name — "the dental preterite"]
-[pause 8 seconds for the answer]
-[your turn — say: the two machines — "sagte and walked; parla and habló"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"sagte, walked — the same ending."
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is the -te called? (The dental preterite.) Why dental? (It is made at the teeth.) Which English ending is the same thing? (-ed.) Did Latin have it? (No — Romance builds its past another way.) Next: the one verb whose -te form you will hear constantly.
-
-
-Lesson 5 of 10.
-ich hatte — "I had".
-
-Warm-up.
-[pause 2 seconds]
-The dental ending on the verb you have been leaning on for two chapters.
-
-You'll want to know: ich hatte.
-ich hatte — "I had."
-Haben drops its b — the same b that goes missing in du hast and er hat — and the dental ending lands on what is left, doubling the t in the spelling: hat-te. Two syllables, both short.
-English did the identical thing to the identical verb and then wore the result down further: have lost its consonant and took a -d, giving had. So hatte and had are the same word doing the same job.
-Haben has a Perfekt of its own as well — ich habe gehabt, "I have had" — built by the ordinary recipe, since haben is a perfectly ordinary verb when it is not busy helping another one.
-
-Sounds you'll need.
-d-t-final — the doubled tt is one sharp t, and the vowel in front of it is short and clipped. HAT-tuh, never HAH-tuh.
-final-te — the ending is still a full unstressed syllable.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ich hatte"]
-[pause 8 seconds for the answer]
-[your turn — say: the pair — "ich hatte … ich habe gehabt"]
-[pause 8 seconds for the answer]
-[your turn — say: the English twin — "hatte, had"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ich hatte, ich hatte."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I had." (Ich hatte.) Which letter of haben is missing? (The b.) Say the same thing in the Perfekt. (Ich habe gehabt.) Which English word is hatte? (Had.) Next: which of the two pasts a German actually reaches for, and where.
-
-
-Lesson 6 of 10.
-Which past, and where — what separates the two pasts — not meaning, but speech against writing, and north against south.
-
-Warm-up.
-[pause 2 seconds]
-Two tenses, one meaning. Time to answer the question that has been waiting since the -te arrived: when does a German say which?
-
-Grammar Lens: speech takes one, writing takes the other.
-The Perfekt belongs to speech. The Präteritum belongs to narrative writing.
+Two verbs that look like one word:
 [a table of 2 rows, read aloud]
-tense: Perfekt. where it lives: everyday conversation, and dominant there.
-tense: Präteritum. where it lives: novels, reports, anything told on the page.
-Open a German novel and the story runs in Präteritum from the first page to the last. Stand in a German kitchen and you will barely hear it. Neither audience thinks it is choosing a tense; each is simply doing what that setting does.
-So the practical instruction for a speaker is lopsided and easy: produce the Perfekt, recognise the Präteritum. You will read far more of it than you will ever need to say.
+language: German. verb: haben. meaning: to have.
+language: Latin. verb: habēre. meaning: to have.
+They are not related. It is a coincidence, and one of the most famous in linguistics. Follow each one back and they go in opposite directions.
+Haben comes from Germanic habjaną, from Proto-Indo-European kap-, "to seize." That root's Latin child is capere — which is where English gets capture, captive, capable and accept.
+Habēre comes from a different root entirely, gʰabʰ-, and its English descendant is … give.
+So German haben is a cousin of capture, and Latin habēre — the source of French avoir and Italian avere — is a cousin of give. Seizing and giving, which is about as far apart as two verbs get.
 
 Why it's said this way.
-There is a second axis, and it is geographic. Spoken Präteritum has largely vanished from conversation in southern Germany, Austria and Switzerland; further north it survives noticeably better. A Hamburg speaker will use forms in conversation that a Munich speaker would find bookish.
-That map is not decoration — the next lessons turn out to explain it — and it means the honest answer to "do Germans say ich sagte?" is: some of them, some of the time, and it depends where you are standing.
+This is worth carrying beyond one verb. Resemblance is not evidence. Two words can match in sound and sense and still have nothing to do with each other, and the only way to tell is to follow both back rather than to compare them where they stand.
+Most of this book's cousin pairs are real. This one is the control that proves the others were checked.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the split — "Perfekt for speech, Präteritum for writing"]
+[your turn — say: the pair that is not a pair — "haben, habēre"]
 [pause 8 seconds for the answer]
-[your turn — say: your own instruction — "produce the Perfekt, recognise the Präteritum"]
+[your turn — say: where German's goes — "haben, kap-, capture"]
 [pause 8 seconds for the answer]
-[your turn — say: the map — "weaker in the south, stronger in the north"]
+[your turn — say: where Latin's goes — "habēre, gʰabʰ-, give"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"Perfekt spoken, Präteritum written."
+"haben is not habēre."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which past does a novel use? (The Präteritum.) Which does a conversation use? (The Perfekt.) Which should you produce? (The Perfekt.) Where is spoken Präteritum weakest? (The south.) Next: the forms that ignore all of this and stay spoken everywhere.
+Are haben and habēre related? (No — a coincidence.) Which English word is haben's cousin? (Capture, from capere.) And habēre's? (Give.) What did haben's root originally mean? ("To seize.") Next: the whole verb, said through.
 
 
-Lesson 7 of 10.
-ich konnte — "I could".
-
-Warm-up.
-[pause 2 seconds]
-The last new form of the chapter, and a Präteritum nobody thinks twice about saying out loud.
-
-You'll want to know: ich konnte.
-ich konnte — "I could," "I was able to."
-The dental ending again, doubled in the spelling as it was in hatte: konn-te. It belongs to a small family of verbs German calls modal — the ones that lean on another verb, the way English can, must and may do.
-Those verbs are the Präteritum's stronghold in ordinary speech. Nobody in Munich says ich habe gekonnt over dinner; they say ich konnte.
-
-The word, taken apart.
-Konnte and English could descend from one Germanic verb, kunnaną, which meant "to know how" rather than "to be physically able." Ability arrived later, out of knowledge.
-That older sense is still visible in the English relatives: know, cunning (originally "knowing"), and uncouth, which began as "unknown." The l that English wrote into could is pure accident — it was copied from would and should centuries after anyone stopped pronouncing it.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ich konnte"]
-[pause 8 seconds for the answer]
-[your turn — say: the two doubled forms — "hatte, konnte"]
-[pause 8 seconds for the answer]
-[your turn — say: the old meaning — "konnte, could — knew how"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ich konnte, ich hatte."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I could." (Ich konnte.) What did the verb behind it originally mean? ("To know how.") Name an English cousin. (Know, cunning, or uncouth.) Is konnte bookish? (No — it is said out loud everywhere.) Next: why a handful of forms get that exemption.
-
-
-Lesson 8 of 10.
-The forms that stayed spoken — the short list of Präteritum forms that stay spoken everywhere, and the reason the list is short.
+Lesson 8 of 8.
+Practice — the whole of haben.
 
 Warm-up.
 [pause 2 seconds]
-Hatte. Konnte. Both are Präteritum, and both come out of a German mouth without a second thought. So the writing-only rule has holes in it.
+No new words. Four of the six forms below cost you nothing, and the other two have each had a lesson, so this is the first place it is safe to set them out together.
 
-Grammar Lens: a short list of survivors.
-A handful of very common verbs keep their one-word past in speech, everywhere in the German-speaking world.
-Three groups make up almost the whole list:
-hatte — the past of haben;
-konnte and its modal siblings — musste, wollte, durfte;
-the past of the verb for "to be," which arrives two chapters from now and is the most-said of them all.
-Everything else in the Präteritum obeys the split you learned last: written, not spoken.
-Why these? Because they are the verbs said most often, and frequency protects a form the way it protects an irregularity. A shape you produce fifty times a day is never up for replacement; a shape you produce once a month quietly gets swapped for the compound version and nobody notices the swap happening.
-So the practical list is genuinely short, and it is worth having by heart rather than by rule.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the survivors you own — "hatte, konnte"]
-[pause 8 seconds for the answer]
-[your turn — say: the modal siblings — "musste, wollte, durfte"]
-[pause 8 seconds for the answer]
-[your turn — say: the reason — "frequency protects a form"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"hatte, konnte — spoken everywhere."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Name two Präteritum forms a German says out loud. (Hatte, konnte.) Which family does konnte belong to? (The modals.) Why did these survive? (They are said most often.) Next: why the rest of the tense retreated, and where the retreat came from.
-
-
-Lesson 9 of 10.
-The same retreat, three times over — an areal change — the same retreat happened in German, French and Italian at once, because their speakers are neighbours.
-
-Warm-up.
-[pause 2 seconds]
-German is not the only language that let a two-word past crowd out a one-word one. Two of its neighbours did the identical thing at the identical time.
-
-The word, taken apart.
+Grammar Lens: the six, assembled.
 [a table of 3 rows, read aloud]
-language: German. one-word past: Präteritum. what took it over in speech: Perfekt.
-language: French. one-word past: passé simple. what took it over in speech: passé composé.
-language: Italian. one-word past: passato remoto. what took it over in speech: passato prossimo.
-Two Romance languages and one Germanic one, doing the same thing over the same centuries — and not by coincidence. The dental -te and the Romance endings came from completely different ancestors, so nothing inherited can account for three languages arriving at the same answer.
-Geography can. Southern Germany, France and northern Italy are one connected block of territory, and the change spread through it by contact: speakers who live near each other borrow habits, and a habit of speech travels across a language boundary as easily as across a dialect one. Linguists call a change that spreads that way an areal change.
+singular: ich habe. plural: wir haben.
+singular: du hast. plural: ihr habt.
+singular: er/sie/es hat. plural: sie/Sie haben.
+Run it aloud and hear where the b goes missing: habe … hast … hat … haben. Four forms carry it, two do not, and the two that do not are the two shortest.
 
-Why it's said this way.
-Two pieces of evidence make the contact story stick rather than merely sound good.
-The first is what did not happen at the western edge. Spanish and Portuguese kept their one-word past far more fully in speech, and they are the two languages furthest from that connected block.
-The second is the map inside German itself, which you already met: the Präteritum is weakest in the south, nearest the centre of the change, and strongest in the north, furthest from it. A change spreading outward from a region should thin as it goes, and that is exactly what German shows.
-Geography did not dictate any single sentence. But it explains why a Germanic language and two Romance ones moved in step, and why one end of Germany sounds older than the other.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the three languages — "German, French, Italian: the same retreat"]
-[pause 8 seconds for the answer]
-[your turn — say: the name — "an areal change, spread by contact"]
-[pause 8 seconds for the answer]
-[your turn — say: the inside map — "south more Perfekt, north more Präteritum"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"areal change — it spread by contact."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which two neighbours made the same change? (French and Italian.) Did German inherit it from Latin? (No — the two families build their pasts from different material.) What is a change that spreads by contact called? (An areal change.) Which two languages at the western edge kept their one-word past? (Spanish and Portuguese.) Next: the chapter run through end to end.
-
-
-Lesson 10 of 10.
-Practice — the two pasts, side by side.
-
-Warm-up.
-[pause 2 seconds]
-No new words. The point of this one is to hear, in your own voice, that two different-sounding sentences report the same event.
-
-Grammar Lens: one meaning, two shapes.
-[a table of 3 rows, read aloud]
-meaning: I said. Präteritum: ich sagte. Perfekt: ich habe gesagt.
-meaning: I made. Präteritum: ich machte. Perfekt: ich habe gemacht.
-meaning: I had. Präteritum: ich hatte. Perfekt: ich habe gehabt.
-Say each pair back to back — ich sagte … ich habe gesagt — and then er machte das … er hat das gemacht. Nothing about the meaning has moved. All that has changed is which room you are standing in.
+The exchange.
+[a table of 5 rows, read aloud]
+Hast du einen Bruder? means Do you have a brother?
+Und du? means And you?
+Ich habe eine Schwester. means I have a sister.
+Wir haben Brot und Wein. means We have bread and wine.
+Gut! Dann haben wir alles. means Good! Then we have everything.
+Two things slip in without lessons of their own, because the translation carries them: eine, which is what ein becomes for a die-word, and alles ("everything"). And notice Hast du …? — a question puts the verb first, which is the one move German makes that English needs do for.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the pair — "ich sagte … ich habe gesagt"]
+[your turn — say: the six in order — "habe, hast, hat, haben, habt, haben"]
 [pause 8 seconds for the answer]
-[your turn — say: the other pair — "er machte das … er hat das gemacht"]
+[your turn — say: the two breaks alone — "hast, hat"]
 [pause 8 seconds for the answer]
-[your turn — say: the survivors — "ich hatte, ich konnte"]
+[your turn — say: "Ich habe einen Bruder." "Wir haben Brot und Wein."]
 [pause 8 seconds for the answer]
-[your turn — say: your own instruction — "produce the Perfekt, recognise the Präteritum"]
+[your turn — say: the whole exchange, both voices]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich sagte, ich habe gesagt."
+"habe, hast, hat, haben, habt, haben."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I made" both ways. (Ich machte; ich habe gemacht.) Which of the two would a novel use? (The Präteritum.) Which would you say out loud? (The Perfekt — except for the survivors.) What is the -te called? (The dental preterite.) What kind of change pushed the tense out of speech? (An areal one.) Next: the verb every one of these sentences has been waiting for.
+Run the six without looking. Which two drop the b? (Hast and hat.) Say "I have a brother." (Ich habe einen Bruder.) Is haben related to Latin habēre? (No.) Which English word is it related to? (Capture.) Next: the one everyday sentence where German refuses this verb altogether.

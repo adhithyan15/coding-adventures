@@ -12,7 +12,7 @@ headword: "अस्तु"
 gloss: "so be it, all right"
 romanization: "astu"
 concept_tag: SA-REPLY-SO-BE-IT
-prerequisites: [SA-C26-physician]
+prerequisites: [SA-C26-physician, SA-C25-hand, SA-C26-teacher]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C27-REPLY-01]
 practises:
-  knowledge: [SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01]
+  knowledge: [SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01, SA-LEX-C25-BODY-01, SA-LEX-C26-ROLE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It is not a new word so much as a new face on one you know. **अस्ति** 
 A reply softer than yes, built out of the be-verb you already had.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01, SA-LEX-C25-BODY-01, SA-LEX-C26-ROLE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *astu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *asti*, then *astu*, and say what changed between them]
+- [YOU RECALL: say *hastaḥ*, then read **गुरुः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01] -->

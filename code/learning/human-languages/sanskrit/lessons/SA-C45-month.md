@@ -12,7 +12,7 @@ headword: "मासः"
 gloss: "a month"
 romanization: "māsaḥ"
 concept_tag: SA-DAYTIME-MASA
-prerequisites: [SA-C45-evening]
+prerequisites: [SA-C45-evening, SA-C43-trust, SA-C44-green]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C45-DAYTIME-04]
 practises:
-  knowledge: [SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04]
+  knowledge: [SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04, SA-LEX-C43-COURTESY-04, SA-LEX-C44-COLOUR-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Latin *mēnsis*, Greek *mēn*, English *month* and *moon* are all one word trave
 A stretch of time measured by the moon you already know.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04, SA-LEX-C43-COURTESY-04, SA-LEX-C44-COLOUR-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *māsaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sāyam*, then *māsaḥ*]
+- [YOU RECALL: read **विश्वासः**, then say *haritaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04] -->

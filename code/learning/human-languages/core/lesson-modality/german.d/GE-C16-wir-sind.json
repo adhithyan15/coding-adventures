@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C16-wir-sind",
     "language": "german",
-    "chapter": 18,
+    "chapter": 21,
     "sequence": 470,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4a489c2e5ef37d57"
+    "sourceHash": "fnv1a64:2bedef5ad1476bd3"
   },
   "findings": []
 }

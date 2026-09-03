@@ -12,7 +12,7 @@ headword: "अभिनन्दनम्"
 gloss: "congratulation, a greeting of delight"
 romanization: "abhinandanam"
 concept_tag: SA-COURTESY-ABHINANDANA
-prerequisites: [SA-C37-gracious]
+prerequisites: [SA-C37-gracious, SA-C35-book, SA-C36-slowly]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C37-COURTESY-04]
 practises:
-  knowledge: [SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04]
+  knowledge: [SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04, SA-LEX-C35-HOUSE-04, SA-LEX-C36-REPLY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ That *nand* is the piece inside **आनन्दः**, the joy you met near the
 Joy from the beginning of this book, turned outwards towards somebody else.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04, SA-LEX-C35-HOUSE-04, SA-LEX-C36-REPLY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *abhinandanam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ānandaḥ*, then *abhinandanam*]
+- [YOU RECALL: read **पुस्तकम्**, then say *mandam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04] -->

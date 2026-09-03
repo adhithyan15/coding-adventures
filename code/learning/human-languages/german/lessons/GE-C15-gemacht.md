@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C15-gemacht
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 320
-chapter: 15
+chapter: 18
 type: word
 headword: gemacht
 gloss: made, done — the wrap applied to machen, and the one spelling surprise in it

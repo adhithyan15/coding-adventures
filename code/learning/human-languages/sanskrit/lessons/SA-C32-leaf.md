@@ -12,7 +12,7 @@ headword: "पत्रम्"
 gloss: "a leaf"
 romanization: "patram"
 concept_tag: SA-TREE-PATRA
-prerequisites: [SA-C32-tree]
+prerequisites: [SA-C32-tree, SA-C30-seat, SA-C31-moon]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C32-TREE-02]
 practises:
-  knowledge: [SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02]
+  knowledge: [SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C30-WELCOME-02, SA-LEX-C31-SKY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Greek *pteron*, "wing", is its cousin, behind *helicopter* and *pterodactyl*; so
 A leaf, a wing and a page, all carried by one word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C30-WELCOME-02, SA-LEX-C31-SKY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *patram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *taruḥ*, then *patram*]
+- [YOU RECALL: read **आसनम्**, then say *candraḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02] -->

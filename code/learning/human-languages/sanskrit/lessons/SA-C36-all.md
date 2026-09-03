@@ -12,7 +12,7 @@ headword: "सर्वम्"
 gloss: "all, the whole of it"
 romanization: "sarvam"
 concept_tag: SA-REPLY-SARVA
-prerequisites: [SA-C36-also]
+prerequisites: [SA-C36-also, SA-C34-neck, SA-C35-honey]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C36-REPLY-02]
 practises:
-  knowledge: [SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02]
+  knowledge: [SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C34-LIMB-02, SA-LEX-C35-HOUSE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Its cousins lean on *whole* rather than on *every*: Greek *holos*, behind *holis
 A reply that says nothing has been left out.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C34-LIMB-02, SA-LEX-C35-HOUSE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sarvam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *api*, then *sarvam*]
+- [YOU RECALL: read **ग्रीवा**, then say *madhu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02] -->

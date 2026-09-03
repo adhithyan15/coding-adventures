@@ -12,7 +12,7 @@ headword: "भस्म"
 gloss: "ash"
 romanization: "bhasma"
 concept_tag: SA-EARTH-BHASMA
-prerequisites: [SA-C38-fire]
+prerequisites: [SA-C38-fire, SA-C36-all, SA-C37-respectfully]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C38-EARTH-02]
 practises:
-  knowledge: [SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02]
+  knowledge: [SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C36-REPLY-02, SA-LEX-C37-COURTESY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Hindi and Marathi keep *bhasm* with the meaning untouched.
 Fire, and what fire leaves.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C36-REPLY-02, SA-LEX-C37-COURTESY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bhasma*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *agniḥ*, then *bhasma*]
+- [YOU RECALL: read **सर्वम्**, then say *sādaram*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02] -->

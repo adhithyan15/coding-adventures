@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 11,
-  "title": "Bread, Water, Wine",
+  "title": "Telling the Time",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8cccc1dc0356d9b4",
+  "sourceHash": "fnv1a64:43df6e6c73720ebe",
   "lessons": [
     {
-      "id": "GE-C11-brot",
-      "sequence": 265,
-      "title": "das Brot — bread, and the third gender",
-      "headword": "das Brot",
-      "romanization": "das Brot",
-      "gloss": "bread — inherited Germanic, the twin of English bread",
+      "id": "GE-C08-uhr",
+      "sequence": 235,
+      "title": "Uhr — the clock, and a Roman word in the German day",
+      "headword": "Uhr",
+      "romanization": "Uhr",
+      "gloss": "clock / o'clock — and a Latin word inside German",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a79240811759a0ba",
+      "sourceHash": "fnv1a64:66d523c0a0e032ab",
       "notice": null,
       "blocks": [
         {
@@ -35,34 +35,76 @@
             },
             {
               "kind": "speech",
-              "text": "Where the Romance sisters all say a version of Latin pānis (French pain, Italian pane), German goes its own Germanic way: Brot — the direct twin of English bread. And it brings a new grammatical face: the neuter article, das."
+              "text": "Something new happens here. German's numbers were homegrown (eins, zwei), and its weekdays were Germanic gods (Donnerstag). But its word for the clock — Uhr — is borrowed from Latin. Time-keeping came to the German world with Roman and monastic clocks, and the Latin word rode in with them."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "Taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "das Brot (\"bread\") from old Germanic braudam — the same word that became English bread. No Latin here: this is a native word, like Vater and Wasser, from the Germanic core the two languages share."
+              "text": "vowel-u-long — Uhr = oor, a long u then a soft r: one syllable."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The third gender — das",
+          "type": "etymology",
+          "title": "The word, taken apart — a Latin loan among Germanic natives",
           "segments": [
             {
               "kind": "speech",
-              "text": "You have met der (masculine, der Vater) and die (feminine, die Mutter). German has a third: das, the neuter — and Brot is one: das Brot. (German nouns are also always capitalized — Brot, Vater, Wasser — a rule no other language here follows.) So the article set is now complete: der / die / das."
+              "text": "Uhr comes from Latin hōra, \"hour\" — the same word that became French heure, Italian ora, and English hour. German took it in (through medieval Latin/Low German ūr(e)) and made it Uhr."
+            },
+            {
+              "kind": "speech",
+              "text": "That's the striking part: three layers of the German day, three different origins —."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what",
+                "German",
+                "origin"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "what: the numbers. German: eins, zwei, drei. origin: native Germanic (twins of English).",
+                "what: the weekdays. German: Montag, Donnerstag. origin: Germanic gods (Latin months).",
+                "what: the clock. German: Uhr. origin: Latin loan (hōra)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "German kept its own numbers and gods, but for the machine that measures hours, it reached for Rome. (German also has a native word, Stunde, \"an hour's span\" — but for clock-reading, \"o'clock,\" it's Uhr.)"
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: \"Es ist … Uhr\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To tell the time, German says es ist (\"it is\") + the number + Uhr:"
+            },
+            {
+              "kind": "speech",
+              "text": "Es ist ein Uhr. — \"It is one o'clock.\" Es ist zwei Uhr. — \"It is two o'clock.\" Es ist zehn Uhr. — \"It is ten o'clock.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Uhr doesn't add a plural here (not \"zwei Uhren\" for the time) — it works like English o'clock: zwei Uhr = \"two o'clock.\" (Uhren, plural, means \"clocks\" the objects.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -75,34 +117,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"das Brot\" — long o, the neuter das",
+              "instruction": "\"Uhr\" — oor",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"das Brot\" — long *o*, the neuter *das*]"
+              "source": "[YOU SAY: \"Uhr\" — *oor*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twin test — \"Brot / bread — both Germanic, no Latin\"",
+              "instruction": "\"Es ist ein Uhr, zwei Uhr, drei Uhr\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twin test — \"**Brot / bread** — both Germanic, no Latin\"]"
+              "source": "[YOU SAY: \"Es ist ein Uhr, zwei Uhr, drei Uhr\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three genders — \"der Vater, die Mutter, das Brot\"",
+              "instruction": "\"Uhr / heure / hour\" — all from Latin hōra",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three genders — \"der Vater, die Mutter, das Brot\"]"
+              "source": "[YOU SAY: \"Uhr / heure / hour\" — all from Latin *hōra*]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -114,26 +156,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"bread\" with its article. (das Brot.) Why is it not from Latin pānis like French pain? (It is inherited Germanic — the twin of English bread.) What gender does das mark, and what are the other two? (Neuter — with der masculine and die feminine.) Next: Wasser and Wein — and a split between native and borrowed."
+              "text": "Where does Uhr come from, and why is that notable? (Latin hōra — a loanword, unlike German's native numbers and Germanic day-gods.) Two French/English cousins of Uhr? (heure, hour.) How does German say \"it is three o'clock\"? (Es ist drei Uhr.) Next: Mittag and Mitternacht — noon and midnight."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C11-wasser-wein",
-      "sequence": 270,
-      "title": "das Wasser, der Wein — one word Germans always had, one Rome brought",
-      "headword": "das Wasser, der Wein",
-      "romanization": "das Wasser, der Wein",
-      "gloss": "water and wine — one native Germanic, one ancient Latin loan",
+      "id": "GE-C08-mittag-mitternacht",
+      "sequence": 240,
+      "title": "Mittag and Mitternacht — the native middle of day and night",
+      "headword": "Mittag, Mitternacht",
+      "romanization": "Mittag, Mitternacht",
+      "gloss": "noon and midnight — native \"mid-day\" and \"mid-night\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f604d8ae70fdd44",
+      "sourceHash": "fnv1a64:c40cc2fc525d4b5f",
       "notice": null,
       "blocks": [
         {
@@ -149,38 +191,57 @@
             },
             {
               "kind": "speech",
-              "text": "Two drinks, two very different histories. Wasser is a word Germanic speakers have always had; Wein is one Rome carried north with the grapevine. Side by side, they show the difference between an inherited word and an ancient loan."
+              "text": "The clock-word Uhr was Latin. But noon and midnight swing back to native German: Mittag and Mitternacht are plain Germanic compounds — \"the day's middle\" and \"the night's middle\" — built from words you can already almost read."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "das Wasser (water) — native Germanic",
+          "type": "etymology",
+          "title": "The two words, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "das Wasser (\"water\") — the w is pronounced v (VAH-ser). It is the Grimm's-law twin of English water: same Germanic root watar, same core meaning, both native. Like Brot and Vater, no Latin needed — and neuter, das Wasser."
+              "text": "Both start with Mitte, \"middle\" (cousin of English mid, middle, and of Latin medius):"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "=",
+                "literally"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "German: Mittag. =: Mitte + Tag. literally: \"mid-day\" (noon).",
+                "German: Mitternacht. =: Mitter (Mitte) + Nacht. literally: \"mid-night\" (midnight)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Mittag = \"mid-day.\" Tag (\"day\") you met in Montag, Dienstag; put \"middle\" in front and you get noon. Its meaning matches French midi (medius diēs) exactly — same idea, but German built it from its own words instead of borrowing the Latin one."
+            },
+            {
+              "kind": "speech",
+              "text": "Mitternacht = \"mid-night.\" Nacht (\"night\") is the twin of English night (remember acht/eight, Nacht/night — the -cht/-ght pair). So Mitternacht and English mid-night are the same compound in two Germanic tongues."
+            },
+            {
+              "kind": "speech",
+              "text": "To tell the time with them:"
+            },
+            {
+              "kind": "speech",
+              "text": "Es ist Mittag. — \"It is noon.\" Es ist Mitternacht. — \"It is midnight.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So German splits the day three ways by origin: Uhr (Latin) for the hours, Mittag/Mitternacht (native) for its pivots."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "der Wein (wine) — an ancient Latin loan",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "der Wein (\"wine\") — the ei is said \"eye\" (vine). Here is the twist: Wein is not a native Germanic word. It was borrowed from Latin vīnum in Roman times, when the legions brought viticulture north of the Alps. The Germanic tribes took the drink and its name — which is exactly why English wine, German Wein, and Latin vīnum all match: they are one loan, not three cousins. (Masculine: der Wein.)"
-            },
-            {
-              "kind": "speech",
-              "text": "The lesson in one line: Wasser is a word Germans always had; Wein is a word Rome gave them — the vine came with a vocabulary."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -193,34 +254,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"das Wasser\" (v-), \"der Wein\" (-ein = \"eye\")",
+              "instruction": "\"Mittag\" (noon), \"Mitternacht\" (midnight)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"das Wasser\" (*v-*), \"der Wein\" (*-ein* = \"eye\")]"
+              "source": "[YOU SAY: \"Mittag\" (noon), \"Mitternacht\" (midnight)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Wasser / water — native twins\"; \"Wein / wine / vīnum — one Latin loan\"",
+              "instruction": "break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Wasser / water — native twins\"; \"Wein / wine / vīnum — one Latin loan\"]"
+              "source": "[YOU SAY: break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the split — \"Wasser native, Wein borrowed with the grapevine\"",
+              "instruction": "\"Mitternacht / mid-night\" — the same Germanic compound",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the split — \"Wasser native, Wein borrowed with the grapevine\"]"
+              "source": "[YOU SAY: \"Mitternacht / mid-night\" — the same Germanic compound]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -232,7 +293,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"water\" and \"wine\" with articles and correct sounds. (das Wasser — v- — der Wein — \"vine\".) Which is inherited Germanic, and which is a Latin loan? (Wasser native — twin of water; Wein borrowed from vīnum, with the vine.) Why do Wein and English wine match so exactly? (Both borrowed the same Latin word, vīnum.) Next chapter: asking for these at the table."
+              "text": "What do Mittag and Mitternacht literally mean, and from what native word? (\"Mid-day\" / \"mid-night\"; from Mitte \"middle\" + Tag/Nacht.) How does this differ from Uhr? (Uhr is a Latin loan; these are native compounds.) What English word is Mitternacht the twin of? (Midnight.) Next chapter builds on this toward months and family."
             }
           ]
         }

@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C16-sie-sind
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 480
-chapter: 18
+chapter: 21
 type: phrase
 headword: sie sind / Sie sind
 gloss: they are, and the polite you are — one form, and the capital letter is the only difference

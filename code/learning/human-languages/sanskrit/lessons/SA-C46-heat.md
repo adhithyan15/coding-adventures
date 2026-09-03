@@ -12,7 +12,7 @@ headword: "तापः"
 gloss: "heat"
 romanization: "tāpaḥ"
 concept_tag: SA-LIGHT-TAPA
-prerequisites: [SA-C46-shade]
+prerequisites: [SA-C46-shade, SA-C44-blue, SA-C45-year]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C46-LIGHT-05]
 practises:
-  knowledge: [SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05]
+  knowledge: [SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05, SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Latin *tepēre*, "to be warm", is that root gone west, and English took *tepid* 
 Five things about light and warmth: the sun, a ray, light, shade, heat.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05, SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tāpaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *raviḥ* and *tāpaḥ* together]
+- [YOU RECALL: say *nīlaḥ*, then read **संवत्सरः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05] -->

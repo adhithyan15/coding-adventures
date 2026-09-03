@@ -12,7 +12,7 @@ headword: "अहो"
 gloss: "oh!"
 romanization: "aho"
 concept_tag: SA-REPLY4-AHO
-prerequisites: [SA-C49-again-and-again]
+prerequisites: [SA-C49-again-and-again, SA-C47-floor, SA-C48-goose]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C49-REPLY-05]
 practises:
-  knowledge: [SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05]
+  knowledge: [SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05, SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It is two small cries stuck together rather than a word with parts, which is why
 Five more replies: then, as, only, again and again, and oh.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05, SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *aho*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *tarhi* and *aho* together]
+- [YOU RECALL: say *talam*, then read **हंसः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05] -->

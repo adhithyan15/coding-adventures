@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C12-zahlen-13-20",
     "language": "german",
-    "chapter": 12,
+    "chapter": 15,
     "sequence": 280,
     "modality": "sight",
     "derived": "sight",
@@ -17,7 +17,7 @@
       "wide-table"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:cce4d9521e80b221"
+    "sourceHash": "fnv1a64:b8c153d133ffa5a2"
   },
   "findings": []
 }

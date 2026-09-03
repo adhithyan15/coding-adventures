@@ -80,7 +80,7 @@ A country name is a noun. Saying that a person belongs to it needs an adjective,
 भारतम् (Bhāratam) becomes भारतीयः (bhāratīyaḥ) — of Bhārata, Indian.
 सः भारतीयः — saḥ bhāratīyaḥ — he is Indian.
 The piece that does the work is the -īya suffix, and you can see it in the word: the ी after भारत, then य, then the masculine -ः. It is a machine, not a one-off. Give it a place and it gives you the adjective for belonging to that place, and the ending then agrees with whoever you are describing exactly as महत् and नव do.
-Notice what the sentence does not have. There is no अस्ति in it. Sanskrit can leave the is out when it simply links two things, and here it does — he, Indian. You have seen that before in न चिन्ता; this is the same economy.
+Notice what the sentence does not have. There is no अस्ति in it. Sanskrit can leave the is out when its only work is to link two things, and here it does — he, Indian. You have seen that before in न चिन्ता; this is the same economy.
 
 What you've built.
 A country, its name, and the word for somebody who belongs to it.

@@ -1,16 +1,26 @@
 {
   "chapter": 6,
-  "title": "Numbers One to Ten",
-  "label": "ch:numbers-1-10",
-  "canDo": "I can count from one to ten in German and use the numbers in a short exchange.",
+  "title": "One, Two, Three",
+  "label": "ch:ge-zahlen-1-3",
+  "canDo": "I can count one, two, three in German and say why each is the English number's twin rather than a Latin borrowing.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C06-zahlen-6-10",
+    "lesson": "GE-C06-grimm",
     "kind": "task",
-    "summary": "Complete GE-C06-zahlen-6-10, the canonical closing checkpoint, and demonstrate the chapter promise: count from one to ten in German and use the numbers in a short exchange.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "The first three numbers, one per lesson, and then the sound law that explains every difference between them and their English twins. German's numbers were never borrowed from Latin; this chapter is where that stops being a claim and becomes something the reader can hear.",
+    "assesses": [
+      "GE-LEX-EINS-01",
+      "GE-SOUND-EI-AS-EYE-01",
+      "GE-ETYMON-EINS-ONE-02",
+      "GE-LEX-ZWEI-01",
+      "GE-ETYMON-ZWEI-TWO-02",
+      "GE-LEX-DREI-01",
+      "GE-ETYMON-DREI-THREE-02",
+      "GE-GRAMMAR-SOUND-LAW-01",
+      "GE-ETYMON-GERMANIC-SIBLINGS-02"
+    ],
+    "note": "Chapter 6 is generated from schema-v2 lessons, so the payoff is atom-scored. It introduces 9 atoms, under the maxNewAtomsPerChapter of 12: the numbers one to ten were split across four chapters rather than crammed into one, because German's own band is a median of 9 and 23 of its 29 atom-bearing chapters sit at or under the ceiling. Lesson ids keep the GE-C06-* prefix."
   }
 }

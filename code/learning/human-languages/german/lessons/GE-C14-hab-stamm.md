@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C14-hab-stamm
 spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
 sequence: 296
-chapter: 14
+chapter: 17
 type: grammar
 headword: ich habe, wir haben, ihr habt
 gloss: four of haben's six forms come out of the ending machine you already own, with nothing new to learn

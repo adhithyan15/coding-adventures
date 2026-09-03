@@ -12,7 +12,7 @@ headword: "बहु"
 gloss: "much, many"
 romanization: "bahu"
 concept_tag: SA-REPLY-BAHU
-prerequisites: [SA-C42-a-little]
+prerequisites: [SA-C42-a-little, SA-C40-sweet, SA-C41-parasol]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C42-REPLY-05]
 practises:
-  knowledge: [SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05]
+  knowledge: [SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05, SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Hindi *bahut*, "very, a lot", is **बहु** with an ending on it, and it is o
 Five replies about how much and how often: sometimes, suddenly, mostly, a little, much.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05, SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bahu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *kadācit* and *bahu* together]
+- [YOU RECALL: say *modakaḥ*, then read **छत्रम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05] -->

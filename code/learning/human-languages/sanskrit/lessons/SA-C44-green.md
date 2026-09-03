@@ -12,7 +12,7 @@ headword: "हरितः"
 gloss: "green"
 romanization: "haritaḥ"
 concept_tag: SA-COLOUR-HARITA
-prerequisites: [SA-C44-yellow]
+prerequisites: [SA-C44-yellow, SA-C42-a-little, SA-C43-trust]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C44-COLOUR-04]
 practises:
-  knowledge: [SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04]
+  knowledge: [SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04, SA-LEX-C42-REPLY-04, SA-LEX-C43-COURTESY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ English *yellow* and *gold* are its cousins, from **\*ǵhel-**, a root that runs
 Green, from a root that could not decide between green and gold.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04, SA-LEX-C42-REPLY-04, SA-LEX-C43-COURTESY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *haritaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pītaḥ*, then *haritaḥ*]
+- [YOU RECALL: read **किञ्चित्**, then say *viśvāsaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04] -->

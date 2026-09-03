@@ -38,7 +38,7 @@ reviews_of: [GE-C01-der-die-das]
 
 [PAUSE 2s] Your first German noun. In Spanish "day" was *día* (via Latin); in
 French, *jour* (via a longer Latin detour). In German it's *Tag* — and it's
-simply English "day" with one consonant shifted.
+English "day" with one consonant shifted, and nothing else.
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-DER-DIE-DAS-02] -->
@@ -52,7 +52,7 @@ simply English "day" with one consonant shifted.
 - **Tag** = *tahk* — a long open *a*, the vowel of English *father*; Germans
   harden a final *-g* to a *k* (**final devoicing**), so *Tag* rhymes with
   English *tock*, not with English *tag*. German nouns are always
-  **Capitalized** (every noun, not just names).
+  **Capitalized** (every noun, not only names).
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[GE-LEX-TAG-02, GE-ETYMON-TAG-03]; assesses=[] -->

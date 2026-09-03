@@ -12,7 +12,7 @@ headword: "सरलः"
 gloss: "straightforward, honest"
 romanization: "saralaḥ"
 concept_tag: SA-COURTESY-SARALA
-prerequisites: [SA-C43-trust]
+prerequisites: [SA-C43-trust, SA-C41-parasol, SA-C42-much]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C43-COURTESY-05]
 practises:
-  knowledge: [SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05]
+  knowledge: [SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05, SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ English runs the metaphor the same way — *straight*, *upright*, *a straight an
 Five words for how a person carries themselves: hospitality, conduct, humility, trust, plain dealing.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05, SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *saralaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *ātithyam* and *saralaḥ* together]
+- [YOU RECALL: say *chatram*, then read **बहु**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05] -->

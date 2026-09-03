@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C15-sagte
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 395
-chapter: 17
+chapter: 20
 type: word
 headword: ich sagte
 gloss: I said, in one word — the Präteritum of sagen, beside the Perfekt that means exactly the same

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 43,
-  "sourceHash": "fnv1a64:6146999a77810caf",
+  "sourceHash": "fnv1a64:67d44bcbbb4a11d5",
   "lessonIds": [
     "SA-C43-hospitality",
     "SA-C43-conduct",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch43.txt",
   "json": "sanskrit/narration/ch43.json",
-  "textHash": "fnv1a64:881dec451883b1d1",
-  "jsonHash": "fnv1a64:344b2d4d143eb0bc",
+  "textHash": "fnv1a64:78c7c0f58a7f07d0",
+  "jsonHash": "fnv1a64:ccadc271607e937d",
   "findings": []
 }

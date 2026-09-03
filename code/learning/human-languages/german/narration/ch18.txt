@@ -1,323 +1,271 @@
-German, chapter 18: I Am, You Are.
-9 lessons. You can do the first 8 of them in the car; after that you will want to have stopped.
+German, chapter 18: The Wrapped Participle.
+8 lessons. All 8 can be done entirely by ear.
 
 
-Lesson 1 of 9.
-sein — "to be".
-
-Warm-up.
-[pause 2 seconds]
-You have met the German verb for to have. Here is its partner — the most irregular verb in German, and the one verb whose forms you will not be able to guess.
-
-You'll want to know: sein.
-sein — "to be."
-The -en on the end is the infinitive ending you already own from gehen and sehen: the dictionary form of a German verb wears it, and sein wears it too.
-That is where the resemblance stops. Gehen and sehen keep their stem in every form — ich gehe, ich sehe. Sein keeps nothing. Not one of its present forms contains the letters s-e-i-n in that order.
-This is the only verb in the book that has to be met one form at a time, and the next several lessons do exactly that: one form each, said until it is automatic, before any of them are ever seen side by side.
-
-Sounds you'll need.
-s-voiced — a German s before a vowel buzzes like English z, exactly as it does in sehen. So sein opens with a z.
-diphthong-ei — German ei is the vowel of English eye, never "ee".
-final-t — worth having ready now, because two of the forms coming up end in a crisp, fully released t.
-Put together, sein sounds like English zine.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "sein" (zine) — buzzing z, ei as in eye]
-[pause 8 seconds for the answer]
-[your turn — say: "gehen, sehen, sein" — three infinitives, one ending]
-[pause 8 seconds for the answer]
-[your turn — say: "sein — to be"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"sein, sein — zine."
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does sein mean? ("To be.") Which ending does it share with gehen and sehen? (-en, the infinitive.) How does the s sound? (Like English z.) And the ei? (Like English eye.) Next: the first form, and it looks nothing like the word you just learned.
-
-
-Lesson 2 of 9.
-ich bin — "I am".
+Lesson 1 of 8.
+sagen — "to say".
 
 Warm-up.
 [pause 2 seconds]
-You have ich, and you have the infinitive sein. Put them together and you get a form that shares no letters with either half of that sentence except the i.
+One more weak verb before the past tense starts, and it is the verb the whole chapter will be built on.
 
-You'll want to know: ich bin.
-ich bin — "I am."
-One syllable, short i, ordinary b, ordinary n. There is no rule behind it and nothing to derive it from: bin is simply the form that goes with ich, and it is learned the way you learned hallo.
-It rhymes with English bin, and that rhyme is not an accident — see below.
+You'll want to know: sagen.
+sagen — "to say."
+Two syllables, ZAH-gen. It behaves like machen and lernen in every respect: chop the -en and you have the stem sag-, and onto that stem go the endings you already own — ich sage, du sagst.
+Nothing new is happening in those endings. Sagen is here so that when the past tense arrives in the next lesson, the only unfamiliar thing in it is the past.
 
 Sounds you'll need.
-ich-laut — ich still ends in the soft breathy sound you met when you first said "I": tongue where it sits for ee, air pushed past it, no scrape.
-i-short — the i of bin is short and clipped, the vowel of English bin, not the long ee of ihm.
+long-a — the a of sagen is long and open, the vowel of English father, not the clipped a of hat.
+ge-prefix — the -gen at the end is unstressed and swallowed, a soft gn more than a full syllable. The same mumble will open every participle in this chapter, so it is worth getting comfortable now.
 
 The word, taken apart.
-Bin rhymes with English be for a reason, even though the vowels have drifted apart. Both come from Proto-Indo-European bʰuH- — "to grow, to become."
-So German kept that ancient root in the present tense and English kept it as the infinitive: be and bin are the same old word wearing different jobs. Hold on to that; two lessons from now it explains something about the whole verb.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ich bin" — short i, soft ending on ich]
-[pause 8 seconds for the answer]
-[your turn — say: "ich bin Anna." "ich bin Peter."]
-[pause 8 seconds for the answer]
-[your turn — say: "bin — be" — the same old root]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ich bin, ich bin."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I am." (Ich bin.) Is the i of bin long or short? (Short — English bin.) Which English word comes from the same root as bin? (Be.) Next: the same verb for the person you are talking to.
-
-
-Lesson 3 of 9.
-du bist — "you are".
-
-Warm-up.
-[pause 2 seconds]
-Du is the familiar "you" — the one for a friend. Its verb ending is -st, and for once sein uses it.
-
-You'll want to know: du bist.
-du bist — "you are."
-Take bin, drop the n, add the familiar -st: bi- plus -st is bist. That is the same ending as du gehst, du heißt, du siehst.
-Of the six present forms of sein, this is the only one that can be derived from another one. Enjoy it; it does not happen again.
-
-Sounds you'll need.
-u-long — du has a long, rounded oo, the vowel of English do, held.
-final-t — German releases a final t fully and audibly. Bist ends with a small puff of air; English tends to swallow it.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "du bist" — long u, crisp final t]
-[pause 8 seconds for the answer]
-[your turn — say: "ich bin … du bist" — the pair]
-[pause 8 seconds for the answer]
-[your turn — say: "du bist Peter."]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ich bin, du bist."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "you are," to a friend. (Du bist.) Which ending is that? (-st, the familiar one.) Which form is bist built on? (Bin.) Is the final t released or swallowed? (Released.) Next: the form for everybody else.
-
-
-Lesson 4 of 9.
-er ist — "he is".
-
-Warm-up.
-[pause 2 seconds]
-Bin and bist both start with b. The third form does not, and it is the one you will hear most.
-
-You'll want to know: er ist.
-er ist — "he is."
-er is "he." The same ist serves three more subjects without changing at all: sie ist ("she is"), es ist ("it is"), and das ist ("that is") — es and das both already yours.
-So one two-letter word covers everything that is not ich and not du, in the singular. It is the workhorse of the whole verb.
-
-Sounds you'll need.
-r-final — the r at the end of er is not a full English r. It softens towards a vowel, close to air said without the tongue curling.
-final-t — ist ends in the same released t as bist.
-
-The word, taken apart.
-Ist is the one form of sein whose relatives you can name on sight:
-[a table of 4 rows, read aloud]
-language: German. "is": ist.
-language: English. "is": is.
-language: Latin. "is": est.
-language: French. "is": est.
-All from Proto-Indo-European h₁es-, "to be" — and the infinitive sein is built on that root too. So sein and ist really do belong to each other; it is bin and bist that came from somewhere else.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "er ist, sie ist, es ist"]
-[pause 8 seconds for the answer]
-[your turn — say: "Das ist gut." — "that is good"]
-[pause 8 seconds for the answer]
-[your turn — say: "ich bin, du bist, er ist"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"Das ist gut."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "he is." (Er ist.) Which other subjects take the same form? (Sie, es, das.) Say "that is good." (Das ist gut.) Which Latin word is ist? (Est.) Next: the form for more than one.
-
-
-Lesson 5 of 9.
-wir sind — "we are".
-
-Warm-up.
-[pause 2 seconds]
-Three singular forms down. The plural starts here, and after bin, bist, ist, this one will finally look like the verb it belongs to.
-
-You'll want to know: wir sind.
-wir sind — "we are."
-wir is "we." And sind shares its first two letters with the infinitive sein, which is the first visible family resemblance in this verb.
-Its Latin twin is sunt, "they are" — same s, same n, same closing stop, the same root wearing a different vowel.
-
-Sounds you'll need.
-w-as-v — German w is English v. Wir begins like veer.
-ie-long-ee — ie is a long ee. Wir is veer, not wire.
-d-t-final — the d at the end of sind is spoken as a t, the same final devoicing you met on und. Say zint.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "wir sind" — veer zint, final d as t]
-[pause 8 seconds for the answer]
-[your turn — say: "wir sind gut."]
-[pause 8 seconds for the answer]
-[your turn — say: "sein … sind" — the family resemblance]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"wir sind, wir sind."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "we are." (Wir sind.) How is the final d pronounced? (As a t.) How does wir begin? (Like English v.) Which Latin word is sind? (Sunt.) Next: the plural "you."
-
-
-Lesson 6 of 9.
-ihr seid — "you are," to several people.
-
-Warm-up.
-[pause 2 seconds]
-Du is one friend. For two or more friends German has a separate word, and English used to have one as well.
-
-You'll want to know: ihr seid.
-ihr seid — "you are," said to more than one person you would each call du.
-ihr is the familiar plural "you" — a crowd of friends, a group of children, your own family. English once had ye here and let it go, which is why one English you now does the work of four German words.
-seid opens exactly like the infinitive: sei- is sein without its n. Both the s and the ei behave as they did there.
-
-Sounds you'll need.
-ie-long-ee — ihr is eer, one long vowel; the h only stretches it.
-s-voiced — seid opens with the buzzing z of sein.
-diphthong-ei — and carries the eye vowel through. Say zite.
-Wir sind and ihr seid are the two plural forms, and they sound nothing alike, which makes them easy to keep apart.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ihr seid" — eer zite]
-[pause 8 seconds for the answer]
-[your turn — say: "wir sind … ihr seid"]
-[pause 8 seconds for the answer]
-[your turn — say: "sein … seid" — the same opening]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ihr seid, ihr seid."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "you are" to a group of friends. (Ihr seid.) Which English word did that job before English dropped it? (Ye.) Which part of seid comes straight out of sein? (sei-.) Next: the last form, and the one that does double duty.
-
-
-Lesson 7 of 9.
-sie sind / Sie sind — "they are," and "you are," politely.
-
-Warm-up.
-[pause 2 seconds]
-The polite Sie is literally the word for "they," worn as a courtesy. Its verb form follows from that, and costs you nothing new.
-
-You'll want to know: sie sind and Sie sind.
-sie sind — "they are." Sie sind — "you are," to someone you would address formally.
-The form is sind, the very same word you learned for wir. Nothing changes in the mouth at all: wir sind, sie sind, Sie sind are three subjects and one verb form.
-
-Grammar Lens: the capital carries the politeness.
-On the page, sie and Sie differ by exactly one capital letter — and German already spends capitals on grammar rather than decoration. In speech there is no difference at all; the context tells you which one is meant.
-[a table of 2 rows, read aloud]
-sie sind means they are.
-Sie sind means you are, formally.
-That is the whole of it. Six subjects, and you have now met every present form of the verb.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "sie sind" — "they are"]
-[pause 8 seconds for the answer]
-[your turn — say: "Sie sind Herr Peter Schmidt?" — politely]
-[pause 8 seconds for the answer]
-[your turn — say: "wir sind, sie sind, Sie sind" — one form, three subjects]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"sie sind, Sie sind."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "they are." (Sie sind.) Say "you are" to a stranger. (Sie sind — same sound.) What separates the two on paper? (The capital S.) How many different present forms of this verb have you now met? (Five — bin, bist, ist, sind, seid.) Next: one adjective, so you can finally say something about yourself.
-
-
-Lesson 8 of 9.
-müde — "tired".
-
-Warm-up.
-[pause 2 seconds]
-Ich bin is a sentence waiting for one more word. Here is the word that finishes it most often.
-
-You'll want to know: müde.
-müde — "tired."
-Ich bin müde. — "I am tired."
-Two syllables, stress on the first: mü-duh. It is an adjective, and after sein an adjective takes no ending at all — the same bare form serves every subject. Ich bin müde, du bist müde, wir sind müde.
-That is worth noticing, because German adjectives are famous for their endings. They only take them in front of a noun. Standing after sein, they stand still.
-
-Sounds you'll need.
-umlaut-ue — ü is the vowel you make by rounding your lips for oo and then saying ee without moving them. The dots are the fronting mark you already know: the mouth shifts forward, the lips stay round.
-The final -e is a soft uh, never silent. mü-duh, two beats, the weight on the first.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "müde" — round the lips, say ee]
-[pause 8 seconds for the answer]
-[your turn — say: "Ich bin müde."]
-[pause 8 seconds for the answer]
-[your turn — say: "Er ist müde. Wir sind müde." — the adjective never changes]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"Ich bin müde."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I am tired." (Ich bin müde.) How do you make the ü? (Round for oo, say ee.) Does müde change after sein? (No — no ending.) Say "we are tired." (Wir sind müde.) Next: everything at once, on purpose.
-
-
-Lesson 9 of 9.
-Practice — the whole present of sein.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
-Warm-up.
-[pause 2 seconds]
-No new words. Every form below has had its own lesson, so this is the first time it is safe to put them all on one page — as a recap, not as something to memorise from cold.
-
-Grammar Lens: the six forms, assembled.
+Sagen and English say are the same word. Germanic sagjaną went to both, and then English quietly dropped the g out of the middle:
 [a table of 3 rows, read aloud]
-singular: ich bin. plural: wir sind.
-singular: du bist. plural: ihr seid.
-singular: er/sie/es ist. plural: sie/Sie sind.
-Six subjects, five different forms — sind does double duty. Look at that with fresh eyes now that you can say all of it: bin and ist do not look like forms of the same word, and the next chapter explains why they aren't.
-
-The exchange.
-[a table of 5 rows, read aloud]
-Hallo! Wie geht es dir? means Hello! How are you?
-Danke, ich bin müde. means Thanks — I am tired.
-Du bist müde? Ich auch. means You are tired? Me too.
-Dann sind wir müde. Aber das ist gut. means Then we are tired. But that is good.
-Bis morgen! means See you tomorrow!
-Three small joining words slip in there without needing lessons of their own, because each can be read straight off the translation: auch ("too"), dann ("then") and aber ("but").
+sagen means say.
+Tag means day.
+Weg means way.
+Three pairs, one habit. Whenever a German g sits between vowels or at the end of a short word, English is likely to have thinned it to a y sound — so a German g you cannot place is often an English y in disguise.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the six in order — "ich bin, du bist, er ist, wir sind, ihr seid, sie sind"]
+[your turn — say: "sagen" — long a, soft ending]
 [pause 8 seconds for the answer]
-[your turn — say: the same six backwards]
+[your turn — say: "ich sage, du sagst, wir sagen"]
 [pause 8 seconds for the answer]
-[your turn — say: "Ich bin müde." "Du bist müde." "Wir sind müde."]
-[pause 8 seconds for the answer]
-[your turn — say: the whole exchange, both voices]
+[your turn — say: the three pairs — "sagen–say, Tag–day, Weg–way"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich bin, du bist, er ist, wir sind, ihr seid, sie sind."
+"sagen, sagen — to say."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Run the six forms without looking. Which one form covers wir, sie and Sie? (Sind.) Which is the only form built out of another one? (Bist, from bin.) Say "that is good." (Das ist gut.) Say "you are tired" to a group. (Ihr seid müde.) Next: where these forms came from — three different verbs, none of them each other.
+Say "to say." (Sagen.) Say "I say." (Ich sage.) Is the a long or short? (Long — as in father.) Which English word is sagen? (Say.) Next: what happens to this verb when the saying is already over.
+
+
+Lesson 2 of 8.
+gesagt — "said".
+
+Warm-up.
+[pause 2 seconds]
+You have sagen. Now the form German uses when the saying is already finished — and it is longer at both ends than the word it came from.
+
+You'll want to know: gesagt.
+gesagt — "said."
+Hear where it grew. Sag- is still sitting in the middle, untouched. In front of it a ge- has appeared; behind it the -en has gone and a -t has taken its place:
+sagen — ge-sag-t.
+That is the word English calls a past participle: the form that goes with have in I have said. German's has a hat on as well as boots.
+
+Sounds you'll need.
+ge-prefix — unstressed, almost swallowed: guh, never gay. The stress stays on sagt, exactly where it was in sagen.
+final-t — the closing t is crisp and fully released. The g in front of it hardens to a k on the way out, the same hardening you met when und came out as unt: say guh-ZAHKT.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "gesagt" — soft opening, hard ending]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "sagen, gesagt"]
+[pause 8 seconds for the answer]
+[your turn — say: the three pieces — "ge, sag, t"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"sagen, gesagt. Sagen, gesagt."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "said." (Gesagt.) Which part of sagen survives inside it? (Sag-, the stem.) What appeared in front? (Ge-.) What replaced the -en? (-t.) Next: the same two additions, on any weak verb you like.
+
+
+Lesson 3 of 8.
+ge-…-t — the wrap that makes a participle.
+
+Warm-up.
+[pause 2 seconds]
+Sagen, gesagt. One verb did that; the recipe behind it works on every regular verb you own.
+
+Grammar Lens: ge- in front, -t behind.
+Take a regular verb. Strip the -en. Put ge- in front of what is left and -t on the end.
+That is the whole operation for the regular verbs — the ones grammarians call weak, because they build their past out of endings rather than by changing the vowel inside.
+The thing worth noticing is that the ending has a beginning. English marks its participle in one place: walk becomes walk-ed, and the front of the word sits untouched. German marks it in two, one piece of grammar arriving at both ends of the stem at once.
+Grammar has a name for a piece that wraps like that: a circumfix. It is not a prefix plus a suffix that happen to co-occur — neither half means anything without the other. Gesag is not a word, and sagt on its own is "he says." Only both together make "said."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the recipe — "ge in front, t behind"]
+[pause 8 seconds for the answer]
+[your turn — say: the wrap on its own — "ge … t"]
+[pause 8 seconds for the answer]
+[your turn — say: "sagen, gesagt" and hear both ends move]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ge- in front, -t behind."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two pieces make a weak participle? (Ge- in front, -t behind.) What is a piece of grammar that wraps a word called? (A circumfix.) Where does English put its own participle marker? (Only at the end — walked.) Build the participle of sagen. (Gesagt.) Next: the same wrap on a verb you met long before this one.
+
+
+Lesson 4 of 8.
+gemacht — "made," "done".
+
+Warm-up.
+[pause 2 seconds]
+You know the recipe. Run it on machen before reading on: strip the -en, wrap what is left.
+
+You'll want to know: gemacht.
+gemacht — "made," and also "done."
+Machen gives up its -en, leaving mach-. The wrap goes round it and out comes gemacht. No stem was harmed: the a is the same a, and the ch is the same ch.
+German uses this one participle where English chooses between two different words. Ich habe das gemacht is "I made that" and "I did that" alike; German never had to pick.
+
+Sounds you'll need.
+ch-ach — after a, o or u, German ch is the scrape at the back of the throat, the sound in Bach and in Nacht. It sits in the middle of gemacht untouched.
+final-t — and the t on the end is crisp: guh-MAHKHT, three consonants landing together at the finish.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "machen, gemacht"]
+[pause 8 seconds for the answer]
+[your turn — say: both participles together — "gesagt, gemacht"]
+[pause 8 seconds for the answer]
+[your turn — say: one word for two English ones — "made, done — gemacht"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"machen, gemacht."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Build the participle of machen. (Gemacht.) Which two English words does it cover? (Made and done.) What happened to the ch on the way? (Nothing — the wrap only touches the edges.) Next: the verb you have been doing to German itself.
+
+
+Lesson 5 of 8.
+gelernt — "learned".
+
+Warm-up.
+[pause 2 seconds]
+Third time through the recipe, and this one describes what you have been doing since page one.
+
+You'll want to know: gelernt.
+gelernt — "learned."
+Lernen loses its -en, leaving lern-; the wrap closes round it. The English cousin is doing the very same job with the very same stem — learn, learned — and differs only in where the marking sits. German puts a piece at each end; English puts both pieces at the back.
+
+Sounds you'll need.
+r-uvular-german — the r inside gelernt is made at the back of the mouth and, before a consonant, is barely a consonant at all: it colours the vowel more than it rolls. Guh-LEHRNT, with the r almost swallowed.
+final-t — -nt at the end, both consonants sounded, the t released.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "lernen, gelernt"]
+[pause 8 seconds for the answer]
+[your turn — say: the English twin — "learn, learned; lernen, gelernt"]
+[pause 8 seconds for the answer]
+[your turn — say: all three so far — "gesagt, gemacht, gelernt"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"lernen, gelernt."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Build the participle of lernen. (Gelernt.) Which English verb is its twin? (Learn.) Where does English put its marking? (All of it at the end.) Next: the fourth verb, and the last one before the recipe is yours.
+
+
+Lesson 6 of 8.
+gewohnt — "lived".
+
+Warm-up.
+[pause 2 seconds]
+Fourth and last of the four. Run the recipe on wohnen yourself first.
+
+You'll want to know: gewohnt.
+gewohnt — "lived," in the sense of dwelt somewhere.
+Wohn- takes the wrap and nothing else changes. Four verbs, four participles, one recipe: it has not bent once.
+
+Sounds you'll need.
+w-is-v — the w buried in the middle is a German w, which is English v. Guh-VOHNT.
+final-t — -nt to close, exactly as in gelernt.
+
+The word, taken apart.
+Wohnen began by meaning something closer to "to be accustomed" than "to reside," and gewohnt still carries that older sense alongside the newer one: in modern German it is also the ordinary word for used to something.
+English kept the same word and only the old meaning:
+[a table of 2 rows, read aloud]
+German gewohnt means lived; accustomed.
+English wont means accustomed, as in he was wont to sing.
+Two languages split one word between them — Germany took the address and England took the habit.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "wohnen, gewohnt" — with a v in the middle]
+[pause 8 seconds for the answer]
+[your turn — say: the fossil — "gewohnt, wont"]
+[pause 8 seconds for the answer]
+[your turn — say: the whole set — "gesagt, gemacht, gelernt, gewohnt"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"wohnen, gewohnt."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Build the participle of wohnen. (Gewohnt.) How is the w sounded? (Like English v.) Which English word preserves its older sense? (Wont — accustomed.) Next: where that ge- came from, and the English word still hiding it.
+
+
+Lesson 7 of 8.
+The ge- that English lost — the prefix that means "completely" — and the English word that still has one hiding inside it.
+
+Warm-up.
+[pause 2 seconds]
+Four participles, four ge-s. That syllable is not decoration, and English used to have it too.
+
+The word, taken apart.
+German ge- comes from Germanic ga-, a prefix meaning "together, completely." Its job was to mark an action as finished — what grammarians call perfective — which is exactly the work a past participle does. A finished saying is gesagt.
+English inherited the same prefix and spelled it y-. Chaucer still wrote it. Then English let it go, and two fossils were left behind with the prefix welded on:
+[a table of 2 rows, read aloud]
+English word: enough. what is hiding inside: Old English genōg — "completely sufficient".
+English word: yclept (archaic, "named"). what is hiding inside: gecleopod — "called," finished and done.
+Say the German wrap out loud — ge-sag-t — and then the English fossil: en-ough, from genōg. It is the same syllable, worn down to a vowel and carried inside a word nobody thinks of as a participle at all.
+So English once wrapped its participles the same way German still does. German simply never stopped.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: what it meant — "together, completely"]
+[pause 8 seconds for the answer]
+[your turn — say: the fossil — "enough, from genōg"]
+[pause 8 seconds for the answer]
+[your turn — say: four finished actions — "gesagt, gemacht, gelernt, gewohnt"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ge- means completely."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did ge- originally mean? ("Completely," marking an action finished.) How did English spell the same prefix? (Y-.) Which everyday English word still carries it? (Enough, from genōg.) And the archaic one? (Yclept.) Next: the four participles side by side, and then the verb that puts them to work.
+
+
+Lesson 8 of 8.
+Practice — four verbs, one wrap.
+
+Warm-up.
+[pause 2 seconds]
+No new words. Every participle here has had its own lesson, so this is the first place they are safe to put side by side — as a recap of work already done, not as a list to swallow.
+
+Grammar Lens: the four, assembled.
+[a table of 4 rows, read aloud]
+infinitive: sagen. participle: gesagt.
+infinitive: machen. participle: gemacht.
+infinitive: lernen. participle: gelernt.
+infinitive: wohnen. participle: gewohnt.
+Cover the right-hand side and rebuild it from the left. Then cover the left and work backwards: given gemacht, what was the infinitive? The recipe runs both ways, which is what makes it worth having.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the four in order — "gesagt, gemacht, gelernt, gewohnt"]
+[pause 8 seconds for the answer]
+[your turn — say: the four infinitives back — "sagen, machen, lernen, wohnen"]
+[pause 8 seconds for the answer]
+[your turn — say: the recipe out loud — "ge in front, t behind"]
+[pause 8 seconds for the answer]
+[your turn — say: the fossil — "enough, from genōg"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"gesagt, gemacht, gelernt, gewohnt."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Run the four participles without prompting. Which infinitive gives gemacht? (Machen.) What are the two pieces of the wrap? (Ge- and -t.) What did the front piece originally mean? ("Completely.") Next: the verb that carries all four of these into a sentence.

@@ -1,18 +1,15 @@
 {
   "language": "german",
   "chapter": 31,
-  "sourceHash": "fnv1a64:95125ac39bedab3f",
+  "sourceHash": "fnv1a64:4d8343f8f5c0ebca",
   "lessonIds": [
-    "GE-C26-sitzen",
-    "GE-C26-stehen",
-    "GE-C26-schlafen",
-    "GE-C26-hoeren"
+    "GE-C23-gruen-gelb"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "german/narration/ch31.txt",
   "json": "german/narration/ch31.json",
-  "textHash": "fnv1a64:6cdbd3929bcbec74",
-  "jsonHash": "fnv1a64:b386d5964ed72333",
+  "textHash": "fnv1a64:4407482d7dc2c6c9",
+  "jsonHash": "fnv1a64:ce72b71374439e6c",
   "findings": []
 }

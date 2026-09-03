@@ -1,0 +1,14 @@
+{
+  "id": "GE-EXT-015-B-VIER-FUENF",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can count to five in German as one motion, and use ein and eine for “a”.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C06-vier",
+    "GE-C06-fuenf",
+    "GE-C06-zahlen-1-5",
+    "GE-C06-ein-eine"
+  ]
+}

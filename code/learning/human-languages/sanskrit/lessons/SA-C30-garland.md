@@ -12,7 +12,7 @@ headword: "माला"
 gloss: "a garland"
 romanization: "mālā"
 concept_tag: SA-WELCOME-GARLAND
-prerequisites: [SA-C30-flower]
+prerequisites: [SA-C30-flower, SA-C28-auspicious, SA-C29-favour]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C30-WELCOME-04]
 practises:
-  knowledge: [SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04]
+  knowledge: [SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04, SA-LEX-C28-LEAVE-04, SA-LEX-C29-COURTESY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Its own history is unsettled: no agreed cousin outside India, like केशः 
 A third word with no proven travels, and a garland made of the last one.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04, SA-LEX-C28-LEAVE-04, SA-LEX-C29-COURTESY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mālā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *puṣpam*, then *mālā*, and name what turns one into the other]
+- [YOU RECALL: read **शुभम्**, then say *upakāraḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04] -->

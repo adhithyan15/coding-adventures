@@ -12,7 +12,7 @@ headword: "दन्तः"
 gloss: "tooth"
 romanization: "dantaḥ"
 concept_tag: SA-BODY-TOOTH
-prerequisites: [SA-C25-head]
+prerequisites: [SA-C25-head, SA-C23-daughter, SA-C24-cloth]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C25-BODY-04]
 practises:
-  knowledge: [SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-C25-BODY-04]
+  knowledge: [SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-C25-BODY-04, SA-LEX-DAUGHTER, SA-LEX-C24-ASK-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ English *tooth* belongs here too, by the same Germanic shift that turned *p* int
 A third demonstration of one sound law, on a word you can point at.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-C25-BODY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-C25-BODY-04, SA-LEX-DAUGHTER, SA-LEX-C24-ASK-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dantaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dantaḥ*, then *pādaḥ*, then *pitā* — three words, one shift]
+- [YOU RECALL: read **दुहिता**, then say *vastram*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-C25-BODY-04] -->

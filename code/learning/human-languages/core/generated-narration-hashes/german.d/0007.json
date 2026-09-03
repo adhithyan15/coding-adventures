@@ -1,16 +1,18 @@
 {
   "language": "german",
   "chapter": 7,
-  "sourceHash": "fnv1a64:3d80023a6ae5350c",
+  "sourceHash": "fnv1a64:60d6cebfa91d7703",
   "lessonIds": [
-    "GE-C07-wochentage-1",
-    "GE-C07-wochentage-2"
+    "GE-C06-vier",
+    "GE-C06-fuenf",
+    "GE-C06-zahlen-1-5",
+    "GE-C06-ein-eine"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "german/narration/ch07.txt",
   "json": "german/narration/ch07.json",
-  "textHash": "fnv1a64:7c84327897fedd56",
-  "jsonHash": "fnv1a64:179dda10263539c8",
+  "textHash": "fnv1a64:c8c561dd611e6812",
+  "jsonHash": "fnv1a64:058b2c79f6b7332a",
   "findings": []
 }

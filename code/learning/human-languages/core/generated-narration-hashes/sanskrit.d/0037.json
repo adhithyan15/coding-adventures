@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 37,
-  "sourceHash": "fnv1a64:8d233b99b90802f9",
+  "sourceHash": "fnv1a64:dd30cef10d2d2367",
   "lessonIds": [
     "SA-C37-peace",
     "SA-C37-respectfully",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch37.txt",
   "json": "sanskrit/narration/ch37.json",
-  "textHash": "fnv1a64:6c39b317a03df6c4",
-  "jsonHash": "fnv1a64:ef22899526bcb41c",
+  "textHash": "fnv1a64:02247b4b035eb02e",
+  "jsonHash": "fnv1a64:116b7d1bb892c561",
   "findings": []
 }

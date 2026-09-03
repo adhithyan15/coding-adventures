@@ -12,7 +12,7 @@ headword: "सर्पः"
 gloss: "a snake"
 romanization: "sarpaḥ"
 concept_tag: SA-ANIMAL-SARPA
-prerequisites: [SA-C39-dog]
+prerequisites: [SA-C39-dog, SA-C37-blessing, SA-C38-soil]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C39-ANIMAL-05]
 practises:
-  knowledge: [SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05]
+  knowledge: [SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05, SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ A **सर्पः** belongs in the तृणम् rather than on the शि�
 Five creatures: one in milk, one across the sky, one in the river, one at the door, one in the grass.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05, SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sarpaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dhenuḥ* and *sarpaḥ* together]
+- [YOU RECALL: say *āśīrvādaḥ*, then read **मृत्तिका**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05] -->

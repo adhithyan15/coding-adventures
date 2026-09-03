@@ -12,7 +12,7 @@ headword: "कदाचित्"
 gloss: "sometimes"
 romanization: "kadācit"
 concept_tag: SA-REPLY-KADACIT
-prerequisites: [SA-C41-parasol]
+prerequisites: [SA-C41-parasol, SA-C40-curd, SA-C41-wheel]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C42-REPLY-01]
 practises:
-  knowledge: [SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01]
+  knowledge: [SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01, SA-LEX-C40-FOOD-01, SA-LEX-C41-CRAFT-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It is also the polite way to leave a door open: not yes, not no, perhaps sometim
 A reply that answers *when* without saying when.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01, SA-LEX-C40-FOOD-01, SA-LEX-C41-CRAFT-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kadācit*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chatram*, then *kadācit*]
+- [YOU RECALL: say *dadhi*, then read **चक्रम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01] -->

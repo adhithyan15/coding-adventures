@@ -12,7 +12,7 @@ headword: "वृकः"
 gloss: "a wolf"
 romanization: "vṛkaḥ"
 concept_tag: SA-BEAST-VRKA
-prerequisites: [SA-C48-lion]
+prerequisites: [SA-C48-lion, SA-C46-ray, SA-C47-window]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C48-BEAST-02]
 practises:
-  knowledge: [SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02]
+  knowledge: [SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C46-LIGHT-02, SA-LEX-C47-DWELL-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ The Sanskrit word is used of a tearing thing more generally too, which fits the 
 Two animals, one with cousins abroad and one without.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02, SA-LEX-C46-LIGHT-02, SA-LEX-C47-DWELL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vṛkaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *siṁhaḥ*, then *vṛkaḥ*]
+- [YOU RECALL: read **रश्मिः**, then say *vātāyanam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02] -->

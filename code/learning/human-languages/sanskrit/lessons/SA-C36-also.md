@@ -12,7 +12,7 @@ headword: "अपि"
 gloss: "also, too"
 romanization: "api"
 concept_tag: SA-REPLY-API
-prerequisites: [SA-C35-bed]
+prerequisites: [SA-C35-bed, SA-C34-arm, SA-C35-milk]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C36-REPLY-01]
 practises:
-  knowledge: [SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01]
+  knowledge: [SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01, SA-LEX-C34-LIMB-01, SA-LEX-C35-HOUSE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Greek *epi-* is the same small word, and it fronts *epidemic*, *epilogue*, *epic
 A small word that adds one thing to another.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01, SA-LEX-C34-LIMB-01, SA-LEX-C35-HOUSE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *api*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śayyā*, then *dugdham api*]
+- [YOU RECALL: say *bāhuḥ*, then read **दुग्धम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01] -->

@@ -12,7 +12,7 @@ headword: "सूनुः"
 gloss: "son"
 romanization: "sūnuḥ"
 concept_tag: SA-NOUN-SON
-prerequisites: [SA-C23-mother]
+prerequisites: [SA-C23-mother, SA-C21-stand, SA-C22-play]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-SON]
 practises:
-  knowledge: [SA-LEX-MOTHER, SA-LEX-SON]
+  knowledge: [SA-LEX-MOTHER, SA-LEX-SON, SA-LEX-STAND, SA-LEX-PLAY]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ From **√सू** (*sū*), 'to bring forth, to give birth' — so the word mean
 Three of the four, and a root that names a person by what happened to them.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-MOTHER, SA-LEX-SON] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-MOTHER, SA-LEX-SON, SA-LEX-STAND, SA-LEX-PLAY] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sūnuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it beside *sunus* and *son*, and hear the one word underneath]
+- [YOU RECALL: say *tiṣṭhati*, then read **क्रीडति**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-MOTHER, SA-LEX-SON] -->

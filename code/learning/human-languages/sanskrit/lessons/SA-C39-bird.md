@@ -12,7 +12,7 @@ headword: "विहगः"
 gloss: "a bird"
 romanization: "vihagaḥ"
 concept_tag: SA-ANIMAL-VIHAGA
-prerequisites: [SA-C39-cow]
+prerequisites: [SA-C39-cow, SA-C37-respectfully, SA-C38-ash]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C39-ANIMAL-02]
 practises:
-  knowledge: [SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02]
+  knowledge: [SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C37-COURTESY-02, SA-LEX-C38-EARTH-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Across what is unsaid, and does not need saying: आकाशः, the open sky, 
 A bird named for crossing the sky.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C37-COURTESY-02, SA-LEX-C38-EARTH-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vihagaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dhenuḥ*, then *vihagaḥ*]
+- [YOU RECALL: read **सादरम्**, then say *bhasma*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02] -->

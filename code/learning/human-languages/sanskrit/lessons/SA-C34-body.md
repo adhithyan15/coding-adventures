@@ -12,7 +12,7 @@ headword: "देहः"
 gloss: "the body"
 romanization: "dehaḥ"
 concept_tag: SA-LIMB-DEHA
-prerequisites: [SA-C34-blood]
+prerequisites: [SA-C34-blood, SA-C32-wood, SA-C33-sea]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C34-LIMB-05]
 practises:
-  knowledge: [SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05]
+  knowledge: [SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05, SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ English *dough* is the plain cousin. Latin *fingere*, "to shape", gives *figure*
 Ten parts of the body between this chapter and the earlier one, and a single word for all of them.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05, SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dehaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say what *paradise* was built out of]
+- [YOU RECALL: say *dāru*, then read **समुद्रः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05] -->

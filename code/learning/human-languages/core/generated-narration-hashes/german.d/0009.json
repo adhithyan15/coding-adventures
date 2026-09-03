@@ -1,16 +1,19 @@
 {
   "language": "german",
   "chapter": 9,
-  "sourceHash": "fnv1a64:bb300434897bdc90",
+  "sourceHash": "fnv1a64:f8af8980ac361107",
   "lessonIds": [
-    "GE-C09-monate",
-    "GE-C09-jahreszeiten"
+    "GE-C06-neun",
+    "GE-C06-zehn",
+    "GE-C06-zahlen-6-10",
+    "GE-C06-monate-latein",
+    "GE-C06-practice"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
   "text": "german/narration/ch09.txt",
   "json": "german/narration/ch09.json",
-  "textHash": "fnv1a64:f55bd3307c9ca715",
-  "jsonHash": "fnv1a64:b1280861b0fe5419",
+  "textHash": "fnv1a64:cac5fd4043d89593",
+  "jsonHash": "fnv1a64:cc53839353a9ebde",
   "findings": []
 }

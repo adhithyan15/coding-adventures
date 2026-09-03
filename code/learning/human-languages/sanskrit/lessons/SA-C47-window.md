@@ -12,7 +12,7 @@ headword: "वातायनम्"
 gloss: "a window"
 romanization: "vātāyanam"
 concept_tag: SA-DWELL-VATAYANA
-prerequisites: [SA-C47-wall]
+prerequisites: [SA-C47-wall, SA-C45-noon, SA-C46-ray]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C47-DWELL-02]
 practises:
-  knowledge: [SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02]
+  knowledge: [SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C45-DAYTIME-02, SA-LEX-C46-LIGHT-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Set it against भित्तिः and the pair makes sense of a room: the wal
 The opening in the wall, named for what comes through it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C45-DAYTIME-02, SA-LEX-C46-LIGHT-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vātāyanam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bhittiḥ*, then *vātāyanam*]
+- [YOU RECALL: read **मध्याह्नः**, then say *raśmiḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02] -->

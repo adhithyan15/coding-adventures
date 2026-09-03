@@ -1,0 +1,14 @@
+{
+  "id": "GE-PATH-015-C",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "GE-C06-sechs",
+    "GE-C06-sieben",
+    "GE-C06-acht"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-015-C-SECHS-ACHT"
+  ],
+  "after": []
+}

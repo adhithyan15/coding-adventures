@@ -1,9 +1,11 @@
 {
   "language": "german",
   "chapter": 25,
-  "sourceHash": "fnv1a64:bd06786aa3a461d5",
+  "sourceHash": "fnv1a64:86f2c4c1d61b550b",
   "lessonIds": [
-    "GE-C20-entschuldigung"
+    "GE-C17-kopf",
+    "GE-C17-kopf-haupt",
+    "GE-C17-hand"
   ],
-  "tex": "german/book/chapters/ch25-sorry.tex"
+  "tex": "german/book/chapters/ch25-head-and-hand.tex"
 }

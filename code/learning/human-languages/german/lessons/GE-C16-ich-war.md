@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C16-ich-war
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 510
-chapter: 20
+chapter: 23
 type: phrase
 headword: ich war
 gloss: I was — the past of sein, and a third stem that shares nothing with the other two

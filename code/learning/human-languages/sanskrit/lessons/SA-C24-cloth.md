@@ -12,7 +12,7 @@ headword: "वस्त्रम्"
 gloss: "cloth, a garment"
 romanization: "vastram"
 concept_tag: SA-NOUN-CLOTH
-prerequisites: [SA-C24-fruit]
+prerequisites: [SA-C24-fruit, SA-C22-burn, SA-C23-daughter]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C24-ASK-04]
 practises:
-  knowledge: [SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03, SA-LEX-C24-ASK-04]
+  knowledge: [SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03, SA-LEX-C24-ASK-04, SA-LEX-BURN, SA-LEX-DAUGHTER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The wearing one travelled. Latin *vestis*, and through it English *vest*, *vestm
 A word that warns you: same letters, different root.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03, SA-LEX-C24-ASK-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03, SA-LEX-C24-ASK-04, SA-LEX-BURN, SA-LEX-DAUGHTER] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vastram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vasāmi*, then *vastram*, and say which root each one belongs to]
+- [YOU RECALL: read **दहति**, then say *duhitā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03, SA-LEX-C24-ASK-04] -->

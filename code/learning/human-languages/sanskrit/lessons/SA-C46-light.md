@@ -12,7 +12,7 @@ headword: "प्रकाशः"
 gloss: "light"
 romanization: "prakāśaḥ"
 concept_tag: SA-LIGHT-PRAKASHA
-prerequisites: [SA-C46-ray]
+prerequisites: [SA-C46-ray, SA-C44-yellow, SA-C45-evening]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C46-LIGHT-03]
 practises:
-  knowledge: [SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03]
+  knowledge: [SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C44-COLOUR-03, SA-LEX-C45-DAYTIME-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ So the sky and the light in it are built out of one word, parting only at the sm
 Light, and the piece it shares with the sky.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C44-COLOUR-03, SA-LEX-C45-DAYTIME-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *prakāśaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *raśmiḥ*, then *prakāśaḥ*]
+- [YOU RECALL: say *pītaḥ*, then read **सायम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03] -->

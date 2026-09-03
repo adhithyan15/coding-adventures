@@ -12,7 +12,7 @@ headword: "चक्रम्"
 gloss: "a wheel"
 romanization: "cakram"
 concept_tag: SA-CRAFT-CAKRA
-prerequisites: [SA-C40-sweet]
+prerequisites: [SA-C40-sweet, SA-C39-cow, SA-C40-curd]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C41-CRAFT-01]
 practises:
-  knowledge: [SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01]
+  knowledge: [SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01, SA-LEX-C39-ANIMAL-01, SA-LEX-C40-FOOD-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ English later borrowed the Sanskrit itself, unworn, as *chakra*, so the word now
 A wheel, and a root that turns in three languages at once.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01, SA-LEX-C39-ANIMAL-01, SA-LEX-C40-FOOD-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cakram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *modakaḥ*, then *cakram*]
+- [YOU RECALL: say *dhenuḥ*, then read **दधि**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01] -->

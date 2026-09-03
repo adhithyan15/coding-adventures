@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C16-suppletion
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 535
-chapter: 20
+chapter: 23
 type: grammar
 headword: Suppletion
 gloss: suppletion — when one verb's missing forms are filled in from a different verb

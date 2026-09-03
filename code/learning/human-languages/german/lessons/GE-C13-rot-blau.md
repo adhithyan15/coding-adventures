@@ -1,7 +1,7 @@
 ---
 id: GE-C13-rot-blau
 sequence: 290
-chapter: 13
+chapter: 16
 type: word
 headword: rot, blau
 gloss: red and blue — an ancient shared root, and a second word German lent to its neighbours

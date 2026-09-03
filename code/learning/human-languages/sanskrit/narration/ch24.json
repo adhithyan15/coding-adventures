@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Things You Ask For",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8b056dd4608b997e",
+  "sourceHash": "fnv1a64:00bb3eb42c076cb2",
   "lessons": [
     {
       "id": "SA-C24-water",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98bebd04a3e92fdd",
+      "sourceHash": "fnv1a64:8e7d2dbadc0bd23e",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pānīyam*, then *jalam*, and say which one you would ask for at a table]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say śṛṇoti, then read पिता",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *śṛṇoti*, then read **पिता**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec6373e56bfb2028",
+      "sourceHash": "fnv1a64:f9b8fda377e32c97",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *annam*, then *odanaḥ*, and name the ending each one carries]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read नयति, then say mātā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **नयति**, then say *mātā*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2be3d7fc2d86640e",
+      "sourceHash": "fnv1a64:4ea484fa0a6b0903",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *phalam*, and then *jalam* and *phalam* together, naming the ending they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say krīḍati, then read सूनुः",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *krīḍati*, then read **सूनुः**]"
             }
           ]
         },
@@ -598,7 +625,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b9e932a387ffcfb",
+      "sourceHash": "fnv1a64:fdade22d4e335708",
       "notice": null,
       "blocks": [
         {
@@ -685,6 +712,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vasāmi*, then *vastram*, and say which root each one belongs to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read दहति, then say duhitā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **दहति**, then say *duhitā*]"
             }
           ]
         },

@@ -1,16 +1,18 @@
 {
   "language": "german",
   "chapter": 20,
-  "sourceHash": "fnv1a64:ed08f85dee439119",
+  "sourceHash": "fnv1a64:e1fc2cbdf98e1c1f",
   "lessonIds": [
-    "GE-C16-ich-war",
-    "GE-C16-du-warst",
-    "GE-C16-er-war",
-    "GE-C16-wir-waren",
-    "GE-C16-drei-wurzeln",
-    "GE-C16-suppletion",
-    "GE-C16-haeufig-unregelmaessig",
-    "GE-C16-war-practice"
+    "GE-C15-praeteritum",
+    "GE-C15-sagte",
+    "GE-C15-machte",
+    "GE-C15-dentales-praeteritum",
+    "GE-C15-hatte",
+    "GE-C15-register",
+    "GE-C15-konnte",
+    "GE-C15-hochfrequent",
+    "GE-C15-praeteritum-map",
+    "GE-C15-praeteritum-practice"
   ],
-  "tex": "german/book/chapters/ch20-drei-wurzeln.tex"
+  "tex": "german/book/chapters/ch20-praeteritum.tex"
 }

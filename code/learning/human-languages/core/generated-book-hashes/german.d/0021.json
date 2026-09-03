@@ -1,17 +1,17 @@
 {
   "language": "german",
   "chapter": 21,
-  "sourceHash": "fnv1a64:d4810ca8524018a1",
+  "sourceHash": "fnv1a64:04437bd64ffd95cf",
   "lessonIds": [
-    "GE-C16-perfekt-sein",
-    "GE-C16-kommen",
-    "GE-C16-fahren",
-    "GE-C16-werden",
-    "GE-C16-bleiben",
-    "GE-C16-perfekt-sein-ausnahmen",
-    "GE-C16-perfekt-sein-agreement",
-    "GE-C16-partizip-attributiv",
-    "GE-C16-haben-oder-sein"
+    "GE-C16-sein",
+    "GE-C16-ich-bin",
+    "GE-C16-du-bist",
+    "GE-C16-er-ist",
+    "GE-C16-wir-sind",
+    "GE-C16-ihr-seid",
+    "GE-C16-sie-sind",
+    "GE-C16-muede",
+    "GE-C16-praesens-practice"
   ],
-  "tex": "german/book/chapters/ch21-perfekt-sein.tex"
+  "tex": "german/book/chapters/ch21-sein.tex"
 }

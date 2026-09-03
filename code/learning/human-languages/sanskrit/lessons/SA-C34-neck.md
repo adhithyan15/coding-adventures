@@ -12,7 +12,7 @@ headword: "ग्रीवा"
 gloss: "the neck"
 romanization: "grīvā"
 concept_tag: SA-LIMB-GRIVA
-prerequisites: [SA-C34-arm]
+prerequisites: [SA-C34-arm, SA-C32-leaf, SA-C33-bridge]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C34-LIMB-02]
 practises:
-  knowledge: [SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02]
+  knowledge: [SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C32-TREE-02, SA-LEX-C33-LAND-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Latin *gula*, "throat", is a cousin, behind *gullet*; Russian *griva* is a mane,
 A neck, and a throat full of English words.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C32-TREE-02, SA-LEX-C33-LAND-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *grīvā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bāhuḥ*, then *grīvā*]
+- [YOU RECALL: read **पत्रम्**, then say *setuḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02] -->

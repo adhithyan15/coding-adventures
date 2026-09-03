@@ -1,72 +1,136 @@
-German, chapter 6: Numbers One to Ten.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+German, chapter 6: One, Two, Three.
+4 lessons. All 4 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-eins, zwei, drei, vier, fünf — counting to five.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The numbers, taken apart until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 4.
+eins — "one," and the German ei.
 
 Warm-up.
 [pause 2 seconds]
-Here's where German feels closer to English than any Romance language does. German numbers aren't borrowed from Latin like Spanish or French — they're German's own Germanic words, and they're the near-twins of English one, two, three, four, five. The reason is a single sound-law.
+Here is where German is closer to English than any Romance language gets. Its numbers are not borrowed from Latin — they are German's own, and they are the near-twins of the English ones. Start with the first.
+
+You'll want to know: eins.
+eins — "one," the number you say when you are counting.
 
 Sounds you'll need.
-diphthong-ei — eins, zwei, drei all carry the ei = English "eye" sound: eyns, tsvy, dry.
-umlaut-ue — fünf: the ü is "ee" said with rounded lips; fünf ≈ fewnf.
+diphthong-ei — German ei is the English word eye. Always, in every word, with no exceptions to remember.
+So eins is eyns. You already own this one: heißen is HY-ssen, and Wiedersehen has an ie, which is the other way round and says ee. ei says eye; ie says ee. The second letter tells you which.
 
-The numbers, taken apart.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: German, English twin, shared ancestor, Latin cousin. Come back and look at it when you have stopped.
-German and English are siblings; Latin is a cousin. So drei isn't from Latin trēs — both descend from one prehistoric word, and Grimm's Law is the recipe for the differences: an old t became Germanic th/d (trēs becomes three becomes drei), and an old p became f (pénkʷe becomes five / fünf, while Latin kept it as quīnque). Say fünf and five back to back — same word, one p-turned-f apart.
-
-Grammar Lens: eins becomes ein / eine (one = a/an).
-Like English one/an and Spanish uno/un, German eins becomes the article ein (masc./neut.) / eine (fem.) before a noun: ein Kaffee "a/one coffee," eine Katze "a/one cat." The counting form is eins; the article drops the -s. The other numbers don't change for the article.
+The word, taken apart.
+eins is English one. Not borrowed from it, not similar to it — the same inherited word, which is why it needs no story to make it stick.
+English hides the relationship in its spelling. One is written as though it rhymed with bone, and it did once; the w-sound at the front (wun) crept in later. Strip that off and one and ein are the same shape.
+The same word is also sitting inside English a and an — an apple is one apple, worn down. German does exactly the same thing with eins, and once the first five are learned there is a lesson on it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "eins, zwei, drei, vier, fünf" — count up]
+[your turn — say: "eins" — eyns, with the English word eye inside it]
 [pause 8 seconds for the answer]
-[your turn — say: each with its English twin — "zwei/two, drei/three, fünf/five"]
+[your turn — say: "eins" then "one" — the same old word]
 [pause 8 seconds for the answer]
-[your turn — say: "fünf" then "five" — hear the p becomes f of Grimm's Law in pénkʷe]
+[your turn — say: "ei" as eye, "ie" as ee — the second letter decides]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give 1–5 in German. (Eins, zwei, drei, vier, fünf.) Are these borrowed from Latin? (No — Germanic twins of English, cousins of Latin via Grimm's Law.) What sound-change links fünf and five to Latin quīnque? (Old p becomes Germanic f.) Next: 6–10.
+What is "one" in German? (Eins.) How is ei said? (Like the English word eye.) And ie? (Ee.) Which English word is eins? (One — and a/an underneath it.)
 
 
-Lesson 2 of 2.
-sechs, sieben, acht, neun, zehn — finishing the count.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The numbers, taken apart until you have stopped, and I will say so again when we reach it.
+Lesson 2 of 4.
+zwei — "two," and the z that is a ts.
 
 Warm-up.
 [pause 2 seconds]
-The rest of the way to ten — and again, each is the twin of its English number, with Latin as the cousin one sound-shift away. Two of them show Grimm's Law beautifully.
+One down. The second number has the same ei you met a moment ago, and one letter that does not say what an English reader expects.
 
-Sounds you'll need.
-ch-ach — acht: the ch is the raspy back-of-throat sound (as in Bach): akht. It matches the gh in English eight — both once a real throat sound.
-diphthong-eu — neun = noyn (the eu = "oy").
+You'll want to know: zwei.
+zwei — "two."
+Said tsvy. The z is the ts of English cats — never the buzz of English zoo. That is the whole of the German z: it has one job and it never does anything else.
+The other two letters you already own. The w is a v, as in wohnen, and the ei is eye, as in eins. So zwei is three rules you have and one that is new.
 
-The numbers, taken apart.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: German, English twin, shared ancestor, Latin cousin. Come back and look at it when you have stopped.
-Two showpieces of Grimm's Law:
-zehn corresponds to ten corresponds to decem: an old d became Germanic t — so Latin kept decem, English shifted to ten, and German went one hop further (t becomes z) to zehn. Same number, three snapshots of one consonant drifting.
-acht corresponds to eight corresponds to Nacht/night: the German -cht- answers English -ght- every time (acht/eight, Nacht/night, Licht/light) — a fossil of a throat sound both languages once had.
-
-Grammar Lens: German borrowed the months, not the numbers.
-English and German both took their month names straight from Latin — September, Oktober, November, Dezember in German too. So the same "off by two" trick works: those months mean Latin 7, 8, 9, 10 (the Roman year began in March), even though German's own numbers sieben/acht/neun/zehn look nothing like them. The numbers are homegrown; the month labels are Latin imports.
+The word, taken apart.
+zwei is English two, with the tw- opening turned into zw-.
+English still says the tw- out loud in the words two grew from — twin (two born together), between (in the space of two), twice, twenty. It only lost the w in the number itself, which is why two is spelt with a letter nobody pronounces. German kept the pair and shifted the t to ts:
+tw- becomes zw-: two / zwei, twin / Zwilling, twelve / zwölf.
+So the silent w in English two is not a spelling accident. It is the w that German still says.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "sechs, sieben, acht, neun, zehn" — finish the count]
+[your turn — say: "zwei" — tsvy, the z like the end of cats]
 [pause 8 seconds for the answer]
-[your turn — say: "zehn/ten/decem" — the d becomes t becomes z drift; "acht/eight, Nacht/night"]
+[your turn — say: "eins, zwei"]
 [pause 8 seconds for the answer]
-[your turn — say: full count "eins … zehn" once through]
+[your turn — say: "two", "twin", "between" — then "zwei", and hear the w come back]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give 6–10 in German. (Sechs, sieben, acht, neun, zehn.) What consonant-drift connects zehn, ten, and decem? (Old d becomes Germanic t becomes German z.) Where do German's month names come from, unlike its numbers? (Latin — September etc.) Next chapter builds on this toward telling the time.
+What is "two"? (Zwei.) How is German z said? (Ts, as in cats.) Which English words still say the w that two dropped? (Twin, between, twice.)
+
+
+Lesson 3 of 4.
+drei — "three," and German's missing th.
+
+Warm-up.
+[pause 2 seconds]
+Third number, third ei. And it shows you something that will keep paying: German has no th sound at all, and you can predict what it uses instead.
+
+You'll want to know: drei.
+drei — "three."
+Said dry: the scraped r you met in lernen, and the ei saying eye.
+
+The word, taken apart.
+drei is English three. German has no th at all, and where English says one, German says d. That is not a fact about numbers — it is a fact about the whole language, and you have been using it since your first danke:
+[a table of 4 rows, read aloud]
+English: three. German: drei.
+English: the. German: der, die, das.
+English: thank. German: danke.
+English: that. German: das.
+Five words, one swap. Whenever an English word starts with th, try a d and you will often land on the German.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "drei" — dry, scrape the r]
+[pause 8 seconds for the answer]
+[your turn — say: "eins, zwei, drei"]
+[pause 8 seconds for the answer]
+[your turn — say: the swap — "three/drei", "the/der", "thank/danke"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "three"? (Drei.) What does German use where English has th? (D.) Give three pairs. (Three/drei, the/der, thank/danke.)
+
+
+Lesson 4 of 4.
+Siblings, not borrowings — why German and English numbers match and the Latin ones only rhyme.
+
+Warm-up.
+[pause 2 seconds]
+Drei, three, and Latin tres all mean three and all start with a different sound. Before the next seven numbers, it is worth knowing why — because the answer makes each of them cheaper to learn.
+
+Grammar Lens: siblings and cousins.
+German and English are siblings. Latin is a cousin.
+That is not a figure of speech. All three grew out of one older language, and Germanic — the parent of English and German — split off from the rest first. So drei did not come from tres, and English three did not either. All three are what one prehistoric word became along three different roads.
+Which is why the German numbers are the easy ones and the Romance numbers are the hard ones, for an English speaker: three and drei are the same word two doors apart, while tres is the same word across the street.
+
+Why it's said this way.
+The differences are not random. A sound law is a change that happened to every word in a language at once, so once you know one you can predict the rest.
+You have already met one of these. Gut is good with the d turned to a t, and machen is make with the k turned to a ch — one shift, two words, and it caught every word in German that had those sounds.
+The shift that separates Germanic from Latin is older and works the same way. The two turns worth carrying into the next lessons are:
+[a table of 2 rows, read aloud]
+Older sound: t. Germanic sound: th, and German d. Seen in: Latin tres, English three, German drei.
+Older sound: p. Germanic sound: f. Seen in: Latin pes "foot", English foot.
+So when a Latin word and a German one sound nothing alike, try the first consonant before deciding they are unrelated. Often they are the same word, one law apart.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "tres", "three", "drei" — one word, three roads]
+[pause 8 seconds for the answer]
+[your turn — say: the two turns — "t becomes th", "p becomes f"]
+[pause 8 seconds for the answer]
+[your turn — say: "good/gut", "make/machen" — the shift you already knew]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is drei borrowed from Latin tres? (No — they are cousins, both from one older word.) What is a sound law? (A change that hit every word in the language at once, so it is predictable.) Which two turns should you carry forward? (Old t to th/d, old p to f.)

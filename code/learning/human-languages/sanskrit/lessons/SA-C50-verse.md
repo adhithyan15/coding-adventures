@@ -12,7 +12,7 @@ headword: "श्लोकः"
 gloss: "a verse"
 romanization: "ślokaḥ"
 concept_tag: SA-SOUND-SHLOKA
-prerequisites: [SA-C50-song]
+prerequisites: [SA-C50-song, SA-C48-goose, SA-C49-oh]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C50-SOUND-05]
 practises:
-  knowledge: [SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05]
+  knowledge: [SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05, SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ Nearly the whole of the long Sanskrit story-poems is in this one shape, which is
 Five things the ear takes in: a sound, a question, the voice, a song, a verse.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05, SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ślokaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *śabdaḥ* and *ślokaḥ* together]
+- [YOU RECALL: say *haṁsaḥ*, then read **अहो**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05] -->

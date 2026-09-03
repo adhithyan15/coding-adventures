@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C14-einen
 spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
 sequence: 300
-chapter: 14
+chapter: 17
 type: word
 headword: einen
 gloss: a, an — the form the word takes for a masculine thing you have, and the first sighting of a system taught later

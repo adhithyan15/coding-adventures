@@ -1,0 +1,13 @@
+{
+  "id": "GE-PATH-016-C",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "GE-C10-eltern",
+    "GE-C10-geschwister"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-016-C-FAMILIE"
+  ],
+  "after": []
+}

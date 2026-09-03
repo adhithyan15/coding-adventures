@@ -42,7 +42,7 @@ called." No "myself" needed, unlike the Romance languages.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[GE-SOUND-HEISSEN-01]; assesses=[] -->
 
-- **heißen** = *HY-ssen*. The **ß** (*Eszett*) is just a sharp "ss." **ei** is
+- **heißen** = *HY-ssen*. The **ß** (*Eszett*) is a sharp "ss." **ei** is
   the vowel of English *eye*. So **heiße** = *HY-ssuh*.
 
 ## The word, taken apart

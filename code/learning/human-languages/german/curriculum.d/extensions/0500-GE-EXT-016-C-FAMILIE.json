@@ -1,0 +1,12 @@
+{
+  "id": "GE-EXT-016-C-FAMILIE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the people in a German family — parents and siblings.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C10-eltern",
+    "GE-C10-geschwister"
+  ]
+}

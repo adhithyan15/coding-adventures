@@ -12,7 +12,7 @@ headword: "एवम्"
 gloss: "thus, so"
 romanization: "evam"
 concept_tag: SA-REPLY-THUS
-prerequisites: [SA-C27-true]
+prerequisites: [SA-C27-true, SA-C25-hair, SA-C26-physician]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C27-REPLY-05]
 practises:
-  knowledge: [SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05]
+  knowledge: [SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05, SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Its real value is that it combines. Put it in front of the first word of this ru
 Five replies past yes and no: so be it, well done, enough, true, thus.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05, SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *evam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *evam astu* as one phrase]
+- [YOU RECALL: say *keśaḥ*, then read **वैद्यः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05] -->

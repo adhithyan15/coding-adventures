@@ -12,7 +12,7 @@ headword: "भित्तिः"
 gloss: "a wall"
 romanization: "bhittiḥ"
 concept_tag: SA-DWELL-BHITTI
-prerequisites: [SA-C46-heat]
+prerequisites: [SA-C46-heat, SA-C45-morning, SA-C46-sun]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-C47-DWELL-01]
 practises:
-  knowledge: [SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01]
+  knowledge: [SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01, SA-LEX-C45-DAYTIME-01, SA-LEX-C46-LIGHT-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ It stands on *bhid*, "to split, to break apart", which is exactly what a wall do
 One wall, told apart from the walled town.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01, SA-LEX-C45-DAYTIME-01, SA-LEX-C46-LIGHT-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bhittiḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tāpaḥ*, then *bhittiḥ*]
+- [YOU RECALL: say *prātaḥ*, then read **रविः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01] -->
