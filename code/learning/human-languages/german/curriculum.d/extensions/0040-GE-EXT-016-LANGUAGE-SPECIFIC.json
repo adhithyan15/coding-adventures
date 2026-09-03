@@ -3,10 +3,18 @@
   "stage": "pre-A1",
   "kind": "required",
   "category": "language-specific",
-  "canDo": "I can tell the time in German — the hour, and the two ends of the day.",
+  "canDo": "I can tell the time in German — the hour with its borrowed word, and the two pivots German built itself.",
   "prerequisites": [],
   "lessons": [
     "GE-C08-uhr",
+    "GE-C08-uhr-hora",
+    "GE-C08-stunde",
+    "GE-C08-es-ist-uhr",
+    "GE-C08-uhr-ohne-plural",
+    "GE-C08-mitte",
+    "GE-C08-mittag",
+    "GE-C08-mittag-midi",
+    "GE-C08-mitternacht",
     "GE-C08-mittag-mitternacht"
   ]
 }

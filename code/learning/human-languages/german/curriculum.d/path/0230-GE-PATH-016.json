@@ -3,6 +3,14 @@
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
     "GE-C08-uhr",
+    "GE-C08-uhr-hora",
+    "GE-C08-stunde",
+    "GE-C08-es-ist-uhr",
+    "GE-C08-uhr-ohne-plural",
+    "GE-C08-mitte",
+    "GE-C08-mittag",
+    "GE-C08-mittag-midi",
+    "GE-C08-mitternacht",
     "GE-C08-mittag-mitternacht"
   ],
   "before": [],

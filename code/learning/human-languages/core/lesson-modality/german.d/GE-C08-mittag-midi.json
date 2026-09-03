@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "GE-C08-uhr",
+    "id": "GE-C08-mittag-midi",
     "language": "german",
     "chapter": 12,
-    "sequence": 245,
+    "sequence": 252,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6b5927b13d03002d"
+    "sourceHash": "fnv1a64:a2c6af2d90d1b9b7"
   },
   "findings": []
 }

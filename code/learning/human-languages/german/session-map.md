@@ -9,7 +9,7 @@ authoritative order.
 Every chapter listed here is **generated from the lessons** rather than
 hand-written LaTeX, so these tables and the book are the same object seen twice:
 the order below is the `sequence:` order the generator reads. The gap between
-chapter 4 and chapter 20 is the hand-written stretch that has not been retired
+chapter 12 and chapter 18 is the hand-written stretch that has not been retired
 yet.
 
 ## Chapter 1 — Greetings
@@ -215,6 +215,25 @@ weekday/weekend seam.
 | Sonnabend | the northern Saturday: *Sonne* + *Abend*, "Sun-eve" |
 | practice | all seven, five gods, one edit, one import |
 
+## Chapter 12 — Telling the Time
+
+Two lessons become ten. The chapter's own thesis is a division of labour: the
+clock arrived from Rome and brought its word with it, while noon and midnight
+were always there and German built them out of what it owned.
+
+| Session | What it adds |
+|---|---|
+| die Uhr | the clock, and the word for "o'clock"; one long syllable |
+| Uhr und hōra | Latin *hōra*, the same word as *heure*, *ora* and **hour** |
+| die Stunde | German's own hour-word, kept for the span the loan did not take |
+| Es ist … Uhr | the frame: *es ist* + a number + *Uhr* |
+| zwei Uhr, not zwei Uhren | a unit of time takes no plural; *Uhren* means clocks |
+| die Mitte | the middle; English *mid*, Latin *medius* |
+| der Mittag | *Mitte* + *Tag*, readable before it is taught |
+| Mittag und midi | French assembled *medius diēs*; German assembled its own |
+| die Mitternacht | *Mitte* + *Nacht*, and *-cht*/*-ght* paying off from *acht* |
+| practice | the counted hour and the two uncounted pivots, side by side |
+
 ## Chapter 18 — To Have
 
 Chapter 5 taught the ending machine, so *haben* is met as the place that machine
@@ -354,5 +373,5 @@ six forms of a verb should use them for something real before meeting its past.
 
 ## Next
 
-Chapter 12 — telling the time. Chapters 12–17 are still hand-written LaTeX;
+Chapter 13 — months and seasons. Chapters 13–17 are still hand-written LaTeX;
 see `../BACKLOG.d/` for the retirement queue.
