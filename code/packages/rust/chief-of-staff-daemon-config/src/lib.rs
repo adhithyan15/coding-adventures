@@ -618,9 +618,24 @@ pub struct VaultConfig {
     storage_path: ConfigPath,
     default_lease_ttl: Duration,
     container: bool,
+    /// Owner-only key-encryption-key file for the Chief vault.
+    ///
+    /// Optional, and absent by default. Absent means the daemon offers no
+    /// vault tool at all rather than offering one over an empty vault: a
+    /// lease tool with nothing to lease can only fail, and telling a model it
+    /// has a capability it does not have is worse than not offering it.
+    ///
+    /// Same shape and same 32-byte owner-only file as the six smart-home
+    /// pairing vaults already use, so this introduces no new key handling.
+    kek_path: Option<ConfigPath>,
 }
 
 impl VaultConfig {
+    /// Return the owner-only KEK file, if the vault is configured to open.
+    pub fn kek_path(&self) -> Option<&ConfigPath> {
+        self.kek_path.as_ref()
+    }
+
     /// Return the vault storage root.
     pub fn storage_path(&self) -> &ConfigPath {
         &self.storage_path
@@ -1061,6 +1076,12 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
     let storage_path = ConfigPath::parse(expect_string(document.take(VAULT, "storage_path")?)?)?;
     let default_lease_ttl = positive_secs(document.take(VAULT, "default_lease_ttl")?)?;
     let container = expect_bool(document.take(VAULT, "container")?)?;
+    let vault_kek_path = document
+        .take_optional(VAULT, "kek_path")
+        .map(expect_string)
+        .transpose()?
+        .map(ConfigPath::parse)
+        .transpose()?;
     let tier_1_auto_approve_timeout = canonical_secs(
         document.take(PRIVILEGE, "tier_1_auto_approve_timeout")?,
         TIER_1_AUTO_APPROVE_TIMEOUT,
@@ -1533,6 +1554,7 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             storage_path,
             default_lease_ttl,
             container,
+            kek_path: vault_kek_path,
         },
         privilege: PrivilegeConfig {
             tier_1_auto_approve_timeout,
@@ -2334,6 +2356,11 @@ hardware_key_timeout = 60
             Duration::from_secs(5)
         );
         assert_eq!(config.vault().default_lease_ttl(), Duration::from_secs(30));
+        // Absent by default, and that is load-bearing: with no KEK the daemon
+        // offers no vault tool rather than offering one over an empty vault. A
+        // lease tool with nothing to lease can only fail, and telling a model
+        // it has a capability it does not have is worse than not offering it.
+        assert!(config.vault().kek_path().is_none());
         assert!(config.vault().container());
         assert_eq!(
             config.privilege().tier_1_auto_approve_timeout(),
@@ -2354,6 +2381,20 @@ hardware_key_timeout = 60
         assert!(config.data_plane().ollama_models().is_empty());
         assert!(config.data_plane().smart_home_tool_grants().is_empty());
         assert!(config.smart_home().is_none());
+    }
+
+    #[test]
+    fn a_configured_vault_kek_path_is_read() {
+        // When present the daemon can open the Chief vault and offer the lease
+        // tool. Same shape and same owner-only file as the six smart-home
+        // pairing vaults, so this adds no new key handling.
+        let source = VALID.replace(
+            "[vault]\nstorage_path = \"~/.chief-of-staff/vault/\"",
+            "[vault]\nstorage_path = \"~/.chief-of-staff/vault/\"\nkek_path = \"~/.chief-of-staff/vault.kek\"",
+        );
+        assert_ne!(source, VALID, "fixture substitution missed");
+        let config = parse_config(&source).expect("valid config");
+        assert!(config.vault().kek_path().is_some());
     }
 
     #[test]

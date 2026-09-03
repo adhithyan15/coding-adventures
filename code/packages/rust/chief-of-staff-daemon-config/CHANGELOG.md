@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Add an optional `[vault] kek_path`, the owner-only key-encryption-key file
+  for the Chief vault. Same shape and same 32-byte owner-only file as the six
+  smart-home pairing vaults, so it introduces no new key handling.
+- Absent by default, and that is load-bearing: with no KEK the daemon offers no
+  vault tool rather than offering one over an empty vault. A lease tool with
+  nothing to lease can only fail, and telling a model it has a capability it
+  does not have is worse than not offering it.
+
 ## 0.1.0
 
 - Parse the D18 Chief TOML schema through the repository-owned fallible parser.
