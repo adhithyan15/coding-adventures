@@ -995,7 +995,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Lua build prerequisites
-        run: sudo apt-get install -q libreadline-dev libncurses-dev
+        run: sudo apt-get install -qy libreadline-dev libncurses-dev
 
       - name: Install pinned Lua 5.4.7 from verified mirrors
         run: python3 code/scripts/setup_lua.py --prefix .lua
@@ -1202,7 +1202,7 @@ jobs:
             if [ "$RUNNER_OS" = "macOS" ]; then
               brew install readline ncurses
             else
-              sudo apt-get install -q libreadline-dev libncurses-dev
+              sudo apt-get install -qy libreadline-dev libncurses-dev
             fi
             python3 code/scripts/setup_lua.py --prefix .lua
           fi
