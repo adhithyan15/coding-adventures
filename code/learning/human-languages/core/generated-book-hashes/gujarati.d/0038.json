@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:283e786f1b7747e9",
+  "lessonIds": [
+    "GU-C34-kemke",
+    "GU-C34-kem-kemke",
+    "GU-C34-kemke-write",
+    "GU-C34-maate",
+    "GU-C34-tethi"
+  ],
+  "tex": "gujarati/book/chapters/ch38-because-therefore.tex"
+}

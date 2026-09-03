@@ -12,7 +12,7 @@ headword: "माथा"
 gloss: "a forehead"
 romanization: "māthā"
 concept_tag: HI-NOUN-FOREHEAD
-prerequisites: [HI-C53-knee]
+prerequisites: [HI-C53-knee, HI-C51-courtyard, HI-C52-oil]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C53-BODY-03]
 practises:
-  knowledge: [HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03]
+  knowledge: [HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C51-WELCOME-03, HI-LEX-C52-KITCHEN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ From Sanskrit मस्तक (*mastaka*), 'head'. The everyday word narrowed as
 The third of five, and a narrowing you can watch happen.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C51-WELCOME-03, HI-LEX-C52-KITCHEN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *māthā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *māthā*, and then सिर, which you met when the head was first named]
+- [YOU RECALL: say *āṁgan*, then read **तेल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03] -->

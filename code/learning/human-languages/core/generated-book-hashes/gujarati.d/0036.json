@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:d4bae72f769b2a87",
+  "lessonIds": [
+    "GU-C32-ane",
+    "GU-C32-ane-clauses",
+    "GU-C32-ane-write",
+    "GU-C32-athava",
+    "GU-C32-pan"
+  ],
+  "tex": "gujarati/book/chapters/ch36-and-or-but.tex"
+}

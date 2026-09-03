@@ -12,7 +12,7 @@ headword: "भी"
 gloss: "also, too"
 romanization: "bhī"
 concept_tag: HI-WORD-ALSO
-prerequisites: [HI-C71-today, HI-C70-rest]
+prerequisites: [HI-C71-today, HI-C70-rest, HI-C69-station, HI-C69-ticket]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C71-TODAY-02]
 practises:
-  knowledge: [HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02, HI-LEX-C70-LEISURE-05]
+  knowledge: [HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02, HI-LEX-C70-LEISURE-05, HI-LEX-C69-GOING-03, HI-LEX-C69-GOING-04]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -62,13 +62,14 @@ sitting inside it — but they are separate words with separate jobs, the way
 आज and भी, and a pair to keep apart.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02, HI-LEX-C70-LEISURE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02, HI-LEX-C70-LEISURE-05, HI-LEX-C69-GOING-03, HI-LEX-C69-GOING-04] -->
 
 [PAUSE 1s]
 - [YOU RECALL: read **आराम**, then say it without looking]
 - [YOU SAY: *maiṁ bhī*]
 - [YOU SAY: *āj bhī*]
 - [YOU WRITE: आज once more, then भी beside it]
+- [YOU RECALL: read **स्टेशन**, then say *ṭikaṭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02] -->

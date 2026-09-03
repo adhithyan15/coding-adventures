@@ -12,7 +12,7 @@ headword: "कौन"
 gloss: "who? — asking about a person"
 romanization: "kaun"
 concept_tag: HI-DEIXIS-WHO
-prerequisites: [HI-C40-there]
+prerequisites: [HI-C40-there, HI-C37-kitaab, HI-C38-pet]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C40-DEIXIS-05]
 practises:
-  knowledge: [HI-LEX-C40-DEIXIS-03, HI-LEX-C40-DEIXIS-04, HI-LEX-C40-DEIXIS-05]
+  knowledge: [HI-LEX-C40-DEIXIS-03, HI-LEX-C40-DEIXIS-04, HI-LEX-C40-DEIXIS-05, HI-CONCEPT-C37-KITAAB-01, HI-CONCEPT-C37-KITAAB-02, HI-CONCEPT-C37-KITAAB-03, HI-CONCEPT-C38-PET-01, HI-CONCEPT-C38-PET-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,11 +51,12 @@ differ by one sound at the front — **k-** for ask — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-05, HI-CONCEPT-C37-KITAAB-01, HI-CONCEPT-C37-KITAAB-02, HI-CONCEPT-C37-KITAAB-03, HI-CONCEPT-C38-PET-01, HI-CONCEPT-C38-PET-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "कौन" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *kitāb / pustak / pothā*, then read **पेट**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-05] -->

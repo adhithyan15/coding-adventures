@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Able, and Willing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ba2f7e481d288912",
+  "sourceHash": "fnv1a64:52ccf706ca3baa28",
   "lessons": [
     {
       "id": "HI-C70-sakna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fa41ef231fcc5dc",
+      "sourceHash": "fnv1a64:b97e5530002158c8",
       "notice": null,
       "blocks": [
         {
@@ -124,6 +124,15 @@
               "source": "[YOU SAY: which of the two verbs takes the ending — **सकना, and it goes last**]"
             },
             {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aur, then read … या …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aur*, then read **… या …**]"
+            },
+            {
               "kind": "activity",
               "scored": true,
               "id": "HI-C70-sakna-r1",
@@ -180,7 +189,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ee6be6dbeddcd66",
+      "sourceHash": "fnv1a64:92688bf902811861",
       "notice": null,
       "blocks": [
         {
@@ -276,6 +285,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *maiṁ ānā chāhtā hūṁ* against *maiṁ ā saktā hūṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read लेकिन",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **लेकिन**]"
             },
             {
               "kind": "activity",

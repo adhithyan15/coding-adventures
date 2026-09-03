@@ -12,7 +12,7 @@ headword: "नमक"
 gloss: "salt"
 romanization: "namak"
 concept_tag: HI-NOUN-SALT
-prerequisites: [HI-C45-lamp]
+prerequisites: [HI-C45-lamp, HI-C43-write, HI-C44-family]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C45-ASK-04]
 practises:
-  knowledge: [HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03, HI-LEX-C45-ASK-04]
+  knowledge: [HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03, HI-LEX-C45-ASK-04, HI-LEX-WRITE, HI-LEX-FAMILY]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Persian salt also handed Hindi a measure of character: *namak-halāl* is someone
 Four, and one of them is not a thing you can hold.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03, HI-LEX-C45-ASK-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03, HI-LEX-C45-ASK-04, HI-LEX-WRITE, HI-LEX-FAMILY] -->
 
 [PAUSE 1s]
 - [YOU SAY: *namak*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *namak*, then *dīyā*, then *kapṛā*, backwards down the run]
+- [YOU RECALL: read **लिखना**, then say *parivār*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03, HI-LEX-C45-ASK-04] -->

@@ -1,0 +1,22 @@
+{
+  "chapter": 38,
+  "title": "Because, and Therefore",
+  "label": "ch:gu-because-therefore",
+  "canDo": "I can answer a why-question with a reason, say what something is for, and draw a conclusion from a fact I have just stated.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "GU-C34-tethi",
+    "kind": "task",
+    "summary": "The reason words. kem has been askable since chapter 3 and answerable never; kemke is that same question word with the complementiser stuck to it, so the answer is built out of two things the reader already owns. maate separates purpose from cause, and tethi flips the order so the reason comes first -- and its -thi is the postposition from, not the worn-down is that ends nathi, which is a distinction worth drawing where both words are fresh.",
+    "assesses": [
+      "GU-JOIN-KEMKE-01",
+      "GU-JOIN-KEM-KEMKE-01",
+      "GU-SCRIPT-KEMKE-01",
+      "GU-JOIN-MAATE-01",
+      "GU-JOIN-TETHI-01"
+    ],
+    "note": "Realises CONNECTIVE-BECAUSE, which SPINE-SAY-WHY has omitted since the track began."
+  }
+}

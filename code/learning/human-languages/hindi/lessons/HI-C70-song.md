@@ -12,7 +12,7 @@ headword: "गाना"
 gloss: "a song"
 romanization: "gānā"
 concept_tag: HI-NOUN-SONG
-prerequisites: [HI-C70-cricket]
+prerequisites: [HI-C70-cricket, HI-C68-language, HI-C69-ticket]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C70-LEISURE-04]
 practises:
-  knowledge: [HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-03, HI-LEX-C70-LEISURE-04]
+  knowledge: [HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-03, HI-LEX-C70-LEISURE-04, HI-LEX-C68-ORIGIN-04, HI-LEX-C69-GOING-04]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -62,12 +62,13 @@ run of chapters is out.
 Four, and the first word you have met that is two words at once.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-02, HI-LEX-C70-LEISURE-04, HI-LEX-C68-ORIGIN-04, HI-LEX-C69-GOING-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *gānā*]
 - [YOU CONTRAST: *gānā* as the song, and *gānā* as the singing]
 - [YOU WRITE: गाना, then खेलना under it, and look at the ending they share]
+- [YOU RECALL: read **भाषा**, then say *ṭikaṭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-04] -->

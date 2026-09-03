@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 64,
-  "sourceHash": "fnv1a64:4610a1f8ea462e7c",
+  "sourceHash": "fnv1a64:4facebbb7e99bad7",
   "lessonIds": [
     "HI-C64-now",
     "HI-C64-quickly",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch64.txt",
   "json": "hindi/narration/ch64.json",
-  "textHash": "fnv1a64:3c75d97a8c4ff25b",
-  "jsonHash": "fnv1a64:52c4cd3637a0e617",
+  "textHash": "fnv1a64:7d6a98c0663db6f3",
+  "jsonHash": "fnv1a64:06aaa899a3ee075e",
   "findings": []
 }

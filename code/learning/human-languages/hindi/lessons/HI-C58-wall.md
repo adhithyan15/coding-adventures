@@ -12,7 +12,7 @@ headword: "दीवार"
 gloss: "a wall"
 romanization: "dīvār"
 concept_tag: HI-NOUN-WALL
-prerequisites: [HI-C57-sweetness]
+prerequisites: [HI-C57-sweetness, HI-C56-road, HI-C57-present]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C58-HOUSE-01]
 practises:
-  knowledge: [HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01]
+  knowledge: [HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01, HI-LEX-C56-ROAD-01, HI-LEX-C57-GIFT-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It is a loan and not a cousin, which is worth keeping straight: दरवाज�
 The first of five parts of the house.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01, HI-LEX-C56-ROAD-01, HI-LEX-C57-GIFT-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dīvār*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dīvār*, and दरवाज़ा in it]
+- [YOU RECALL: say *saṛak*, then read **तोहफ़ा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01] -->

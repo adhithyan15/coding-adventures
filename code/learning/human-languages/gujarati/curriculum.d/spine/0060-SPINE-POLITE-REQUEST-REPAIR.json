@@ -8,11 +8,11 @@
     "GU-PATH-026",
     "GU-PATH-027",
     "GU-PATH-028",
-    "GU-PATH-029"
+    "GU-PATH-029",
+    "GU-PATH-030"
   ],
   "omits": [
-    "COURTESY-PLEASE",
-    "COURTESY-SORRY"
+    "COURTESY-PLEASE"
   ],
   "relocates": {}
 }

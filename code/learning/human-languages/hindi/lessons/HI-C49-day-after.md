@@ -12,7 +12,7 @@ headword: "परसों"
 gloss: "the day after tomorrow"
 romanization: "parsoṁ"
 concept_tag: HI-WORD-DAY-AFTER
-prerequisites: [HI-C49-now]
+prerequisites: [HI-C49-now, HI-C47-student, HI-C48-enough]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C49-LEAVE-02]
 practises:
-  knowledge: [HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02]
+  knowledge: [HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C47-ROLE-02, HI-LEX-C48-REPLY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Sanskrit *parasu*, 'the far day', lies underneath, and the language evidently ne
 Two, and both of them are about when.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C47-ROLE-02, HI-LEX-C48-REPLY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *parsoṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *parsoṁ*, then *abhī*, the far day beside this very moment]
+- [YOU RECALL: say *chātra*, then read **बस**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02] -->

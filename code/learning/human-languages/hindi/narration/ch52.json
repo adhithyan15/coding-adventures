@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4740452712440e61",
+  "sourceHash": "fnv1a64:fbb3169f0a1ae4a8",
   "lessons": [
     {
       "id": "HI-C52-rice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6fcd83eec56c18ff",
+      "sourceHash": "fnv1a64:ed536f69b8364737",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *chāval*, the grain the rest of the meal is served over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ābhār, then read फूल",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ābhār*, then read **फूल**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7f932b44657cfd8",
+      "sourceHash": "fnv1a64:d6acdd47efecaf04",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *dāl*, then *chāval* — the pair that makes a meal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read एहसान, then say mālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **एहसान**, then say *mālā*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c7f92ea69c176d3",
+      "sourceHash": "fnv1a64:aab90ceb9812945e",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tel*, the thing the दाल is finished with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ādar, then read आँगन",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ādar*, then read **आँगन**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10e745b0be662cd4",
+      "sourceHash": "fnv1a64:7e8633671c2a55c5",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *chīnī*, and then *chāy*, which you have had for a long time now]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read आशीर्वाद, then say mez",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **आशीर्वाद**, then say *mez*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a0a17fff3f96bc3",
+      "sourceHash": "fnv1a64:d2abcefba15bd76f",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sabzī*, then *dāl*, then *chāval* — say the shelf in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say praṇām, then say miṭhāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *praṇām*, then say *miṭhāī*]"
             }
           ]
         },

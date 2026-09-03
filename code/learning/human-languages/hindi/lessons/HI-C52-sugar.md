@@ -12,7 +12,7 @@ headword: "चीनी"
 gloss: "sugar"
 romanization: "chīnī"
 concept_tag: HI-NOUN-SUGAR
-prerequisites: [HI-C52-oil]
+prerequisites: [HI-C52-oil, HI-C50-blessing, HI-C51-table]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C52-KITCHEN-04]
 practises:
-  knowledge: [HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C52-KITCHEN-04]
+  knowledge: [HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C52-KITCHEN-04, HI-LEX-C50-COURTESY-04, HI-LEX-C51-WELCOME-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The traffic ran the other way too. English *sugar* came through Arabic *sukkar* 
 The fourth of five, and the only one that is a nationality.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C52-KITCHEN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C52-KITCHEN-04, HI-LEX-C50-COURTESY-04, HI-LEX-C51-WELCOME-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *chīnī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chīnī*, and then *chāy*, which you have had for a long time now]
+- [YOU RECALL: read **आशीर्वाद**, then say *mez*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02, HI-LEX-C52-KITCHEN-03, HI-LEX-C52-KITCHEN-04] -->

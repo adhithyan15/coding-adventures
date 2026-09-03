@@ -12,7 +12,7 @@ headword: "लोग"
 gloss: "people"
 romanization: "log"
 concept_tag: HI-NOUN-PEOPLE
-prerequisites: [HI-C44-family]
+prerequisites: [HI-C44-family, HI-C42-give]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-PEOPLE]
 practises:
-  knowledge: [HI-LEX-FAMILY, HI-LEX-PEOPLE]
+  knowledge: [HI-LEX-FAMILY, HI-LEX-PEOPLE, HI-LEX-GIVE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,13 @@ From Sanskrit लोक (*loka*), 'world, realm': the word for the world slid ac
 That closes the run: son, daughter, family, and everyone else.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-FAMILY, HI-LEX-PEOPLE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-FAMILY, HI-LEX-PEOPLE, HI-LEX-GIVE] -->
 
 [PAUSE 1s]
 - [YOU SAY: *log*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *parivār*, so the two sit together]
+- [YOU RECALL: read **देना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-FAMILY, HI-LEX-PEOPLE] -->

@@ -12,7 +12,7 @@ headword: "बाल"
 gloss: "hair"
 romanization: "bāl"
 concept_tag: HI-NOUN-HAIR
-prerequisites: [HI-C45-soap]
+prerequisites: [HI-C45-soap, HI-C44-son, HI-C45-fruit]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C46-BODY-01]
 practises:
-  knowledge: [HI-LEX-C45-ASK-04, HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01]
+  knowledge: [HI-LEX-C45-ASK-04, HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01, HI-LEX-SON, HI-LEX-C45-ASK-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Take care with its neighbour: *bāl-* also means 'child' in words borrowed strai
 The first of five more body words.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-04, HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-04, HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01, HI-LEX-SON, HI-LEX-C45-ASK-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bāl*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bāl*, then *sābun*, so the washing and the washed sit together]
+- [YOU RECALL: say *beṭā*, then read **फल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-04, HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01] -->

@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7c3731d24ff3c231",
+  "sourceHash": "fnv1a64:11e20fef620724c2",
   "lessons": [
     {
       "id": "HI-C43-look",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d267ef18c18c21ae",
+      "sourceHash": "fnv1a64:8b771ca328b97ea2",
       "notice": null,
       "blocks": [
         {
@@ -93,6 +93,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say baṛā, then say choṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *baṛā*, then say *choṭā*]"
             }
           ]
         },
@@ -128,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09c33c1c1065159b",
+      "sourceHash": "fnv1a64:38c1306544d4d221",
       "notice": null,
       "blocks": [
         {
@@ -211,6 +220,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *dekhnā*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say acchā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *acchā*]"
             }
           ]
         },
@@ -246,7 +264,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:510ce3ce9dd102ec",
+      "sourceHash": "fnv1a64:d00f298dea694824",
       "notice": null,
       "blocks": [
         {
@@ -329,6 +347,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *sunnā*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nayā*]"
             }
           ]
         },
@@ -364,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0e540b1c2d03453",
+      "sourceHash": "fnv1a64:2cc68662a9597ab1",
       "notice": null,
       "blocks": [
         {
@@ -447,6 +474,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: it after *bolnā*, so the two sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read पुराना",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **पुराना**]"
             }
           ]
         },

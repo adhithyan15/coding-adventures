@@ -12,7 +12,7 @@ headword: "सीढ़ी"
 gloss: "a staircase, a ladder"
 romanization: "sīṛhī"
 concept_tag: HI-NOUN-STAIRS
-prerequisites: [HI-C58-window]
+prerequisites: [HI-C58-window, HI-C56-shop, HI-C57-fragrance]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C58-HOUSE-04]
 practises:
-  knowledge: [HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04]
+  knowledge: [HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04, HI-LEX-C56-ROAD-04, HI-LEX-C57-GIFT-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ The word does not distinguish a staircase from a ladder. Both are सीढ़�
 The fourth of five, and one word for two objects.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04, HI-LEX-C56-ROAD-04, HI-LEX-C57-GIFT-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sīṛhī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sīṛhī*, up to the *chat*]
+- [YOU RECALL: read **दुकान**, then say *khushbū*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04] -->

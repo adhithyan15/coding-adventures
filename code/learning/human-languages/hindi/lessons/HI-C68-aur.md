@@ -12,7 +12,7 @@ headword: और
 romanization: "aur"
 gloss: and — the commonest word in Hindi that this book has never taught, and the one that turns two sentences into one
 concept_tag: HI-JOIN-AUR
-prerequisites: [HI-C37-chai, HI-C37-dudh, HI-C35-pasand]
+prerequisites: [HI-C37-chai, HI-C37-dudh, HI-C35-pasand, HI-C66-seed, HI-C66-crop]
 sounds: [diphthong-au]
 roots: []
 etymology_hook: "और descends from Sanskrit अपर (apara, 'other, further'), so Hindi's word for adding one more thing began, like Marathi's आणि from अन्य, as a word for the OTHER thing — two Indo-Aryan languages made the same move out of two different words for other, and English does it from the third side with an other becoming another"
@@ -23,7 +23,7 @@ requires:
 introduces:
   knowledge: [HI-JOIN-AUR-01]
 practises:
-  knowledge: [HI-JOIN-AUR-01, HI-CONCEPT-C35-PASAND-01, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01]
+  knowledge: [HI-JOIN-AUR-01, HI-CONCEPT-C35-PASAND-01, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01, HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -73,7 +73,7 @@ Roman letters, and the debt is written down rather than hidden. Learn *aur* now
 by ear — it is far too useful to wait for — and the letter will come.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-AUR-01, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C35-PASAND-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-AUR-01, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C35-PASAND-01, HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02] -->
 
 <!-- hl-activity: {"id":"HI-C68-aur-r1","kind":"text","assesses":["HI-JOIN-AUR-01"],"prompt":"Say that you like tea and milk.","answer":"mujhe chāy aur dūdh pasand hai","accepted":["mujhe chay aur dudh pasand hai"],"feedback":{"correct":"One word between them, and nothing else moves.","incorrect":"aur goes BETWEEN the two things; leave both sides alone."},"response_seconds":20} -->
 
@@ -81,6 +81,7 @@ by ear — it is far too useful to wait for — and the letter will come.
 - [YOU SAY: *chāy aur dūdh* — tea and milk]
 - [YOU SAY: *mujhe chāy aur dūdh pasand hai*]
 - [YOU SAY: which letter of *aur* you have not been taught — **the opening *au***]
+- [YOU RECALL: say *bīj*, then read **फ़सल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-AUR-01] -->

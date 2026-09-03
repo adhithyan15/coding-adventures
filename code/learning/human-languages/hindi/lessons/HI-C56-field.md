@@ -12,7 +12,7 @@ headword: "खेत"
 gloss: "a field"
 romanization: "khet"
 concept_tag: HI-NOUN-FIELD
-prerequisites: [HI-C56-shop]
+prerequisites: [HI-C56-shop, HI-C54-goat, HI-C55-sky]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C56-ROAD-05]
 practises:
-  knowledge: [HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04, HI-LEX-C56-ROAD-05]
+  knowledge: [HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04, HI-LEX-C56-ROAD-05, HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ From Sanskrit क्षेत्र (*kṣetra*), 'field, ground'. The *kṣ-* c
 The fifth of five. That is the way out of the village.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04, HI-LEX-C56-ROAD-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04, HI-LEX-C56-ROAD-05, HI-LEX-C54-ANIMAL-05, HI-LEX-C55-SKY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *khet*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *khet*, *gā̃v*, *saṛak*, *bāzār*, *dukān* — walk it in order]
+- [YOU RECALL: say *bakrī*, then read **आसमान**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04, HI-LEX-C56-ROAD-05] -->

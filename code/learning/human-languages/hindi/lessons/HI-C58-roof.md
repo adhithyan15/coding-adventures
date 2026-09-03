@@ -12,7 +12,7 @@ headword: "छत"
 gloss: "a roof"
 romanization: "chat"
 concept_tag: HI-NOUN-ROOF
-prerequisites: [HI-C58-wall]
+prerequisites: [HI-C58-wall, HI-C56-village, HI-C57-feast]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C58-HOUSE-02]
 practises:
-  knowledge: [HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02]
+  knowledge: [HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C56-ROAD-02, HI-LEX-C57-GIFT-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ A flat छत in North India is a place people go, not only a lid: it is where w
 The second of five, and a parasol that turned into a roof.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C56-ROAD-02, HI-LEX-C57-GIFT-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *chat*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chat*, over the *dīvār*]
+- [YOU RECALL: read **गाँव**, then say *dāvat*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02] -->

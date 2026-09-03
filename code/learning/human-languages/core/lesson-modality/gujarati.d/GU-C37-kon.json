@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C37-kon",
+    "language": "gujarati",
+    "chapter": 41,
+    "sequence": 2080,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6dff3dbeb514ceec"
+  },
+  "findings": []
+}

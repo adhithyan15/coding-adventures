@@ -12,7 +12,7 @@ headword: "ख़ुशबू"
 gloss: "fragrance"
 romanization: "khushbū"
 concept_tag: HI-NOUN-FRAGRANCE
-prerequisites: [HI-C57-platter]
+prerequisites: [HI-C57-platter, HI-C55-cloud, HI-C56-shop]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C57-GIFT-04]
 practises:
-  knowledge: [HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04]
+  knowledge: [HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04, HI-LEX-C55-SKY-04, HI-LEX-C56-ROAD-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ Persian builds a great many words like this, and Hindi took the habit along with
 The fourth of five, and the first word you have been able to take apart.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04, HI-LEX-C55-SKY-04, HI-LEX-C56-ROAD-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *khushbū*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *khushbū*, and hear ख़ुशी in its first half]
+- [YOU RECALL: read **बादल**, then say *dukān*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03, HI-LEX-C57-GIFT-04] -->

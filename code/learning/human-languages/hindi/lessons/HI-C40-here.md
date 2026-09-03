@@ -12,7 +12,7 @@ headword: "यहाँ"
 gloss: "here — where I am"
 romanization: "yahā̃"
 concept_tag: HI-DEIXIS-HERE
-prerequisites: [HI-C40-that]
+prerequisites: [HI-C40-that, HI-C37-khaana]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C40-DEIXIS-03]
 practises:
-  knowledge: [HI-LEX-C40-DEIXIS-01, HI-LEX-C40-DEIXIS-02, HI-LEX-C40-DEIXIS-03]
+  knowledge: [HI-LEX-C40-DEIXIS-01, HI-LEX-C40-DEIXIS-02, HI-LEX-C40-DEIXIS-03, HI-CONCEPT-C37-KHAANA-01, HI-CONCEPT-C37-KHAANA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,11 +51,12 @@ differ by one sound at the front — **y-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-03, HI-CONCEPT-C37-KHAANA-01, HI-CONCEPT-C37-KHAANA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "यहाँ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *khānā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-03] -->

@@ -12,7 +12,7 @@ headword: "तोहफ़ा"
 gloss: "a present"
 romanization: "tohfā"
 concept_tag: HI-NOUN-PRESENT
-prerequisites: [HI-C56-field]
+prerequisites: [HI-C56-field, HI-C55-sun, HI-C56-road]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C57-GIFT-01]
 practises:
-  knowledge: [HI-LEX-C56-ROAD-04, HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-01]
+  knowledge: [HI-LEX-C56-ROAD-04, HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-01, HI-LEX-C55-SKY-01, HI-LEX-C56-ROAD-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ It carries a shade the English word does not: a *tuḥfa* is a gift that is choi
 The first of five things that travel with thanks.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-04, HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-04, HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-01, HI-LEX-C55-SKY-01, HI-LEX-C56-ROAD-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tohfā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tohfā*, offered with both hands]
+- [YOU RECALL: say *sūraj*, then say *saṛak*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-04, HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-01] -->

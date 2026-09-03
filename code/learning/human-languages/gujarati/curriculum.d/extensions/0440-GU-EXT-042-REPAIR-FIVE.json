@@ -1,0 +1,16 @@
+{
+  "id": "GU-EXT-042-REPAIR-FIVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can negate a sentence, say I did not understand in the form that matches me, write pha, and use maaf karo both to apologise and to get attention.",
+  "prerequisites": [
+    "GU-EXT-041-PEOPLE-FIVE"
+  ],
+  "lessons": [
+    "GU-C31-nathi",
+    "GU-C31-samajto-nathi",
+    "GU-W08-pha",
+    "GU-C31-repair-five"
+  ]
+}

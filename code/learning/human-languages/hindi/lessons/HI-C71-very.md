@@ -12,7 +12,7 @@ headword: "बहुत"
 gloss: "very, a lot"
 romanization: "bahut"
 concept_tag: HI-WORD-VERY
-prerequisites: [HI-C71-also]
+prerequisites: [HI-C71-also, HI-C69-go]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C71-TODAY-03]
 practises:
-  knowledge: [HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02, HI-LEX-C71-TODAY-03]
+  knowledge: [HI-LEX-C71-TODAY-01, HI-LEX-C71-TODAY-02, HI-LEX-C71-TODAY-03, HI-LEX-C69-GOING-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -64,12 +64,13 @@ not a comparison; it is an intensity.
 Three: आज, भी, बहुत. One that places the day, one that adds, one that raises.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-02, HI-LEX-C71-TODAY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-02, HI-LEX-C71-TODAY-03, HI-LEX-C69-GOING-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bahut baṛā*]
 - [YOU SAY: *bahut dhanyavād*]
 - [YOU CONTRAST: *bahut* before its word, and *bhī* after its word]
+- [YOU RECALL: say *jānā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-03] -->

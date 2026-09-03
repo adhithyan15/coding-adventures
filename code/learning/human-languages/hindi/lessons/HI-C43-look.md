@@ -12,7 +12,7 @@ headword: "देखना"
 gloss: "to look, to see"
 romanization: "dekhnā"
 concept_tag: HI-VERB-LOOK
-prerequisites: []
+prerequisites: [HI-C41-big, HI-C41-small]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-LOOK]
 practises:
-  knowledge: [HI-LEX-LOOK]
+  knowledge: [HI-LEX-LOOK, HI-LEX-C41-ADJ-01, HI-LEX-C41-ADJ-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -51,12 +51,12 @@ The *-ना* infinitive again. *Dekh-* is the stem you will meet inside every o
 One more. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LOOK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LOOK, HI-LEX-C41-ADJ-01, HI-LEX-C41-ADJ-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dekhnā*]
 - [YOU SAY: it once more, slowly]
-
+- [YOU RECALL: say *baṛā*, then say *choṭā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LOOK] -->

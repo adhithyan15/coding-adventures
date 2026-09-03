@@ -12,7 +12,7 @@ headword: चाहना
 romanization: "chāhnā"
 gloss: to want — and the one verb in this chapter that takes a full infinitive rather than a bare stem
 concept_tag: VERB-WANT
-prerequisites: [HI-C70-sakna]
+prerequisites: [HI-C70-sakna, HI-C68-lekin]
 sounds: [matra-aa, hindi-ha]
 roots: []
 etymology_hook: "चाहना is from Sanskrit चक्ष् / छन्द् by way of Prakrit चाह- 'desire', and the noun चाह 'longing' still sits inside it; the same word is behind Urdu chāhat and behind the चाहिए that Hindi uses for wanting a THING, which is why the two look alike and take completely different objects"
@@ -23,7 +23,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-CHAHNA-01]
 practises:
-  knowledge: [HI-LEX-CHAHNA-01, HI-CONCEPT-C05-BOLNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-LEX-COME, HI-LEX-SAKNA-01]
+  knowledge: [HI-LEX-CHAHNA-01, HI-CONCEPT-C05-BOLNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-LEX-COME, HI-LEX-SAKNA-01, HI-JOIN-LEKIN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -66,7 +66,7 @@ how Hindi wants a THING rather than an action. They look alike and take opposite
 kinds of object; this lesson teaches only the verb.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-CHAHNA-01, HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-CHAHNA-01, HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-JOIN-LEKIN-01] -->
 
 <!-- hl-activity: {"id":"HI-C70-chahna-r1","kind":"text","assesses":["HI-LEX-CHAHNA-01","HI-GRAMMAR-SAKNA-STEM-01"],"prompt":"Say that you can speak Hindi and then that you want to speak Hindi, and name the difference.","answer":"maiṁ hindī bol saktā hūṁ; maiṁ hindī bolnā chāhtā hūṁ — saknā takes the bare stem, chāhnā the full -nā","accepted":["मैं हिंदी बोल सकता हूँ मैं हिंदी बोलना चाहता हूँ"],"feedback":{"correct":"Stem for saknā, infinitive for chāhnā.","incorrect":"Listen for the -nā: chāhnā keeps it, saknā drops it."},"response_seconds":30} -->
 
@@ -74,6 +74,7 @@ kinds of object; this lesson teaches only the verb.
 - [YOU SAY: *maiṁ hindī bolnā chāhtā hūṁ*]
 - [YOU SAY: the pair back to back — *bol saktā hūṁ* / *bolnā chāhtā hūṁ*]
 - [YOU SAY: *maiṁ ānā chāhtā hūṁ* against *maiṁ ā saktā hūṁ*]
+- [YOU RECALL: read **लेकिन**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-CHAHNA-01, HI-GRAMMAR-SAKNA-STEM-01] -->

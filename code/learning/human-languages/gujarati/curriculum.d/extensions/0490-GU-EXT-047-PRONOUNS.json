@@ -1,0 +1,17 @@
+{
+  "id": "GU-EXT-047-PRONOUNS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use te for anyone absent, choose between ame and aapne, write te, and describe someone with je ... te ... instead of naming them.",
+  "prerequisites": [
+    "GU-EXT-046-CONDITION"
+  ],
+  "lessons": [
+    "GU-C36-te",
+    "GU-C36-ame-aapne",
+    "GU-C36-te-write",
+    "GU-C36-je",
+    "GU-C36-je-te"
+  ]
+}

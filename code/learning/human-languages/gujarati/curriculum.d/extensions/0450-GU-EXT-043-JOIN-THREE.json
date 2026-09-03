@@ -1,0 +1,17 @@
+{
+  "id": "GU-EXT-043-JOIN-THREE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can join two nouns or two sentences with ane, write ane, offer a choice with athava, and use pan for both but and also.",
+  "prerequisites": [
+    "GU-EXT-042-REPAIR-FIVE"
+  ],
+  "lessons": [
+    "GU-C32-ane",
+    "GU-C32-ane-clauses",
+    "GU-C32-ane-write",
+    "GU-C32-athava",
+    "GU-C32-pan"
+  ]
+}

@@ -12,7 +12,7 @@ headword: कब
 romanization: "kab"
 gloss: when, as a question — the fourth k- word, and the one a timetable is read with
 concept_tag: HI-JOIN-KAB
-prerequisites: [HI-R71-reasons, HI-C04-kal-milte-hain]
+prerequisites: [HI-R71-reasons, HI-C04-kal-milte-hain, HI-C70-sakna, HI-C70-chahna]
 sounds: [hindi-ba]
 roots: []
 etymology_hook: "कब continues Sanskrit कदा (kadā, 'when'), on the same interrogative stem क- as क्या and क्यों; its partners जब and तब come from यदा (yadā) and तदा (tadā), so Hindi's when/then/when? trio is the Sanskrit ya-/ta-/ka- system worn down but perfectly intact"
@@ -23,7 +23,7 @@ requires:
 introduces:
   knowledge: [HI-JOIN-KAB-01]
 practises:
-  knowledge: [HI-JOIN-KAB-01, HI-CONCEPT-C04-KALMILTEHAIN-01, HI-GRAMMAR-C40-DEIXIS-SYSTEM, HI-JOIN-KYON-01, HI-LEX-SAKNA-01]
+  knowledge: [HI-JOIN-KAB-01, HI-CONCEPT-C04-KALMILTEHAIN-01, HI-GRAMMAR-C40-DEIXIS-SYSTEM, HI-JOIN-KYON-01, HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-LEX-CHAHNA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -59,7 +59,7 @@ the question the whole timetable half of a listening paper is made of.
 lesson, and they are the same word with different first letters.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-KAB-01, HI-JOIN-KYON-01, HI-LEX-SAKNA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-KAB-01, HI-JOIN-KYON-01, HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-LEX-CHAHNA-01] -->
 
 <!-- hl-activity: {"id":"HI-C72-kab-r1","kind":"text","assesses":["HI-JOIN-KAB-01"],"prompt":"Ask when the listener can come.","answer":"āp kab ā sakte haiṁ?","accepted":["आप कब आ सकते हैं?"],"feedback":{"correct":"In the ordinary slot, in front of the verb.","incorrect":"Leave the word order alone and put kab before the verb."},"response_seconds":20} -->
 
@@ -67,6 +67,7 @@ lesson, and they are the same word with different first letters.
 - [YOU SAY: *āp kab ā sakte haiṁ?*]
 - [YOU SAY: the same question with *kyoṁ* instead — *āp kyoṁ ā sakte haiṁ?*]
 - [YOU SAY: the five k- words together — *kyā*, *kaun*, *kahāṁ*, *kyoṁ*, *kab*]
+- [YOU RECALL: say *saknā*, then read **चाहना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-KAB-01, HI-GRAMMAR-C40-DEIXIS-SYSTEM] -->

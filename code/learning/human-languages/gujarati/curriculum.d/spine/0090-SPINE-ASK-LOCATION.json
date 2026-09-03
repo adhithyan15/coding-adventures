@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "QUESTION-WHERE"
+  "segments": [
+    "GU-PATH-036"
   ],
+  "omits": [],
   "relocates": {}
 }

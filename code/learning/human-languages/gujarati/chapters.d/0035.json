@@ -1,0 +1,23 @@
+{
+  "chapter": 35,
+  "title": "The Word for Not, and the Word for Sorry",
+  "label": "ch:gu-not-and-sorry",
+  "canDo": "I can say that something is not so, tell someone I did not understand, and apologise or get a stranger's attention.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C31-repair-five",
+    "kind": "task",
+    "summary": "The repair kit. Gujarati negates a sentence by swapping chhe for nathi rather than adding a word, and that one swap unlocks the sentence a beginner needs most -- samajto nathi, 'I do not understand'. The chapter spends the only new letter in this whole run, pha, and spends it on maaf karo, which both apologises and stops a stranger to ask.",
+    "assesses": [
+      "GU-NEG-NATHI-01",
+      "GU-NEG-SAMAJTO-NATHI-01",
+      "GU-SCRIPT-PHA-01",
+      "GU-LEX-MAAF-01",
+      "GU-SCRIPT-MAAF-01",
+      "GU-PERFORMANCE-REPAIR-FIVE-01"
+    ],
+    "note": "Realises COURTESY-SORRY, which SPINE-POLITE-REQUEST-REPAIR has omitted since the track began."
+  }
+}

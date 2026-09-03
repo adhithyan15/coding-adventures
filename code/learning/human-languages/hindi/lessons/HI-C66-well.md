@@ -12,7 +12,7 @@ headword: "कुआँ"
 gloss: "a well"
 romanization: "kuā̃"
 concept_tag: HI-NOUN-WELL
-prerequisites: [HI-C66-grass]
+prerequisites: [HI-C66-grass, HI-C64-more, HI-C65-manners]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C66-FIELD-05]
 practises:
-  knowledge: [HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05]
+  knowledge: [HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05, HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ From Sanskrit कूप (*kūpa*), 'a pit, a well'. The *p* softened away and th
 Five: बीज, फ़सल, अनाज, घास, कुआँ. Enough to name a field and the water that keeps it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05, HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kuā̃*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *phir milenge*]
+- [YOU RECALL: say *zyādā*, then read **अदब**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05] -->

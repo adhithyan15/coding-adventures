@@ -12,7 +12,7 @@ headword: "आज"
 gloss: "today"
 romanization: "āj"
 concept_tag: HI-TIME-TODAY
-prerequisites: [HI-C70-rest, HI-C70-song]
+prerequisites: [HI-C70-rest, HI-C70-song, HI-C69-vehicle, HI-C69-railway]
 sounds: []
 roots: []
 duration:
@@ -22,7 +22,7 @@ requires:
 introduces:
   knowledge: [HI-LEX-C71-TODAY-01]
 practises:
-  knowledge: [HI-LEX-C70-LEISURE-05, HI-LEX-C71-TODAY-01, HI-LEX-C70-LEISURE-04]
+  knowledge: [HI-LEX-C70-LEISURE-05, HI-LEX-C71-TODAY-01, HI-LEX-C70-LEISURE-04, HI-LEX-C69-GOING-01, HI-LEX-C69-GOING-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -61,13 +61,14 @@ that makes it about now rather than in general.
 The first of five small words that do a great deal of work.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01, HI-LEX-C70-LEISURE-04, HI-LEX-C70-LEISURE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01, HI-LEX-C70-LEISURE-04, HI-LEX-C70-LEISURE-05, HI-LEX-C69-GOING-01, HI-LEX-C69-GOING-02] -->
 
 [PAUSE 1s]
 - [YOU RECALL: say *gānā*, then read **आराम** and say what it means]
 - [YOU HEAR: *āj*, then *kal*, then *parsoṁ*]
 - [YOU SAY: *āj*]
 - [YOU SAY: *āj āp kaise haiṁ?*]
+- [YOU RECALL: say *gāṛī*, then read **रेल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01] -->
