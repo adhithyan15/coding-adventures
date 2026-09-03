@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "GE-C08-uhr",
+    "id": "GE-C08-stunde",
     "language": "german",
     "chapter": 12,
-    "sequence": 245,
+    "sequence": 247,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6b5927b13d03002d"
+    "sourceHash": "fnv1a64:cc2e61d5e7251e67"
   },
   "findings": []
 }

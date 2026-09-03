@@ -84,10 +84,18 @@ Spanish and French where a contrast helps. The recurring decoder is the
   *dimanche*) and German kept the sun, so one week records both decisions.
   ***Sonnabend*** closes it: the northern Saturday, transparent the moment
   *Sonne* and *Abend* are both owned. **Authored.**
-- **Ch. 12 — Time & the clock**: Uhr (clock/o'clock ← Latin *hōra* — the **standout
-  Latin loanword** in a Germanic system of native numbers & day-gods; *es ist zwei
-  Uhr*) → Mittag/Mitternacht (noon/midnight, **native** compounds *Mitte* + *Tag* /
-  *Nacht*, unlike the borrowed *Uhr*). **Authored.**
+- **Ch. 12 — Telling the time**: the chapter is a **division of labour**, and it
+  makes one argument with two sides. ***Uhr*** came from Latin *hōra* with the
+  Roman and monastic clocks — the same word as French *heure*, Italian *ora* and
+  English **hour** — and German already had ***Stunde*** for an hour's span, so
+  the loan took the job the native word could not do and *Stunde* kept the one it
+  could. ***Mitte***, ***Mittag*** and ***Mitternacht*** are the other side:
+  compounds German built from words it owned, where French inherited the same
+  thought from Latin *medius diēs* as *midi*. That thesis is
+  `GE-GRAMMAR-NATIVE-VS-LOAN-01` for the **third** time, so it is required rather
+  than reintroduced — which is the one atom that keeps the chapter at 11 and out
+  of a split. Closes on the two frames side by side: a number with *Uhr*
+  (*es ist zwei Uhr*), or a pivot standing alone (*es ist Mittag*). **Authored.**
 - **Ch. 13 — Months & seasons**: the **native-vs-Latin split deepens** — the months
   are **Latin loans** (Januar ← Janus, *März* ← Mars = Dienstag's Tiw; September–
   Dezember = Latin 7–10), like the clock-word *Uhr*, while the **seasons stay

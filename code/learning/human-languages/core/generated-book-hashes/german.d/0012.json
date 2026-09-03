@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 12,
-  "sourceHash": "fnv1a64:f74aed23f376e855",
+  "sourceHash": "fnv1a64:1a0f26c4dcdc34de",
   "lessonIds": [
     "GE-C08-uhr",
     "GE-C08-uhr-hora",
@@ -14,11 +14,5 @@
     "GE-C08-mitternacht",
     "GE-C08-mittag-mitternacht"
   ],
-  "voiceLessons": 10,
-  "drivablePrefix": 10,
-  "text": "german/narration/ch12.txt",
-  "json": "german/narration/ch12.json",
-  "textHash": "fnv1a64:a727a3576670d118",
-  "jsonHash": "fnv1a64:2b302fa1cfb8b0ea",
-  "findings": []
+  "tex": "german/book/chapters/ch12-time.tex"
 }
