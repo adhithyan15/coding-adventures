@@ -255,7 +255,7 @@ describe("the committed corpus", () => {
     // count going down is the gate working, not the detector breaking. The
     // named-fixture test below is what protects the detector itself.
     expect(report.summary.fullParadigmGrids).toBe(21);
-    expect(report.summary.lessonsWithFindings).toBe(121); // +1: vocabulary wave 5 // HL-C113: unchanged // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C165: +11 -- Sanskrit chapters 17 and 18
+    expect(report.summary.lessonsWithFindings).toBe(120); // 121 -> 120: retiring French chapter 18 removed FR-C15-passe-compose, whose single lesson carried the whole participle system in stacked tables. Twelve lessons replace it and none of them trips a finding -- the paradigm table it held is now a recap in a practice lesson, after every part has been taught individually, which is the shape this gate exists to encourage. A FALL here is the gate working; it is pinned exactly so a silent rise is caught too // +1: vocabulary wave 5 // HL-C113: unchanged // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C165: +11 -- Sanskrit chapters 17 and 18
   });
 
   it("flags the known full grids by name", () => {

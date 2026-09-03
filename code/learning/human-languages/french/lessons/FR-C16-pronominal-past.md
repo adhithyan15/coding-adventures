@@ -1,6 +1,6 @@
 ---
 id: FR-C16-pronominal-past
-sequence: 575
+sequence: 635
 chapter: 19
 type: grammar
 headword: elle s'est lavée / lavé les mains
@@ -11,7 +11,7 @@ sounds: [silent-agreement]
 roots: [latin-reflexive]
 etymology_hook: "pronominal verbs use être as auxiliary but agreement still follows the preceding-direct-object logic learned with avoir"
 est_minutes: 4
-reviews_of: [FR-C16-passe-compose-etre, FR-C15-passe-compose]
+reviews_of: [FR-C16-passe-compose-etre, FR-C15-practice]
 ---
 
 # Elle s’est lavée — pronominal past agreement

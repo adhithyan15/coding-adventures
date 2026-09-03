@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 18,
-  "sourceHash": "fnv1a64:a15d536715eef86f",
+  "sourceHash": "fnv1a64:c44099023cbcc5e2",
   "lessonIds": [
     "FR-C15-participe-er",
     "FR-C15-jai-parle",
@@ -16,11 +16,5 @@
     "FR-C15-areal",
     "FR-C15-practice"
   ],
-  "voiceLessons": 12,
-  "drivablePrefix": 12,
-  "text": "french/narration/ch18.txt",
-  "json": "french/narration/ch18.json",
-  "textHash": "fnv1a64:87d121e3eb3b7f31",
-  "jsonHash": "fnv1a64:b5008c133747a71c",
-  "findings": []
+  "tex": "french/book/chapters/ch18-passe-compose.tex"
 }

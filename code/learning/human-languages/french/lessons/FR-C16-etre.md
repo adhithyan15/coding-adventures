@@ -1,6 +1,6 @@
 ---
 id: FR-C16-etre
-sequence: 560
+sequence: 620
 chapter: 19
 type: word
 headword: être

@@ -2,8 +2,18 @@
   "id": "FR-PATH-017",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "FR-C15-passe-compose",
+    "FR-C15-participe-er",
+    "FR-C15-jai-parle",
+    "FR-C15-parler-parle-parlez",
+    "FR-C15-participe-ir-re",
+    "FR-C15-participe-latin",
+    "FR-C15-possessif",
+    "FR-C15-accord",
+    "FR-C15-practice-compose",
     "FR-C15-passe-simple",
+    "FR-C15-soeurs",
+    "FR-C15-areal",
+    "FR-C15-practice",
     "FR-C16-etre"
   ],
   "before": [

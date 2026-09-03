@@ -119,12 +119,29 @@ it("pins French modality", () => expectLanguageModality("french"));
 // claim is the Romance/Germanic split -- every Romance language on the continent
 // HAS its years and every Germanic one IS them -- which was a bare table in a
 // `culture` block that no lesson owned.
+// 189 -> 201 lessons: retiring handwritten chapter 18, The Compound Past. Two
+// schema-v1 lessons held the whole participle system (three classes), the tense
+// built on it, the Latin endings behind it, the possessive construction it grew
+// out of, the agreement fossil that construction left, AND a second past tense
+// with its Romance sisters and the areal change that retired it. Twelve lessons
+// now own one thing each; nine atoms, well under the ceiling.
+//
+// `finir` and `vendre` appear as EXAMPLES of the -ir and -re participle classes
+// and are deliberately not taught as vocabulary -- neither verb exists anywhere
+// in this corpus, and smuggling two headwords in to illustrate a pattern would
+// have been exactly the cramming the atom ceiling exists to prevent. The lesson
+// says so in as many words.
+// 24 -> 25 culture claims: the areal change. French, German and Italian each
+// swapped a simple past for a compound one, and they did it as NEIGHBOURS --
+// one change spreading by contact across a connected block -- while Spanish and
+// Portuguese at the western edge kept theirs. That was a `culture` block owned
+// by nobody.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 189,
+    lessons: 201,
     idioms: 3,
     senses: 7,
-    cultureClaims: 24,
+    cultureClaims: 25,
     unitPrefix: "FR",
   }));
 
