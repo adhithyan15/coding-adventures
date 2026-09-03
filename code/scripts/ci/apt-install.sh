@@ -107,22 +107,37 @@ else
   echo "no vendor source lists to prune"
 fi
 
-# The guard on the pruning above. If a future pattern is too broad and takes
-# the Ubuntu archive with it, this says so in one line -- rather than letting
-# the job fail later with "unable to locate package", which points at the
-# package instead of at this script.
-archive_found=0
-if [[ -f "$SOURCES_LIST" ]] && grep -Eq '^[^#]*\b(deb|deb-src)\b' "$SOURCES_LIST" 2>/dev/null; then
-  archive_found=1
+# The guard on the pruning above: did we just delete everything?
+#
+# Deliberately NOT "does a known Ubuntu mirror hostname appear somewhere".
+# The first version of this asked exactly that, and failed on the real runner
+# while passing every local fixture -- because it encoded my guess about which
+# mirror and which file layout the image uses, and the guess was wrong. The
+# invariant that actually matters does not need to know any of that: pruning
+# must leave at least one source behind that we did not prune.
+remaining=()
+if [[ -d "$SOURCES_DIR" ]]; then
+  shopt -s nullglob
+  for path in "$SOURCES_DIR"/*.list "$SOURCES_DIR"/*.sources; do
+    [[ -f "$path" ]] && remaining+=("$(basename "$path")")
+  done
+  shopt -u nullglob
 fi
-if [[ -d "$SOURCES_DIR" ]] && grep -rEq 'archive\.ubuntu\.com|ports\.ubuntu\.com|azure\.archive\.ubuntu\.com' "$SOURCES_DIR" 2>/dev/null; then
-  archive_found=1
+if [[ -f "$SOURCES_LIST" ]] && grep -Eq '^[[:space:]]*(deb|deb-src|Types:)' "$SOURCES_LIST" 2>/dev/null; then
+  remaining+=("$(basename "$SOURCES_LIST")")
 fi
-if [[ "$archive_found" -ne 1 ]]; then
-  echo "error: no Ubuntu archive is configured after pruning." >&2
-  echo "       Every package this script installs comes from that archive, so" >&2
-  echo "       continuing would fail with a misleading 'unable to locate" >&2
-  echo "       package'. Check VENDOR_PATTERNS in $0 -- one of them is too broad." >&2
+
+# Printed unconditionally, not only on failure. When this went wrong in CI the
+# error said what it concluded and not what it saw, so diagnosing it needed
+# another run. One line now saves that round trip.
+echo "apt sources remaining: ${remaining[*]:-(none)}"
+
+if [[ ${#remaining[@]} -eq 0 ]]; then
+  echo "error: pruning removed every configured apt source." >&2
+  echo "       Every package this script installs comes from the Ubuntu" >&2
+  echo "       archive, so continuing would fail with a misleading 'unable to" >&2
+  echo "       locate package'. Check VENDOR_PATTERNS in $0 -- one of them is" >&2
+  echo "       too broad." >&2
   exit 1
 fi
 

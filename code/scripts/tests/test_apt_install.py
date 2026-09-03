@@ -121,11 +121,16 @@ class PruneTests(unittest.TestCase):
                 [p.name for p in sources_dir.iterdir()],
             )
 
-    def test_refuses_to_continue_with_no_ubuntu_archive(self) -> None:
+    def test_refuses_to_continue_when_pruning_removed_everything(self) -> None:
         # The guard on the pruning itself. If a pattern is ever widened too far
         # and takes the archive with it, this says so in one line rather than
         # letting the job fail later with "unable to locate package", which
         # points at the package instead of at the cause.
+        #
+        # The invariant is "something we did not prune survives", NOT "a known
+        # Ubuntu mirror hostname appears somewhere". The first version asked the
+        # latter and failed on the real runner while passing every fixture here,
+        # because it encoded a guess about the image's mirror and file layout.
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             sources_dir = root / "sources.list.d"
@@ -137,7 +142,20 @@ class PruneTests(unittest.TestCase):
             result = _prune(sources_dir, sources_list)
 
             self.assertEqual(result.returncode, 1)
-            self.assertIn("no Ubuntu archive is configured", result.stderr)
+            self.assertIn("removed every configured apt source", result.stderr)
+
+    def test_reports_what_survived_even_on_success(self) -> None:
+        # Printed unconditionally. When this guard misfired in CI the error said
+        # what it concluded and not what it saw, so diagnosing it cost another
+        # run. The surviving source list is the one fact needed to tell "the
+        # patterns are too broad" from "this image is laid out differently".
+        with tempfile.TemporaryDirectory() as tmp:
+            sources_dir, sources_list = _runner_layout(Path(tmp))
+            result = _prune(sources_dir, sources_list)
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("apt sources remaining:", result.stdout)
+            self.assertIn("ubuntu.sources", result.stdout)
 
     def test_accepts_the_older_layout(self) -> None:
         # 22.04 runners keep the archive in `/etc/apt/sources.list`. Both
