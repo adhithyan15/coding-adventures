@@ -66,45 +66,74 @@ SOURCES_LIST="${APT_SOURCES_LIST:-/etc/apt/sources.list}"
 # real apt. On a runner this is plain `sudo`.
 SUDO="${APT_SUDO-sudo}"
 
-# Vendor repositories the runner images preinstall and this repository never
-# installs from. Matched as shell globs against the file NAME, in both the
-# one-line `.list` format and the deb822 `.sources` format, because the runner
-# images have been migrating between the two and a pattern that knew only one
-# would silently stop pruning.
-VENDOR_PATTERNS=(
-  "microsoft*"
-  "azure-cli*"
-  "azure_cli*"
+# Which source lists to KEEP. An allowlist, not a list of vendors to drop.
+#
+# The first version enumerated vendors -- microsoft, azure-cli -- and shipped.
+# The diagnostic below then reported what actually survived on the runner:
+#
+#     pruned 2 vendor source list(s): microsoft-prod.list azure-cli.sources
+#     apt sources remaining: google-chrome.sources ubuntu.sources
+#
+# `google-chrome.sources` is a repository nothing here installs from, and it
+# can 403 exactly the way Microsoft's did. A denylist over repositories someone
+# else decides to preinstall can only ever be as current as the last time
+# somebody looked at a runner image, and every miss is silent until an outage.
+#
+# What this project depends on is a closed set: every package installed across
+# all six workflows comes from the Ubuntu archive, and no workflow runs
+# `add-apt-repository`. So the safe shapes are named instead, and a vendor
+# repository added to some future image cannot fail a job here.
+#
+# Same correction, and the same reasoning, as the release archiver's member
+# names -- see "a denylist over filename hazards is unwinnable" in lessons.md.
+KEEP_PATTERNS=(
+  "ubuntu.sources"
+  "ubuntu.list"
+  "ubuntu-*.sources"
+  "ubuntu-*.list"
 )
+
+# The escape hatch. Nothing needs it today -- no workflow adds a repository --
+# but the day one does, it will add the PPA and then call this script, which
+# would delete it a line later and fail with "unable to locate package"
+# pointing at the package rather than at us. Space-separated globs.
+#
+#   APT_KEEP="deadsnakes*" bash apt-install.sh python3.13
+# `${arr[@]}` on an EMPTY array is an unbound-variable error under `set -u` in
+# bash 3.2, which is what macOS ships -- the runners have bash 5, where it is
+# fine, so this would have passed CI and failed for anyone running it locally.
+read -r -a extra_keep <<< "${APT_KEEP:-}"
+if [[ ${#extra_keep[@]} -gt 0 ]]; then
+  KEEP_PATTERNS+=("${extra_keep[@]}")
+fi
+
+keep_this() {
+  local name="$1" pattern
+  for pattern in "${KEEP_PATTERNS[@]}"; do
+    [[ -n "$pattern" && "$name" == $pattern ]] && return 0
+  done
+  return 1
+}
 
 pruned=()
 if [[ -d "$SOURCES_DIR" ]]; then
-  for pattern in "${VENDOR_PATTERNS[@]}"; do
-    # `nullglob` so a pattern that matches nothing expands to nothing rather
-    # than to the literal pattern -- otherwise this would try to remove a file
-    # named `microsoft*` and, under `set -e`, take the job down with it.
-    shopt -s nullglob
-    for path in "$SOURCES_DIR"/$pattern; do
-      # `-f` FOLLOWS symlinks, so this does not exclude a link pointing at
-      # a vendor name -- it only decides whether to unlink. That is still the
-      # behaviour we want, because `rm -f` unlinks the link rather than its
-      # target, so nothing outside this directory is removed either way.
-      # Stated plainly because the earlier wording claimed the opposite, and a
-      # comment that overstates what a check does invites someone to lean on a
-      # guarantee that was never there.
-      if [[ -f "$path" ]]; then
-        $SUDO rm -f "$path"
-        pruned+=("$(basename "$path")")
-      fi
-    done
-    shopt -u nullglob
+  shopt -s nullglob
+  for path in "$SOURCES_DIR"/*.list "$SOURCES_DIR"/*.sources; do
+    [[ -f "$path" ]] || continue
+    name="$(basename "$path")"
+    if keep_this "$name"; then
+      continue
+    fi
+    $SUDO rm -f "$path"
+    pruned+=("$name")
   done
+  shopt -u nullglob
 fi
 
 if [[ ${#pruned[@]} -gt 0 ]]; then
-  echo "pruned ${#pruned[@]} vendor source list(s): ${pruned[*]}"
+  echo "pruned ${#pruned[@]} unused source list(s): ${pruned[*]}"
 else
-  echo "no vendor source lists to prune"
+  echo "no unused source lists to prune"
 fi
 
 # The guard on the pruning above: did we just delete everything?
@@ -136,8 +165,8 @@ if [[ ${#remaining[@]} -eq 0 ]]; then
   echo "error: pruning removed every configured apt source." >&2
   echo "       Every package this script installs comes from the Ubuntu" >&2
   echo "       archive, so continuing would fail with a misleading 'unable to" >&2
-  echo "       locate package'. Check VENDOR_PATTERNS in $0 -- one of them is" >&2
-  echo "       too broad." >&2
+  echo "       locate package'. Check KEEP_PATTERNS in $0 -- the Ubuntu" >&2
+  echo "       archive's source list is not being matched by any of them." >&2
   exit 1
 fi
 
