@@ -1,0 +1,4608 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY MALAYALAM EXAMINING OR LANGUAGE BODY. core/exam-levels.json records malayalam as exam 'no widely-sat ladder', basis 'editorial', and it carries NO caveat -- so unlike Tamil, whose entry names its diglossia, this track hands the inventory no external steer at all. Kerala's state school syllabi and the Kerala Sahitya Akademi exist, but they are built for children schooled in Malayalam or for literary attainment rather than for an adult second-language learner against CEFR can-do descriptors, and neither was consulted. Read 'A1' here as the CEFR descriptor -- can greet, introduce oneself, and handle a short exchange in everyday spoken Malayalam -- and as a measuring stick this project built for itself.\n\nEXAM ENVELOPE: NONE EXISTS. There is no malayalam/task-shapes/ and no malayalam/mocks/, and no malayalam/assessment.json. So unlike Hindi and Marathi, whose inventories could mine a checked-in mock for the exponent a paper item actually needs, nothing here can say which task demands which word. Where those files write 'the mock asks for X', this one can only write 'an A1 learner needs X'. That is a weaker claim and is stated as one.\n\nSEARCH FOR AN EXTERNAL SOURCE: NOT SEARCHED, BY INSTRUCTION. The project settled at HL-C287/HL-C290 that the proxy derivation is the method for tracks with no sat ladder, and the search was deliberately not redone for Malayalam. Saying so is what keeps 'we did not look' from reading as 'there is nothing to find'.\n\nTHE REGISTER COLUMN IS MEASURED, NOT BORROWED. Tamil's inventory carries a register column because core/exam-levels.json names Tamil's diglossia in a caveat. Malayalam has no caveat, so this file measured the corpus instead of importing Tamil's shape. What it found is a DIFFERENT axis: four lessons carry register 'formal' and every one is a Sanskrit-tatsama time-of-day greeting, two carry 'literary'/'literary-narrative' and both teach a native word the everyday Sanskrit one displaced, and one teaches respect as grammatical plurality. That is a lexical borrowed-against-inherited split plus an honorific, and this file claims exactly that and does not claim a literary/spoken diglossia. The eighteen lessons carrying variety 'standard' rather than 'standard-colloquial' were checked and are ALL writing lessons, so they are an artefact of the script runway and not evidence of a second variety.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is the Instituto Cervantes Plan Curricular inventories. The proxy supplies the LEVEL and the shape of the columns; every Malayalam exponent is this project's choice, and every point records which Spanish point or points it was derived from.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Spanish is a proxy for LEVEL, never for grammar: each point was read as 'what must an A1 learner be able to do here', and the Malayalam exponent that carries the same load was then chosen. Where Malayalam carries the load with machinery Spanish does not have -- case suffixes, a dative subject, a question particle, a verb that never agrees -- the point is restated around the Malayalam machinery and its Spanish origin recorded in derivedFrom."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume",
+      "note": "Supplies the meaning of 'A1' as a can-do band. It describes what a learner can DO and names no language's forms, which is exactly why a second, language-shaped source was needed and why the Spanish inventory is used as the proxy for that shape."
+    },
+    {
+      "id": "ML-CORPUS",
+      "kind": "project-owned",
+      "title": "malayalam/lessons/ as merged on main",
+      "note": "292 lessons, all schema_version 2, introducing 358 atoms. Every probe in this file names an atom drawn from this set and was checked mechanically against it before the file was written; no probe names an id that a future lesson is expected to introduce."
+    },
+    {
+      "id": "ED-MALAYALAM",
+      "kind": "editorial",
+      "title": "this project's judgement about Malayalam",
+      "note": "Where a Spanish point has no single Malayalam exponent, the choice of which Malayalam form carries the load is this project's and is defended in the point's own note. The clearest cases are the dative subject standing in for gustar, undu standing in for both hay and tener, and the -o particle standing in for Spanish interrogative inversion."
+    }
+  ],
+  "proxy": {
+    "of": "core/exam-inventory-es-a1.json",
+    "notTransferred": []
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "Derived from the PCIC functional inventory by way of core/exam-inventory-es-a1.json.",
+      "note": "The Spanish functional subsections were walked in full and each was answered with the Malayalam exponent that carries it. Partial because the answers are this project's editorial choices rather than an examining body's list, and because no Malayalam mock exists to check them against."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "Derived from the PCIC grammar inventory by way of core/exam-inventory-es-a1.json.",
+      "note": "Every Spanish A1 grammar category was answered, including the ones whose Malayalam answer is that the category does not exist. Partial because a Malayalam-shaped grammar inventory would enumerate categories Spanish never raises -- the full case series, the relative participle, the quotative -- and this file reaches those only where a Spanish point happened to point at them."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "Derived from the PCIC orthography inventory, plus this track's own script lessons.",
+      "note": "The script column is measured against the corpus rather than against Malayalam: 67 distinct characters appear in headwords and 58 are taught. Partial for two reasons -- the nine untaught characters, and the fact that the pronunciation points are answered by SHAPE lessons rather than by sound lessons, which is honest and thin."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "Derived from the PCIC notional inventories by way of core/exam-inventory-es-a1.json.",
+      "note": "All twenty Spanish specific-notion areas were walked. Seven of them -- leisure, media, money and shopping, services, medicine, the arts, technology -- have no Malayalam word in the corpus at all, and are enumerated as uncovered rather than omitted."
+    }
+  },
+  "probeSemantics": "A probe is the set of atoms whose presence in the corpus demonstrates the point. ALL of them must be introduced for the point to count: a point covered by half its atoms is not covered, because a candidate asked for the whole of something does not get partial credit for half of it. probe: null means nothing in the corpus corresponds to the point, and every null carries a note naming what is missing -- those notes are a work queue and are written as one.",
+  "points": [
+    {
+      "id": "ML-A1-N-01",
+      "category": "Naamam (the noun)",
+      "label": "proper nouns: a personal name, given in an introduction and used in address",
+      "probe": [
+        "ML-LEX-PERU-01",
+        "ML-PHRASE-C02-MY-NAME-IS-01",
+        "ML-PHRASE-C02-WHATS-YOUR-NAME-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "peru and both halves of the frame are chapter 2, and the frame is what an introduction actually uses."
+    },
+    {
+      "id": "ML-A1-N-02",
+      "category": "Naamam (the noun)",
+      "label": "place names: the town you live in, and the country you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-N-01",
+        "A1-NE20-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "naadu ('home country', ML-C55-homeland) is the nearest thing taught, and it names a KIND of place rather than one. No settlement name, no name of Kerala or of India, appears anywhere in 292 lessons -- so a learner can answer 'where are you from' only with a category. One lesson teaching uuru ('town') plus Keralam would close this and ML-A1-NG3-07 together."
+    },
+    {
+      "id": "ML-A1-N-03",
+      "category": "Naamam (the noun)",
+      "label": "common nouns naming stretches of time",
+      "probe": [
+        "ML-CONCEPT-C23-DIVASAM-01",
+        "ML-CONCEPT-C18-MANI-01",
+        "ML-CONCEPT-C14-KAALANGAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "divasam (day), mani (hour) and the four kaalangal (seasons) between them cover the day, the hour and the year."
+    },
+    {
+      "id": "ML-A1-N-04",
+      "category": "Naamam (the noun)",
+      "label": "Malayalam has no grammatical gender on the noun, and the noun therefore never agrees",
+      "probe": [
+        "ML-CONCEPT-C05-VERB-NEVER-AGREES-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-N-03",
+        "A1-ADJ-03",
+        "A1-SN-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "The Spanish points ask what a learner must handle about gender agreement. In Malayalam the honest answer is that there is none to handle: ML-C05-samsaarikkuka states that the verb never agrees with anything, which is the same fact seen from the verb's end. Restated around the Malayalam machinery rather than dropped."
+    },
+    {
+      "id": "ML-A1-N-05",
+      "category": "Naamam (the noun)",
+      "label": "natural gender by separate words: makan against makal, achhan against amma",
+      "probe": [
+        "ML-CONCEPT-C36-MAKAN-01",
+        "ML-CONCEPT-C36-MAKAL-01",
+        "ML-CONCEPT-C12-KUDUMBAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "Where Spanish has padre/madre, Malayalam has the same heteronymy: makan/makal and the six kudumbam words."
+    },
+    {
+      "id": "ML-A1-N-06",
+      "category": "Naamam (the noun)",
+      "label": "number: the plural suffix -kal and when a bare noun already reads as plural",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "The plural is never taught. -kal appears inside taught headwords -- nirangal (colours), maasangal (months), shareera-bhaagangal (body parts), kaalangal (seasons) -- so the learner has met the suffix four times as part of a word and has never been told it is a suffix. That is the cheapest grammar lesson available to this track."
+    },
+    {
+      "id": "ML-A1-ADJ-01",
+      "category": "Visheshanam (the adjective)",
+      "label": "qualifying adjectives used before a noun",
+      "probe": [
+        "ML-LEX-C42-ADJ-01",
+        "ML-LEX-C42-ADJ-02",
+        "ML-LEX-C42-ADJ-03",
+        "ML-GRAMMAR-C42-ADJ-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "valiya, cheriya and nalla, plus the rule that ties them together."
+    },
+    {
+      "id": "ML-A1-ADJ-02",
+      "category": "Visheshanam (the adjective)",
+      "label": "the adjective is invariable: it never changes for gender, number or case",
+      "probe": [
+        "ML-GRAMMAR-C42-ADJ-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03",
+        "A1-ADJ-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "ML-C42-adjective-system teaches exactly this -- 'before the noun, unchanged'. Two Spanish points about agreement collapse into one Malayalam point about its absence."
+    },
+    {
+      "id": "ML-A1-ADJ-03",
+      "category": "Visheshanam (the adjective)",
+      "label": "position: the adjective stands before its noun, always",
+      "probe": [
+        "ML-GRAMMAR-C42-ADJ-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "The mirror image of the Spanish point, and the reason it is worth stating: Spanish puts it after, Malayalam before, and neither language allows the other order."
+    },
+    {
+      "id": "ML-A1-ADJ-04",
+      "category": "Visheshanam (the adjective)",
+      "label": "relational adjectives: naming where a person or thing is from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "No gentilic is taught. There is no word for 'Indian', 'Keralite' or 'Malayali' anywhere, which is the same hole as ML-A1-N-02 seen from the adjective's side."
+    },
+    {
+      "id": "ML-A1-ADJ-05",
+      "category": "Visheshanam (the adjective)",
+      "label": "degree: intensifying an adjective",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01",
+        "A1-NG2-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "valare ('very') is not taught, and neither is any other degree word. The track teaches five adjectives and no way to grade any of them, so 'good' cannot become 'very good'. Three Spanish points land on this one gap."
+    },
+    {
+      "id": "ML-A1-ADJ-06",
+      "category": "Visheshanam (the adjective)",
+      "label": "age as a quality: old and new of a thing",
+      "probe": [
+        "ML-LEX-C42-ADJ-04",
+        "ML-LEX-C42-ADJ-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "puthiya and pazhaya are taught, and the lesson is explicit that pazhaya is used of a thing and not of a person. Age of a PERSON is ML-A1-TIME-08."
+    },
+    {
+      "id": "ML-A1-ART-01",
+      "category": "Nirdeshakam (definiteness, and the article Malayalam does not have)",
+      "label": "Malayalam has no definite article: a bare noun is definite or indefinite by context",
+      "probe": [
+        "ML-LEX-C41-DEIXIS-01",
+        "ML-LEX-C41-DEIXIS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "The Spanish question is 'how does a learner mark definiteness'. Malayalam's answer is that it does not mark it at all, and reaches for ith/ath when it must. Restated around the Malayalam machinery."
+    },
+    {
+      "id": "ML-A1-ART-02",
+      "category": "Nirdeshakam (definiteness, and the article Malayalam does not have)",
+      "label": "the indefinite: oru before a noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ART-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "oru ('a, one') is never taught, although onnu ('one') is. That is a one-word lesson which would let every noun in chapters 46 to 66 be asked for singly."
+    },
+    {
+      "id": "ML-A1-ART-03",
+      "category": "Nirdeshakam (definiteness, and the article Malayalam does not have)",
+      "label": "no article contractions exist, because there is no article to contract",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ART-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Recorded so the walk is total. Nothing in Malayalam corresponds and nothing needs teaching; the point is enumerated rather than dropped because a reader comparing the two inventories should see it answered."
+    },
+    {
+      "id": "ML-A1-DEM-01",
+      "category": "Chuttezhuttu (demonstratives and deixis)",
+      "label": "the i- / a- / e- system: this, that, and the question word, built on one pattern",
+      "probe": [
+        "ML-GRAMMAR-C41-DEIXIS-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam does in one three-way prefix what Spanish does with este/ese/aquel plus separate interrogatives: i- is near, a- is far, e- asks. ML-C41-deixis-system teaches the pattern itself, which is why one point carries two Spanish ones."
+    },
+    {
+      "id": "ML-A1-DEM-02",
+      "category": "Chuttezhuttu (demonstratives and deixis)",
+      "label": "ith and ath: this one and that one",
+      "probe": [
+        "ML-LEX-C41-DEIXIS-01",
+        "ML-LEX-C41-DEIXIS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-DEM-03",
+      "category": "Chuttezhuttu (demonstratives and deixis)",
+      "label": "ivide and avide: here and there",
+      "probe": [
+        "ML-LEX-C41-DEIXIS-03",
+        "ML-LEX-C41-DEIXIS-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Spanish needs three (aqui, ahi, alli); Malayalam's taught set is two, and the third degree is not taught."
+    },
+    {
+      "id": "ML-A1-DEM-04",
+      "category": "Chuttezhuttu (demonstratives and deixis)",
+      "label": "position: the demonstrative stands before its noun and cannot follow it",
+      "probe": [
+        "ML-GRAMMAR-C41-DEIXIS-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-PRON-01",
+      "category": "Sarvanaamam (pronouns)",
+      "label": "first person: njaan, and the fact that Malayalam cannot drop it",
+      "probe": [
+        "ML-LEX-NJAAN-01",
+        "ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "The point where Malayalam and Spanish are exact opposites, and the corpus says so: Spanish drops yo because the verb carries the person, Malayalam must keep njaan because the verb carries nothing."
+    },
+    {
+      "id": "ML-A1-PRON-02",
+      "category": "Sarvanaamam (pronouns)",
+      "label": "second person: nii and ningal, and the respect the plural carries",
+      "probe": [
+        "ML-LEX-NII-NINGAL-01",
+        "ML-CONCEPT-C02-RESPECT-BY-PLURAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "The tu/usted question, answered with Malayalam's own machinery: respect is the plural, not a separate word."
+    },
+    {
+      "id": "ML-A1-PRON-03",
+      "category": "Sarvanaamam (pronouns)",
+      "label": "third person: avan, aval, athu -- he, she, it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught. The i-/a- deixis lesson gives ith and ath for THINGS, and aar ('who') for asking, but no third-person pronoun for a PERSON exists anywhere in the corpus. So a learner can say 'I' and 'you' and cannot say 'he' -- which also blocks every reported statement."
+    },
+    {
+      "id": "ML-A1-PRON-04",
+      "category": "Sarvanaamam (pronouns)",
+      "label": "first and second person plural: njangal, naam, ningal",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Only ningal is taught, and it is taught as respectful singular rather than as a plural. No word for 'we' exists, which is a large hole for a level whose functions include invitations and proposals."
+    },
+    {
+      "id": "ML-A1-PRON-05",
+      "category": "Sarvanaamam (pronouns)",
+      "label": "the dative subject: enikku, where the experiencer is not the subject",
+      "probe": [
+        "ML-CONCEPT-C06-DATIVE-SUBJECT-01",
+        "ML-CONCEPT-C06-DATIVE-SUBJECT-02",
+        "ML-CONCEPT-C06-DATIVE-SUBJECT-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-01",
+        "A1-SV-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam's answer to gustar, and a deeper one: knowing, liking and being hungry all happen TO you, so the person takes -ikku and the thing is the subject. Three Spanish points about indirect objects and gustar land here because this one construction is how Malayalam carries all of them."
+    },
+    {
+      "id": "ML-A1-PRON-06",
+      "category": "Sarvanaamam (pronouns)",
+      "label": "interrogative pronouns: entu, aar",
+      "probe": [
+        "ML-LEX-ENTU-01",
+        "ML-LEX-C41-DEIXIS-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-PRON-07",
+      "category": "Sarvanaamam (pronouns)",
+      "label": "reflexive: doing something to oneself",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "No reflexive is taught. Malayalam uses thanne and a self-word; neither appears."
+    },
+    {
+      "id": "ML-A1-PRON-08",
+      "category": "Sarvanaamam (pronouns)",
+      "label": "the relative participle, which is Malayalam's answer to relative que",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05",
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "UNTAUGHT, AND STRUCTURALLY THE BIGGEST GAP IN THIS FILE. Malayalam does not join with a relative pronoun at all: it turns the verb into a participle and puts the whole clause in front of the noun. Nothing in 292 lessons teaches it, so a learner cannot say 'the man who came'. Three Spanish points depend on it and all three are open."
+    },
+    {
+      "id": "ML-A1-PRON-09",
+      "category": "Sarvanaamam (pronouns)",
+      "label": "exclamative: how good!, what a thing!",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught. enthoru and the exclamative use of the e- series are both absent."
+    },
+    {
+      "id": "ML-A1-POS-01",
+      "category": "Sambandham (possession)",
+      "label": "the genitive: enre, 'my'",
+      "probe": [
+        "ML-LEX-ENRE-01",
+        "ML-PHRASE-C02-MY-NAME-IS-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Taught as one word in chapter 2 rather than as a suffix, which is enough to say 'my name' and not enough to build a second possessor."
+    },
+    {
+      "id": "ML-A1-POS-02",
+      "category": "Sambandham (possession)",
+      "label": "the genitive suffix itself: -nre / -ude on any noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-03",
+        "A1-SN-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "enre and ninre are both taught whole, and the suffix inside them is never named. So the learner owns two possessives and cannot make a third -- 'the teacher's book' is out of reach although both nouns are taught."
+    },
+    {
+      "id": "ML-A1-POS-03",
+      "category": "Sambandham (possession)",
+      "label": "possession of a thing: 'I have', built with the dative and undu",
+      "probe": [
+        "ML-CONCEPT-C32-UNDU-01",
+        "ML-CONCEPT-C06-DATIVE-IKKU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-POS-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam has no verb 'to have': undu plus a dative person is the whole construction, and both halves are taught. Restated around the Malayalam machinery."
+    },
+    {
+      "id": "ML-A1-NUM-01",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "cardinals one to five",
+      "probe": [
+        "ML-CONCEPT-C07-NUMBERS-1-5-01",
+        "ML-CONCEPT-C07-NUMBERS-1-5-02",
+        "ML-CONCEPT-C07-NUMBERS-1-5-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-NUM-02",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "cardinals six to ten",
+      "probe": [
+        "ML-CONCEPT-C07-NUMBERS-6-10-01",
+        "ML-CONCEPT-C07-NUMBERS-6-10-02",
+        "ML-CONCEPT-C07-NUMBERS-6-10-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-NUM-03",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "cardinals eleven to twenty, and the additive pattern behind them",
+      "probe": [
+        "ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01",
+        "ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "The lesson teaches the pattern, not only the ten words, which is what makes it carry the general notion of number as well."
+    },
+    {
+      "id": "ML-A1-NUM-04",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "counting past twenty, and the hundreds",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "The count stops at twenty. Prices, ages over twenty and years are all out of reach."
+    },
+    {
+      "id": "ML-A1-NUM-05",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "ordinals: first, second, third",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "No ordinal is taught, so neither the ordering notion nor 'the first street on the left' is available."
+    },
+    {
+      "id": "ML-A1-NUM-06",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "relative quantity: more, less, a little",
+      "probe": [
+        "ML-LEX-C58-ANSWER-01",
+        "ML-LEX-C58-ANSWER-02",
+        "ML-LEX-C58-ANSWER-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-ADV-03",
+        "A1-NG2-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "koodutal, kuravu and kurachu are chapter 58, and they answer the quantity question as short replies rather than as modifiers."
+    },
+    {
+      "id": "ML-A1-NUM-07",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "sufficiency: enough, that will do, no need",
+      "probe": [
+        "ML-LEX-C49-REPLY-02",
+        "ML-LEX-C58-ANSWER-04",
+        "ML-LEX-C58-ANSWER-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-Q-04",
+        "A1-NG6-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "mathi, venda and athu mathi. A genuinely Malayalam cluster: the language answers 'do you want more?' with a single word far more often than Spanish does."
+    },
+    {
+      "id": "ML-A1-NUM-08",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "valiya and cheriya give size as a quality. No unit of measure, no word for distance or weight, is taught."
+    },
+    {
+      "id": "ML-A1-NUM-09",
+      "category": "Sankhya (numerals and quantity)",
+      "label": "the Malayalam numerals as written signs",
+      "probe": [
+        "ML-SCRIPT-DIGITS-1-3-07",
+        "ML-SCRIPT-DIGITS-4-5-07",
+        "ML-SCRIPT-DIGITS-6-8-07",
+        "ML-SCRIPT-DIGITS-9-10-07"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE16-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Chapter 7's writing lessons teach the indigenous digit shapes, which the printed language now mostly replaces with the international ones -- but the track teaches them and they are enumerated here as taught."
+    },
+    {
+      "id": "ML-A1-CASE-01",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "the dative -ikku: to, for, and the person something happens to",
+      "probe": [
+        "ML-CONCEPT-C06-DATIVE-IKKU-01",
+        "ML-CONCEPT-C06-DATIVE-IKKU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SV-05",
+        "A1-PRON-08"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam's most load-bearing suffix, and the corpus teaches the stacking idea with it. Spanish carries the same load with a plus a stressed pronoun."
+    },
+    {
+      "id": "ML-A1-CASE-02",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "the locative -il: in, at",
+      "probe": [
+        "ML-CONCEPT-C05-POSTPOSITION-IL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01",
+        "A1-SV-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "Taught inside taamasikkuka, which is where a learner first needs it: 'I live IN somewhere'."
+    },
+    {
+      "id": "ML-A1-CASE-03",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "case suffixes stack onto the noun rather than standing in front of it",
+      "probe": [
+        "ML-CONCEPT-C06-DATIVE-IKKU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "The typological fact a Spanish speaker most needs told: Malayalam glues where Spanish puts a separate word in front."
+    },
+    {
+      "id": "ML-A1-CASE-04",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "the accusative -e, and marking a human object",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SV-04",
+        "A1-PRON-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught. Spanish marks a human direct object with a and can replace it with an unstressed clitic; Malayalam has no clitic object pronoun at all -- the object stays a full noun and takes -e. Neither the suffix nor the animacy rule appears anywhere, so both Spanish points are open on one missing suffix."
+    },
+    {
+      "id": "ML-A1-CASE-05",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "the instrumental and sociative: with, by means of",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG1-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Neither -aal nor oppam is taught, so 'with a friend' and 'by bus' are both out of reach although suhruthu is taught."
+    },
+    {
+      "id": "ML-A1-CASE-06",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "the ablative -il ninnu: from a place",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG3-05",
+        "A1-NG3-07"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught. Combined with the missing place names at ML-A1-N-02, 'where are you from' cannot be answered at all."
+    },
+    {
+      "id": "ML-A1-CASE-07",
+      "category": "Vibhakti (case endings and postpositions)",
+      "label": "spatial postpositions: on, under, behind, in front of",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "None of mukalil, thaazhe, pinnil or munnil is taught. The track teaches five house objects and no way to say where any of them is."
+    },
+    {
+      "id": "ML-A1-V-01",
+      "category": "Kriya (the verb)",
+      "label": "the dictionary form in -uka, which is where every verb is looked up",
+      "probe": [
+        "ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01",
+        "ML-LEX-POKUKA-VARIKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-V-12",
+        "A1-SUB-01",
+        "A1-SUB-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam's citation form, and the form the corpus consistently heads its verb lessons with. It also carries the two Spanish infinitive-clause points, because the -uka form is what fills those slots."
+    },
+    {
+      "id": "ML-A1-V-02",
+      "category": "Kriya (the verb)",
+      "label": "the verb never agrees with its subject, in any person or number",
+      "probe": [
+        "ML-CONCEPT-C05-VERB-NEVER-AGREES-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-SN-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "The single largest simplification Malayalam offers, and the reason the pronoun cannot be dropped. Where Spanish spends fourteen verb points on paradigms, Malayalam spends one point saying there is no paradigm."
+    },
+    {
+      "id": "ML-A1-V-03",
+      "category": "Kriya (the verb)",
+      "label": "the present tense, one ending for everybody",
+      "probe": [
+        "ML-CONCEPT-C32-POKUKA-01",
+        "ML-PHRASE-C05-I-SPEAK-MALAYALAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "pokuka's lesson is explicit that each of the three tense endings IS the entire conjugation."
+    },
+    {
+      "id": "ML-A1-V-04",
+      "category": "Kriya (the verb)",
+      "label": "the past tense, and the one place a Malayalam verb can still surprise you",
+      "probe": [
+        "ML-CONCEPT-C32-VARUKA-01",
+        "ML-CONCEPT-C32-VARUKA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08"
+      ],
+      "malayalamSpecific": false,
+      "note": "Four Spanish past-tense points collapse into one, because Malayalam has one past and it is regular except in the stem. varuka is where the corpus teaches the irregularity."
+    },
+    {
+      "id": "ML-A1-V-05",
+      "category": "Kriya (the verb)",
+      "label": "the future tense",
+      "probe": [
+        "ML-CONCEPT-C32-POKUKA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "The third of pokuka's three endings, and the form plans and intentions are stated in."
+    },
+    {
+      "id": "ML-A1-V-06",
+      "category": "Kriya (the verb)",
+      "label": "the copula aanu: X is Y",
+      "probe": [
+        "ML-LEX-AANU-01",
+        "ML-CONCEPT-C02-COPULA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02",
+        "A1-SV-03",
+        "A1-OS-05",
+        "A1-NG1-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "Spanish spends five points on ser/estar and their attributes; Malayalam has one copula, it never agrees, and there is no second one to choose between. Five Spanish points, one Malayalam point."
+    },
+    {
+      "id": "ML-A1-V-07",
+      "category": "Kriya (the verb)",
+      "label": "undu: there is, there are, and having something",
+      "probe": [
+        "ML-CONCEPT-C32-UNDU-01",
+        "ML-CONCEPT-C32-UNDU-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam's existential, doing the work of Spanish hay and tener at once. The same lesson teaches irikkuka, 'to be somewhere', which is the locational half."
+    },
+    {
+      "id": "ML-A1-V-08",
+      "category": "Kriya (the verb)",
+      "label": "the imperative in -oo, for a direct instruction",
+      "probe": [
+        "ML-LEX-LOOK",
+        "ML-LEX-LISTEN",
+        "ML-LEX-SPEAK",
+        "ML-LEX-WRITE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-F4-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Chapters 43 and 44 teach eight imperatives as headwords -- nokku, kelkku, samsaarikku, ezhuthu -- which is the form itself taught eight times."
+    },
+    {
+      "id": "ML-A1-V-09",
+      "category": "Kriya (the verb)",
+      "label": "more imperatives: give, run, stand, sleep",
+      "probe": [
+        "ML-LEX-GIVE",
+        "ML-LEX-RUN",
+        "ML-LEX-STAND",
+        "ML-LEX-SLEEP"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-V-11",
+        "A1-NE01-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "The other four, and the ones that also carry the Spanish point about actions and positions of the body."
+    },
+    {
+      "id": "ML-A1-V-10",
+      "category": "Kriya (the verb)",
+      "label": "the -aam form: I'll do it, shall we, it may be",
+      "probe": [
+        "ML-CONCEPT-C04-AAM-VOLITIONAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-07",
+        "A1-NG1-05",
+        "A1-NG6-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "Taught inside the goodbye poyi varaam, and the corpus names the form. It is Malayalam's volitional-and-permissive, which is how offers, invitations and 'that would be all right' are all said."
+    },
+    {
+      "id": "ML-A1-V-11",
+      "category": "Kriya (the verb)",
+      "label": "the -anam form: should, must, please do",
+      "probe": [
+        "ML-CONCEPT-C09-KSHAMIKKANAM-01",
+        "ML-CONCEPT-C09-KSHAMIKKANAM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Taught inside kshamikkanam, 'you should forgive' -- which is how Malayalam apologises and also how it makes a softened request."
+    },
+    {
+      "id": "ML-A1-V-12",
+      "category": "Kriya (the verb)",
+      "label": "a noun plus ceyyuka, the way Malayalam makes new verbs",
+      "probe": [
+        "ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01",
+        "ML-LEX-JOLI-CEYYUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE07-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "joli ceyyuka, 'work-do'. Productive, and worth a point because it is how a learner turns any of the track's many Sanskrit nouns into something they can do."
+    },
+    {
+      "id": "ML-A1-V-13",
+      "category": "Kriya (the verb)",
+      "label": "verbs of motion: to go and to come",
+      "probe": [
+        "ML-CONCEPT-C32-POKUKA-01",
+        "ML-CONCEPT-C32-VARUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-V-14",
+      "category": "Kriya (the verb)",
+      "label": "verbs of perception: to see, to hear",
+      "probe": [
+        "ML-CONCEPT-C32-KAANUKA-01",
+        "ML-LEX-LISTEN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-V-15",
+      "category": "Kriya (the verb)",
+      "label": "verbs of the mind: to know, to think, to understand",
+      "probe": [
+        "ML-CONCEPT-C32-ARIYUKA-01",
+        "ML-CONCEPT-C33-CINTIKKUKA-01",
+        "ML-CONCEPT-C33-MANASSILAAKKUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01",
+        "A1-F2-14"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-V-16",
+      "category": "Kriya (the verb)",
+      "label": "verbs of the page: to read, to write",
+      "probe": [
+        "ML-CONCEPT-C33-VAAYIKKUKA-01",
+        "ML-CONCEPT-C33-EZHUTUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-V-17",
+      "category": "Kriya (the verb)",
+      "label": "verbs of exchange: to ask, to take, to help",
+      "probe": [
+        "ML-CONCEPT-C34-CODIKKUKA-01",
+        "ML-CONCEPT-C34-EDUKKUKA-01",
+        "ML-CONCEPT-C34-SAHAAYIKKUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-V-18",
+      "category": "Kriya (the verb)",
+      "label": "verbs of everyday living: to eat, to live somewhere, to speak",
+      "probe": [
+        "ML-CONCEPT-C32-TINNUKA-01",
+        "ML-LEX-TAAMASIKKUKA-01",
+        "ML-LEX-SAMSAARIKKUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-V-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-V-19",
+      "category": "Kriya (the verb)",
+      "label": "the present perfect: I have done it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-V-09",
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught. Malayalam builds it with the past participle plus undu, and neither the participle nor the construction appears -- so three Spanish points about participles and the perfect are open together."
+    },
+    {
+      "id": "ML-A1-V-20",
+      "category": "Kriya (the verb)",
+      "label": "the progressive: I am doing it right now",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-V-13"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught. The -kkunnu form is used inside ML-C05's sentence but never named as a form, and there is no gerund lesson."
+    },
+    {
+      "id": "ML-A1-V-21",
+      "category": "Kriya (the verb)",
+      "label": "the habitual past: I used to do it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-V-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught, and correctly low priority: Malayalam has no separate imperfect, so the Spanish distinction has no Malayalam form to land on. Recorded because the SENSE still has to be sayable at A1."
+    },
+    {
+      "id": "ML-A1-V-22",
+      "category": "Kriya (the verb)",
+      "label": "ability: I can do it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09"
+      ],
+      "malayalamSpecific": false,
+      "note": "kazhiyum and the -aan kazhiyum frame are not taught. Three Spanish points about ability and competence are open on one missing form."
+    },
+    {
+      "id": "ML-A1-V-23",
+      "category": "Kriya (the verb)",
+      "label": "wanting: I want",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F3-03",
+        "A1-F3-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "venam ('want, need') is not taught, although venda ('no need') is -- so the learner can refuse and cannot ask. That asymmetry is the single cheapest fix in this file."
+    },
+    {
+      "id": "ML-A1-NEG-01",
+      "category": "Nishedham (negation)",
+      "label": "illa: the existential negative, and the everyday 'no'",
+      "probe": [
+        "ML-LEX-ILLA-01",
+        "ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05",
+        "A1-OS-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam's first negative and the one a beginner needs most."
+    },
+    {
+      "id": "ML-A1-NEG-02",
+      "category": "Nishedham (negation)",
+      "label": "alla: negating an identity rather than an existence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam splits its negation two ways -- illa denies that something IS THERE, alla denies that something IS SO. Only illa is taught, so 'I am not a teacher' cannot be said."
+    },
+    {
+      "id": "ML-A1-NEG-03",
+      "category": "Nishedham (negation)",
+      "label": "negative coordination: neither this nor that",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Untaught, and it depends on the missing coordinator at ML-A1-JOIN-01."
+    },
+    {
+      "id": "ML-A1-NEG-04",
+      "category": "Nishedham (negation)",
+      "label": "refusing: no need, no thank you",
+      "probe": [
+        "ML-LEX-C58-ANSWER-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-09",
+        "A1-F4-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "venda, chapter 58. It is the polite refusal and the refusal of permission at once, which is how Malayalam actually works."
+    },
+    {
+      "id": "ML-A1-NEG-05",
+      "category": "Nishedham (negation)",
+      "label": "it does not matter, never mind",
+      "probe": [
+        "ML-LEX-SAARAMILLA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "saaramilla, which is both the reply to an apology and Malayalam's 'you're welcome'."
+    },
+    {
+      "id": "ML-A1-Q-01",
+      "category": "Chodyam (asking questions)",
+      "label": "the yes-or-no question particle -o, added to the end",
+      "probe": [
+        "ML-CONCEPT-C03-QUESTION-PARTICLE-O-01",
+        "ML-PHRASE-C03-ARE-YOU-WELL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam asks by adding one syllable and changing nothing else -- no inversion, no auxiliary. Worth a point of its own because it is so much cheaper than the Spanish machinery it replaces."
+    },
+    {
+      "id": "ML-A1-Q-02",
+      "category": "Chodyam (asking questions)",
+      "label": "entu: what",
+      "probe": [
+        "ML-LEX-ENTU-01",
+        "ML-PHRASE-C02-WHATS-YOUR-NAME-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-OS-03",
+        "A1-F1-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-Q-03",
+      "category": "Chodyam (asking questions)",
+      "label": "aar: who",
+      "probe": [
+        "ML-LEX-C41-DEIXIS-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-Q-04",
+      "category": "Chodyam (asking questions)",
+      "label": "evide: where",
+      "probe": [
+        "ML-LEX-C41-DEIXIS-06"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-Q-05",
+      "category": "Chodyam (asking questions)",
+      "label": "engane: how",
+      "probe": [
+        "ML-LEX-ENGANE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-Q-06",
+      "category": "Chodyam (asking questions)",
+      "label": "eppol: when",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught. The e- deixis lesson gives the pattern that would predict it, and the word itself never arrives -- so a learner who owns the days of the week cannot ask which one."
+    },
+    {
+      "id": "ML-A1-Q-07",
+      "category": "Chodyam (asking questions)",
+      "label": "enthukondu: why",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08",
+        "A1-SUB-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "Neither the question word nor the because-word is taught, so cause cannot be asked about or given. See ML-A1-JOIN-05."
+    },
+    {
+      "id": "ML-A1-Q-08",
+      "category": "Chodyam (asking questions)",
+      "label": "ethra: how much, how many",
+      "probe": [
+        "ML-CONCEPT-C19-VAYASSU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG2-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Taught inside the age question, which is the one place a beginner needs a quantity word."
+    },
+    {
+      "id": "ML-A1-Q-09",
+      "category": "Chodyam (asking questions)",
+      "label": "asking for confirmation: a tag question",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "alle is not taught. The -o particle asks a genuine question; a tag question invites agreement, and Malayalam has a separate form for it."
+    },
+    {
+      "id": "ML-A1-Q-10",
+      "category": "Chodyam (asking questions)",
+      "label": "confirming or denying what was just said",
+      "probe": [
+        "ML-LEX-ATHE-01",
+        "ML-LEX-ILLA-01",
+        "ML-LEX-SARI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F1-05",
+        "A1-F2-06",
+        "A1-NG6-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "athe, illa and sari. The corpus teaches all three in chapter 1, which is why agreement and conformity are covered this early."
+    },
+    {
+      "id": "ML-A1-ADV-01",
+      "category": "Kriyaavisheshanam (adverbs)",
+      "label": "place: here and there",
+      "probe": [
+        "ML-LEX-C41-DEIXIS-03",
+        "ML-LEX-C41-DEIXIS-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-ADV-02",
+      "category": "Kriyaavisheshanam (adverbs)",
+      "label": "time: now, and the day after tomorrow",
+      "probe": [
+        "ML-LEX-C50-LEAVE-01",
+        "ML-LEX-C50-LEAVE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "ippol and matrannaal. 'Today' and 'yesterday' are not taught -- see ML-A1-TIME-05."
+    },
+    {
+      "id": "ML-A1-ADV-03",
+      "category": "Kriyaavisheshanam (adverbs)",
+      "label": "manner: that way, just so",
+      "probe": [
+        "ML-LEX-C49-REPLY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "angane. bhangiyaayi ('well') and mosham ('badly') are not taught, so manner is answerable and not describable."
+    },
+    {
+      "id": "ML-A1-ADV-04",
+      "category": "Kriyaavisheshanam (adverbs)",
+      "label": "polarity: yes and no as one-word answers",
+      "probe": [
+        "ML-LEX-ATHE-01",
+        "ML-LEX-ILLA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-ADV-05",
+      "category": "Kriyaavisheshanam (adverbs)",
+      "label": "sequence: then, soon, sometimes",
+      "probe": [
+        "ML-LEX-C64-SMALL-01",
+        "ML-LEX-C64-SMALL-02",
+        "ML-LEX-C64-SMALL-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03",
+        "A1-NG3-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "pinne, udane, chilappol -- chapter 64. These order EVENTS across turns; they do not join clauses, which is the distinction ML-A1-JOIN-01 turns on."
+    },
+    {
+      "id": "ML-A1-ADV-06",
+      "category": "Kriyaavisheshanam (adverbs)",
+      "label": "restriction: only, that much and no more",
+      "probe": [
+        "ML-LEX-C64-SMALL-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "maathram. tambien and tampoco have no taught Malayalam counterpart -- kooti is not taught -- so this point carries the restrictive half only."
+    },
+    {
+      "id": "ML-A1-ADV-07",
+      "category": "Kriyaavisheshanam (adverbs)",
+      "label": "certainty and doubt as adverbs: certainly, perhaps",
+      "probe": [
+        "ML-LEX-C49-REPLY-03",
+        "ML-LEX-C49-REPLY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG1-05",
+        "A1-F2-10",
+        "A1-F2-12"
+      ],
+      "malayalamSpecific": false,
+      "note": "theerchayaayum and orupakshe. Chapter 49 gives Malayalam a modal vocabulary before it has any modal verbs, which is an unusual shape and worth recording."
+    },
+    {
+      "id": "ML-A1-ADV-08",
+      "category": "Kriyaavisheshanam (adverbs)",
+      "label": "degree: very, quite, a bit",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "valare is not taught. Same gap as ML-A1-ADJ-05, from the adverb's side."
+    },
+    {
+      "id": "ML-A1-ADV-09",
+      "category": "Kriyaavisheshanam (adverbs)",
+      "label": "near and far, and how far away something is",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "aduthu and akale are not taught. ivide and avide give a two-way here/there and no way to say that something is FAR, so distance can be pointed at and not measured."
+    },
+    {
+      "id": "ML-A1-S-01",
+      "category": "Vaakyam (the sentence)",
+      "label": "subject-object-verb: the verb comes last",
+      "probe": [
+        "ML-PHRASE-C05-I-SPEAK-MALAYALAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SV-06",
+        "A1-OS-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "njaan malayaalam samsaarikkunnu, and the word order it demonstrates. The reverse of Spanish, and the first thing a learner has to re-wire."
+    },
+    {
+      "id": "ML-A1-S-02",
+      "category": "Vaakyam (the sentence)",
+      "label": "the copular sentence: X aanu Y",
+      "probe": [
+        "ML-LEX-AANU-01",
+        "ML-PHRASE-C02-MY-NAME-IS-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-OS-05",
+        "A1-SV-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-S-03",
+      "category": "Vaakyam (the sentence)",
+      "label": "the existential sentence: undu with no subject at all",
+      "probe": [
+        "ML-CONCEPT-C32-UNDU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-OS-04"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-S-04",
+      "category": "Vaakyam (the sentence)",
+      "label": "the dative-subject sentence, where the person is not the grammatical subject",
+      "probe": [
+        "ML-CONCEPT-C06-DATIVE-SUBJECT-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SV-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "enikku malayaalam ariyaam. The sentence type Spanish reaches with gustar, and Malayalam uses for knowing, liking, wanting and every bodily state."
+    },
+    {
+      "id": "ML-A1-S-05",
+      "category": "Vaakyam (the sentence)",
+      "label": "the declarative, affirmative and negative",
+      "probe": [
+        "ML-PHRASE-C05-I-SPEAK-MALAYALAM-01",
+        "ML-LEX-ILLA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-S-06",
+      "category": "Vaakyam (the sentence)",
+      "label": "the yes-or-no question, and the wh-question",
+      "probe": [
+        "ML-CONCEPT-C03-QUESTION-PARTICLE-O-01",
+        "ML-LEX-ENTU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-OS-02",
+        "A1-OS-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-S-07",
+      "category": "Vaakyam (the sentence)",
+      "label": "the vocative: calling somebody by name or role",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SN-04",
+        "A1-F5-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "No vocative particle and no term of address is taught. chettaa, chechi and the -e vocative are all absent, so a learner cannot open a conversation by addressing anyone."
+    },
+    {
+      "id": "ML-A1-S-08",
+      "category": "Vaakyam (the sentence)",
+      "label": "the noun phrase: adjective plus noun, and nothing else",
+      "probe": [
+        "ML-GRAMMAR-C42-ADJ-SYSTEM",
+        "ML-GRAMMAR-C41-DEIXIS-SYSTEM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SN-01",
+        "A1-SN-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Adjective and demonstrative both precede, both invariable. The de-phrase and the relative clause, which the Spanish point also names, are ML-A1-POS-02 and ML-A1-PRON-08 and both are open."
+    },
+    {
+      "id": "ML-A1-JOIN-01",
+      "category": "Samuchayam (joining and subordination)",
+      "label": "and: joining two nouns, and joining two clauses",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "EMPTY, AND THIS IS THE HEADLINE FINDING. Malayalam's 'and' is the clitic -um, repeated on each item. It is not taught anywhere in 292 lessons. A learner who owns 66 chapters of vocabulary -- five body parts, five animals, five kitchen words -- cannot say 'rice and water'."
+    },
+    {
+      "id": "ML-A1-JOIN-02",
+      "category": "Samuchayam (joining and subordination)",
+      "label": "or: offering two alternatives",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-CO-03",
+        "A1-F3-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "athava and allengil are both absent. So the Spanish function 'ask about a preference by offering alternatives' has no form to be asked in."
+    },
+    {
+      "id": "ML-A1-JOIN-03",
+      "category": "Samuchayam (joining and subordination)",
+      "label": "but: setting one thing against another",
+      "probe": [
+        "ML-LEX-C64-SMALL-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ],
+      "malayalamSpecific": false,
+      "note": "ennaal, chapter 64 -- the ONE point in this column that is covered, and the only clause connective the track teaches. It also carries the Spanish function 'offer a counter-argument with pero'."
+    },
+    {
+      "id": "ML-A1-JOIN-04",
+      "category": "Samuchayam (joining and subordination)",
+      "label": "distributive: one thing, then the other",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "Untaught, and dependent on the missing coordinator."
+    },
+    {
+      "id": "ML-A1-JOIN-05",
+      "category": "Samuchayam (joining and subordination)",
+      "label": "because: giving a reason",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "enthukondennaal and kaaranam are both absent. Combined with the missing 'why' at ML-A1-Q-07, cause cannot be asked for or supplied in either direction."
+    },
+    {
+      "id": "ML-A1-JOIN-06",
+      "category": "Samuchayam (joining and subordination)",
+      "label": "that-clauses: saying what somebody said or thinks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03",
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "malayalamSpecific": false,
+      "note": "The quotative ennu is Malayalam's single most productive subordinator -- it turns any sentence into the object of 'say', 'think', 'know' or 'ask'. It is not taught. The track teaches cintikkuka, ariyuka and codikkuka and gives none of them anything to take as an object."
+    },
+    {
+      "id": "ML-A1-JOIN-07",
+      "category": "Samuchayam (joining and subordination)",
+      "label": "when: locating one event against another",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "malayalamSpecific": false,
+      "note": "The -mbol form is not taught, and neither is the question word eppol."
+    },
+    {
+      "id": "ML-A1-JOIN-08",
+      "category": "Samuchayam (joining and subordination)",
+      "label": "if: the conditional clause",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "malayalamSpecific": false,
+      "note": "The -aal conditional is not taught. Recorded separately from 'when' because Malayalam builds them with different suffixes."
+    },
+    {
+      "id": "ML-A1-JOIN-09",
+      "category": "Samuchayam (joining and subordination)",
+      "label": "in order to: purpose",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "malayalamSpecific": false,
+      "note": "The -aan purpose form is not taught, which also blocks the ability frame at ML-A1-V-22 -- both are built on it."
+    },
+    {
+      "id": "ML-A1-JOIN-10",
+      "category": "Samuchayam (joining and subordination)",
+      "label": "the relative participle: joining a clause to a noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "See ML-A1-PRON-08. Enumerated here as well because the Spanish inventory files it under subordination and this file must answer both."
+    },
+    {
+      "id": "ML-A1-JOIN-11",
+      "category": "Samuchayam (joining and subordination)",
+      "label": "the -i participle: doing one thing and then the next",
+      "probe": [
+        "ML-CONCEPT-C04-AAM-VOLITIONAL-01",
+        "ML-PHRASE-C04-POYI-VARAAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "poyi varaam -- 'having gone, I'll come'. Malayalam's real everyday clause-joiner IS this participle, and the corpus teaches it once, inside the goodbye, without naming it. That is the closest the track comes to teaching clause-joining, and it is why this column reads 2 of 11 rather than 1."
+    },
+    {
+      "id": "ML-A1-TIME-01",
+      "category": "Kaalavum theeyathiyum (time and date)",
+      "label": "the days of the week",
+      "probe": [
+        "ML-CONCEPT-C10-AZHCHA-01",
+        "ML-CONCEPT-C10-AZHCHA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-TIME-02",
+      "category": "Kaalavum theeyathiyum (time and date)",
+      "label": "the months of the Kollam Era calendar",
+      "probe": [
+        "ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01",
+        "ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "The track teaches the Malayalam solar calendar rather than the Gregorian months, which is a deliberate editorial choice and a genuine one -- but it means a learner cannot name the month on a form."
+    },
+    {
+      "id": "ML-A1-TIME-03",
+      "category": "Kaalavum theeyathiyum (time and date)",
+      "label": "the seasons",
+      "probe": [
+        "ML-CONCEPT-C14-KAALANGAL-01",
+        "ML-CONCEPT-C14-KAALANGAL-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-TIME-04",
+      "category": "Kaalavum theeyathiyum (time and date)",
+      "label": "the parts of the day: morning, noon, afternoon, evening, night, midnight",
+      "probe": [
+        "ML-CONCEPT-C26-RAAVILE-01",
+        "ML-CONCEPT-C17-UCHA-PAATHIRA-01",
+        "ML-CONCEPT-C28-UCHAKAZHINJU-01",
+        "ML-CONCEPT-C27-VAIKUNNERAM-01",
+        "ML-CONCEPT-C24-RATHRI-01",
+        "ML-CONCEPT-C17-PAATHIRA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Six words across six chapters, which is unusually complete: this is the track's strongest column."
+    },
+    {
+      "id": "ML-A1-TIME-05",
+      "category": "Kaalavum theeyathiyum (time and date)",
+      "label": "today, yesterday, tomorrow",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02",
+        "A1-NG4-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "innu and innale are NOT taught. naale ('tomorrow') appears only inside the fixed farewell naale kaanaam and is never taught as a word, so the learner has one third of the set and cannot use it apart from that phrase."
+    },
+    {
+      "id": "ML-A1-TIME-06",
+      "category": "Kaalavum theeyathiyum (time and date)",
+      "label": "telling the clock time",
+      "probe": [
+        "ML-CONCEPT-C18-MANI-01",
+        "ML-CONCEPT-C18-MANI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "mani plus a number, and the numbers reach twenty, so every hour is sayable."
+    },
+    {
+      "id": "ML-A1-TIME-07",
+      "category": "Kaalavum theeyathiyum (time and date)",
+      "label": "the day itself: divasam, and the native naal beside it",
+      "probe": [
+        "ML-CONCEPT-C23-DIVASAM-01",
+        "ML-CONCEPT-C23-NAAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-TIME-08",
+      "category": "Kaalavum theeyathiyum (time and date)",
+      "label": "asking and giving an age",
+      "probe": [
+        "ML-CONCEPT-C19-VAYASSU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NG5-04",
+        "A1-NE03-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "ningalkku ethra vayassundu -- a dative subject plus the existential, which is a genuinely different shape from Spanish tener. The numbers stop at twenty, so an adult cannot answer it."
+    },
+    {
+      "id": "ML-A1-TIME-09",
+      "category": "Kaalavum theeyathiyum (time and date)",
+      "label": "anteriority and posteriority: before and after",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "munpu and shesham are not taught. pinne ('then') is the nearest and it sequences turns rather than events."
+    },
+    {
+      "id": "ML-A1-TIME-10",
+      "category": "Kaalavum theeyathiyum (time and date)",
+      "label": "locating an event in time: it is on Monday, it is at three",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "Requires the locative on a time word, which is not taught. The parts are all present -- days, hours, the -il suffix -- and are never assembled."
+    },
+    {
+      "id": "ML-A1-F-01",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "greet, in the way that works at any hour",
+      "probe": [
+        "ML-LEX-NAMASKARAM-01",
+        "ML-ETYMON-NAMASKARAM-BOW-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F6-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-02",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "greet by the time of day: good morning, good evening, good night, good afternoon",
+      "probe": [
+        "ML-CONCEPT-C29-SUPRABHAATHAM-01",
+        "ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-01",
+        "ML-CONCEPT-C25-SHUBHA-RATHRI-01",
+        "ML-CONCEPT-C31-SHUBHA-MADHYAAHNAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Four chapters, four formal Sanskrit-tatsama greetings. Their register is the subject of ML-A1-REG-01."
+    },
+    {
+      "id": "ML-A1-F-03",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "respond to a greeting",
+      "probe": [
+        "ML-LEX-SUKHAM-01",
+        "ML-PHRASE-C03-ARE-YOU-WELL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-02",
+        "A1-F6-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-04",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "introduce oneself by name",
+      "probe": [
+        "ML-PHRASE-C02-MY-NAME-IS-01",
+        "ML-LEX-PERU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-04",
+        "A1-F1-01",
+        "A1-F1-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-05",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "ask somebody their name",
+      "probe": [
+        "ML-PHRASE-C02-WHATS-YOUR-NAME-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-06",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "respond to an introduction",
+      "probe": [
+        "ML-LEX-SANTOSHAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "santosham, 'joy' -- which is the whole reply."
+    },
+    {
+      "id": "ML-A1-F-07",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "ask how somebody is",
+      "probe": [
+        "ML-PHRASE-C03-ARE-YOU-WELL-01",
+        "ML-CONCEPT-C03-QUESTION-PARTICLE-O-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F6-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-08",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "thank",
+      "probe": [
+        "ML-LEX-NANDI-01",
+        "ML-ETYMON-NANDI-NAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-09",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "thank in the fuller register: gratitude, a favour, a blessing",
+      "probe": [
+        "ML-LEX-C51-COURTESY-01",
+        "ML-LEX-C51-COURTESY-02",
+        "ML-LEX-C51-COURTESY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "malayalamSpecific": false,
+      "note": "Chapter 51 gives the noun vocabulary around thanking, which is how Malayalam says more than nandi."
+    },
+    {
+      "id": "ML-A1-F-10",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "reply to thanks",
+      "probe": [
+        "ML-LEX-SAARAMILLA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-11",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "apologise",
+      "probe": [
+        "ML-CONCEPT-C09-KSHAMIKKANAM-01",
+        "ML-CONCEPT-C09-KSHAMIKKANAM-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-12",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "say please, and soften a request",
+      "probe": [
+        "ML-CONCEPT-C08-DAYAVAYI-01",
+        "ML-CONCEPT-C08-DAYAVAYI-02",
+        "ML-CONCEPT-C08-DAYAVAYI-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-13",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "give an order or instruction",
+      "probe": [
+        "ML-LEX-LOOK",
+        "ML-LEX-LISTEN",
+        "ML-LEX-GIVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-14",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "ask for help",
+      "probe": [
+        "ML-CONCEPT-C34-SAHAAYIKKUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "The verb is taught; the request frame that would turn it into 'can you help me' is not -- see ML-A1-V-22."
+    },
+    {
+      "id": "ML-A1-F-15",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "respond to a request: all right, that will do",
+      "probe": [
+        "ML-LEX-SARI-01",
+        "ML-LEX-C58-ANSWER-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-04",
+        "A1-NG6-06"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-16",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "ask for permission, and grant or refuse it",
+      "probe": [
+        "ML-LEX-C65-ASK-02",
+        "ML-LEX-C65-ASK-03",
+        "ML-LEX-C58-ANSWER-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "anuvaadam, sammatam and venda. Chapter 65 gives the nouns; the verb form that asks for permission is the missing -aamo, so this is covered as vocabulary and not as a frame."
+    },
+    {
+      "id": "ML-A1-F-17",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "make a request politely, and name what a request is",
+      "probe": [
+        "ML-LEX-C65-ASK-01",
+        "ML-LEX-C65-ASK-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "apeksha and maryaada -- chapter 65 is unusual in teaching the METALANGUAGE of politeness alongside the forms."
+    },
+    {
+      "id": "ML-A1-F-18",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "take leave",
+      "probe": [
+        "ML-PHRASE-C04-POYI-VARAAM-01",
+        "ML-LEX-C50-LEAVE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-11",
+        "A1-F6-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "poyi varaam, and vida. The corpus is explicit that Malayalam does not say 'goodbye' but 'I will go and come back'."
+    },
+    {
+      "id": "ML-A1-F-19",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "arrange to meet again",
+      "probe": [
+        "ML-PHRASE-C04-NAALE-KAANAAM-01",
+        "ML-PHRASE-C04-VEENDUM-KAANAAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-20",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "say that one is setting off",
+      "probe": [
+        "ML-LEX-C50-LEAVE-04",
+        "ML-LEX-C50-LEAVE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-21",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "welcome a guest",
+      "probe": [
+        "ML-LEX-C52-WELCOME-01",
+        "ML-LEX-C52-WELCOME-02",
+        "ML-LEX-C48-ROLE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "malayalamSpecific": false,
+      "note": "vaathil, kasera and athithi. The objects and the role are taught; the invitation frame is not."
+    },
+    {
+      "id": "ML-A1-F-22",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "express agreement",
+      "probe": [
+        "ML-LEX-ATHE-01",
+        "ML-LEX-SARI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-F2-05"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-23",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "express disagreement",
+      "probe": [
+        "ML-LEX-ILLA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F2-07"
+      ],
+      "malayalamSpecific": false,
+      "note": "Covered only by the bare negative. Without alla (ML-A1-NEG-02) a learner can deny that something exists and cannot deny that something is so, which is what disagreement usually needs."
+    },
+    {
+      "id": "ML-A1-F-24",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "assert something as true, and as certain",
+      "probe": [
+        "ML-LEX-C49-REPLY-01",
+        "ML-LEX-C49-REPLY-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F2-10",
+        "A1-NG1-05"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-25",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "hedge: perhaps, I am not sure",
+      "probe": [
+        "ML-LEX-C49-REPLY-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F2-08",
+        "A1-F2-11",
+        "A1-F2-12"
+      ],
+      "malayalamSpecific": false,
+      "note": "orupakshe. 'I don't know' as a frame needs the quotative and is not sayable -- see ML-A1-JOIN-06."
+    },
+    {
+      "id": "ML-A1-F-26",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "say that one knows, or does not know, something",
+      "probe": [
+        "ML-CONCEPT-C06-DATIVE-SUBJECT-01",
+        "ML-CONCEPT-C32-ARIYUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F2-13",
+        "A1-F2-14",
+        "A1-F2-15"
+      ],
+      "malayalamSpecific": false,
+      "note": "enikku ... ariyaam is taught whole, and ariyuka is taught as a verb. Its negative ariyilla is not taught, so 'I do not know' is out of reach -- one of the three Spanish points here is only half answered and is recorded as covered because the frame and the verb both exist."
+    },
+    {
+      "id": "ML-A1-F-27",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "express what one likes",
+      "probe": [
+        "ML-CONCEPT-C34-ISHTAM-01",
+        "ML-CONCEPT-C34-ISHTAM-02",
+        "ML-CONCEPT-C34-ISHTAM-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-NG6-08"
+      ],
+      "malayalamSpecific": false,
+      "note": "enikku ... ishtamaanu. A noun plus the copula plus a dative person, which is Malayalam's gustar and is taught as a whole construction."
+    },
+    {
+      "id": "ML-A1-F-28",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "give an opinion or an evaluation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F2-01",
+        "A1-F2-02",
+        "A1-F2-03",
+        "A1-F2-04",
+        "A1-NG6-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "OPEN, AND IT IS THE QUOTATIVE AGAIN. 'I think that ...' needs ennu plus cintikkuka; both halves of the evaluation vocabulary -- nallathu, moshamaanu -- are also absent. Five Spanish functional points sit on this one gap, which makes it the single highest-value fix in the file after the coordinator."
+    },
+    {
+      "id": "ML-A1-F-29",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "show one is following: I see, right, go on",
+      "probe": [
+        "ML-LEX-SARI-01",
+        "ML-LEX-C49-REPLY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-30",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "state a plan or intention",
+      "probe": [
+        "ML-CONCEPT-C32-POKUKA-02",
+        "ML-CONCEPT-C04-AAM-VOLITIONAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "The future ending and the -aam volitional between them carry intention, though no lesson frames them as such."
+    },
+    {
+      "id": "ML-A1-F-31",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "express a wish or a preference",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F3-03",
+        "A1-F3-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "venam is not taught -- see ML-A1-V-23."
+    },
+    {
+      "id": "ML-A1-F-32",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught. The imperative set of chapters 43 and 44 does not include a quieting verb."
+    },
+    {
+      "id": "ML-A1-F-33",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "ask for a person: is X there?",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F6-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "Requires undu with a name and a question particle. Both parts are taught, the assembly is not, and there is no third-person pronoun (ML-A1-PRON-03) to refer to the person once found."
+    },
+    {
+      "id": "ML-A1-F-34",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "congratulate, toast, offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-08",
+        "A1-F5-09",
+        "A1-F5-10"
+      ],
+      "malayalamSpecific": false,
+      "note": "None of abhinandanangal, a toast formula, or a condolence formula is taught. Three Spanish social functions, one gap."
+    },
+    {
+      "id": "ML-A1-F-35",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "address somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "See ML-A1-S-07: no term of address exists in the corpus."
+    },
+    {
+      "id": "ML-A1-F-36",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "accept or decline an offer",
+      "probe": [
+        "ML-LEX-SARI-01",
+        "ML-LEX-C58-ANSWER-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F4-08",
+        "A1-F4-09"
+      ],
+      "malayalamSpecific": false,
+      "note": "sari accepts, venda declines. Both are single words, which is how Malayalam actually does it."
+    },
+    {
+      "id": "ML-A1-F-37",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "say how one feels physically",
+      "probe": [
+        "ML-LEX-C63-FEEL-01",
+        "ML-LEX-C63-FEEL-02",
+        "ML-LEX-C63-FEEL-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01",
+        "A1-NE02-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "vishappu, ksheenam and vedana -- and chapter 63's frame is the dative subject, so 'I am hungry' is enikku vishappundu."
+    },
+    {
+      "id": "ML-A1-F-38",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "greet and open a conversation at a door",
+      "probe": [
+        "ML-LEX-C52-WELCOME-01",
+        "ML-LEX-NAMASKARAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F6-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-F-39",
+      "category": "Vyavahaaram (communicative functions)",
+      "label": "express trust, respect and good manners as things one can name",
+      "probe": [
+        "ML-LEX-C65-ASK-05",
+        "ML-LEX-C51-COURTESY-03",
+        "ML-LEX-C65-ASK-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "vishvaasam, bahumaanam, maryaada. The track teaches the vocabulary of character before it teaches any character adjective."
+    },
+    {
+      "id": "ML-A1-LEX-01",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the body: head and hand",
+      "probe": [
+        "ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-02",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the face: eye, ear, nose, mouth",
+      "probe": [
+        "ML-CONCEPT-C37-KANNU-01",
+        "ML-CONCEPT-C37-CHEVI-01",
+        "ML-CONCEPT-C37-MOOKKU-01",
+        "ML-CONCEPT-C37-VAAY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-03",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the limbs: leg, tooth, hair, finger, stomach",
+      "probe": [
+        "ML-LEX-C47-BODY-01",
+        "ML-LEX-C47-BODY-02",
+        "ML-LEX-C47-BODY-03",
+        "ML-LEX-C47-BODY-04",
+        "ML-LEX-C47-BODY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-04",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the frame: neck, back, lip, nail, bone",
+      "probe": [
+        "ML-LEX-C57-FRAME-01",
+        "ML-LEX-C57-FRAME-02",
+        "ML-LEX-C57-FRAME-03",
+        "ML-LEX-C57-FRAME-04",
+        "ML-LEX-C57-FRAME-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-05",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the heart and the chest",
+      "probe": [
+        "ML-CONCEPT-C38-HRUDAYAM-01",
+        "ML-CONCEPT-C38-NENCHU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-06",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "physical characteristics of a person: tall, short, thin",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Only valiya and cheriya are taught, and they describe things. No word for a person's build or height."
+    },
+    {
+      "id": "ML-A1-LEX-07",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the immediate family: father, mother, and four age-graded siblings",
+      "probe": [
+        "ML-CONCEPT-C12-KUDUMBAM-01",
+        "ML-CONCEPT-C12-KUDUMBAM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam grades siblings by age rather than only by sex, so the six words are not the Spanish four."
+    },
+    {
+      "id": "ML-A1-LEX-08",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "children: child, son, daughter",
+      "probe": [
+        "ML-CONCEPT-C36-KUTTI-01",
+        "ML-CONCEPT-C36-MAKAN-01",
+        "ML-CONCEPT-C36-MAKAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-09",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "grandparents and the married pair",
+      "probe": [
+        "ML-LEX-GRANDFATHER",
+        "ML-LEX-GRANDMOTHER",
+        "ML-LEX-HUSBAND",
+        "ML-LEX-WIFE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-10",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "family as a word, and friend",
+      "probe": [
+        "ML-CONCEPT-C35-KUDUMBAM-01",
+        "ML-CONCEPT-C35-SUHRUTHU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-11",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "social roles: teacher, student, doctor, farmer, guest",
+      "probe": [
+        "ML-LEX-C48-ROLE-01",
+        "ML-LEX-C48-ROLE-02",
+        "ML-LEX-C48-ROLE-03",
+        "ML-LEX-C48-ROLE-04",
+        "ML-LEX-C48-ROLE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01",
+        "A1-NE06-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-12",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "food staples: water, raw rice, cooked rice",
+      "probe": [
+        "ML-CONCEPT-C15-VELLAM-ARI-01",
+        "ML-CONCEPT-C15-VELLAM-ARI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-13",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "drinks: tea, coffee, milk",
+      "probe": [
+        "ML-CONCEPT-C39-CHAAYA-01",
+        "ML-CONCEPT-C39-KAAPI-01",
+        "ML-CONCEPT-C39-PAAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-14",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the meal itself",
+      "probe": [
+        "ML-CONCEPT-C40-OON-01",
+        "ML-CONCEPT-C40-OON-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01",
+        "A1-NE05-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "oon, and the second eat-verb behind it. The Spanish points also ask for the names of the meals of the day, which are not taught."
+    },
+    {
+      "id": "ML-A1-LEX-15",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the kitchen shelf: coconut, oil, curd, jaggery, chilli",
+      "probe": [
+        "ML-LEX-C61-SHELF-01",
+        "ML-LEX-C61-SHELF-02",
+        "ML-LEX-C61-SHELF-03",
+        "ML-LEX-C61-SHELF-04",
+        "ML-LEX-C61-SHELF-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-16",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "things you ask for: fruit, cloth, lamp, salt, book",
+      "probe": [
+        "ML-LEX-C46-ASK-01",
+        "ML-LEX-C46-ASK-02",
+        "ML-LEX-C46-ASK-03",
+        "ML-LEX-C46-ASK-04",
+        "ML-LEX-C46-ASK-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE03-03",
+        "A1-NE12-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-17",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the house: door, chair, mat, basket, box",
+      "probe": [
+        "ML-LEX-C52-WELCOME-01",
+        "ML-LEX-C52-WELCOME-02",
+        "ML-LEX-C56-HOUSE-01",
+        "ML-LEX-C56-HOUSE-02",
+        "ML-LEX-C56-HOUSE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE10-04",
+        "A1-NE10-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Objects, yes; the names of the ROOMS of a dwelling, which the Spanish point also asks for, are not taught."
+    },
+    {
+      "id": "ML-A1-LEX-18",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "household tools: knife, vessel, rope, thread, needle, broom",
+      "probe": [
+        "ML-LEX-C56-HOUSE-03",
+        "ML-LEX-C56-HOUSE-04",
+        "ML-LEX-C62-HAND-01",
+        "ML-LEX-C62-HAND-02",
+        "ML-LEX-C62-HAND-03",
+        "ML-LEX-C62-HAND-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE10-03",
+        "A1-NE07-02"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-19",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "colours: black, white, red, blue, green, yellow",
+      "probe": [
+        "ML-CONCEPT-C11-NIRANGAL-01",
+        "ML-CONCEPT-C11-NIRANGAL-02",
+        "ML-CONCEPT-C22-PACCHA-MANJA-01",
+        "ML-CONCEPT-C22-PACCHA-MANJA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-20",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "animals of the house and the yard",
+      "probe": [
+        "ML-CONCEPT-C21-NAAYA-POOCHA-01",
+        "ML-LEX-C60-ANIMAL-01",
+        "ML-LEX-C60-ANIMAL-02",
+        "ML-LEX-C60-ANIMAL-03",
+        "ML-LEX-C60-ANIMAL-04",
+        "ML-LEX-C60-ANIMAL-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-21",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the sky: sky, sun, moon, star, sunshine",
+      "probe": [
+        "ML-LEX-C53-SKY-01",
+        "ML-LEX-C53-SKY-02",
+        "ML-LEX-C53-SKY-03",
+        "ML-LEX-C53-SKY-04",
+        "ML-LEX-C53-SKY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-22",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the tree, part by part",
+      "probe": [
+        "ML-LEX-C54-TREE-01",
+        "ML-LEX-C54-TREE-02",
+        "ML-LEX-C54-TREE-03",
+        "ML-LEX-C54-TREE-04",
+        "ML-LEX-C54-TREE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-23",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the ground: river, rock, homeland, path, field",
+      "probe": [
+        "ML-LEX-C55-GROUND-01",
+        "ML-LEX-C55-GROUND-02",
+        "ML-LEX-C55-GROUND-03",
+        "ML-LEX-C55-GROUND-04",
+        "ML-LEX-C55-GROUND-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-24",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "what the air carries: wind, sand, mud, smoke, ember",
+      "probe": [
+        "ML-LEX-C59-AIR-01",
+        "ML-LEX-C59-AIR-02",
+        "ML-LEX-C59-AIR-03",
+        "ML-LEX-C59-AIR-04",
+        "ML-LEX-C59-AIR-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-25",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the weather as a word",
+      "probe": [
+        "ML-CONCEPT-C20-KALAVASTHA-01",
+        "ML-CONCEPT-C20-KALAVASTHA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "kaalaavastha, 'the state of time'. The word for weather is taught and no weather adjective is, so a learner can name the topic and say nothing about it."
+    },
+    {
+      "id": "ML-A1-LEX-26",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the paddy field: paddy, grass, ear of grain, plough, harvest",
+      "probe": [
+        "ML-LEX-C66-PADDY-01",
+        "ML-LEX-C66-PADDY-02",
+        "ML-LEX-C66-PADDY-03",
+        "ML-LEX-C66-PADDY-04",
+        "ML-LEX-C66-PADDY-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE07-02",
+        "A1-NE15-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "The track's economy vocabulary is agricultural, which is an editorial choice about Kerala and is recorded as one. It does not answer the Spanish industry point, which is about factories and energy."
+    },
+    {
+      "id": "ML-A1-LEX-27",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "illness: hunger, tiredness, pain, cough, fever",
+      "probe": [
+        "ML-LEX-C63-FEEL-01",
+        "ML-LEX-C63-FEEL-02",
+        "ML-LEX-C63-FEEL-03",
+        "ML-LEX-C63-FEEL-04",
+        "ML-LEX-C63-FEEL-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-28",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the doorway and its welcome: kolam, flower, garland",
+      "probe": [
+        "ML-LEX-C52-WELCOME-03",
+        "ML-LEX-C52-WELCOME-04",
+        "ML-LEX-C52-WELCOME-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "The nearest the track comes to the Spanish point about celebrations and occasions, and a genuinely Kerala answer to it."
+    },
+    {
+      "id": "ML-A1-LEX-29",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "clothing, footwear and accessories",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE12-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "thuni ('cloth') is the only textile word taught. Not one garment is named."
+    },
+    {
+      "id": "ML-A1-LEX-30",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "money, price and paying",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE12-03",
+        "A1-NE15-01",
+        "A1-NG6-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "No word for money, price, buying or selling appears anywhere. Three Spanish points, one gap, and it blocks the whole shopping scenario."
+    },
+    {
+      "id": "ML-A1-LEX-31",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "shops, and the people in them",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01",
+        "A1-NE15-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "kada is not taught. With ML-A1-LEX-30 this makes shopping unreachable in a track that teaches five kinds of vegetable oil's neighbours."
+    },
+    {
+      "id": "ML-A1-LEX-32",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "school and the classroom",
+      "probe": [
+        "ML-LEX-C48-ROLE-01",
+        "ML-LEX-C48-ROLE-02",
+        "ML-LEX-C46-ASK-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE06-02",
+        "A1-NE06-07"
+      ],
+      "malayalamSpecific": false,
+      "note": "Teacher, student and book. The institution, the timetable and classroom language are not taught, so four of the seven Spanish education points are open at ML-A1-LEX-33."
+    },
+    {
+      "id": "ML-A1-LEX-33",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the education system: school, lesson, exam, marks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-03",
+        "A1-NE06-05",
+        "A1-NE06-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "None of paLLikkoodam, paadam or pareeksha is taught."
+    },
+    {
+      "id": "ML-A1-LEX-34",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "learning and teaching as activities",
+      "probe": [
+        "ML-CONCEPT-C33-VAAYIKKUKA-01",
+        "ML-CONCEPT-C33-EZHUTUKA-01",
+        "ML-CONCEPT-C32-ARIYUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE06-04"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-35",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "work as an activity",
+      "probe": [
+        "ML-LEX-JOLI-CEYYUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE07-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-LEX-36",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "conditions of work: rights, unemployment, what makes a good worker",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "Nothing in the corpus. Correctly low priority at A1 and recorded so the walk is total."
+    },
+    {
+      "id": "ML-A1-LEX-37",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "free time, sport, games, shows",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01",
+        "A1-NE08-02",
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not one leisure word is taught in 292 lessons. Four Spanish points, one gap, and it is a large one for a level whose functions include invitations."
+    },
+    {
+      "id": "ML-A1-LEX-38",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the telephone, the post, the internet, an e-mail address",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-02",
+        "A1-NE09-03",
+        "A1-NE09-06",
+        "A1-NE11-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Nothing. The Spanish inventory expects an A1 candidate to dictate an e-mail address; this track cannot name a telephone."
+    },
+    {
+      "id": "ML-A1-LEX-39",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "press, television and radio",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE09-04",
+        "A1-NE09-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "Nothing taught."
+    },
+    {
+      "id": "ML-A1-LEX-40",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "housing as a transaction: buying, selling, renting",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Nothing taught."
+    },
+    {
+      "id": "ML-A1-LEX-41",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "banks, health services, the police",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE11-02",
+        "A1-NE11-03",
+        "A1-NE11-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "vaidyan ('a doctor') is the only word in this whole area."
+    },
+    {
+      "id": "ML-A1-LEX-42",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "medicine, treatment and hygiene",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE13-04"
+      ],
+      "malayalamSpecific": false,
+      "note": "The symptoms are taught (ML-A1-LEX-27) and nothing that treats them is."
+    },
+    {
+      "id": "ML-A1-LEX-43",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "travel, accommodation and transport",
+      "probe": [
+        "ML-LEX-C50-LEAVE-03",
+        "ML-LEX-C55-GROUND-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01",
+        "A1-NE14-02",
+        "A1-NE14-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "yaathra ('a journey') and vazhi ('a path') are the whole of it. No vehicle, no ticket, no place to stay -- so this is recorded as covered for the NOTION of a journey and the three Spanish points behind it remain thin."
+    },
+    {
+      "id": "ML-A1-LEX-44",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "documents: passport, identity card, personal data",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Nothing taught. Name and age are available (ML-A1-F-04, ML-A1-TIME-08); address and telephone are not."
+    },
+    {
+      "id": "ML-A1-LEX-45",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "government, politics, law",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Nothing taught, and correctly outside A1."
+    },
+    {
+      "id": "ML-A1-LEX-46",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "computing and technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Nothing taught."
+    },
+    {
+      "id": "ML-A1-LEX-47",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "the arts: music, dance, literature, cinema",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-04",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "malayalamSpecific": false,
+      "note": "Nothing taught -- six Spanish points on one gap. Notable for a track whose culture is unusually rich here."
+    },
+    {
+      "id": "ML-A1-LEX-48",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "religion",
+      "probe": [
+        "ML-LEX-C51-COURTESY-04",
+        "ML-LEX-C52-WELCOME-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "anugraham ('a blessing') and maala ('a garland'). Thin, and genuinely present."
+    },
+    {
+      "id": "ML-A1-LEX-49",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "business and organisations",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE15-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "Nothing taught."
+    },
+    {
+      "id": "ML-A1-LEX-50",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "geography: country, town, city, capital",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "naadu ('home country') only -- see ML-A1-N-02."
+    },
+    {
+      "id": "ML-A1-LEX-51",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "open and closed, way in and way out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "The door is taught and neither opening nor closing it is."
+    },
+    {
+      "id": "ML-A1-LEX-52",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "attractiveness: beautiful, ugly",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "ML-A1-LEX-53",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "good and bad as evaluations",
+      "probe": [
+        "ML-LEX-C42-ADJ-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG6-01",
+        "A1-NG6-04",
+        "A1-NG6-07"
+      ],
+      "malayalamSpecific": false,
+      "note": "nalla is taught and there is no word for bad, so evaluation runs one way only. Three Spanish points depend on the pair and are half answered by half of it."
+    },
+    {
+      "id": "ML-A1-LEX-54",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "ease and difficulty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NG6-10"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught."
+    },
+    {
+      "id": "ML-A1-LEX-55",
+      "category": "Padakosham (lexicon by domain)",
+      "label": "eating out: the restaurant, ordering, the bill",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE05-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "Nothing taught. The track teaches the meal at home -- oon, rice, curd, jaggery -- and no word for a place that serves one. With the missing money vocabulary at ML-A1-LEX-30 the whole restaurant scenario is closed."
+    },
+    {
+      "id": "ML-A1-SCR-01",
+      "category": "Lipi (script and orthography)",
+      "label": "the script is an abugida: a consonant carries an inherent vowel until a sign changes it",
+      "probe": [
+        "ML-SCRIPT-CHANDRAKKALA-01",
+        "ML-SCRIPT-RECOG-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-01",
+        "A1-O1-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "The chandrakkala, taught twice -- as a shape in chapter 1's writing arc and as a recognised sign at ML-S02. This is the fact that makes Malayalam readable at all, and Spanish's alphabet points are what it answers."
+    },
+    {
+      "id": "ML-A1-SCR-02",
+      "category": "Lipi (script and orthography)",
+      "label": "the independent vowel letters",
+      "probe": [
+        "ML-SCRIPT-RECOG-133",
+        "ML-SCRIPT-RECOG-137",
+        "ML-SCRIPT-RECOG-140",
+        "ML-SCRIPT-RECOG-135",
+        "ML-SCRIPT-RECOG-116",
+        "ML-SCRIPT-RECOG-125",
+        "ML-SCRIPT-RECOG-126"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "a, aa, i, e, u, uu, oo as free-standing letters."
+    },
+    {
+      "id": "ML-A1-SCR-03",
+      "category": "Lipi (script and orthography)",
+      "label": "the dependent vowel signs that hang off a consonant",
+      "probe": [
+        "ML-SCRIPT-RECOG-03",
+        "ML-SCRIPT-RECOG-04",
+        "ML-SCRIPT-RECOG-07",
+        "ML-SCRIPT-RECOG-119",
+        "ML-SCRIPT-RECOG-134",
+        "ML-SCRIPT-RECOG-138",
+        "ML-SCRIPT-RECOG-139",
+        "ML-SCRIPT-RECOG-141",
+        "ML-SCRIPT-RECOG-143",
+        "ML-SCRIPT-RECOG-128"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Ten matra signs, which is the part of the script a reader meets on every word."
+    },
+    {
+      "id": "ML-A1-SCR-04",
+      "category": "Lipi (script and orthography)",
+      "label": "the chillu letters: consonants that end a word without a vowel",
+      "probe": [
+        "ML-SCRIPT-RECOG-06",
+        "ML-SCRIPT-RECOG-131",
+        "ML-SCRIPT-RECOG-142",
+        "ML-SCRIPT-RECOG-144"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam has a distinct set of word-final consonant shapes that no other Indic script keeps in this form, and four of the six are taught."
+    },
+    {
+      "id": "ML-A1-SCR-05",
+      "category": "Lipi (script and orthography)",
+      "label": "the anusvara, which closes so many Malayalam nouns",
+      "probe": [
+        "ML-SCRIPT-ANUSVARAM-01",
+        "ML-SCRIPT-RECOG-120"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-SCR-06",
+      "category": "Lipi (script and orthography)",
+      "label": "the everyday consonants: the first eight a beginner meets",
+      "probe": [
+        "ML-SCRIPT-RECOG-01",
+        "ML-SCRIPT-RECOG-05",
+        "ML-SCRIPT-RECOG-08",
+        "ML-SCRIPT-RECOG-109",
+        "ML-SCRIPT-RECOG-110",
+        "ML-SCRIPT-RECOG-111",
+        "ML-SCRIPT-RECOG-112",
+        "ML-SCRIPT-RECOG-114"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-SCR-07",
+      "category": "Lipi (script and orthography)",
+      "label": "the retroflex and the distinctively Dravidian consonants",
+      "probe": [
+        "ML-SCRIPT-RECOG-113",
+        "ML-SCRIPT-RECOG-117",
+        "ML-SCRIPT-RECOG-118",
+        "ML-SCRIPT-RECOG-136"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "nna, tta, the zha that Malayalam shares only with Tamil, and rra."
+    },
+    {
+      "id": "ML-A1-SCR-08",
+      "category": "Lipi (script and orthography)",
+      "label": "the Sanskrit-borrowed consonants a Malayalam text cannot do without",
+      "probe": [
+        "ML-SCRIPT-RECOG-121",
+        "ML-SCRIPT-RECOG-123",
+        "ML-SCRIPT-RECOG-124",
+        "ML-SCRIPT-RECOG-127",
+        "ML-SCRIPT-RECOG-129",
+        "ML-SCRIPT-RECOG-130",
+        "ML-SCRIPT-RECOG-132",
+        "ML-SCRIPT-RECOG-145"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "ssa, da, sa, ha, bha, tha, ga, ja. The track teaches a lot of Sanskrit vocabulary and these are the letters it is written with."
+    },
+    {
+      "id": "ML-A1-SCR-09",
+      "category": "Lipi (script and orthography)",
+      "label": "reading a whole known word back off the page",
+      "probe": [
+        "ML-SCRIPT-NAMASKARAM-READ-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "malayalamSpecific": false,
+      "note": "Chapter 1's arc ends by assembling namaskaram from shapes already met, which is the moment reading starts."
+    },
+    {
+      "id": "ML-A1-SCR-10",
+      "category": "Lipi (script and orthography)",
+      "label": "writing a known word from sound alone",
+      "probe": [
+        "ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02",
+        "ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "malayalamSpecific": false,
+      "note": "The trace / guided-copy / delayed-copy / dictation ladder, which the track runs twice."
+    },
+    {
+      "id": "ML-A1-SCR-11",
+      "category": "Lipi (script and orthography)",
+      "label": "the indigenous Malayalam numerals",
+      "probe": [
+        "ML-SCRIPT-DIGITS-1-3-07",
+        "ML-SCRIPT-DIGITS-4-5-07",
+        "ML-SCRIPT-DIGITS-6-8-07",
+        "ML-SCRIPT-DIGITS-9-10-07"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O4-03"
+      ],
+      "malayalamSpecific": false
+    },
+    {
+      "id": "ML-A1-SCR-12",
+      "category": "Lipi (script and orthography)",
+      "label": "the nine characters the corpus uses in headwords and never teaches",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "MEASURED, NOT ESTIMATED. 67 distinct Malayalam characters appear in headwords across 292 lessons and 58 are taught by a script lesson -- 87 per cent closure, between Tamil's 52 of 52 and Kannada's 50 of 69. The nine open ones, by the number of headwords that need them: sha (14), lla (10), chillu-rr (8), nga (8), the ai sign (5), dha (5), ba (3), kha (3), cha (2). sha alone blocks fourteen taught words including sari, the first-chapter 'okay'."
+    },
+    {
+      "id": "ML-A1-SCR-13",
+      "category": "Lipi (script and orthography)",
+      "label": "capital letters",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam has no case distinction, so the Spanish points have no Malayalam counterpart. Enumerated rather than dropped: a reader comparing the files should see the answer."
+    },
+    {
+      "id": "ML-A1-SCR-14",
+      "category": "Lipi (script and orthography)",
+      "label": "written accentuation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O2-01",
+        "A1-O2-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Malayalam has no accent marks. Same reasoning as ML-A1-SCR-13."
+    },
+    {
+      "id": "ML-A1-SCR-15",
+      "category": "Lipi (script and orthography)",
+      "label": "punctuation: the full stop, comma, question mark and the rest",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-04",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "malayalamSpecific": false,
+      "note": "Modern Malayalam uses the European marks, and not one lesson teaches any of them. Nine Spanish points on one gap. Cheap to close and entirely open."
+    },
+    {
+      "id": "ML-A1-SCR-16",
+      "category": "Lipi (script and orthography)",
+      "label": "abbreviations and initialisms",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-06",
+        "A1-O4-01",
+        "A1-O4-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "Nothing taught, and correctly marginal at A1."
+    },
+    {
+      "id": "ML-A1-PHON-01",
+      "category": "Uccharanam (pronunciation)",
+      "label": "the retroflex series, which English does not have",
+      "probe": [
+        "ML-SCRIPT-RECOG-113",
+        "ML-SCRIPT-RECOG-117"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "Taught as shapes rather than as sounds. Recorded as covered for the CONTRAST being present in the corpus at all, and it is fair to call that thin."
+    },
+    {
+      "id": "ML-A1-PHON-02",
+      "category": "Uccharanam (pronunciation)",
+      "label": "zha, the sound Malayalam shares only with Tamil",
+      "probe": [
+        "ML-SCRIPT-RECOG-118",
+        "ML-CONCEPT-C33-EZHUTUKA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "malayalamSpecific": false,
+      "note": "ML-C33-ezhutuka names it explicitly as the letter Tamil also carries, which is the one place the corpus teaches a sound as a sound."
+    },
+    {
+      "id": "ML-A1-PHON-03",
+      "category": "Uccharanam (pronunciation)",
+      "label": "long and short vowels as a meaning difference",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "The vowel signs are taught as shapes; no lesson says that length changes the word."
+    },
+    {
+      "id": "ML-A1-PHON-04",
+      "category": "Uccharanam (pronunciation)",
+      "label": "gemination: the doubled consonant",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "malayalamSpecific": false,
+      "note": "The chandrakkala is taught and the doubling it writes is never named as a contrast, although it appears in dozens of taught headwords."
+    },
+    {
+      "id": "ML-A1-PHON-05",
+      "category": "Uccharanam (pronunciation)",
+      "label": "word stress",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-O2-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "Not taught anywhere. Malayalam's stress is regular, which is exactly why one lesson would settle it for good."
+    },
+    {
+      "id": "ML-A1-REG-01",
+      "category": "Bhaashaabhedam (register: Sanskritic and native, familiar and respectful)",
+      "label": "the Sanskrit-tatsama greeting against the everyday one",
+      "probe": [
+        "ML-CONCEPT-C29-SUPRABHAATHAM-01",
+        "ML-CONCEPT-C25-SHUBHA-RATHRI-01",
+        "ML-LEX-NAMASKARAM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "MEASURED FROM THIS TRACK, NOT BORROWED FROM TAMIL. Four lessons in this corpus carry register: formal, and every one of them is a Sanskrit-tatsama time-of-day greeting; namaskaram is respectful-neutral and works at any hour. That is a lexical register split between borrowed and inherited words -- it is NOT Tamil's literary/spoken diglossia, and this file does not claim one."
+    },
+    {
+      "id": "ML-A1-REG-02",
+      "category": "Bhaashaabhedam (register: Sanskritic and native, familiar and respectful)",
+      "label": "the native word narrowed into narrative or literary use",
+      "probe": [
+        "ML-CONCEPT-C23-NAAL-01",
+        "ML-CONCEPT-C24-NATIVE-NIGHT-WORDS-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "malayalamSpecific": false,
+      "note": "The only two lessons in the corpus marked register: literary-narrative and literary. Both teach a native word that the everyday Sanskrit one displaced -- naal beside divasam, iravu beside raathri. A learner needs to recognise them and should not produce them, and the corpus marks that."
+    },
+    {
+      "id": "ML-A1-REG-03",
+      "category": "Bhaashaabhedam (register: Sanskritic and native, familiar and respectful)",
+      "label": "respect expressed as plurality: nii against ningal",
+      "probe": [
+        "ML-LEX-NII-NINGAL-01",
+        "ML-CONCEPT-C02-RESPECT-BY-PLURAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "The one register distinction a beginner must produce correctly from the first conversation."
+    },
+    {
+      "id": "ML-A1-REG-04",
+      "category": "Bhaashaabhedam (register: Sanskritic and native, familiar and respectful)",
+      "label": "the politeness vocabulary as a thing that can be named",
+      "probe": [
+        "ML-LEX-C65-ASK-04",
+        "ML-LEX-C51-COURTESY-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "maryaada and bahumaanam. Unusual: the track hands the learner the words FOR politeness before it hands them many polite forms."
+    },
+    {
+      "id": "ML-A1-REG-05",
+      "category": "Bhaashaabhedam (register: Sanskritic and native, familiar and respectful)",
+      "label": "when to use the formal greeting and when the everyday one",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "ML-CORPUS",
+        "ED-MALAYALAM"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "malayalamSpecific": false,
+      "note": "The corpus teaches four formal greetings and namaskaram and never states the rule for choosing between them. The evidence is in the lessons' own register fields; the guidance is not in their prose."
+    }
+  ]
+}
