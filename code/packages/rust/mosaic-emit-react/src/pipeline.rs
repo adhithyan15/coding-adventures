@@ -468,6 +468,12 @@ fn sample_ts_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> Strin
         SlotType::Color => "\"#808080\"".to_string(),
         SlotType::Node | SlotType::Component(_) => "null".to_string(),
         SlotType::List(_) => "[]".to_string(),
+        // The first declared value, not a generic placeholder: a one-of slot
+        // has a closed set, so a sample can be a real member of it.
+        SlotType::OneOf(values) => values
+            .first()
+            .map(|v| format!("\"{v}\""))
+            .unwrap_or_else(|| "\"\"".to_string()),
     }
 }
 
@@ -5145,6 +5151,21 @@ fn slot_type_to_ts(t: &SlotType) -> String {
         SlotType::Node => "React.ReactNode".to_string(),
         SlotType::List(inner) => format!("Array<{}>", list_inner_to_ts(inner)),
         SlotType::Component(name) => format!("React.ReactNode /* {name} */"),
+        // A closed set lowers to a TypeScript union, so passing a variant the
+        // component does not declare is a compile error in the generated host
+        // rather than a value silently ignored at runtime -- which is exactly
+        // what `slot variant : text` allowed (#14036).
+        SlotType::OneOf(values) => {
+            if values.is_empty() {
+                "string".to_string()
+            } else {
+                values
+                    .iter()
+                    .map(|v| format!("\"{v}\""))
+                    .collect::<Vec<_>>()
+                    .join(" | ")
+            }
+        }
     }
 }
 

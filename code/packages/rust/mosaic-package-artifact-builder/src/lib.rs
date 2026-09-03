@@ -3137,7 +3137,9 @@ fn compose_host_value_for_slot(slot: &SlotDecl, require_runtime: bool) -> String
     let slot_name = escape_kotlin_string(&slot.name);
     if require_runtime && slot.default.is_none() {
         let helper = match &slot.r#type {
-            SlotType::Text | SlotType::Image | SlotType::Color => "mosaicRequiredString",
+            SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
+                "mosaicRequiredString"
+            }
             SlotType::Number => "mosaicRequiredDouble",
             SlotType::Bool => "mosaicRequiredBoolean",
             SlotType::List(inner) => match inner.as_ref() {
@@ -3154,7 +3156,7 @@ fn compose_host_value_for_slot(slot: &SlotDecl, require_runtime: bool) -> String
     }
     let fallback = sample_kotlin_value_for_slot(slot);
     match &slot.r#type {
-        SlotType::Text | SlotType::Image | SlotType::Color => {
+        SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
             format!("mosaicString(hostProps, \"{slot_name}\", {fallback})")
         }
         SlotType::Number => format!("mosaicDouble(hostProps, \"{slot_name}\", {fallback})"),
@@ -3206,6 +3208,12 @@ fn sample_kotlin_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> S
         SlotType::Node => "{}".to_string(),
         SlotType::List(_) => "emptyList()".to_string(),
         SlotType::Component(name) => format!("TODO(\"Sample {}\")", escape_kotlin_string(name)),
+        // A one-of slot has a closed set, so its sample is a real member of
+        // that set rather than a generic placeholder.
+        SlotType::OneOf(values) => values
+            .first()
+            .map(|v| format!("\"{}\"", escape_kotlin_string(v)))
+            .unwrap_or_else(|| "\"\"".to_string()),
     }
 }
 

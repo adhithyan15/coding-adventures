@@ -5439,6 +5439,9 @@ fn emit_host_tooltip(
 fn slot_type_to_kotlin(t: &SlotType) -> String {
     match t {
         SlotType::Text => "String".to_string(),
+        // A one-of value is a name from a closed set, carried as a string.
+        // Lowering it to a native enum is UI49 open question 2.
+        SlotType::OneOf(_) => "String".to_string(),
         SlotType::Number => "Double".to_string(),
         SlotType::Bool => "Boolean".to_string(),
         SlotType::Image => "String".to_string(),

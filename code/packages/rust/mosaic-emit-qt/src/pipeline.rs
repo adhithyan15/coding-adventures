@@ -6285,6 +6285,9 @@ fn find_number_prop(node: &LayoutNode, prop_name: &str) -> Option<f64> {
 fn slot_type_to_qml(t: &SlotType) -> (&'static str, &'static str) {
     match t {
         SlotType::Text => ("string", "\"\""),
+        // A one-of value is a name from a closed set, carried as a string.
+        // Lowering it to a native enum is UI49 open question 2.
+        SlotType::OneOf(_) => ("string", "\"\""),
         SlotType::Number => ("real", "0"),
         SlotType::Bool => ("bool", "false"),
         SlotType::Image => ("url", "\"\""),
