@@ -5046,6 +5046,7 @@ pub struct InMemoryToolRuntime {
     registry: InMemoryToolRegistry,
     handlers: BTreeMap<ToolId, Box<dyn ToolHandler>>,
     policy: Box<dyn ToolPolicyEngine>,
+    agent_surface: bool,
 }
 
 impl Default for InMemoryToolRuntime {
@@ -5054,6 +5055,7 @@ impl Default for InMemoryToolRuntime {
             registry: InMemoryToolRegistry::new(),
             handlers: BTreeMap::new(),
             policy: Box::new(AllowAllToolPolicy),
+            agent_surface: false,
         }
     }
 }
@@ -5071,7 +5073,25 @@ impl InMemoryToolRuntime {
             registry: InMemoryToolRegistry::new(),
             handlers: BTreeMap::new(),
             policy: Box::new(policy),
+            agent_surface: false,
         }
+    }
+
+    /// Mark this runtime as a V1 agent surface, enabling the D18S S-I7 output
+    /// check.
+    ///
+    /// Scoped by RUNTIME rather than by a per-tool exemption list, because the
+    /// exemption is a property of who is looking rather than of the tool. The
+    /// smart-home audit and access-review readers exist to report on
+    /// principals and must keep doing so; they simply cannot be registered
+    /// into a `HostProfileRuntime`, since `check_registration` refuses a tool
+    /// that names a peer in its schema. So "is this an agent surface" is
+    /// answerable here and a per-tool list would have to be maintained
+    /// forever.
+    #[must_use]
+    pub fn as_agent_surface(mut self) -> Self {
+        self.agent_surface = true;
+        self
     }
 
     pub fn set_policy<P>(&mut self, policy: P)
@@ -5278,7 +5298,20 @@ impl InMemoryToolRuntime {
                 // whose output was refused could still say anything it liked to
                 // every event sink.
                 if let Some(output_schema) = &definition.output_schema {
-                    let output_validation = output_schema.validate_value(&output.output);
+                    // On an agent surface the output is walked for peer
+                    // identities too, closing S-I7's FIRST clause -- the
+                    // agent's view contains no agent identity.
+                    //
+                    // The registration gate covers tools that DECLARE a peer,
+                    // which is precisely not the hole case: an `Any` output
+                    // declares nothing, so `context.read_entries` could return
+                    // `{"entries": [{"agent_id": "peer-7"}]}` unchallenged
+                    // while passing every schema check.
+                    let output_validation = if self.agent_surface {
+                        output_schema.validate_supplied_value(&output.output)
+                    } else {
+                        output_schema.validate_value(&output.output)
+                    };
                     if !output_validation.ok {
                         let result = ToolResult::failed(
                             request.call_id.clone(),

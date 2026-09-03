@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Mark `HostProfileRuntime`'s inner runtime as a V1 agent surface, so tool
+  outputs are walked for peer identities as well as arguments. A
+  `HostProfileRuntime` IS the agent surface -- that is what
+  `check_registration`'s S-I7 refusal established -- so the scope follows from
+  a fact already encoded rather than from a new flag anyone must remember to
+  set.
+
 - Enforce D18S S-I7 in `HostProfileRuntime::check_registration`: a tool whose
   schema names another agent cannot be registered into an agent host. New
   `HostRuntimeError::ToolNamesAnotherAgent` names the tool and the offending

@@ -4,6 +4,19 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add `InMemoryToolRuntime::as_agent_surface`, which extends the S-I7 identity
+  walk to tool OUTPUTS. This closes the first clause -- the agent's view
+  contains no agent identity -- where the registration gate could not reach it:
+  that gate inspects DECLARED schemas, and an `Any` output declares nothing, so
+  `context.read_entries` could return `{"entries": [{"agent_id": "peer-7"}]}`
+  and pass every check.
+- Scoped by RUNTIME rather than by a per-tool exemption list. The exemption is
+  a property of who is looking, not of the tool: the smart-home audit and
+  access-review readers exist to report on principals and must keep doing so,
+  and they simply cannot be registered into an agent surface because
+  `check_registration` refuses a tool that names a peer in its schema. A
+  per-tool list would have to be maintained forever and would drift.
+
 - Add `JsonSchema::validate_supplied_value`, which validates shape and
   additionally refuses an agent identity smuggled through a position no schema
   describes. Tool invocation now validates arguments with it.
