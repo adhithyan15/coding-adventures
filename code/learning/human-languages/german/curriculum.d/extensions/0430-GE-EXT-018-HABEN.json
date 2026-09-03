@@ -1,0 +1,16 @@
+{
+  "id": "GE-EXT-018-HABEN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can build the four forms of haben the ending machine already gives me, and produce the two it gets wrong — du hast and er hat — without deriving them.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C14-hab-stamm",
+    "GE-C14-du-hast",
+    "GE-C14-er-hat",
+    "GE-C14-b-verlust",
+    "GE-C14-einen",
+    "GE-C14-habere"
+  ]
+}

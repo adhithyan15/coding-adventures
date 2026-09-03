@@ -1,0 +1,17 @@
+{
+  "language": "hindi",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:e02ad5ca302828e2",
+  "lessonIds": [
+    "HI-C71-today",
+    "HI-C71-also",
+    "HI-C71-very"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch78.txt",
+  "json": "hindi/narration/ch78.json",
+  "textHash": "fnv1a64:d660fa77fc137012",
+  "jsonHash": "fnv1a64:f390781cd94db208",
+  "findings": []
+}

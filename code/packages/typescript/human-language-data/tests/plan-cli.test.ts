@@ -102,7 +102,14 @@ describe("the plan CLI", () => {
     // all; the file carries a Register category that says so and a deliberately
     // uncovered point, SA-A1-RG-02, rather than pretending a functional
     // inventory measures a pariksha.
-    expect(out).toMatch(/0 complete and 10 partial of 138/);
+    // 9 -> 10 partial: `exam-inventory-kannada-a1.json`.
+    // 10 -> 11 partial: `exam-inventory-malayalam-a1.json` lands, partial in all
+    // four dimensions for the reason every proxy-derived file is. Malayalam's
+    // `exam-levels.json` entry carries NO caveat, so unlike Sanskrit and Tamil
+    // it has no external steer to answer; the file measures the corpus's own
+    // register fields instead and claims a borrowed-against-inherited lexical
+    // split rather than importing Tamil's diglossia column.
+    expect(out).toMatch(/0 complete and 11 partial of 138/);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -132,7 +139,9 @@ describe("the plan CLI", () => {
     // 7 -> 8: Sanskrit A1 joins it as well. French is still the only file this
     // test corrupts, so this number stays the written total minus exactly one.
     // 8 -> 9: Kannada A1 joins it, on the same rule.
-    expect(out).toMatch(/0 complete and 9 partial of 138/);
+    // 9 -> 10: Malayalam A1 joins it too. French is still the only file this
+    // test corrupts, so this number stays the written total minus exactly one.
+    expect(out).toMatch(/0 complete and 10 partial of 138/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:873301090dfd37b5",
+  "lessonIds": [
+    "HI-C72-money",
+    "HI-C72-rupee",
+    "HI-C72-price",
+    "HI-C72-expensive",
+    "HI-C72-buy"
+  ],
+  "tex": "hindi/book/chapters/ch79-what-it-costs.tex"
+}

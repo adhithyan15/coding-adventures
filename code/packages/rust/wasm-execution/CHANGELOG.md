@@ -2,6 +2,82 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.98] - 2026-09-02 - `ref.eq` (`0xD3`) + a `Table`/`TableElement` i31ref gap it uncovered (W39 slice 1)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 1 of 5.
+
+**`ref.eq` itself**: new `vm.register_context_opcode(0xD3, ...)` handler,
+registered right after `ref.func`'s `0xD2` -- a genuinely base-opcode-
+space byte, NOT `0xFB`-prefixed like most other GC instructions (cross-
+checked against two independent fetches of the GC proposal's own
+`MVP.md`; see the spec's own "Real spec text" section for the full
+verification, including a first fetch of a *different* page that
+returned wrong `0xFB` numbers while still getting `ref.eq = 0xD3`
+right). Pops two values, pushes `I32(1)` if referentially equal, else
+`I32(0)`:
+- two nulls (`Ref(None)`/`Ref(None)`) are equal;
+- two i31ref payloads (carried as plain `WasmValue::I32`, never `Ref` --
+  see `pop_i31_payload`'s own doc comment) are equal iff their unboxed
+  i32s are equal;
+- two `gc_heap`-handle values (`Ref(Some(h))`) are equal iff they are the
+  literal SAME handle -- this crate's `Vec`-index handle scheme already
+  gives real reference identity for free;
+- any other combination (a null vs. a non-null, or a cross-KIND i31-vs-
+  handle pair) is always `0`, **never a panic or a trap** -- the real
+  spec's own "no trap conditions at all" rule for this instruction, and a
+  defensive requirement even against a module this crate's own loose
+  validator (see `wasm-validator`'s CHANGELOG) fails to reject.
+No entry needed in `wasm-opcodes::OPCODES` -- `ref.eq` has no immediate,
+so the existing `decode_function_body` fallback (`get_opcode` returning
+`None` -> a bare, zero-byte-immediate `DecodedOperand::None`) already
+decodes it correctly, the same precedent `ref.is_null`'s `0xD1` already
+established.
+
+**Real, pre-existing gap this slice's own corpus fixture (`ref_eq.
+wast`) uncovered**: that file's `init` function does `(table.set (i32.
+const N) (ref.i31 (i32.const V)))` into an `eqref`-typed table, then
+reads entries back out for `ref.eq` to compare. `TableElement` (this
+crate's table-slot representation) only had two variants, `Raw(u32)`
+(a bare handle/funcidx) and `Func(FuncRefTarget)` -- neither can hold an
+i31 payload without colliding it with a `gc_heap` handle of the same
+numeric value (a real correctness bug: `ref.eq` comparing i31 `7` against
+a struct handle `7` read back out of the SAME table slot representation
+would wrongly say "equal"). `table.set`/`table.get`/`table.grow`/
+`table.fill`'s own opcode handlers also only recognized `WasmValue::
+Ref(..)`, so an i31 payload (`WasmValue::I32`) hit their `other =>
+Err("type mismatch: expected funcref, ...")` arm -- `init` would error
+out entirely before `ref_eq.wast`'s own comparisons ever ran.
+
+Fixed by adding a THIRD `TableElement::I31(i32)` variant (see its own doc
+comment for the full rationale) and wiring it through all four opcode
+handlers (`table.get`/`0x25`, `table.set`/`0x26`, `table.grow`/`0x0F`,
+`table.fill`/`0x11`) plus `call_indirect`'s two table-element match sites
+(which now have a defensive, never-reached-per-validation `TableElement::
+I31(_) => Err(...)` arm, since `wasm-validator` already guarantees
+`call_indirect` only ever targets a funcref-typed table). `table.get`
+round-trips an `I31` slot as a plain `WasmValue::I32`, never wrapped in
+`Ref(Some(_))`.
+
+**New unit tests** (7, all in `wasm-execution/src/lib.rs`, none of them
+corpus-derived -- direct, targeted coverage per the spec's own
+verification plan): same struct handle vs. itself (true), two DIFFERENT
+struct instances of the same type (false -- proves real handle equality,
+not `ref_matches_concrete_type`'s old "any struct matches" stub logic
+leaking in), equal/unequal i31 payloads, null-vs-null, null-vs-non-null,
+and an i31-vs-struct-handle cross-kind comparison (false, and must not
+panic).
+
+**Corpus effect** (measured via `wasm-conformance`'s regenerated
+baseline; see that crate's own CHANGELOG for the full per-file
+breakdown): `ref_eq.wast` 6/89 (83 NYS) -> 87/89 (2 NYS, both an
+already-understood, non-regressive validator-looseness artifact -- see
+`wasm-validator`'s CHANGELOG); `array_init_elem.wast`, `array_new_elem.
+wast`, `table_init.wast`, `table_init64.wast` each close a handful of
+NYS too (all four use `ref.eq` as a general funcref-equality helper in
+their own fixtures). Zero new `Fail`/trap anywhere in the 257-file
+corpus; `cargo test -p wasm-execution` (and every other touched crate)
+verified via a `git stash` A/B with zero regressions.
+
 ## [0.9.97] - 2026-09-02 - `array.init_elem`/`array.new_elem` execution + `element_values` (W38 slices 4/5)
 
 Per `code/specs/W38-wasm-gc-array-bulk-ops.md`. Two new `0xFB` sub-opcodes,

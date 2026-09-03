@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-73-EATING",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "HI-C73-eating-house",
+    "HI-C73-breakfast",
+    "HI-C73-bill",
+    "HI-C73-waiter",
+    "HI-C73-drink"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-73-EATING"
+  ],
+  "after": []
+}

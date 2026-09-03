@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C16-bleiben
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 580
-chapter: 20
+chapter: 21
 type: word
 headword: bleiben
 gloss: to stay — a verb that takes sein while meaning the exact opposite of change

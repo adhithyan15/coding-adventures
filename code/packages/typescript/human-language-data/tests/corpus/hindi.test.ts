@@ -12,15 +12,15 @@ it("pins Hindi continuity", () => expectLanguageContinuity("hindi"));
 it("pins Hindi modality", () => expectLanguageModality("hindi"));
 it("pins Hindi lesson-content budgets", () =>
   expectLanguageLessonBudgets("hindi", {
-    // 287 -> 310: the joining tranche (chapters 68-74) adds twenty-three
-    // lessons -- fifteen items, one of them a sound rather than a word, and
-    // seven reviews. Re-measured against the tree. Idioms, senses and culture
-    // claims are unchanged at 21 / 22 / 27: a conjunction is not an idiom, and
-    // the etymologies these lessons carry live in `etymology_hook` rather than
-    // in a culture claim.
-    lessons: 310,
+    // 310 -> 343: this vocabulary tranche adds thirty-three lessons in seven
+    // chapters (75-81), one new word each. Thirty-five were authored; kab and
+    // kyon were cut, because #14113's joining tranche teaches both and a
+    // headword introduced twice is a hard error. Re-measured against the tree.
+    lessons: 343,
     idioms: 21,
-    senses: 22,
+    // +2: HI-C70-song declares gana's singing sense and HI-C73-drink declares
+    // khana's eating sense, which is what covers HI-A1-V-26.
+    senses: 24,
     cultureClaims: 27,
     unitPrefix: "HI",
   }));

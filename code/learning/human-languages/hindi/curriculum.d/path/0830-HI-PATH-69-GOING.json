@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-69-GOING",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "HI-C69-vehicle",
+    "HI-C69-railway",
+    "HI-C69-station",
+    "HI-C69-ticket",
+    "HI-C69-go"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-69-GOING"
+  ],
+  "after": []
+}

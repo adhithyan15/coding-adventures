@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C70-song",
+    "language": "hindi",
+    "chapter": 77,
+    "sequence": 2960,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5041a8a2e393bfca"
+  },
+  "findings": []
+}

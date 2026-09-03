@@ -1,0 +1,21 @@
+{
+  "chapter": 76,
+  "title": "Ways of Going",
+  "label": "ch:hi-ways-of-going",
+  "canDo": "I can name what carries me, ask for a ticket, and say that I am going somewhere.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "HI-C69-go",
+    "kind": "production",
+    "summary": "Complete HI-C69-go and say all five words in order, then say that you go to the station.",
+    "assesses": [
+      "HI-LEX-C69-GOING-01",
+      "HI-LEX-C69-GOING-02",
+      "HI-LEX-C69-GOING-03",
+      "HI-LEX-C69-GOING-04",
+      "HI-LEX-C69-GOING-05"
+    ]
+  }
+}

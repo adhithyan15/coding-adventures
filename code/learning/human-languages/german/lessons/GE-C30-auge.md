@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C30-auge
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 930
-chapter: 34
+chapter: 35
 type: word
 headword: das Auge
 gloss: eye — the third gender back on a body part, and a direct Germanic cousin of English eye

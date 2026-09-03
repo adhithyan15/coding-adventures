@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:edc4b34ea388d99c",
+  "lessonIds": [
+    "HI-C73-eating-house",
+    "HI-C73-breakfast",
+    "HI-C73-bill",
+    "HI-C73-waiter",
+    "HI-C73-drink"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch80.txt",
+  "json": "hindi/narration/ch80.json",
+  "textHash": "fnv1a64:933187cf2d2b74a6",
+  "jsonHash": "fnv1a64:beba77a93700b288",
+  "findings": []
+}

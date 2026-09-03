@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-70-LEISURE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "HI-C70-game",
+    "HI-C70-play",
+    "HI-C70-cricket",
+    "HI-C70-song",
+    "HI-C70-rest"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-70-LEISURE"
+  ],
+  "after": []
+}

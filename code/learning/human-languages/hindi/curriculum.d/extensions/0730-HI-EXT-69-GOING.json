@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-69-GOING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a vehicle, a railway, a station and a ticket, and say that I go.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C69-vehicle",
+    "HI-C69-railway",
+    "HI-C69-station",
+    "HI-C69-ticket",
+    "HI-C69-go"
+  ]
+}

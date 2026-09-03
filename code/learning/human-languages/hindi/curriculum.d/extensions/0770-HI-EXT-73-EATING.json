@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-73-EATING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name an eating house, breakfast, the bill and the waiter, and say that I drink.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C73-eating-house",
+    "HI-C73-breakfast",
+    "HI-C73-bill",
+    "HI-C73-waiter",
+    "HI-C73-drink"
+  ]
+}

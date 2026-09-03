@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:cd9e186e73b3c78c",
+  "lessonIds": [
+    "HI-C70-game",
+    "HI-C70-play",
+    "HI-C70-cricket",
+    "HI-C70-song",
+    "HI-C70-rest"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch77.txt",
+  "json": "hindi/narration/ch77.json",
+  "textHash": "fnv1a64:e70c63c0d0fe2ace",
+  "jsonHash": "fnv1a64:8373bcca64283ac8",
+  "findings": []
+}

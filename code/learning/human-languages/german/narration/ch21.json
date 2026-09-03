@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 21,
-  "title": "Head and Hand",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:12d04bf8b21ce7da",
+  "title": "The Past That Takes To Be",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:285db0aad67d872a",
   "lessons": [
     {
-      "id": "GE-C17-kopf",
-      "sequence": 610,
-      "title": "Der Kopf — “the head”",
-      "headword": "der Kopf",
-      "romanization": "der Kopf",
-      "gloss": "the head — masculine, capitalised, with final pf",
+      "id": "GE-C16-perfekt-sein",
+      "sequence": 560,
+      "title": "ich bin gegangen — the perfect built on sein",
+      "headword": "ich bin gegangen",
+      "romanization": "ich bin gegangen",
+      "gloss": "the perfect built on sein — the family of verbs that refuses haben",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7befc33591b5232",
+      "sourceHash": "fnv1a64:42edc20268d8b4c3",
       "notice": null,
       "blocks": [
         {
@@ -35,76 +35,69 @@
             },
             {
               "kind": "speech",
-              "text": "Learn the first body part with its article and its characteristic final sound."
+              "text": "You built the everyday past with haben — ich habe gelernt. A particular family of verbs refuses haben and takes this chapter's verb instead."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: der Kopf",
+          "type": "grammar",
+          "title": "Grammar Lens: which verbs take sein",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Kopf — the head."
+              "text": "Verbs of motion and change of state build their perfect with sein, not haben."
             },
             {
               "kind": "speech",
-              "text": "It is masculine and capitalised because every German noun begins with a capital letter."
+              "text": "An action that leaves you somewhere else, or leaves you something else, takes sein. An ordinary activity that leaves you where you were keeps haben: ich habe gearbeitet, ich habe getanzt."
+            },
+            {
+              "kind": "speech",
+              "text": "Gehen is the model, and because every present form of sein now belongs to you, the whole thing reads off without a single new word:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "ich bin gegangen means I went / I have gone.",
+                "du bist gegangen means you went.",
+                "er ist gegangen means he went.",
+                "wir sind gegangen means we went."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The recipe is the one you already know, with the helper swapped:"
+            },
+            {
+              "kind": "speech",
+              "text": "present form of sein + past participle, and the participle goes last."
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: Make the -pf sequence",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "At the end of Kopf, close for p and release directly into f. English has no identical native ending, so practise it slowly:"
+              "text": "ge-prefix — gegangen opens with the same unstressed ge- that wrapped gelernt and gesagt. It is never stressed; the weight falls on -gang-."
             },
             {
               "kind": "speech",
-              "text": "Ko-p-f becomes Kopf."
+              "text": "ich-laut — and ich keeps its soft ending right before it, so the phrase runs ich bin ge-GANG-en without a break."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: Kopf + Schmerzen",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "A useful phrase is:"
-            },
-            {
-              "kind": "speech",
-              "text": "Ich habe Kopfschmerzen. — I have a headache."
-            },
-            {
-              "kind": "speech",
-              "text": "German compounds simply place nouns together: Kopf (head) + Schmerzen (pains)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart: The old cup",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Kopf originally meant a cup or bowl. It is related to English cup; both were early borrowings of Late Latin cuppa. A container word became slang for the skull and eventually took over the everyday job."
-            },
-            {
-              "kind": "speech",
-              "text": "German’s older inherited head-word did not disappear completely. The next micro-lesson follows it into compounds and compares the same container metaphor in French."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -117,29 +110,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“der Kopf” — release p into f",
+              "instruction": "\"ich bin gegangen; du bist gegangen; er ist gegangen; wir sind gegangen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “der Kopf” — release *p* into *f*]"
+              "source": "[YOU SAY: \"ich bin gegangen; du bist gegangen; er ist gegangen; wir sind gegangen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Ich habe Kopfschmerzen.”",
+              "instruction": "the contrast — \"ich habe gelernt … ich bin gegangen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Ich habe Kopfschmerzen.”]"
+              "source": "[YOU SAY: the contrast — \"ich habe gelernt … ich bin gegangen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Kopf — cup or bowl”",
+              "instruction": "the rule — \"motion and change take sein\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Kopf — cup or bowl”]"
+              "source": "[YOU SAY: the rule — \"motion and change take sein\"]"
             },
             {
               "kind": "repeat",
@@ -148,12 +141,12 @@
             },
             {
               "kind": "speech",
-              "text": "“Der Kopf — masculine, capitalised.”"
+              "text": "\"ich bin gegangen.\""
             }
           ]
         },
         {
-          "index": 6,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -165,26 +158,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say “the head.” (Der Kopf.) Give its gender. (Masculine.) Why the capital? (It is a noun.) What did Kopf first mean? (A cup or bowl.) Name the related English word. (Cup.) Next: find the inherited word Haupt."
+              "text": "Which family of verbs takes sein? (Motion and change of state.) Say \"I went.\" (Ich bin gegangen.) Where does the participle sit? (At the end.) Which helper does arbeiten take? (Haben — it is an activity, not a change.) Next: the first of the family, and it is the one you say most."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C17-kopf-haupt",
-      "sequence": 620,
-      "title": "Kopf / Haupt — two head-words",
-      "headword": "Kopf / Haupt",
-      "romanization": "Kopf / Haupt",
-      "gloss": "the cup-word and the inherited Germanic head-word",
+      "id": "GE-C16-kommen",
+      "sequence": 565,
+      "title": "kommen — \"to come\"",
+      "headword": "kommen",
+      "romanization": "kommen",
+      "gloss": "to come — English come with one consonant shifted, and the second verb of the sein family",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d13b909407b1d01",
+      "sourceHash": "fnv1a64:e4db5291036acf3e",
       "notice": null,
       "blocks": [
         {
@@ -200,73 +193,880 @@
             },
             {
               "kind": "speech",
-              "text": "Kopf began as “cup.” German’s inherited word for “head” is Haupt, a cousin of English head and Latin caput."
+              "text": "Motion takes sein. Here is the motion verb you will use as often as gehen, and it is an English word you already own."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: inherited Haupt",
+          "type": "input",
+          "title": "You'll want to know: kommen",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "kommen — \"to come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich bin gekommen — \"I came.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The infinitive wears the -en you know. The participle is gekommen: the ge- wrap in front, and -en rather than -t at the back, because this is one of the old strong verbs rather than a regular one."
+            },
+            {
+              "kind": "speech",
+              "text": "Coming is arriving somewhere you were not. That is motion with a result, so it takes sein, exactly as gehen does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kommen and English come are the same word, both from Germanic kwemaną. No Latin anywhere in the line — French venir and Spanish venir come from Latin venīre instead, which is where English gets advent, convene and venue."
+            },
+            {
+              "kind": "speech",
+              "text": "So English, as usual, owns both halves: the everyday come from the Germanic side, the formal convene from the Latin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-o — the o is short and open, the vowel of English cot, not the uh English puts in come."
+            },
+            {
+              "kind": "speech",
+              "text": "ge-prefix — gekommen keeps the unstressed ge-; the stress is on -KOMM-."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kommen\" — short open o",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kommen\" — short open *o*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich bin gekommen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich bin gekommen\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich bin gegangen … ich bin gekommen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich bin gegangen … ich bin gekommen\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"ich bin gekommen.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does kommen mean? (\"To come.\") Say \"I came.\" (Ich bin gekommen.) Which helper, and why? (Sein — it is motion.) Which English word is it? (Come.) Next: the verb that covers everything with a vehicle under it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-fahren",
+      "sequence": 570,
+      "title": "fahren — \"to travel, to drive\"",
+      "headword": "fahren",
+      "romanization": "fahren",
+      "gloss": "to travel, to drive — motion with a vehicle under it, and English fare hiding inside",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25e879682f697de5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Gehen is going on your feet. When there is a vehicle under you, German changes the verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fahren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fahren — \"to travel, to go by vehicle, to drive.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich bin gefahren — \"I travelled, I drove.\""
+            },
+            {
+              "kind": "speech",
+              "text": "German keeps two verbs where English makes do with go. You gehen on foot and you fahren in anything with wheels — a car, a bus, a train, a bicycle. Getting that pair right is one of the first things that makes a learner sound German rather than translated."
+            },
+            {
+              "kind": "speech",
+              "text": "It is motion, so the helper is sein."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-a-long — the a is long and open, as in war."
+            },
+            {
+              "kind": "speech",
+              "text": "h-silent-lengthening — and the h after it is the silent stretcher you met in gehen and sehen: it is not breathed, it only holds the vowel. FAH-ren rhymes with the way gehen and sehen are built."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fahren is English fare — the old verb meaning \"to travel,\" which English demoted to a noun and then almost forgot. It is still there in:"
+            },
             {
               "kind": "table",
               "headers": [
-                "language",
-                "inherited form"
+                "English word",
+                "what it is really saying"
               ],
               "columns": 2,
-              "rowCount": 3,
+              "rowCount": 4,
               "utterances": [
-                "language: Latin. inherited form: caput.",
-                "language: German. inherited form: Haupt.",
-                "language: English. inherited form: head."
+                "English word: farewell. what it is really saying: travel well.",
+                "English word: thoroughfare. what it is really saying: a way you can travel through.",
+                "English word: seafaring. what it is really saying: sea-travelling.",
+                "English word: the fare you pay. what it is really saying: what the travelling costs."
               ]
             },
             {
               "kind": "speech",
-              "text": "The initial k becomes h relationship reflects Grimm’s law, the same systematic Germanic sound shift seen in Latin pater beside English father. The later consonants have their own history; use the initial pair as the clear signal."
+              "text": "So auf Wiedersehen and farewell are built the same way: both are a wish handed over at the door, one about seeing again, one about travelling well."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"fahren\" — long a, silent h",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"fahren\" — long *a*, silent *h*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich bin gefahren\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich bin gefahren\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"gehen on foot, fahren with wheels\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"gehen on foot, fahren with wheels\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"fahren — fare — farewell\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"fahren — fare — farewell\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "speech",
-              "text": "Haupt survives in compounds and formal vocabulary:"
+              "text": "\"Ich bin gefahren.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "Hauptstadt — capital, literally “head city”;"
+              "text": "What does fahren mean? (\"To travel, to go by vehicle.\") Which verb would you use walking to the shop? (Gehen.) Say \"I drove.\" (Ich bin gefahren.) Which English word is fahren? (Fare — as in farewell.) Next: the verb for becoming something else."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-werden",
+      "sequence": 575,
+      "title": "werden — \"to become\"",
+      "headword": "werden",
+      "romanization": "werden",
+      "gloss": "to become — the change-of-state half of the rule, in one word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:beb7630d7f914af2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Hauptbahnhof — main station;"
+              "text": "The rule has two halves. Gehen, kommen and fahren are the motion half. This one word is the whole of the other half."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: werden",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "werden — \"to become.\""
             },
             {
               "kind": "speech",
-              "text": "Hauptsache — main thing."
+              "text": "ich bin geworden — \"I became.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Sein says what you are. Werden says what you turn into. Where sein sits still, werden moves — and that is exactly why it takes sein as its helper: becoming is change of state in its purest form."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich bin müde geworden. — \"I got tired.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what that sentence does. The adjective you learned with sein now describes an arrival rather than a condition. German makes the difference with the verb; English does it with be against get."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "w-as-v — the w is English v, as in war and wir."
+            },
+            {
+              "kind": "speech",
+              "text": "d-t-final — and in wird (\"he becomes\") the final d devoices to a t, the same rule that turned sind into zint."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "werden is a lost English verb — weorthan, \"to turn, to come to be\" — and its bones are still in the language:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "the buried meaning"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "English: toward. the buried meaning: turning to.",
+                "English: backward. the buried meaning: turning back.",
+                "English: worth. the buried meaning: what a thing turns out to be."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So werden means \"to turn into,\" and every time you say toward you are using the same root without knowing it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"werden\" — VAIR-den",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"werden\" — *VAIR-den*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich bin geworden\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich bin geworden\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich bin müde geworden.\" — \"I got tired\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich bin müde geworden.\" — \"I got tired\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"werden — toward — worth\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"werden — toward — worth\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Ich bin müde geworden.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does werden mean? (\"To become.\") Why does it take sein? (It is change of state — the other half of the rule.) Say \"I became.\" (Ich bin geworden.) Which English words hide the same root? (Toward, backward, worth.) Next: the two verbs that break the rule by standing still."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-bleiben",
+      "sequence": 580,
+      "title": "bleiben — \"to stay\"",
+      "headword": "bleiben",
+      "romanization": "bleiben",
+      "gloss": "to stay — a verb that takes sein while meaning the exact opposite of change",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5af4635e4a46931",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Werden takes sein because it is pure change. This verb takes sein too — and it means staying exactly where you are."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bleiben",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bleiben — \"to stay, to remain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich bin geblieben — \"I stayed.\""
+            },
+            {
+              "kind": "speech",
+              "text": "By the rule as stated, this verb should take haben. Staying is not motion and it is not change; it is the absence of both. It takes sein anyway, and every German learner meets it as a fact rather than a consequence."
+            },
+            {
+              "kind": "speech",
+              "text": "The honest way to hold it: bleiben is on the sein list because it is about where you are rather than what you do, and that is the deeper thing the motion rule was pointing at all along."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diphthong-ei — ei is the eye vowel again, exactly as in sein. So bleiben is BLY-ben, never blee-ben. The two verbs of this chapter that break the rule both carry that vowel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bleiben is be- plus an old Germanic verb lība-, \"to remain.\" English lost the verb and kept its leavings — literally: what remains after everything else has gone is what English calls the leftovers, and leave in the sense of what is left belongs to the same family."
+            },
+            {
+              "kind": "speech",
+              "text": "German still uses the verb every day; English kept only the residue of it, which is a fitting fate for a word meaning \"to be left over.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bleiben\" — BLY-ben, the eye vowel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bleiben\" — *BLY-ben*, the *eye* vowel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich bin geblieben\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich bin geblieben\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the odd pair — \"ich bin geworden … ich bin geblieben\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the odd pair — \"ich bin geworden … ich bin geblieben\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Ich bin geblieben.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bleiben mean? (\"To stay.\") Say \"I stayed.\" (Ich bin geblieben.) Does the motion rule predict its helper? (No — it has to be learned.) How is ei pronounced? (Like English eye.) Next: the rest of the verbs that have to be learned, including this chapter's own verb."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-perfekt-sein-ausnahmen",
+      "sequence": 585,
+      "title": "ich bin gewesen — and the rest of the learned list",
+      "headword": "ich bin gewesen",
+      "romanization": "ich bin gewesen",
+      "gloss": "the short learned list — the verbs on the sein side that the motion rule does not predict",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a7230f853aa44ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Bleiben was the first verb the rule failed to predict. Here is the whole of the rest of that list, and it is short."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the verbs you simply learn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Besides motion and change, a small fixed set of verbs takes sein and has to be learned."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "perfect",
+                "meaning"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "verb: sein. perfect: ich bin gewesen. meaning: I have been.",
+                "verb: bleiben. perfect: ich bin geblieben. meaning: I stayed.",
+                "verb: gelingen. perfect: es ist gelungen. meaning: it succeeded.",
+                "verb: geschehen. perfect: es ist geschehen. meaning: it happened.",
+                "verb: passieren. perfect: es ist passiert. meaning: it happened.",
+                "verb: begegnen. perfect: ich bin begegnet. meaning: I met."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Sein and bleiben head the list because they are the two that most clearly contradict the rule: one says a thing simply is, the other says it stays. The rest are events that arrive of their own accord — succeeding, happening, running into somebody — and German treats an arrival as a change."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look closely at gewesen. Strip the ge- wrap and the -en ending and what is left is wes- — the third of the three roots inside this verb, the one that gave war and English was."
+            },
+            {
+              "kind": "speech",
+              "text": "So sein reaches for that root twice: once for its past tense, once for its participle. The infinitive comes from one root, the present from two, the past and participle from a third. There is no part of this verb that belongs to all of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich bin gewesen; ich bin geblieben\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich bin gewesen; ich bin geblieben\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"es ist passiert\" — \"it happened\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"es ist passiert\" — \"it happened\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"war … gewesen\" — the same root twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"war … gewesen\" — the same root twice]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"ich bin gewesen.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the two verbs at the head of the learned list. (Sein and bleiben.) Say \"I have been.\" (Ich bin gewesen.) Say \"it happened.\" (Es ist passiert — or es ist geschehen.) Which root is hiding inside gewesen? (wes-, the one behind war.) Next: the ending German does not put on any of these."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-perfekt-sein-agreement",
+      "sequence": 590,
+      "title": "gegangen — the participle that never changes",
+      "headword": "gegangen",
+      "romanization": "gegangen",
+      "gloss": "no agreement in the perfect — one participle for every subject, where French has four",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2bd3a5dd2581a03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "French draws the same have-against-be line German does. Here is the place the two languages part company, and German comes out easier."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: German agrees with nothing here",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Inside the perfect, the German participle takes no ending at all. Gegangen is gegangen for every person, number and gender."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "French",
+                "German"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "he went. French: il est allé. German: er ist gegangen.",
+                "she went. French: elle est allée. German: sie ist gegangen.",
+                "they went. French: ils sont allés. German: sie sind gegangen."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "French makes the participle agree with its subject and spells the agreement out three different ways. German changes the helper — ist, sind — and leaves the participle exactly where it found it."
+            },
+            {
+              "kind": "speech",
+              "text": "Old High German did inflect it here, at least some of the time. Modern German lost that, along with most of its other adjective-like endings in this position. So the simplicity is not a design; it is an erosion, and German happens to have come out ahead."
             }
           ]
         },
         {
           "index": 2,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: Two container metaphors",
+          "title": "Why it's said this way",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "language",
-                "everyday word",
-                "older picture"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "language: German. everyday word: Kopf. older picture: cuppa, cup.",
-                "language: French. everyday word: tête. older picture: testa, pot."
-              ]
+              "kind": "speech",
+              "text": "It would be easy to assume German copied this split from Latin, the way it borrowed so much else. It did not."
             },
             {
               "kind": "speech",
-              "text": "Both languages independently promoted a vessel-word to “head,” while keeping the older head-root in words for chiefs, capitals, or main things. The vocabulary sources are both Latin loans, but the metaphor was applied separately: heads look like bowls in many languages."
+              "text": "The haben-perfect and the sein-perfect are native Germanic developments. They grew up alongside the Romance ones rather than out of them: neighbouring languages drifting the same way over centuries of contact, the same areal spread that pushed the simple past out of everyday speech in French, German and Italian together."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things to carry forward, and they point in opposite directions:"
+            },
+            {
+              "kind": "speech",
+              "text": "the split between the two helpers is shared with French;"
+            },
+            {
+              "kind": "speech",
+              "text": "the agreement is not."
             }
           ]
         },
@@ -284,29 +1084,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Kopf — everyday cup-word”",
+              "instruction": "\"er ist gegangen; sie ist gegangen; sie sind gegangen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Kopf — everyday cup-word”]"
+              "source": "[YOU SAY: \"er ist gegangen; sie ist gegangen; sie sind gegangen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Haupt — inherited head-word”",
+              "instruction": "the participle, unchanged, three times — \"gegangen, gegangen, gegangen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Haupt — inherited head-word”]"
+              "source": "[YOU SAY: the participle, unchanged, three times — \"gegangen, gegangen, gegangen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hauptstadt, Hauptbahnhof”",
+              "instruction": "the comparison — \"elle est allée … sie ist gegangen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hauptstadt, Hauptbahnhof”]"
+              "source": "[YOU SAY: the comparison — \"elle est allée … sie ist gegangen\"]"
             },
             {
               "kind": "repeat",
@@ -315,7 +1115,7 @@
             },
             {
               "kind": "speech",
-              "text": "“Kopf took the job; Haupt stayed in compounds.”"
+              "text": "\"sie ist gegangen; sie sind gegangen.\""
             }
           ]
         },
@@ -332,43 +1132,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which word is everyday “head”? (Kopf.) Which inherited word survives in compounds? (Haupt.) Name two compounds. (Hauptstadt, Hauptbahnhof.) What parallel metaphor did French use? (Tête, originally a pot.) Next: the hand."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GE-C17-kopf-haupt-compound-word",
-              "prompt": "Which inherited German head-word survives in compounds such as Hauptstadt?",
-              "assesses": [
-                "GE-LEX-HAUPT-02"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "haupt"
-              ],
-              "feedback": {
-                "correct": "Correct: Haupt is the inherited head-word retained in compounds.",
-                "incorrect": "The inherited word is Haupt, as in Hauptstadt and Hauptbahnhof."
-              }
+              "text": "Does the German participle agree with its subject in the perfect? (No — never.) What changes instead? (The helper — ist, sind.) Does French agree? (Yes.) Did German take this split from Latin? (No — it grew in parallel.) Next: the one place a German participle does take an ending."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C17-hand",
-      "sequence": 630,
-      "title": "die Hand — \"the hand\"",
-      "headword": "die Hand",
-      "romanization": "die Hand",
-      "gloss": "the hand — the same word as English, and unrelated to Romance manus",
+      "id": "GE-C16-partizip-attributiv",
+      "sequence": 595,
+      "title": "der angekommene Zug — where the ending comes back",
+      "headword": "der angekommene Zug",
+      "romanization": "der angekommene Zug",
+      "gloss": "the one place a German participle does take an ending — standing in front of a noun",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8d12b1d180c6414",
+      "sourceHash": "fnv1a64:82ebcf8b11b3ce02",
       "notice": null,
       "blocks": [
         {
@@ -384,41 +1167,198 @@
             },
             {
               "kind": "speech",
-              "text": "After the tangle of Kopf and Haupt, here is the easiest word in the chapter — and a useful lesson about when languages don't match."
+              "text": "The participle takes no ending in the perfect. That is a fact about the perfect, not about participles — and the difference matters."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: die Hand",
+          "type": "grammar",
+          "title": "Grammar Lens: in front of a noun, it inflects",
           "segments": [
             {
               "kind": "speech",
-              "text": "die Hand — the hand. Feminine, and spelled exactly like English."
+              "text": "A German participle standing in front of a noun is working as an adjective, and it takes the endings adjectives take there."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "ein geschriebener Brief means a written letter.",
+                "der angekommene Zug means the arrived train.",
+                "die eingeschlafene Katze means the fallen-asleep cat."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Each noun keeps its capital, and each participle now carries a small ending chosen by the article in front of it. That is the ordinary German adjective machine, applied to a participle. (Katze, \"cat\", gets a lesson of its own later; here it is only carrying the ending.)"
+            },
+            {
+              "kind": "speech",
+              "text": "So German did not lose participle endings everywhere. It lost them in exactly one construction: the perfect."
             }
           ]
         },
         {
           "index": 2,
           "type": "pronunciation",
-          "title": "Sounds you'll need: Final devoicing",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "One pronunciation note: the final d is said as a t. German devoices a consonant at the end of a word, so Hand ends like English hunt — but with the open ah of Tag, not hunt's vowel. Add an ending and the d comes back: die Hände (\"the hands\")."
+              "text": "ge-prefix — all three participles above still carry their ge- wrap, and it is still unstressed. In angekommen it has slid into the middle of the word, behind an-, which is where German puts it when a prefix comes first."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: It is the English word",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Hand is Germanic handuz, and English inherited it directly. Same word, same meaning, two thousand years apart. German and English are close relatives, and body parts are where you feel it most:"
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der angekommene Zug\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der angekommene Zug\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die eingeschlafene Katze\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die eingeschlafene Katze\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"sie ist gegangen\" (no ending) … \"die eingeschlafene Katze\" (ending)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"sie ist gegangen\" (no ending) … \"die eingeschlafene Katze\" (ending)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"die müde Mutter\" — an ordinary adjective doing the same thing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"die müde Mutter\" — an ordinary adjective doing the same thing]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does a German participle still take an ending? (In front of a noun, as an adjective.) Where does it never take one? (In the perfect.) Say \"the arrived train.\" (Der angekommene Zug.) What is the participle behaving as, in that phrase? (An adjective.) Next: choosing between the two helpers, on the spot."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-haben-oder-sein",
+      "sequence": 600,
+      "title": "Practice — haben or sein?",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — choosing between haben and sein until the choice is a reflex",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:720ce13eb19523ca",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. The only skill left in this chapter is picking the right helper without stopping to think, and that is drill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the whole family in one place",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "perfect",
+                "why"
+              ],
+              "columns": 3,
+              "rowCount": 8,
+              "utterances": [
+                "verb: gehen. perfect: ich bin gegangen. why: motion.",
+                "verb: kommen. perfect: ich bin gekommen. why: motion.",
+                "verb: fahren. perfect: ich bin gefahren. why: motion.",
+                "verb: werden. perfect: ich bin geworden. why: change of state.",
+                "verb: bleiben. perfect: ich bin geblieben. why: learned.",
+                "verb: sein. perfect: ich bin gewesen. why: learned.",
+                "verb: lernen. perfect: ich habe gelernt. why: ordinary activity.",
+                "verb: machen. perfect: ich habe gemacht. why: ordinary activity."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read the right-hand column and you can see how much of the work the motion rule does on its own: only two rows have to be memorised outright."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
             {
               "kind": "table",
               "headers": [
@@ -428,55 +1368,21 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "Hand means hand.",
-                "Arm means arm.",
-                "Finger means finger.",
-                "Fuß means foot.",
-                "Herz means heart."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: Where the family tree stops",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Now the interesting part. Every Romance language builds \"hand\" on Latin manus:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "French, la main.",
-                "Italian, la mano.",
-                "Portuguese, a mão.",
-                "Spanish, la mano."
+                "Wo bist du gewesen? means Where have you been?",
+                "Ich bin nach Berlin gefahren. means I travelled to Berlin.",
+                "Und Anna? Ist sie gekommen? means And Anna? Did she come?",
+                "Anna ist zu Hause geblieben. means Anna stayed at home.",
+                "Ich habe viel gelernt. Jetzt bin ich müde. means I learned a lot. Now I am tired."
               ]
             },
             {
               "kind": "speech",
-              "text": "And Germanic — German, English — has handuz, which is not related to manus at all. The two families simply have different words here."
-            },
-            {
-              "kind": "speech",
-              "text": "That is worth noticing, because these connections keep turning up, and it can start to feel as though everything must connect. It doesn't. Indo-European languages share a great deal, and then diverge, and \"hand\" is one of the places where they diverged early and completely."
-            },
-            {
-              "kind": "speech",
-              "text": "The Latin word did reach German — but only as borrowed vocabulary: Manuskript, Maniküre, manuell. Learned imports, sitting beside the native word without displacing it."
+              "text": "Note the third and fourth lines: ist sie gekommen, Anna ist geblieben — a feminine subject both times, and not one letter added to either participle."
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -489,43 +1395,76 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"die Hand\" — final d said as t",
+              "instruction": "the contrast pair — \"ich habe gelernt … ich bin gegangen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"die Hand\" — final **d** said as **t**]"
+              "source": "[YOU SAY: the contrast pair — \"ich habe gelernt … ich bin gegangen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the plural, and hear the d return — \"die Hände\"",
+              "instruction": "the family — \"bin gekommen, bin gefahren, bin geworden, bin geblieben, bin gewesen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the plural, and hear the *d* return — \"die Hän**d**e\"]"
+              "source": "[YOU SAY: the family — \"bin gekommen, bin gefahren, bin geworden, bin geblieben, bin gewesen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the Germanic set — \"Hand, Arm, Finger, Fuß, Herz\"",
+              "instruction": "the French comparison — \"elle est allée … sie ist gegangen\", no ending at all",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the Germanic set — \"Hand, Arm, Finger, Fuß, Herz\"]"
+              "source": "[YOU SAY: the French comparison — \"elle est allée … sie ist gegangen\", no ending at all]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the gap — \"main, mano, mão … but Hand\"",
+              "instruction": "the one place the ending returns — \"der angekommene Zug\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the gap — \"*main*, *mano*, *mão* … but **Hand**\"]"
+              "source": "[YOU SAY: the one place the ending returns — \"der angekommene Zug\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both voices",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both voices]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"ich habe gelernt … ich bin gegangen.\""
             }
           ]
         },
         {
-          "index": 6,
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built — where this volume pauses",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have gone from guten Tag to two working past tenses, and the method has not changed once: take the word apart, find the English cousin sleeping inside it, and let the family tree do the memorising for you."
+            },
+            {
+              "kind": "speech",
+              "text": "The next volume picks the thread back up with describing what you see."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -537,7 +1476,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the hand.\" (Die Hand — feminine.) How is the final d pronounced, and why? (As a t — German devoices final consonants; the d returns in Hände.) Is Hand related to French main? (No — Germanic handuz against Latin manus; the families differ here.) How did manus reach German anyway? (As borrowed learned words — Manuskript, manuell.) Next: the rest of the body."
+              "text": "Which helper for tanzen, \"to dance\"? (Haben — an activity.) Which for fahren? (Sein — motion.) Which two verbs on the sein list mean the opposite of change? (Sein and bleiben.) Say \"she stayed.\" (Sie ist geblieben — no ending on the participle.)"
             }
           ]
         }

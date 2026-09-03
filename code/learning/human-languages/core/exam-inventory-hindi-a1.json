@@ -51,9 +51,13 @@
       "id": "HI-A1-N-03",
       "category": "Sangya (the noun)",
       "label": "place names: the city you live in, and the country",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C68-ORIGIN-01",
+        "HI-LEX-C68-ORIGIN-02",
+        "HI-LEX-C68-ORIGIN-03"
+      ],
       "derivedFrom": "ES:A1-N-01, ES:A1-NE20-02",
-      "note": "Not one settlement or country name is introduced. `shahar` ('city') is not taught either, and it is a required form field in BOTH mocks' writing papers."
+      "note": "Covered by HI-C68-country, HI-C68-india and HI-C68-city: `desh`, the country name `Bharat`, and `shahar`, the form field both mocks' writing papers require. No settlement name below the country is taught, so a candidate can write the city LABEL but must supply their own city as a proper noun."
     },
     {
       "id": "HI-A1-N-04",
@@ -219,15 +223,17 @@
       "label": "relational adjectives naming origin or nationality (bharatiya, hindustani)",
       "probe": null,
       "derivedFrom": "ES:A1-ADJ-02, ES:A1-NG3-07",
-      "note": "No country name, no nationality adjective. `hindi` is taught only inside `main hindi bolta hun`."
+      "note": "`Bharat` is now taught as a country NAME (HI-C68-india). The relational adjective built from it is not, and neither is any other nationality word, so this point measures exactly the derivation that is missing."
     },
     {
       "id": "HI-A1-ADJ-06",
       "category": "Visheshan (the adjective)",
       "label": "the intensifier bahut, and kafi",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C71-TODAY-03"
+      ],
       "derivedFrom": "ES:A1-ADJ-06, ES:A1-SADJ-01, ES:A1-NG2-03, ES:A1-Q-04",
-      "note": "`bahut` is the single commonest intensifier in spoken Hindi and the direct counterpart of the proxy's `muy`. Neither it nor `kafi` is introduced, so no taught adjective can be graded at all."
+      "note": "`bahut` is taught in HI-C71-very, which is the intensifier this point is about and the direct counterpart of the proxy's `muy`. `kafi` is still untaught; it is a second exponent of the same demand, not a second demand."
     },
     {
       "id": "HI-A1-ADJ-07",
@@ -621,17 +627,23 @@
       "id": "HI-A1-V-25",
       "category": "Kriya (the verb)",
       "label": "jana, and the go-somewhere frame every A1 routine description needs",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C69-GOING-05",
+        "HI-CONCEPT-C05-BOLTAHUN-01"
+      ],
       "derivedFrom": "ES:A1-V-02, ES:A1-NG3-04",
-      "note": "Neither `jana` nor its stem is introduced anywhere. Every personal-account item in both mocks uses it, and the A1 speaking interview asks about transport and routine. The single highest-traffic missing verb in the level."
+      "note": "Covered by productive combination, the same liberty `probeSemantics` names for HI-A1-F-32: HI-C69-go introduces `jana`, and the habitual template is introduced as applying to any stem, so `main steshan jata hun` is buildable from taught parts -- and HI-C69-go's guided practice says exactly that sentence."
     },
     {
       "id": "HI-A1-V-26",
       "category": "Kriya (the verb)",
       "label": "khana and pina as verbs, distinguished from khana the noun",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C73-EATING-05",
+        "HI-CONCEPT-C37-KHAANA-01"
+      ],
       "derivedFrom": "ES:A1-NE05-01",
-      "note": "`khana` is introduced as the masculine noun 'food'. The verb sense, and `pina` at all, are untaught; mock 1's account has `khana khati hun` and mock 2's has `chay piti hai`."
+      "note": "HI-C73-drink introduces `pina` and, in the same lesson, the doing-word sense of `khana` set against the noun the learner already holds. The lesson's wrap-up assesses the distinction the label asks for."
     },
     {
       "id": "HI-A1-V-27",
@@ -752,9 +764,11 @@
       "id": "HI-A1-ADV-03",
       "category": "Kriya-visheshan (adverbs)",
       "label": "aaj, the word for today",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C71-TODAY-01"
+      ],
       "derivedFrom": "ES:A1-ADV-02, ES:A1-NG4-02",
-      "note": "Not introduced anywhere, and it is hard to overstate how often the level needs it: mock 1 reading items 3 and 9 and listening item 6, mock 2 reading items 8 and 11 and its whole writing task, which is about why you cannot meet TODAY. `kal` is taught and its anchor is not."
+      "note": "Taught in HI-C71-today, which places it beside the `kal` and `parson` the track already had. It carries mock 1 reading items 3 and 9 and listening item 6, mock 2 reading items 8 and 11, and the whole of mock 2's writing task, which is about why you cannot meet TODAY."
     },
     {
       "id": "HI-A1-ADV-04",
@@ -797,9 +811,11 @@
       "id": "HI-A1-ADV-08",
       "category": "Kriya-visheshan (adverbs)",
       "label": "the additive bhi, Hindi's 'also' and 'too'",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C71-TODAY-02"
+      ],
       "derivedFrom": "ES:A1-ADV-06",
-      "note": "One of the highest-frequency words in the language and the counterpart of the proxy's tambien/tampoco point. Untaught, so nothing can be added to anything."
+      "note": "HI-C71-also teaches `bhi` and, because the placement is what beginners get wrong, teaches that it follows the word it adds to."
     },
     {
       "id": "HI-A1-ADV-09",
@@ -1632,7 +1648,7 @@
       "label": "ask where someone is from, and say where you are from",
       "probe": null,
       "derivedFrom": "ES:A1-F1-03, ES:A1-NG3-07",
-      "note": "The first question of the A1 speaking interview and of mock 1 listening item 10. Needs `se`."
+      "note": "The first question of the A1 speaking interview and of mock 1 listening item 10. `desh` and `shahar` are now taught (HI-C68), so the ANSWER's content words exist; the frame still needs `se`, which is untaught."
     },
     {
       "id": "HI-A1-F-25",
@@ -1965,9 +1981,14 @@
       "id": "HI-A1-F-60",
       "category": "Sanvad-karya (communicative functions)",
       "label": "read a public sign: entrance, exit, open, closed",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C74-SIGNS-01",
+        "HI-LEX-C74-SIGNS-02",
+        "HI-LEX-C74-SIGNS-03",
+        "HI-LEX-C74-SIGNS-04"
+      ],
       "derivedFrom": "ES:A1-NG5-05",
-      "note": "Items 1 to 4 of BOTH mocks' reading papers, and the first 35 of that paper's 100 points. The corpus introduces no sign vocabulary at all -- not pravesh, nikas, band, khula, bahar or dhyan den."
+      "note": "Exactly the four words the label names, taught in HI-C74-open, HI-C74-closed, HI-C74-entrance and HI-C74-exit. These carry items 1 to 4 of both mocks' reading papers."
     },
     {
       "id": "HI-A1-F-61",
@@ -1983,9 +2004,12 @@
       "id": "HI-A1-F-62",
       "category": "Sanvad-karya (communicative functions)",
       "label": "ask what something costs",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C72-COST-03",
+        "HI-CONCEPT-C02-KYA-01"
+      ],
       "derivedFrom": "ES:A1-NG6-02, ES:A1-NE12-03",
-      "note": "Required by mock 1's speaking role-play part 3, 40 of that paper's 100 points. Needs `kitne ka`, `rupaye` and numerals above twenty; the corpus has none of them."
+      "note": "HI-C72-price teaches `dam` and builds `dam kya hai?` from it and the already-taught `kya`, and the lesson's guided practice and wrap-up both require the learner to produce that question. The exponent taught is `dam kya hai?`, NOT the `kitne ka` the earlier note named; both are current market Hindi. STATING an answer still needs numerals above twenty, which HI-A1-NUM-03 records as missing."
     },
     {
       "id": "HI-A1-F-63",
@@ -2190,7 +2214,7 @@
       "label": "the meals of the day",
       "probe": null,
       "derivedFrom": "ES:A1-NE05-01",
-      "note": "`khana` is taught as the noun 'food'. No word for breakfast, lunch or dinner, and no verb for eating; see HI-A1-V-26."
+      "note": "`nashta` ('breakfast') is now taught in HI-C73-breakfast, and the doing-word sense of `khana` is taught in HI-C73-drink and covered at HI-A1-V-26. Lunch and dinner are still unnamed, so two thirds of the label's demand remains."
     },
     {
       "id": "HI-A1-LEX-19",
@@ -2230,9 +2254,13 @@
       "id": "HI-A1-LEX-22",
       "category": "Shabd-bhandar (core lexis)",
       "label": "the eating place: ordering, the server, the bill",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C73-EATING-01",
+        "HI-LEX-C73-EATING-03",
+        "HI-LEX-C73-EATING-04"
+      ],
       "derivedFrom": "ES:A1-NE05-05",
-      "note": "Ordering one drink is taught (HI-A1-F-15). Nothing else in the scene is: no word for restaurant, server or bill, and no price. Mock 1's speaking role-play is set in a cafe."
+      "note": "Ordering was already taught (HI-A1-F-15). HI-C73 adds `hotal` for the eating house, `bil` for the bill and `vetar` for the server, which are the three the label names."
     },
     {
       "id": "HI-A1-LEX-23",
@@ -2333,17 +2361,25 @@
       "id": "HI-A1-LEX-33",
       "category": "Shabd-bhandar (core lexis)",
       "label": "free time and entertainment",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C70-LEISURE-01",
+        "HI-LEX-C70-LEISURE-02",
+        "HI-LEX-C70-LEISURE-05"
+      ],
       "derivedFrom": "ES:A1-NE08-01, ES:A1-NE08-02",
-      "note": "Nothing at all: no word for playing, resting, or an outing. Mock 2's listening profile has somebody playing cricket in the evening."
+      "note": "HI-C70 teaches `khel`, `khelna` and `aram`, which answer playing and resting. An outing is still unnamed."
     },
     {
       "id": "HI-A1-LEX-34",
       "category": "Shabd-bhandar (core lexis)",
       "label": "sport and games",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C70-LEISURE-01",
+        "HI-LEX-C70-LEISURE-02",
+        "HI-LEX-C70-LEISURE-03"
+      ],
       "derivedFrom": "ES:A1-NE08-03, ES:A1-NE08-04",
-      "note": "Mock 2's listening profile has Imran playing cricket in the evening, and neither the game nor the verb for playing is taught."
+      "note": "HI-C70 teaches the game, the doing word and `kriket` itself, which is the game mock 2's listening profile has Imran playing."
     },
     {
       "id": "HI-A1-LEX-35",
@@ -2401,7 +2437,7 @@
       "label": "buying, selling and renting a home",
       "probe": null,
       "derivedFrom": "ES:A1-NE10-01",
-      "note": "The dwelling and its parts are well taught (HI-A1-LEX-37); the transactions around it are not, and neither is any verb of buying or selling."
+      "note": "The dwelling and its parts are well taught (HI-A1-LEX-37). A verb of buying now exists -- `kharidna`, HI-C72-buy -- but nothing sells or rents, and no dwelling transaction is taught, so this point stays uncovered on its own terms."
     },
     {
       "id": "HI-A1-LEX-41",
@@ -2464,17 +2500,26 @@
       "id": "HI-A1-LEX-47",
       "category": "Shabd-bhandar (core lexis)",
       "label": "payment: money, price and change",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C72-COST-01",
+        "HI-LEX-C72-COST-02",
+        "HI-LEX-C72-COST-03"
+      ],
       "derivedFrom": "ES:A1-NE12-03, ES:A1-NG6-02, ES:A1-NE15-01",
-      "note": "No unit of money, no price word, and no numeral above twenty, so the cafe role-play's price turn cannot be attempted."
+      "note": "HI-C72 teaches `paisa`, `rupaya` and `dam`. The numerals above twenty that the cafe role-play needs to STATE a price are still missing and are enumerated at HI-A1-NUM-03; this point covers the vocabulary of payment, not the ability to say every amount."
     },
     {
       "id": "HI-A1-LEX-48",
       "category": "Shabd-bhandar (core lexis)",
       "label": "transport: bus, train, bicycle, station",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C69-GOING-01",
+        "HI-LEX-C69-GOING-02",
+        "HI-LEX-C69-GOING-03",
+        "HI-LEX-C69-GOING-04"
+      ],
       "derivedFrom": "ES:A1-NE14-03",
-      "note": "Both mocks' reading, listening and speaking papers ask about transport, and the A1 speaking interview lists it as one of five interview topics. The corpus has `safar` ('a journey') and nothing that moves."
+      "note": "HI-C69 teaches `gari`, `rel`, `steshan` and `tikat`, and `bas` was already taught. A bicycle is still not named, so the label's fourth item is the one gap left."
     },
     {
       "id": "HI-A1-LEX-49",
@@ -2514,7 +2559,7 @@
       "label": "the arts: music, dance, image, literature, stage and screen",
       "probe": null,
       "derivedFrom": "ES:A1-NE18-01, ES:A1-NE18-02, ES:A1-NE18-03, ES:A1-NE18-04, ES:A1-NE18-05, ES:A1-NE18-06",
-      "note": "Untaught, in a track whose etymology lessons are steeped in literary Sanskrit and Persian. The proxy spends six A1 points here and the corpus has kitab."
+      "note": "`gana` is now taught in HI-C70-song, as both the song and the singing, so the music corner of this label has a foothold. Dance, image, literature, stage and screen are all still untaught; the proxy spends six A1 points here and one word does not answer them."
     },
     {
       "id": "HI-A1-LEX-54",
@@ -2545,9 +2590,13 @@
       "id": "HI-A1-LEX-56",
       "category": "Shabd-bhandar (core lexis)",
       "label": "geography: country, town, city, capital",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C68-ORIGIN-01",
+        "HI-LEX-C68-ORIGIN-02",
+        "HI-LEX-C68-ORIGIN-03"
+      ],
       "derivedFrom": "ES:A1-NE20-02",
-      "note": "`gaon` ('village') is taught. Neither `desh` nor `shahar` is, and `shahar` is a required field in both mocks' writing papers."
+      "note": "`gaon` was already taught; `desh`, `Bharat` and `shahar` are now taught in HI-C68. The word for a capital is still not, which is the remaining quarter of this point's label."
     },
     {
       "id": "HI-A1-LEX-57",
@@ -2598,17 +2647,27 @@
       "id": "HI-A1-LEX-61",
       "category": "Shabd-bhandar (core lexis)",
       "label": "naming a second language, and naming nationalities",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C68-ORIGIN-04",
+        "HI-LEX-C68-ORIGIN-05"
+      ],
       "derivedFrom": "ES:A1-ADJ-02, ES:A1-F1-03",
-      "note": "`hindi` is taught inside `main hindi bolta hun`. `angrezi` is not, and neither is any country name -- yet mock 1 item 16 and mock 2 item 20 both key on someone speaking TWO languages, and `bhasha` is a form field in both writing papers."
+      "note": "`bhasha` and `angrezi` are taught in HI-C68-language and HI-C68-english, which is what mock 1 item 16 and mock 2 item 20 key on and what the writing papers' `bhasha` field needs. Naming a NATIONALITY still needs the relational adjective, which stays untaught and is enumerated separately at HI-A1-ADJ-05."
     },
     {
       "id": "HI-A1-LEX-62",
       "category": "Shabd-bhandar (core lexis)",
       "label": "the words a town sign or a station announcement uses",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C69-GOING-03",
+        "HI-LEX-C74-SIGNS-01",
+        "HI-LEX-C74-SIGNS-02",
+        "HI-LEX-C74-SIGNS-03",
+        "HI-LEX-C74-SIGNS-04",
+        "HI-LEX-C74-SIGNS-05"
+      ],
       "derivedFrom": "ES:A1-NG5-05",
-      "note": "The lexical twin of HI-A1-F-60. `dhyan den`, `shuru`, `taiyar`, `der se`, `khula`, `band`, `pravesh`, `nikas`, `platform`: none is introduced, and they carry the opening items of both papers that are scored first."
+      "note": "HI-C74 teaches `khula`, `band`, `pravesh`, `nikas` and `der`, and HI-C69 teaches `steshan`. Six of the nine words this note used to list. `dhyan den`, `shuru`, `taiyar` and `platform` are still untaught."
     },
     {
       "id": "HI-A1-LEX-63",

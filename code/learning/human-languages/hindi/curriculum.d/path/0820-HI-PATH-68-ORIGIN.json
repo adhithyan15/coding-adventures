@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-68-ORIGIN",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "HI-C68-country",
+    "HI-C68-india",
+    "HI-C68-city",
+    "HI-C68-language",
+    "HI-C68-english"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-68-ORIGIN"
+  ],
+  "after": []
+}
