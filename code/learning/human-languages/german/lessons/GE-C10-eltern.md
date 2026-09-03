@@ -1,71 +1,81 @@
 ---
+schema_version: 2
 id: GE-C10-eltern
-sequence: 285
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 286
 chapter: 16
 type: word
-headword: der Vater, die Mutter
-gloss: father and mother — Grimm's law makes them twins of English father/mother
+headword: die Eltern
+gloss: parents — a plural with no singular, and underneath it a comparative meaning "the older ones"
 concept_tag: GE-FAMILY-PARENTS
-prerequisites: [GE-C09-jahreszeiten, GE-C01-hallo]
-sounds: [v-as-f, umlaut-u]
-roots: [pie-pater, pie-mater, grimms-law]
-etymology_hook: "Vater/Mutter aren't borrowed from Latin like the German months — they're inherited Germanic cousins of English father/mother, and Grimm's law (p→f, t→th→d) is written right on their faces"
-est_minutes: 4
-reviews_of: [GE-C09-jahreszeiten, GE-C01-hallo]
+prerequisites: [GE-C10-mutter-mater]
+sounds: [herz-short-e, r-final]
+roots: [germanic-althiz]
+etymology_hook: "Eltern is a comparative frozen into a noun — literally the older ones — and English once had the same word as elders, which it kept for a different job"
+duration:
+  max_seconds: 175
+requires:
+  knowledge: [GE-LEX-VATER-01, GE-LEX-MUTTER-01, GE-GRAMMAR-PLURAL-DIE-01, GE-GRAMMAR-NATIVE-VS-LOAN-01]
+introduces:
+  knowledge: [GE-LEX-ELTERN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GE-CULTURE-FAMILIE-GERMANISCH-01]
+practises:
+  knowledge: [GE-LEX-ELTERN-01, GE-LEX-VATER-01, GE-LEX-MUTTER-01, GE-GRAMMAR-PLURAL-DIE-01, GE-GRAMMAR-NATIVE-VS-LOAN-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C10-vater, GE-C10-mutter, GE-C01-die-plural]
 ---
 
-# der Vater, die Mutter — the family that proves Grimm's law
+# die Eltern — "parents"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-VATER-01, GE-LEX-MUTTER-01] -->
 
-[PAUSE 2s] Back in the months chapter, German **borrowed** its calendar from
-Latin (*Januar, März*…). Family is the **opposite** story: **Vater** and
-**Mutter** are **not** borrowed — they are *inherited* Germanic words, blood
-cousins of English **father** and **mother**. And the sound-law that links them,
-**Grimm's law**, is written right on their faces.
+[PAUSE 2s] You have a father and a mother. German has one word for the two of
+them, and it only comes in the plural.
 
-## Taken apart
+## You'll want to know: die Eltern
+<!-- hl-knowledge: introduces=[GE-LEX-ELTERN-01]; assesses=[GE-GRAMMAR-PLURAL-DIE-01, GE-LEX-VATER-01, GE-LEX-MUTTER-01] -->
 
-- **der Vater** ("father") — note the spelling **V**, but it is pronounced **f**
-  (*FAH-ter*). ← PIE **\*ph₂tḗr**.
-- **die Mutter** ("mother"). ← PIE **\*méh₂tēr**.
+> **die Eltern** — "parents."
 
-Articles: *der* Vater (masculine), *die* Mutter (feminine).
+It takes *die*, like every plural you have met, and there is no singular form of
+it. You cannot say "one *Eltern*"; a single one is *der Vater* or *die Mutter*.
 
-## Grimm's law, on display
+Underneath, it is a **comparative** that hardened into a noun: it means "the
+**older** ones." English had the same formation and kept it as **elders**,
+narrowed to people of standing rather than to the two who raised you.
 
-Grimm's law is the great sound-shift that split the **Germanic** languages
-(English, German, Dutch…) off from the rest. Watch what it did to the *same* PIE
-words that Latin kept as *pater/māter*:
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-LEX-ELTERN-01] -->
 
-| PIE | Latin (French) | Germanic (English / German) |
-|---|---|---|
-| \*ph₂tḗr | *pater* (père) | **f**ather / **V**ater (*V* = *f*) |
-| \*méh₂tēr | *māter* (mère) | **m**other / **M**utter |
+Every word in this chapter is inherited. Not one of them was bought.
 
-- **p → f**: Latin kept the *p* (*pater*); Germanic turned it to *f* — English
-  **f**ather, German **V**ater (the *V* is just an old spelling of that *f* sound).
-- **t → th → d**: the middle consonant became English *th* (mo**th**er) and then,
-  in German's later shift, *d/t* (Mu**tt**er).
-
-So German and English **agree** here (both *f-*, both *m-*) precisely because they
-are **both Germanic** — while French/Latin sit on the other side of Grimm's line.
-The month names were Latin tourists; **Vater** and **Mutter** are natives.
+That is not an accident of this list. The words a language uses every hour of
+every day are the ones an incoming language cannot displace, and there is
+nothing more everyday than the people in a house. Rome ran the calendar, so
+German took the calendar's words. Rome did not run anybody's family.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ELTERN-01, GE-LEX-VATER-01, GE-LEX-MUTTER-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "der Vater, die Mutter" — *Vater* with an **f** sound]
-- [YOU SAY: the twin test — "**V**ater / **f**ather, **M**utter / **m**other —
-  both Germanic"]
-- [YOU SAY: contrast — "German months = Latin (Januar); German family = Germanic
-  (Vater)"]
+- [YOU SAY: "die Eltern"]
+- [YOU SAY: the two it stands for — "der Vater, die Mutter"]
+- [YOU SAY: what it literally means — "the older ones"]
+- [YOU SAY: the English word from the same formation — "elders"]
+
+[REPEAT x2] "die Eltern."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ELTERN-01, GE-GRAMMAR-PLURAL-DIE-01, GE-GRAMMAR-NATIVE-VS-LOAN-01] -->
 
-[PAUSE 3s] Give "father" and "mother" with articles, minding the pronunciation.
-(**der Vater** — *f* sound — **die Mutter**.) Why do German *Vater* and English
-*father* match, while French *père* differs? (German & English are both
-**Germanic** — Grimm's law shifted *p → f* in both; French kept Latin's *p*.) How
-does this chapter contrast with the months chapter? (Months were **borrowed** from
-Latin; family is **inherited** Germanic.) Next: **Bruder** and **Schwester**.
+[PAUSE 3s] Say "parents." (**Die Eltern**.) What is the singular? (**There is
+none** — use *der Vater* or *die Mutter*.) What does it mean underneath?
+(**The older ones**.) Was any word in this chapter borrowed? (**No** — all
+inherited.) Next: the brother.

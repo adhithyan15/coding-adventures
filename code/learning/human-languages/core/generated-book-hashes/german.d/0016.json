@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 16,
-  "sourceHash": "fnv1a64:a2f146574616b85e",
+  "sourceHash": "fnv1a64:7919a441fa4d559d",
   "lessonIds": [
     "GE-C10-vater",
     "GE-C10-vater-pater",
@@ -17,11 +17,5 @@
     "GE-C10-ge-kollektiv",
     "GE-C10-geschwister"
   ],
-  "voiceLessons": 13,
-  "drivablePrefix": 13,
-  "text": "german/narration/ch16.txt",
-  "json": "german/narration/ch16.json",
-  "textHash": "fnv1a64:f8ace45ea21cb6c7",
-  "jsonHash": "fnv1a64:16379659f3da3bf4",
-  "findings": []
+  "tex": "german/book/chapters/ch16-familie.tex"
 }

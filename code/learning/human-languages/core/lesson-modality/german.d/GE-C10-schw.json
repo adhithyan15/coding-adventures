@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "GE-C10-eltern",
+    "id": "GE-C10-schw",
     "language": "german",
     "chapter": 16,
-    "sequence": 286,
+    "sequence": 289,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0b293ee3e80b8222"
+    "sourceHash": "fnv1a64:b2fe640b61130e30"
   },
   "findings": []
 }

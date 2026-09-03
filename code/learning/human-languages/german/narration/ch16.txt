@@ -1,69 +1,452 @@
-German, chapter 16: Family.
-2 lessons. All 2 can be done entirely by ear.
+German, chapter 16: The Pair That Proves Grimm's Law.
+13 lessons. All 13 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-der Vater, die Mutter — the family that proves Grimm's law.
-
-Warm-up.
-[pause 2 seconds]
-Back in the months chapter, German borrowed its calendar from Latin (Januar, März…). Family is the opposite story: Vater and Mutter are not borrowed — they are inherited Germanic words, blood cousins of English father and mother. And the sound-law that links them, Grimm's law, is written right on their faces.
-
-Taken apart.
-der Vater ("father") — note the spelling V, but it is pronounced f (FAH-ter). from PIE ph₂tḗr.
-die Mutter ("mother"). from PIE méh₂tēr.
-Articles: der Vater (masculine), die Mutter (feminine).
-
-Grimm's law, on display.
-Grimm's law is the great sound-shift that split the Germanic languages (English, German, Dutch…) off from the rest. Watch what it did to the same PIE words that Latin kept as pater/māter:
-[a table of 2 rows, read aloud]
-PIE: ph₂tḗr. Latin (French): pater (père). Germanic (English / German): father / Vater (V = f).
-PIE: méh₂tēr. Latin (French): māter (mère). Germanic (English / German): mother / Mutter.
-p becomes f: Latin kept the p (pater); Germanic turned it to f — English father, German Vater (the V is just an old spelling of that f sound).
-t becomes th becomes d: the middle consonant became English th (mother) and then, in German's later shift, d/t (Mutter).
-So German and English agree here (both f-, both m-) precisely because they are both Germanic — while French/Latin sit on the other side of Grimm's line. The month names were Latin tourists; Vater and Mutter are natives.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "der Vater, die Mutter" — Vater with an f sound]
-[pause 8 seconds for the answer]
-[your turn — say: the twin test — "Vater / father, Mutter / mother — both Germanic"]
-[pause 8 seconds for the answer]
-[your turn — say: contrast — "German months = Latin (Januar); German family = Germanic (Vater)"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give "father" and "mother" with articles, minding the pronunciation. (der Vater — f sound — die Mutter.) Why do German Vater and English father match, while French père differs? (German & English are both Germanic — Grimm's law shifted p becomes f in both; French kept Latin's p.) How does this chapter contrast with the months chapter? (Months were borrowed from Latin; family is inherited Germanic.) Next: Bruder and Schwester.
-
-
-Lesson 2 of 2.
-der Bruder, die Schwester — and the word for "siblings".
+Lesson 1 of 13.
+der Vater — "father".
 
 Warm-up.
 [pause 2 seconds]
-The parent pair proved German and English are Germanic twins. The sibling pair does it again: Bruder ("brother") and Schwester ("sister") are the near-identical cousins of the English words — no translation really needed, just an ear for the German sounds.
+The months were bought from Rome. Nothing in this chapter was.
 
-Taken apart.
-der Bruder ("brother") from PIE bʰréh₂tēr — the same root as Latin frāter (French frère), but here kept with a b- (Grimm's law changed bʰ becomes b), exactly like English brother.
-die Schwester ("sister") from PIE swésōr. The German sch spells an sh sound; strip it back and Schwester is English sister and Latin soror, all one root.
+You'll want to know: der Vater.
+der Vater — "father."
+A der-word, two syllables, and the first letter is a trap for an English eye.
 
-The collective — Geschwister.
-German has a tidy word English lacks: die Geschwister = "siblings," brothers-and-sisters together. It is built with the ge- prefix, an old collective marker ("a set of…") on Schwester — the same ge- that bundles mountains into a Gebirge ("range") and lets German gather a family in one word.
-The four family words now stand as a Germanic set beside the Romance ones:
-[a table of 2 rows, read aloud]
-German: Vater / Mutter. English: father / mother. (Romance cousin): père / mère.
-German: Bruder / Schwester. English: brother / sister. (Romance cousin): frère / sœur.
+Sounds you'll need.
+v-as-f — German v is an f. You were given this on vier, "four," and it has not changed: Vater opens FAH-, never VAH-.
+vowel-a-long — the a is long and open, the ah of English father.
+r-final — and it closes on the soft r you have been ending words with since Uhr.
+FAH-ter. Say it beside English father and the only real difference is the middle consonant.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "der Bruder, die Schwester" — Schw- = shv]
+[your turn — say: "der Vater" — FAH-ter]
 [pause 8 seconds for the answer]
-[your turn — say: the twin test — "Bruder / brother, Schwester / sister"]
+[your turn — say: the letter and the sound — "V on the page, f in the mouth"]
 [pause 8 seconds for the answer]
-[your turn — say: "die Geschwister — the ge- bundles them into 'siblings'"]
+[your turn — say: it beside its English twin — "Vater, father"]
 [pause 8 seconds for the answer]
+[repeat that twice]
+"der Vater."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "brother" and "sister" with articles. (der Bruder, die Schwester.) Why do they match English so closely? (Both Germanic — same PIE roots, no Grimm's-law gap between them.) What does Geschwister mean, and what does the ge- do? ("Siblings"; ge- is a collective prefix, "a set of.") Next chapter: putting the family into sentences.
+Say "father." (Der Vater.) Which article? (Der.) How is the V said? (As an f.) Which number gave you that? (Vier.) Next: why that f is there at all.
+
+
+Lesson 2 of 13.
+Vater and pater — the p that became an f — Grimm's law, on the one word every family has.
+
+Warm-up.
+[pause 2 seconds]
+You were given a sound law once, on Donner and thunder. Here it is again, on the oldest word in the language.
+
+The word, taken apart.
+One ancient word, reconstructed as ph₂tér, went into every branch of the family. Then the Germanic branch did something the others did not.
+[a table of 2 rows, read aloud]
+branch: Latin, and Romance after it. what it did to the first sound: kept the p. result: pater, French père.
+branch: Germanic. what it did to the first sound: turned it into an f. result: father, Vater.
+The German V is an old spelling of that f. Take the letter away and the two Germanic words are the same word.
+
+Why it's said this way.
+That p becomes f is one line of Grimm's law, the shift that separated the Germanic languages from the rest. It ran through the whole vocabulary at once, which is why it is a law and not an anecdote.
+And it is why German and English agree here while French sits on the other side. They agree because they are on the same side of one ancient change — not because either borrowed from the other. The month names came from Rome. This word never went anywhere.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the two Germanic ones — "Vater, father"]
+[pause 8 seconds for the answer]
+[your turn — say: the Latin one — "pater"]
+[pause 8 seconds for the answer]
+[your turn — say: the change — "p became f"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"pater, Vater — p to f."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did Latin keep? (The p — pater.) What did Germanic do with it? (Turned it into an f.) What is that shift called? (Grimm's law.) So why do German and English match? (Same side of the change.) Next: the mother, and the second leg of the same law.
+
+
+Lesson 3 of 13.
+die Mutter — "mother".
+
+Warm-up.
+[pause 2 seconds]
+The father's first sound changed. This one held.
+
+You'll want to know: die Mutter.
+die Mutter — "mother."
+A die-word beside der Vater, and the pair is how the two articles are usually first met in a sentence about people.
+
+Sounds you'll need.
+mund-short-u — the u is short, the vowel of English put, not the uh of English mother.
+d-t-final — and the -tt- is a crisp double t.
+MOO-ter, with the oo clipped short. Weight on the first syllable, as it is on Vater.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "die Mutter" — MOO-ter, short]
+[pause 8 seconds for the answer]
+[your turn — say: the pair with their articles — "der Vater, die Mutter"]
+[pause 8 seconds for the answer]
+[your turn — say: the English pair — "father, mother"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"der Vater, die Mutter."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "mother." (Die Mutter.) Which article? (Die.) Is the u long or short? (Short.) Say both parents together. (Der Vater, die Mutter.) Next: the consonant in the middle, which did move.
+
+
+Lesson 4 of 13.
+Mutter and mater — the same law, one consonant further in — t became th in English and then d or t in German.
+
+Warm-up.
+[pause 2 seconds]
+The father moved at the front. The mother moves in the middle.
+
+The word, taken apart.
+The first sound of this word never changed anywhere: m in Latin, m in English, m in German. The middle one did, twice.
+[a table of 3 rows, read aloud]
+stage: Latin, untouched. the middle sound: t. word: mater, French mère.
+stage: Germanic, first shift. the middle sound: th. word: mother.
+stage: German, its own later shift. the middle sound: tt. word: Mutter.
+English stopped after one change. German kept going and ran a second shift of its own, which is why mother and Mutter differ where father and Vater barely do.
+
+Why it's said this way.
+Two shifts, one after the other, both of them laws rather than accidents. The first separated Germanic from Latin; the second separated German from English.
+So the distance between any two of these words is a count of how many shifts have run between them. Mater to mother is one. Mother to Mutter is one more. That is the whole reason the family looks scattered from the outside and is perfectly orderly from the inside.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three in order — "mater, mother, Mutter"]
+[pause 8 seconds for the answer]
+[your turn — say: the middle sound each time — "t, th, tt"]
+[pause 8 seconds for the answer]
+[your turn — say: what never changed — "the m"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"mater, mother, Mutter."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the Latin? (Mater.) What did the first shift make of the middle t? (Th.) And the second? (The tt of Mutter.) How many shifts separate mater from Mutter? (Two.) Next: the word for both of them at once.
+
+
+Lesson 5 of 13.
+die Eltern — "parents".
+
+Warm-up.
+[pause 2 seconds]
+You have a father and a mother. German has one word for the two of them, and it only comes in the plural.
+
+You'll want to know: die Eltern.
+die Eltern — "parents."
+It takes die, like every plural you have met, and there is no singular form of it. You cannot say "one Eltern"; a single one is der Vater or die Mutter.
+Underneath, it is a comparative that hardened into a noun: it means "the older ones." English had the same formation and kept it as elders, narrowed to people of standing rather than to the two who raised you.
+
+Why it's said this way.
+Every word in this chapter is inherited. Not one of them was bought.
+That is not an accident of this list. The words a language uses every hour of every day are the ones an incoming language cannot displace, and there is nothing more everyday than the people in a house. Rome ran the calendar, so German took the calendar's words. Rome did not run anybody's family.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "die Eltern"]
+[pause 8 seconds for the answer]
+[your turn — say: the two it stands for — "der Vater, die Mutter"]
+[pause 8 seconds for the answer]
+[your turn — say: what it literally means — "the older ones"]
+[pause 8 seconds for the answer]
+[your turn — say: the English word from the same formation — "elders"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"die Eltern."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "parents." (Die Eltern.) What is the singular? (There is none — use der Vater or die Mutter.) What does it mean underneath? (The older ones.) Was any word in this chapter borrowed? (No — all inherited.) Next: the brother.
+
+
+Lesson 6 of 13.
+der Bruder — "brother".
+
+Warm-up.
+[pause 2 seconds]
+Out of the parents and into their children. This one you can almost read already.
+
+You'll want to know: der Bruder.
+der Bruder — "brother."
+A der-word. Set it beside English brother and one vowel is the whole distance: oo where English has uh.
+
+Sounds you'll need.
+vowel-u-long — a long oo, as in English food.
+r-uvular — the r after B is made at the back of the throat, a light scrape rather than a roll.
+r-final — and the ending is the soft closing r again.
+BROO-der, weight on the first, exactly the rhythm of Vater and Mutter.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der Bruder" — BROO-der]
+[pause 8 seconds for the answer]
+[your turn — say: the English twin — "Bruder, brother"]
+[pause 8 seconds for the answer]
+[your turn — say: three of the family so far — "der Vater, die Mutter, der Bruder"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"der Bruder."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "brother." (Der Bruder.) Which article? (Der.) Long or short u? (Long — BROO.) Next: what Latin did to the front of it.
+
+
+Lesson 7 of 13.
+Bruder and frater — the third line of the same law — where Latin has an f, Germanic has a b.
+
+Warm-up.
+[pause 2 seconds]
+On the father, Latin had the p and Germanic had the f. Here it is the other way round, and that is not a contradiction.
+
+The word, taken apart.
+The ancient word is reconstructed as bʰréh₂tēr — it begins with a breathy b, a sound neither language kept.
+[a table of 2 rows, read aloud]
+branch: Latin. what it did with the breathy b: turned it into an f. result: frater, French frère.
+branch: Germanic. what it did with the breathy b: flattened it to a plain b. result: brother, Bruder.
+So Bruder and frater really are one word, and the b against the f is the mark of which branch you are standing in.
+
+Why it's said this way.
+It looks reversed against Vater and pater, where Germanic held the f. It is not. The two words started from different ancient sounds: a plain p in one, a breathy b in the other. Grimm's law moved each of them once, in its own direction, and the results cross over.
+That is what makes it a law worth the name. It does not say "Germanic prefers f." It says each old sound goes to one particular new one, every time — and you can run it forwards on a word you have never seen.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "frater, Bruder"]
+[pause 8 seconds for the answer]
+[your turn — say: which branch has which — "Latin f, Germanic b"]
+[pause 8 seconds for the answer]
+[your turn — say: the father pair beside it — "pater, Vater"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"frater, Bruder."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the Latin for Bruder? (Frater.) Which branch has the b? (Germanic.) Does that contradict pater and Vater? (No — they started from different old sounds.) Next: a cluster of three letters that says two sounds.
+
+
+Lesson 8 of 13.
+schw- — three letters, two sounds.
+
+Warm-up.
+[pause 2 seconds]
+One sound cluster before the next word, because the word is unreadable without it.
+
+Sounds you'll need.
+sch-sh — sch is one sound, and it is the sh of English ship. Not s-k-h, not sk. Three letters, one consonant.
+w-as-v — and German w is a v, which you have from Winter.
+schw-cluster — put them together and schw- comes out shv-.
+English can say sh and English can say v, but it never puts them side by side at the start of a word. Say shhh, hold it, then let it fall straight into v without a vowel between: shv.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the first sound alone — "sh"]
+[pause 8 seconds for the answer]
+[your turn — say: the second alone — "v"]
+[pause 8 seconds for the answer]
+[your turn — say: the two joined, no vowel — "shv"]
+[pause 8 seconds for the answer]
+[your turn — say: it again, slower — "shv"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"shv."
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many sounds is sch? (One — English sh.) How is German w said? (As a v.) So what does schw- sound like? (Shv-.) Is there a vowel between them? (No.) Next: the word that starts with it.
+
+
+Lesson 9 of 13.
+die Schwester — "sister".
+
+Warm-up.
+[pause 2 seconds]
+You have the cluster. Here is the word it was for.
+
+You'll want to know: die Schwester.
+die Schwester — "sister."
+SHVES-ter. A die-word, and the counterpart of der Bruder.
+On the page it looks unrelated to sister. In the mouth it is not: take the shv back to a plain s and what is left — s-e-s-t-e-r — is the English word with one vowel moved.
+
+Sounds you'll need.
+schw-cluster — shv-, straight into the vowel.
+herz-short-e — a short open e, the vowel of English bed.
+r-final — and the same soft ending as Vater, Mutter and Bruder.
+Four family words now, and all four end the same way.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "die Schwester" — SHVES-ter]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "der Bruder, die Schwester"]
+[pause 8 seconds for the answer]
+[your turn — say: all four — "der Vater, die Mutter, der Bruder, die Schwester"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"die Schwester."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "sister." (Die Schwester.) How does it start? (Shv-.) Which article? (Die.) Say the brother beside it. (Der Bruder.) Next: what Latin did with the same word.
+
+
+Lesson 10 of 13.
+Schwester and soror — one root behind Schwester, sister and soror — and the s that survived in all three.
+
+Warm-up.
+[pause 2 seconds]
+The brother's first sound split the two branches. The sister's did not split anything.
+
+The word, taken apart.
+The ancient word is reconstructed as swésōr, and all three descendants keep its s:
+[a table of 3 rows, read aloud]
+language: German. the word: Schwester. the first sound: sch is a later German dressing on an s.
+language: English. the word: sister. the first sound: plain s.
+language: Latin. the word: soror. the first sound: plain s.
+Grimm's law had nothing to do to an s. It moved the stops — the ps, ts and bs — and left this one where it stood, which is why the sister is the one family word whose front sound matches across the whole family.
+
+Why it's said this way.
+Latin soror is behind French sœur, and behind English sorority — which English borrowed back from Latin centuries after it already had sister from the same root. The two came in by different doors and nobody noticed they were relatives.
+That is the ordinary condition of a big vocabulary: the same ancient word arriving twice, once inherited and once bought, sitting in the dictionary without recognising each other.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three — "Schwester, sister, soror"]
+[pause 8 seconds for the answer]
+[your turn — say: what they share — "the s"]
+[pause 8 seconds for the answer]
+[your turn — say: the English word borrowed back from Latin — "sorority"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Schwester, sister, soror."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the Latin? (Soror.) What do all three share? (The s.) Why did Grimm's law leave it? (It moved stops, not s.) What is the sch then? (Later German dressing on the same s.) Next: the word English does not have.
+
+
+Lesson 11 of 13.
+die Geschwister — "siblings".
+
+Warm-up.
+[pause 2 seconds]
+German has one word for the brother and the sister together. English has siblings, which almost nobody says at a kitchen table.
+
+You'll want to know: die Geschwister.
+die Geschwister — "siblings," brothers and sisters as a set.
+Consider what is inside it. Take off the Ge- at the front and -schwister is Schwester, which you own — the same shv, the same ending. A plural, so die, and like Eltern it has no singular.
+
+Why it's said this way.
+The odd part is that a word built on Schwester covers the brothers too. Two boys and no girls in a house are still die Geschwister.
+German built the collective on the word that happened to be there, and the collective then outranked the piece it was made from. English never built one at all: it says brothers and sisters and reaches for the Latin-derived siblings when it needs a single term.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "die Geschwister"]
+[pause 8 seconds for the answer]
+[your turn — say: the word inside it — "Schwester"]
+[pause 8 seconds for the answer]
+[your turn — say: the two it covers — "der Bruder, die Schwester"]
+[pause 8 seconds for the answer]
+[your turn — say: what English says instead — "brothers and sisters"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"die Geschwister."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "siblings." (Die Geschwister.) Which word is inside it? (Schwester.) Does it cover brothers? (Yes — all of them.) Is there a singular? (No.) Next: what that Ge- on the front is doing.
+
+
+Lesson 12 of 13.
+The gathering Ge- — the prefix that turns one thing into a set of them.
+
+Warm-up.
+[pause 2 seconds]
+One prefix, one job, and the last word showed you it working.
+
+Grammar Lens: one member in, a whole set out.
+Put Ge- on the front of a word for one member of something, and you get a word for the whole set of them.
+[a table of 1 row, read aloud]
+in: Schwester, one member. out: Geschwister, the set.
+That is the machine. It is old, it is Germanic, and German still runs it: a mountain becomes a mountain range, a piece of luggage becomes the luggage, a vegetable becomes the vegetables — each one a bare noun with Ge- welded on.
+English had this prefix and wore it away to nothing. What is left of it in English are fossils nobody parses any more.
+
+Why it's said this way.
+Both plural-only family words in this chapter are made rather than borrowed, and each is made a different way.
+Eltern takes an adjective and freezes it: the older ones. Geschwister takes a noun and gathers it: the set of them.
+Neither has a singular, because neither was ever about one person. They name a group directly, and German got both of them out of parts it already had.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: what the prefix does — "one member in, the set out"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair it made — "Schwester, Geschwister"]
+[pause 8 seconds for the answer]
+[your turn — say: the two plural-only words — "die Eltern, die Geschwister"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Schwester, Geschwister."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does the gathering Ge- do? (Makes a set out of one member.) Which word in this chapter was built with it? (Geschwister.) And how was Eltern built instead? (From a comparative — the older ones.) Do either of them have a singular? (No.)
+
+
+Lesson 13 of 13.
+Practice — the household, and the law that runs through it.
+
+Warm-up.
+[pause 2 seconds]
+No new words. Four people, two words for groups of them, and one sound law with three lines.
+
+Grammar Lens: the four, and their two collectives.
+[a table of 4 rows, read aloud]
+one person: der Vater. the set they belong to: die Eltern.
+one person: die Mutter. the set they belong to: die Eltern.
+one person: der Bruder. the set they belong to: die Geschwister.
+one person: die Schwester. the set they belong to: die Geschwister.
+Both collectives take die and neither has a singular. One was frozen out of a comparative, the other gathered with a prefix.
+
+Why it's said this way.
+Set the four against their Latin cousins and the law is legible in a line:
+Vater against pater — the p became an f.
+Mutter against mater — the t became th, and then German moved it again.
+Bruder against frater — a breathy b flattened one way in Germanic and turned to f in Latin, so the swap runs the opposite way.
+Schwester against soror — nothing moved. The law does not touch an s.
+Three moved and one did not, and which is which was decided by the sound, not by the word. That is what makes it predictable.
+
+Why it's said this way — and what the chapter is made of.
+And every word here is inherited. Not one was bought, where every month name was.
+The pattern holds across the whole book: the words a language uses every hour resist replacement, and the words that arrive with an institution come in whole. A calendar is an institution. A household is not.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the four with their articles — "der Vater, die Mutter, der Bruder, die Schwester"]
+[pause 8 seconds for the answer]
+[your turn — say: the two collectives — "die Eltern, die Geschwister"]
+[pause 8 seconds for the answer]
+[your turn — say: the one that starts shv — "die Schwester"]
+[pause 8 seconds for the answer]
+[your turn — say: each pair against its Latin — "Vater, pater; Mutter, mater; Bruder, frater; Schwester, soror"]
+[pause 8 seconds for the answer]
+[your turn — say: the one Latin word that did not move — "soror"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"der Vater, die Mutter, der Bruder, die Schwester."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name the four. (Der Vater, die Mutter, der Bruder, die Schwester.) The word for the two older ones? (Die Eltern.) For the two younger? (Die Geschwister.) Which of the four is unchanged from Latin at the front? (Schwester — the s never moved.) And how many of these words did German borrow? (None.)
