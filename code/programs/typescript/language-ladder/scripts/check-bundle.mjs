@@ -229,7 +229,18 @@ if (missing.length > 0) {
 // has started doing the splitter's job again and the BAND WIDTH is what should
 // change -- not this number. The message names the band so that is a decision
 // rather than a bump.
-const BAND_SPLIT_SLACK = 1;
+//
+// 1 -> 0. German's chapter-13 migration put 27 new GE-C09-* lessons into the
+// C5 band -- ids band by their OWN number, not by the book chapter they were
+// assigned -- and pushed German 5-9 over the backstop as well, which is the
+// second split this number was never meant to cover. The band width went 5 -> 3
+// exactly as this message instructs, and at 3 NOTHING splits: 589 batches over
+// 589 bands, largest batch 191 kB against a 262 kB backstop. Width 4 also cleared
+// today at 211 kB, and was rejected because German's four remaining hand-written
+// chapters project it back onto the backstop; see lesson-bands.mjs for the
+// measurement. So the debt is gone rather than re-budgeted, and this is a real
+// zero that fails on the first regression instead of absorbing one.
+const BAND_SPLIT_SLACK = 0;
 if (extraChunks > BAND_SPLIT_SLACK) {
   failures.push(
     `the size backstop split ${extraChunks} band(s) beyond the ${BAND_SPLIT_SLACK} ` +
