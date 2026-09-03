@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C29-personne
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1040
-chapter: 32
+chapter: 33
 type: word
 headword: la personne
 gloss: person — feminine no matter who is meant, even a man, and secretly "nobody" when it stands next to ne

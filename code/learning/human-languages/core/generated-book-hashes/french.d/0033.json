@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 33,
-  "sourceHash": "fnv1a64:1f844bc71faacd33",
+  "sourceHash": "fnv1a64:3a2fdc501cc1aa27",
   "lessonIds": [
-    "FR-C30-fromage",
-    "FR-C30-beurre",
-    "FR-C30-sel",
-    "FR-C30-oeuf"
+    "FR-C29-ami",
+    "FR-C29-famille",
+    "FR-C29-enfant",
+    "FR-C29-personne"
   ],
-  "tex": "french/book/chapters/ch33-cheese-butter-salt-egg.tex"
+  "tex": "french/book/chapters/ch33-the-people-you-introduce.tex"
 }

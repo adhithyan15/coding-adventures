@@ -1,17 +1,12 @@
 {
   "language": "french",
   "chapter": 35,
-  "sourceHash": "fnv1a64:9a3114ac06165dea",
+  "sourceHash": "fnv1a64:1eec1e0372740778",
   "lessonIds": [
-    "FR-C32-intonation",
-    "FR-C32-est-ce-que",
-    "FR-C32-ou",
-    "FR-C32-quand",
-    "FR-C32-comment",
-    "FR-C32-combien",
-    "FR-C32-pourquoi",
-    "FR-C32-inversion",
-    "FR-C32-quel"
+    "FR-C31-oeil",
+    "FR-C31-nez",
+    "FR-C31-bouche",
+    "FR-C31-ventre"
   ],
-  "tex": "french/book/chapters/ch35-questions.tex"
+  "tex": "french/book/chapters/ch35-eyes-nose-mouth-stomach.tex"
 }

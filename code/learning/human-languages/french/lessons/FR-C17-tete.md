@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C17-tete
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 720
-chapter: 20
+chapter: 21
 type: word
 headword: la tête
 gloss: the head — from Latin for a clay pot

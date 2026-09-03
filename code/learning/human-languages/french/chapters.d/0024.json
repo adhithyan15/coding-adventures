@@ -1,20 +1,19 @@
 {
   "chapter": 24,
-  "title": "Weather",
-  "label": "ch:fr-weather",
-  "canDo": "I can talk about the weather in French — quel temps fait-il, il fait chaud, il fait froid, il pleut.",
+  "title": "Sorry",
+  "label": "ch:fr-sorry",
+  "canDo": "I can apologise in French and pick between je suis désolé(e), pardon and excusez-moi for the situation I am actually in.",
   "spineNodes": [
-    "SPINE-TIME-OF-DAY"
+    "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "FR-C21-le-temps",
+    "lesson": "FR-C20-je-suis-desole",
     "kind": "production",
-    "summary": "Use le temps in both its senses, build the weather with faire (il fait chaud / il fait froid), and say il pleut with the Latin pl- cluster French kept intact. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "Say je suis désolé(e) knowing it literally means 'I am desolate', then place pardon as the quick reflex and excusez-moi as the attention-getter. The chapter's only lesson, so the payoff covers everything it introduces.",
     "assesses": [
-      "FR-LEX-TEMPS-02",
-      "FR-GRAMMAR-IL-FAIT-03",
-      "FR-LEX-IL-PLEUT-04",
-      "FR-ETYMON-PLEUVOIR-05"
+      "FR-LEX-DESOLE-02",
+      "FR-ETYMON-DESOLE-03",
+      "FR-PRAGMATICS-SORRY-04"
     ]
   }
 }

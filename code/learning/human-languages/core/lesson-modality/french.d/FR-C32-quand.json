@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C32-quand",
     "language": "french",
-    "chapter": 35,
+    "chapter": 36,
     "sequence": 1230,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:64baff298ee11c88"
+    "sourceHash": "fnv1a64:8ae2464609b777db"
   },
   "findings": []
 }

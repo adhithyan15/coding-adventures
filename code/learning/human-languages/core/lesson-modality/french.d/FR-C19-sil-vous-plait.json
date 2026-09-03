@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C19-sil-vous-plait",
     "language": "french",
-    "chapter": 22,
+    "chapter": 23,
     "sequence": 760,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0cb5e63affe1ee2e"
+    "sourceHash": "fnv1a64:8c1501e241afb67d"
   },
   "findings": []
 }

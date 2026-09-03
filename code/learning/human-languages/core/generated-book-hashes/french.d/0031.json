@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 31,
-  "sourceHash": "fnv1a64:1dbf9b7e65457154",
+  "sourceHash": "fnv1a64:68153058a6e32875",
   "lessonIds": [
-    "FR-C28-cafe",
-    "FR-C28-the",
-    "FR-C28-lait",
-    "FR-C28-sucre"
+    "FR-C27-sasseoir",
+    "FR-C27-se-lever",
+    "FR-C27-ouvrir",
+    "FR-C27-fermer"
   ],
-  "tex": "french/book/chapters/ch31-coffee-tea-milk-sugar.tex"
+  "tex": "french/book/chapters/ch31-sitting-standing-opening-closing.tex"
 }

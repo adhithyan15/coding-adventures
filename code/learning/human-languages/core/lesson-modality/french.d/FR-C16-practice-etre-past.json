@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C16-practice-etre-past",
+    "language": "french",
+    "chapter": 20,
+    "sequence": 709,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b48d984ab52c125a"
+  },
+  "findings": []
+}

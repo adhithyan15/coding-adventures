@@ -1,16 +1,24 @@
 {
   "language": "french",
   "chapter": 20,
-  "sourceHash": "fnv1a64:5884a47ca8b7da33",
+  "sourceHash": "fnv1a64:ea532af11402347e",
   "lessonIds": [
-    "FR-C17-tete",
-    "FR-C17-main"
+    "FR-C16-suis-alle",
+    "FR-C16-famille-etre",
+    "FR-C16-pas-tout-mouvement",
+    "FR-C16-bascule",
+    "FR-C16-accord-sujet",
+    "FR-C16-accord-unifie",
+    "FR-C16-pronominal-etre",
+    "FR-C16-pronominal-accord",
+    "FR-C16-pronominal-seul",
+    "FR-C16-practice-etre-past"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 10,
+  "drivablePrefix": 10,
   "text": "french/narration/ch20.txt",
   "json": "french/narration/ch20.json",
-  "textHash": "fnv1a64:db9e0cf787a68d38",
-  "jsonHash": "fnv1a64:44dfecdfe5666601",
+  "textHash": "fnv1a64:dcba810cbfd50f5e",
+  "jsonHash": "fnv1a64:77233a9093416227",
   "findings": []
 }

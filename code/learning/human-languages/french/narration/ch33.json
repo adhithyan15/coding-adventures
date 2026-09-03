@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 33,
-  "title": "Cheese, Butter, Salt, Egg",
+  "title": "The People You Introduce",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:49c0ae6bfacc0e91",
+  "sourceHash": "fnv1a64:647920597b5339b3",
   "lessons": [
     {
-      "id": "FR-C30-fromage",
-      "sequence": 1050,
-      "title": "le fromage — cheese, named for its mould",
-      "headword": "le fromage",
-      "romanization": "le fromage",
-      "gloss": "cheese — masculine, and named for its MOULD rather than for the milk it's made from",
+      "id": "FR-C29-ami",
+      "sequence": 1010,
+      "title": "l'ami, l'amie — the friend, and why the article gives way",
+      "headword": "l'ami, l'amie",
+      "romanization": "l'ami, l'amie",
+      "gloss": "friend — masculine or feminine by a regular swap, and the reason le/la elides to l' before a vowel",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee00529f1ee6ba41",
+      "sourceHash": "fnv1a64:f51cc00b6b936507",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can name la personne and l'enfant now. The café chapter asked politely for a drink; this chapter asks for what goes with it — starting with a word every other Romance language names completely differently."
+              "text": "The café chapter handed you le lait and le sucre, and three more things to ask for. Now the people you'd ask them with — starting with the one whose name teaches French's most useful spelling rule."
             }
           ]
         },
@@ -46,176 +46,29 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "le fromage — cheese. Masculine."
-            },
-            {
-              "kind": "speech",
-              "text": "Du fromage, s'il vous plaît. — \"Some cheese, please.\""
+              "text": "un ami — a (male) friend. une amie — a (female) friend. Same sound, ah-MEE; the feminine just adds a silent -e. A regular swap: the article and ending follow who the friend is."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: the mould, not the curd",
+          "type": "grammar",
+          "title": "Grammar Lens: why it's l'ami, not le ami",
           "segments": [
             {
               "kind": "speech",
-              "text": "fromage from Medieval Latin formāticum, \"a thing made in a mould\" — built on forma, \"shape, mould.\" Cheesemakers press curds into a mould to set their shape, and French named the finished cheese for that step."
-            },
-            {
-              "kind": "speech",
-              "text": "Classical Latin's actual word for cheese was caseus — and that word is what survives in Spanish queso and Portuguese queijo, as well as English casein and Old English cyse, the ancestor of cheese itself. So French fromage and English cheese are not cousins: French walked away from caseus entirely and named the cheese for its mould instead, while Spanish, Portuguese and English all kept the old word for the curd."
+              "text": "Say le ami out loud: two vowels collide, euh then ah, and French won't stand for it. So le and la both drop their vowel before a word that starts with one, and glue on with an apostrophe: l'ami, l'amie — one form for both genders once the article elides. This is the exact same move as l'eau — French never tolerates le or la sitting next to another vowel sound. It also happens to a pronoun you already use daily: je ai became j'ai by the identical rule."
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"le fromage\" — masculine",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"le fromage\" — masculine]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"du fromage, s'il vous plaît\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"du fromage, s'il vous plaît\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the mould — \"forma becomes fromage\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the mould — \"forma → fromage\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the split — \"fromage and cheese are not cousins; queso, queijo and cheese all come from caseus\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the split — \"fromage and cheese are not cousins; queso, queijo and cheese all come from caseus\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"cheese, please.\" (Du fromage, s'il vous plaît. — masculine.) What Latin word is fromage built on, and what did it mean? (Forma, \"shape, mould.\") Which Romance languages kept the older word for cheese instead, and what is it? (Spanish queso, Portuguese queijo — from Latin caseus, also behind English casein and cheese.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C30-beurre",
-      "sequence": 1060,
-      "title": "le beurre — butter, one loanword twice",
-      "headword": "le beurre",
-      "romanization": "le beurre",
-      "gloss": "butter — masculine, and the same borrowed word as English butter, not two separate coinages",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:6a12aad102340adc",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Fromage took a French road all its own. This word, French and English took together — the exact same borrowing, not two."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "le beurre — butter. Masculine."
-            },
-            {
-              "kind": "speech",
-              "text": "Du beurre, s'il vous plaît. — \"Some butter, please.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: not native to either language",
+          "title": "The word, taken apart: loved, then chosen",
           "segments": [
             {
               "kind": "speech",
-              "text": "beurre from Latin būtyrum from Greek boútūron, usually broken down as boûs \"cow\" + tyrós \"cheese\" — \"cow-cheese.\" But butter wasn't a Greek or Roman product; both cultures were oil cultures, and most likely imported both the substance and the word from further east, possibly from Scythian traders. Treat \"cow-cheese\" as a folk reshaping of a foreign word into familiar Greek pieces, not a certain compound."
-            },
-            {
-              "kind": "speech",
-              "text": "Either way, English butter borrows the identical Latin word French beurre does. This isn't two languages separately naming the same thing — it's one loanword, arriving twice."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: désolé, when there's none left",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The courtesy words you already have fit right here:"
-            },
-            {
-              "kind": "speech",
-              "text": "Désolé, il n'y a plus de beurre. — \"Sorry, there's no more butter.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Désolé — real regret, for running out. If you'd only bumped the butter dish, pardon would do instead; to get someone's attention before asking for it at all, excusez-moi."
+              "text": "ami from Latin amicus, \"friend\" — built on the verb amāre, \"to love.\" English kept the adjective whole in amicable, amiable, and amity (\"friendship\" between nations). A French ami is, at the root, someone you love."
             }
           ]
         },
@@ -233,38 +86,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le beurre\" — masculine",
+              "instruction": "\"un ami, une amie\" — the regular swap",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le beurre\" — masculine]"
+              "source": "[YOU SAY: \"un ami, une amie\" — the regular swap]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"du beurre, s'il vous plaît\"",
+              "instruction": "\"l'ami, l'amie\" — never le ami",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"du beurre, s'il vous plaît\"]"
+              "source": "[YOU SAY: \"l'ami, l'amie\" — never *le ami*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"beurre, butter\" — one word, borrowed twice",
+              "instruction": "the family — \"l'eau, j'ai, l'ami\" — one rule, three words",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"beurre, butter\" — one word, borrowed twice]"
+              "source": "[YOU SAY: the family — \"l'eau, j'ai, l'ami\" — one rule, three words]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"désolé, il n'y a plus de beurre\"",
+              "instruction": "\"amicable, amiable, amity\" — all built on amāre, to love",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"désolé, il n'y a plus de beurre\"]"
+              "source": "[YOU SAY: \"amicable, amiable, amity\" — all built on **amāre**, to love]"
             }
           ]
         },
@@ -281,26 +134,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"butter, please.\" (Du beurre, s'il vous plaît. — masculine.) Is \"cow-cheese\" a safe etymology for boútūron? (Not certain — likely a Greek reshaping of a foreign word, since butter wasn't native to Greece or Rome.) Is French beurre related to English butter by common descent or by borrowing? (Borrowing — the same Latin word, taken by both languages.) When would you reach for pardon instead of désolé? (A small, quick slip — not real regret.)"
+              "text": "Give \"a friend\" for a man and for a woman. (un ami, une amie.) Why do you say l'ami instead of le ami? (Two vowels can't sit together — the article elides, the same rule behind l'eau and j'ai.) What Latin verb is ami built on, and what does it mean? (Amāre, \"to love.\")"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C30-sel",
-      "sequence": 1070,
-      "title": "le sel — salt, a real cousin and a fake legend",
-      "headword": "le sel",
-      "romanization": "le sel",
-      "gloss": "salt — masculine, cousin of English salt by common descent, and the source of a salary story no ancient writer actually tells",
+      "id": "FR-C29-famille",
+      "sequence": 1020,
+      "title": "la famille — the family, feminine no matter who's in it",
+      "headword": "la famille",
+      "romanization": "la famille",
+      "gloss": "family — feminine and fixed, whoever is in it, and once meant the household's servants",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6278f2705f2a89fa",
+      "sourceHash": "fnv1a64:aab455789803b93c",
       "notice": null,
       "blocks": [
         {
@@ -316,7 +169,7 @@
             },
             {
               "kind": "speech",
-              "text": "Beurre was one word borrowed twice. This one is different again — a genuine family relative of its English counterpart, plus a famous story about it that isn't actually true."
+              "text": "L'ami changes shape with who it names. This word never does — whoever is in the family, the word itself stays exactly as it is. (And before you had l'ami, you already had le sucre — every one of this book's nouns keeps its article.)"
             }
           ]
         },
@@ -327,26 +180,22 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "le sel — salt. Masculine."
+              "text": "la famille — the family. Feminine, fixed — no elision here, since famille starts with a consonant: la famille, never l'famille."
             },
             {
               "kind": "speech",
-              "text": "Du sel, s'il vous plaît. — \"Some salt, please.\""
+              "text": "The double -ll- after i is not said like an English L: famille is fah-MEE-yuh, the -ille landing as a y-sound, the l itself silent. You'll meet this -ille spelling again."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: a real cousin, and a fake story",
+          "title": "The word, taken apart: the household, servants included",
           "segments": [
             {
               "kind": "speech",
-              "text": "sel from Latin sal, stem sal- — inherited, like lait, not borrowed like café or sucre. English salt is a genuine cousin: both words descend from the same Proto-Indo-European root, sal-, inherited separately down the Latin and Germanic branches. Unlike lait and milk, which share no root at all, sel and salt really are family."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin salārium — English salary — is built on this same sal. You may have heard that Roman soldiers were literally paid in salt, which is where \"salary\" supposedly comes from. That claim appears in no ancient source; no Roman writer says it. Salārium genuinely is built on sal — that part is real — but the vivid soldiers-and-salt story attached to it later, and belongs with folk etymology, not fact."
+              "text": "famille from Latin familia, \"the household\" — built on famulus, \"servant, slave.\" Roman familia named everyone under one roof: parents, children, and the servants who worked there, all together. It broadened to mean \"blood relatives\" only because relatives usually were the people sharing that roof. Where ami is built on loving someone, famille is built on living with them."
             }
           ]
         },
@@ -364,38 +213,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le sel\" — masculine",
+              "instruction": "\"la famille\" — feminine, no elision",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le sel\" — masculine]"
+              "source": "[YOU SAY: \"la famille\" — feminine, no elision]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"du sel, s'il vous plaît\"",
+              "instruction": "the sound — \"fa-MI-yuh,\" not \"fa-MILL\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"du sel, s'il vous plaît\"]"
+              "source": "[YOU SAY: the sound — \"fa-MI-yuh,\" not \"fa-MILL\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the real cousins — \"sel, salt — one PIE root, two branches\"",
+              "instruction": "the contrast — \"un ami: loving. la famille: living together.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the real cousins — \"sel, salt — one PIE root, two branches\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"beurre, fromage, sel\" — three foods, all masculine",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"beurre, fromage, sel\" — three foods, all masculine]"
+              "source": "[YOU SAY: the contrast — \"un ami: loving. la famille: living together.\"]"
             }
           ]
         },
@@ -412,26 +252,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"salt, please.\" (Du sel, s'il vous plaît. — masculine.) Is sel related to English salt by common descent or by borrowing? (Common descent — both from PIE sal-, a genuine cousin pair.) Is the \"soldiers paid in salt\" story behind salary true? (No — it appears in no ancient source; salārium really is built on sal, but the legend is later.)"
+              "text": "Say \"the family.\" (La famille — feminine.) Why doesn't it elide to l'famille? (It starts with a consonant — elision only happens before a vowel.) What did Latin familia originally include besides relatives? (The household's servants, from famulus.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C30-oeuf",
-      "sequence": 1080,
-      "title": "l'œuf — the egg, that loses its consonant only in the plural",
-      "headword": "l'œuf, les œufs",
-      "romanization": "l'œuf, les œufs",
-      "gloss": "egg — masculine, a genuine cousin of English egg, and the one French noun whose final consonant vanishes only in the plural",
+      "id": "FR-C29-enfant",
+      "sequence": 1030,
+      "title": "l'enfant — the child, one word for both",
+      "headword": "l'enfant",
+      "romanization": "l'enfant",
+      "gloss": "child — one spelling for both genders, the article alone showing which; literally \"not yet speaking\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b453a1abbe91608d",
+      "sourceHash": "fnv1a64:dbb86742edc43938",
       "notice": null,
       "blocks": [
         {
@@ -447,7 +287,7 @@
             },
             {
               "kind": "speech",
-              "text": "Fromage, beurre, sel — three foods, three masculine articles. The fourth starts with a vowel, so this chapter closes the way it began: with the elision rule from l'ami."
+              "text": "La famille stays fixed no matter who's in it. This member of it does something different again: one spelling, for a boy or a girl alike."
             }
           ]
         },
@@ -458,26 +298,22 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "l'œuf — the egg. Masculine, and it elides — never le œuf."
-            },
-            {
-              "kind": "speech",
-              "text": "Un œuf, s'il vous plaît. — \"An egg, please.\" Said with a clear final f: un-EUF."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the plural: les œufs. Spelled with the same -fs, but the f disappears entirely — lay-ZEU, not lay-ZEUFS. One noun, and its final consonant survives in the singular only to vanish in the plural."
+              "text": "l'enfant — the child. Starts with a vowel, so the article elides again, exactly like l'ami: un enfant (a boy), une enfant (a girl) — but the word itself never changes. Only un/une tells you which."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: a genuine cousin",
+          "title": "The word, taken apart: not yet speaking",
           "segments": [
             {
               "kind": "speech",
-              "text": "œuf from Latin ovum, from a Proto-Indo-European word for \"egg,\" h₂ōwyóm. English egg descends from the same root, by the Germanic road (Old Norse egg, from Proto-Germanic ajja-) — a real cousin pair, exactly like sel and salt, not a borrowing in either direction. The Latin-only learned family — oval, ovary, ovum itself — are the ones English took straight from written Latin, sitting beside its own native egg."
+              "text": "enfant from Latin īnfāns, \"not speaking\" — in- \"not\" + fāns, \"speaking\" (from fārī, \"to speak\"). Literally, a baby too young to talk."
+            },
+            {
+              "kind": "speech",
+              "text": "But Romans already stretched īnfāns to cover children well past babyhood long before French existed, and French enfant simply inherited that wider sense — it didn't narrow English infant into something broader. The two words split apart in a different way: English kept the narrow, original \"not-yet-speaking\" sense for its borrowing, while French's everyday word carried the older, already-widened Latin meaning forward."
             }
           ]
         },
@@ -495,38 +331,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"l'œuf\" — masculine, elided",
+              "instruction": "\"un enfant, une enfant\" — one spelling, two articles",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"l'œuf\" — masculine, elided]"
+              "source": "[YOU SAY: \"un enfant, une enfant\" — one spelling, two articles]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"un œuf\" — f pronounced",
+              "instruction": "the elision — \"l'enfant,\" never le enfant",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"un œuf\" — f pronounced]"
+              "source": "[YOU SAY: the elision — \"l'enfant,\" never *le enfant*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"les œufs\" — f silent",
+              "instruction": "\"in- + fari\" — not speaking",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"les œufs\" — f silent]"
+              "source": "[YOU SAY: \"in- + fari\" — not speaking]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the cousins — \"œuf, egg — same PIE root, two branches\"",
+              "instruction": "the family so far — \"l'ami, la famille, l'enfant\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"œuf, egg — same PIE root, two branches\"]"
+              "source": "[YOU SAY: the family so far — \"l'ami, la famille, l'enfant\"]"
             }
           ]
         },
@@ -543,7 +379,184 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"an egg, please,\" then \"the eggs.\" (Un œuf, s'il vous plaît — f pronounced; les œufs — f silent.) Why does l'œuf elide? (Vowel-initial — same rule as l'ami.) Is œuf borrowed from Latin ovum, or a genuine cousin of it? (A cousin — both from PIE h₂ōwyóm, like English egg.) Name the chapter's four foods with their articles. (Le fromage, le beurre, le sel, l'œuf — all masculine.)"
+              "text": "How do you tell a boy child from a girl child in French, if the word itself never changes? (The article — un enfant / une enfant.) What does enfant literally mean, and where does that meaning come from? (\"Not speaking\" — in- + fārī, \"to speak.\") Does French narrow Latin's meaning or keep it wide? (Keeps it wide — Latin had already stretched infans past babyhood.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C29-personne",
+      "sequence": 1040,
+      "title": "la personne — the person, and the mask behind the word",
+      "headword": "la personne",
+      "romanization": "la personne",
+      "gloss": "person — feminine no matter who is meant, even a man, and secretly \"nobody\" when it stands next to ne",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9fc8b09ce8c1106",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "L'ami changes with its friend; l'enfant doesn't, but its article does. This last one is the strangest of the four: it never changes at all — not even for a man."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la personne — the person. Always feminine — grammatically, whether you mean a man, a woman, or anyone at all:"
+            },
+            {
+              "kind": "speech",
+              "text": "Cet homme est une bonne personne. — \"That man is a good person.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Homme is masculine; personne describing him stays feminine regardless. Grammatical gender here has come loose from the person's actual sex entirely — further even than ami, which at least tracks who's meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: not nasal, on purpose",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Personne looks like it should rhyme with non's nasal -on — it doesn't. Double -nn- blocks the nasal: non is nasal, said through the nose, but personne ends oral, pehr-SUN, the vowel staying in the mouth. One consonant, doubled, is the difference between a nasal ending and a plain one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: the mask, not \"sounding through\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "personne from Latin persona, a theatrical mask — from Etruscan phersu, most likely from Greek prósōpon, \"face.\" A tidy but doubted story derives it from per- + sonāre, \"sound through\" (the mask an actor's voice rang through); linguists reject it on the vowel length, so treat it as folk etymology, not fact."
+            },
+            {
+              "kind": "speech",
+              "text": "Pair personne with ne and it flips to \"nobody\" — je ne vois personne = \"I see nobody.\" Behind an empty mask, no one at all."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: four people, four kinds of gender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The chapter's four words, side by side:"
+            },
+            {
+              "kind": "speech",
+              "text": "l'ami / l'amie — changes with who's meant; elides either way."
+            },
+            {
+              "kind": "speech",
+              "text": "la famille — fixed feminine, whoever's in it; no elision."
+            },
+            {
+              "kind": "speech",
+              "text": "l'enfant — one spelling; only un/une shows which; elides."
+            },
+            {
+              "kind": "speech",
+              "text": "la personne — fixed feminine, even naming a man."
+            },
+            {
+              "kind": "speech",
+              "text": "Four different relationships between gender and the person named — none of them the \"normal\" case. Each is its own rule, learned with the word."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la personne\" — always feminine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la personne\" — always feminine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"cet homme est une bonne personne\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"cet homme est une bonne personne\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"non\" nasal, \"personne\" not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"non\" nasal, \"personne\" not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the flip — \"je ne vois personne\" — nobody",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the flip — \"je ne vois personne\" — nobody]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is personne ever masculine, even describing a man? (No — always feminine, grammatically.) Why doesn't personne nasalize like non? (Double -nn- blocks it.) What does ne … personne mean, and what does that use share with ne … pas? (\"Nobody\" — the same negation frame built around ne.) Is persona really built on \"sounding through\"? (Probably not — a folk etymology; the real root is likely Etruscan phersu, \"mask.\")"
             }
           ]
         }

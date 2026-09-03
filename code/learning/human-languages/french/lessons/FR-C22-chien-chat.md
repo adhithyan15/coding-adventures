@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C22-chien-chat
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 790
-chapter: 25
+chapter: 26
 type: word
 headword: chien, chat
 gloss: dog and cat — chien is the REGULAR, expected descendant of canis (unlike Spanish's mysterious perro); chat continues cattus, the same Egypt-to-Rome story as Spanish's gato

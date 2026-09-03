@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C16-sont",
+    "language": "french",
+    "chapter": 19,
+    "sequence": 645,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab5e7b26e8f0f50a"
+  },
+  "findings": []
+}

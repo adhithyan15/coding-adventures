@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C24-aider",
     "language": "french",
-    "chapter": 27,
+    "chapter": 28,
     "sequence": 830,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3125a51d070e68a2"
+    "sourceHash": "fnv1a64:63d3523c390c1b55"
   },
   "findings": []
 }

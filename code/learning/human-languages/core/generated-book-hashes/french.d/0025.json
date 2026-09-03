@@ -1,9 +1,9 @@
 {
   "language": "french",
   "chapter": 25,
-  "sourceHash": "fnv1a64:3b512c9f5afddf90",
+  "sourceHash": "fnv1a64:92d18f6a13b3ddce",
   "lessonIds": [
-    "FR-C22-chien-chat"
+    "FR-C21-le-temps"
   ],
-  "tex": "french/book/chapters/ch25-dog-and-cat.tex"
+  "tex": "french/book/chapters/ch25-weather.tex"
 }

@@ -1,15 +1,15 @@
 {
   "language": "french",
   "chapter": 25,
-  "sourceHash": "fnv1a64:64fef699810ea645",
+  "sourceHash": "fnv1a64:f9be94bf8bf6c982",
   "lessonIds": [
-    "FR-C22-chien-chat"
+    "FR-C21-le-temps"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "french/narration/ch25.txt",
   "json": "french/narration/ch25.json",
-  "textHash": "fnv1a64:3db884b2cb3ce4df",
-  "jsonHash": "fnv1a64:393b9791063b2c0b",
+  "textHash": "fnv1a64:f69fc7fc05b057d4",
+  "jsonHash": "fnv1a64:8016ccfe36e66877",
   "findings": []
 }

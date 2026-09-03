@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C18-oui",
     "language": "french",
-    "chapter": 21,
+    "chapter": 22,
     "sequence": 740,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6bfefa0d1cb4e734"
+    "sourceHash": "fnv1a64:3fa2fa951659905f"
   },
   "findings": []
 }

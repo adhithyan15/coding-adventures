@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C32-quel",
     "language": "french",
-    "chapter": 35,
+    "chapter": 36,
     "sequence": 1280,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a62812a12fb0db98"
+    "sourceHash": "fnv1a64:69f3624e7bf89f7f"
   },
   "findings": []
 }

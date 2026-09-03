@@ -1,21 +1,21 @@
 {
   "chapter": 21,
-  "title": "Yes and No",
-  "label": "ch:fr-yes-and-no",
-  "canDo": "I can answer yes or no in French, send non through my nose as a nasal vowel, and recognise the ne … pas pair that carries negation inside a sentence.",
+  "title": "Head and Hand",
+  "label": "ch:fr-head-and-hand",
+  "canDo": "I can name the head and the hand in French with the right article, and point out the Latin manus hiding inside English manual, manufacture and maintain.",
   "spineNodes": [
-    "SPINE-RESPOND-BASIC"
+    "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "FR-C18-non",
+    "lesson": "FR-C17-main",
     "kind": "production",
-    "summary": "The oui / non pair said back to back, non's -on nasal placed against bon and bonjour, and the ne … pas frame named as the sentence-level negation to come.",
+    "summary": "Say la main with its nasal -ain, then run the manus family out loud — manual, manuscript, maintenir — and land on manufacture, 'made by hand', now the name for the opposite.",
     "assesses": [
-      "FR-LEX-OUI-02",
-      "FR-LEX-NON-02",
-      "FR-SOUND-NON-03",
-      "FR-GRAMMAR-NEGATION-04"
+      "FR-LEX-MAIN-02",
+      "FR-SOUND-MAIN-03",
+      "FR-ETYMON-MAIN-04",
+      "FR-ETYMON-MAINTENIR-05"
     ],
-    "note": "Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess oui."
+    "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence; it exercises the main half of the chapter but not the tête half."
   }
 }

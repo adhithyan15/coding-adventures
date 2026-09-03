@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C30-oeuf",
     "language": "french",
-    "chapter": 33,
+    "chapter": 34,
     "sequence": 1080,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b453a1abbe91608d"
+    "sourceHash": "fnv1a64:46ea7ffdf7ea547c"
   },
   "findings": []
 }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 30,
-  "title": "Sitting, Standing, Opening, Closing",
+  "title": "Hearing, Sleeping, Walking, Running",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:c40923eb78cda0b3",
+  "sourceHash": "fnv1a64:3bca0aa475afadf9",
   "lessons": [
     {
-      "id": "FR-C27-sasseoir",
-      "sequence": 930,
-      "title": "s'asseoir — \"to sit down,\" a verb you do to yourself",
-      "headword": "s'asseoir",
-      "romanization": "s'asseoir",
-      "gloss": "to sit down — a verb you do to yourself, from Latin sedēre, and the one French verb that ships with two accepted sets of forms",
+      "id": "FR-C26-entendre",
+      "sequence": 890,
+      "title": "entendre — \"to hear,\" and the stretching inside it",
+      "headword": "entendre",
+      "romanization": "entendre",
+      "gloss": "to hear — from a Latin verb meaning \"to stretch toward,\" so English's intend is its closest surviving cousin, and French still keeps the older sense in entendu and s'entendre",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4babf93a9b50d6db",
+      "sourceHash": "fnv1a64:f712d6a61023f398",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have walked and you have run. Now stop. French does not say \"I sit\" — it says \"I seat myself,\" and that extra word is one you own."
+              "text": "You can think and understand. Now the ear — and French's word for it is English's intend."
             }
           ]
         },
@@ -46,90 +46,109 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "s'asseoir — to sit down. Said sah-SWAHR. Je m'assieds. — I sit down. Said juh mah-SYAY."
+              "text": "entendre — to hear. Two nasal an sounds in a row, then the -dre of prendre: say it ahn-TAHN-druh. J'entends le chien. — I hear the dog."
             },
             {
               "kind": "speech",
-              "text": "The m' is the me inside je m'appelle: French treats sitting as something you do to yourself, so the pronoun is not optional."
-            },
-            {
-              "kind": "speech",
-              "text": "Keep two ideas apart. S'asseoir is the movement, lowering yourself into a chair. Je suis assis is the state after it, \"I am seated.\" English lets sit cover both; French makes you choose."
+              "text": "The -ds of j'entends is silent, as in je prends."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: one verb, two accepted sets",
+          "title": "Grammar Lens: the nasal that stays put",
           "segments": [
             {
               "kind": "speech",
-              "text": "The only verb in this book with two correct answers, both in dictionaries. Learn this series whole:"
+              "text": "Prendre's nasal dies in the plural. Entendre looks like its twin and does the opposite — the stem never moves:"
             },
             {
               "kind": "speech",
-              "text": "je m'assieds — mah-SYAY."
+              "text": "j'entends — jahn-TAHN."
             },
             {
               "kind": "speech",
-              "text": "tu t'assieds — tah-SYAY."
+              "text": "tu entends — ahn-TAHN."
             },
             {
               "kind": "speech",
-              "text": "il s'assied — sah-SYAY (three identical to the ear)."
+              "text": "il entend — ahn-TAHN (three identical to the ear)."
             },
             {
               "kind": "speech",
-              "text": "nous nous asseyons — noo-zah-say-YOHN."
+              "text": "nous entendons — ahn-tahn-DOHN, nasal still there."
             },
             {
               "kind": "speech",
-              "text": "vous vous asseyez — voo-zah-say-YAY."
+              "text": "vous entendez — ahn-tahn-DAY."
             },
             {
               "kind": "speech",
-              "text": "ils s'asseyent — sah-SAY."
-            },
-            {
-              "kind": "speech",
-              "text": "Then recognise the rival singulars je m'assois, tu t'assois, il s'assoit — ordinary spoken French. Their plurals (assoyons, assoyez) are much rarer in France, so the series above is the safer one to own. Since 1990 the infinitive may also be spelled s'assoir. Nothing here is wrong; the language never chose."
+              "text": "ils entendent — ahn-TAHND."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: sedēre",
+          "title": "The word, taken apart: a stretching",
           "segments": [
             {
               "kind": "speech",
-              "text": "s'asseoir from Vulgar Latin adsedēre, a remaking of Classical adsidēre — ad- \"at\" plus sedēre, \"to sit.\" Latin had built the compound; French only wore it down. And sedēre is everywhere in English:"
+              "text": "entendre from Latin intendere — in- \"toward\" plus tendere, \"to stretch.\" To intendere was to stretch a thing out and aim it: a bowstring, a journey, your attention. English kept the family — intend, plainest of them, plus intent, intense, tension, a tent (a stretched skin), extend and pretend."
             },
             {
               "kind": "speech",
-              "text": "sedentary, sitting work; a session, \"a sitting\"; sediment, what sits at the bottom."
+              "text": "Set your three mind-verbs together: French pictures each as a different thing the body does."
             },
             {
               "kind": "speech",
-              "text": "reside, sit back; preside and president, sitting in front; assiduous, sitting at a task."
+              "text": "comprendre — to grasp together, built on prendre."
             },
             {
               "kind": "speech",
-              "text": "siege — an army sitting down before a city; possess, obsess, subsidy."
+              "text": "penser — to weigh, from pēnsāre."
             },
             {
               "kind": "speech",
-              "text": "A bishop's see is his sedēs, his seat."
-            },
-            {
-              "kind": "speech",
-              "text": "Dormir English only borrowed. This root it owns from birth too: sit, seat and settle come down the Germanic road from the same source."
+              "text": "entendre — to stretch toward."
             }
           ]
         },
         {
           "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the sense that took over",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From its oldest French records entendre already covers a span at once: to hear, to attend, to understand, to intend. Nothing arrived late. What happened since is that the other senses fell away and hearing took the word outright — because Latin's verb for hearing, audīre, wore down in French to ouïr and stopped being usable. English kept that family instead: audio, audience, audible, audition."
+            },
+            {
+              "kind": "speech",
+              "text": "The abandoned senses survive in phrases French never rebuilt:"
+            },
+            {
+              "kind": "speech",
+              "text": "entendu — \"understood,\" \"agreed.\""
+            },
+            {
+              "kind": "speech",
+              "text": "s'entendre — to hear one another, and so to get along."
+            },
+            {
+              "kind": "speech",
+              "text": "l'entente — an understanding between parties, borrowed into English whole in Entente Cordiale."
+            },
+            {
+              "kind": "speech",
+              "text": "So the two languages split one Latin pair: French hears with the verb English uses for intending, and English hears with the verb French let go."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -142,70 +161,61 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"s'asseoir\" — sah-SWAHR",
+              "instruction": "\"entendre\" — ahn-TAHN-druh, two nasals",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"s'asseoir\" — *sah-SWAHR*]"
+              "source": "[YOU SAY: \"entendre\" — *ahn-TAHN-druh*, two nasals]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je m'assieds\" then \"nous nous asseyons\"",
+              "instruction": "\"j'entends le chien\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je m'assieds\" then \"nous nous asseyons\"]"
+              "source": "[YOU SAY: \"j'entends le chien\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je m'appelle\" then \"je m'assieds\" — the same little m'",
+              "instruction": "\"nous prenons\" then \"nous entendons\" — one flattens, one holds",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je m'appelle\" then \"je m'assieds\" — the same little *m'*]"
+              "source": "[YOU SAY: \"nous prenons\" then \"nous entendons\" — one flattens, one holds]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je m'assieds\" then \"je suis assis\" — movement, then state",
+              "instruction": "\"j'écris, je comprends, j'entends\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je m'assieds\" then \"je suis assis\" — movement, then state]"
+              "source": "[YOU SAY: \"j'écris, je comprends, j'entends\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je marche, je cours, je m'assieds, je dors\"",
+              "instruction": "the three pictures — stretching, grasping, weighing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je marche, je cours, je m'assieds, je dors\"]"
+              "source": "[YOU SAY: the three pictures — stretching, grasping, weighing]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'entends\" — the ear needs no chair",
+              "instruction": "\"intend, tension, tent\" — all a stretching",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'entends\" — the ear needs no chair]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sedentary, session, siege\" — every one a sitting",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sedentary, session, siege\" — every one a sitting]"
+              "source": "[YOU SAY: \"intend, tension, tent\" — all a stretching]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -217,26 +227,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I sit down\" and \"we sit down.\" (Je m'assieds. Nous nous asseyons.) Why is the pronoun there? (French sits you yourself down — the same m' as in je m'appelle.) What is a siege, literally? (A sitting — an army sitting down before a city.) Which English words are cousins of sedēre by birth rather than borrowing? (Sit, seat, settle.) Now the pair: \"je cours\" and \"je dors.\""
+              "text": "Say \"I hear the dog\" and \"we hear.\" (J'entends le chien. Nous entendons — and unlike nous prenons, nothing flattens.) What did intendere mean, and which English verb is its plainest survival? (To stretch toward; intend.) Why did French hand hearing to this verb? (Latin's audīre wore down to ouïr and fell out of use — English kept the audīre words instead.) What does s'entendre mean? (To get along.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C27-se-lever",
-      "sequence": 940,
-      "title": "se lever, debout — standing, which French says in two pieces",
-      "headword": "se lever, debout",
-      "romanization": "se lever, debout",
-      "gloss": "to stand — French has no single verb for it, so the movement is se lever (\"to lighten yourself\") and the state is être debout, literally \"on end\"",
+      "id": "FR-C26-dormir",
+      "sequence": 900,
+      "title": "dormir — \"to sleep,\" and the room named after it",
+      "headword": "dormir",
+      "romanization": "dormir",
+      "gloss": "to sleep — Latin dormīre, unchanged in French, and the source of dormitory and dormant, though not of the dormouse",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea0da58fdbf95a60",
+      "sourceHash": "fnv1a64:0eab2082e50047db",
       "notice": null,
       "blocks": [
         {
@@ -252,212 +262,7 @@
             },
             {
               "kind": "speech",
-              "text": "You sat down. Getting up is harder, because French has no single verb for \"to stand.\" It splits the idea in two."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the movement",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "se lever — to get up, to rise. Said suh luh-VAY. Je me lève. — I get up. Said juh muh LEV."
-            },
-            {
-              "kind": "speech",
-              "text": "Reflexive, as s'asseoir is: you raise yourself. After that verb's two paradigms this is a relief — an ordinary -er verb with one habit. Silent ending, and the e takes a grave accent; spoken ending, and it flattens:"
-            },
-            {
-              "kind": "speech",
-              "text": "je me lève — LEV."
-            },
-            {
-              "kind": "speech",
-              "text": "tu te lèves — LEV."
-            },
-            {
-              "kind": "speech",
-              "text": "il se lève — LEV."
-            },
-            {
-              "kind": "speech",
-              "text": "nous nous levons — luh-VOHN, flat."
-            },
-            {
-              "kind": "speech",
-              "text": "vous vous levez — luh-VAY, flat."
-            },
-            {
-              "kind": "speech",
-              "text": "ils se lèvent — LEV."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "input",
-          "title": "You'll want to know: the state",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "debout — standing, upright. Said duh-BOO. Je suis debout. — I am standing."
-            },
-            {
-              "kind": "speech",
-              "text": "Se lever is the movement, debout the state — the split between sitting down and being seated. Debout is no verb: attach it to être."
-            },
-            {
-              "kind": "speech",
-              "text": "And it is transparent once opened: de + bout, \"on end.\" A bout is a tip or end, so standing is being set on your end. French did once have a plain verb for standing, ester; it survives only in a courtroom phrase, which is why the language builds this from pieces."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: lightness",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "lever from Latin levāre, \"to raise\" — built on levis, \"light in weight.\" To raise a thing is to lighten it. Hence elevate, elevator, levitate, levity; a lever, which lightens a load; alleviate, relieve, relief; leaven."
-            },
-            {
-              "kind": "speech",
-              "text": "So two of this book's verbs come from one corner of Roman thought. Penser is pēnsāre, \"to weigh\"; lever is levāre, \"to make light.\" Thinking weighs, rising un-weighs, and sedēre just sits there."
-            },
-            {
-              "kind": "speech",
-              "text": "One correction. Bout comes from bouter, \"to strike,\" taken from Frankish — and its English relative by descent is beat. Butt looks closer but is a later borrowing back out of French."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"se lever\" — suh luh-VAY",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"se lever\" — *suh luh-VAY*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je me lève\" then \"nous nous levons\" — sharp, then flat",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je me lève\" then \"nous nous levons\" — sharp, then flat]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je m'assieds\" then \"je me lève\" — down, then up",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je m'assieds\" then \"je me lève\" — down, then up]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je suis debout\" — the state, on être",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je suis debout\" — the state, on *être*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je me lève et je cours\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je me lève et je cours\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je pense\" then \"je me lève\" — weighing, then lightening",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je pense\" then \"je me lève\" — weighing, then lightening]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"elevate, lever, relief\" — all a raising",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"elevate, lever, relief\" — all a raising]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I get up\" and \"we get up.\" (Je me lève. Nous nous levons — the accent appears only when the ending is silent.) How does French say \"I am standing\"? (Je suis debout — a state pinned to être, not a verb, and debout is de + bout, \"on end.\") Penser came from weighing; what does lever come from? (Levis, \"light in weight\".) And the opposite movement? (Je m'assieds.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C27-ouvrir",
-      "sequence": 950,
-      "title": "ouvrir — \"to open,\" an -ir verb wearing -er endings",
-      "headword": "ouvrir",
-      "romanization": "ouvrir",
-      "gloss": "to open — an -ir verb that takes -er endings, from a Latin verb reshaped to look like its own opposite, and the source of English overt and overture",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:495ab34f72fbbc0b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can sit and rise. Now something for the hand. This verb is French conjugation's small trap: spelled like one family, behaving like another."
+              "text": "After a verb that changed jobs, here is one that never changed. Dormir is Latin's word for sleeping, handed on almost untouched — and it hides one trap."
             }
           ]
         },
@@ -468,81 +273,77 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ouvrir — to open. Said oo-VREER. J'ouvre la main. — I open my hand."
+              "text": "dormir — to sleep. Said dor-MEER, with the throaty French r in the middle and at the end. Le chat dort. — The cat is sleeping."
             },
             {
               "kind": "speech",
-              "text": "French says la main where English says \"my hand\"; with your own body the article does the work. And listen to that nasal — pain, main — the same -ain you have been making since the bread."
+              "text": "French has no separate \"is sleeping\" form. Il dort covers both \"he sleeps\" and \"he is sleeping\"; the plain present does all the work."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: the endings it should not have",
+          "title": "Grammar Lens: the m that goes missing",
           "segments": [
             {
               "kind": "speech",
-              "text": "Ouvrir ends in -ir, so you would expect it to run like dormir. It does not. It takes the endings of marcher, an -er verb, exactly:"
+              "text": "The stem is dorm-, and in the singular French throws the m away. Listen for where it comes back:"
             },
             {
               "kind": "speech",
-              "text": "j'ouvre — JOOVR."
+              "text": "je dors — dor."
             },
             {
               "kind": "speech",
-              "text": "tu ouvres — OOVR."
+              "text": "tu dors — dor."
             },
             {
               "kind": "speech",
-              "text": "il ouvre — OOVR."
+              "text": "il dort — dor (three identical, the m gone)."
             },
             {
               "kind": "speech",
-              "text": "nous ouvrons — oo-VROHN."
+              "text": "nous dormons — dor-MOHN, and there it is."
             },
             {
               "kind": "speech",
-              "text": "vous ouvrez — oo-VRAY."
+              "text": "vous dormez — dor-MAY."
             },
             {
               "kind": "speech",
-              "text": "ils ouvrent — OOVR."
+              "text": "ils dorment — DORM."
             },
             {
               "kind": "speech",
-              "text": "Four identical to the ear, nous and vous audible: the shape of je marche, nous marchons. A small group of -ir verbs does this, and ouvrir is the one you meet most. The spelling promises one thing; listen to what the verb does."
+              "text": "One rule, and you have the whole verb: singular loses the last stem consonant, plural gets it back. A small family of -ir verbs shares the shape, so learning it once is worth more than one verb."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: reshaped by its own opposite",
+          "title": "The word, taken apart: dormīre",
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin's verb for opening was aperīre, which ouvrir does not look much like — because the word was remodelled on the way into popular Latin operīre. The likeliest cause is the pull of its own opposite, cooperīre, \"to cover,\" which became French couvrir. Opening and covering ended up rhyming and have stayed matched since. The meaning stayed aperīre's; only the shape moved."
+              "text": "dormir from Latin dormīre, \"to sleep.\" Spanish kept dormir, Italian dormire, Portuguese dormir — the verb crossed into its daughter languages untouched, which is rarer than it sounds. English has no inherited descendant; it borrowed the family later, through French:"
             },
             {
               "kind": "speech",
-              "text": "English collected both ends:"
+              "text": "dormitory from dormītōrium, a sleeping place; French wore the identical word down to dortoir."
             },
             {
               "kind": "speech",
-              "text": "from aperīre — an aperture; an aperitif, the drink that opens a meal."
+              "text": "dormant — Old French dormant, \"sleeping\"; a dormant volcano is asleep."
             },
             {
               "kind": "speech",
-              "text": "from Old French ovrir — overt, its past participle \"opened,\" and overture, ouverture."
+              "text": "dormer — a roof window, from Old French dormeor, because the room behind it was where you slept."
             },
             {
               "kind": "speech",
-              "text": "from the covering half — curfew, Old French cuevrefeu, \"cover-fire,\" the bell that said to bank the hearth."
-            },
-            {
-              "kind": "speech",
-              "text": "Set that beside the hand. Maintenir is manū tenēre, \"to hold in the hand\" — and ouvrir la main releases that grip."
+              "text": "And an honest stop. The dormouse looks like the best cousin of the lot and is not one. The story needs an Anglo-Norman word for \"sleeper\" that nobody has found in a text, and dormouse's real origin is unknown. A guess in circulation, not an etymology."
             }
           ]
         },
@@ -560,65 +361,56 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ouvrir\" — oo-VREER",
+              "instruction": "\"dormir\" — dor-MEER, throaty r",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ouvrir\" — *oo-VREER*]"
+              "source": "[YOU SAY: \"dormir\" — *dor-MEER*, throaty *r*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'ouvre la main\" — and hear pain, main",
+              "instruction": "\"je dors\" then \"nous dormons\" — the m vanishes, then returns",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'ouvre la main\" — and hear *pain*, *main*]"
+              "source": "[YOU SAY: \"je dors\" then \"nous dormons\" — the *m* vanishes, then returns]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je marche, nous marchons\" then \"j'ouvre, nous ouvrons\" — one shape",
+              "instruction": "\"le chat dort\" — the cat, the travelling word out of Egypt",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je marche, nous marchons\" then \"j'ouvre, nous ouvrons\" — one shape]"
+              "source": "[YOU SAY: \"le chat dort\" — the cat, the travelling word out of Egypt]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je m'assieds, je me lève, j'ouvre la main\"",
+              "instruction": "\"j'entends le chat\" then \"le chat dort\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je m'assieds, je me lève, j'ouvre la main\"]"
+              "source": "[YOU SAY: \"j'entends le chat\" then \"le chat dort\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je suis debout et j'ouvre la main\"",
+              "instruction": "\"dormir, dormitory, dormant\" — one Latin verb, borrowed back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je suis debout et j'ouvre la main\"]"
+              "source": "[YOU SAY: \"dormir, dormitory, dormant\" — one Latin verb, borrowed back]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"maintenir\" then \"ouvrir\" — holding in the hand, then letting go",
+              "instruction": "\"je comprends\" then \"je dors\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"maintenir\" then \"ouvrir\" — holding in the hand, then letting go]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"aperture, aperitif, overt, overture\" — every one an opening",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"aperture, aperitif, overt, overture\" — every one an opening]"
+              "source": "[YOU SAY: \"je comprends\" then \"je dors\"]"
             }
           ]
         },
@@ -635,26 +427,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I open my hand\" and \"we open.\" (J'ouvre la main. Nous ouvrons.) Which endings does ouvrir borrow, despite its spelling? (The -er set — marcher's.) What is an aperitif, literally? (The opener — the drink that opens a meal.) Why does ouvrir not look like Latin aperīre? (It was reshaped to match its own opposite, the verb for covering.)"
+              "text": "Say \"the cat is sleeping\" and \"we sleep.\" (Le chat dort. Nous dormons — the m is silent in the singular and audible in the plural.) Where does dormitory come from? (Latin dormītōrium, \"a sleeping place\" — and French wore the same word down to dortoir.) Is the dormouse in this family? (No — that is folk etymology; the word's real origin is unknown.) And chat — an inherited Latin word, or a traveller? (A traveller, from cattus, moving with the cat itself out of Egypt.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C27-fermer",
-      "sequence": 960,
-      "title": "fermer — \"to close,\" which in French means \"to make firm\"",
-      "headword": "fermer",
-      "romanization": "fermer",
-      "gloss": "to close — from Latin firmāre, \"to make firm,\" so a French door is not shut but made fast; the same verb gave Italian \"to stop\" and Spanish \"to sign\"",
+      "id": "FR-C26-marcher",
+      "sequence": 910,
+      "title": "marcher — \"to walk,\" and the step hiding inside French negation",
+      "headword": "marcher",
+      "romanization": "marcher",
+      "gloss": "to walk — and also to work, so ça marche is the most useful two words in the chapter; its own origin is genuinely unsettled between a Frankish verb and a Latin hammer",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55c1f8a3c63816e3",
+      "sourceHash": "fnv1a64:d903cedbd25c3da9",
       "notice": null,
       "blocks": [
         {
@@ -670,7 +462,7 @@
             },
             {
               "kind": "speech",
-              "text": "The last of the four, and the opposite of the one before it. French chose an unexpected picture: to close a thing is to make it firm."
+              "text": "You can hear and you can sleep. Now move. This verb does a second job too, used dozens of times a day."
             }
           ]
         },
@@ -681,69 +473,73 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fermer — to close. Said fer-MAY. Je ferme la main. — I close my hand. Il pleut. Je ferme. — It's raining. I'm closing up."
+              "text": "marcher — to walk. Said mar-SHAY: the -er is a clean ay, and the ch is sh, never k. Je marche. — I walk."
             },
             {
               "kind": "speech",
-              "text": "A regular -er verb: je ferme, tu fermes, il ferme, nous fermons, vous fermez, ils ferment."
+              "text": "After dormir's vanishing m, this one asks nothing: an ordinary -er verb. Je marche, tu marches, il marche, nous marchons, vous marchez, ils marchent — four of the six sound identical, just marsh."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two opposites, one set of endings",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: ça marche",
           "segments": [
             {
               "kind": "speech",
-              "text": "Ouvrir borrowed the -er endings against its own spelling. Fermer owns them outright. So the two opposites conjugate in step, and drill as one pair:"
+              "text": "Marcher is also the everyday verb for a thing working. A machine, a plan, an arrangement: if it functions, it walks."
             },
             {
               "kind": "speech",
-              "text": "j'ouvre / je ferme."
+              "text": "Ça marche. — \"That works.\" Also \"Fine,\" \"Deal,\" \"Sounds good.\" Ça ne marche pas. — \"That doesn't work.\""
             },
             {
               "kind": "speech",
-              "text": "nous ouvrons / nous fermons."
+              "text": "There is your ne … pas from the answer-word non, round a real verb at last. And ça marche alone is an agreement, two words long."
             },
             {
               "kind": "speech",
-              "text": "ils ouvrent / ils ferment."
+              "text": "Entendre once held several jobs and shed all but hearing. Marcher holds two right now."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: making it firm",
+          "title": "The word, taken apart: a step, or a hammer",
           "segments": [
             {
               "kind": "speech",
-              "text": "fermer from Latin firmāre, \"to make firm,\" from firmus, \"firm.\" A Roman door was not closed, it was secured. English took the adjective and left the verb: firm, affirm, confirm, infirm and the infirmary, the firmament — the sky as a solid vault."
+              "text": "Here the honest answer is that nobody is certain. Old French marchier first meant \"to trample, to tread on,\" and two accounts compete:"
             },
             {
               "kind": "speech",
-              "text": "Probably also farm. Old French ferme meant a fixed rent, from Medieval Latin firma, \"a fixed payment,\" so a farm began as a lease and not a field. Etymologists call this history a confused one, because Old English feorm, \"food-rent,\" sat nearby and may have pulled on it. Likely, not clean."
+              "text": "Frankish markōn, \"to mark, to press a step in\" — preferred by most reference works."
             },
             {
               "kind": "speech",
-              "text": "The best part is the split. One Latin verb, three languages, three jobs:"
+              "text": "Late Latin marcāre, from marcus, \"a hammer\" — a blow and a tread being one motion."
             },
             {
               "kind": "speech",
-              "text": "French fermer — to close."
+              "text": "Three consequences, in falling order of certainty:"
             },
             {
               "kind": "speech",
-              "text": "Italian fermare — to stop."
+              "text": "English march, the verb, is borrowed straight from marcher. Secure whichever origin is right."
             },
             {
               "kind": "speech",
-              "text": "Spanish firmar — to sign, because a signature makes a paper firm."
+              "text": "English mark is Germanic, from Old English mearc. A relative only if the Frankish account holds — conditional, not a fact."
             },
             {
               "kind": "speech",
-              "text": "And Spanish and Portuguese do not close with this verb at all. Their words come from Latin's bolt. So French shuts a door by making it solid while its neighbours slide a bar across."
+              "text": "French la marche, a borderland, with marquis and German margrave, comes from the Germanic noun marka, \"boundary\" — a separate arrival."
+            },
+            {
+              "kind": "speech",
+              "text": "And one cousin you own already. The pas in ne … pas began as Latin passus, \"a step.\" Je ne marche pas is, underneath, \"I do not walk a step.\""
             }
           ]
         },
@@ -761,74 +557,56 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"fermer\" — fer-MAY",
+              "instruction": "\"marcher\" — mar-SHAY, sh not k",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"fermer\" — *fer-MAY*]"
+              "source": "[YOU SAY: \"marcher\" — *mar-SHAY*, *sh* not *k*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'ouvre la main\" then \"je ferme la main\"",
+              "instruction": "\"je marche\" then \"nous marchons\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'ouvre la main\" then \"je ferme la main\"]"
+              "source": "[YOU SAY: \"je marche\" then \"nous marchons\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the chapter's four — \"je m'assieds, je me lève, j'ouvre, je ferme\"",
+              "instruction": "\"ça marche\" — that works, that's fine",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the chapter's four — \"je m'assieds, je me lève, j'ouvre, je ferme\"]"
+              "source": "[YOU SAY: \"ça marche\" — that works, that's fine]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"je suis debout et je ferme\"",
+              "instruction": "\"non\", then \"je ne marche pas\" — and pas is a step",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"je suis debout et je ferme\"]"
+              "source": "[YOU SAY: \"non\", then \"je ne marche pas\" — and *pas* is a **step**]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"il pleut, je ferme\"",
+              "instruction": "\"j'entends, je dors, je marche\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"il pleut, je ferme\"]"
+              "source": "[YOU SAY: \"j'entends, je dors, je marche\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"vous fermez, s'il vous plaît\" then \"tu fermes, s'il te plaît\" — formal, then familiar",
+              "instruction": "\"nous dormons, nous marchons\" — one stem shifts, one never does",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"vous fermez, s'il vous plaît\" then \"tu fermes, s'il te plaît\" — formal, then familiar]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je suis désolé, je ferme\" — the apology before the refusal",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je suis désolé, je ferme\" — the apology before the refusal]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"fermer, firm, affirm, confirm\" — all a making-firm",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"fermer, firm, affirm, confirm\" — all a making-firm]"
+              "source": "[YOU SAY: \"nous dormons, nous marchons\" — one stem shifts, one never does]"
             }
           ]
         },
@@ -845,7 +623,225 @@
             },
             {
               "kind": "speech",
-              "text": "Say the chapter's four with je. (Je m'assieds, je me lève, j'ouvre, je ferme.) What did firmāre mean, and what is a French door doing when it closes? (Making firm — being secured, not barred.) One Latin verb, three languages: Italian and Spanish? (Fermare, \"to stop\"; firmar, \"to sign\".) Now close politely in both registers, then apologise. (Vous fermez, s'il vous plaît. Tu fermes, s'il te plaît. Je suis désolé.) And the hand? (J'ouvre la main, je ferme la main.)"
+              "text": "Say \"I walk\" and \"that works.\" (Je marche. Ça marche.) What are the two competing origins? (Frankish markōn, \"to press a step in,\" or Latin marcus, \"a hammer.\" Genuinely unsettled.) Which English word is certainly related, and which only might be? (March, borrowed straight from marcher; mark only if the Frankish account is right.) What did pas mean before it meant \"not\"? (A step.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C26-courir",
+      "sequence": 920,
+      "title": "courir — \"to run,\" and why it is not chourir",
+      "headword": "courir",
+      "romanization": "courir",
+      "gloss": "to run — Latin currere, the root under current, course, courier and curriculum, and the verb that shows why chien palatalized its c and courir did not",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d98e6e854b49d250",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hearing, sleeping, walking — and now the fastest of the four. Its Latin root is one of the busiest in English, and its spelling settles a question the dog raised."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "courir — to run. Said koo-REER, throaty at both rs. Le chien court. — The dog runs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the same endings, a different stem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Courir takes dormir's singular endings — -s, -s, -t, all silent:"
+            },
+            {
+              "kind": "speech",
+              "text": "je cours — koor."
+            },
+            {
+              "kind": "speech",
+              "text": "tu cours — koor."
+            },
+            {
+              "kind": "speech",
+              "text": "il court — koor."
+            },
+            {
+              "kind": "speech",
+              "text": "nous courons — koo-ROHN."
+            },
+            {
+              "kind": "speech",
+              "text": "vous courez — koo-RAY."
+            },
+            {
+              "kind": "speech",
+              "text": "ils courent — KOOR."
+            },
+            {
+              "kind": "speech",
+              "text": "But the resemblance stops there. Dormir sheds a consonant in the singular: dorm- becomes dor-. Courir sheds nothing — its stem cour- has nothing spare to lose."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: currere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Marcher left a choice between a Frankish verb and a Latin hammer. This one leaves none. courir from Latin currere, \"to run,\" which English mined harder than almost any other verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "current and currency both run; a cursor runs across a screen; a course is a run, a corridor a running-place."
+            },
+            {
+              "kind": "speech",
+              "text": "courier, one who runs; curriculum, literally \"a running.\""
+            },
+            {
+              "kind": "speech",
+              "text": "concur, run together; occur, run up against; excursion."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the spelling question. Chien came from canis, and its c turned into ch — the shift that made champ and chanter. So why is this verb not chourir? Because that shift only struck c before a. Currere had c before u, untouched, so the k survived. One rule, two regular outcomes."
+            },
+            {
+              "kind": "speech",
+              "text": "One honest limit. Latin carrus, \"wagon,\" gave English car and cargo, and descends from the same very old root. But Latin borrowed carrus from Gaulish: a cousin by another road, not a word built out of currere."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chapter's four with je — \"j'entends, je dors, je marche, je cours\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chapter's four with *je* — \"j'entends, je dors, je marche, je cours\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le chien court\" then \"le chat dort\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le chien court\" then \"le chat dort\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"il fait chaud, je cours\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"il fait chaud, je cours\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"il pleut, je ne cours pas\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"il pleut, je ne cours pas\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je dors, nous dormons\" then \"je cours, nous courons\" — one sheds",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je dors, nous dormons\" then \"je cours, nous courons\" — one sheds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"chien\" then \"courir\" — ch before a, k before u",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"chien\" then \"courir\" — *ch* before *a*, *k* before *u*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"current, course, courier, curriculum\" — every one a running",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"current, course, courier, curriculum\" — every one a running]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ça marche\" — the agreement, two words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ça marche\" — the agreement, two words]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the chapter's four verbs with je. (J'entends, je dors, je marche, je cours.) What does curriculum literally mean? (A running — from currere.) Why did canis become chien while currere stayed hard? (The shift only hit c before a.) Which of the four began as a stretching? (Entendre — intendere, to stretch toward.) Now: \"the dog runs\" and \"it is hot.\" (Le chien court. Il fait chaud.)"
             }
           ]
         }

@@ -1,15 +1,15 @@
 {
   "language": "french",
   "chapter": 23,
-  "sourceHash": "fnv1a64:93335debe05e8070",
+  "sourceHash": "fnv1a64:292b0fbd0695b25f",
   "lessonIds": [
-    "FR-C20-je-suis-desole"
+    "FR-C19-sil-vous-plait"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "french/narration/ch23.txt",
   "json": "french/narration/ch23.json",
-  "textHash": "fnv1a64:660d85cc0a01a706",
-  "jsonHash": "fnv1a64:857d93e50fba279e",
+  "textHash": "fnv1a64:083f8237e40b7f6a",
+  "jsonHash": "fnv1a64:0235ece180bad5b1",
   "findings": []
 }

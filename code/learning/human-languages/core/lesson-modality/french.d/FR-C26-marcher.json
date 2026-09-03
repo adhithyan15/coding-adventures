@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C26-marcher",
     "language": "french",
-    "chapter": 29,
+    "chapter": 30,
     "sequence": 910,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:82fc34ef95d581db"
+    "sourceHash": "fnv1a64:d903cedbd25c3da9"
   },
   "findings": []
 }

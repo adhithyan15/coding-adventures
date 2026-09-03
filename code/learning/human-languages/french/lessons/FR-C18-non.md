@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C18-non
 spine_node: SPINE-RESPOND-BASIC
 sequence: 750
-chapter: 21
+chapter: 22
 type: word
 headword: non
 gloss: no / not

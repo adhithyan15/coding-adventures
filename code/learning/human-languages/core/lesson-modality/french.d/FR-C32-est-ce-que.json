@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C32-est-ce-que",
     "language": "french",
-    "chapter": 35,
+    "chapter": 36,
     "sequence": 1210,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d17ec271c1c7a080"
+    "sourceHash": "fnv1a64:d3794fb8fcab5231"
   },
   "findings": []
 }

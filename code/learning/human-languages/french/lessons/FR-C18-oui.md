@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C18-oui
 spine_node: SPINE-RESPOND-BASIC
 sequence: 740
-chapter: 21
+chapter: 22
 type: word
 headword: oui
 gloss: yes

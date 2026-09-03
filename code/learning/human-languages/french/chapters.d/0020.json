@@ -1,21 +1,26 @@
 {
   "chapter": 20,
-  "title": "Head and Hand",
-  "label": "ch:fr-head-and-hand",
-  "canDo": "I can name the head and the hand in French with the right article, and point out the Latin manus hiding inside English manual, manufacture and maintain.",
+  "title": "The Past That Takes être",
+  "label": "ch:passe-compose-etre",
+  "canDo": "I can choose between avoir and être in the past, and say what the participle agrees with and why.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "FR-C17-main",
-    "kind": "production",
-    "summary": "Say la main with its nasal -ain, then run the manus family out loud — manual, manuscript, maintenir — and land on manufacture, 'made by hand', now the name for the opposite.",
+    "lesson": "FR-C16-practice-etre-past",
+    "kind": "task",
+    "summary": "A short closed list of verbs refuses avoir and takes être, and it is easier as a shape than a list: arriving and leaving, in space or in life. Two corrections come with it — motion verbs like courir take avoir, because motion is not transition, and five verbs switch to avoir the moment they take an object, which shows the rule is about the sentence rather than the verb. Then the agreement, which is audible for once: elle est morte. And underneath avoir's rule, être's rule and the pronominal rule sits one fact — the participle was an adjective, and it agrees with whatever it described.",
     "assesses": [
-      "FR-LEX-MAIN-02",
-      "FR-SOUND-MAIN-03",
-      "FR-ETYMON-MAIN-04",
-      "FR-ETYMON-MAINTENIR-05"
+      "FR-GRAM-PASSE-COMPOSE-ETRE-01",
+      "FR-GRAM-ETRE-FAMILLE-02",
+      "FR-GRAM-ETRE-PAS-MOUVEMENT-03",
+      "FR-GRAM-ETRE-AVOIR-BASCULE-04",
+      "FR-GRAM-ACCORD-SUJET-05",
+      "FR-GRAM-ACCORD-UNIFIE-06",
+      "FR-GRAM-PRONOMINAL-ETRE-07",
+      "FR-GRAM-PRONOMINAL-ACCORD-08",
+      "FR-GRAM-PRONOMINAL-SEUL-09"
     ],
-    "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence; it exercises the main half of the chapter but not the tête half."
+    "note": "Authored when chapter 19 was split in two. This half is the past built on the verb, including the pronominal system, whose agreement follows AVOIR's rule despite taking être. The payoff is atom-scored -- it assesses every atom its chapter introduces."
   }
 }

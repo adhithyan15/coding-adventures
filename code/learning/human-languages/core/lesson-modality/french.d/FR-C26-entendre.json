@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C26-entendre",
     "language": "french",
-    "chapter": 29,
+    "chapter": 30,
     "sequence": 890,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:796c9e6bd7179746"
+    "sourceHash": "fnv1a64:f712d6a61023f398"
   },
   "findings": []
 }

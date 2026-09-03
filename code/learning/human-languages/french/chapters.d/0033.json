@@ -1,22 +1,24 @@
 {
   "chapter": 33,
-  "title": "Cheese, Butter, Salt, Egg",
-  "label": "ch:fr-cheese-butter-salt-egg",
-  "canDo": "I can ask for cheese, butter, salt or an egg in French, and say why un œuf keeps its final f while les œufs drops it.",
+  "title": "The People You Introduce",
+  "label": "ch:fr-the-people-you-introduce",
+  "canDo": "I can introduce a friend, name my family, name a child and name any person, using French's four different relationships between grammatical gender and the person meant, and elide le or la to l' before a vowel.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "FR-C30-oeuf",
+    "lesson": "FR-C29-personne",
     "kind": "task",
-    "summary": "Ask for an egg, hold un œuf's pronounced f against les œufs' silent one, and place œuf beside English egg as genuine cousins rather than a borrowing. Reaches back past the chapter to le sel, le beurre and le fromage, and to Chapter 29's elision rule, which l'œuf needs exactly as l'ami did.",
+    "summary": "Say la personne, always feminine even naming a man, then line the chapter's four words up by how each one handles gender: l'ami changes, la famille is fixed, l'enfant is one spelling with two articles, la personne is fixed regardless of sex. Reaches back to Chapter 18's non for a sound contrast (personne's double -nn- blocks the nasal non has) and to its ne ... pas negation, which personne itself joins as \"nobody.\"",
     "assesses": [
-      "FR-LEX-OEUF-07",
-      "FR-ETYMON-OEUF-08",
-      "FR-LEX-SEL-05",
-      "FR-LEX-BEURRE-03",
-      "FR-LEX-FROMAGE-01",
-      "FR-GRAMMAR-ELISION-ARTICLE-02"
+      "FR-LEX-PERSONNE-08",
+      "FR-ETYMON-PERSONNE-09",
+      "FR-LEX-AMI-01",
+      "FR-GRAMMAR-ELISION-ARTICLE-02",
+      "FR-LEX-FAMILLE-04",
+      "FR-LEX-ENFANT-06",
+      "FR-SOUND-NON-03",
+      "FR-GRAMMAR-NEGATION-04"
     ]
   }
 }

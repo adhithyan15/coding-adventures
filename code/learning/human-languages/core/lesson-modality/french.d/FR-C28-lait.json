@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C28-lait",
     "language": "french",
-    "chapter": 31,
+    "chapter": 32,
     "sequence": 990,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:41fd2b418e9dc519"
+    "sourceHash": "fnv1a64:8bce53f7a0acd06a"
   },
   "findings": []
 }

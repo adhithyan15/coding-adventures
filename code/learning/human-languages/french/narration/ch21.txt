@@ -1,76 +1,93 @@
-French, chapter 21: Yes and No.
-2 lessons. All 2 can be done entirely by ear.
+French, chapter 21: Head and Hand.
+2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 2.
-oui — yes.
+la tête — "the head".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Where Spanish kept Latin's word for yes, French built a brand-new one — and named half a country after it.
+The first body part, and one of the best etymologies in French. The word for head is not the Latin word for head.
 
-The word, taken apart.
-oui = yes. Just two sounds, wee.
-Its Romance cousins (Spanish sí, Italian sì) come from Latin sīc "thus." French took a different road entirely. oui comes from Old French oïl, and oïl is a squeezed-down Latin phrase:
-hoc ille ("this [is] it") becomes o-ïl becomes oui.
-You answered "yes" by saying, in effect, "that's the one."
+You'll want to know: The word.
+la tête — the head. Feminine, so la.
 
-Why it's said this way: A word that split a country.
-This mattered so much it became a map. In the Middle Ages France was divided by how people said yes:
-the north said oïl becomes the langue d'oïl (which became modern French).
-the south said oc becomes the langue d'oc — still visible in the region name Languedoc, and in the language Occitan.
-One little answer-word, drawn as a border.
+The word, taken apart: Latin had a perfectly good word.
+Latin's word for "head" was caput. You can see it surviving all over Europe:
+[a table of 4 rows, read aloud]
+Portuguese, cabeça.
+Spanish, cabeza.
+Italian, capo (now "chief, boss").
+English, captain, capital, decapitate.
+French has caput too, and in two layers. Inherited, worn down by use: chef ("chief," originally "head"), chapitre, cap (a headland), achever ("to finish" — to bring to a head). Re-borrowed later, straight from written Latin: capital, capitaine, décapiter.
+What French does not use it for is the thing on your shoulders.
+Tête comes from Latin testa: an earthenware pot, a shell, a potsherd.
 
-Grammar Lens: The other “yes,” si.
-French keeps a second yes — si — for one special job: contradicting a negative. When someone says something isn't so and you insist it is, you answer si, not oui:
-Tu ne viens pas? ("You're not coming?") — Si! ("Yes I am!")
-(That si is the Latin sīc the Spanish sí also comes from — French kept it only for this contradicting move.)
+Why it's said this way: Why a pot?
+Soldiers' slang. Roman troops called the skull a testa the way English speakers say someone got hit on the noggin — a noggin being a small mug. It was a joke, it spread, and eventually the joke replaced the real word in Gaul and Italy.
+So a French speaker saying j'ai mal à la tête is, historically, saying "my pot hurts."
+Testa is still visible in English test — which began as the shallow pot an alchemist used to assay metals.
+
+Sounds you'll need: The circumflex is a receipt.
+Look at the accent: tête. Chapter W01 taught what a circumflex records — a letter that used to be there, almost always an s.
+testa becomes Old French teste becomes modern tête.
+The s stopped being pronounced, and the accent was put in to mark the grave. That is why English, which borrowed from Old French before the s fell, still has it in test.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "oui" — wee]
+[your turn — say: "la tête"]
 [pause 8 seconds for the answer]
-[your turn — say: the origin — "hoc ille becomes oïl becomes oui": that's the one]
+[your turn — say: "j'ai mal à la tête" — "my head hurts"]
 [pause 8 seconds for the answer]
-[your turn — say: the contradiction — "Tu ne viens pas? — Si!"]
+[your turn — say: the joke — "testa = a pot"]
+[pause 8 seconds for the answer]
+[your turn — say: the receipt — "teste becomes tê-te"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you say yes in French? (oui.) What Latin phrase is it worn down from? (hoc ille, "this is it," via oïl.) What were the langue d'oïl and langue d'oc named after? (The two medieval words for yes.) When do you answer si instead of oui? (To contradict a negative — Tu ne viens pas? — Si!)
-[question — say your answer, then pause 8 seconds]
-French has two words for yes. Which one contradicts a negative?
+Say "the head." (La tête — feminine.) Does it come from Latin caput? (No — from testa, an earthenware pot.) Why a pot? (Roman soldiers' slang for the skull, which replaced the proper word.) Where did caput survive in French? (Inherited in chef, chapitre, cap, achever; re-borrowed in capital, capitaine, décapiter — just never for the head itself.) What does the circumflex on tête record? (A lost s — teste, still visible in English test.) Next: the hand.
 
 
 Lesson 2 of 2.
-non — no / not.
+la main — "the hand".
 
 Warm-up.
 [pause 2 seconds]
-After French's home-grown oui, its no is the family word, shared straight with Spanish — but said the French way, through the nose.
+Where tête abandoned its Latin ancestor, this one kept it — and then lent it to English several dozen times over.
 
-The word, taken apart.
-non = no. It comes from Latin nōn, the same source as Spanish no and Italian no:
-[a table of 3 rows, read aloud]
-Latin nōn: Spanish. , which gives:: no.
-Latin nōn: Italian. , which gives:: no.
-Latin nōn: French. , which gives:: non.
-Spanish dropped the n and left a clean no. French kept the n — but turned it into a nasal vowel: you don't quite touch your tongue to say the final n, you send the vowel through your nose. That's the sound written ‑on in non, bon, bonjour — you've met it before.
+You'll want to know: The word.
+la main — the hand. Feminine, and worth flagging: it ends in a consonant and still takes la. French gender is not predictable from the ending, which is why this book always gives you the article.
+The -ain is the nasal vowel of pain, the bread — say them together: pain, main.
 
-Grammar Lens: The seed of French negation.
-The word that actually carries negation inside a French sentence isn't non but its unstressed twin, ne — both worn down from the same Latin nōn. Modern French usually reinforces ne with a second word, giving the pair ne … pas:
-Je ne parle pas français = "I do not speak French."
-For now, non on its own is your answer-word. In ne … pas, the ne is non's cousin from nōn; the pas was added later — it originally meant "a step" (Latin passus), as in "not walk a step" — and simply stuck. That fuller sentence negation is something you'll build later.
+The word, taken apart: manus in English.
+Main comes from Latin manus, "hand." That word is inside an enormous number of English words, and once you see it you cannot unsee it:
+[a table of 6 rows, read aloud]
+English: manual. literally: done by hand.
+English: manufacture. literally: made by hand (manus + facere "to make").
+English: manuscript. literally: written by hand (manus + scrībere).
+English: maintain. literally: hold in the hand (manū tenēre).
+English: manage. literally: to handle — via Italian maneggiare, of horses.
+English: manoeuvre. literally: work by hand (manū operārī).
+Manufacture is the one worth pausing on. It means "made by hand" — and it now names precisely the thing that isn't.
+
+The phrase, taken apart: French kept it too.
+Maintenir / English maintain is Latin manū tenēre, "to hold in the hand" — a hand, plus the verb tenēre, "to hold."
+So maintenance — the least romantic word in any office — is literally keeping something in hand.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "non" — nasal, through the nose, like the -on in bon]
+[your turn — say: "la main" — and hear pain, main]
 [pause 8 seconds for the answer]
-[your turn — say: the pair with yes — "oui / non"]
+[your turn — say: "j'ai mal à la main"]
 [pause 8 seconds for the answer]
-[your turn — say: the family — Latin nōn becomes Spanish no, French non]
+[your turn — say: the family — "manual, manuscript, maintain — all a hand"]
+[pause 8 seconds for the answer]
+[your turn — say: the irony — "manufacture = made by hand"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you say no in French? (non.) What Latin word is it from, and which Spanish word is its twin? (nōn; Spanish no.) What did French do to the n that Spanish dropped? (Kept it as a nasal vowel — the -on sound.) What pair does full French negation usually wrap around the verb? (ne … pas.)
+Say "the hand." (La main — feminine, despite the consonant ending.) What Latin word is it from? (Manus.) Give three English words built on it. (Manual, manufacture, manuscript, maintain, manage, manoeuvre.) What does manufacture literally mean? ("Made by hand" — now the name for the opposite.) And maintenir? (Manū tenēre, "hold in the hand".) Next: the rest of the body.

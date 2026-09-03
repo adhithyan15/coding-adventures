@@ -1,10 +1,10 @@
 {
   "language": "french",
   "chapter": 21,
-  "sourceHash": "fnv1a64:87ef2c25c2918384",
+  "sourceHash": "fnv1a64:f58ba564c2233e7f",
   "lessonIds": [
-    "FR-C18-oui",
-    "FR-C18-non"
+    "FR-C17-tete",
+    "FR-C17-main"
   ],
-  "tex": "french/book/chapters/ch21-yes-and-no.tex"
+  "tex": "french/book/chapters/ch21-head-and-hand.tex"
 }

@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C32-ou",
     "language": "french",
-    "chapter": 35,
+    "chapter": 36,
     "sequence": 1220,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5ba24586636bc100"
+    "sourceHash": "fnv1a64:3382adead379fb5d"
   },
   "findings": []
 }

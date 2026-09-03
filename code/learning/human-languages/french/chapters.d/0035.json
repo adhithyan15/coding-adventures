@@ -1,21 +1,25 @@
 {
   "chapter": 35,
-  "title": "Asking a Question — Three Ways, and Which One to Use",
-  "label": "ch:fr-questions",
-  "canDo": "I can ask a question in French three ways — by raising my voice, with est-ce que, and by inversion — choose between them by how formal the moment is, and ask where, when, how, how much and why.",
+  "title": "Eyes, Nose, Mouth, Stomach",
+  "label": "ch:fr-eyes-nose-mouth-stomach",
+  "canDo": "I can name the eye and its irregular-looking plural yeux, the nose, the mouth and the stomach in French, extending Chapter 17's head and hand.",
   "spineNodes": [
-    "SPINE-ASK-LOCATION"
+    "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "FR-C32-quel",
+    "lesson": "FR-C31-ventre",
     "kind": "task",
-    "summary": "The one question word that agrees with its noun, closing a chapter that began with the question costing no new words at all.",
+    "summary": "Say j'ai mal au ventre, take ventriloquist apart as \"belly-speaker,\" and close the chapter's own four words (l'œil/les yeux, le nez, la bouche, le ventre) beside Chapter 17's head and hand. Reaches back past the chapter to la main's nasal -ain, contrasted with ventre's own different nasal vowel, and further back to le café, l'ami and l'œuf, one word from each of this book's four newest chapters.",
     "assesses": [
-      "FR-GRAMMAR-QUEL-09",
-      "FR-GRAMMAR-INTONATION-01",
-      "FR-GRAMMAR-ESTCEQUE-02",
-      "FR-GRAMMAR-INVERSION-08",
-      "FR-LEX-OU-03"
+      "FR-LEX-VENTRE-07",
+      "FR-ETYMON-VENTRE-08",
+      "FR-LEX-BOUCHE-05",
+      "FR-LEX-NEZ-03",
+      "FR-LEX-OEIL-01",
+      "FR-SOUND-MAIN-03",
+      "FR-LEX-CAFE-01",
+      "FR-LEX-AMI-01",
+      "FR-LEX-OEUF-07"
     ]
   }
 }

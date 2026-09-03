@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C30-fromage",
     "language": "french",
-    "chapter": 33,
+    "chapter": 34,
     "sequence": 1050,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ee00529f1ee6ba41"
+    "sourceHash": "fnv1a64:17090798ca97d646"
   },
   "findings": []
 }

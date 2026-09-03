@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C16-famille-etre",
+    "language": "french",
+    "chapter": 20,
+    "sequence": 685,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68c1dfe64975ca05"
+  },
+  "findings": []
+}

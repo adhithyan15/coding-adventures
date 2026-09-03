@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C32-pourquoi",
     "language": "french",
-    "chapter": 35,
+    "chapter": 36,
     "sequence": 1260,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a692357a6242262a"
+    "sourceHash": "fnv1a64:58ed603bdc5383c3"
   },
   "findings": []
 }

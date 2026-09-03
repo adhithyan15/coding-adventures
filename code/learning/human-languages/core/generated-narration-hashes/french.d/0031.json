@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 31,
-  "sourceHash": "fnv1a64:c6316e021d57d314",
+  "sourceHash": "fnv1a64:8cc5ee5186e048e6",
   "lessonIds": [
-    "FR-C28-cafe",
-    "FR-C28-the",
-    "FR-C28-lait",
-    "FR-C28-sucre"
+    "FR-C27-sasseoir",
+    "FR-C27-se-lever",
+    "FR-C27-ouvrir",
+    "FR-C27-fermer"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch31.txt",
   "json": "french/narration/ch31.json",
-  "textHash": "fnv1a64:139cdf3e2530e0a3",
-  "jsonHash": "fnv1a64:8d48fd5c8d7421b2",
+  "textHash": "fnv1a64:e4072f01f828efd4",
+  "jsonHash": "fnv1a64:ef27abac0817c8ac",
   "findings": []
 }

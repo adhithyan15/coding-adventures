@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 34,
-  "sourceHash": "fnv1a64:5091c4560c59685f",
+  "sourceHash": "fnv1a64:385f0be077071618",
   "lessonIds": [
-    "FR-C31-oeil",
-    "FR-C31-nez",
-    "FR-C31-bouche",
-    "FR-C31-ventre"
+    "FR-C30-fromage",
+    "FR-C30-beurre",
+    "FR-C30-sel",
+    "FR-C30-oeuf"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch34.txt",
   "json": "french/narration/ch34.json",
-  "textHash": "fnv1a64:1581fb71c0fcc980",
-  "jsonHash": "fnv1a64:6484a4ab2d6dabad",
+  "textHash": "fnv1a64:79e1c55854780593",
+  "jsonHash": "fnv1a64:018729ccf5af6151",
   "findings": []
 }

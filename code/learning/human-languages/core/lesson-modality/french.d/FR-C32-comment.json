@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C32-comment",
     "language": "french",
-    "chapter": 35,
+    "chapter": 36,
     "sequence": 1240,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8c0ec070eafb6ee2"
+    "sourceHash": "fnv1a64:1793139f430711b3"
   },
   "findings": []
 }

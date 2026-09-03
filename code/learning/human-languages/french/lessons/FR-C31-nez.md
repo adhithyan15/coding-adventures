@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C31-nez
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 1100
-chapter: 34
+chapter: 35
 type: word
 headword: le nez
 gloss: nose — masculine, a silent final z, and another genuine cousin of its English counterpart

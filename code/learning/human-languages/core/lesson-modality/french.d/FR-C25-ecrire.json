@@ -2,7 +2,7 @@
   "lesson": {
     "id": "FR-C25-ecrire",
     "language": "french",
-    "chapter": 28,
+    "chapter": 29,
     "sequence": 880,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a0e98e3f1367d0f6"
+    "sourceHash": "fnv1a64:43e43a3660c67655"
   },
   "findings": []
 }

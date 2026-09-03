@@ -3,7 +3,7 @@ schema_version: 2
 id: FR-C30-oeuf
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1080
-chapter: 33
+chapter: 34
 type: word
 headword: l'œuf, les œufs
 gloss: egg — masculine, a genuine cousin of English egg, and the one French noun whose final consonant vanishes only in the plural

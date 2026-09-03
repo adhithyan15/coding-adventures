@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C16-accord-sujet",
+    "language": "french",
+    "chapter": 20,
+    "sequence": 694,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d47f56f46e7cf0d"
+  },
+  "findings": []
+}

@@ -1,12 +1,9 @@
 {
   "language": "french",
   "chapter": 27,
-  "sourceHash": "fnv1a64:c445d8aa7280d6e9",
+  "sourceHash": "fnv1a64:f0c117db82d62581",
   "lessonIds": [
-    "FR-C24-prendre",
-    "FR-C24-demander",
-    "FR-C24-aider",
-    "FR-C24-aimer"
+    "FR-C23-vert-jaune"
   ],
-  "tex": "french/book/chapters/ch27-taking-asking-helping-loving.tex"
+  "tex": "french/book/chapters/ch27-green-and-yellow.tex"
 }
