@@ -75,7 +75,16 @@ French *nuit* — one Indo-European word, split four ways.
   to the act of gathering before buying Latin *autumn* for the season German
   never stopped naming with it. Closes on *Lenz*, the old poetic spring German
   kept without needing.
-- **Chapter 16 — Family**: Eltern, Geschwister.
+- **Chapter 16 — The Pair That Proves Grimm's Law**: *der Vater* (a **V** on the
+  page and an **f** in the mouth), *die Mutter*, *der Bruder*, *die Schwester* —
+  and the sound law legible across all four. *Vater* against *pater* is **p → f**;
+  *Mutter* against *mater* is **t → th** and then German moving it again;
+  *Bruder* against *frater* runs the swap the **other** way, because the two words
+  started from different ancient sounds; and *Schwester* against *soror* is the one
+  that did not move at all, because the law touches stops and leaves an *s* alone.
+  Closes on German's two plural-only collectives — *die Eltern*, "the older ones",
+  and *die Geschwister*, built with the gathering **Ge-** on a stem that means
+  *sister* and covering the brothers anyway.
 - **Chapter 17 — Bread, Water, Wine**: Brot, Wasser/Wein.
 - **Chapter 18 — Numbers Eleven to Twenty**: elf/zwölf (the *-lif* "left over"
   story), 13–20.

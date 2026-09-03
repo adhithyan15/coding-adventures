@@ -3,7 +3,7 @@
     "id": "GE-C10-geschwister",
     "language": "german",
     "chapter": 16,
-    "sequence": 290,
+    "sequence": 294,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3734e6145b8caf92"
+    "sourceHash": "fnv1a64:f87bd4e06e5d90e0"
   },
   "findings": []
 }

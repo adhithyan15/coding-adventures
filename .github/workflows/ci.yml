@@ -105,6 +105,7 @@ jobs:
       run_d18q_channel_key_grant_conformance: ${{ steps.detect.outputs.run_d18q_channel_key_grant_conformance }}
       run_d18t_durable_epoch_activation_conformance: ${{ steps.detect.outputs.run_d18t_durable_epoch_activation_conformance }}
       run_ruby_grammar_regen_check: ${{ steps.detect.outputs.run_ruby_grammar_regen_check }}
+      run_mosaic_grammar_regen_check: ${{ steps.detect.outputs.run_mosaic_grammar_regen_check }}
       run_unicode17_elixir_conformance: ${{ steps.detect.outputs.run_unicode17_elixir_conformance }}
       run_unicode17_lua_conformance: ${{ steps.detect.outputs.run_unicode17_lua_conformance }}
       run_unicode17_perl_conformance: ${{ steps.detect.outputs.run_unicode17_perl_conformance }}
@@ -902,6 +903,57 @@ jobs:
             exit 1
           fi
           echo "All Ruby compiled grammars are up to date."
+
+  # ── Job 7b: Mosaic compiled-grammar regeneration check ──────────
+  #
+  # The three Mosaic language compilers (mosmodel, moslayout, mosstyle) keep
+  # BOTH their token grammar and their parser grammar in one src/_grammar.rs.
+  # They are `*-compiler` crates, so the `*-lexer` / `*-parser` sweep never
+  # covered them: of 88 _grammar.rs files in the repository those three were
+  # the only ones nothing could regenerate. Their sources drifted unnoticed for
+  # months, and one drift -- mosmodel's slot_type alternation order -- would
+  # have broken all 72 `list<>` slot declarations the moment anyone regenerated
+  # (#14067). This job regenerates them from source and fails on any diff.
+  #
+  # Deliberately scoped to these three rather than sweeping every Rust grammar:
+  # 33 other committed _grammar.rs files currently differ from their sources,
+  # so a repo-wide check would fail on main from the first run. That backlog is
+  # tracked in #14202; this gate protects what is already correct.
+  mosaic-grammar-regen-check:
+    name: Mosaic compiled-grammar regeneration check
+    needs: detect
+    if: needs.detect.outputs.run_mosaic_grammar_regen_check == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build grammar-tools
+        run: cargo build --release --manifest-path code/programs/rust/grammar-tools/Cargo.toml
+
+      - name: Regenerate the Mosaic compilers' _grammar.rs from current source
+        run: |
+          GT=code/programs/rust/grammar-tools/target/release/grammar-tools
+          for stem in mosmodel moslayout mosstyle; do
+            "$GT" generate-rust-compiled-grammars "$stem"
+          done
+
+      - name: Fail if regeneration produced any diff
+        run: |
+          if ! git diff --quiet -- code/packages/rust/mosmodel-compiler code/packages/rust/moslayout-compiler code/packages/rust/mosstyle-compiler; then
+            echo "::error::Regenerating the Mosaic compiled grammars produced changes that are not committed."
+            echo "A .tokens/.grammar source changed without regenerating the _grammar.rs that embeds it."
+            echo
+            git diff --stat -- code/packages/rust/mosmodel-compiler code/packages/rust/moslayout-compiler code/packages/rust/mosstyle-compiler
+            echo
+            echo "Run this locally and commit the result:"
+            echo "  for s in mosmodel moslayout mosstyle; do grammar-tools generate-rust-compiled-grammars \$s; done"
+            exit 1
+          fi
+          echo "All Mosaic compiled grammars are up to date."
 
   # ── Job 8: Unicode 17 generated Elixir conformance ─────────────
   unicode17-elixir-conformance:
@@ -2705,7 +2757,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, build]
+    needs: [detect, contracts, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -2720,6 +2772,7 @@ jobs:
           D18Q_RESULT: ${{ needs['d18q-channel-key-grant-conformance'].result }}
           D18T_RESULT: ${{ needs['d18t-durable-epoch-activation-conformance'].result }}
           RUBY_GRAMMAR_REGEN_RESULT: ${{ needs['ruby-grammar-regen-check'].result }}
+          MOSAIC_GRAMMAR_REGEN_RESULT: ${{ needs['mosaic-grammar-regen-check'].result }}
           UNICODE17_ELIXIR_RESULT: ${{ needs['unicode17-elixir-conformance'].result }}
           UNICODE17_LUA_RESULT: ${{ needs['unicode17-lua-conformance'].result }}
           UNICODE17_PERL_RESULT: ${{ needs['unicode17-perl-conformance'].result }}
@@ -2727,9 +2780,9 @@ jobs:
           UNICODE17_SWIFT_RESULT: ${{ needs['unicode17-swift-conformance'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

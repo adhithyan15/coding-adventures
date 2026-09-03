@@ -3,10 +3,21 @@
   "stage": "pre-A1",
   "kind": "required",
   "category": "language-specific",
-  "canDo": "I can name the people in a German family — parents and siblings.",
+  "canDo": "I can name the people in a German family, and say which of their names the language inherited rather than bought.",
   "prerequisites": [],
   "lessons": [
+    "GE-C10-vater",
+    "GE-C10-vater-pater",
+    "GE-C10-mutter",
+    "GE-C10-mutter-mater",
     "GE-C10-eltern",
+    "GE-C10-bruder",
+    "GE-C10-bruder-frater",
+    "GE-C10-schw",
+    "GE-C10-schwester",
+    "GE-C10-schwester-soror",
+    "GE-C10-geschwister-wort",
+    "GE-C10-ge-kollektiv",
     "GE-C10-geschwister"
   ]
 }
