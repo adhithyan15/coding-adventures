@@ -1,0 +1,3221 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL POINT SET, NOT A TRANSCRIPTION OF THE JLPT SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO THE JAPAN FOUNDATION, to Japan Educational Exchanges and Services, to the JLPT, or to the JF Standard for Japanese-Language Education. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT JAPANESE. Three claims are stacked here with very different strengths, so read them apart. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, which restates the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing in this file and all it establishes is a LEVEL. (2) THE JAPANESE EXPONENTS are editorial throughout. THE CAVEAT WAS READ FIRST AND IT SHAPED THE FILE. core/exam-levels.json's japanese entry records that the official CEFR indication on a JLPT score report covers 'only the language knowledge, reading, and listening competence JLPT tests', and that 'JLPT does not test production (speaking and writing) or interaction'. So THE EXAM ANCHOR CANNOT SCORE HALF THE CEFR CONSTRUCT, and an inventory that quietly reported reading and listening coverage would flatter this track exactly the way HL20 section 1 warns about. The answer is the Sanshutsu to yaritori category: the four production tasks japanese/assessment-spec.md#a1 names for its JF-Standard companion, plus interaction, measured separately. One of the five is covered. THE SCRIPT QUESTION, AND WHY THIS FILE HAS THREE SCRIPT COLUMNS. Japanese runs hiragana, katakana and kanji on one line, and the three stand in completely different places in this corpus: 31 of 46 hiragana signs are taught, 2 of 46 katakana, and 3 kanji. A POINTS SET THAT TREATED 'THE SCRIPT' AS ONE COLUMN WOULD AVERAGE THOSE INTO A NUMBER THAT DESCRIBES NOTHING, and would hide the fact that a reader who can decode a hiragana sentence still cannot read a menu, a name or a sign. So Hiragana, Katakana and Kanji are three categories, a fourth (Hyouki) holds what they share, and the mixed-script fact itself - which is the thing a single column would most obviously have lost - is its own point at JA-A1-HYO-01. WHICH PROXY ORTHOGRAPHY POINTS HAVE NO JAPANESE ANALOGUE AT ALL: three, and they are named in `proxy.notTransferred` rather than quietly restated. A1-O1-04 and A1-O1-05, capital and lower-case letters, have no counterpart in ANY of the three scripts - Japanese is caseless throughout - and unlike Chinese, where the same demand survives in pinyin, it does not survive in romaji, because romaji is not part of Japanese literacy and appears on no JLPT paper. A1-O1-06, superscript letters in abbreviations, has no counterpart either. Everything else in the Spanish orthography column restates, including the alphabet point (three times, once per script) and the two accentuation points (onto the dakuten). ROMAJI IS TREATED AS PRONUNCIATION AND NOT AS SCRIPT, for the reasons at JA-A1-HYO-06, so no point in this file is counted covered on a romanized headword alone. NO SEARCH WAS RUN, BY INSTRUCTION - BACKLOG.d HL-C287 and HL-C290 record the sourcing question as settled. NO JLPT KANJI OR VOCABULARY LIST IS CITED ANYWHERE IN THIS FILE and no point divides by one. THE CORPUS IS SMALL AND UNUSUALLY WELL BUILT. 117 lessons in 13 chapters introducing 111 atoms, and it is one of only two tracks in the whole corpus with ZERO findings in every gentle-ramp queue - no missed reinforcement window, no script-closure debt, no forward reference, no atom or glyph spike, no measurement-blind lesson. The coverage number below should be read against that: this is not a neglected track, it is a short one that was built carefully.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Japanese is attributed to DELE, the Instituto Cervantes or the Plan Curricular. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.japanese - exam 'JLPT plus Coding Adventures Japanese production companion', basis 'published', A1 mapped to 'JLPT N5 pass with total 80+'. ITS CAVEAT IS THE MOST LOAD-BEARING OF ANY TRACK'S and is quoted in `about`: the published CEFR indication covers only the receptive JLPT tests, and JLPT scores no production and no interaction. That is the whole reason the Sanshutsu to yaritori category exists. EXAM ENVELOPE: PARTIAL AND DANGLING, BUT ITS PROSE HALF IS REAL AND WAS USED. japanese/assessment.json declares an A1 level targeting 'JLPT N5 reception anchor plus production companion' with four skills, and japanese/assessment-spec.md#a1 names the receptive floor (N5 total 80+, language knowledge and reading 38+, listening 19+) AND FOUR CONCRETE PRODUCTION TASKS: complete a small form, write a 30-40 character personal message for a named reader, answer familiar personal questions, and complete a simple rehearsed role-play. THOSE FOUR TASKS ARE ENUMERATED DIRECTLY AS POINTS JA-A1-PROD-01 TO -04, which makes this the only inventory in this sitting with any point bound to a project-internal statement of what an A1 paper will actually ask. What does NOT exist: japanese/task-shapes/ holds only pre-a1.json and japanese/mocks/ does not exist, so the A1 task inventory and both A1 mocks the contract names are absent - the HL20 6b debt, pinned under core/assessment-artifact-ceiling/. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 117 lesson files in code/learning/human-languages/japanese/lessons/, which introduce 111 distinct atoms between them - 55 SCRIPT, 45 LEX, 5 PERFORMANCE, and one each of BRIDGE, DIALOGUE, ETYMON, PARTICLE, REGISTER and a farewell-specific atom. The script claims were taken by walking every kana and kanji any lesson puts on a page and comparing it with the set the writing lessons teach, and then against data/scripts/japanese.d, which carries 49 letters and 3 marks with cited stroke order. The absence claims - no watashi or boku, no desu, no no, no wo, no ka, no question word of any kind, no numeral above the ichi inside ichido, no adjective, no dictionary-form verb - were each checked across all 117 files IN KANA AND IN ROMAJI. NOT SEARCHED, BY INSTRUCTION: no external search for a JLPT N5 content list or the JF Standard descriptors was performed.",
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding - an unmapped point is uncovered, never skipped. EVERY ATOM NAMED IN EVERY PROBE WAS CHECKED MECHANICALLY against the 111 atoms the japanese track actually introduces, and the check is re-runnable: a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so no id was invented to fill a point and no probe points at a lesson somebody intends to write. Because no id was guessed, every point here is either fully probed or null and the coverage report's `partial` count is zero by construction. FOUR HABITS ARE NAMED SO THEY ARE NOT HIDDEN GENEROSITIES. (1) This track files half its atoms under SCRIPT: every kana sign, every kanji, every component, the dakuten, the long mark, the small tsu and the assembled-reading atoms are all SCRIPT. Probing a script or register or performance atom rather than a lexis one is therefore normal here, and the note on each such point says which. (2) THE BIGGEST RISK IN THIS FILE IS A FROZEN FORM SCORING AS A PARADIGM, and three points carry that risk explicitly. JA-A1-V-04 is counted on wakarimashita alone where the proxy asks for eight past-tense points; JA-A1-V-05 on itte kudasai alone where it asks for four; JA-A1-ADV-05 on wakarimasen alone. Each is counted because a form the reader can genuinely produce is present, and each note says in as many words that the reader cannot put a second verb into it. A tick with that note is more useful than a null; a tick without it would be a lie. (3) SEVERAL POINTS ARE COUNTED ON ONE EXPONENT WHERE THE PROXY ASKS FOR A FIELD - JA-A1-K-01 on koko where the kosoado series has nine cells, JA-A1-NUM-01 on the ichi inside ichido, JA-A1-NE04-01 on koohii. Each says 'thin' or 'counted on X alone'. (4) NO POINT IS COUNTED COVERED ON A ROMANIZED HEADWORD ALONE, which is the mechanical form of the romaji decision at JA-A1-HYO-06, and no script point is counted on a lexis atom. `derivedFrom` records each point's provenance - the proxy point ids whose demand it answers, or an empty list with `japaneseSpecific: true`. `anchorIds` records which anchor each point leans on and the anchor's `kind` says whether that was something read or something decided. Neither field is read by any code; both are carried so the derivation can be audited rather than trusted.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "The project's restatement of the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE. The only inventory in this repository that restates a real awarding body's published syllabus, so it is the only one that can lend a LEVEL. It lends a level and never a language. Its best moment for Japanese is the demonstrative column, where Spanish's three-way este/ese/aquel asks exactly the question the kosoado series answers; its worst is the orthography column, where seven points assume one alphabet and Japanese runs three scripts at once."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "Public, third-party and language-neutral. Load-bearing here more than in any sibling file, for two reasons: the PCIC A1 function column has no repair entry while the CEFR descriptors do, which is why five repair points exist; and the JLPT anchor scores no interaction at all, so CEFR is the only thing that can say what interaction at A1 means."
+    },
+    {
+      "id": "JA-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/japanese/ - 117 lessons, 13 chapters, curriculum.d and chapters.d",
+      "note": "Our own work, and what every probe resolves against. It is finite and auditable, but agreeing with it is not corroboration. Worth recording about this one specifically: it is one of only two tracks in the corpus with zero findings in every gentle-ramp queue, and 17 of its 117 lessons introduce nothing at all, existing only to reach back."
+    },
+    {
+      "id": "JA-EXAM-LEVELS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/core/exam-levels.json, tracks.japanese",
+      "note": "Records Japanese as JLPT plus a project-defined production companion, basis 'published', A1 as an N5 pass with total 80+. Its caveat is the reason this file has a production-and-interaction category: the published CEFR indication covers only the receptive tests, and JLPT scores no production and no interaction, so the exam anchor cannot see half the construct."
+    },
+    {
+      "id": "JA-ASSESSMENT",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/japanese/assessment.json and assessment-spec.md",
+      "note": "The only project-internal envelope in this sitting concrete enough to enumerate as points. Its A1 section names four JF-Standard production tasks, and JA-A1-PROD-01 to -04 are those four tasks, one for one. Its A1 task inventory and both A1 mocks do not exist on disk."
+    },
+    {
+      "id": "JA-SCRIPT-DATA",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/data/scripts/japanese.d",
+      "note": "The sharded Japanese ductus: 49 letters (34 hiragana, 9 katakana, 6 logographs) and 3 marks, each with a cited stroke order, and `complete: false`. It is the denominator behind JA-A1-KATA-02 and JA-A1-KANJI-04 - seven sourced katakana and three sourced kanji are untaught - and the evidence behind JA-A1-HIRA-06, because ra, da and do are taught and are not in it."
+    },
+    {
+      "id": "ED-JAPANESE",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Japanese",
+      "note": "Every Japanese exponent below, and four decisions larger than any single point: that THE SCRIPT COLUMN MUST BE THREE COLUMNS AND NOT ONE, because 31/46, 2/46 and 3 average into a number that describes nothing; that romaji is pronunciation and not script; that a frozen -mashita form counts as covering the past-tense demand PROVIDED the note says the reader cannot inflect a second verb; and that the four production tasks in the project's own assessment spec are worth enumerating as points, so the half of the construct JLPT cannot score is visible rather than absent."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [
+      {
+        "spanishPoints": [
+          "A1-O1-04",
+          "A1-O1-05"
+        ],
+        "why": "Capital letters, and initial lower-case letters. THESE ARE THE PROXY ORTHOGRAPHY POINTS WITH NO JAPANESE ANALOGUE AT ALL, and they are dropped rather than restated because there is nothing on the other side to restate them onto. Japanese is caseless in all three of its scripts: no hiragana sign, no katakana sign and no kanji has a capital form, there is no sentence-initial marking, and there is no proper-noun marking. The Chinese inventory keeps the same two points, because pinyin has a case distinction and pinyin is taught in schools and printed on beginner HSK material, so the demand survives there. IT DOES NOT SURVIVE IN ROMAJI: romaji is not part of Japanese literacy in any comparable sense and appears on no JLPT paper at any level, so counting a romaji capital would be measuring a convention this project invented for its own transcriptions. See JA-A1-HYO-06."
+      },
+      {
+        "spanishPoints": [
+          "A1-O1-06"
+        ],
+        "why": "Superscript letters in frequent abbreviations. No counterpart in any Japanese script: none of the three has a superscript convention, and the Japanese ordinal is the prefix character dai plus a numeral rather than a written ending that could be raised. Japanese abbreviation works by clipping a long word to four mora, which is a different demand and is derived at JA-A1-ABB-01. Note that Russian DERIVED this same point, at RU-A1-L-09, because Russian answers it with the hyphenated ordinal 1-y; it is dropped here because Japanese returns nothing, not because superscripts looked foreign."
+      }
+    ],
+    "note": "Three points dropped out of 273, all in the orthography column, and all three named individually rather than swept into one entry - because the reason differs and a reader checking this file needs to see which. Everything else restates, including the places it first looked impossible: A1-O1-01 becomes THREE points, one per script; the two accentuation points become the dakuten, which is a diacritic on an otherwise complete sign and is the demand the proxy was making; the fourteen verb points collapse onto -masu, -mashita and the te-form; and the three demonstrative points map onto the kosoado series more exactly than any other correspondence in this file."
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's 54 A1 function points), the CEFR Companion Volume A1 descriptors, and japanese/assessment-spec.md's A1 production companion",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension - for Spanish. It does not close this one, for a reason specific to this track: THE EXAM ANCHOR SCORES NO PRODUCTION AND NO INTERACTION AT ALL, so half of what a CEFR A1 candidate must do has no published external list behind it anywhere, and the four production points here come from this project's own assessment spec rather than from a syllabus. The PCIC list also has no repair entry, while the CEFR descriptors do - five points exist for that reason, and they are the strongest five in the file."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
+      "note": "THE DIMENSION THE PROXY HELPS LEAST WITH. Spanish marks its grammatical relations with agreement and with clitics; Japanese marks all of them with postposed particles and marks politeness on the verb, and neither has a Spanish column. Eight points in Joshi, three in Teineisa, three in Uchi to soto and two more elsewhere are marked japaneseSpecific for that reason. Walking the Spanish column is still worth doing - it surfaces the copula, the demonstratives, the possessive and the polar question, all real and all missing - but a proxy built on an agreement language cannot enumerate a particle language, and the columns that decide whether a Japanese sentence is grammatical were added here by hand."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's orthography and accentuation columns), data/scripts/japanese.d, and the corpus's own 48 writing lessons",
+      "note": "THE DIMENSION THAT FORCED THE FILE'S SHAPE. Spanish's seven letter points assume ONE alphabet; Japanese runs three scripts on one line and this corpus stands in a completely different place in each - 31 of 46 hiragana, 2 of 46 katakana, 3 kanji - so the column is split three ways plus a fourth for what they share, and the mixed-script fact is its own point. Three proxy points are dropped outright as having no Japanese analogue, which is stated in `proxy.notTransferred` rather than left implicit. What keeps the dimension partial beyond that: pitch accent is a phonemic contrast Japanese writes nothing for and the corpus never mentions, and there is no A1-only pronunciation source anywhere - the PCIC publishes its own as an undivided A1-A2 band, so even the proxy has none to lend."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "core/exam-inventory-es-a1.json (the proxy's general and specific notion columns)",
+      "note": "The proxy's specific-notion column is twenty fields of ordinary modern life. Japanese answers two of them deeply - fourteen body words and nine family words, each with four-skill checkpoints over them - and returns nothing for seventeen others, including food, school, work, the home, the shop and health. The shape is unusual and worth naming: this is a track with a great many NOUNS in two fields and almost no verbs, no adjectives and no particles, so the reader can name every part of their own head and cannot say that any of it hurts. The 45 lexical atoms also contain no word for 'I'."
+    }
+  },
+  "points": [
+    {
+      "id": "JA-A1-N-01",
+      "category": "Meishi - the noun",
+      "label": "proper nouns: a personal name, and the name of the language",
+      "probe": [
+        "JA-LEX-NIHONGO",
+        "JA-BRIDGE-SINO-JAPANESE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "nihongo is chapter 5, taught with the Sino-Japanese bridge that explains why its three kanji are read the way they are. A personal NAME is not taught - namae does not occur anywhere in the 117 lesson files - so the track can name the language and cannot name a person."
+    },
+    {
+      "id": "JA-A1-N-02",
+      "category": "Meishi - the noun",
+      "label": "common nouns naming periods of time: day, morning, night, month, year",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "note": "Absent. konnichiwa is taught in chapter 2 and its literal 'today' sense is discussed in the etymology, which is not the same as owning kyou. There is no asa, no yoru, no hi, no tsuki and no toshi."
+    },
+    {
+      "id": "JA-A1-N-03",
+      "category": "Meishi - the noun",
+      "label": "grammatical gender: Japanese has none, so a noun carries no agreement",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-N-03",
+        "A1-ADJ-03"
+      ],
+      "note": "Not stated. Two Spanish points collapse into one absence and nothing in the track tells the reader the absence is there - a Spanish speaker will look for it. Uncovered on the same rule the whole file uses: an absence that no lesson names is not something the reader holds."
+    },
+    {
+      "id": "JA-A1-N-04",
+      "category": "Meishi - the noun",
+      "label": "sex by a different word: father against mother, elder brother against elder sister",
+      "probe": [
+        "JA-LEX-CHICHI",
+        "JA-LEX-HAHA",
+        "JA-LEX-ANI",
+        "JA-LEX-ANE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "note": "chichi/haha and ani/ane, chapter 13, and the corpus does something better than the Spanish point asks: it teaches them WITH their in-group restriction, glossing each as 'my father', 'my elder sister'. See JA-A1-UCHI-01, which is where that restriction is measured."
+    },
+    {
+      "id": "JA-A1-N-05",
+      "category": "Meishi - the noun",
+      "label": "number: Japanese marks no plural on a noun",
+      "probe": [
+        "JA-LEX-ME-EYE",
+        "JA-LEX-MIMI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "COUNTED, AND ON A NICETY WORTH DEFENDING. Spanish asks for a plural ending; Japanese has none, and the corpus makes the absence visible in the right place - me is glossed 'eye; eyes' and mimi 'ear; ears', so the reader meets number-neutrality on the two nouns where an English or Spanish speaker most expects a plural. The general rule is not stated, which is why JA-A1-N-03 is uncovered and this one is not: here the reader is shown the behaviour on real words."
+    },
+    {
+      "id": "JA-A1-J-01",
+      "category": "Joshi - the particles, which do the work case endings do elsewhere",
+      "label": "the topic particle wa, and the fact that it is written with the sign for ha",
+      "probe": [
+        "JA-PARTICLE-WA-SPELLING",
+        "JA-SCRIPT-WA-01",
+        "JA-SCRIPT-HA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and HALF COVERED in a way the note has to be exact about. Spanish has no particle column at all. What chapter 2 teaches is the SPELLING irregularity - konnichiwa ends in the sign read ha, not the sign read wa - which is an orthography fact and one of the first three things any learner of Japanese must be told. What it does NOT teach is wa's job: marking the topic of a sentence. Counted, because the atom is real and the spelling fact is the harder half to discover; and marked here so nobody reads the tick as 'the topic particle is taught'."
+    },
+    {
+      "id": "JA-A1-J-02",
+      "category": "Joshi - the particles, which do the work case endings do elsewhere",
+      "label": "the subject particle ga, and the wa/ga contrast",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific and absent."
+    },
+    {
+      "id": "JA-A1-J-03",
+      "category": "Joshi - the particles, which do the work case endings do elsewhere",
+      "label": "the object particle wo, whose sign has no other use in the language",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-04"
+      ],
+      "note": "Absent, and it is the sharpest single gap in the script column as well as the grammar one: wo is one of the fifteen hiragana signs this track never teaches, and it is the ONLY sign whose entire job is to write one grammatical particle. Missing it costs a letter and a case at once."
+    },
+    {
+      "id": "JA-A1-J-04",
+      "category": "Joshi - the particles, which do the work case endings do elsewhere",
+      "label": "the particles ni and de: where, when, to whom, and by what means",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-05",
+        "A1-NG3-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-J-05",
+      "category": "Joshi - the particles, which do the work case endings do elsewhere",
+      "label": "the particle no, which joins two nouns and is how Japanese possesses",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-02",
+        "A1-POS-03",
+        "A1-SN-01"
+      ],
+      "note": "ABSENT. no occurs zero times in the 117 lesson files. Four Spanish possessive and noun-phrase points collapse onto this one particle, because Japanese does not inflect a possessive, does not agree it and does not distinguish one possessor from several - it puts no between the two nouns. The track teaches nine family words and no way to say whose."
+    },
+    {
+      "id": "JA-A1-J-06",
+      "category": "Joshi - the particles, which do the work case endings do elsewhere",
+      "label": "the particle to, joining two nouns, and mo, adding one",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-01",
+        "A1-ADV-06"
+      ],
+      "note": "Absent. Japanese joins nouns with to and marks 'also' with mo, and neither is taught - see JA-A1-JOIN-01 for the measurement."
+    },
+    {
+      "id": "JA-A1-J-07",
+      "category": "Joshi - the particles, which do the work case endings do elsewhere",
+      "label": "the sentence-final particles ka, ne and yo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-02",
+        "A1-F1-04"
+      ],
+      "note": "ABSENT, and ka is the cheapest sentence-level gain in the track: one sign at the end of a polite sentence turns it into a question. It is also one of the fifteen untaught hiragana."
+    },
+    {
+      "id": "JA-A1-J-08",
+      "category": "Joshi - the particles, which do the work case endings do elsewhere",
+      "label": "the particles as a class: Japanese grammar is carried by them",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and it exists to record a corpus-level finding rather than a single form. ONE PARTICLE ATOM EXISTS IN THIS TRACK AND IT IS ABOUT SPELLING. wa's function, ga, wo, ni, de, no, to, mo, kara, made, ka, ne and yo are all untaught, and no, wo, ka and de return zero occurrences of any kind. Japanese marks every grammatical relation with a particle rather than with word order or with an ending, so a Japanese course with no particles has taught vocabulary and script and has not yet taught grammar. THE SAME SENTENCE IS TRUE OF THE CHINESE TRACK, measured in the same sitting, for a different reason - and it means both files' sentence columns are near-empty for a cause that is one tranche wide rather than many."
+    },
+    {
+      "id": "JA-A1-ADJ-01",
+      "category": "Keiyoushi - the adjectives, of which Japanese has two kinds",
+      "label": "the two adjective classes: i-adjectives and na-adjectives",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01",
+        "A1-ADJ-03",
+        "A1-ADJ-04"
+      ],
+      "note": "ABSENT. Not one adjective is taught in this track - no ookii, no chiisai, no ii, no takai. Three Spanish points collapse here because Japanese's answer to 'what is an adjective and how does it agree' is that there are two classes and they conjugate rather than agree, which is a genuinely different fact and one the track never reaches."
+    },
+    {
+      "id": "JA-A1-ADJ-02",
+      "category": "Keiyoushi - the adjectives, of which Japanese has two kinds",
+      "label": "adjectives of nationality and origin",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02",
+        "A1-NG3-07"
+      ],
+      "note": "Absent. nihon is inside nihongo (chapter 5) and nihonjin is one taught kanji plus one untaught one away, so 'I am Japanese' and 'where are you from' are both close and unreachable."
+    },
+    {
+      "id": "JA-A1-ADJ-03",
+      "category": "Keiyoushi - the adjectives, of which Japanese has two kinds",
+      "label": "position: the adjective stands before its noun, and can also be the whole predicate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "note": "Absent - see JA-A1-ADJ-01."
+    },
+    {
+      "id": "JA-A1-ADJ-04",
+      "category": "Keiyoushi - the adjectives, of which Japanese has two kinds",
+      "label": "degree: totemo, sukoshi, amari",
+      "probe": [
+        "JA-LEX-SUKOSHI",
+        "JA-LEX-MOU-SUKOSHI",
+        "JA-LEX-YOKU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01",
+        "A1-NG2-03"
+      ],
+      "note": "COVERED ON THE SMALL END ONLY, and honestly: sukoshi ('a little'), mou sukoshi ('a little more') and yoku ('well, fully') are all taught in chapters 9 and 10, because the repair sentences need them. totemo is absent. So the track can ask for a little more slowness and cannot say something is very good - which is exactly what you would predict from a course whose degree words arrived through its repair chapter."
+    },
+    {
+      "id": "JA-A1-ART-01",
+      "category": "Kanshi - the article",
+      "label": "the article: Japanese has none, and a bare noun is definite or indefinite by context",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-02",
+        "A1-ART-03",
+        "A1-ART-04"
+      ],
+      "note": "All four Spanish article points collapse into one Japanese fact, and no lesson states it. Uncovered for the same reason as JA-A1-N-03: an absence nobody names is an absence the reader will fill from their own language."
+    },
+    {
+      "id": "JA-A1-K-01",
+      "category": "Kosoado - the demonstrative series",
+      "label": "the kosoado series: kore/sore/are, koko/soko/asoko, kono/sono/ano",
+      "probe": [
+        "JA-LEX-KOKO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-02"
+      ],
+      "note": "COUNTED ON ONE CELL OF NINE, and the note has to be blunt about which one. koko ('here') is taught in chapter 10, because the repair chapter needs somewhere to point. soko, asoko, kore, sore, are, kono, sono and ano are all absent. THE PROXY MAPS UNUSUALLY WELL HERE and cannot be answered: Spanish's three-way este/ese/aquel is the same three-way near/mid/far distinction the kosoado series makes, so this is one of the few places the Spanish column asks exactly the right question, and the corpus has one word out of nine."
+    },
+    {
+      "id": "JA-A1-K-02",
+      "category": "Kosoado - the demonstrative series",
+      "label": "the pointing sentence: kore wa ... desu",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03",
+        "A1-OS-05"
+      ],
+      "note": "Absent, and blocked three times over - no kore, no wa as a topic marker, no desu. This is the commonest sentence on a JLPT N5 paper and every one of its three pieces is missing."
+    },
+    {
+      "id": "JA-A1-K-03",
+      "category": "Kosoado - the demonstrative series",
+      "label": "the kosoado question words: dore, doko, dono, dou",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06",
+        "A1-ADV-07"
+      ],
+      "note": "Absent. NOT ONE QUESTION WORD IS TAUGHT IN THIS TRACK - nani, dare, doko, itsu, dou and ikutsu each return zero occurrences across the 117 files. The track cannot ask anything at all, which is the finding behind JA-A1-F1-02."
+    },
+    {
+      "id": "JA-A1-POSS-01",
+      "category": "Shoyuu - possession",
+      "label": "possession with no",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SN-02"
+      ],
+      "note": "Absent - see JA-A1-J-05."
+    },
+    {
+      "id": "JA-A1-NUM-01",
+      "category": "Suushi to josuushi - numerals and counters",
+      "label": "the cardinal numerals, at least to ten",
+      "probe": [
+        "JA-LEX-ICHIDO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "note": "COUNTED ON ONE, AND THE ONE IS INSIDE A PHRASE, so read this tick narrowly. ichido ('one time; once') is taught in chapter 9 as part of mou ichido onegai shimasu, and the ichi in it is the numeral one. Nothing else: ni, san, yon, go and the rest are absent, as is every counter. A candidate cannot count, give an age, a price or a telephone number. It is counted because the Spanish point asks whether the reader can produce a cardinal at all and one is genuinely there, and it is marked thin because one is not a paradigm."
+    },
+    {
+      "id": "JA-A1-NUM-02",
+      "category": "Suushi to josuushi - numerals and counters",
+      "label": "the counters, and the two counting systems Japanese runs in parallel",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific and absent. Spanish has no classifier column. Japanese has two - the native hitotsu/futatsu series and the Sino-Japanese ichi/ni series with a counter word attached - and choosing between them is the first hard thing about Japanese numbers. Nothing in the track touches it."
+    },
+    {
+      "id": "JA-A1-NUM-03",
+      "category": "Suushi to josuushi - numerals and counters",
+      "label": "ordinals, and ordering words",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-NG3-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NUM-04",
+      "category": "Suushi to josuushi - numerals and counters",
+      "label": "quantity words: takusan, sukoshi",
+      "probe": [
+        "JA-LEX-SUKOSHI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-ADV-03",
+        "A1-NG2-02"
+      ],
+      "note": "Counted on sukoshi, chapter 10. takusan and amari are absent, so the reader has 'a little' and no 'a lot'."
+    },
+    {
+      "id": "JA-A1-NUM-05",
+      "category": "Suushi to josuushi - numerals and counters",
+      "label": "measures of size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-04",
+        "A1-NG2-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-PRON-01",
+      "category": "Daimeishi - pronouns, and the fact that Japanese avoids them",
+      "label": "the first person: watashi, and knowing when to leave it out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01",
+        "A1-PRON-08"
+      ],
+      "note": "THE MOST SURPRISING ABSENCE IN THE FILE. watashi, boku and their kanji return ZERO occurrences across all 117 lesson files. The track teaches nine family words, fourteen body parts and a complete repair kit, and has no word for 'I'. Two Spanish points collapse here, and the Japanese answer to both would have been one word plus the observation that Japanese usually drops it - which is a better lesson than Spanish's six-cell paradigm and is not written."
+    },
+    {
+      "id": "JA-A1-PRON-02",
+      "category": "Daimeishi - pronouns, and the fact that Japanese avoids them",
+      "label": "the second and third persons, and why Japanese prefers a name or a title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "Absent. anata, kare and kanojo are all zero, and so is the -san that a Japanese speaker would use instead - which is the point a course should make here."
+    },
+    {
+      "id": "JA-A1-PRON-03",
+      "category": "Daimeishi - pronouns, and the fact that Japanese avoids them",
+      "label": "object and indirect-object pronouns",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02",
+        "A1-PRON-03"
+      ],
+      "note": "Absent, and restated rather than transferred: Japanese has no object pronoun form at all - the same noun takes a particle - so what Spanish spends two clitic paradigms on, Japanese spends on JA-A1-J-03 and JA-A1-J-04."
+    },
+    {
+      "id": "JA-A1-PRON-04",
+      "category": "Daimeishi - pronouns, and the fact that Japanese avoids them",
+      "label": "the liking frame: X ga suki desu, where the thing liked takes the subject particle",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-01",
+        "A1-F3-01",
+        "A1-NG6-08"
+      ],
+      "note": "Absent, and it is the closest analogue to gustar in this corpus - Japanese, like Spanish, makes the thing liked the grammatical subject and the liker the topic. The proxy asks exactly the right question and the answer needs suki, desu and ga, none of which is taught."
+    },
+    {
+      "id": "JA-A1-PRON-05",
+      "category": "Daimeishi - pronouns, and the fact that Japanese avoids them",
+      "label": "the relative clause, which in Japanese stands before its noun with no relative word",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05",
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "note": "Absent. Three Spanish points collapse here and the restatement is worth keeping in the file for its own sake: Japanese has no que, no kotoryy and no relative pronoun of any kind - the clause is simply placed in front of the noun - so this is a reorientation to teach rather than a word to add."
+    },
+    {
+      "id": "JA-A1-PRON-06",
+      "category": "Daimeishi - pronouns, and the fact that Japanese avoids them",
+      "label": "the reflexive jibun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-PRON-07",
+      "category": "Daimeishi - pronouns, and the fact that Japanese avoids them",
+      "label": "the exclamative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-ADV-01",
+      "category": "Fukushi - adverbs",
+      "label": "place words: koko, soko, asoko",
+      "probe": [
+        "JA-LEX-KOKO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01"
+      ],
+      "note": "Counted on koko, chapter 10 - taught because the repair chapter needs a place to point at. The other two are absent."
+    },
+    {
+      "id": "JA-A1-ADV-02",
+      "category": "Fukushi - adverbs",
+      "label": "time words: ima, kyou, ashita, kinou",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "note": "Absent - no time word of any kind."
+    },
+    {
+      "id": "JA-A1-ADV-03",
+      "category": "Fukushi - adverbs",
+      "label": "manner adverbs, and yukkuri, which is the one this track needs",
+      "probe": [
+        "JA-LEX-YUKKURI",
+        "JA-LEX-YOKU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04"
+      ],
+      "note": "yukkuri ('slowly, without rushing') and yoku ('well, fully'), both chapter 9 and 10, and both arrive because the repair sentences need them. A manner adverb learned in order to ask somebody to slow down is a manner adverb the reader will actually use."
+    },
+    {
+      "id": "JA-A1-ADV-04",
+      "category": "Fukushi - adverbs",
+      "label": "polarity: hai and iie",
+      "probe": [
+        "JA-LEX-HAI",
+        "JA-LEX-IIE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05",
+        "A1-F1-05"
+      ],
+      "note": "Chapter 1, the first two words in the book, and taught together with the mora-length fact that iie needs - two beats on the ii, which a Spanish or English speaker will not give it. Two Spanish points collapse here."
+    },
+    {
+      "id": "JA-A1-ADV-05",
+      "category": "Fukushi - adverbs",
+      "label": "negation: the -masen and -nai endings",
+      "probe": [
+        "JA-LEX-WAKARIMASEN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "COUNTED ON ONE FROZEN FORM, and the note has to say so. wakarimasen ('I do not understand') is taught in chapter 9 as a whole word. The -masen ending is not taught as an ending, so the reader cannot negate anything else, and there is no nai at all. A negative that cannot be applied to a second verb is a phrase rather than a grammar point - it is counted because the Spanish point asks whether the reader can produce a negative statement, and they can produce exactly one."
+    },
+    {
+      "id": "JA-A1-ADV-06",
+      "category": "Fukushi - adverbs",
+      "label": "asking why, and answering because",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08",
+        "A1-SUB-06"
+      ],
+      "note": "Absent in both halves."
+    },
+    {
+      "id": "JA-A1-V-01",
+      "category": "Doushi - the verb",
+      "label": "the polite -masu form, which is the form a beginner learns first",
+      "probe": [
+        "JA-LEX-ONEGAI-SHIMASU",
+        "JA-LEX-ARIGATOU-GOZAIMASU",
+        "JA-REGISTER-TEINEIGO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-02"
+      ],
+      "note": "COUNTED ON RECOGNITION, NOT ON PRODUCTION. Four -masu forms are taught as whole words - onegai shimasu, gozaimasu, wakarimasen, wakarimashita - and chapter 4 introduces teineigo as the register they belong to, which is the right frame. What is missing is any verb the reader can PUT into -masu, because no dictionary form and no stem is taught. Two Spanish points collapse here; the paradigm behind them is JA-A1-V-02."
+    },
+    {
+      "id": "JA-A1-V-02",
+      "category": "Doushi - the verb",
+      "label": "the verb as a paradigm: a dictionary form, a stem, and the endings that attach to it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-12"
+      ],
+      "note": "ABSENT. Not one verb in this track is taught in its dictionary form. taberu, nomu, iku, miru, suru: none. The reader owns four polite forms and no verb, which is the exact inverse of the Russian track measured in the same sitting - fourteen verbs, all in the infinitive, and no conjugated form."
+    },
+    {
+      "id": "JA-A1-V-03",
+      "category": "Doushi - the verb",
+      "label": "the copula desu, which is where every beginner's sentence ends",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-SV-02",
+        "A1-SV-03",
+        "A1-OS-05"
+      ],
+      "note": "ABSENT. desu returns zero occurrences across all 117 lesson files - in kana and in romaji. FOUR SPANISH POINTS COLLAPSE ONTO THIS ONE WORD, because Japanese answers ser, estar, the copular sentence and the attribute with it, and the track does not teach it. Together with the missing watashi (JA-A1-PRON-01) it means the sentence 'I am X' - the first sentence in any beginner's course in any language - cannot be produced."
+    },
+    {
+      "id": "JA-A1-V-04",
+      "category": "Doushi - the verb",
+      "label": "the past: -mashita, and the fact that Japanese has two tenses rather than three",
+      "probe": [
+        "JA-LEX-WAKARIMASHITA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08",
+        "A1-V-09",
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "note": "COUNTED ON ONE FROZEN FORM AND THIS IS THE THINNEST TICK IN THE FILE, so read the note rather than the tick. wakarimashita is taught in chapter 10 as a whole word meaning 'understood'. EIGHT SPANISH POINTS COLLAPSE HERE - the imperfect, the preterite and its two irregular sets, the present perfect and two participles - because Japanese has a two-way past/non-past distinction and one regular ending, which is dramatically simpler than what the proxy asks for. It is counted because a past-marked form is genuinely present and produced; it would be dishonest to leave the note off, because the reader cannot put any other verb into it."
+    },
+    {
+      "id": "JA-A1-V-05",
+      "category": "Doushi - the verb",
+      "label": "the te-form, which is what a request, a sequence and a progressive all need",
+      "probe": [
+        "JA-LEX-ITTE-KUDASAI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-V-03",
+        "A1-V-11",
+        "A1-V-13",
+        "A1-F4-01"
+      ],
+      "note": "COUNTED ON itte kudasai ('please say it'), chapter 10, which is a te-form plus kudasai and is taught as a unit. FOUR SPANISH POINTS COLLAPSE HERE - the durative present, the imperative, the gerund and the instruction function - because the te-form is Japanese's single most productive shape and does all four jobs. Being able to say one of them is not being able to build them, and the note is the honest half of the tick."
+    },
+    {
+      "id": "JA-A1-V-06",
+      "category": "Doushi - the verb",
+      "label": "the verb of existence: aru and iru, and the fact that Japanese has two",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "note": "Absent. Three Spanish points collapse onto aru/iru, and the split - one verb for things and one for animate beings - has no Spanish counterpart at all, so it is a fact the track will have to teach rather than transfer."
+    },
+    {
+      "id": "JA-A1-POL-01",
+      "category": "Teineisa - politeness, which in Japanese is grammar",
+      "label": "teineigo: politeness is carried by the verb, not by the pronoun",
+      "probe": [
+        "JA-REGISTER-TEINEIGO",
+        "JA-LEX-ARIGATOU",
+        "JA-LEX-ARIGATOU-GOZAIMASU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and one of the best-taught things in this corpus. Chapter 3 teaches arigatou and chapter 4 teaches arigatou gozaimasu as the SAME ACT at a different level, with an atom for the register itself. Spanish's tu/usted is a pronoun choice and the PCIC A1 column treats it as morphology; Japanese changes the verb, so the choice is made again in every sentence. There is no proxy point for this and it is scored on a JLPT-aligned speaking companion."
+    },
+    {
+      "id": "JA-A1-POL-02",
+      "category": "Teineisa - politeness, which in Japanese is grammar",
+      "label": "choosing the level: when plain is right and when polite is",
+      "probe": [
+        "JA-REGISTER-TEINEIGO",
+        "JA-LEX-SAYOUNARA",
+        "JA-SAYOUNARA-HEARD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific. Counted narrowly: the register atom names the distinction, and the sayounara lesson teaches that the farewell is context-dependent rather than a general goodbye - which is a register judgement rather than a vocabulary fact. What is missing is any plain-form verb to contrast with a polite one, so the reader knows the axis exists and can only stand at one end of it."
+    },
+    {
+      "id": "JA-A1-POL-03",
+      "category": "Teineisa - politeness, which in Japanese is grammar",
+      "label": "the humble and honorific registers, which choose a different verb entirely",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific and absent. Correctly out of reach at A1 as a productive skill; kept in the file because onegai shimasu, which the track DOES teach, is itself a humble form, so the reader is already using the register without being told it exists."
+    },
+    {
+      "id": "JA-A1-UCHI-01",
+      "category": "Uchi to soto - in-group and out-group, which chooses the word",
+      "label": "in-group and out-group: chichi is my father, otousan is yours",
+      "probe": [
+        "JA-LEX-CHICHI",
+        "JA-LEX-HAHA",
+        "JA-LEX-ANI",
+        "JA-LEX-ANE",
+        "JA-LEX-OTOUTO",
+        "JA-LEX-IMOUTO",
+        "JA-LEX-OTTO",
+        "JA-LEX-TSUMA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and the corpus teaches it WITHOUT NAMING IT, which is why this point exists. Every one of the eight family words in chapter 13 is glossed with 'my' - my father, my mother, my elder brother, my elder sister, my younger brother, my younger sister, my husband, my wife - so the in-group forms are taught correctly and exclusively. Counted on that. What is NOT taught is that they are in-group forms, or that a different word is required to ask about somebody else's family, and that is JA-A1-UCHI-02. Spanish has no column for this anywhere."
+    },
+    {
+      "id": "JA-A1-UCHI-02",
+      "category": "Uchi to soto - in-group and out-group, which chooses the word",
+      "label": "the out-group set: otousan, okaasan, oniisan, oneesan",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific and ABSENT, and it is the half a candidate needs to ASK a question rather than answer one. With chichi and no otousan the reader can describe their own family and cannot enquire about anybody else's - which on a speaking paper is the difference between a monologue and an exchange. Eight taught words and eight missing partners."
+    },
+    {
+      "id": "JA-A1-UCHI-03",
+      "category": "Uchi to soto - in-group and out-group, which chooses the word",
+      "label": "the -san suffix, which is how a name is used at all",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SN-04",
+        "A1-F5-03"
+      ],
+      "note": "Absent, and it is the smallest high-value gap in the file: -san is two hiragana, both untaught, and without it a Japanese speaker cannot address or refer to anybody politely. Restated from Spanish's vocative and address points, which Japanese answers with a suffix rather than with a form of address."
+    },
+    {
+      "id": "JA-A1-NP-01",
+      "category": "Meishiku - the noun phrase",
+      "label": "the noun phrase: modifier before head, joined by no",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "note": "Absent - see JA-A1-J-05."
+    },
+    {
+      "id": "JA-A1-NP-02",
+      "category": "Meishiku - the noun phrase",
+      "label": "agreement inside the noun phrase: there is none",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SN-02",
+        "A1-SN-03"
+      ],
+      "note": "Two Spanish points collapse into an absence nobody states. Japanese agrees nothing - not gender, not number, not person - so what a Spanish learner must get right, a Japanese learner must simply not do, and no lesson says so."
+    },
+    {
+      "id": "JA-A1-VP-01",
+      "category": "Doushiku - the verb phrase",
+      "label": "the verb goes last, and everything else is ordered by its particle",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-06",
+        "A1-OS-06"
+      ],
+      "note": "ABSENT AS A TAUGHT FACT, and it is the single most important structural difference between Japanese and every European language in this corpus. Two Spanish points collapse here. The track's dialogues are all one- or two-word turns, so the reader never sees a full clause and is never told where the verb goes."
+    },
+    {
+      "id": "JA-A1-VP-02",
+      "category": "Doushiku - the verb phrase",
+      "label": "requesting an action: the te-form plus kudasai",
+      "probe": [
+        "JA-LEX-ITTE-KUDASAI",
+        "JA-LEX-SLOWER-PLEASE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-05",
+        "A1-F4-02"
+      ],
+      "note": "itte kudasai and mou sukoshi yukkuri itte kudasai, chapter 10. Counted, and note that the second is a five-word sentence with an adverb, a degree word and a verb in it - the longest thing the reader can produce in this track, and it exists because the repair chapter needed it."
+    },
+    {
+      "id": "JA-A1-S-01",
+      "category": "Tanbun - the simple sentence",
+      "label": "the declarative statement",
+      "probe": [
+        "JA-LEX-WAKARIMASHITA",
+        "JA-LEX-WAKARIMASEN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "Counted on the two wakarimasu forms, which are complete Japanese sentences on their own - subject dropped, verb final, politeness marked. A one-word sentence is a real sentence in Japanese in a way it is not in Spanish, which is why this is counted where JA-A1-VP-01 is not."
+    },
+    {
+      "id": "JA-A1-S-02",
+      "category": "Tanbun - the simple sentence",
+      "label": "the yes/no question, marked by ka",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "note": "Absent - see JA-A1-J-07."
+    },
+    {
+      "id": "JA-A1-S-03",
+      "category": "Tanbun - the simple sentence",
+      "label": "the question with an asking word, which stays where the answer would go",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "note": "Absent, and doubly: no question word (JA-A1-K-03) and no ka (JA-A1-J-07). The track cannot ask a question of any kind."
+    },
+    {
+      "id": "JA-A1-S-04",
+      "category": "Tanbun - the simple sentence",
+      "label": "the topic-comment sentence, which is the shape Japanese prefers",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific and absent. Spanish is subject-prominent and has no column for this. Together with the missing wa (JA-A1-J-01) it means the reader has no template for a Japanese sentence at all."
+    },
+    {
+      "id": "JA-A1-JOIN-01",
+      "category": "Setsuzoku - joining two clauses",
+      "label": "joining two nouns: to",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "note": "Absent. Japanese joins nouns with to and clauses with the te-form, and neither is taught as a joining device - itte kudasai contains a te-form used as a request, not as a link."
+    },
+    {
+      "id": "JA-A1-JOIN-02",
+      "category": "Setsuzoku - joining two clauses",
+      "label": "the alternative: ka in a statement, soretomo in a question",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-JOIN-03",
+      "category": "Setsuzoku - joining two clauses",
+      "label": "the contrast: demo, shikashi, ga",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-04",
+        "A1-F2-09"
+      ],
+      "note": "Absent - demo returns zero occurrences across the 117 files."
+    },
+    {
+      "id": "JA-A1-JOIN-04",
+      "category": "Setsuzoku - joining two clauses",
+      "label": "negative and distributive coordination",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-02",
+        "A1-CO-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-JOIN-05",
+      "category": "Setsuzoku - joining two clauses",
+      "label": "the quoted clause: ... to omoimasu, ... to iimasu",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-01",
+        "A1-SUB-02",
+        "A1-SUB-03"
+      ],
+      "note": "Absent. Three Spanish points collapse onto the quotative to, which is Japanese's single complementiser and which does the work of que, chto and chto-ever-else. The track teaches itte kudasai, whose verb is the same iu that the quotative pattern needs."
+    },
+    {
+      "id": "JA-A1-JOIN-06",
+      "category": "Setsuzoku - joining two clauses",
+      "label": "the causal and purpose clauses: kara, node, tame ni",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06",
+        "A1-SUB-07"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-JOIN-07",
+      "category": "Setsuzoku - joining two clauses",
+      "label": "the time clause: ... toki",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-JOIN-08",
+      "category": "Setsuzoku - joining two clauses",
+      "label": "joining anything at all: the whole column, measured together",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and it carries a corpus-level measurement. NO CONJUNCTION, NO CLAUSE LINKER AND NO QUOTATIVE IS TAUGHT: to, mo, demo, shikashi, soretomo, kara, node, toki and the te-form-as-link are all untaught, and demo, kara and node return zero occurrences of any kind. THIS IS THE EIGHTH TRACK IN A ROW TO REPORT AN EMPTY JOINING COLUMN AND THE THIRD OUTSIDE SOUTH ASIA, alongside Russian and Chinese from the same sitting. Six Indic tracks, one Slavic, one Sinitic and one Japonic is no longer a fact about a language family. It is a fact about how this corpus is authored: a chapter is built around a word family, and a conjunction belongs to no family, so nothing ever schedules one. JAPANESE IS THE STRONGEST-BUILT TRACK IN THE CORPUS ON EVERY OTHER MEASURE - zero missed reinforcement windows, zero script-closure debt, zero forward references - AND ITS JOINING COLUMN IS AS EMPTY AS GUJARATI'S. That is the clearest evidence available that the hole is structural rather than a symptom of a track being neglected."
+    },
+    {
+      "id": "JA-A1-F1-01",
+      "category": "Joho no juju - giving and asking for information",
+      "label": "identify yourself by name",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-01",
+        "A1-F1-03",
+        "A1-NE03-01"
+      ],
+      "note": "ABSENT, AND IT IS THE HEADLINE GAP OF THIS FILE. Three Spanish points collapse here and the track has none of the three pieces: no watashi, no desu, no namae. A course that teaches fourteen body parts, nine family words and a complete repair kit cannot say 'I am Tanaka'."
+    },
+    {
+      "id": "JA-A1-F1-02",
+      "category": "Joho no juju - giving and asking for information",
+      "label": "ask for information about a person, a thing or a place",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-02",
+        "A1-F6-03"
+      ],
+      "note": "ABSENT. Not one question word and not one question particle is taught, so the track cannot ask anything at all - not a name, not a place, not a price. This is the deepest structural difference from the Russian and Chinese files measured beside it, both of which manage exactly one question."
+    },
+    {
+      "id": "JA-A1-F1-03",
+      "category": "Joho no juju - giving and asking for information",
+      "label": "ask for confirmation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "note": "Absent - needs ne or ka."
+    },
+    {
+      "id": "JA-A1-F1-04",
+      "category": "Joho no juju - giving and asking for information",
+      "label": "confirm or deny what was just said",
+      "probe": [
+        "JA-LEX-HAI",
+        "JA-LEX-IIE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-05"
+      ],
+      "note": "hai and iie, chapter 1, and the iie lesson also teaches the mora-length fact that makes it two beats rather than one."
+    },
+    {
+      "id": "JA-A1-F2-01",
+      "category": "Iken to chishiki - opinions, attitudes and knowledge",
+      "label": "ask for an opinion, and give one",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-01",
+        "A1-F2-02",
+        "A1-F2-10",
+        "A1-F2-11"
+      ],
+      "note": "Absent - four Spanish points, all blocked on the quotative to omoimasu and on desu."
+    },
+    {
+      "id": "JA-A1-F2-02",
+      "category": "Iken to chishiki - opinions, attitudes and knowledge",
+      "label": "ask how something is, and evaluate it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-03",
+        "A1-F2-04",
+        "A1-NG6-01"
+      ],
+      "note": "Absent - no adjective and no question."
+    },
+    {
+      "id": "JA-A1-F2-03",
+      "category": "Iken to chishiki - opinions, attitudes and knowledge",
+      "label": "express approval, agreement and disagreement",
+      "probe": [
+        "JA-LEX-HAI",
+        "JA-LEX-IIE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-05",
+        "A1-F2-06",
+        "A1-F2-07",
+        "A1-NG6-06"
+      ],
+      "note": "Counted on hai and iie, which do carry agreement and disagreement at A1 - and note that hai in Japanese means 'I have received what you said' at least as often as it means 'that is true', which the track does not say and which is a real pragmatic trap. Four Spanish points collapse here."
+    },
+    {
+      "id": "JA-A1-F2-04",
+      "category": "Iken to chishiki - opinions, attitudes and knowledge",
+      "label": "hedge, or show uncertainty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-08",
+        "A1-F2-12",
+        "A1-NG1-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-F2-05",
+      "category": "Iken to chishiki - opinions, attitudes and knowledge",
+      "label": "say that you understand, or that you do not",
+      "probe": [
+        "JA-LEX-WAKARIMASHITA",
+        "JA-LEX-WAKARIMASEN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-13",
+        "A1-F2-14",
+        "A1-F2-15",
+        "A1-NG7-01"
+      ],
+      "note": "COVERED IN BOTH DIRECTIONS, WHICH NO OTHER TRACK IN THIS SITTING MANAGES. wakarimasen ('I do not understand') is chapter 9 and wakarimashita ('understood') is chapter 10, so the reader can report a failure AND confirm a success. Four Spanish points about knowing and not knowing collapse here."
+    },
+    {
+      "id": "JA-A1-F2-06",
+      "category": "Iken to chishiki - opinions, attitudes and knowledge",
+      "label": "ask about, and state, an ability",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-F3-01",
+      "category": "Kono to kibou - likes, wishes and feelings",
+      "label": "say what you like or prefer",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-F3-02",
+        "A1-F3-03"
+      ],
+      "note": "Absent - see JA-A1-PRON-04."
+    },
+    {
+      "id": "JA-A1-F3-02",
+      "category": "Kono to kibou - likes, wishes and feelings",
+      "label": "say what you want",
+      "probe": [
+        "JA-LEX-ONEGAI-SHIMASU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-04"
+      ],
+      "note": "Counted narrowly and deliberately: onegai shimasu ('please; I request it') is how a Japanese speaker asks for a thing, so a want expressed as a request IS available. hoshii and -tai, which are how a want is stated rather than performed, are absent."
+    },
+    {
+      "id": "JA-A1-F3-03",
+      "category": "Kono to kibou - likes, wishes and feelings",
+      "label": "state a plan or an intention",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-05",
+        "A1-F3-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-F3-04",
+      "category": "Kono to kibou - likes, wishes and feelings",
+      "label": "say how you feel",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-F4-01",
+      "category": "Aite ni hatarakikakeru - influencing the other person",
+      "label": "ask somebody to do something",
+      "probe": [
+        "JA-LEX-ITTE-KUDASAI",
+        "JA-LEX-ONEGAI-SHIMASU",
+        "JA-LEX-SLOWER-PLEASE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-01",
+        "A1-F4-02",
+        "A1-F4-03"
+      ],
+      "note": "COVERED, AND WITH A REAL SENTENCE RATHER THAN A FORMULA. mou sukoshi yukkuri itte kudasai - 'please say it a little more slowly' - is five words with an adverb, a degree word and a verb, and it is the longest thing this track can produce. Three Spanish points collapse here."
+    },
+    {
+      "id": "JA-A1-F4-02",
+      "category": "Aite ni hatarakikakeru - influencing the other person",
+      "label": "respond to a request, and grant or refuse",
+      "probe": [
+        "JA-LEX-HAI",
+        "JA-LEX-IIE",
+        "JA-LEX-WAKARIMASHITA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-04",
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "note": "hai, iie and wakarimashita, and the third is the idiomatic one - a Japanese speaker who has been asked to do something answers 'understood', not 'yes'."
+    },
+    {
+      "id": "JA-A1-F4-03",
+      "category": "Aite ni hatarakikakeru - influencing the other person",
+      "label": "offer and invite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "note": "Absent - needs the volitional or douzo."
+    },
+    {
+      "id": "JA-A1-F4-04",
+      "category": "Aite ni hatarakikakeru - influencing the other person",
+      "label": "accept or decline an offer",
+      "probe": [
+        "JA-LEX-ARIGATOU-GOZAIMASU",
+        "JA-LEX-IIE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-08",
+        "A1-F4-09"
+      ],
+      "note": "arigatou gozaimasu accepts; iie declines. iie kekkou desu, which is the polite refusal, is out of reach - so the reader's refusal is blunter than a speaker's."
+    },
+    {
+      "id": "JA-A1-F5-01",
+      "category": "Shakaiteki na yaritori - social contact",
+      "label": "greet",
+      "probe": [
+        "JA-LEX-KONNICHIWA",
+        "JA-SCRIPT-KONNICHIWA-READ-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-01",
+        "A1-F5-02"
+      ],
+      "note": "konnichiwa, chapter 2 - and taught twice over, once as a word and once as five signs the reader can now read rather than recall, which is how this track handles everything. ohayou gozaimasu and konbanwa are absent, so the track has one hour of the day."
+    },
+    {
+      "id": "JA-A1-F5-02",
+      "category": "Shakaiteki na yaritori - social contact",
+      "label": "address somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "note": "Absent - see JA-A1-UCHI-03. Two hiragana away."
+    },
+    {
+      "id": "JA-A1-F5-03",
+      "category": "Shakaiteki na yaritori - social contact",
+      "label": "introduce yourself, and respond to an introduction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-04",
+        "A1-F5-05"
+      ],
+      "note": "Absent - see JA-A1-F1-01. hajimemashite and douzo yoroshiku, which are the two fixed formulae that do this entire job in Japanese and need no grammar at all, are both missing."
+    },
+    {
+      "id": "JA-A1-F5-04",
+      "category": "Shakaiteki na yaritori - social contact",
+      "label": "apologise",
+      "probe": [
+        "JA-LEX-SUMIMASEN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "note": "COVERED, AND IT IS THE POINT THAT SEPARATES THIS TRACK FROM EVERY OTHER ONE MEASURED IN THIS SITTING. sumimasen is taught in chapter 9, glossed 'excuse me; I am sorry', which is exactly right - it is the apology, the attention-getter and the thank-you all at once, and it is the single most useful word in beginner's Japanese. Russian has no izvinite; Chinese has no duibuqi; Gujarati had no word for sorry at all. Japanese has this one from chapter 9."
+    },
+    {
+      "id": "JA-A1-F5-05",
+      "category": "Shakaiteki na yaritori - social contact",
+      "label": "thank, at two levels of politeness",
+      "probe": [
+        "JA-LEX-ARIGATOU",
+        "JA-LEX-ARIGATOU-GOZAIMASU",
+        "JA-REGISTER-TEINEIGO",
+        "JA-ETYMON-ARIGATASHI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "note": "Both forms, chapters 3 and 4, taught as one act at two levels with a register atom naming the axis and an etymology atom explaining that arigatou began as 'this is hard to exist' - rare, and therefore precious. Answering thanks is NOT taught: no dou itashimashite, no ie ie."
+    },
+    {
+      "id": "JA-A1-F5-06",
+      "category": "Shakaiteki na yaritori - social contact",
+      "label": "congratulate, toast, offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-08",
+        "A1-F5-09",
+        "A1-F5-10"
+      ],
+      "note": "None of the three."
+    },
+    {
+      "id": "JA-A1-F5-07",
+      "category": "Shakaiteki na yaritori - social contact",
+      "label": "take leave, and choose a farewell that fits",
+      "probe": [
+        "JA-LEX-SAYOUNARA",
+        "JA-SAYOUNARA-HEARD-01",
+        "JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "note": "sayounara, chapter 8, and the track does something careful with it: the lesson is titled 'goodbye; ONE farewell used at a parting' and the four-skill checkpoint calls it 'one context-dependent farewell', so the reader is warned that sayounara is not the general goodbye an English speaker expects. That is a register correction, not a vocabulary item."
+    },
+    {
+      "id": "JA-A1-F6-01",
+      "category": "Kaiwa no un-ei - managing the conversation, and repairing it",
+      "label": "run a short exchange from beginning to end",
+      "probe": [
+        "JA-DIALOGUE-DOORWAY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-01",
+        "A1-F6-02",
+        "A1-F6-06"
+      ],
+      "note": "The chapter-7 doorway dialogue: six lines, three writing systems, and the lesson's own etymology hook says 'not one word that has not already been taught'. Three Spanish points collapse here because the dialogue opens, sustains and closes."
+    },
+    {
+      "id": "JA-A1-F6-02",
+      "category": "Kaiwa no un-ei - managing the conversation, and repairing it",
+      "label": "show that you are following",
+      "probe": [
+        "JA-LEX-HAI",
+        "JA-LEX-WAKARIMASHITA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "hai as an acknowledgement and wakarimashita as a confirmation. The aizuchi habit - the constant short backchannel that Japanese conversation actually runs on - is not named, which is a pragmatic gap rather than a lexical one."
+    },
+    {
+      "id": "JA-A1-F6-03",
+      "category": "Kaiwa no un-ei - managing the conversation, and repairing it",
+      "label": "say you have not understood",
+      "probe": [
+        "JA-LEX-WAKARIMASEN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific as a point (no PCIC A1 entry, a CEFR A1 descriptor), and COVERED with a whole lesson. Chapter 9."
+    },
+    {
+      "id": "JA-A1-F6-04",
+      "category": "Kaiwa no un-ei - managing the conversation, and repairing it",
+      "label": "ask for a repeat",
+      "probe": [
+        "JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU",
+        "JA-LEX-MOU",
+        "JA-LEX-ICHIDO",
+        "JA-LEX-ONEGAI-SHIMASU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and COVERED WITH ITS PARTS AS WELL AS ITS WHOLE. mou ichido onegai shimasu is taught in chapter 9 and so are mou, ichido and onegai shimasu separately, so the reader owns the sentence and its pieces rather than a formula. No other track in this sitting has any form of this."
+    },
+    {
+      "id": "JA-A1-F6-05",
+      "category": "Kaiwa no un-ei - managing the conversation, and repairing it",
+      "label": "ask for slower speech",
+      "probe": [
+        "JA-LEX-SLOWER-PLEASE",
+        "JA-LEX-YUKKURI",
+        "JA-LEX-MOU-SUKOSHI",
+        "JA-LEX-ITTE-KUDASAI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and COVERED, and this is the one that makes the difference on a real speaking paper: a candidate who can only say 'I do not understand' stalls, and one who can say 'please say it a little more slowly' keeps the exchange alive. Chapter 10, taught as a sentence and as four separate atoms."
+    },
+    {
+      "id": "JA-A1-F6-06",
+      "category": "Kaiwa no un-ei - managing the conversation, and repairing it",
+      "label": "confirm that the repair worked",
+      "probe": [
+        "JA-LEX-WAKARIMASHITA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and the piece almost nobody teaches: after a repair, the speaker needs to hear that it worked. wakarimashita, chapter 10, closes the loop that chapter 9 opens. THE FOUR REPAIR POINTS ABOVE PLUS THIS ONE AND THE APOLOGY AT JA-A1-F5-04 MAKE THE COMPLETE CEFR A1 REPAIR KIT, and Japanese is the only track in the corpus measured so far that holds all of it."
+    },
+    {
+      "id": "JA-A1-F6-07",
+      "category": "Kaiwa no un-ei - managing the conversation, and repairing it",
+      "label": "point at something while repairing",
+      "probe": [
+        "JA-LEX-KOKO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific. koko ('here'), chapter 10, taught inside the repair chapter so the learner can point at the word they missed. It is a small thing and it is the difference between a repair that works and one that loops."
+    },
+    {
+      "id": "JA-A1-F6-08",
+      "category": "Kaiwa no un-ei - managing the conversation, and repairing it",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "CEFR-CV",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NG1-01",
+      "category": "Sonzai - existence",
+      "label": "existence and possession",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-NG1-02",
+        "A1-NG1-03",
+        "A1-NG1-04"
+      ],
+      "note": "Absent - four Spanish points, all needing aru/iru or desu (JA-A1-V-06, JA-A1-V-03)."
+    },
+    {
+      "id": "JA-A1-NG1-02",
+      "category": "Sonzai - existence",
+      "label": "certainty and uncertainty",
+      "probe": [
+        "JA-LEX-WAKARIMASHITA",
+        "JA-LEX-WAKARIMASEN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG1-05"
+      ],
+      "note": "Counted on the wakarimasu pair, which is how an A1 speaker really marks what they are and are not sure of."
+    },
+    {
+      "id": "JA-A1-NG2-01",
+      "category": "Suuryou - quantity",
+      "label": "counting, and quantity",
+      "probe": [
+        "JA-LEX-SUKOSHI",
+        "JA-LEX-MOU-SUKOSHI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG2-01",
+        "A1-NG2-02"
+      ],
+      "note": "COUNTED ON THE VAGUE END ONLY. sukoshi and mou sukoshi are taught; no numeral above one and no counter, so nothing can be counted exactly. Two Spanish points collapse here and only the approximate half is answered."
+    },
+    {
+      "id": "JA-A1-NG2-02",
+      "category": "Suuryou - quantity",
+      "label": "measures of size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NG3-01",
+      "category": "Kuukan - space",
+      "label": "saying where something is",
+      "probe": [
+        "JA-LEX-KOKO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01",
+        "A1-NG3-02",
+        "A1-NG3-03"
+      ],
+      "note": "Counted on koko alone and marked thin: 'here' with no ni, no aru and no soko or asoko is a pointing word rather than a location. Three Spanish points collapse here."
+    },
+    {
+      "id": "JA-A1-NG3-02",
+      "category": "Kuukan - space",
+      "label": "movement, direction and order",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04",
+        "A1-NG3-05",
+        "A1-NG3-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NG3-03",
+      "category": "Kuukan - space",
+      "label": "origin: where you are from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07"
+      ],
+      "note": "Absent, and close: nihon is inside nihongo, and 'I am from Japan' needs kara, desu and watashi, all missing."
+    },
+    {
+      "id": "JA-A1-NG4-01",
+      "category": "Jikan - time",
+      "label": "the clock, the parts of the day, and the calendar",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01",
+        "A1-NG4-02",
+        "A1-NG4-03"
+      ],
+      "note": "Absent - three Spanish points and not one time word. konnichiwa contains 'today' in its etymology and the reader does not own kyou."
+    },
+    {
+      "id": "JA-A1-NG5-01",
+      "category": "Seishitsu - quality",
+      "label": "seeing and hearing, and the organs that do it",
+      "probe": [
+        "JA-LEX-ME-EYE",
+        "JA-LEX-MIMI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "note": "Counted on the nouns, chapter 11: me and mimi. miru and kiku, the verbs, are absent - the same shape as the Russian file, where the ear exists and the verb does not."
+    },
+    {
+      "id": "JA-A1-NG5-02",
+      "category": "Seishitsu - quality",
+      "label": "colour",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NG5-03",
+      "category": "Seishitsu - quality",
+      "label": "age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "note": "Absent - blocked on the numerals and counters."
+    },
+    {
+      "id": "JA-A1-NG5-04",
+      "category": "Seishitsu - quality",
+      "label": "open and closed, in and out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NG6-01",
+      "category": "Hyouka - evaluation",
+      "label": "general evaluation, quality and correctness",
+      "probe": [
+        "JA-LEX-YOKU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-01",
+        "A1-NG6-04",
+        "A1-NG6-07"
+      ],
+      "note": "COUNTED ON ONE ADVERB AND MARKED THIN. yoku ('well; fully') is taught in chapter 9 for the repair sentence, and ii, warui and daijoubu are absent, so the reader can say something is done well and cannot say it IS good. Three Spanish points collapse here."
+    },
+    {
+      "id": "JA-A1-NG6-02",
+      "category": "Hyouka - evaluation",
+      "label": "value and price",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02",
+        "A1-NE12-03",
+        "A1-NE15-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NG6-03",
+      "category": "Hyouka - evaluation",
+      "label": "attractiveness and appearance",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03",
+        "A1-NE01-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NG6-04",
+      "category": "Hyouka - evaluation",
+      "label": "acceptability",
+      "probe": [
+        "JA-LEX-HAI",
+        "JA-LEX-WAKARIMASHITA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-05"
+      ],
+      "note": "Counted."
+    },
+    {
+      "id": "JA-A1-NG6-05",
+      "category": "Hyouka - evaluation",
+      "label": "interest, ease and difficulty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-08",
+        "A1-NG6-10"
+      ],
+      "note": "Absent as taught words, and the etymology of arigatou - 'hard to exist' - is where the reader meets the idea of difficulty without owning muzukashii."
+    },
+    {
+      "id": "JA-A1-NG6-06",
+      "category": "Hyouka - evaluation",
+      "label": "ability and competence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-09"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NG7-01",
+      "category": "Shikou to hatsuwa - thinking and speaking",
+      "label": "understanding, and saying so",
+      "probe": [
+        "JA-LEX-WAKARIMASEN",
+        "JA-LEX-WAKARIMASHITA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01"
+      ],
+      "note": "Both directions, chapters 9 and 10. The best-served notion in the track."
+    },
+    {
+      "id": "JA-A1-NG7-02",
+      "category": "Shikou to hatsuwa - thinking and speaking",
+      "label": "speaking, saying, and naming the language",
+      "probe": [
+        "JA-LEX-ITTE-KUDASAI",
+        "JA-LEX-NIHONGO",
+        "JA-SCRIPT-KANJI-READINGS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "note": "Counted on itte kudasai, whose verb is iu ('to say'), and on nihongo. Reading and writing as ACTIONS - yomu and kaku - are absent, which is worth noting in a track that spends 48 of its 117 lessons on writing."
+    },
+    {
+      "id": "JA-A1-NE01-01",
+      "category": "Karada - the body",
+      "label": "parts of the body: the head and face",
+      "probe": [
+        "JA-LEX-ATAMA",
+        "JA-LEX-KAO",
+        "JA-LEX-ME-EYE",
+        "JA-LEX-MIMI",
+        "JA-LEX-KUCHI",
+        "JA-LEX-HANA-NOSE",
+        "JA-LEX-HA-TOOTH",
+        "JA-LEX-KAMI-HAIR"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "EIGHT WORDS FOR THE HEAD ALONE, chapters 11 and 12, with a seven-word and a fourteen-word four-skill reading checkpoint over them. This is the deepest single field in the track and one of the deepest in the corpus."
+    },
+    {
+      "id": "JA-A1-NE01-02",
+      "category": "Karada - the body",
+      "label": "parts of the body: the trunk and limbs",
+      "probe": [
+        "JA-LEX-TE-HAND",
+        "JA-LEX-ASHI",
+        "JA-LEX-KATA-SHOULDER",
+        "JA-LEX-ONAKA",
+        "JA-LEX-SENAKA",
+        "JA-LEX-KOSHI"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "Six more, chapters 11 and 12: hand, foot/leg, shoulder, belly, back, waist. Fourteen body words in total, which is more than the Russian track's five and the Chinese track's one."
+    },
+    {
+      "id": "JA-A1-NE01-03",
+      "category": "Karada - the body",
+      "label": "physical characteristics, and actions of the body",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02",
+        "A1-NE01-03"
+      ],
+      "note": "Absent, and it is the shape of this whole track: fourteen body nouns and no verb, no adjective and no particle to use them with. A reader can name every part of their head and cannot say that any of it hurts."
+    },
+    {
+      "id": "JA-A1-NE02-01",
+      "category": "Jibun - identity and character",
+      "label": "character and personality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE02-02",
+      "category": "Jibun - identity and character",
+      "label": "personal data: name, address, telephone, age, documents",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01",
+        "A1-NE03-02",
+        "A1-NE03-03"
+      ],
+      "note": "Absent - three Spanish points and not one of them. This is what blocks the 'complete a small form' task in the project's own A1 production companion (JA-A1-PROD-01)."
+    },
+    {
+      "id": "JA-A1-NE03-01",
+      "category": "Kazoku - family and people",
+      "label": "the immediate family",
+      "probe": [
+        "JA-LEX-CHICHI",
+        "JA-LEX-HAHA",
+        "JA-LEX-ANI",
+        "JA-LEX-ANE",
+        "JA-LEX-OTOUTO",
+        "JA-LEX-IMOUTO",
+        "JA-LEX-OTTO",
+        "JA-LEX-TSUMA",
+        "JA-LEX-KODOMO"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "NINE WORDS, chapter 13, with two four-skill checkpoints over them - and taught with the in-group restriction built in, which is the fact that matters (JA-A1-UCHI-01). The elder/younger split that Japanese requires and Spanish does not is taught as part of the set rather than as an afterthought."
+    },
+    {
+      "id": "JA-A1-NE03-02",
+      "category": "Kazoku - family and people",
+      "label": "social relationships: friend, colleague, teacher",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "note": "Absent - no tomodachi, no sensei."
+    },
+    {
+      "id": "JA-A1-NE03-03",
+      "category": "Kazoku - family and people",
+      "label": "celebrations and occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE04-01",
+      "category": "Shokuji - food and drink",
+      "label": "drink",
+      "probe": [
+        "JA-LEX-KOOHII"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "note": "COUNTED ON ONE WORD, and it is there for a script reason rather than a culinary one: koohii is chapter 6's example of a katakana loanword, which is how the track opens its second writing system. mizu, ocha and biiru are absent."
+    },
+    {
+      "id": "JA-A1-NE04-02",
+      "category": "Shokuji - food and drink",
+      "label": "food, meals, dishes and the restaurant",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01",
+        "A1-NE05-03",
+        "A1-NE05-04",
+        "A1-NE05-05"
+      ],
+      "note": "Absent - four Spanish points and not one word. No gohan, no sushi, no itadakimasu. Same empty field as Chinese, measured in the same sitting, and for both it is the field a traveller needs on day one."
+    },
+    {
+      "id": "JA-A1-NE05-01",
+      "category": "Kyouiku - education",
+      "label": "school, teachers, students and classroom language",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-02",
+        "A1-NE06-03",
+        "A1-NE06-04",
+        "A1-NE06-05",
+        "A1-NE06-06",
+        "A1-NE06-07"
+      ],
+      "note": "Absent - seven Spanish points. The contrast with Chinese is sharp and worth recording: chapters 13 to 15 of the chinese track build three institutions and four kinds of student productively out of four characters, and the japanese track has none of it."
+    },
+    {
+      "id": "JA-A1-NE06-01",
+      "category": "Shigoto - work",
+      "label": "professions, workplaces and working",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01",
+        "A1-NE07-02",
+        "A1-NE07-03",
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE07-01",
+      "category": "Yoka - leisure",
+      "label": "free time, sport, games and shows",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01",
+        "A1-NE08-02",
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE08-01",
+      "category": "Media - media and communication",
+      "label": "media, the telephone, letters and the internet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-02",
+        "A1-NE09-03",
+        "A1-NE09-04",
+        "A1-NE09-05",
+        "A1-NE09-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE09-01",
+      "category": "Sumai - housing",
+      "label": "the dwelling, its rooms, its objects and what is done in it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01",
+        "A1-NE10-02",
+        "A1-NE10-03",
+        "A1-NE10-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE10-01",
+      "category": "Kaimono to service - services and shopping",
+      "label": "shops, shopping, paying and the public services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-02",
+        "A1-NE11-03",
+        "A1-NE11-04",
+        "A1-NE12-01",
+        "A1-NE12-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE11-01",
+      "category": "Kenkou - health",
+      "label": "health, illness, medicine and hygiene",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01",
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE13-04"
+      ],
+      "note": "Absent, and it is the most frustrating empty field in the file: fourteen body words are taught and there is no itai, no byouki and no isha, so the one situation those words exist for cannot be entered."
+    },
+    {
+      "id": "JA-A1-NE12-01",
+      "category": "Ryokou - travel and transport",
+      "label": "travel, accommodation and transport",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01",
+        "A1-NE14-02",
+        "A1-NE14-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE13-01",
+      "category": "Okane - money and the economy",
+      "label": "money, commerce, business and industry",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE15-02",
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE14-01",
+      "category": "Kagaku - science and technology",
+      "label": "computing and technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE15-01",
+      "category": "Shakai - state and society",
+      "label": "government, politics and law",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE16-01",
+      "category": "Geijutsu - the arts",
+      "label": "the arts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-04",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE17-01",
+      "category": "Shuukyou - religion",
+      "label": "religion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-NE18-01",
+      "category": "Chiri to shizen - geography and nature",
+      "label": "the country, the language, and the world outside",
+      "probe": [
+        "JA-LEX-NIHONGO",
+        "JA-SCRIPT-KANJI-NICHI-01",
+        "JA-SCRIPT-KANJI-HON-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "note": "Counted narrowly on nihongo and its first two kanji, which spell 'Japan'. The reader can write the country's name inside the language's name and has no word for a town, a city or a capital."
+    },
+    {
+      "id": "JA-A1-NE18-02",
+      "category": "Chiri to shizen - geography and nature",
+      "label": "the universe, the weather, plants and animals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01",
+        "A1-NE20-03",
+        "A1-NE20-04",
+        "A1-NE20-05",
+        "A1-NE20-06"
+      ],
+      "note": "Absent - five Spanish points. The sun kanji is taught, in nihongo, as a piece of a word rather than as a thing in the sky."
+    },
+    {
+      "id": "JA-A1-HIRA-01",
+      "category": "Hiragana - the first syllabary",
+      "label": "the gojuuon: hiragana is a closed set of 46 signs, and it has an order",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "note": "THIRTY-ONE OF FORTY-SIX, counted sign by sign. Taught with their own writing lesson: a, i, u, e, o; ka, ku, ko; sa, shi, su, se; ta, chi, tsu, te, to; na, ni, ne; ha; ma, mi, me, mo; yu, yo; ra, ri; wa; n. Missing: ki, ke, so, nu, no, hi, fu, he, ho, mu, ya, ru, re, ro and WO. Not counted, because the Spanish point asks for the SET and its order, and the reader is never shown the gojuuon grid - signs arrive in the order the words need them, which is HL11's rule and is the right rule, and it leaves the reader without the table that makes the fifteen missing signs visible as a gap rather than as an absence of luck."
+    },
+    {
+      "id": "JA-A1-HIRA-02",
+      "category": "Hiragana - the first syllabary",
+      "label": "the five vowel signs, which are the row every other row is built on",
+      "probe": [
+        "JA-SCRIPT-A-01",
+        "JA-SCRIPT-I-01",
+        "JA-SCRIPT-U-01",
+        "JA-SCRIPT-E-01",
+        "JA-SCRIPT-O-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "ALL FIVE, chapters 1 to 10, each with its own writing lesson. This is the one part of the Spanish orthography column that transfers exactly - Spanish asks for the vowel letters and Japanese has five, in a fixed order, and the track teaches every one."
+    },
+    {
+      "id": "JA-A1-HIRA-03",
+      "category": "Hiragana - the first syllabary",
+      "label": "the consonant rows: one sign per consonant-plus-vowel mora",
+      "probe": [
+        "JA-SCRIPT-KA-01",
+        "JA-SCRIPT-SA-01",
+        "JA-SCRIPT-TA-01",
+        "JA-SCRIPT-NA-01",
+        "JA-SCRIPT-HA-01",
+        "JA-SCRIPT-MA-01",
+        "JA-SCRIPT-YO-01",
+        "JA-SCRIPT-RA-01",
+        "JA-SCRIPT-WA-01",
+        "JA-SCRIPT-N-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "COUNTED ON THE ROW-HEADS, and the note says what that means: the first sign of each of the nine consonant rows is taught, plus the standalone n. So the reader has met every consonant the script writes, and holds only 31 of the 46 cells. Restated from Spanish's consonant-letters point, which asks whether the reader can decode every consonant - here they can, and cannot decode every sign."
+    },
+    {
+      "id": "JA-A1-HIRA-04",
+      "category": "Hiragana - the first syllabary",
+      "label": "the small-y digraphs: kya, shu, cho and the rest",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Absent. Japanese's answer to Spanish's DIGRAPH demand is the yoon - a full-size sign plus a small ya, yu or yo - and the track teaches full-size yu and yo and never the small forms. Any word with a sha, shu, sho or cho in it is unreadable, which includes most of the polite verb endings."
+    },
+    {
+      "id": "JA-A1-HIRA-05",
+      "category": "Hiragana - the first syllabary",
+      "label": "the fifteen signs this track never teaches, and the one that costs the most",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and it carries a MEASUREMENT rather than a demand, so it is deliberately null. Fifteen of the 46 basic signs are untaught: ki, ke, so, nu, no, hi, fu, he, ho, mu, ya, ru, re, ro, wo. All fifteen are also unshown, so this is untaught-and-unseen debt rather than the shown-but-untaught kind Russian and Kannada reported - the corpus never asks the reader to decode a sign it has not taught, which is why japanese is one of only two tracks with ZERO script-closure findings. THE EXPENSIVE ONE IS WO: it writes exactly one thing, the object particle, and nothing else in the language, so its absence is a letter and a case at once (JA-A1-J-03). NO, KA and RU are next, in that order: no writes the possessive, ka the question, and ru ends most dictionary-form verbs."
+    },
+    {
+      "id": "JA-A1-HIRA-06",
+      "category": "Hiragana - the first syllabary",
+      "label": "the pen path: whether a taught sign has a cited stroke order behind it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific and PARTLY BROKEN, and it is the one script defect this otherwise clean track has. data/scripts/japanese.d carries 49 letters and 3 marks, each with a cited stroke order, and THREE SIGNS THE WRITING LESSONS TEACH ARE NOT IN IT: ra, da and do. The ra lesson describes the path in prose and cites a Unicode code chart, which shows the shape and does not order the strokes, so HL11's rule - no citation, no pen path - is met in the letter and not in the substance. da and do are voiced forms whose bases ta and to ARE in the ledger, while ga, go and za are in it as separate entries, so the omission is an inconsistency rather than a policy. Three signs, and the fix is three ledger entries with sources."
+    },
+    {
+      "id": "JA-A1-KATA-01",
+      "category": "Katakana - the second syllabary",
+      "label": "katakana: the second syllabary, covering exactly the same beats with different shapes",
+      "probe": [
+        "JA-SCRIPT-KATAKANA-LOANWORDS",
+        "JA-SCRIPT-KATAKANA-KO-01",
+        "JA-SCRIPT-KATAKANA-HI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "note": "COUNTED FOR THE SYSTEM AND NOT FOR THE SET, and the two must not be confused. What is taught, in chapter 6, is that katakana EXISTS, that it writes borrowed words, and that koohii is written in it - which is the fact a reader most needs, and the ra lesson later even warns against forcing new hiragana into it. What is taught of the SET is TWO SIGNS OF FORTY-SIX: ko and hi. Counted here because the Spanish point asks whether the reader knows the script exists and can read a word in it, and they can read one; the set is measured at JA-A1-KATA-02."
+    },
+    {
+      "id": "JA-A1-KATA-02",
+      "category": "Katakana - the second syllabary",
+      "label": "the katakana set: 2 of 46, which is where this column really stands",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, null, and it exists so the previous point's tick cannot be read as a closed script. Two signs. A JLPT N5 reading paper is full of katakana - every foreign name, every loanword, every menu - and a reader with ko and hi can read koohii and nothing else. data/scripts/japanese.d carries nine katakana with cited stroke order (a, i, ko, to, hi, ba, pa, ru, n), so SEVEN OF THE NINE ALREADY-SOURCED SIGNS ARE UNTAUGHT: the evidence is checked in and unused, which makes this the cheapest script tranche available in the corpus."
+    },
+    {
+      "id": "JA-A1-KANJI-01",
+      "category": "Kanji - the third script, which is not a syllabary at all",
+      "label": "kanji: a third script whose signs carry meaning rather than sound",
+      "probe": [
+        "JA-SCRIPT-KANJI-NICHI-01",
+        "JA-SCRIPT-KANJI-HON-01",
+        "JA-SCRIPT-KANJI-GO-01",
+        "JA-BRIDGE-SINO-JAPANESE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "note": "COUNTED FOR THE SYSTEM. Three kanji - nichi, hon, go - taught in chapter 5 as the three signs of nihongo, with the Sino-Japanese bridge atom explaining where they came from. The reader learns that a third script exists and that its signs are borrowed Chinese characters, which is the orienting fact."
+    },
+    {
+      "id": "JA-A1-KANJI-02",
+      "category": "Kanji - the third script, which is not a syllabary at all",
+      "label": "the two readings: a kanji is said one way in a compound and another way alone",
+      "probe": [
+        "JA-SCRIPT-KANJI-READINGS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and taught in chapter 5, which is early and right. No alphabetic or syllabic script has a column for this: a sign with two unrelated pronunciations chosen by context is the single hardest structural fact about Japanese literacy, and the corpus names it on the first kanji word it teaches."
+    },
+    {
+      "id": "JA-A1-KANJI-03",
+      "category": "Kanji - the third script, which is not a syllabary at all",
+      "label": "components: a kanji is assembled from reusable pieces",
+      "probe": [
+        "JA-SCRIPT-KANJI-SPEECH-COMPONENT-01",
+        "JA-SCRIPT-KANJI-MOUTH-COMPONENT-01",
+        "JA-SCRIPT-KANJI-FIVE-COMPONENT-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Chapter 5 decomposes go into the speech component, the five-shaped top and the mouth box, and teaches each separately before assembling them. Restated from Spanish's 'which units combine' point, and it is the method that makes kanji learnable rather than memorable."
+    },
+    {
+      "id": "JA-A1-KANJI-04",
+      "category": "Kanji - the third script, which is not a syllabary at all",
+      "label": "how many kanji the reader can actually read: three, and three more shown",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, null, and it carries the measurement. Three kanji are taught and three components with them. data/scripts/japanese.d carries six logographs with cited stroke order - nichi, hon, go, kon, yuu and nan - so kon, yuu and nan are SOURCED AND UNTAUGHT, and they are not arbitrary: kon is the 'today' inside konnichiwa and yuu and nan are the 'hard to exist' inside arigatou, both of which the corpus already explains in etymology. Three kanji already cited, already motivated by words the reader knows, and not taught. THIS COLUMN CANNOT BE GIVEN A DENOMINATOR HERE and is not: no kanji list is cited anywhere in this file, so the report is the raw number rather than a percentage of something nobody read."
+    },
+    {
+      "id": "JA-A1-KANJI-05",
+      "category": "Kanji - the third script, which is not a syllabary at all",
+      "label": "okurigana: the hiragana tail that inflects a kanji stem",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific and absent. It is the join between two of the three scripts and it is where a reader learns that kanji do not stand alone. Out of reach while no verb is taught (JA-A1-V-02)."
+    },
+    {
+      "id": "JA-A1-HYO-01",
+      "category": "Hyouki - the orthography the three scripts share",
+      "label": "three scripts on one line, and knowing which does what",
+      "probe": [
+        "JA-SCRIPT-KATAKANA-LOANWORDS",
+        "JA-DIALOGUE-DOORWAY",
+        "JA-SCRIPT-KANJI-READINGS"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, AND IT IS THE POINT A SINGLE SCRIPT COLUMN WOULD HAVE HIDDEN. An ordinary Japanese sentence runs hiragana for grammar, katakana for borrowings and kanji for content words, all at once, and a reader who has learned the three sets separately still cannot read one until somebody tells them the division of labour. Chapter 7's doorway dialogue is titled 'one daytime exchange, three scripts' and its own hook says 'six lines, three writing systems, and not one word that has not already been taught'. That lesson is the answer to this point and it is the reason this file has three script categories rather than one."
+    },
+    {
+      "id": "JA-A1-HYO-02",
+      "category": "Hyouki - the orthography the three scripts share",
+      "label": "the sign read ha that is pronounced wa when it is the topic particle",
+      "probe": [
+        "JA-PARTICLE-WA-SPELLING",
+        "JA-SCRIPT-HA-01",
+        "JA-SCRIPT-WA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, chapter 2, and it is the first orthographic irregularity any learner meets. Spanish has silent h and b/v; neither is a sign that changes its value according to its grammatical job. See JA-A1-J-01 for what is NOT taught alongside it."
+    },
+    {
+      "id": "JA-A1-HYO-03",
+      "category": "Hyouki - the orthography the three scripts share",
+      "label": "the long vowel: written with a following u in hiragana and a bar in katakana",
+      "probe": [
+        "JA-SCRIPT-U-01",
+        "JA-SCRIPT-CHOUON",
+        "JA-SCRIPT-KATAKANA-LONG-MARK-01",
+        "JA-SCRIPT-MORA-LENGTH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "COVERED, AND IN BOTH SCRIPTS, which is what makes it a real coverage claim rather than half of one. Chapter 3 teaches that the u at the end of arigatou lengthens the o before it; chapter 6 teaches the katakana bar that does the same job with a different mark. Restated from Spanish's syllable-division and double-spelling point, and Japanese's version is harder, because the same sound has two spellings depending on which script it is in."
+    },
+    {
+      "id": "JA-A1-HYO-04",
+      "category": "Hyouki - the orthography the three scripts share",
+      "label": "the small tsu, which writes a beat of silence",
+      "probe": [
+        "JA-SCRIPT-SMALL-TSU-01",
+        "JA-SCRIPT-TSU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "Chapter 11 for the small form and chapter 13 for the full-size one it is derived from, and the ordering is deliberate: the reader meets the small sign in otto and tsuma before meeting the letter it shrinks from. A sign that spells a pause has no Spanish counterpart at all."
+    },
+    {
+      "id": "JA-A1-HYO-05",
+      "category": "Hyouki - the orthography the three scripts share",
+      "label": "the dakuten and handakuten: the two marks that voice a sign",
+      "probe": [
+        "JA-SCRIPT-DAKUTEN",
+        "JA-SCRIPT-DAKUTEN-01",
+        "JA-SCRIPT-DA-01",
+        "JA-SCRIPT-DO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O2-01",
+        "A1-O2-02"
+      ],
+      "note": "COVERED FOR THE DAKUTEN, NOT FOR THE HANDAKUTEN, and counted because the reader holds the productive rule. Chapter 3 teaches the two small marks as a RULE - ka becomes ga, ko becomes go - rather than as a set of new signs, which is why the corpus can show ga, go and za without teaching them and still report zero script-closure debt. The handakuten, the small circle that makes ha into pa, is not taught. RESTATED FROM SPANISH'S TWO ACCENTUATION POINTS: Spanish writes a mark that tells you where the stress is; Japanese writes a mark that tells you the consonant is voiced. Both are diacritics on an otherwise complete sign, and that is the demand the proxy was making."
+    },
+    {
+      "id": "JA-A1-HYO-06",
+      "category": "Hyouki - the orthography the three scripts share",
+      "label": "romaji, and what it is not",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, null, and it records a DECISION rather than a missing lesson. Every lesson in this track carries a `romanization`, so the same question arises here that arose for Chinese pinyin: is a word known in romaji a script claim? THIS FILE SAYS NO, and more firmly than for pinyin. Two reasons, and the second is why the answer differs in strength. (1) The same internal evidence as Chinese: script-closure.ts treats a declared romanization as the promise that the reader need not decode, and every one of the 55 JA-SCRIPT atoms names a kana, a kanji, a component or a mark - not one names a roman letter. (2) Pinyin is taught in PRC schools and printed on beginner HSK material, so a pinyin claim is at least arguably a literacy claim; ROMAJI IS NOT PART OF JAPANESE LITERACY IN ANY COMPARABLE SENSE and appears on no JLPT paper at any level. So the three script columns above count kana and kanji only, and no point anywhere in this file is counted covered on a romanized headword alone."
+    },
+    {
+      "id": "JA-A1-ON-01",
+      "category": "Onchou to haku - pitch and mora, which the proxy measures nothing of",
+      "label": "the mora: Japanese is timed in equal beats, not in syllables",
+      "probe": [
+        "JA-SCRIPT-MORA-LENGTH",
+        "JA-SCRIPT-HIRAGANA-MORA",
+        "JA-LEX-IIE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and taught in the FIRST LESSON on iie, which needs two beats on its ii and which a Spanish or English speaker will give one. Spanish is syllable-timed and has no length contrast at all, so there is no proxy point anywhere that could have asked this - and it is the single fact that most decides whether a Japanese speaker understands a learner."
+    },
+    {
+      "id": "JA-A1-ON-02",
+      "category": "Onchou to haku - pitch and mora, which the proxy measures nothing of",
+      "label": "the moraic n, which is a beat with no vowel",
+      "probe": [
+        "JA-SCRIPT-N-01",
+        "JA-LEX-KONNICHIWA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, chapter 2, taught as 'the one hiragana sign that is not a full syllable - one stroke, one beat, no vowel'. That sentence is the whole point and it is in the corpus."
+    },
+    {
+      "id": "JA-A1-ON-03",
+      "category": "Onchou to haku - pitch and mora, which the proxy measures nothing of",
+      "label": "pitch accent: unwritten, and it distinguishes words",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "JA-SCRIPT-DATA",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific and ABSENT. Japanese marks hashi 'chopsticks' against hashi 'bridge' with pitch and writes nothing, which is the same shape as Russian's unwritten stress and Mandarin's written tone - and unlike both, this track never mentions it. No lesson names pitch accent and no `sounds` tag records one. It is the largest untouched phonological demand in the file."
+    },
+    {
+      "id": "JA-A1-PUN-01",
+      "category": "Kutouten - punctuation",
+      "label": "the full stop and the comma, which are a small circle and a slanted mark",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-02"
+      ],
+      "note": "SHOWN AND NOT TAUGHT. The Japanese full stop appears in 13 of the 117 lesson files and the comma in 3, and no lesson introduces either and no atom names them. This is the same shape as Russian's `yo`: a mark the reader is asked to read past and is never told about. Two Spanish points collapse here because Japanese uses one mark for each job and neither has an alternative."
+    },
+    {
+      "id": "JA-A1-PUN-02",
+      "category": "Kutouten - punctuation",
+      "label": "the corner brackets that quote speech",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-05",
+        "A1-O3-06"
+      ],
+      "note": "Absent and unshown - the corner brackets occur zero times in the 117 files, so every dialogue in the book is set without them."
+    },
+    {
+      "id": "JA-A1-PUN-03",
+      "category": "Kutouten - punctuation",
+      "label": "the question and exclamation marks, and the fact that formal Japanese does without them",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-04"
+      ],
+      "note": "Absent, and the interesting half is the convention: a Japanese question is marked by the particle ka, so a question mark is optional and reads as informal - which is exactly parallel to the Mandarin situation and opposite to the Spanish one, where a question is marked by TWO obligatory signs. Blocked twice, on the missing particle and the missing mark."
+    },
+    {
+      "id": "JA-A1-PUN-04",
+      "category": "Kutouten - punctuation",
+      "label": "the interpunct, which separates items in a list and the parts of a foreign name",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-03",
+        "A1-O3-07",
+        "A1-O3-09"
+      ],
+      "note": "SHOWN IN 23 OF 117 FILES - more than any other mark in the track, because the body-part and family checkpoints list their words separated by it - AND TAUGHT NOWHERE. Three Spanish points collapse here, because the interpunct does the work Spanish spreads over the colon, the hyphen and the slash. A mark the reader meets on a fifth of the pages of the book and is never introduced to is the clearest small debt in this file."
+    },
+    {
+      "id": "JA-A1-PUN-05",
+      "category": "Kutouten - punctuation",
+      "label": "the dash and the ellipsis",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-08"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "JA-A1-ABB-01",
+      "category": "Ryakugo - abbreviations and symbols",
+      "label": "abbreviations, initialisms and symbols",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02",
+        "A1-O4-03"
+      ],
+      "note": "Absent - three Spanish points. Japanese abbreviates by clipping to four mora, and writes numbers in Arabic digits, and neither is touched."
+    },
+    {
+      "id": "JA-A1-PROD-01",
+      "category": "Sanshutsu to yaritori - production and interaction, which the receptive anchor does not test",
+      "label": "complete a small form: name, age, nationality, address",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-EXAM-LEVELS",
+        "JA-ASSESSMENT",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and this category exists because core/exam-levels.json's japanese caveat says so: the published CEFR indication on a JLPT score report covers 'only the language knowledge, reading, and listening competence JLPT tests', and 'JLPT does not test production (speaking and writing) or interaction'. So the exam anchor cannot score half the CEFR construct, and japanese/assessment-spec.md#a1 names a JF-Standard production companion instead - four tasks, of which this is the first. ABSENT: no personal-data vocabulary at all (JA-A1-NE02-02), no numerals, no desu."
+    },
+    {
+      "id": "JA-A1-PROD-02",
+      "category": "Sanshutsu to yaritori - production and interaction, which the receptive anchor does not test",
+      "label": "write a 30-40 character personal message for a named reader",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-EXAM-LEVELS",
+        "JA-ASSESSMENT",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, the second companion task, and ABSENT although the SCRIPT half is nearly there: the reader can write 31 hiragana, 2 katakana and 3 kanji, which is enough signs for a 30-character message. What is missing is a sentence to write - no desu, no verb paradigm, no particle - and a reader to name, since -san is untaught. A track that can write the letters and not the message is a precise description of where this corpus stands."
+    },
+    {
+      "id": "JA-A1-PROD-03",
+      "category": "Sanshutsu to yaritori - production and interaction, which the receptive anchor does not test",
+      "label": "answer familiar personal questions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-EXAM-LEVELS",
+        "JA-ASSESSMENT",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, the third companion task. ABSENT in both halves: no question word, no question particle, and no first-person pronoun or copula to answer with."
+    },
+    {
+      "id": "JA-A1-PROD-04",
+      "category": "Sanshutsu to yaritori - production and interaction, which the receptive anchor does not test",
+      "label": "complete a simple rehearsed role-play",
+      "probe": [
+        "JA-DIALOGUE-DOORWAY",
+        "JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01",
+        "JA-PERFORMANCE-FAMILY-RECEPTION-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-EXAM-LEVELS",
+        "JA-ASSESSMENT",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, the fourth companion task, and THE ONE THE TRACK CAN DO. The chapter-7 doorway dialogue is a rehearsed exchange with an opening, a middle and a close, using nothing untaught; the sayounara and family checkpoints are separately scored across four skills. One of the companion's four tasks is reachable, which is a more useful statement about this track than any percentage in the file."
+    },
+    {
+      "id": "JA-A1-PROD-05",
+      "category": "Sanshutsu to yaritori - production and interaction, which the receptive anchor does not test",
+      "label": "interaction: taking a turn you did not rehearse",
+      "probe": [
+        "JA-LEX-SUMIMASEN",
+        "JA-LEX-WAKARIMASEN",
+        "JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU",
+        "JA-LEX-SLOWER-PLEASE",
+        "JA-LEX-WAKARIMASHITA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "JA-EXAM-LEVELS",
+        "JA-ASSESSMENT",
+        "JA-CORPUS",
+        "ED-JAPANESE"
+      ],
+      "derivedFrom": [],
+      "japaneseSpecific": true,
+      "note": "Japanese-specific, and it is where this track is strongest against the very thing its exam anchor cannot score. JLPT tests no interaction at all; CEFR A1 interaction is largely the ability to keep an exchange alive when it breaks, and chapters 9 and 10 teach exactly that - apologise, report the failure, ask for a repeat, ask for slower speech, confirm the repair. Counted, and it is the only point in any of the three inventories written in this sitting where the corpus is ahead of what its own exam can measure."
+    }
+  ]
+}
