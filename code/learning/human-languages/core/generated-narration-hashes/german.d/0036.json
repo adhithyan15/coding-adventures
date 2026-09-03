@@ -1,18 +1,17 @@
 {
   "language": "german",
   "chapter": 36,
-  "sourceHash": "fnv1a64:01bd5bc3fdd0ed07",
+  "sourceHash": "fnv1a64:e815fba76bbc65b0",
   "lessonIds": [
-    "GE-C31-arm",
-    "GE-C31-finger",
-    "GE-C31-fuss",
-    "GE-C31-herz"
+    "GE-C28-kaffee",
+    "GE-C28-tee",
+    "GE-C28-milch"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "german/narration/ch36.txt",
   "json": "german/narration/ch36.json",
-  "textHash": "fnv1a64:30ab31791c4a87a3",
-  "jsonHash": "fnv1a64:b34f0e20c72966b7",
+  "textHash": "fnv1a64:99536dafdc097a4d",
+  "jsonHash": "fnv1a64:496c6ff2405931cb",
   "findings": []
 }

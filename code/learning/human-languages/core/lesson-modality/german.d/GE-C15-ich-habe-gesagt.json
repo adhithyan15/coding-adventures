@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C15-ich-habe-gesagt",
     "language": "german",
-    "chapter": 16,
+    "chapter": 19,
     "sequence": 350,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:122c7c34184e025a"
+    "sourceHash": "fnv1a64:36ecacafe5f30425"
   },
   "findings": []
 }

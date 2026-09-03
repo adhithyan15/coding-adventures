@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 34,
-  "title": "Friend and Family",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1b60e422785f5267",
+  "title": "Sitting, Standing, Sleeping, Hearing",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:b98fc8fc00916d54",
   "lessons": [
     {
-      "id": "GE-C29-freund",
-      "sequence": 900,
-      "title": "der Freund — a word that was already a compliment",
-      "headword": "der Freund",
-      "romanization": "der Freund",
-      "gloss": "friend — a Germanic cousin of English friend, both frozen out of the same old verb meaning \"to love\"",
+      "id": "GE-C26-sitzen",
+      "sequence": 790,
+      "title": "sitzen — the same word as sit, respelt by one law",
+      "headword": "sitzen",
+      "romanization": "sitzen",
+      "gloss": "to sit — the same inherited word as English sit, respelt by the other branch of the shift that separated helfen from help",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:721e59b7db5f51e4",
+      "sourceHash": "fnv1a64:29794561562602c5",
       "notice": null,
       "blocks": [
         {
@@ -35,182 +35,96 @@
             },
             {
               "kind": "speech",
-              "text": "You were taught freut mich — \"pleased to meet you,\" literally \"it gladdens me.\" The person doing the gladdening has a name of their own, and it is built from the very same root."
+              "text": "Helfen is help, split by the second sound shift: Germanic p became German f. That law has other branches. This verb rides one."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: der Freund",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "der Freund — friend (male, or a friend in general). Masculine."
+              "text": "tz-affricate — tz is one squeezed sound, ts, as in English cats."
             },
             {
               "kind": "speech",
-              "text": "Das ist der Freund. — \"This/That is the friend.\""
+              "text": "i-short — a short, tight i: sitzen = ZIT-sen, buzzed at the front because German s before a vowel is voiced."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: eu",
+          "type": "input",
+          "title": "You'll want to know: sitzen",
           "segments": [
             {
               "kind": "speech",
-              "text": "eu is a diphthong said oy, exactly as in English boy: Freund = FROYND. It is the same sound spelled äu in Häuser and läuft, just without the umlaut in front of it."
+              "text": "sitzen means \"to sit.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich sitze — I sit, wir sitzen — we sit."
+            },
+            {
+              "kind": "speech",
+              "text": "du sitzt — you sit, ihr sitzt — you all sit."
+            },
+            {
+              "kind": "speech",
+              "text": "er sitzt — he sits, sie sitzen — they sit."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich sitze. — a whole sentence, two words."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: a verb wearing a noun's clothes",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Freund and English friend are not merely cousins — they are the exact same inherited word, Proto-Germanic frijōnds. That word was never a plain noun to begin with: it is a frozen present participle of the verb frijōną, \"to love,\" so Freund literally means \"the one who is loving.\" freut mich is built on the same family: both trace to Proto-Indo-European preyH-, \"to love, to please.\" The goddess Frigg — whose day German keeps as Freitag and English as Friday — carries the same root one step further."
-            },
-            {
-              "kind": "speech",
-              "text": "Milch needed no journey to reach German; Freund did not either — but where Milch is a noun that was always a noun, Freund is a verb that stopped moving and became one."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"der Freund\" — FROYND",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Freund\" — *FROYND*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Das ist der Freund.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist der Freund.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the family — \"Freund, freut mich, Frigg, Friday — all one root\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"Freund, freut mich, Frigg, Friday — all one root\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give \"friend\" with its article. (Der Freund.) What part of speech did Freund start out as? (A verb — a frozen present participle of \"to love.\") Which greeting phrase shares its root? (Freut mich.) Which day of the week carries the same PIE root one step further? (Freitag / Friday, from the goddess Frigg.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C29-freundin",
-      "sequence": 910,
-      "title": "die Freundin — one suffix, and the fox that kept it in English",
-      "headword": "die Freundin",
-      "romanization": "die Freundin",
-      "gloss": "friend (female) — built on Freund with the native feminine suffix -in, the same suffix English kept in exactly one fossil word, vixen",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:6dd8f5ff8c99c14d",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You have der Freund. German does not need a new word for the feminine — it needs one small, reusable ending."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: die Freundin",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "die Freundin — friend (female). Feminine."
-            },
-            {
-              "kind": "speech",
-              "text": "Das ist die Freundin. — \"This/That is the (female) friend.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: the ending that builds a whole class of nouns",
+          "title": "Grammar Lens: strong does not mean it breaks",
           "segments": [
             {
               "kind": "speech",
-              "text": "Add -in to a masculine noun for a person and you get the feminine: der Lehrer becomes die Lehrerin (\"teacher\"), der Student becomes die Studentin (\"student\"), der Freund becomes die Freundin. It is entirely regular, and it works on almost any such noun you will ever meet — one rule, not a new word each time."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: English kept this suffix exactly once",
-          "segments": [
+              "text": "Sitzen is a strong verb — its past is saß, not sitzte. But its present never breaks its vowel: du sitzt, er sitzt. Beside it, helfen breaks to du hilfst."
+            },
             {
               "kind": "speech",
-              "text": "-in is native Germanic, not a Latin import — English inherited the same suffix and mostly stopped using it. Almost mostly: one English word still carries it, fossilized, unrecognized as a suffix by most speakers who use it — vixen, \"female fox,\" built the same way Freundin is built. English did not lose this pattern by borrowing over it; it simply stopped reaching for it, and later borrowed French -ess (princess, actress) to do the same job instead. German never stopped."
+              "text": "So \"strong\" is a fact about a verb's past; the du/er break is a separate habit only some strong verbs have."
+            },
+            {
+              "kind": "speech",
+              "text": "The doing verbs gave two ways to say you like something: ich mag with a thing, gern hung on a verb. This verb takes the second."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich sitze gern. — \"I like sitting.\""
             }
           ]
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart: the shift's other branch",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sitzen is Proto-Germanic sitjaną, and English sit is the same inherited word — Old English sittan, Old High German sizzen."
+            },
+            {
+              "kind": "speech",
+              "text": "The second, High German shift moved Germanic p to f in helfen. It moved Germanic t just as hard, to z (said ts) or ss: sittan becomes sitzen, water becomes Wasser, eat becomes essen, ten becomes zehn, bite becomes beißen. The food lesson handed you Wasser and the first numbers handed you zehn long before there was a name for what had happened to them."
+            },
+            {
+              "kind": "speech",
+              "text": "Under both lies PIE sed-, \"to sit,\" one of the family's great providers. Latin sedēre gives session, sedentary and preside; Latin sedēs, \"a seat,\" gives the bishop's see. Greek hédra, also \"a seat,\" gives cathedral — the church with the bishop's chair — and polyhedron."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -223,43 +137,61 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"die Freundin\" — Freund plus -in",
+              "instruction": "\"ich sitze, du sitzt, er sitzt\" — the i never moves",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"die Freundin\" — Freund plus -in]"
+              "source": "[YOU SAY: \"ich sitze, du sitzt, er sitzt\" — the *i* never moves]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist die Freundin.\"",
+              "instruction": "the contrast — \"du sitzt\" beside \"du hilfst\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist die Freundin.\"]"
+              "source": "[YOU SAY: the contrast — \"du sitzt\" beside \"du hilfst\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pattern — \"Lehrer/Lehrerin, Student/Studentin, Freund/Freundin\"",
+              "instruction": "\"Ich sitze gern.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pattern — \"Lehrer/Lehrerin, Student/Studentin, Freund/Freundin\"]"
+              "source": "[YOU SAY: \"Ich sitze gern.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the English fossil — \"fox, vixen — the same -in, once\"",
+              "instruction": "the t branch four times — \"sitzen/sit, Wasser/water, essen/eat, zehn/ten\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the English fossil — \"fox, vixen — the same -in, once\"]"
+              "source": "[YOU SAY: the *t* branch four times — \"sitzen/sit, Wasser/water, essen/eat, zehn/ten\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the p branch beside it — \"helfen/help\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *p* branch beside it — \"helfen/help\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the seat words — \"sitzen, sedēre, hédra, cathedral\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the seat words — \"sitzen, sedēre, hédra, cathedral\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -271,26 +203,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"friend (female)\" with its article. (Die Freundin.) What suffix builds it from Freund, and what does that suffix do generally? (-in — it makes the feminine of a person-noun.) Is -in borrowed or native? (Native — English inherited it too.) Name the one English word that still shows it. (Vixen.)"
+              "text": "Give the du and er forms of sitzen. (Du sitzt, er sitzt — no break.) Which of the doing verbs does break, and how? (Helfen — du hilfst.) Which sound did the second shift turn German's z and ss out of? (An old t.) Name two pairs from that branch. (Wasser/water, essen/eat, zehn/ten.) Say you like sitting. (Ich sitze gern.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C29-familie",
-      "sequence": 920,
-      "title": "die Familie — the word that gathers Eltern and Geschwister",
-      "headword": "die Familie",
-      "romanization": "die Familie",
-      "gloss": "family — the whole group the Eltern and Geschwister already named the members of, and this chapter's one Latin loan beside two native words",
+      "id": "GE-C26-stehen",
+      "sequence": 800,
+      "title": "stehen — the verb that was hiding inside verstehen",
+      "headword": "stehen",
+      "romanization": "stehen",
+      "gloss": "to stand — the verb hiding inside verstehen, and the one place German keeps a letter English put in the wrong tense",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:811f730d9275e9ff",
+      "sourceHash": "fnv1a64:c5c936bc18c7b3ed",
       "notice": null,
       "blocks": [
         {
@@ -306,57 +238,92 @@
             },
             {
               "kind": "speech",
-              "text": "You have der Freund and die Freundin, both native, both built on a verb meaning \"to love.\" The word for the group at home has a completely different history."
+              "text": "Verstehen was broken into ver- plus stehen, and named stehen as English stand. Here is that verb alone, and the letter the two languages disagree about."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: die Familie",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "die Familie — family. Feminine."
+              "text": "st-initial-scht — st at the start of a German word is said sht."
             },
             {
               "kind": "speech",
-              "text": "Das ist die Familie. — \"This/That is the family.\""
-            },
-            {
-              "kind": "speech",
-              "text": "You already have the members: Vater, Mutter, Bruder, Schwester — and the collective Geschwister, \"siblings.\" Familie is the word that gathers all of them into one group."
+              "text": "h-silent-lengthening — the h is silent and marks the long vowel: stehen = SHTAY-en."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: three syllables, not two",
+          "type": "input",
+          "title": "You'll want to know: stehen",
           "segments": [
             {
               "kind": "speech",
-              "text": "Familie keeps all three vowels distinct: fa-MEE-lee-eh, four syllables in careful speech, with the stress on the second. It does not collapse the way English family does."
+              "text": "stehen means \"to stand.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich stehe — I stand, wir stehen — we stand."
+            },
+            {
+              "kind": "speech",
+              "text": "du stehst — you stand, ihr steht — you all stand."
+            },
+            {
+              "kind": "speech",
+              "text": "er steht — he stands, sie stehen — they stand."
+            },
+            {
+              "kind": "speech",
+              "text": "Like sitzen, it keeps its vowel all the way through. Two postures, two sentences:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich sitze. Ich stehe."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart: the one Latin loan among these three chapters",
+          "title": "The word, taken apart: the missing n",
           "segments": [
             {
               "kind": "speech",
-              "text": "Familie is a Latin loan: familia, \"household,\" related to famulus, \"servant\" or \"slave\" — a Roman household word, not originally a word about blood relation at all. English family borrowed the very same Latin root, by way of Old French, well before German did; German took Familie directly from Latin later, in the early modern period, which is why the two loans look so close to identical without one having been copied from the other."
+              "text": "Germanic ran two stems off one root here: a short stāną and a longer standaną with an n wedged inside. English generalised the long one and got stand; German took the short one and got stehen, Old High German stān."
             },
             {
               "kind": "speech",
-              "text": "So this small chapter runs the same shape twice: Freund and Freundin are native, built from a Germanic verb meaning \"to love\"; Familie is borrowed, from a Roman word that first meant \"household staff.\" The food lesson set up exactly this pattern with Wasser native beside Wein borrowed, and the drinks just ran it a third time with Milch beside Kaffee and Tee."
+              "text": "German did not lose the n. It kept it in the past: ich stand, and the participle gestanden. German's past tense is spelt the way English's present is, out of the same drawer of stems."
+            },
+            {
+              "kind": "speech",
+              "text": "The root is PIE steh₂-, the one verstehen named, and it is everywhere. Latin stāre gave state, station, stable, constant. Greek hístēmi, \"I set up,\" gave static, system and ecstasy — standing outside yourself. German built die Stadt, a city: a standing-place. English built stead, steady and instead."
             }
           ]
         },
         {
           "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: two postures, two Latin cousins",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Notice the shape of what has happened. Sitzen goes back to sed-, and so does Latin's sedēre. Stehen goes back to steh₂-, and so does Latin's stāre."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing was borrowed in either direction. Two families inherited the same two roots and held them to the same two meanings for thousands of years, because sitting and standing are things everybody does."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -369,43 +336,61 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"die Familie\" — fa-MEE-lee-eh",
+              "instruction": "\"ich stehe, du stehst, er steht\" — SHTAY, not STAY",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"die Familie\" — *fa-MEE-lee-eh*]"
+              "source": "[YOU SAY: \"ich stehe, du stehst, er steht\" — *SHTAY*, not *STAY*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist die Familie.\"",
+              "instruction": "both postures — \"Ich sitze. Ich stehe.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist die Familie.\"]"
+              "source": "[YOU SAY: both postures — \"Ich sitze. Ich stehe.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the members inside it — \"Vater, Mutter, Bruder, Schwester, Geschwister\"",
+              "instruction": "the verb inside the verb — \"stehen, verstehen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the members inside it — \"Vater, Mutter, Bruder, Schwester, Geschwister\"]"
+              "source": "[YOU SAY: the verb inside the verb — \"stehen, verstehen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "native beside borrowed — \"Freund, Freundin native; Familie borrowed\"",
+              "instruction": "where the n went — \"ich stehe, ich stand, gestanden\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: native beside borrowed — \"Freund, Freundin native; Familie borrowed\"]"
+              "source": "[YOU SAY: where the *n* went — \"ich stehe, ich stand, gestanden\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin pair — \"sitzen/sedēre, stehen/stāre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin pair — \"sitzen/sedēre, stehen/stāre\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what stands in English — \"state, station, stable, stead\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what stands in English — \"state, station, stable, stead\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -417,7 +402,433 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"family\" with its article. (Die Familie.) Is it native or borrowed? (Borrowed — Latin familia, \"household.\") What did familia first mean, before \"relatives\"? (Household — kin to famulus, \"servant.\") Which two words from this chapter are native instead? (Freund and Freundin.)"
+              "text": "Give the du and er forms. (Du stehst, er steht.) Which letter does English's stand carry that German's stehen does not? (An n.) Where does German still keep it? (In the past — ich stand, gestanden.) Which longer verb already taught has stehen inside it? (Verstehen.) Say \"I sit. I stand.\" (Ich sitze. Ich stehe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C26-schlafen",
+      "sequence": 810,
+      "title": "schlafen — sleep, under two coats of paint",
+      "headword": "schlafen",
+      "romanization": "schlafen",
+      "gloss": "to sleep — the same word as English sleep under two coats of German paint, and a second way for a strong verb to break",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d26108da31b027a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sitzen and stehen held their vowels still. This one does not — and it does not break the way the mind verbs broke either."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sch-sh — sch is English sh: schlafen = SHLAH-fen."
+            },
+            {
+              "kind": "speech",
+              "text": "vowel-ae — ä is a flat eh: schläft = SHLEFT."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: schlafen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schlafen means \"to sleep.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich schlafe, wir schlafen."
+            },
+            {
+              "kind": "speech",
+              "text": "du schläfst, ihr schlaft."
+            },
+            {
+              "kind": "speech",
+              "text": "er schläft, sie schlafen."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Katze schläft. — \"The cat is sleeping.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the second kind of break",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Lesen gave you one break: long e goes to i for du and er — du liest, er hilft. Here is the other: a takes two dots and becomes ä — du schläfst, er schläft."
+            },
+            {
+              "kind": "speech",
+              "text": "Those two dots are the umlaut, the mark that turns Buch into Bücher. The break lands in the same slot as before, du and er and nobody else, so only its raw material is new: e verbs brighten to i, a verbs to ä."
+            },
+            {
+              "kind": "speech",
+              "text": "Es regnet. Die Katze schläft."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart: two coats of paint",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schlafen is Proto-Germanic slēpaną, and English sleep is the same inherited word — Old English slæpan, Old High German slāfan."
+            },
+            {
+              "kind": "speech",
+              "text": "Two German changes sit between them. The first you know: the second shift, Germanic p to German f, as in helfen. The second is new — German turned s into sh before l, m, n and w, and wrote it down: sleep becomes schlafen, swim becomes schwimmen, snow becomes Schnee, smith becomes Schmied. It did the same before p and t and never spelt it, which is why stehen is said SHTAY-en."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the honest part. The old Indo-European verb for sleeping was swep-, still in plain view: Latin somnus gives insomnia and somnolent, Latin sopor gives soporific, Greek hýpnos gives hypnosis, and Old Norse sofa is Swedish sova today. German and English both threw that verb away and built a new one on sleb-, \"to be slack\" — German still has schlaff, \"limp.\" They made that swap together, before they were two languages."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich schlafe, du schläfst, er schläft\" — the a brightens to ä",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich schlafe, du schläfst, er schläft\" — the *a* brightens to *ä*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three verbs — \"Ich sitze. Ich stehe. Ich schlafe.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three verbs — \"Ich sitze. Ich stehe. Ich schlafe.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Es regnet. Die Katze schläft.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Es regnet. Die Katze schläft.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both breaks in the same slot — \"du hilfst\" beside \"du schläfst\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both breaks in the same slot — \"du hilfst\" beside \"du schläfst\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sch row — \"schlafen, schwimmen, Schnee, Schmied\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *sch* row — \"schlafen, schwimmen, Schnee, Schmied\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verb they both threw away — \"somnus, hypnos, sova\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verb they both threw away — \"somnus, hypnos, sova\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the du and er forms. (Du schläfst, er schläft — two dots on the a.) Which two people does a German verb break for? (Du and er, always.) Name the two changes between sleep and schlafen. (p to f, and s to sch.) Why is stehen said SHTAY-en? (Same change, never spelt.) Say \"the cat is sleeping.\" (Die Katze schläft.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C26-hoeren",
+      "sequence": 820,
+      "title": "hören — hear, and the end of a chapter that never moved",
+      "headword": "hören",
+      "romanization": "hören",
+      "gloss": "to hear — the same verb as English hear, and the closing of a chapter of four things you do without going anywhere",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b020058147d8054e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich sitze. Ich stehe. Ich schlafe. Three verbs that stay put. Here is the fourth — the sense that works with your eyes shut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "umlaut-oe — ö is the e of bed said with rounded lips."
+            },
+            {
+              "kind": "speech",
+              "text": "r-uvular — the r is a soft scrape at the back: hören = HUR-en."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: hören",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hören means \"to hear.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ich höre, wir hören."
+            },
+            {
+              "kind": "speech",
+              "text": "du hörst, ihr hört."
+            },
+            {
+              "kind": "speech",
+              "text": "er hört, sie hören."
+            },
+            {
+              "kind": "speech",
+              "text": "The ö never moves. Schlafen grew its dots for du and er; hören was born with them, so nothing is left to break."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Hund hört. Die Katze hört."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: liking it, the mögen way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gern hangs on this verb like any other:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich höre gern. — \"I like listening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Gern is English yearn: underneath, \"I hear yearningly.\" Beside it is the other way of liking, ich mag — English may, with the power drained out."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart: the s that became an r",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hören is Proto-Germanic hauzijaną, and English hear is the same inherited word."
+            },
+            {
+              "kind": "speech",
+              "text": "This time the change is one they share. Gothic still says hausjan, with an s; Old English hīeran and Old High German hōren had both turned it to r. Sitzen shows where German left English; hören shows a road they walked together."
+            },
+            {
+              "kind": "speech",
+              "text": "The h is Grimm's law, the first shift: an old k became Germanic h. Greek kept the k — akoúein, \"to hear,\" which English borrowed back as acoustic. Same swap that made kwon- into Hund while Latin kept canis."
+            },
+            {
+              "kind": "speech",
+              "text": "Some break the root up further, into \"sharp\" plus \"ear\" — which would make hören \"sharp-eared\" and put das Ohr inside it. Cited often, not settled."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: gehören is not \"hear\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gehören means \"to belong.\" It is ge- welded onto hören, and began as \"to hearken to\": what belongs to you answers when called."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — \"Ich sitze. Ich stehe. Ich schlafe. Ich höre.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — \"Ich sitze. Ich stehe. Ich schlafe. Ich höre.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four er forms — \"er sitzt, er steht, er schläft, er hört\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four *er* forms — \"er sitzt, er steht, er schläft, er hört\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Der Hund hört. Die Katze schläft.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Der Hund hört. Die Katze schläft.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich höre gern.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich höre gern.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shared change — \"hausjan, hīeran, hōren\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shared change — \"hausjan, hīeran, hōren\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the h row — \"hören/akoúein, Hund/canis\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *h* row — \"hören/akoúein, Hund/canis\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"gehören is belong\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"gehören is *belong*\"]"
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give all four ich forms of this chapter. (Ich sitze, ich stehe, ich schlafe, ich höre.) Which breaks its vowel? (Schlafen — a to ä.) Which letter did Gothic keep where German and English have r? (An s.) Which law put the h on hören and Hund? (Grimm's law.)"
             }
           ]
         }

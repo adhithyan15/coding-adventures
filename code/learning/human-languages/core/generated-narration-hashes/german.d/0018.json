@@ -1,23 +1,22 @@
 {
   "language": "german",
   "chapter": 18,
-  "sourceHash": "fnv1a64:ad33184f69d71c0b",
+  "sourceHash": "fnv1a64:43453086e83ecac4",
   "lessonIds": [
-    "GE-C16-sein",
-    "GE-C16-ich-bin",
-    "GE-C16-du-bist",
-    "GE-C16-er-ist",
-    "GE-C16-wir-sind",
-    "GE-C16-ihr-seid",
-    "GE-C16-sie-sind",
-    "GE-C16-muede",
-    "GE-C16-praesens-practice"
+    "GE-C15-sagen",
+    "GE-C15-gesagt",
+    "GE-C15-partizip",
+    "GE-C15-gemacht",
+    "GE-C15-gelernt",
+    "GE-C15-gewohnt",
+    "GE-C15-ge-praefix",
+    "GE-C15-partizip-practice"
   ],
   "voiceLessons": 8,
   "drivablePrefix": 8,
   "text": "german/narration/ch18.txt",
   "json": "german/narration/ch18.json",
-  "textHash": "fnv1a64:1837415d0e0853c9",
-  "jsonHash": "fnv1a64:98bb7a851e81c87f",
+  "textHash": "fnv1a64:7b3fa914a3a877fe",
+  "jsonHash": "fnv1a64:6117f3d1f97353fc",
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C06-eins",
+    "language": "german",
+    "chapter": 6,
+    "sequence": 211,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:163b5b7f0c58faf7"
+  },
+  "findings": []
+}

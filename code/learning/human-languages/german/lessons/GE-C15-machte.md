@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C15-machte
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 400
-chapter: 17
+chapter: 20
 type: word
 headword: ich machte
 gloss: I made, I did — the second verb through the -te ending

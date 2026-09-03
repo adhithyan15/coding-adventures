@@ -1,16 +1,25 @@
 {
   "chapter": 8,
-  "title": "Telling the Time",
-  "label": "ch:time",
-  "canDo": "I can ask for and tell the time in German.",
+  "title": "Six, Seven, Eight",
+  "label": "ch:ge-zahlen-6-8",
+  "canDo": "I can count six, seven and eight in German, and hear the three sounds that make them hard to guess from the spelling.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C08-mittag-mitternacht",
+    "lesson": "GE-C06-acht",
     "kind": "task",
-    "summary": "Complete GE-C08-mittag-mitternacht, the canonical closing checkpoint, and demonstrate the chapter promise: ask for and tell the time in German.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Three more numbers, each with the sound that makes it unguessable from the page: the chs of sechs, the buzzing s of sieben, and the throat sound in acht that English spells gh.",
+    "assesses": [
+      "GE-LEX-SECHS-01",
+      "GE-SOUND-CHS-AS-KS-01",
+      "GE-ETYMON-SECHS-SIX-02",
+      "GE-LEX-SIEBEN-01",
+      "GE-SOUND-S-BUZZES-01",
+      "GE-ETYMON-SIEBEN-SEVEN-02",
+      "GE-LEX-ACHT-01",
+      "GE-ETYMON-ACHT-EIGHT-02"
+    ],
+    "note": "Chapter 8 is generated from schema-v2 lessons, so the payoff is atom-scored. It introduces 8 atoms, under the maxNewAtomsPerChapter of 12: the numbers one to ten were split across four chapters rather than crammed into one, because German's own band is a median of 9 and 23 of its 29 atom-bearing chapters sit at or under the ceiling. Lesson ids keep the GE-C06-* prefix."
   }
 }

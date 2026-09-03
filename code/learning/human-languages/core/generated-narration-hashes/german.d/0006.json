@@ -1,16 +1,18 @@
 {
   "language": "german",
   "chapter": 6,
-  "sourceHash": "fnv1a64:6866acd0f8171296",
+  "sourceHash": "fnv1a64:94f0803076fc1318",
   "lessonIds": [
-    "GE-C06-zahlen-1-5",
-    "GE-C06-zahlen-6-10"
+    "GE-C06-eins",
+    "GE-C06-zwei",
+    "GE-C06-drei",
+    "GE-C06-grimm"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "german/narration/ch06.txt",
   "json": "german/narration/ch06.json",
-  "textHash": "fnv1a64:44ef522197d162f6",
-  "jsonHash": "fnv1a64:fdc1829a825239c4",
+  "textHash": "fnv1a64:9236441473dd0566",
+  "jsonHash": "fnv1a64:1413aa335c79137f",
   "findings": []
 }

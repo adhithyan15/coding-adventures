@@ -1,16 +1,23 @@
 {
   "chapter": 9,
-  "title": "Months and Seasons",
-  "label": "ch:months-seasons",
-  "canDo": "I can name the months and seasons in German and say when something happens.",
+  "title": "Nine, Ten, and the Months That Are Numbers",
+  "label": "ch:ge-zahlen-9-10",
+  "canDo": "I can count all the way to ten in German, and say which words a language keeps and which it buys.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C09-jahreszeiten",
+    "lesson": "GE-C06-practice",
     "kind": "task",
-    "summary": "Complete GE-C09-jahreszeiten, the canonical closing checkpoint, and demonstrate the chapter promise: name the months and seasons in German and say when something happens.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Nine and ten finish the count, and the chapter closes on the seam the whole sequence has been building toward: the numbers are homegrown and the month names are Latin imports, so one calendar carries both answers to the same question.",
+    "assesses": [
+      "GE-LEX-NEUN-01",
+      "GE-ETYMON-NEUN-NINE-02",
+      "GE-LEX-ZEHN-01",
+      "GE-ETYMON-ZEHN-TEN-02",
+      "GE-LEX-ZAEHLEN-6-10-01",
+      "GE-GRAMMAR-NATIVE-VS-LOAN-01"
+    ],
+    "note": "Chapter 9 is generated from schema-v2 lessons, so the payoff is atom-scored. It introduces 6 atoms, under the maxNewAtomsPerChapter of 12: the numbers one to ten were split across four chapters rather than crammed into one, because German's own band is a median of 9 and 23 of its 29 atom-bearing chapters sit at or under the ceiling. Lesson ids keep the GE-C06-* prefix."
   }
 }

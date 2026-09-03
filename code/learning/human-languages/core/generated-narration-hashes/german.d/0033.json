@@ -1,17 +1,18 @@
 {
   "language": "german",
   "chapter": 33,
-  "sourceHash": "fnv1a64:a2236571e96fcc26",
+  "sourceHash": "fnv1a64:bad5577e0f36aa42",
   "lessonIds": [
-    "GE-C28-kaffee",
-    "GE-C28-tee",
-    "GE-C28-milch"
+    "GE-C25-nehmen",
+    "GE-C25-fragen",
+    "GE-C25-helfen",
+    "GE-C25-moegen-lieben"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "german/narration/ch33.txt",
   "json": "german/narration/ch33.json",
-  "textHash": "fnv1a64:313f0b33961d95ac",
-  "jsonHash": "fnv1a64:ae09c64a8ce4631c",
+  "textHash": "fnv1a64:230fab56472b8b75",
+  "jsonHash": "fnv1a64:3c2fb871f4ad685b",
   "findings": []
 }

@@ -1,270 +1,57 @@
-German, chapter 14: To Have.
-8 lessons. All 8 can be done entirely by ear.
+German, chapter 14: Bread, Water, Wine.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 8.
-haben — "to have".
-
-Warm-up.
-[pause 2 seconds]
-German's workhorse verb, and the twin of a word you have said every day of your life.
-
-You'll want to know: haben.
-haben — "to have."
-Same word as English have, worn differently. Chop the -en the way you did with machen and the stem is hab-, which is where every form in this chapter starts.
-Two syllables, and the first one carries the weight: HAH-ben.
-
-Sounds you'll need.
-long-a — the a of haben is long and open, the vowel of English father, not the clipped a of hat.
-d-t-final — that long a does not survive into every form. Two of them coming up are short and clipped, and both end in a crisp, fully released t.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "haben" — long a, soft second syllable]
-[pause 8 seconds for the answer]
-[your turn — say: the stem on its own — "hab-"]
-[pause 8 seconds for the answer]
-[your turn — say: the twins — "haben, have"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"haben, haben — to have."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "to have." (Haben.) What is its stem? (Hab-.) Is the a long or short? (Long — as in father.) Which English verb is it? (Have.) Next: the stem through the ending machine you already own.
-
-
-Lesson 2 of 8.
-hab- through the machine — four of haben's six forms come out of the ending machine you already own, with nothing new to learn.
+Lesson 1 of 2.
+das Brot — bread, and the third gender.
 
 Warm-up.
 [pause 2 seconds]
-You own an ending machine: a stem, and -e, -st, -t, -en. Run hab- through it before reading on, and keep what you get.
+Where the Romance sisters all say a version of Latin pānis (French pain, Italian pane), German goes its own Germanic way: Brot — the direct twin of English bread. And it brings a new grammatical face: the neuter article, das.
 
-Grammar Lens: four forms you already knew.
-On hab-, the machine is right four times out of six.
-Ich takes -e, so ich habe. Wir takes -en, so wir haben — which is the infinitive over again, the way the wir form goes throughout German. Ihr takes -t, so ihr habt. And sie takes -en like wir, so sie haben.
-Nothing there is new. Those four are the rule from your first verbs applied to one more stem — so do not read them off the page. Take each ending, put it on hab-, and hear that you already knew the answer.
-The chapter is about the other two.
+Taken apart.
+das Brot ("bread") from old Germanic braudam — the same word that became English bread. No Latin here: this is a native word, like Vater and Wasser, from the Germanic core the two languages share.
+
+The third gender — das.
+You have met der (masculine, der Vater) and die (feminine, die Mutter). German has a third: das, the neuter — and Brot is one: das Brot. (German nouns are also always capitalized — Brot, Vater, Wasser — a rule no other language here follows.) So the article set is now complete: der / die / das.
 
 Guided Practice.
 [pause 1 second]
-Build each one before you say it — take the ending first, then put it on hab-.
-[your turn — say: the ending ich takes, then the form — "-e … ich habe"]
+[your turn — say: "das Brot" — long o, the neuter das]
 [pause 8 seconds for the answer]
-[your turn — say: the ending wir takes, then the form — "-en … wir haben"]
+[your turn — say: the twin test — "Brot / bread — both Germanic, no Latin"]
 [pause 8 seconds for the answer]
-[your turn — say: the ending ihr takes, then the form — "-t … ihr habt"]
+[your turn — say: the three genders — "der Vater, die Mutter, das Brot"]
 [pause 8 seconds for the answer]
-[your turn — say: sie borrows wir's ending — "sie haben"]
-[pause 8 seconds for the answer]
-[your turn — say: now prove the machine is not about this verb — run wohn- through it: "ich wohne, wir wohnen, ihr wohnt"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ich habe, wir haben, ihr habt, sie haben."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Build "we have" without being given it. (Wir haben.) Build "you all have." (Ihr habt.) Which other form does wir haben match? (The infinitive.) Did you have to learn any of those four, or work them out? (Work them out — the endings were already yours.) How many of the six does the rule get right? (Four.) Next: the first one it gets wrong.
+Give "bread" with its article. (das Brot.) Why is it not from Latin pānis like French pain? (It is inherited Germanic — the twin of English bread.) What gender does das mark, and what are the other two? (Neuter — with der masculine and die feminine.) Next: Wasser and Wein — and a split between native and borrowed.
 
 
-Lesson 3 of 8.
-du hast — "you have".
+Lesson 2 of 2.
+das Wasser, der Wein — one word Germans always had, one Rome brought.
 
 Warm-up.
 [pause 2 seconds]
-The machine says du plus -st on the stem hab-. Say what that would give, and then hear what German actually says.
+Two drinks, two very different histories. Wasser is a word Germanic speakers have always had; Wein is one Rome carried north with the grapevine. Side by side, they show the difference between an inherited word and an ancient loan.
 
-You'll want to know: du hast.
-du hast — "you have," to one person you are on familiar terms with.
-The rule predicts hab-st. German says hast. The b is simply gone, and the long a goes with it: the vowel is short and clipped now, and the -st lands crisply on the end.
-This is not a spelling convenience. It is one of exactly two places in the whole verb where the machine fails, and it is worth meeting on its own so that it is a form you know rather than a form you derive wrongly.
+das Wasser (water) — native Germanic.
+das Wasser ("water") — the w is pronounced v (VAH-ser). It is the Grimm's-law twin of English water: same Germanic root watar, same core meaning, both native. Like Brot and Vater, no Latin needed — and neuter, das Wasser.
 
-Sounds you'll need.
-vowel-a — short and clipped, the a of English hat, not the long a of haben. The form is one syllable: hast, rhyming with English mast.
-d-t-final — the -st is fully released; German does not soften it.
+der Wein (wine) — an ancient Latin loan.
+der Wein ("wine") — the ei is said "eye" (vine). Here is the twist: Wein is not a native Germanic word. It was borrowed from Latin vīnum in Roman times, when the legions brought viticulture north of the Alps. The Germanic tribes took the drink and its name — which is exactly why English wine, German Wein, and Latin vīnum all match: they are one loan, not three cousins. (Masculine: der Wein.)
+The lesson in one line: Wasser is a word Germans always had; Wein is a word Rome gave them — the vine came with a vocabulary.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "du hast"]
+[your turn — say: "das Wasser" (v-), "der Wein" (-ein = "eye")]
 [pause 8 seconds for the answer]
-[your turn — say: the long against the short — "ich habe, du hast"]
+[your turn — say: "Wasser / water — native twins"; "Wein / wine / vīnum — one Latin loan"]
 [pause 8 seconds for the answer]
-[your turn — say: what the rule wanted, then what German says — "hab-st … hast"]
+[your turn — say: the split — "Wasser native, Wein borrowed with the grapevine"]
 [pause 8 seconds for the answer]
-[repeat that twice]
-"du hast, du hast."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "you have," informally. (Du hast.) Which letter went missing? (The b.) What happened to the vowel? (It shortened.) What would the rule have predicted? (Hab-st.) Next: the second place the machine fails, and it fails the same way.
-
-
-Lesson 4 of 8.
-er hat — "he has".
-
-Warm-up.
-[pause 2 seconds]
-One more break, and then the verb behaves for good. The machine says -t on hab-.
-
-You'll want to know: er hat.
-er hat — "he has." Also sie hat, "she has," and es hat, "it has."
-The rule predicts hab-t. German says hat: the same b gone, the same vowel shortened. One syllable, rhyming with English hut rather than hat — the German a sits further back than the English one.
-One form covers er, sie and es, exactly as the third-person -t always does. So the two breaks in this verb are neighbours: du hast, er hat, and every other form is the machine.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "er hat, sie hat, es hat"]
-[pause 8 seconds for the answer]
-[your turn — say: the two breaks together — "du hast, er hat"]
-[pause 8 seconds for the answer]
-[your turn — say: the whole shape — "habe … hast … hat … haben"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"du hast, er hat."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "he has." (Er hat.) Say "she has." (Sie hat.) Which two forms of this verb break the rule? (Hast and hat.) What do both of them drop? (The b.) Next: why they drop it, and the English verb that does the identical thing.
-
-
-Lesson 5 of 8.
-The b that fell out — why hast and hat lost their b — and the English verb that lost it in the same two places.
-
-Warm-up.
-[pause 2 seconds]
-Hast and hat both lost a b. That is not two accidents.
-
-Grammar Lens: one shortcut, in exactly two cells.
-Haben keeps its b everywhere except before a -st or a -t ending, where the b drops and the vowel shortens with it.
-Say hab-st and hab-t at speed and you can feel why: a b squeezed between a vowel and a hard t is work, and centuries of speakers declined to do it. The consonant wore away and the two shortest forms are what is left.
-Now listen to English, which is the same verb:
-[a table of 3 rows, read aloud]
-person: infinitive. English: have. German: haben.
-person: second person, older. English: thou hast. German: du hast.
-person: third person. English: he has. German: er hat.
-English lost the same consonant, in the same two cells, of the same verb — and kept the archaic hast long enough for us to see it. Two languages, one shortcut, inherited together rather than invented twice.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: where the b survives — "habe, haben, habt"]
-[pause 8 seconds for the answer]
-[your turn — say: where it does not — "hast, hat"]
-[pause 8 seconds for the answer]
-[your turn — say: the English echo — "thou hast, du hast; he has, er hat"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"hast, hat — no b."
-
-Wrap-up Recall.
-[pause 3 seconds]
-In which two forms does the b drop? (Hast and hat.) What else changes with it? (The vowel shortens.) Which English form still shows the same loss? (He has — or archaic thou hast.) Next: something to actually have.
-
-
-Lesson 6 of 8.
-einen — "a," when it is the thing you have.
-
-Warm-up.
-[pause 2 seconds]
-Ich habe … wants something after it. The commonest thing to put there is "a something," and German asks one small question first.
-
-You'll want to know: einen.
-einen — "a," for a der-word that is the thing you have.
-Ein is the number one doing a second job, which is exactly what English a is — a worn-down one. German keeps the resemblance visible: ein, eins.
-The -en on the end is the part English threw away. German marks a der-word differently when it is the thing being had rather than the thing doing the having, and einen is that marked form:
-Ich habe einen Bruder. — "I have a brother."
-Der Bruder is a der-word, and he is what you have, so ein becomes einen. Nothing else in the sentence moves.
-Take this one as a word for now, not as a system. The system behind it — German's cases — gets a chapter of its own later; this is the first place the book cannot avoid it, because a sentence with haben in it needs something to have.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "einen"]
-[pause 8 seconds for the answer]
-[your turn — say: "Ich habe einen Bruder."]
-[pause 8 seconds for the answer]
-[your turn — say: it with the two broken forms — "du hast einen Bruder; er hat einen Bruder"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"Ich habe einen Bruder."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I have a brother." (Ich habe einen Bruder.) Which word did ein become? (Einen.) Why? (Because der Bruder is the thing being had.) Which English word is ein underneath? (One.) Next: the trap this verb is famous for.
-
-
-Lesson 7 of 8.
-haben is not habēre — the famous false cognate — haben is a cousin of capture, and Latin habēre is a cousin of give.
-
-Warm-up.
-[pause 2 seconds]
-German haben, Latin habēre. Same consonants, same meaning, and the best false cognate in the business.
-
-The word, taken apart.
-Two verbs that look like one word:
-[a table of 2 rows, read aloud]
-language: German. verb: haben. meaning: to have.
-language: Latin. verb: habēre. meaning: to have.
-They are not related. It is a coincidence, and one of the most famous in linguistics. Follow each one back and they go in opposite directions.
-Haben comes from Germanic habjaną, from Proto-Indo-European kap-, "to seize." That root's Latin child is capere — which is where English gets capture, captive, capable and accept.
-Habēre comes from a different root entirely, gʰabʰ-, and its English descendant is … give.
-So German haben is a cousin of capture, and Latin habēre — the source of French avoir and Italian avere — is a cousin of give. Seizing and giving, which is about as far apart as two verbs get.
-
-Why it's said this way.
-This is worth carrying beyond one verb. Resemblance is not evidence. Two words can match in sound and sense and still have nothing to do with each other, and the only way to tell is to follow both back rather than to compare them where they stand.
-Most of this book's cousin pairs are real. This one is the control that proves the others were checked.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the pair that is not a pair — "haben, habēre"]
-[pause 8 seconds for the answer]
-[your turn — say: where German's goes — "haben, kap-, capture"]
-[pause 8 seconds for the answer]
-[your turn — say: where Latin's goes — "habēre, gʰabʰ-, give"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"haben is not habēre."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Are haben and habēre related? (No — a coincidence.) Which English word is haben's cousin? (Capture, from capere.) And habēre's? (Give.) What did haben's root originally mean? ("To seize.") Next: the whole verb, said through.
-
-
-Lesson 8 of 8.
-Practice — the whole of haben.
-
-Warm-up.
-[pause 2 seconds]
-No new words. Four of the six forms below cost you nothing, and the other two have each had a lesson, so this is the first place it is safe to set them out together.
-
-Grammar Lens: the six, assembled.
-[a table of 3 rows, read aloud]
-singular: ich habe. plural: wir haben.
-singular: du hast. plural: ihr habt.
-singular: er/sie/es hat. plural: sie/Sie haben.
-Run it aloud and hear where the b goes missing: habe … hast … hat … haben. Four forms carry it, two do not, and the two that do not are the two shortest.
-
-The exchange.
-[a table of 5 rows, read aloud]
-Hast du einen Bruder? means Do you have a brother?
-Und du? means And you?
-Ich habe eine Schwester. means I have a sister.
-Wir haben Brot und Wein. means We have bread and wine.
-Gut! Dann haben wir alles. means Good! Then we have everything.
-Two things slip in without lessons of their own, because the translation carries them: eine, which is what ein becomes for a die-word, and alles ("everything"). And notice Hast du …? — a question puts the verb first, which is the one move German makes that English needs do for.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the six in order — "habe, hast, hat, haben, habt, haben"]
-[pause 8 seconds for the answer]
-[your turn — say: the two breaks alone — "hast, hat"]
-[pause 8 seconds for the answer]
-[your turn — say: "Ich habe einen Bruder." "Wir haben Brot und Wein."]
-[pause 8 seconds for the answer]
-[your turn — say: the whole exchange, both voices]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"habe, hast, hat, haben, habt, haben."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Run the six without looking. Which two drop the b? (Hast and hat.) Say "I have a brother." (Ich habe einen Bruder.) Is haben related to Latin habēre? (No.) Which English word is it related to? (Capture.) Next: the one everyday sentence where German refuses this verb altogether.
+Give "water" and "wine" with articles and correct sounds. (das Wasser — v- — der Wein — "vine".) Which is inherited Germanic, and which is a Latin loan? (Wasser native — twin of water; Wein borrowed from vīnum, with the vine.) Why do Wein and English wine match so exactly? (Both borrowed the same Latin word, vīnum.) Next chapter: asking for these at the table.

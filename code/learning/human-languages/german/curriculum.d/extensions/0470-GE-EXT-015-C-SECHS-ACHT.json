@@ -1,0 +1,13 @@
+{
+  "id": "GE-EXT-015-C-SECHS-ACHT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say six, seven and eight in German, including the three sounds their spellings hide.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C06-sechs",
+    "GE-C06-sieben",
+    "GE-C06-acht"
+  ]
+}

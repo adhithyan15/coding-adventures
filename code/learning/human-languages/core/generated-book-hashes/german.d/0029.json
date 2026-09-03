@@ -1,12 +1,9 @@
 {
   "language": "german",
   "chapter": 29,
-  "sourceHash": "fnv1a64:50d4de68543af423",
+  "sourceHash": "fnv1a64:32dc5f7ac697137c",
   "lessonIds": [
-    "GE-C24-denken",
-    "GE-C24-verstehen",
-    "GE-C24-lesen",
-    "GE-C24-schreiben"
+    "GE-C21-das-wetter"
   ],
-  "tex": "german/book/chapters/ch29-mind-verbs.tex"
+  "tex": "german/book/chapters/ch29-weather.tex"
 }

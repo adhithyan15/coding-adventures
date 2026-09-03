@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 8,
-  "title": "Telling the Time",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:43f8eec17cde9e22",
+  "title": "Six, Seven, Eight",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:e8453f6923c376b8",
   "lessons": [
     {
-      "id": "GE-C08-uhr",
-      "sequence": 235,
-      "title": "Uhr — the clock, and a Roman word in the German day",
-      "headword": "Uhr",
-      "romanization": "Uhr",
-      "gloss": "clock / o'clock — and a Latin word inside German",
+      "id": "GE-C06-sechs",
+      "sequence": 219,
+      "title": "sechs — \"six,\" where chs is a plain x",
+      "headword": "sechs",
+      "romanization": "sechs",
+      "gloss": "six — where chs is simply an x",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5cc9aeede24f93f",
+      "sourceHash": "fnv1a64:49d95702b92b3fc7",
       "notice": null,
       "blocks": [
         {
@@ -35,71 +35,52 @@
             },
             {
               "kind": "speech",
-              "text": "Something new happens here. German's numbers were homegrown (eins, zwei), and its weekdays were Germanic gods (Donnerstag). But its word for the clock — Uhr — is borrowed from Latin. Time-keeping came to the German world with Roman and monastic clocks, and the Latin word rode in with them."
+              "text": "The second hand starts here. And the sixth number quietly settles the last thing German ch can do."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "input",
+          "title": "You'll want to know: sechs",
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-u-long — Uhr = oor, a long u then a soft r: one syllable."
+              "text": "sechs — \"six.\""
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — a Latin loan among Germanic natives",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Uhr comes from Latin hōra, \"hour\" — the same word that became French heure, Italian ora, and English hour. German took it in (through medieval Latin/Low German ūr(e)) and made it Uhr."
+              "text": "ch-none — in chs, the ch makes no throat sound at all. The pair is a plain ks, exactly the English letter x."
             },
             {
               "kind": "speech",
-              "text": "That's the striking part: three layers of the German day, three different origins —."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "what",
-                "German",
-                "origin"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "what: the numbers. German: eins, zwei, drei. origin: native Germanic (twins of English).",
-                "what: the weekdays. German: Montag, Donnerstag. origin: Germanic gods (Latin months).",
-                "what: the clock. German: Uhr. origin: Latin loan (hōra)."
-              ]
+              "text": "So sechs is zeks, and it rhymes with English sex — which is also, as it happens, the Latin word for six."
             },
             {
               "kind": "speech",
-              "text": "German kept its own numbers and gods, but for the machine that measures hours, it reached for Rome. (German also has a native word, Stunde, \"an hour's span\" — but for clock-reading, \"o'clock,\" it's Uhr.)"
+              "text": "That completes the ch: raspy after a as in machen, and silent-into-ks when an s follows. Nothing else to learn about it."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: \"Es ist … Uhr\"",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "To tell the time, German says es ist (\"it is\") + the number + Uhr:"
+              "text": "sechs is English six, and here the two languages have barely moved apart at all — zeks against siks. Even the Latin cousin sex is close enough to hear, because this is one of the few numbers no sound law rearranged much."
             },
             {
               "kind": "speech",
-              "text": "Es ist ein Uhr. — \"It is one o'clock.\" Es ist zwei Uhr. — \"It is two o'clock.\" Es ist zehn Uhr. — \"It is ten o'clock.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Uhr doesn't add a plural here (not \"zwei Uhren\" for the time) — it works like English o'clock: zwei Uhr = \"two o'clock.\" (Uhren, plural, means \"clocks\" the objects.)"
+              "text": "Which makes it the cheapest number in the chapter: if you can say x, you can say sechs."
             }
           ]
         },
@@ -117,29 +98,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Uhr\" — oor",
+              "instruction": "\"sechs\" — zeks, no throat rasp",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Uhr\" — *oor*]"
+              "source": "[YOU SAY: \"sechs\" — *zeks*, no throat rasp]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Es ist ein Uhr, zwei Uhr, drei Uhr\"",
+              "instruction": "\"machen\" then \"sechs\" — the two jobs of ch",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es ist ein Uhr, zwei Uhr, drei Uhr\"]"
+              "source": "[YOU SAY: \"machen\" then \"sechs\" — the two jobs of *ch*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Uhr / heure / hour\" — all from Latin hōra",
+              "instruction": "\"sechs\" then \"six\" — barely a step apart",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Uhr / heure / hour\" — all from Latin *hōra*]"
+              "source": "[YOU SAY: \"sechs\" then \"six\" — barely a step apart]"
             }
           ]
         },
@@ -156,26 +137,26 @@
             },
             {
               "kind": "speech",
-              "text": "Where does Uhr come from, and why is that notable? (Latin hōra — a loanword, unlike German's native numbers and Germanic day-gods.) Two French/English cousins of Uhr? (heure, hour.) How does German say \"it is three o'clock\"? (Es ist drei Uhr.) Next: Mittag and Mitternacht — noon and midnight."
+              "text": "What is \"six\"? (Sechs, said zeks.) What does ch do in front of an s? (Nothing — the pair is a plain ks.) And after an a? (The raspy throat sound, as in machen.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C08-mittag-mitternacht",
-      "sequence": 240,
-      "title": "Mittag and Mitternacht — the native middle of day and night",
-      "headword": "Mittag, Mitternacht",
-      "romanization": "Mittag, Mitternacht",
-      "gloss": "noon and midnight — native \"mid-day\" and \"mid-night\"",
+      "id": "GE-C06-sieben",
+      "sequence": 220,
+      "title": "sieben — \"seven,\" and the buzzing s",
+      "headword": "sieben",
+      "romanization": "sieben",
+      "gloss": "seven — and the s that buzzes at the front of a word",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f3b70fa1b579e8b",
+      "sourceHash": "fnv1a64:56bcfc7e6c438d6c",
       "notice": null,
       "blocks": [
         {
@@ -191,57 +172,57 @@
             },
             {
               "kind": "speech",
-              "text": "The clock-word Uhr was Latin. But noon and midnight swing back to native German: Mittag and Mitternacht are plain Germanic compounds — \"the day's middle\" and \"the night's middle\" — built from words you can already almost read."
+              "text": "You have been saying sechs as zeks without being told why. Here is the rule, on the number that needs it most."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The two words, taken apart",
+          "type": "input",
+          "title": "You'll want to know: sieben",
           "segments": [
             {
               "kind": "speech",
-              "text": "Both start with Mitte, \"middle\" (cousin of English mid, middle, and of Latin medius):"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "German",
-                "=",
-                "literally"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "German: Mittag. =: Mitte + Tag. literally: \"mid-day\" (noon).",
-                "German: Mitternacht. =: Mitter (Mitte) + Nacht. literally: \"mid-night\" (midnight)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Mittag = \"mid-day.\" Tag (\"day\") you met in Montag, Dienstag; put \"middle\" in front and you get noon. Its meaning matches French midi (medius diēs) exactly — same idea, but German built it from its own words instead of borrowing the Latin one."
-            },
-            {
-              "kind": "speech",
-              "text": "Mitternacht = \"mid-night.\" Nacht (\"night\") is the twin of English night (remember acht/eight, Nacht/night — the -cht/-ght pair). So Mitternacht and English mid-night are the same compound in two Germanic tongues."
-            },
-            {
-              "kind": "speech",
-              "text": "To tell the time with them:"
-            },
-            {
-              "kind": "speech",
-              "text": "Es ist Mittag. — \"It is noon.\" Es ist Mitternacht. — \"It is midnight.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So German splits the day three ways by origin: Uhr (Latin) for the hours, Mittag/Mitternacht (native) for its pivots."
+              "text": "sieben — \"seven.\" Two syllables: ZEE-ben."
             }
           ]
         },
         {
           "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "s-voiced — a German s in front of a vowel buzzes, like the English letter z. At the end of a word it goes back to a plain hiss."
+            },
+            {
+              "kind": "speech",
+              "text": "ie-long-ee — the long ee again, as in vier."
+            },
+            {
+              "kind": "speech",
+              "text": "So sieben is ZEE-ben, not SEE-ben. And it explains the two numbers before it: sechs is zeks and not seks for the same reason."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sieben is English seven, with the middle consonant softened from a v to a b — a swap those two letters make in each other's direction constantly, because they are made with the same lips."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the one number where the Latin cousin is also unmistakable: septem, which English still uses in September and in septet. Seven is the number almost nobody's language disguised."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -254,34 +235,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Mittag\" (noon), \"Mitternacht\" (midnight)",
+              "instruction": "\"sieben\" — ZEE-ben, buzz the s",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Mittag\" (noon), \"Mitternacht\" (midnight)]"
+              "source": "[YOU SAY: \"sieben\" — *ZEE-ben*, buzz the *s*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"",
+              "instruction": "\"sechs, sieben\" — both start with the buzz",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"]"
+              "source": "[YOU SAY: \"sechs, sieben\" — both start with the buzz]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Mitternacht / mid-night\" — the same Germanic compound",
+              "instruction": "\"sieben\" then \"seven\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Mitternacht / mid-night\" — the same Germanic compound]"
+              "source": "[YOU SAY: \"sieben\" then \"seven\"]"
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -293,7 +274,152 @@
             },
             {
               "kind": "speech",
-              "text": "What do Mittag and Mitternacht literally mean, and from what native word? (\"Mid-day\" / \"mid-night\"; from Mitte \"middle\" + Tag/Nacht.) How does this differ from Uhr? (Uhr is a Latin loan; these are native compounds.) What English word is Mitternacht the twin of? (Midnight.) Next chapter builds on this toward months and family."
+              "text": "What is \"seven\"? (Sieben, said ZEE-ben.) What does a German s do in front of a vowel? (It buzzes, like z.) And at the end of a word? (It hisses.) Which English word is sieben? (Seven — the v softened to a b.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C06-acht",
+      "sequence": 221,
+      "title": "acht — \"eight,\" on a rasp you already have",
+      "headword": "acht",
+      "romanization": "acht",
+      "gloss": "eight — the rasp you already own, on a number you already know",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a57c366dfe1c903d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new in the mouth for this one. You met its sound on the very first Gute Nacht."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: acht",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "acht — \"eight.\" Said akht."
+            },
+            {
+              "kind": "speech",
+              "text": "The ch is the raspy back-of-the-throat sound from Nacht and machen: a clean open ah, then the scrape. One syllable, no vowel after it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "acht is English eight — and the pairing is easier to believe once you notice that English still writes the missing sound."
+            },
+            {
+              "kind": "speech",
+              "text": "Eight has a gh in it that nobody says. It is not decoration. English used to make a real throat scrape there, exactly the one German still makes, and the spelling is the fossil left behind after the sound fell out."
+            },
+            {
+              "kind": "speech",
+              "text": "So German -cht- answers English -ght-, and it does it every single time:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "acht means eight.",
+                "Nacht means night.",
+                "Licht means light.",
+                "recht means right."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Nacht and night you already own. The pattern is worth more than the number: whenever you see a German word with cht, try the English one with ght."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"acht\" — akht, open ah then the scrape",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"acht\" — *akht*, open *ah* then the scrape]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Nacht\" then \"acht\" — the same ending twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Nacht\" then \"acht\" — the same ending twice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pairs — \"acht/eight\", \"Nacht/night\", \"Licht/light\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pairs — \"acht/eight\", \"Nacht/night\", \"Licht/light\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"eight\"? (Acht.) What does German -cht- answer in English? (-ght-.) Why does eight have a silent gh? (English used to say the same scrape German still says.) Give another pair. (Nacht/night.)"
             }
           ]
         }

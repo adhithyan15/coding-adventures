@@ -2,20 +2,20 @@
   "lesson": {
     "id": "GE-C06-zahlen-6-10",
     "language": "german",
-    "chapter": 6,
-    "sequence": 220,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "chapter": 9,
+    "sequence": 224,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:79b90ac4f55c4080"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5870c482be619d5"
   },
   "findings": []
 }

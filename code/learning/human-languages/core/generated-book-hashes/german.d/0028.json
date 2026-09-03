@@ -1,9 +1,9 @@
 {
   "language": "german",
   "chapter": 28,
-  "sourceHash": "fnv1a64:6a3bac54c033a4a3",
+  "sourceHash": "fnv1a64:783a5a14ee9d66c2",
   "lessonIds": [
-    "GE-C23-gruen-gelb"
+    "GE-C20-entschuldigung"
   ],
-  "tex": "german/book/chapters/ch28-green-and-yellow.tex"
+  "tex": "german/book/chapters/ch28-sorry.tex"
 }

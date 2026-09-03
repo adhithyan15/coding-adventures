@@ -1,17 +1,21 @@
 {
   "language": "german",
   "chapter": 22,
-  "sourceHash": "fnv1a64:766efad1d6ce6e2d",
+  "sourceHash": "fnv1a64:609ea4e4f73d8445",
   "lessonIds": [
-    "GE-C17-kopf",
-    "GE-C17-kopf-haupt",
-    "GE-C17-hand"
+    "GE-C14-alt",
+    "GE-C14-jahr",
+    "GE-C14-jahr-alt",
+    "GE-C14-wie-alt-bist-du",
+    "GE-C14-alter",
+    "GE-C14-alter-sein-haben",
+    "GE-C14-alter-practice"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "german/narration/ch22.txt",
   "json": "german/narration/ch22.json",
-  "textHash": "fnv1a64:186bdb40b3a976d7",
-  "jsonHash": "fnv1a64:231819ab817c48cc",
+  "textHash": "fnv1a64:f239bf1a486147a5",
+  "jsonHash": "fnv1a64:836bc11c903bd81d",
   "findings": []
 }

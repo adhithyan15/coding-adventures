@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C14-du-hast
 spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
 sequence: 297
-chapter: 14
+chapter: 17
 type: phrase
 headword: du hast
 gloss: you have — the first form where the b falls out and the rule stops working

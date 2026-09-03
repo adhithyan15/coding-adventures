@@ -1,12 +1,12 @@
 {
   "language": "german",
   "chapter": 32,
-  "sourceHash": "fnv1a64:9a5880a4119c050e",
+  "sourceHash": "fnv1a64:9b69ea08f389d135",
   "lessonIds": [
-    "GE-C27-gehen",
-    "GE-C27-laufen",
-    "GE-C27-oeffnen",
-    "GE-C27-schliessen"
+    "GE-C24-denken",
+    "GE-C24-verstehen",
+    "GE-C24-lesen",
+    "GE-C24-schreiben"
   ],
-  "tex": "german/book/chapters/ch32-moving-verbs.tex"
+  "tex": "german/book/chapters/ch32-mind-verbs.tex"
 }

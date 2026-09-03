@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C15-partizip
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 315
-chapter: 15
+chapter: 18
 type: grammar
 headword: ge-…-t
 gloss: the weak past participle — a circumfix, wrapped round the stem at both ends rather than stuck on one
