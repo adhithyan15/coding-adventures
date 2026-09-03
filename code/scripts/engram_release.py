@@ -213,6 +213,68 @@ def archive_web(version: str, commit: str, source: Path, output_dir: Path) -> Pa
     return output
 
 
+def archive_compose(
+    version: str, platform: str, source: Path, output_dir: Path, commit: str
+) -> Path:
+    """Archive a Compose Desktop distribution for publication.
+
+    Python's `zipfile` rather than the `zip` command, because `zip` does not
+    exist in Git Bash on the Windows runner -- the Compose app built there
+    perfectly and then failed to package, which is a silly way to lose a
+    platform. Python is already set up in every one of these jobs, so this is
+    the one tool that behaves identically on all three.
+
+    `ZipFile.write` carries each file's mode into `external_attr`, so the
+    executable bits in the distribution survive the round trip. An archive that
+    loses them extracts to an app that cannot be launched.
+    """
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}", commit)
+    if not source.is_dir():
+        raise ValueError(f"Compose distribution does not exist: {source}")
+
+    # Same reasoning as the wasm check in `archive_web`, and the same bug this
+    # repository has already shipped once: Gradle's `createDistributable`
+    # succeeds whether or not the engine was copied in beside the jar, so a
+    # distribution missing `engram_capi` is a *runtime* failure behind a green
+    # build -- an app that launches and then cannot open a deck.
+    #
+    # Checked here rather than in `build-native.sh` because the shell script's
+    # symbol assertion runs `nm`, which does not exist on the Windows runner
+    # and is skipped there. This path runs identically on all three.
+    engine = next(
+        (
+            path
+            for path in source.rglob("*")
+            if path.is_file() and path.stem.removeprefix("lib") == "engram_capi"
+        ),
+        None,
+    )
+    if engine is None:
+        raise ValueError(
+            f"Compose distribution has no engram_capi engine: {source}"
+        )
+    if engine.stat().st_size == 0:
+        raise ValueError(f"engram_capi engine is empty: {engine}")
+
+    name = compose_artifact_name(version, platform)
+    output = output_dir / name
+    _zip_tree(source, output, f"engram-compose-{platform}-v{version}", commit)
+    return output
+
+
+def _cmd_archive_compose(args: argparse.Namespace) -> int:
+    output = archive_compose(
+        args.version,
+        args.platform,
+        Path(args.source),
+        Path(args.output_dir),
+        args.commit,
+    )
+    print(output)
+    return 0
+
+
 def _cmd_validate(args: argparse.Namespace) -> int:
     validate_identifiers(args.version, args.tag, args.commit)
     print(f"version={args.version}")
@@ -263,6 +325,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     names.add_argument("--version", required=True)
     names.set_defaults(handler=_cmd_artifact_names)
+
+    archive_compose_cmd = subcommands.add_parser(
+        "archive-compose", help="Archive a Compose distribution for publication"
+    )
+    archive_compose_cmd.add_argument("--version", required=True)
+    archive_compose_cmd.add_argument("--platform", required=True)
+    archive_compose_cmd.add_argument("--source", required=True)
+    archive_compose_cmd.add_argument("--output-dir", required=True)
+    archive_compose_cmd.add_argument("--commit", required=True)
+    archive_compose_cmd.set_defaults(handler=_cmd_archive_compose)
 
     compose = subcommands.add_parser(
         "compose-name", help="The published name for one platform's Compose build"

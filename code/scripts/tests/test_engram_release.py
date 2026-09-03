@@ -272,6 +272,151 @@ class ArchiveWebTests(unittest.TestCase):
                 self.assertEqual(one.namelist(), two.namelist())
 
 
+def _write_compose_dist(root: Path) -> Path:
+    """A stand-in for what `createDistributable` leaves behind."""
+
+    dist = root / "app" / "Engram.app" / "Contents"
+    (dist / "app").mkdir(parents=True)
+    (dist / "MacOS").mkdir(parents=True)
+    (dist / "app" / "engram-host.jar").write_bytes(b"PK\x03\x04stub")
+    (dist / "app" / "libengram_capi.dylib").write_bytes(b"\xcf\xfa\xed\xfe")
+    launcher = dist / "MacOS" / "Engram"
+    launcher.write_text("#!/bin/sh\nexec java -jar app/engram-host.jar\n")
+    launcher.chmod(0o755)
+    return root / "app"
+
+
+class ArchiveComposeTests(unittest.TestCase):
+    def test_archives_a_distribution_under_a_named_root(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            output = engram_release.archive_compose(
+                "0.4.0", "macos", dist, root / "out", COMMIT
+            )
+
+            self.assertEqual(output.name, "engram-compose-macos-v0.4.0.zip")
+            with zipfile.ZipFile(output) as archive:
+                names = archive.namelist()
+                self.assertIn(
+                    "engram-compose-macos-v0.4.0/Engram.app/Contents/app/"
+                    "libengram_capi.dylib",
+                    names,
+                )
+                self.assertEqual(
+                    archive.read(
+                        "engram-compose-macos-v0.4.0/SOURCE_COMMIT"
+                    ).decode(),
+                    f"{COMMIT}\n",
+                )
+
+    def test_the_launcher_is_still_executable_after_a_round_trip(self) -> None:
+        # The reason this uses `zipfile` rather than a shell command: whatever
+        # archives the app has to carry the executable bits, or it extracts to
+        # a bundle that cannot be launched -- a broken download that every
+        # structural check passes. `ZipFile.write` puts the mode in
+        # `external_attr`; this is the test that says so.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            output = engram_release.archive_compose(
+                "0.4.0", "macos", dist, root / "out", COMMIT
+            )
+            member = "engram-compose-macos-v0.4.0/Engram.app/Contents/MacOS/Engram"
+            with zipfile.ZipFile(output) as archive:
+                mode = archive.getinfo(member).external_attr >> 16
+            self.assertTrue(mode & 0o111, f"launcher lost its executable bit: {mode:o}")
+
+    def test_refuses_a_distribution_with_no_engine(self) -> None:
+        # The bug this repository has already shipped once in another form:
+        # Gradle's `createDistributable` succeeds whether or not the engine was
+        # copied in, so the app launches and then cannot open a deck. The shell
+        # script's symbol check runs `nm`, which is skipped on Windows -- this
+        # is the check that covers every platform.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            next(dist.rglob("libengram_capi.dylib")).unlink()
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("engram_capi", str(caught.exception))
+
+    def test_refuses_an_empty_engine(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            next(dist.rglob("libengram_capi.dylib")).write_bytes(b"")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", COMMIT
+                )
+            self.assertIn("empty", str(caught.exception))
+
+    def test_accepts_the_engine_under_each_platform_name(self) -> None:
+        # The filename differs per platform (`libengram_capi.so`,
+        # `libengram_capi.dylib`, `engram_capi.dll`), so a check written against
+        # one spelling would reject the other two -- turning a correct build
+        # into a failed release.
+        for filename in [
+            "libengram_capi.so",
+            "libengram_capi.dylib",
+            "engram_capi.dll",
+        ]:
+            with self.subTest(filename=filename):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    dist = _write_compose_dist(root)
+                    engine = next(dist.rglob("libengram_capi.dylib"))
+                    engine.rename(engine.with_name(filename))
+                    engram_release.archive_compose(
+                        "0.4.0", "macos", dist, root / "out", COMMIT
+                    )
+
+    def test_refuses_a_distribution_that_was_never_built(self) -> None:
+        # The failure this replaced was the opposite shape -- a packaging step
+        # that could not find its tool. A missing distribution should say so
+        # rather than produce an empty archive the publish job accepts.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_compose(
+                    "0.4.0", "macos", root / "nope", root / "out", COMMIT
+                )
+            self.assertIn("does not exist", str(caught.exception))
+
+    def test_refuses_an_unknown_platform_and_a_bad_commit(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            with self.assertRaises(ValueError):
+                engram_release.archive_compose(
+                    "0.4.0", "solaris", dist, root / "out", COMMIT
+                )
+            with self.assertRaises(ValueError):
+                engram_release.archive_compose(
+                    "0.4.0", "macos", dist, root / "out", "abc"
+                )
+
+    def test_every_platform_the_release_declares_can_be_archived(self) -> None:
+        # Windows is the point of this test: `zip` does not exist in Git Bash
+        # there, so the platform built and then failed to package. Nothing in
+        # this path is platform-specific any more, and this pins that.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            dist = _write_compose_dist(root)
+            for platform in engram_release.COMPOSE_TARGETS:
+                with self.subTest(platform=platform):
+                    output = engram_release.archive_compose(
+                        "0.4.0", platform, dist, root / platform, COMMIT
+                    )
+                    self.assertTrue(output.is_file())
+                    self.assertIn(
+                        output.name, engram_release.artifact_names("0.4.0")
+                    )
+
+
 class CommandLineTests(unittest.TestCase):
     def test_validate_succeeds(self) -> None:
         self.assertEqual(
