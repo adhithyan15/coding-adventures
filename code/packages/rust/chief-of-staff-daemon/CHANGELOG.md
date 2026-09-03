@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Compose the model tool surface through `CompositeModelToolDispatcher`, with
+  the smart-home dispatcher as one source rather than the whole surface. No
+  behaviour change today -- it is a list of one -- but adding the second source
+  is now an addition rather than a rewrite of the daemon's composition.
+
 - Compose the config-backed exact privilege resolver and Trust Checker into the
   production daemon. Fully declared Tier 0 channel and pipeline mutations are
   executable; missing mappings and interactive tiers remain fail-closed.

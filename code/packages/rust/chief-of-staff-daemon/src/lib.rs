@@ -27,8 +27,9 @@ use chief_of_staff_host_control_protocol::{
     DataPlaneFailure, ModelToolCall, ModelToolDefinition, ModelToolResult,
 };
 use chief_of_staff_host_data_plane::{
-    AuthorityBackedHostDataPlaneService, DurableHostDataPlaneDispatcher, HostDataPlaneDispatcher,
-    HostDataPlaneService, ModelToolDispatcher, UnavailableHostDataPlaneService,
+    AuthorityBackedHostDataPlaneService, CompositeModelToolDispatcher,
+    DurableHostDataPlaneDispatcher, HostDataPlaneDispatcher, HostDataPlaneService,
+    ModelToolDispatcher, UnavailableHostDataPlaneService,
 };
 use chief_of_staff_orchestrator_core::OrchestratorCore;
 use chief_of_staff_process_supervisor::{
@@ -911,15 +912,21 @@ fn compose_data_plane_service_with_controller(
         controller,
         SmartHomeAgentId::trusted("chief-daemon-model-tools"),
     );
+    // Smart home is now ONE source behind a composite, not the tool surface.
+    // The service takes a single `ModelToolDispatcher`, which is what made it
+    // the whole surface: there was no way to add a second source without
+    // replacing the first. Composing it as a list of one changes no behaviour
+    // today and makes adding the second an addition rather than a rewrite.
+    let model_tools: Vec<Arc<dyn ModelToolDispatcher>> = vec![Arc::new(D18dSmartHomeModelTools {
+        bridge,
+        clock: unix_clock,
+    })];
     Ok(Arc::new(
         AuthorityBackedHostDataPlaneService::with_model_tools(
             backend,
             Arc::new(channel_keys),
             Arc::new(models),
-            Arc::new(D18dSmartHomeModelTools {
-                bridge,
-                clock: unix_clock,
-            }),
+            Arc::new(CompositeModelToolDispatcher::new(model_tools)),
             metadata_source,
         ),
     ))

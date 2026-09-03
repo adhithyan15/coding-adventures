@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Add `CompositeModelToolDispatcher`, several `ModelToolDispatcher`s behind one,
+  routed by tool name. The service composed exactly one dispatcher, which is
+  what made smart home *the* model tool surface rather than one agent among
+  several: there was no way to add a second source without replacing the first.
+- Two sources claiming one tool name is an error on both the offer and the
+  execute path, not a first-match win. Silently picking one would mean the tool
+  a model called and the tool that ran could differ by nothing but construction
+  order.
+
 - Expose the exact binding-aware installed D18D catalog through a separately
   authorized data-plane operation while preserving exact-catalog enforcement
   on every later tool completion.

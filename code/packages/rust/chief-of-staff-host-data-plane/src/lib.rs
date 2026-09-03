@@ -100,6 +100,82 @@ pub trait ModelToolDispatcher: Send + Sync {
     ) -> Result<ModelToolResult, DataPlaneFailure>;
 }
 
+/// Several dispatchers behind one, routed by tool name.
+///
+/// The daemon composed exactly one `ModelToolDispatcher`, and it was the
+/// hardcoded smart-home one. That is what made smart home *the* tool surface
+/// rather than one agent among several: there was no way to add a second
+/// source without replacing the first.
+///
+/// Routing is by tool name against each source's own `definitions`, so a
+/// source owns exactly the tools it declares and nothing else.
+pub struct CompositeModelToolDispatcher {
+    sources: Vec<Arc<dyn ModelToolDispatcher>>,
+}
+
+impl CompositeModelToolDispatcher {
+    /// Build a composite over `sources`, in order.
+    pub fn new(sources: Vec<Arc<dyn ModelToolDispatcher>>) -> Self {
+        Self { sources }
+    }
+
+    /// Resolve the single source owning `name` for this binding.
+    ///
+    /// Ambiguity is an error rather than a first-match win. Two sources
+    /// offering the same tool name is a composition mistake, and silently
+    /// picking one would mean the tool a model called and the tool that ran
+    /// could differ by nothing more than construction order.
+    fn owner(
+        &self,
+        binding: &HostPipelineBinding,
+        name: &str,
+    ) -> Result<&Arc<dyn ModelToolDispatcher>, DataPlaneFailure> {
+        let mut found = None;
+        for source in &self.sources {
+            if source
+                .definitions(binding)?
+                .iter()
+                .any(|definition| definition.name == name)
+            {
+                if found.is_some() {
+                    return Err(DataPlaneFailure::InvalidRequest);
+                }
+                found = Some(source);
+            }
+        }
+        found.ok_or(DataPlaneFailure::Unauthorized)
+    }
+}
+
+impl ModelToolDispatcher for CompositeModelToolDispatcher {
+    fn definitions(
+        &self,
+        binding: &HostPipelineBinding,
+    ) -> Result<Vec<ModelToolDefinition>, DataPlaneFailure> {
+        let mut definitions = Vec::new();
+        let mut seen = std::collections::BTreeSet::new();
+        for source in &self.sources {
+            for definition in source.definitions(binding)? {
+                // A duplicate name is refused here too, so the offered set a
+                // model sees can never contain two tools it cannot tell apart.
+                if !seen.insert(definition.name.clone()) {
+                    return Err(DataPlaneFailure::InvalidRequest);
+                }
+                definitions.push(definition);
+            }
+        }
+        Ok(definitions)
+    }
+
+    fn execute(
+        &self,
+        binding: &HostPipelineBinding,
+        call: &ModelToolCall,
+    ) -> Result<ModelToolResult, DataPlaneFailure> {
+        self.owner(binding, &call.name)?.execute(binding, call)
+    }
+}
+
 /// Fail-closed tool authority used when the daemon installed no D18D catalog.
 #[derive(Default)]
 pub struct UnavailableModelToolDispatcher;
@@ -1051,6 +1127,178 @@ fn binding_failure(error: &PipelineBindingError) -> DataPlaneFailure {
 
 #[cfg(test)]
 mod tests {
+
+    struct FixedTools {
+        names: Vec<&'static str>,
+        answer: &'static str,
+    }
+
+    impl ModelToolDispatcher for FixedTools {
+        fn definitions(
+            &self,
+            _binding: &HostPipelineBinding,
+        ) -> Result<Vec<ModelToolDefinition>, DataPlaneFailure> {
+            Ok(self
+                .names
+                .iter()
+                .map(|name| ModelToolDefinition {
+                    name: (*name).to_string(),
+                    description: "fixture".to_string(),
+                    input_schema: serde_json::json!({"type": "object"}),
+                })
+                .collect())
+        }
+
+        fn execute(
+            &self,
+            _binding: &HostPipelineBinding,
+            call: &ModelToolCall,
+        ) -> Result<ModelToolResult, DataPlaneFailure> {
+            Ok(ModelToolResult {
+                call: call.clone(),
+                output: serde_json::json!({"source": self.answer}),
+                is_error: false,
+            })
+        }
+    }
+
+    fn composite_binding() -> HostPipelineBinding {
+        // The composite never reads the binding -- it routes on tool name --
+        // but the trait takes one, so build a real fixture rather than
+        // widening the trait for a test.
+        let backend = InMemoryStorageBackend::new();
+        install_binding(&backend)
+    }
+
+    #[test]
+    fn a_composite_offers_every_sources_tools() {
+        // The daemon could hold exactly one dispatcher, which is what made
+        // smart home THE tool surface rather than one agent among several.
+        let composite = CompositeModelToolDispatcher::new(vec![
+            Arc::new(FixedTools {
+                names: vec!["smart_home.get_state"],
+                answer: "home",
+            }),
+            Arc::new(FixedTools {
+                names: vec!["notes.append", "notes.read"],
+                answer: "notes",
+            }),
+        ]);
+        let names = composite
+            .definitions(&composite_binding())
+            .expect("definitions compose")
+            .into_iter()
+            .map(|definition| definition.name)
+            .collect::<Vec<_>>();
+        assert_eq!(
+            names,
+            vec!["smart_home.get_state", "notes.append", "notes.read"]
+        );
+    }
+
+    #[test]
+    fn a_call_routes_to_the_source_that_declared_it() {
+        let composite = CompositeModelToolDispatcher::new(vec![
+            Arc::new(FixedTools {
+                names: vec!["smart_home.get_state"],
+                answer: "home",
+            }),
+            Arc::new(FixedTools {
+                names: vec!["notes.append"],
+                answer: "notes",
+            }),
+        ]);
+        let binding = composite_binding();
+        for (tool, expected) in [("smart_home.get_state", "home"), ("notes.append", "notes")] {
+            let result = composite
+                .execute(
+                    &binding,
+                    &ModelToolCall {
+                        call_id: "call-1".to_string(),
+                        name: tool.to_string(),
+                        arguments: serde_json::json!({}),
+                    },
+                )
+                .expect("a declared tool routes");
+            assert_eq!(
+                result.output,
+                serde_json::json!({"source": expected}),
+                "{tool} routed to the wrong source"
+            );
+        }
+    }
+
+    #[test]
+    fn a_tool_no_source_declared_is_unauthorized() {
+        let composite = CompositeModelToolDispatcher::new(vec![Arc::new(FixedTools {
+            names: vec!["notes.append"],
+            answer: "notes",
+        })]);
+        assert!(matches!(
+            composite.execute(
+                &composite_binding(),
+                &ModelToolCall {
+                    call_id: "call-1".to_string(),
+                    name: "smart_home.get_state".to_string(),
+                    arguments: serde_json::json!({}),
+                },
+            ),
+            Err(DataPlaneFailure::Unauthorized)
+        ));
+    }
+
+    #[test]
+    fn two_sources_claiming_one_tool_is_an_error_not_a_race() {
+        // First-match-wins would mean the tool a model called and the tool
+        // that ran could differ by nothing but construction order. Refused on
+        // both the offer and the execute path.
+        let composite = CompositeModelToolDispatcher::new(vec![
+            Arc::new(FixedTools {
+                names: vec!["shared.tool"],
+                answer: "first",
+            }),
+            Arc::new(FixedTools {
+                names: vec!["shared.tool"],
+                answer: "second",
+            }),
+        ]);
+        let binding = composite_binding();
+        assert!(matches!(
+            composite.definitions(&binding),
+            Err(DataPlaneFailure::InvalidRequest)
+        ));
+        assert!(matches!(
+            composite.execute(
+                &binding,
+                &ModelToolCall {
+                    call_id: "call-1".to_string(),
+                    name: "shared.tool".to_string(),
+                    arguments: serde_json::json!({}),
+                },
+            ),
+            Err(DataPlaneFailure::InvalidRequest)
+        ));
+    }
+
+    #[test]
+    fn an_empty_composite_offers_nothing_and_authorizes_nothing() {
+        let composite = CompositeModelToolDispatcher::new(Vec::new());
+        assert!(composite
+            .definitions(&composite_binding())
+            .expect("an empty composite still answers")
+            .is_empty());
+        assert!(matches!(
+            composite.execute(
+                &composite_binding(),
+                &ModelToolCall {
+                    call_id: "call-1".to_string(),
+                    name: "anything".to_string(),
+                    arguments: serde_json::json!({}),
+                },
+            ),
+            Err(DataPlaneFailure::Unauthorized)
+        ));
+    }
     use super::*;
     use chief_of_staff_channel_crypto::{
         ChannelId, ChannelMasterKey, KeyEpoch, OriginatorSigningKey, ReceiverKeyPair,
