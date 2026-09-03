@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Add `OrchestratorProfile::from_manifests` and
+  `SupervisedOrchestratorRuntime::spawn_deno_from_manifests`, making the
+  supervised path manifest-driven. `spawn_deno_verified` takes an
+  `OrchestratorProfile`, and the only way to build one was `from_json` --
+  operator configuration that can disagree with the signed bytes governing the
+  code it launches. Every check an agent then passed was decided by a file
+  nobody signed.
+- One host per manifest, each via `HostProfile::from_manifest`, so tier ceiling,
+  allowed tools and tool capabilities all come from inside the integrity
+  boundary. `validate` already refuses two hosts claiming the same tool, which
+  matters more here: two agents independently declaring `artifact.write` is an
+  ordinary authoring mistake and must not resolve to whichever host was seen
+  last.
+
 - Enforce D18S S-I7 in `HostProfileRuntime::check_registration`: a tool whose
   schema names another agent cannot be registered into an agent host. New
   `HostRuntimeError::ToolNamesAnotherAgent` names the tool and the offending
