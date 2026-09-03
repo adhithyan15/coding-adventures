@@ -1,11 +1,11 @@
 //! End-to-end test for the music FACTS library
 //! (`adj-facts-stdlib/music/solfege-alt-name.adj`) driven through the
 //! built CLI: a native `table` naming the alternate spelling/name the
-//! SAME Wikipedia "Solfège" source span already states for two of the
-//! seven solfège syllables -- a sibling to the already-shipped
-//! `solfege.adj` (which only carries each syllable's scale degree),
-//! decoding the alternate-name parentheticals already sitting unused
-//! inside that table's own `source` field. Resolves binding-query recall
+//! Wikipedia "Solfège" sentence `solfege.adj` cites already states for two
+//! of the seven solfège syllables -- a sibling to the already-shipped
+//! `solfege.adj` (which only carries each syllable's scale degree, and
+//! which carried this sentence as its own `source` until installment 4c
+//! moved the degree mapping into its envelope). Resolves binding-query recall
 //! (both directions) with the source's citation, and abstains on a
 //! syllable (mi) the cited span gives no alternate for -- 0 model calls.
 
@@ -99,5 +99,31 @@ fn solfege_alt_name_abstains_honestly_on_mi() {
     assert!(
         out.contains("\"abstained\":true"),
         "mi's own cited span states no alternate name -- honest abstention: {out}"
+    );
+}
+
+const SOLFEGE_ALT_NAME_PIN: &str = r#""bindings":{"Alt":"doh"},"citations":[{"source":"The tonic sol-fa method popularised the seven syllables commonly used in English-speaking countries: do (spelt doh in tonic sol-fa),[2] re, mi, fa, so(l), la, and ti (or si) (see below).","locator":"https://en.wikipedia.org/wiki/Solf%C3%A8ge","trust":"consensus""#;
+
+#[test]
+fn solfege_alt_name_citation_keeps_the_pages_footnote_marker() {
+    let dir = scratch("reground");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"solfege-alt-name.adj\"\n? solfege_alt_name(do, $Alt)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Both libraries SHIPPED the same 170-character sentence, each carrying
+    // the same two defects: a dropped "[2]" and a truncation before
+    // " (see below).". Both restored; as repaired the sentence is 186
+    // characters. music/solfege now carries it as a `cites`, not a `source`
+    // -- this library keeps it as its envelope, because its rows (do -> doh,
+    // ti -> si) ARE stated by it.
+    assert!(
+        out.contains(SOLFEGE_ALT_NAME_PIN),
+        "the solfege-alt-name citation matches its page: {out}"
     );
 }

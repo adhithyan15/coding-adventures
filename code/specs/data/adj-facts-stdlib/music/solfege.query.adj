@@ -7,7 +7,13 @@
 % the `solfege_degree` rows and returns the degree (or the syllable, on a reverse
 % query) + the encyclopedia's source/locator/trust. Anything that is not one of
 % the seven diatonic syllables — a chromatic syllable, a random word — abstains
-% honestly: the engine never invents a degree it cannot cite.
+% honestly: the engine never invents a degree it cannot cite or disclose.
+%
+% READ `solfege.adj`'s Provenance note before reading these answers. The cited
+% spans state `do` = 1 and `re` = 2 outright and then say "etc."; the other five
+% rows are a COMPOSITION of that with the syllable order the corroboration
+% states, and their citations place the syllable in that order without assigning
+% it a degree. The composed queries below are marked as such.
 %
 % Run (from this directory so the relative import resolves):
 %     ../../../../packages/rust/target/debug/adj-lang-cli solfege.query.adj
@@ -16,6 +22,7 @@
 import "solfege.adj"
 
 ? solfege_degree(do, $N)       % expect 1   (do is the tonic, the first degree)
-? solfege_degree(sol, $N)      % expect 5   (sol is the fifth — the dominant)
-? solfege_degree($S, 3)        % expect mi  (reverse: which syllable is the third?)
+? solfege_degree(sol, $N)      % expect 5   COMPOSED row — the citations place
+                               %             sol in the order, never call it 5th
+? solfege_degree($S, 3)        % expect mi  COMPOSED row, read backward
 ? solfege_degree(di, $N)       % expect abstain — di is a chromatic syllable, not a diatonic row
