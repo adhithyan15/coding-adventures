@@ -4,9 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
-- Add `tools_naming_another_agent` and `v1_agent_tool_catalog`, enforcing D18S
-  S-I7: in V1 an agent's view contains no agent identity and the agent cannot
-  supply one. The check walks nested objects and arrays, because a peer
+- Add `tools_naming_another_agent`, `tools_with_unverifiable_schema` and
+  `v1_agent_tool_catalog`, making D18S S-I7 checkable: in V1 an agent's view
+  contains no agent identity and the agent cannot supply one. These are
+  conformance checks, not a runtime gate -- the enforcement points that decide
+  a real agent's surface are the signed manifest and host registration, and
+  wiring them is tracked separately. The check walks nested objects and arrays, because a peer
   identity in `delivery.recipients[].agent_id` authorizes as much as one at the
   top level and is easier to miss in review.
 - Exclude `vault.request_direct` from the V1 agent surface: it requires a
@@ -15,6 +18,20 @@ All notable changes to this package will be documented in this file.
   supervisor-side path, where the consumer comes from wiring.
 - Report violations rather than silently filtering them, so a newly added tool
   taking a peer identity fails a test instead of quietly joining the surface.
+- Report `JsonSchema::Any` and `allow_unknown_fields` positions separately as
+  *unverifiable* rather than clean. Eleven built-ins declare one, including
+  `job.install`'s `spec: Any`, which accepts `{"run_as_agent_id": "peer-7"}`
+  and reports no violation. S-I7's "the agent cannot supply one" is established
+  only for tools absent from that list, and conflating a hole with a pass would
+  have let "no violations" read as "the rule holds".
+- Walk output schemas too. Checking only inputs establishes "cannot supply one"
+  while leaving "the view contains none" unchecked; a tool returning
+  `{agent_id, status}` puts a peer in the agent's view just as surely.
+- Match on normalized names covering the identity synonyms this repo actually
+  uses -- `host_id` and `host_name` (the host name IS the agent id),
+  `principal_id`, `originator_id`, `recipient` -- and normalize case and
+  separators, since `validate_schema_key` permits `agentId` and nothing
+  enforces snake_case.
 
 ### Security
 

@@ -96457,6 +96457,43 @@ fn event_delivery_output_schema() -> JsonSchema {
 
 #[cfg(test)]
 mod tests {
+
+    #[test]
+    fn the_smart_home_catalog_is_checked_against_s_i7_too() {
+        // The S-I7 gate in `chief-of-staff-tool-api` was written against
+        // `builtin_tool_catalog`, and this is the catalog that actually
+        // reaches a model. Checking one and not the other would make the rule
+        // true of the surface nobody uses.
+        //
+        // `principal_id` IS an agent identity here -- this crate declares
+        // `default_principal_id: AgentId` and builds it with
+        // `AgentId::trusted(context.agent_id)` -- so these tools let a caller
+        // name a peer and read its authorization state. None is in
+        // `PRODUCTION_SMART_HOME_MODEL_TOOLS` today; they are in the catalog
+        // `register_all` offers, so this pins the exception rather than
+        // discovering it later.
+        let definitions = smart_home_tool_definitions();
+        let named = chief_of_staff_tool_api::tools_naming_another_agent(&definitions)
+            .into_iter()
+            .map(|(tool_id, _)| tool_id)
+            .collect::<Vec<_>>();
+        assert_eq!(
+            named,
+            vec![
+                "smart_home.get_authorization_gap_audit_summary",
+                "smart_home.get_authorization_summary",
+                "smart_home.get_capability_grant_summary",
+                "smart_home.get_command_risk_audit_summary",
+                "smart_home.get_platform_access_review_summary",
+                "smart_home.list_authorization_decisions",
+                "smart_home.list_authorization_gap_audit",
+                "smart_home.list_capability_grants",
+                "smart_home.list_command_risk_audit",
+                "smart_home.list_platform_access_review",
+            ],
+            "a smart-home tool gained or lost a peer identity in its schema"
+        );
+    }
     use super::*;
     use chief_of_staff_tool_api::{
         RequestedBy, ToolCatalogExport, ToolExecutionJournal, ToolExecutionTrace,

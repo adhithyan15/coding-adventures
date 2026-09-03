@@ -3322,6 +3322,34 @@ fn same_file(left: &Metadata, right: &Metadata) -> bool {
 
 #[cfg(test)]
 mod tests {
+
+    #[test]
+    fn the_production_model_tool_surface_names_no_peer() {
+        // D18S S-I7 (V1): the agent's view contains no agent identity and the
+        // agent cannot supply one. `PRODUCTION_SMART_HOME_MODEL_TOOLS` is the
+        // list that actually reaches a model on the shipping path, so this is
+        // the one place the rule has to hold today.
+        //
+        // Ten tools in the wider smart-home catalog DO name a peer via
+        // `principal_id` -- the audit, access-review and capability-grant
+        // readers. None is in this list, and this test is what keeps one from
+        // being added without the S-I7 question being asked.
+        let definitions = PRODUCTION_SMART_HOME_MODEL_TOOLS
+            .iter()
+            .filter_map(|tool_id| {
+                chief_of_staff_smart_home_tools::smart_home_tool_definition(tool_id)
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(
+            definitions.len(),
+            PRODUCTION_SMART_HOME_MODEL_TOOLS.len(),
+            "every production tool id must resolve to a definition"
+        );
+        assert!(
+            chief_of_staff_tool_api::tools_naming_another_agent(&definitions).is_empty(),
+            "a production model tool names another agent"
+        );
+    }
     use super::*;
     use chief_of_staff_channel_endpoints::AgentId as ChannelAgentId;
     use chief_of_staff_host_control_protocol::{LaunchBindings, LevelOneModelBinding};
