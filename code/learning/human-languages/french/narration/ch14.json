@@ -2,203 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 14,
-  "title": "To Have, and How Old You Are",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:34537d5a86a25237",
+  "title": "The Welded Teens",
+  "drivablePrefix": 9,
+  "sourceHash": "fnv1a64:fd17c8353e5b5faa",
   "lessons": [
     {
-      "id": "FR-C14-avoir",
-      "sequence": 285,
-      "title": "avoir — \"to have\"",
-      "headword": "avoir",
-      "romanization": "avoir",
-      "gloss": "to have — the most worn-down verb in French, and a root you already met",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:39141d6140d500e2",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The verb French leans on hardest. It's irregular, it's everywhere, and — you have already met its root without knowing it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The forms",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "j'ai, nous avons, blank.",
-                "tu as, vous avez, blank.",
-                "il/elle a, ils/elles ont, blank."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say the singular column: ai, as, a — three forms, and they all sound the same. The written endings differ; your ear can't tell them apart. Only the pronoun tells you who."
-            },
-            {
-              "kind": "speech",
-              "text": "Note j'ai, not je ai: before a vowel, je loses its e. That's the elision you already do in l'eau (Ch. 11)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The root you already own",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "avoir from Latin habēre. And among your first verbs you learned habiter (\"to live somewhere\") from habitāre — which is just habēre run through a \"keep doing it\" pattern: to keep having a place. Same root, both verbs."
-            },
-            {
-              "kind": "speech",
-              "text": "The family in English is large because English borrowed it whole:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English word",
-                "inside it"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "English word: habit. inside it: what you have regularly.",
-                "English word: inhabit. inside it: to have a place — = habiter.",
-                "English word: exhibit. inside it: to hold out.",
-                "English word: prohibit. inside it: to hold back."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "How far it wore down",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin habeō (\"I have\") becomes French j'ai. Four syllables of Latin reduced to a single vowel sound. French does this more than any of its sisters — compare Italian ho, Spanish he, and the aqua becomes eau behind the word for water."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"j'ai, tu as, il a, nous avons, vous avez, ils ont\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'ai, tu as, il a, nous avons, vous avez, ils ont\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three that sound alike — \"ai, as, a\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three that sound alike — \"ai · as · a\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"J'ai un frère\" (\"I have a brother\") — Ch. 10's family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"J'ai un frère\" (\"I have a brother\") — Ch. 10's family]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root pair — \"avoir, habiter\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root pair — \"avoir · habiter\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the six forms of avoir. (J'ai, tu as, il a, nous avons, vous avez, ils ont.) Which three sound identical? (Ai, as, a.) What root is avoir from? (Latin habēre.) Which of your first verbs shares it? (Habiter from habitāre.) Why is it j'ai and not je ai? (Elision — je drops its e before a vowel.) Next: what French does with avoir that English would never do."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C14-age",
-      "sequence": 290,
-      "title": "j'ai vingt ans — having your years",
-      "headword": "j'ai vingt ans",
-      "romanization": "j'ai vingt ans",
-      "gloss": "age — French HAS its years, it doesn't BE them",
+      "id": "FR-C12-onze",
+      "sequence": 365,
+      "title": "onze — eleven",
+      "headword": "onze",
+      "romanization": "onze",
+      "gloss": "eleven — and not \"ten-one\", which is the whole surprise",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e029f4ff9d301dce",
+      "sourceHash": "fnv1a64:bc75381ff9dabcc0",
       "notice": null,
       "blocks": [
         {
@@ -214,78 +35,50 @@
             },
             {
               "kind": "speech",
-              "text": "Ask a French speaker their age and the answer uses avoir. Not \"I am twenty\" — \"I have twenty years.\" English can't do this; Spanish and Italian do exactly the same thing."
+              "text": "You can count to ten. The eleventh number is where you find out that French did not build its teens at all — it inherited them, already welded shut."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Quel âge as-tu? — \"What age do you have?\" J'ai vingt ans. — \"I have twenty years.\""
+              "text": "nasal-on — the on is a nasal vowel, the same one you have in bonjour."
             },
             {
               "kind": "speech",
-              "text": "Two things to notice:"
+              "text": "z-voiced — the z is buzzed, not hissed: your throat should vibrate."
             },
             {
               "kind": "speech",
-              "text": "The verb is avoir, never être. Je suis vingt ans is simply wrong."
-            },
-            {
-              "kind": "speech",
-              "text": "ans is compulsory. English drops it (\"I'm twenty\"); French cannot."
+              "text": "Together: onze = ONZ, one syllable."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "an from annus",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "an (\"year\") from Latin annus, which gives English annual, anniversary, annals, and per annum. You have already met its descendants: the month names came from the same calendar."
+              "text": "onze is Latin ūndecim — ūnus (\"one\") plus decem (\"ten\"), fused into one word before French existed."
             },
             {
               "kind": "speech",
-              "text": "Careful with the sound: an is nasal, and in vingt ans the silent t of vingt wakes up and links — vin-t-an. That's liaison, French's habit of reviving a dead consonant when a vowel follows."
+              "text": "Notice what French did not do. English says eleven, which is its own strange word; German says elf. French could have said dix-un, \"ten-one,\" and it does not. It took the Latin compound whole and wore it down: ūndecim becomes onze, four syllables into one."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth flagging now, because it will not last. French keeps this inherited style for exactly six numbers, and then abandons it in front of you."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Who else does it this way",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "\"I am 20\""
-              ],
-              "columns": 2,
-              "rowCount": 6,
-              "utterances": [
-                "language: French. \"I am 20\": j'ai vingt ans — have.",
-                "language: Spanish. \"I am 20\": tengo veinte años — have.",
-                "language: Italian. \"I am 20\": ho venti anni — have.",
-                "language: Portuguese. \"I am 20\": tenho vinte anos — have.",
-                "language: German. \"I am 20\": ich bin zwanzig Jahre alt — be.",
-                "language: English. \"I am 20\": I am twenty — be."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "A clean split: Romance has its years; Germanic is its years. Age as something you carry versus age as something you are."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -298,38 +91,1159 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Quel âge as-tu?\"",
+              "instruction": "\"onze\" — ONZ, the vowel through the nose, the z buzzed",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Quel âge as-tu ?\"]"
+              "source": "[YOU SAY: \"onze\" — *ONZ*, the vowel through the nose, the *z* buzzed]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"J'ai vingt ans\" — with the liaison, vin-t-an",
+              "instruction": "the count so far — \"huit, neuf, dix, onze\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"J'ai vingt ans\" — with the liaison, *vin-t-an*]"
+              "source": "[YOU SAY: the count so far — \"huit, neuf, dix, onze\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "your own age, using Ch. 12's numbers",
+              "instruction": "what is inside it — \"ūnus plus decem: one-ten\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: your own age, using Ch. 12's numbers]"
+              "source": "[YOU SAY: what is inside it — \"ūnus plus decem: one-ten\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say eleven? (onze, ONZ.) What two Latin words are fused inside it? (ūnus and decem — \"one\" and \"ten\".) Did French build this word out of dix and un? (No — it inherited ūndecim already joined.) Next: twelve, the same way."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C12-douze",
+      "sequence": 370,
+      "title": "douze — twelve",
+      "headword": "douze",
+      "romanization": "douze",
+      "gloss": "twelve — the second welded teen, and the one that shows the pattern",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99846eff2631759e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One welded number could be an accident. Two of them is a pattern, and this one lets you hear the join."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-ou — ou is a single pure oo, as in English food. Never two sounds."
+            },
+            {
+              "kind": "speech",
+              "text": "z-voiced — the same buzzed z as onze."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: douze = DOOZ, one syllable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "douze is Latin duodecim — duo (\"two\") plus decem (\"ten\")."
+            },
+            {
+              "kind": "speech",
+              "text": "And this time you can see both halves survive into the French. Say deux, then say douze, and listen to the front of each: deu-, dou-. That is the same digit, and it did not disappear — it was only worn down."
+            },
+            {
+              "kind": "speech",
+              "text": "The back half is doing the same thing. onze and douze both end in -ze, and both come from a Latin word ending in -decim. Two words, one shared ending, and a strong hint about where that ending came from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the split — \"French a ses ans; English is its years\"",
+              "instruction": "\"douze\" — DOOZ, the ou a single pure vowel",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the split — \"French **a** ses ans; English **is** its years\"]"
+              "source": "[YOU SAY: \"douze\" — *DOOZ*, the *ou* a single pure vowel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the digit surfacing — \"deux, douze\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the digit surfacing — \"deux, douze\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"onze, douze\"; hear the shared ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"onze, douze\"; hear the shared ending]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say twelve? (douze, DOOZ.) Which small number can you hear at the front of it? (deux.) What Latin word is it from? (duodecim.) What ending do onze and douze share? (-ze.) Next: what that -ze actually is."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C12-ze-decem",
+      "sequence": 375,
+      "title": "-ze — the ten you keep meeting",
+      "headword": "-ze",
+      "romanization": "-ze",
+      "gloss": "the shared ending — one Latin \"ten\" wearing three different disguises",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fcd0e2ebe9379f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Onze and douze share an ending. Before you learn four more words that also share it, it is worth two minutes to find out what it is — because you have already met it twice, wearing other clothes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The -ze on the end of onze and douze is Latin decem, \"ten.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That is all it is. ūn-decim becomes on-ze. duo-decim becomes dou-ze. The Latin -decim has been ground down to a single buzzed consonant and a silent vowel, but it is still the word ten, still sitting in the back half of the number, still telling you what the number is built on."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put it beside the other two places you have already met that same decem:"
+            },
+            {
+              "kind": "speech",
+              "text": "dix — ten itself, worn down from decem at the front instead of the back."
+            },
+            {
+              "kind": "speech",
+              "text": "décembre — the old tenth month, which kept decem almost intact."
+            },
+            {
+              "kind": "speech",
+              "text": "-ze — the same ten, welded onto a digit and nearly erased."
+            },
+            {
+              "kind": "speech",
+              "text": "One Latin root, three disguises, and you now hold all three. This is the single most useful habit this book can give you: when a scrap of a word looks familiar, it usually is, and the long word is the one that tells you what the short one was."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three disguises — \"dix, décembre, onze\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three disguises — \"dix, décembre, onze\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the claim — \"the -ze is decem; it means ten\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the claim — \"the -ze is decem; it means ten\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two you have — \"onze, douze\"; and hear the ten on the end of both",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two you have — \"onze, douze\"; and hear the ten on the end of both]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the -ze of onze and douze? (Latin decem, \"ten\".) Name two other French words where you have already met that same decem. (dix and décembre.) Which of the three kept it most intact? (décembre.) Next: thirteen, with the ten now visible on the end."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C12-treize",
+      "sequence": 380,
+      "title": "treize — thirteen",
+      "headword": "treize",
+      "romanization": "treize",
+      "gloss": "thirteen — three-ten, with both halves now legible",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13b440f701b5d154",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With the -ze identified, the rest of the welded teens stop being words to memorise and start being sums you can read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ei is the open è you met in père and frère — treh, not tray."
+            },
+            {
+              "kind": "speech",
+              "text": "z-voiced — the buzzed z again."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: treize = TREHZ, one syllable, with the throat r at the front."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "treize is Latin trēdecim — trēs (\"three\") plus decem (\"ten\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Read it as a sum now rather than a word:"
+            },
+            {
+              "kind": "speech",
+              "text": "trei- is trois, worn down, -ze is decem, worn down."
+            },
+            {
+              "kind": "speech",
+              "text": "Say trois, then treize, and the front half answers for itself. You are not learning a thirteenth arbitrary noise; you are reading three and ten stuck together and then rubbed smooth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"treize\" — TREHZ, the open è",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"treize\" — *TREHZ*, the open *è*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the digit surfacing — \"trois, treize\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the digit surfacing — \"trois, treize\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three you have — \"onze, douze, treize\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three you have — \"onze, douze, treize\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say thirteen? (treize, TREHZ.) What are its two halves? (trois and the -ze that is decem.) Count from eleven. (Onze, douze, treize.) Next: fourteen, the longest of them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C12-quatorze",
+      "sequence": 385,
+      "title": "quatorze — fourteen",
+      "headword": "quatorze",
+      "romanization": "quatorze",
+      "gloss": "fourteen — the longest of the welded teens, and the least worn",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b12fdec626d0e70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every teen so far has been one syllable. This one is two, and the reason is that it started out longer than any of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quatorze = ka-TORZ. Two syllables, weight on the second."
+            },
+            {
+              "kind": "speech",
+              "text": "The qu is a plain k, exactly as in quatre — never a kw."
+            },
+            {
+              "kind": "speech",
+              "text": "z-voiced — the buzzed z closes it, like all the others."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quatorze is Latin quattuordecim — quattuor (\"four\") plus decem."
+            },
+            {
+              "kind": "speech",
+              "text": "Quattuordecim is five syllables. Quatorze is two. French has thrown away more than half the word and still kept both ideas: quator- is the four, -ze is the ten."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it beside its own digit — quatre, KATR — and the family resemblance is obvious once you stop expecting the spelling to match. Both begin quat-; the number simply grew a syllable to carry the ten."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"quatorze\" — ka-TORZ, the qu a plain k",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"quatorze\" — *ka-TORZ*, the *qu* a plain *k*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the digit surfacing — \"quatre, quatorze\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the digit surfacing — \"quatre, quatorze\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four you have — \"onze, douze, treize, quatorze\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four you have — \"onze, douze, treize, quatorze\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say fourteen? (quatorze, ka-TORZ.) How is the qu pronounced? (A plain k.) What Latin word is behind it? (quattuordecim.) Count from eleven. (Onze, douze, treize, quatorze.) Next: fifteen."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C12-quinze",
+      "sequence": 390,
+      "title": "quinze — fifteen",
+      "headword": "quinze",
+      "romanization": "quinze",
+      "gloss": "fifteen — and the fortnight the French count in",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d3c13c7561e9698",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Back to one syllable — and this is the teen whose Latin half you are most likely to already know from English."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nasal-in — the in is the nasal vowel you have in pain and vin."
+            },
+            {
+              "kind": "speech",
+              "text": "The qu is a plain k again."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: quinze = KANZ, one syllable, the vowel through the nose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quinze is Latin quīndecim — quīnque (\"five\") plus decem."
+            },
+            {
+              "kind": "speech",
+              "text": "The French digit cinq has travelled a long way from quīnque, so quinze does not obviously look like cinq. But the Latin quīn- is loud in English, and that is the way in:"
+            },
+            {
+              "kind": "speech",
+              "text": "quintet — a group of five."
+            },
+            {
+              "kind": "speech",
+              "text": "quintuplet — one of five."
+            },
+            {
+              "kind": "speech",
+              "text": "quintessence — the fifth essence, the one the ancients added to earth, water, air and fire."
+            },
+            {
+              "kind": "speech",
+              "text": "So when cinq and quinze refuse to look related, go through English: quintet is the bridge between them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"quinze\" — KANZ, the vowel through the nose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"quinze\" — *KANZ*, the vowel through the nose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bridge — \"cinq, quintet, quinze\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bridge — \"cinq, quintet, quinze\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the five you have — \"onze, douze, treize, quatorze, quinze\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the five you have — \"onze, douze, treize, quatorze, quinze\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say fifteen? (quinze, KANZ.) Which English words carry the same quīn-? (quintet, quintuplet, quintessence.) Why is that useful here? (cinq and quinze do not look alike; the English word is the bridge between them.) Next: sixteen, the last of the welded ones."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C12-seize",
+      "sequence": 395,
+      "title": "seize — sixteen",
+      "headword": "seize",
+      "romanization": "seize",
+      "gloss": "sixteen — the last word French inherited already welded",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88cf81c95ac1069f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The sixth and last of them. After this word the pattern you have spent five lessons learning simply stops — which is the next chapter's whole subject."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ei is the open è, the same vowel as treize."
+            },
+            {
+              "kind": "speech",
+              "text": "z-voiced — the buzzed z one last time."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: seize = SEHZ. Say treize and seize back to back: one consonant apart, and they rhyme exactly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "seize is Latin sēdecim — sex (\"six\") plus decem."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the sixth and final inherited compound. Latin had them beyond this point too, but French did not keep them, and you are about to see what it did instead."
+            },
+            {
+              "kind": "speech",
+              "text": "Note also what seize is not. It is not dix-six. Nothing in the first six teens is built out of dix plus a digit — every one of them arrived from Latin already joined, and French merely wore them down. That distinction is the thing to hold on to going into the next chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"seize\" — SEHZ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"seize\" — *SEHZ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rhyme — \"treize, seize\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rhyme — \"treize, seize\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all six — \"onze, douze, treize, quatorze, quinze, seize\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all six — \"onze, douze, treize, quatorze, quinze, seize\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say sixteen? (seize, SEHZ.) Which other teen rhymes with it? (treize.) Is it built from dix and six? (No — it came from Latin sēdecim already fused.) Count all six. (Onze, douze, treize, quatorze, quinze, seize.) Next: which end of each word is the digit."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C12-digit-first",
+      "sequence": 400,
+      "title": "trei-ze — which half is which",
+      "headword": "trei-ze",
+      "romanization": "trei-ze",
+      "gloss": "which half is which — the digit comes first, the ten comes second",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d93a9775aec4ec06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have six words and you know their ending is ten. One question is left, and it is the one that makes the next chapter make sense: which end of the word is the digit?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: digit in front, ten behind",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In all six, the digit comes first and the ten comes second. Trēdecim is \"three-ten,\" not \"ten-three.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Each word is its own small number worn down, with the ten stuck on the back:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "number",
+                "the digit in front",
+                "the ten behind"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "number: onze. the digit in front: on- from un. the ten behind: -ze.",
+                "number: douze. the digit in front: dou- from deux. the ten behind: -ze.",
+                "number: treize. the digit in front: trei- from trois. the ten behind: -ze.",
+                "number: quatorze. the digit in front: quator- from quatre. the ten behind: -ze.",
+                "number: quinze. the digit in front: quin- from cinq. the ten behind: -ze.",
+                "number: seize. the digit in front: sei- from six. the ten behind: -ze."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say each pair slowly — deux, douze; six, seize — and the small number surfaces every time."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold on to the order, not just the halves. Digit-first is a choice, and a language can make the other one. French is about to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rule — \"digit first, ten second\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rule — \"digit first, ten second\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six pairs — \"un/onze, deux/douze, trois/treize, quatre/quatorze, cinq/quinze, six/seize\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six pairs — \"un/onze, deux/douze, trois/treize, quatre/quatorze, cinq/quinze, six/seize\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shape of one — \"trei- is three, -ze is ten\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shape of one — \"trei- is three, -ze is ten\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"onze, douze, treize, quatorze, quinze, seize\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In treize, which half is the three and which is the ten? (trei- is the three; -ze is the ten.) So is 13 built as \"three-ten\" or \"ten-three\"? (Three-ten — the digit comes first.) Which digit is hiding in quatorze? (quatre.) Next chapter: the number where French reverses that order and stops fusing altogether."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C12-practice-teens",
+      "sequence": 405,
+      "title": "Practice — eleven to sixteen",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "the six welded teens, and the ten hiding on the end of each",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b423b9456fc13843",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six words, learned one at a time. Run them as a block, then take each one apart again from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: the run",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"onze, douze, treize, quatorze, quinze, seize\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"onze, douze, treize, quatorze, quinze, seize\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "from ten — \"dix, onze, douze, treize, quatorze, quinze, seize\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: from ten — \"dix, onze, douze, treize, quatorze, quinze, seize\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "backwards — \"seize, quinze, quatorze, treize, douze, onze\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: backwards — \"seize, quinze, quatorze, treize, douze, onze\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"onze, douze, treize, quatorze, quinze, seize\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: surface the digit",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each pair — \"un/onze, deux/douze, trois/treize\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each pair — \"un/onze, deux/douze, trois/treize\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the harder three — \"quatre/quatorze, cinq/quinze, six/seize\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the harder three — \"quatre/quatorze, cinq/quinze, six/seize\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that needs English — \"cinq, quintet, quinze\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that needs English — \"cinq, quintet, quinze\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: the ten on the end",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three disguises — \"dix, décembre, -ze\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three disguises — \"dix, décembre, -ze\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one sum aloud — \"trei- is three, -ze is ten, treize is thirteen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one sum aloud — \"trei- is three, -ze is ten, treize is thirteen\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "six numbers, eleven to sixteen."
+            },
+            {
+              "kind": "speech",
+              "text": "one ending explained — the -ze is decem, the same ten you already had in dix and décembre. Three disguises, one root."
+            },
+            {
+              "kind": "speech",
+              "text": "the order — digit in front, ten behind. Treize is \"three-ten.\""
+            },
+            {
+              "kind": "speech",
+              "text": "a way in when a word refuses — cinq and quinze do not look alike, and English quintet stands between them. Reach for the long formal English word whenever the short French one has worn past recognition."
             }
           ]
         },
@@ -346,7 +1260,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb does French use for age? (Avoir — never être.) What does j'ai vingt ans literally say? (\"I have twenty years.\") Can you drop ans? (No — French requires it.) Where does an come from? (Latin annus becomes annual, anniversary.) What happens to the t of vingt before ans? (It links — liaison.) Which languages side with English here? (German — and only German, of the five.)"
+              "text": "Count eleven to sixteen without stopping. (Onze, douze, treize, quatorze, quinze, seize.) What is the -ze? (Latin decem, \"ten\".) Which comes first in these words, the digit or the ten? (The digit.) Which digit is in quatorze? (quatre.) Were any of these built out of dix plus a digit? (No — all six arrived from Latin already fused.)"
             }
           ]
         }

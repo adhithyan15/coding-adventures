@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C09-en-saison",
+    "language": "french",
+    "chapter": 11,
+    "sequence": 250,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8e945e5d106d5011"
+  },
+  "findings": []
+}

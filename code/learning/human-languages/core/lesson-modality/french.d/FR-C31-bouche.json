@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C31-bouche",
     "language": "french",
-    "chapter": 31,
-    "sequence": 1010,
+    "chapter": 35,
+    "sequence": 1110,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:07c355ba06f471d2"
+    "sourceHash": "fnv1a64:8289dd46dc6af841"
   },
   "findings": []
 }

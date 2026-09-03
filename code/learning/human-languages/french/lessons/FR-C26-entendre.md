@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C26-entendre
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 790
-chapter: 26
+sequence: 890
+chapter: 30
 type: word
 headword: entendre
 gloss: to hear — from a Latin verb meaning "to stretch toward," so English's intend is its closest surviving cousin, and French still keeps the older sense in entendu and s'entendre

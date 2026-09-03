@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 31,
-  "sourceHash": "fnv1a64:4f2b9b49041dbbaa",
+  "sourceHash": "fnv1a64:8cc5ee5186e048e6",
   "lessonIds": [
-    "FR-C31-oeil",
-    "FR-C31-nez",
-    "FR-C31-bouche",
-    "FR-C31-ventre"
+    "FR-C27-sasseoir",
+    "FR-C27-se-lever",
+    "FR-C27-ouvrir",
+    "FR-C27-fermer"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch31.txt",
   "json": "french/narration/ch31.json",
-  "textHash": "fnv1a64:b01aa49bec649f1d",
-  "jsonHash": "fnv1a64:f0cd936a9c26a8af",
+  "textHash": "fnv1a64:e4072f01f828efd4",
+  "jsonHash": "fnv1a64:ef27abac0817c8ac",
   "findings": []
 }

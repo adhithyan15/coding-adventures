@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C15-participe-latin",
+    "language": "french",
+    "chapter": 18,
+    "sequence": 560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bc09c81f574f4c0"
+  },
+  "findings": []
+}

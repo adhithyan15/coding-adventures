@@ -2,13 +2,13 @@
 schema_version: 2
 id: FR-C22-chien-chat
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 690
-chapter: 22
+sequence: 790
+chapter: 26
 type: word
 headword: chien, chat
 gloss: dog and cat — chien is the REGULAR, expected descendant of canis (unlike Spanish's mysterious perro); chat continues cattus, the same Egypt-to-Rome story as Spanish's gato
 concept_tag: FR-ANIMALS
-prerequisites: [FR-C14-age]
+prerequisites: [FR-C14-practice]
 sounds: [ca-to-cha-shift, nasal-en]
 roots: [latin-canis-dog, latin-cattus-afroasiatic]
 etymology_hook: "chien is the fully REGULAR French descendant of Latin canis — the same ca- → cha- palatalization that also gives champ (← campus) and chanter (← cantāre) — unlike Spanish, which replaced canis-derived can with the still-unexplained perro; chat continues cattus, the same word (probably Afro-Asiatic, traveling with the cat out of Egypt) behind Spanish's gato and Italian's gatto"
@@ -28,7 +28,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-contemporary
-reviews_of: [FR-C14-age]
+reviews_of: [FR-C14-practice]
 ---
 
 # chien, chat — the regular one, and the well-traveled one

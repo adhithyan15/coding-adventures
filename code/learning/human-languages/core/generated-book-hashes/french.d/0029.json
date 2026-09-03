@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 29,
-  "sourceHash": "fnv1a64:ca14c0860c02bf00",
+  "sourceHash": "fnv1a64:be4e55050c3c5e2c",
   "lessonIds": [
-    "FR-C29-ami",
-    "FR-C29-famille",
-    "FR-C29-enfant",
-    "FR-C29-personne"
+    "FR-C25-comprendre",
+    "FR-C25-penser",
+    "FR-C25-lire",
+    "FR-C25-ecrire"
   ],
-  "tex": "french/book/chapters/ch29-the-people-you-introduce.tex"
+  "tex": "french/book/chapters/ch29-verbs-of-the-mind.tex"
 }

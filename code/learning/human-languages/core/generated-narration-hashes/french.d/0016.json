@@ -1,18 +1,22 @@
 {
   "language": "french",
   "chapter": 16,
-  "sourceHash": "fnv1a64:7624ec792357c233",
+  "sourceHash": "fnv1a64:df70fba0a5ea3e83",
   "lessonIds": [
-    "FR-C16-etre",
-    "FR-C16-etre-roots",
-    "FR-C16-passe-compose-etre",
-    "FR-C16-pronominal-past"
+    "FR-C13-noir",
+    "FR-C13-blanc",
+    "FR-C13-aube",
+    "FR-C13-rouge",
+    "FR-C13-bleu",
+    "FR-C13-vin-rouge",
+    "FR-C13-tricolore",
+    "FR-C13-practice"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "french/narration/ch16.txt",
   "json": "french/narration/ch16.json",
-  "textHash": "fnv1a64:37b55af3866e3cdb",
-  "jsonHash": "fnv1a64:708cd880dc22c3bf",
+  "textHash": "fnv1a64:78ac3f64716fba1b",
+  "jsonHash": "fnv1a64:b17b24cd89e74af3",
   "findings": []
 }

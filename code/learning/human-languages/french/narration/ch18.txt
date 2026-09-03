@@ -1,76 +1,413 @@
-French, chapter 18: Yes and No.
-2 lessons. All 2 can be done entirely by ear.
+French, chapter 18: The Compound Past.
+12 lessons. All 12 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-oui — yes.
+Lesson 1 of 12.
+parlé — the past participle.
 
 Warm-up.
 [pause 2 seconds]
-Where Spanish kept Latin's word for yes, French built a brand-new one — and named half a country after it.
+Before French can talk about the past it needs one new form of the verb, and for the verbs you already have it is the smallest change imaginable.
 
-The word, taken apart.
-oui = yes. Just two sounds, wee.
-Its Romance cousins (Spanish sí, Italian sì) come from Latin sīc "thus." French took a different road entirely. oui comes from Old French oïl, and oïl is a squeezed-down Latin phrase:
-hoc ille ("this [is] it") becomes o-ïl becomes oui.
-You answered "yes" by saying, in effect, "that's the one."
-
-Why it's said this way: A word that split a country.
-This mattered so much it became a map. In the Middle Ages France was divided by how people said yes:
-the north said oïl becomes the langue d'oïl (which became modern French).
-the south said oc becomes the langue d'oc — still visible in the region name Languedoc, and in the language Occitan.
-One little answer-word, drawn as a border.
-
-Grammar Lens: The other “yes,” si.
-French keeps a second yes — si — for one special job: contradicting a negative. When someone says something isn't so and you insist it is, you answer si, not oui:
-Tu ne viens pas? ("You're not coming?") — Si! ("Yes I am!")
-(That si is the Latin sīc the Spanish sí also comes from — French kept it only for this contradicting move.)
+Grammar Lens: -er becomes -é.
+Take an -er verb and put an accent where the r was:
+parler becomes parlé, habiter becomes habité, travailler becomes travaillé.
+That form is the past participle. On its own it is not a tense and not even really a verb — it is closer to an adjective, and parlé means something like "spoken," the way written or broken work in English.
+That is worth holding on to, because it explains everything this chapter does next. You are not learning a past tense yet. You are learning a part, and the tense gets built out of it in the next lesson.
+All three of your -er verbs behave identically. There is no list to learn and no exception in this class at all.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "oui" — wee]
+[your turn — say: the swap — "parler, parlé"]
 [pause 8 seconds for the answer]
-[your turn — say: the origin — "hoc ille becomes oïl becomes oui": that's the one]
+[your turn — say: the other two — "habiter, habité; travailler, travaillé"]
 [pause 8 seconds for the answer]
-[your turn — say: the contradiction — "Tu ne viens pas? — Si!"]
+[your turn — say: what it is — "spoken, lived, worked: adjectives, not tenses"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you say yes in French? (oui.) What Latin phrase is it worn down from? (hoc ille, "this is it," via oïl.) What were the langue d'oïl and langue d'oc named after? (The two medieval words for yes.) When do you answer si instead of oui? (To contradict a negative — Tu ne viens pas? — Si!)
-[question — say your answer, then pause 8 seconds]
-French has two words for yes. Which one contradicts a negative?
+What is the past participle of parler? (parlé.) What changes? (The -er becomes -é.) Is parlé a past tense on its own? (No — it is closer to an adjective, "spoken.") Give the participles of habiter and travailler. (habité, travaillé.) Next: what to build with it.
 
 
-Lesson 2 of 2.
-non — no / not.
+Lesson 2 of 12.
+j'ai parlé — the past built from "have".
 
 Warm-up.
 [pause 2 seconds]
-After French's home-grown oui, its no is the family word, shared straight with Spanish — but said the French way, through the nose.
+You have both halves of French's everyday past tense already. This lesson only puts them next to each other.
 
-The word, taken apart.
-non = no. It comes from Latin nōn, the same source as Spanish no and Italian no:
+Grammar Lens: avoir, then the participle.
+The recipe is two words:
+avoir (conjugated) + past participle.
+So, with parlé:
+j'ai parlé — I spoke, I have spoken.
+tu as parlé — you spoke.
+il a parlé — he spoke.
+nous avons parlé — we spoke.
+ils ont parlé — they spoke.
+Only avoir changes. The participle sits there, identical in every line. So this is not six new forms — it is the verb you spent last chapter on, with one unchanging word after it.
+Notice too that French makes no distinction English insists on. J'ai parlé is both "I spoke" and "I have spoken"; there is no separate form for the two. Where English has two past tenses to choose between, French conversation mostly has this one.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the recipe — "avoir, then the participle"]
+[pause 8 seconds for the answer]
+[your turn — say: the run — "j'ai parlé, tu as parlé, il a parlé, nous avons parlé, ils ont parlé"]
+[pause 8 seconds for the answer]
+[your turn — say: another verb — "j'ai travaillé, j'ai habité"]
+[pause 8 seconds for the answer]
+[your turn — say: the two English meanings — "I spoke, I have spoken; French has one form"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"j'ai parlé, tu as parlé, il a parlé".
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the two parts of the compound past? (avoir conjugated, then the past participle.) Which part changes with the person? (Only avoir.) Say "we worked." (Nous avons travaillé.) How many English tenses does j'ai parlé cover? (Two — "I spoke" and "I have spoken".) Next: a spelling trap you cannot hear.
+
+
+Lesson 3 of 12.
+parler, parlé, parlez — one sound, three jobs.
+
+Warm-up.
+[pause 2 seconds]
+Say the infinitive, the participle and the vous form out loud, one after the other. Now try to hear a difference.
+
+Grammar Lens: your ear gets no help at all.
+parler, parlé and parlez are pronounced exactly the same: par-LAY.
+Three different jobs, three different spellings, one sound:
+parler — to speak (the infinitive).
+parlé — spoken (the participle).
+parlez — you speak (the vous form).
+This is the same phenomenon you met with ai, as and a, and it has the same cause: French endings survive on the page and die in the mouth. But it lands harder here, because these three are different parts of speech, and only the sentence around them says which one you heard.
+The good news is that the sentence always does. Vous parlez has a pronoun in front of it. J'ai parlé has avoir in front of it. Parler has nothing in front of it, or a verb like vouloir. In practice you never have to decide — which is why French speakers are untroubled by a distinction that looks impossible written down.
+For writing, though, you do have to choose, and choosing wrongly is the single most common spelling mistake native French speakers make.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three — "parler, parlé, parlez"; one sound]
+[pause 8 seconds for the answer]
+[your turn — say: each in its frame — "vous parlez", "j'ai parlé"]
+[pause 8 seconds for the answer]
+[your turn — say: the rule of thumb — "what comes before it tells you which"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many of parler, parlé and parlez sound different? (None — all three are par-LAY.) What tells you which one you are hearing? (What comes before it — a pronoun, avoir, or nothing.) Which is the participle? (parlé.) Next: the verbs that do not end in -er.
+
+
+Lesson 4 of 12.
+fini, vendu — the other two classes.
+
+Warm-up.
+[pause 2 seconds]
+Every verb you have met so far ends in -er. That is by far the biggest group, and it is not the only one.
+
+Grammar Lens: three classes, three vowels.
+French verbs are sorted by how the infinitive ends, and each group makes its participle with its own vowel:
 [a table of 3 rows, read aloud]
-Latin nōn: Spanish. , which gives:: no.
-Latin nōn: Italian. , which gives:: no.
-Latin nōn: French. , which gives:: non.
-Spanish dropped the n and left a clean no. French kept the n — but turned it into a nasal vowel: you don't quite touch your tongue to say the final n, you send the vowel through your nose. That's the sound written ‑on in non, bon, bonjour — you've met it before.
-
-Grammar Lens: The seed of French negation.
-The word that actually carries negation inside a French sentence isn't non but its unstressed twin, ne — both worn down from the same Latin nōn. Modern French usually reinforces ne with a second word, giving the pair ne … pas:
-Je ne parle pas français = "I do not speak French."
-For now, non on its own is your answer-word. In ne … pas, the ne is non's cousin from nōn; the pas was added later — it originally meant "a step" (Latin passus), as in "not walk a step" — and simply stuck. That fuller sentence negation is something you'll build later.
+infinitive ends in: -er. participle ends in: -é. example: parler becomes parlé.
+infinitive ends in: -ir. participle ends in: -i. example: finir becomes fini.
+infinitive ends in: -re. participle ends in: -u. example: vendre becomes vendu.
+finir ("to finish") and vendre ("to sell") are the standard examples, and they are here as examples of the pattern rather than words to add to your vocabulary — neither has appeared in this book yet. What you want from this lesson is the shape: when you meet a verb, its infinitive ending already tells you what its participle will look like.
+That is three facts, not three hundred. And -er is the group that matters most in practice: it holds the overwhelming majority of French verbs, and it is the only group still taking new members — every verb French invents or borrows becomes an -er verb.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "non" — nasal, through the nose, like the -on in bon]
+[your turn — say: the three endings — "é, i, u"]
 [pause 8 seconds for the answer]
-[your turn — say: the pair with yes — "oui / non"]
+[your turn — say: the three pairs — "parler parlé, finir fini, vendre vendu"]
 [pause 8 seconds for the answer]
-[your turn — say: the family — Latin nōn becomes Spanish no, French non]
+[your turn — say: the useful half — "-er is the big one, and the only one still growing"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you say no in French? (non.) What Latin word is it from, and which Spanish word is its twin? (nōn; Spanish no.) What did French do to the n that Spanish dropped? (Kept it as a nasal vowel — the -on sound.) What pair does full French negation usually wrap around the verb? (ne … pas.)
+What vowel ends the participle of an -ir verb? (-i.) And an -re verb? (-u.) And -er? (-é.) Which class is by far the largest? (-er — and it is the only one that still takes new verbs.) Next: where those three endings came from.
+
+
+Lesson 5 of 12.
+-ātum, -ītum, -ūtum — where the endings came from.
+
+Warm-up.
+[pause 2 seconds]
+Three participle vowels, and two of them are inherited. The third is French tidying up after itself, which is a different kind of fact.
+
+The word, taken apart.
+Latin marked its participles with a -t- and a vowel in front of it:
+parlé from -ātum.
+fini from -ītum.
+vendu from -ūtum.
+French wore away the -t- and the ending, and kept the vowel. English, which borrowed from Latin rather than inheriting it, kept the -t- instead — you can see it whole in finite, acute, statute. Same suffix, two salvage strategies: French saved the vowel, English saved the consonant.
+Now the third one, which is the interesting one. -ūtus was rare in Latin. It turns up in a handful of words — minūtus (small, hence minute), tribūtus (assigned, hence tribute) — and nothing like a whole class.
+French and Italian took that small, scrappy group and spread it across an entire conjugation. So -é and -i are straight inheritance, and -u is largely the language tidying up by analogy: a pattern noticed in a few words and then applied on purpose to many.
+That is worth separating from ordinary etymology. Most of what this book shows you is erosion — words wearing down. This is the opposite force: speakers regularising, making a language tidier than they received it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three Latin endings — "-ātum, -ītum, -ūtum"]
+[pause 8 seconds for the answer]
+[your turn — say: what English kept — "finite, acute, statute"; the t survived]
+[pause 8 seconds for the answer]
+[your turn — say: the odd one — "-ūtus was rare, and French spread it"]
+[pause 8 seconds for the answer]
+[your turn — say: the two forces — "erosion wears words down; analogy tidies them up"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did French keep from the Latin participle ending, and what did English keep? (French kept the vowel; English kept the -t-, as in finite, acute, statute.) Which of the three French endings is not straight inheritance? (-u — -ūtus was rare in Latin and French spread it over a whole class.) What is that process called? (Analogy — speakers regularising.) Next: why this tense exists at all.
+
+
+Lesson 6 of 12.
+habeō litterās scriptās — the buried possessive.
+
+Warm-up.
+[pause 2 seconds]
+There is an obvious question about this tense that is worth asking: why have? What does owning something have to do with the past?
+
+Grammar Lens: it was never a tense to begin with.
+Latin could say:
+habeō litterās scriptās — "I have letters, written ones."
+Read that as Latin, not as French. It is not a past tense. It is habēre in its plain, ordinary sense — I possess some letters — with scriptās as an adjective describing them, agreeing with litterās in gender and number the way any Latin adjective would.
+The sentence says nothing about who did the writing, and nothing about when. It says: I own letters, and their condition is written.
+Then centuries pass. The phrase gets said constantly, the possession fades out of it, and what is left is the doing: I wrote. A construction about owning an object hardened into a construction about having done an action.
+This happens to be one of the best-documented examples of the whole process, and you can watch it happen in the surviving texts. It is also why English "I have written" exists — English built the same thing, from the same starting point, independently.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the Latin — "habeō litterās scriptās"]
+[pause 8 seconds for the answer]
+[your turn — say: what it meant — "I have letters, written ones"]
+[pause 8 seconds for the answer]
+[your turn — say: what it became — "I wrote"]
+[pause 8 seconds for the answer]
+[your turn — say: the shift in one line — "possession hardened into a tense"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did habeō litterās scriptās originally mean? ("I have letters, written ones" — plain possession.) What part of speech was scriptās? (An adjective, describing the letters.) What did the phrase turn into? (A past tense — "I wrote".) Why does French build its past out of have? (Because the construction began as one about having.) Next: the fossil that construction left behind.
+
+
+Lesson 7 of 12.
+les lettres que j'ai écrites — the fossil.
+
+Warm-up.
+[pause 2 seconds]
+The possessive is gone from the meaning. It is not gone from the spelling, and the place it survives is one of the strangest rules in French.
+
+Grammar Lens: the participle still agrees, when the object goes first.
+Normally the participle never changes:
+J'ai écrit les lettres. — "I wrote the letters." écrit, plain.
+Move the object in front of the verb, though, and the participle agrees with it — feminine, plural, exactly as an adjective would:
+Les lettres que j'ai écrites. — "The letters that I wrote." écrites.
+That -es is the two-thousand-year-old adjective ending from habeō litterās scriptās, still doing the job it was doing in Latin. The meaning moved on; the agreement stayed behind.
+Two things make this bearable. First, you can almost never hear it — écrit and écrites sound the same, so it is a writing rule far more than a speaking one. Second, it now has an explanation instead of being arbitrary: the participle agrees when the thing it describes comes before it, which is where an adjective could still see it.
+French schoolchildren spend years on this rule and are taught it as a list of conditions. It is really one fact with a very long memory.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the plain order — "J'ai écrit les lettres"]
+[pause 8 seconds for the answer]
+[your turn — say: the object first — "Les lettres que j'ai écrites"]
+[pause 8 seconds for the answer]
+[your turn — say: what the -es is — "an adjective ending, two thousand years old"]
+[pause 8 seconds for the answer]
+[your turn — say: the consolation — "you cannot hear it"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+When does the past participle agree with the object? (When the object comes before the verb.) Why does it agree at all? (Because it was an adjective first, describing the thing that was possessed.) Can you hear the agreement in écrites? (No — it is a writing rule.) Next: all of it, together.
+
+
+Lesson 8 of 12.
+Practice — the past you actually say.
+
+Warm-up.
+[pause 2 seconds]
+One tense, built from two things you already had. Run it, then take it apart again.
+
+Guided Practice: build it.
+[pause 1 second]
+[your turn — say: "j'ai parlé, tu as parlé, il a parlé, nous avons parlé, vous avez parlé, ils ont parlé"]
+[pause 8 seconds for the answer]
+[your turn — say: with your other verbs — "j'ai travaillé, nous avons habité"]
+[pause 8 seconds for the answer]
+[your turn — say: what moves and what does not — "avoir changes; the participle never does"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"j'ai parlé, tu as parlé, il a parlé".
+
+Guided Practice: the three endings.
+[pause 1 second]
+[your turn — say: "é, i, u"]
+[pause 8 seconds for the answer]
+[your turn — say: the pairs — "parler parlé, finir fini, vendre vendu"]
+[pause 8 seconds for the answer]
+[your turn — say: the Latin — "-ātum, -ītum, -ūtum"; and English "finite, acute, statute"]
+[pause 8 seconds for the answer]
+
+Guided Practice: the sound trap and the fossil.
+[pause 1 second]
+[your turn — say: the three that sound alike — "parler, parlé, parlez"]
+[pause 8 seconds for the answer]
+[your turn — say: the old meaning — "I have letters, written ones"]
+[pause 8 seconds for the answer]
+[your turn — say: the fossil — "Les lettres que j'ai écrites"]
+[pause 8 seconds for the answer]
+
+What you've built so far.
+a past tense, made of a verb you already knew and one unchanging word.
+three participle endings, one per verb class, two inherited and one spread by analogy.
+an explanation for the have: the construction began as plain possession — I have letters, written ones — and hardened into a tense.
+a fossil you can point at: the agreement in écrites is an adjective ending that has outlived the grammar that required it.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "we spoke." (Nous avons parlé.) Which half changes with the person? (avoir.) Give the three participle vowels. (-é, -i, -u.) Which three forms of parler sound identical? (parler, parlé, parlez.) When does the participle agree? (When the object comes first.) Next: the other past tense — the one you will read and never say.
+
+
+Lesson 9 of 12.
+il parla — the past you read but never say.
+
+Warm-up.
+[pause 2 seconds]
+French has a second past tense. You will meet it on the first page of almost any novel and never once hear it in a conversation.
+
+Grammar Lens: recognise it, do not produce it.
+It is called the passé simple, and it is one word where the compound past is two:
+[a table of 3 rows, read aloud]
+meaning: he spoke. passé simple: il parla. passé composé: il a parlé.
+meaning: they spoke. passé simple: ils parlèrent. passé composé: ils ont parlé.
+meaning: he had. passé simple: il eut. passé composé: il a eu.
+You do not need to produce these, and you should not try. Nobody says them. Using one out loud sounds roughly like announcing "thus spake he" in an English café.
+What you need is to recognise them, because they carry the past tense of essentially all French literature. A reader who stalls at il parla stalls on page one of everything.
+So this is the first thing in this book that is deliberately half-learned, and that is a real distinction worth making: some things you learn to say, and some you learn only to understand. Treating those as the same job is what makes beginners feel they must master everything before reading anything.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "il parla … il a parlé"; same meaning, two registers]
+[pause 8 seconds for the answer]
+[your turn — say: the plural pair — "ils parlèrent … ils ont parlé"]
+[pause 8 seconds for the answer]
+[your turn — say: where you meet it — "in a novel, not a conversation"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is il parla? (The passé simple — "he spoke".) Where will you meet it? (In writing, especially novels — never in speech.) Do you need to produce it? (No — recognition only.) What is the everyday equivalent? (il a parlé.) Next: who else kept this tense alive.
+
+
+Lesson 10 of 12.
+il parla, habló, falou — the same tense, four fates.
+
+Warm-up.
+[pause 2 seconds]
+The tense French retired to its libraries is a tense other people use to order coffee.
+
+The word, taken apart.
+il parla comes from the plain Latin perfect, handed straight down with no rebuilding at all. Which means it is the same tense as these:
+[a table of 4 rows, read aloud]
+language: French. "he spoke": il parla. status: books only.
+language: Spanish. "he spoke": habló. status: everyday speech.
+language: Portuguese. "he spoke": falou. status: everyday speech.
+language: Italian. "he spoke": parlò. status: regional.
+One Latin ancestor, four different fates. A Spaniard saying habló and a French novelist writing il parla are using the same inherited form, and only one of them sounds archaic doing it.
+That is worth sitting with, because it undoes an assumption. A tense is not formal or informal, literary or everyday, by its nature. Register is not a property of a form; it is a property of what a particular community of speakers happens to have kept. French did not decide il parla was fancy. It just stopped saying it, and the books did not.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the sisters — "il parla, habló, falou, parlò"]
+[pause 8 seconds for the answer]
+[your turn — say: the split — "one of them is literary; the others are lunch"]
+[pause 8 seconds for the answer]
+[your turn — say: the finding — "register is not in the form, it is in the speakers"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Latin tense is il parla? (The plain perfect, inherited directly.) Which languages still say it every day? (Spanish — habló — and Portuguese — falou.) So what makes a tense "literary"? (Not the form — what its speakers kept using.) Next: what pushed it out, and where else that happened.
+
+
+Lesson 11 of 12.
+the same retreat, three times over — three languages, one retreat — and it spread by contact, not coincidence.
+
+Warm-up.
+[pause 2 seconds]
+French pushed its old past tense into books and replaced it with a compound built on have. It is not the only language that did.
+
+Why it's said this way.
+[a table of 3 rows, read aloud]
+language: French. the simple past: passé simple. what replaced it in speech: passé composé — j'ai parlé.
+language: German. the simple past: Präteritum. what replaced it in speech: Perfekt — ich habe gesagt.
+language: Italian. the simple past: passato remoto. what replaced it in speech: passato prossimo — ho parlato.
+Three languages, two Romance and one Germanic, each built a compound past out of "have," and each let that compound push the inherited simple past out of conversation and into writing.
+The obvious reading is that this is a natural drift any language might undergo. The better reading is geographical. France, southern Germany and northern Italy form one connected block, and the change spread through it by contact, over the same few centuries — carried by people who lived near each other, across language boundaries that were never barriers to anything.
+Linguists call that an areal change: one that travels by neighbourhood rather than by descent. And the evidence is at the edges. Spanish and Portuguese, out at the western rim, largely did not get it — they kept their simple past in everyday speech, which is why habló is still ordinary. Though Spain's Spanish has begun drifting the same way, with he hablado taking ground: the change reaching the edge, late.
+So the map explains what the family tree cannot. Italian and Spanish are close relatives that behave differently here, and French and German are distant relatives that behave the same — because what mattered was who was standing next to whom.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three retreats — "passé simple, Präteritum, passato remoto"]
+[pause 8 seconds for the answer]
+[your turn — say: the three replacements — "j'ai parlé, ich habe gesagt, ho parlato"]
+[pause 8 seconds for the answer]
+[your turn — say: the shape — "a connected block: France, southern Germany, northern Italy"]
+[pause 8 seconds for the answer]
+[your turn — say: the edge — "Spanish and Portuguese kept theirs"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which three languages made the same swap? (French, German, Italian.) Was it three separate inventions? (No — one change spreading by contact across a connected block.) What is that kind of change called? (Areal.) Which languages at the edge kept their simple past? (Spanish and Portuguese.) Next: everything together.
+
+
+Lesson 12 of 12.
+Practice — two pasts, and why.
+
+Warm-up.
+[pause 2 seconds]
+One tense to say and one to recognise. Run both, and keep the jobs separate.
+
+Guided Practice: the one you say.
+[pause 1 second]
+[your turn — say: "j'ai parlé, tu as parlé, il a parlé, nous avons parlé, vous avez parlé, ils ont parlé"]
+[pause 8 seconds for the answer]
+[your turn — say: "j'ai travaillé, nous avons habité"]
+[pause 8 seconds for the answer]
+[your turn — say: the three endings — "é, i, u"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"j'ai parlé, nous avons travaillé".
+
+Guided Practice: the one you read.
+[pause 1 second]
+[your turn — say: the pairs — "il parla … il a parlé"; "ils parlèrent … ils ont parlé"]
+[pause 8 seconds for the answer]
+[your turn — say: the sisters — "il parla, habló, falou, parlò"]
+[pause 8 seconds for the answer]
+[your turn — say: the job — "recognise it; do not say it"]
+[pause 8 seconds for the answer]
+
+Guided Practice: the two histories.
+[pause 1 second]
+[your turn — say: where the tense came from — "I have letters, written ones"]
+[pause 8 seconds for the answer]
+[your turn — say: the fossil — "Les lettres que j'ai écrites"]
+[pause 8 seconds for the answer]
+[your turn — say: the three retreats — "passé simple, Präteritum, passato remoto"]
+[pause 8 seconds for the answer]
+
+What you've built this chapter.
+the past tense you will actually use, built from avoir and a participle that never moves.
+three participle endings, and the fact that one of them was spread by analogy rather than inherited.
+an origin: the tense began as plain possession and hardened, which is why it uses have at all — and why a participle still agrees when its object comes first.
+a second past you only read, and the reason it is only read: not because the form is fancy, but because a block of neighbouring languages stopped saying theirs at roughly the same time, and the ones at the edge did not.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "they worked." (Ils ont travaillé.) Which part of the compound past changes? (avoir.) Which three forms of parler are homophones? (parler, parlé, parlez.) What is il parla, and what do you do with it? (The passé simple — recognise it, never say it.) Why does the participle agree in les lettres que j'ai écrites? (It was an adjective first, and the object comes before it.)

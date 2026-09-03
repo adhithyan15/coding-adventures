@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C29-famille
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 920
-chapter: 29
+sequence: 1020
+chapter: 33
 type: word
 headword: la famille
 gloss: family — feminine and fixed, whoever is in it, and once meant the household's servants

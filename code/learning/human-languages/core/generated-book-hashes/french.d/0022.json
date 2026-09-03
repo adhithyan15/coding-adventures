@@ -1,9 +1,10 @@
 {
   "language": "french",
   "chapter": 22,
-  "sourceHash": "fnv1a64:fb49102a7d9fbcc6",
+  "sourceHash": "fnv1a64:76649dc78028cb55",
   "lessonIds": [
-    "FR-C22-chien-chat"
+    "FR-C18-oui",
+    "FR-C18-non"
   ],
-  "tex": "french/book/chapters/ch22-dog-and-cat.tex"
+  "tex": "french/book/chapters/ch22-yes-and-no.tex"
 }

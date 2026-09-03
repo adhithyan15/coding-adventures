@@ -1,88 +1,81 @@
 ---
+schema_version: 2
 id: FR-C15-passe-simple
-sequence: 300
-chapter: 15
-type: word
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 580
+chapter: 18
+type: grammar
 headword: il parla
-gloss: the passé simple — the tense the passé composé drove out of speech, alive only in books
+gloss: the past you read but never say — recognition only, and that is the point
 concept_tag: FR-PAST-SIMPLE-LITERARY
-prerequisites: [FR-C15-passe-compose]
-sounds: [silent-endings]
-roots: [latin-perfect]
-etymology_hook: "il parla ← Vulgar Latin perfect *parabolāvit — the DIRECT inheritance, exactly what Spanish habló and Portuguese falou still are in everyday speech; French, German and Italian all let a compound past push this simple past out of conversation and into literature"
-est_minutes: 4
-reviews_of: [FR-C15-passe-compose, FR-C05-parler]
+prerequisites: [FR-C15-practice-compose]
+sounds: []
+roots: []
+etymology_hook: "il parla is the passé simple — you will meet it in every novel and never hear it spoken, and knowing WHY is worth more than knowing its endings"
+duration:
+  max_seconds: 205
+requires:
+  knowledge: [FR-GRAM-PASSE-COMPOSE-02]
+introduces:
+  knowledge: [FR-GRAM-PASSE-SIMPLE-08]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+practises:
+  knowledge: [FR-GRAM-PASSE-SIMPLE-08, FR-GRAM-PASSE-COMPOSE-02]
+skills: [listening, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: formal
+variety: standard-contemporary
+reviews_of: [FR-C15-practice-compose, FR-C15-jai-parle]
 ---
 
 # il parla — the past you read but never say
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] French has a **second** past tense. You will meet it in every novel
-and never hear it spoken. Knowing why is worth more than knowing its endings.
+[PAUSE 2s] French has a **second** past tense. You will meet it on the first page
+of almost any novel and never once hear it in a conversation.
 
-## What it looks like
+## Grammar Lens: recognise it, do not produce it
+<!-- hl-knowledge: introduces=[FR-GRAM-PASSE-SIMPLE-08]; assesses=[] -->
 
-| | passé simple | passé composé |
+It is called the **passé simple**, and it is one word where the compound past is
+two:
+
+| meaning | passé simple | passé composé |
 |---|---|---|
-| he spoke | **il parla** | il a parlé |
-| they spoke | **ils parlèrent** | ils ont parlé |
-| he had | **il eut** | il a eu |
+| he spoke | *il parla* | *il a parlé* |
+| they spoke | *ils parlèrent* | *ils ont parlé* |
+| he had | *il eut* | *il a eu* |
 
-You do **not** need to produce these. You need to recognise them, because they
-fill the past tense of essentially all French literature.
+You do **not** need to produce these, and you should not try. Nobody says them.
+Using one out loud sounds roughly like announcing "thus spake he" in an English
+café.
 
-## The direct inheritance
+What you need is to **recognise** them, because they carry the past tense of
+essentially all French literature. A reader who stalls at *il parla* stalls on
+page one of everything.
 
-**il parla** ← Vulgar Latin **\*parabolāvit** — the plain Latin perfect, handed straight
-down. Which means the *passé simple* is the **same tense** as:
-
-| language | "he spoke" | status |
-|---|---|---|
-| **French** | *il parla* | **books only** |
-| Spanish | *habló* | everyday speech |
-| Portuguese | *falou* | everyday speech |
-| Italian | *parlò* | regional — see below |
-
-Same Latin ancestor, four different fates.
-
-## The retreat, three times over
-
-Now the striking part. French is not alone:
-
-| language | simple past | what replaced it in speech |
-|---|---|---|
-| French | *passé simple* | **passé composé** (*j'ai parlé*) |
-| German | *Präteritum* | **Perfekt** (*ich habe gesagt*) |
-| Italian | *passato remoto* | **passato prossimo** (*ho parlato*) |
-
-Three languages — two Romance, one **Germanic** — each built a compound past out
-of "have," and each let that compound push the inherited simple past out of
-everyday conversation and into writing.
-
-Not three separate inventions, though. They are **neighbours**: France, southern
-Germany and northern Italy form a connected block, and the change spread through
-it by **contact** over the same few centuries. Linguists call this an *areal*
-change — one that travels across language boundaries because the speakers do.
-
-And Spanish and Portuguese, out at the **western edge** of that block, largely
-**didn't** get it. They kept their simple past where it was. (Though Spain's
-Spanish has since started drifting the same way, with *he hablado* taking ground
-from *habló* — the change reaching the edge late.)
+So this is the first thing in this book that is deliberately **half**-learned,
+and that is a real distinction worth making: some things you learn to say, and
+some you learn only to understand. Treating those as the same job is what makes
+beginners feel they must master everything before reading anything.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-PASSE-SIMPLE-08, FR-GRAM-PASSE-COMPOSE-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: the pair — "il **parla** … il **a parlé**"]
-- [YOU SAY: the sisters — "il parla · habló · falou · parlò"]
-- [YOU SAY: where you'd meet it — "in a **novel**, not a conversation"]
-- [YOU SAY: the three retreats — "passé simple · Präteritum · passato remoto"]
+- [YOU SAY: the pair — "il parla … il a parlé"; same meaning, two registers]
+- [YOU SAY: the plural pair — "ils parlèrent … ils ont parlé"]
+- [YOU SAY: where you meet it — "in a novel, not a conversation"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-PASSE-SIMPLE-08] -->
 
-[PAUSE 3s] Where does the *passé simple* live? (In **writing** — literature, not
-speech.) What is *il parla* descended from? (Vulgar Latin **\*parabolāvit**, the plain
-perfect.) Which languages still use that same tense in ordinary speech?
-(**Spanish** and **Portuguese** — *habló*, *falou*.) Which three languages
-replaced it with a compound? (**French, German, Italian** — a connected, contact-driven change.) Next
-chapter: the other auxiliary, and the verbs that refuse *avoir*.
+[PAUSE 3s] What is *il parla*? (The **passé simple** — "he spoke".) Where will
+you meet it? (In **writing**, especially novels — never in speech.) Do you need
+to produce it? (**No** — recognition only.) What is the everyday equivalent?
+(***il a parlé***.) Next: who else kept this tense alive.

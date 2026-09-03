@@ -1,18 +1,15 @@
 {
   "language": "french",
   "chapter": 24,
-  "sourceHash": "fnv1a64:4ee9cdf417bf763d",
+  "sourceHash": "fnv1a64:114292977ddad233",
   "lessonIds": [
-    "FR-C24-prendre",
-    "FR-C24-demander",
-    "FR-C24-aider",
-    "FR-C24-aimer"
+    "FR-C20-je-suis-desole"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "french/narration/ch24.txt",
   "json": "french/narration/ch24.json",
-  "textHash": "fnv1a64:60ea88664f353cf6",
-  "jsonHash": "fnv1a64:1b3fad915a64fb5c",
+  "textHash": "fnv1a64:d7372729f1441723",
+  "jsonHash": "fnv1a64:066f155d7a4c8ea5",
   "findings": []
 }

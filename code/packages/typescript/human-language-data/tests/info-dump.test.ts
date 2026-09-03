@@ -254,8 +254,24 @@ describe("the committed corpus", () => {
     // time. That grid was the exact shape this gate exists to flag, so the
     // count going down is the gate working, not the detector breaking. The
     // named-fixture test below is what protects the detector itself.
-    expect(report.summary.fullParadigmGrids).toBe(21);
-    expect(report.summary.lessonsWithFindings).toBe(121); // +1: vocabulary wave 5 // HL-C113: unchanged // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C165: +11 -- Sanskrit chapters 17 and 18
+    // HL-C286: 21 -> 20. French chapter 19 left the hand-written set, and
+    // FR-C16-passe-compose-etre's grid -- the etre paradigm plus the verb list
+    // that selects it -- was split across the lessons that teach it, one cell
+    // and one rule at a time. That grid was the exact shape this gate exists to
+    // flag, so the count going down is the gate working.
+    //
+    // RE-MEASURED, not computed as 21 - 1, and the re-measurement earned its
+    // keep: the first draft of the replacement chapter scored 21 again, because
+    // FR-C16-esse had lined the six present forms up against their Latin in a
+    // five-row table and built a NEW full grid while removing the old one. An
+    // etymology lesson is still a lesson, and a person-row table is still a
+    // paradigm. The pairs are prose now.
+    //
+    // FR-C05-parler is untouched and still fires, so the named fixture below
+    // needs no inversion -- it is in chapter 5, which was generated long ago and
+    // is not in the retirement scope.
+    expect(report.summary.fullParadigmGrids).toBe(20);
+    expect(report.summary.lessonsWithFindings).toBe(118); // 120 -> 118: retiring French chapter 19, which became two chapters. FR-C16-etre carried the six-form present grid and FR-C16-passe-compose-etre carried the etre paradigm plus the verb list that selects it; both tripped findings and neither has a successor that does. Twenty-two lessons replace four, one cell or one rule each // 121 -> 120: retiring French chapter 18 removed FR-C15-passe-compose, whose single lesson carried the whole participle system in stacked tables. Twelve lessons replace it and none of them trips a finding -- the paradigm table it held is now a recap in a practice lesson, after every part has been taught individually, which is the shape this gate exists to encourage. A FALL here is the gate working; it is pinned exactly so a silent rise is caught too // +1: vocabulary wave 5 // HL-C113: unchanged // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C165: +11 -- Sanskrit chapters 17 and 18
   });
 
   it("flags the known full grids by name", () => {

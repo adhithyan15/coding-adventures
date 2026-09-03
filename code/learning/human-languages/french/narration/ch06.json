@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Ten",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:f9187682bf6d91b7",
+  "sourceHash": "fnv1a64:a916d918f67186d7",
   "lessons": [
     {
       "id": "FR-C06-un",
@@ -1445,7 +1445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02fe7963f6b91a4f",
+      "sourceHash": "fnv1a64:4873f9d2170cf221",
       "notice": null,
       "blocks": [
         {
@@ -1496,7 +1496,7 @@
             },
             {
               "kind": "speech",
-              "text": "The old Roman year began in March, not January. Counting from March, September genuinely was the seventh month and December the tenth — the names were accurate. Later, two months named for two rulers, juillet (Julius) and août (Augustus), were fixed into the middle of the year, and the start of the year was moved back to January. The counting months were shoved two places along. Their Latin names never caught up."
+              "text": "The old Roman year began in March, not January. Counting from March, September genuinely was the seventh month and December the tenth — the names were accurate. Later, two months named for Julius Caesar and the emperor Augustus were fixed into the middle of the year, and the start of the year was moved back to January. The counting months were shoved two places along. Their Latin names never caught up."
             },
             {
               "kind": "speech",
@@ -1517,7 +1517,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does septembre mean, and which month is it? (Seven — and it is the ninth.) In which month did the old Roman year begin? (March.) Which two months were pushed in, and for whom? (Juillet and août, for Julius and Augustus.) What number are you saying when you say décembre? (Ten, Latin decem.)"
+              "text": "What does septembre mean, and which month is it? (Seven — and it is the ninth.) In which month did the old Roman year begin? (March.) Which two months were pushed in, and for whom? (The two named for Julius Caesar and Augustus.) What number are you saying when you say décembre? (Ten, Latin decem.)"
             }
           ]
         }
@@ -1536,7 +1536,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e8b605a6e47d946",
+      "sourceHash": "fnv1a64:7554f0af7b1a3466",
       "notice": null,
       "blocks": [
         {
@@ -1655,7 +1655,7 @@
             },
             {
               "kind": "speech",
-              "text": "septembre to décembre — four months still counting seven to ten, two places out of place ever since the Roman year stopped starting in March."
+              "text": "the four months at the end of the year — still counting seven to ten, two places out of place ever since the Roman year stopped starting in March."
             }
           ]
         },
@@ -1672,7 +1672,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count from one to ten without stopping. Now backwards. Which three numbers change their ending before a vowel, and how? (Six and dix to a z, neuf to a v.) What is the difference between un jour and une nuit? (Gender — the same word for \"one\" and \"a,\" agreeing with the noun.) Why is décembre the twelfth month when it says ten? (The Roman year began in March, and two months were inserted.)"
+              "text": "Count from one to ten without stopping. Now backwards. Which three numbers change their ending before a vowel, and how? (Six and dix to a z, neuf to a v.) What is the difference between un jour and une nuit? (Gender — the same word for \"one\" and \"a,\" agreeing with the noun.) Why does the twelfth month say ten? (The Roman year began in March, and two months were later inserted.)"
             }
           ]
         }

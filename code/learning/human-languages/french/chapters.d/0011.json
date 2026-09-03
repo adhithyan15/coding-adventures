@@ -1,16 +1,24 @@
 {
   "chapter": 11,
-  "title": "Bread, Water, Wine",
-  "label": "ch:food",
-  "canDo": "I can name and request bread, water, and wine in French.",
+  "title": "The Four Seasons",
+  "label": "ch:seasons",
+  "canDo": "I can name the four seasons in French and say that something happens in one of them.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C11-eau-vin",
+    "lesson": "FR-C09-saisons-practice",
     "kind": "task",
-    "summary": "Complete FR-C11-eau-vin, the canonical closing checkpoint, and demonstrate the chapter promise: name and request bread, water, and wine in French.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Four small Latin poems about heat, sleep and first things. printemps is prīmum tempus, \"the first time\"; été is aestās, \"heat\"; hiver is hībernum, the wintry season that gave English hibernate. And three seasons take en while spring takes au, for a reason that is not about seasons at all.",
+    "assesses": [
+      "FR-LEX-PRINTEMPS-01",
+      "FR-ETYMON-PRINTEMPS-PRIMUM-02",
+      "FR-LEX-ETE-03",
+      "FR-LEX-AUTOMNE-04",
+      "FR-LEX-HIVER-05",
+      "FR-ETYMON-HIVER-HIBERNER-06",
+      "FR-GRAM-EN-SAISON-07"
+    ],
+    "note": "Authored as part of the chapter-9 split: length is never a cost, so sixteen months-and-seasons became three chapters rather than one dense one. The payoff is atom-scored -- it assesses every atom its chapter introduces."
   }
 }

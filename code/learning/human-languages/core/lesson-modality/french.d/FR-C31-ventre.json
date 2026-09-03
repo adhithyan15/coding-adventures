@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C31-ventre",
     "language": "french",
-    "chapter": 31,
-    "sequence": 1020,
+    "chapter": 35,
+    "sequence": 1120,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6060d773c46f80a2"
+    "sourceHash": "fnv1a64:dd3c456eeea0e095"
   },
   "findings": []
 }

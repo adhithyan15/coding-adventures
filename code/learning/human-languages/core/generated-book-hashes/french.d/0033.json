@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 33,
-  "sourceHash": "fnv1a64:ac6fddfb9d2d80d4",
+  "sourceHash": "fnv1a64:3a2fdc501cc1aa27",
   "lessonIds": [
-    "FR-C33-vouloir",
-    "FR-C33-pouvoir",
-    "FR-C33-devoir",
-    "FR-C33-practice"
+    "FR-C29-ami",
+    "FR-C29-famille",
+    "FR-C29-enfant",
+    "FR-C29-personne"
   ],
-  "tex": "french/book/chapters/ch33-modaux.tex"
+  "tex": "french/book/chapters/ch33-the-people-you-introduce.tex"
 }

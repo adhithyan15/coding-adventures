@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C24-demander
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 720
-chapter: 24
+sequence: 820
+chapter: 28
 type: word
 headword: demander
 gloss: to ask — an ordinary, polite, everyday word, and one of the sharpest false friends French holds for an English speaker

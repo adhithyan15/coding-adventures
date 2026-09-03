@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C33-pouvoir
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1200
-chapter: 33
+sequence: 1300
+chapter: 37
 type: word
 headword: pouvoir
 gloss: "can — the verb that turns a demand into a request"

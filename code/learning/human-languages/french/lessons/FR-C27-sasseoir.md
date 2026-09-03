@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C27-sasseoir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 830
-chapter: 27
+sequence: 930
+chapter: 31
 type: word
 headword: s'asseoir
 gloss: to sit down — a verb you do to yourself, from Latin sedēre, and the one French verb that ships with two accepted sets of forms

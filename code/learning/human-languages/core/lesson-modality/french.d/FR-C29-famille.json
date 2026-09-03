@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C29-famille",
     "language": "french",
-    "chapter": 29,
-    "sequence": 920,
+    "chapter": 33,
+    "sequence": 1020,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:10e13748637618a1"
+    "sourceHash": "fnv1a64:aab455789803b93c"
   },
   "findings": []
 }

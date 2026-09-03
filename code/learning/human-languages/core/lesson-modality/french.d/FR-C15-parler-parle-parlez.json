@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C15-parler-parle-parlez",
+    "language": "french",
+    "chapter": 18,
+    "sequence": 550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43082b6c3d07b5e2"
+  },
+  "findings": []
+}

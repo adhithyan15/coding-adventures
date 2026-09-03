@@ -1,0 +1,19 @@
+{
+  "id": "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional French material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C14-jai",
+    "FR-C14-as",
+    "FR-C14-a",
+    "FR-C14-ai-as-a",
+    "FR-C14-avons",
+    "FR-C14-avez",
+    "FR-C14-ont",
+    "FR-C14-habere",
+    "FR-C14-practice-avoir"
+  ]
+}

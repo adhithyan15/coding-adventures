@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C12-practice-teens",
+    "language": "french",
+    "chapter": 14,
+    "sequence": 405,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b423b9456fc13843"
+  },
+  "findings": []
+}

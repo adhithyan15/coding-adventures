@@ -2,7 +2,11 @@
   "id": "FR-PATH-016",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "FR-C14-age"
+    "FR-C14-an",
+    "FR-C14-jai-vingt-ans",
+    "FR-C14-quel-age",
+    "FR-C14-avoir-etre-langues",
+    "FR-C14-practice"
   ],
   "before": [],
   "inline": [],

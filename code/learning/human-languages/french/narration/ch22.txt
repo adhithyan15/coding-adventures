@@ -1,29 +1,76 @@
-French, chapter 22: Dog and Cat.
-1 lesson. All 1 can be done entirely by ear.
+French, chapter 22: Yes and No.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-chien, chat — the regular one, and the well-traveled one.
+Lesson 1 of 2.
+oui — yes.
 
 Warm-up.
 [pause 2 seconds]
-You've met Spanish's perro, a genuine unsolved mystery, and Latin's own canis/fēlēs becomes cattus history. French's two animal words tell a cleaner story: one is perfectly regular, the other is the same well- documented word you already know.
+Where Spanish kept Latin's word for yes, French built a brand-new one — and named half a country after it.
 
-The word, taken apart: chien.
-chien ("dog") comes straight from Latin canis (accusative canem) — and unlike Spanish, French kept it. Two separate, regular changes are stacked here: the initial c becomes ch is the same ca- becomes cha- palatalization you can check against other Latin words — campus becomes champ ("field"), cantāre becomes chanter ("to sing"); the a becomes ie in the middle is a different, later shift specific to words like canem (known as Bartsch's Law — the outcome is completely regular and undisputed, even though the precise phonetic trigger is still debated). Put together, chien is a fully regular sound change, following French's own rules predictably — a genuinely different story from Spanish, where the expected descendant (can) got pushed aside by the still-unexplained perro.
+The word, taken apart.
+oui = yes. Just two sounds, wee.
+Its Romance cousins (Spanish sí, Italian sì) come from Latin sīc "thus." French took a different road entirely. oui comes from Old French oïl, and oïl is a squeezed-down Latin phrase:
+hoc ille ("this [is] it") becomes o-ïl becomes oui.
+You answered "yes" by saying, in effect, "that's the one."
 
-The word, taken apart: chat.
-chat ("cat") continues cattus, the same Late Latin word — most likely ultimately Afro-Asiatic (compare Nubian kadis) — that spread along Roman trade routes as domestic cats themselves spread out of Egypt. This is the identical word behind Spanish's gato and Italian's gatto — French, Spanish, and Italian all independently inherited the exact same Late Latin replacement for Classical fēlēs.
+Why it's said this way: A word that split a country.
+This mattered so much it became a map. In the Middle Ages France was divided by how people said yes:
+the north said oïl becomes the langue d'oïl (which became modern French).
+the south said oc becomes the langue d'oc — still visible in the region name Languedoc, and in the language Occitan.
+One little answer-word, drawn as a border.
+
+Grammar Lens: The other “yes,” si.
+French keeps a second yes — si — for one special job: contradicting a negative. When someone says something isn't so and you insist it is, you answer si, not oui:
+Tu ne viens pas? ("You're not coming?") — Si! ("Yes I am!")
+(That si is the Latin sīc the Spanish sí also comes from — French kept it only for this contradicting move.)
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "chien" — dog, the regular descendant of canis]
+[your turn — say: "oui" — wee]
 [pause 8 seconds for the answer]
-[your turn — say: "champ, chanter" — the same ca- becomes cha- shift, in field and to sing]
+[your turn — say: the origin — "hoc ille becomes oïl becomes oui": that's the one]
 [pause 8 seconds for the answer]
-[your turn — say: "chat" — cat, the same word as Spanish's gato, from Egypt via Rome]
+[your turn — say: the contradiction — "Tu ne viens pas? — Si!"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is chien a regular or irregular descendant of Latin canis? (Regular — the same ca- becomes cha- shift as champ and chanter.) Does French show the same perro-style mystery Spanish does for "dog"? (No — French kept the expected Latin word.) What word does chat continue, and where did that word most likely originate? (Cattus, most likely Afro-Asiatic, traveling with the cat out of Egypt.)
+How do you say yes in French? (oui.) What Latin phrase is it worn down from? (hoc ille, "this is it," via oïl.) What were the langue d'oïl and langue d'oc named after? (The two medieval words for yes.) When do you answer si instead of oui? (To contradict a negative — Tu ne viens pas? — Si!)
+[question — say your answer, then pause 8 seconds]
+French has two words for yes. Which one contradicts a negative?
+
+
+Lesson 2 of 2.
+non — no / not.
+
+Warm-up.
+[pause 2 seconds]
+After French's home-grown oui, its no is the family word, shared straight with Spanish — but said the French way, through the nose.
+
+The word, taken apart.
+non = no. It comes from Latin nōn, the same source as Spanish no and Italian no:
+[a table of 3 rows, read aloud]
+Latin nōn: Spanish. , which gives:: no.
+Latin nōn: Italian. , which gives:: no.
+Latin nōn: French. , which gives:: non.
+Spanish dropped the n and left a clean no. French kept the n — but turned it into a nasal vowel: you don't quite touch your tongue to say the final n, you send the vowel through your nose. That's the sound written ‑on in non, bon, bonjour — you've met it before.
+
+Grammar Lens: The seed of French negation.
+The word that actually carries negation inside a French sentence isn't non but its unstressed twin, ne — both worn down from the same Latin nōn. Modern French usually reinforces ne with a second word, giving the pair ne … pas:
+Je ne parle pas français = "I do not speak French."
+For now, non on its own is your answer-word. In ne … pas, the ne is non's cousin from nōn; the pas was added later — it originally meant "a step" (Latin passus), as in "not walk a step" — and simply stuck. That fuller sentence negation is something you'll build later.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "non" — nasal, through the nose, like the -on in bon]
+[pause 8 seconds for the answer]
+[your turn — say: the pair with yes — "oui / non"]
+[pause 8 seconds for the answer]
+[your turn — say: the family — Latin nōn becomes Spanish no, French non]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say no in French? (non.) What Latin word is it from, and which Spanish word is its twin? (nōn; Spanish no.) What did French do to the n that Spanish dropped? (Kept it as a nasal vowel — the -on sound.) What pair does full French negation usually wrap around the verb? (ne … pas.)

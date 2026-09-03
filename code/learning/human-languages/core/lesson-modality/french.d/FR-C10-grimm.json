@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C10-grimm",
+    "language": "french",
+    "chapter": 12,
+    "sequence": 310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5843614da8b84694"
+  },
+  "findings": []
+}

@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C29-ami
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 910
-chapter: 29
+sequence: 1010
+chapter: 33
 type: word
 headword: l'ami, l'amie
 gloss: friend — masculine or feminine by a regular swap, and the reason le/la elides to l' before a vowel

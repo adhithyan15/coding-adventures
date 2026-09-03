@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 32,
-  "title": "Asking a Question — Three Ways, and Which One to Use",
-  "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:1bf458e5f324bb00",
+  "title": "Coffee, Tea, Milk, Sugar",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:018a9a0efe26a8d7",
   "lessons": [
     {
-      "id": "FR-C32-intonation",
-      "sequence": 1100,
-      "title": "une question — the question you make with your voice alone",
-      "headword": "une question",
-      "romanization": "une question",
-      "gloss": "the question you make with your voice alone",
+      "id": "FR-C28-cafe",
+      "sequence": 970,
+      "title": "le café — coffee, one word the whole road agrees on",
+      "headword": "le café",
+      "romanization": "le café",
+      "gloss": "coffee — masculine, and the one drink-word nearly all of Europe borrowed along the same single road",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db254ce8d31ca4b3",
+      "sourceHash": "fnv1a64:6d29b539c2525dc5",
       "notice": null,
       "blocks": [
         {
@@ -35,64 +35,95 @@
             },
             {
               "kind": "speech",
-              "text": "You can say a great deal in French and cannot yet ask anything. This chapter fixes that, and the first way costs you no new words at all."
+              "text": "You already know how to ask nicely — s'il vous plaît. Now something worth asking for: the first of four everyday words for what's on the table."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "input",
+          "title": "You'll want to know: the word",
           "segments": [
             {
               "kind": "speech",
-              "text": "French has three ways to ask a question. This is the first, the cheapest, and by far the commonest in speech — and it costs you nothing new at all."
+              "text": "le café — coffee. Masculine."
             },
             {
               "kind": "speech",
-              "text": "Tu parles français. — You speak French. Tu parles français? — You speak French?"
+              "text": "Un café, s'il vous plaît. — \"A coffee, please.\""
             },
             {
               "kind": "speech",
-              "text": "The words are identical. The order is identical. The only difference is that the second one rises at the end, and in writing, a question mark."
-            },
-            {
-              "kind": "speech",
-              "text": "That is a real question, correct and unremarkable, and it is what a French speaker uses with friends, family, in a shop, all day. Note the space before the question mark — French puts a thin space before?,!,: and;, which English does not."
-            },
-            {
-              "kind": "speech",
-              "text": "Why start here. Textbooks usually open with the formal inversion, which is the rarest of the three and the hardest to build. You can ask about anything you can already say, right now, by lifting your voice. Everything after this lesson is about register and precision, not about being understood."
+              "text": "Café also names the place you drink it, exactly the way English cafe does — one word, two jobs, in both languages at once."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "etymology",
+          "title": "The word, taken apart: one road, not four",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "une question",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *une question*]"
+              "kind": "speech",
+              "text": "café comes from Ottoman Turkish kahve, which comes from Arabic qahwa. Arabic lexicographers record qahwa as an older word for wine — it only attached to the coffee bean once the drink spread out of Yemen, in the fifteenth century."
             },
             {
-              "kind": "prompt",
-              "action": "ASK",
-              "instruction": "the same question all three ways you know so far",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU ASK: the same question all three ways you know so far]"
+              "kind": "speech",
+              "text": "From Ottoman kahve, the word crossed into Europe through Italian caffè — and stopped there. French café, English coffee, German Kaffee, Italian caffè itself: every one of these is the same borrowing, taken at a different stop on a single road out of the Ottoman Empire. Nobody translated it; everybody just repeated it."
             }
           ]
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le café\" — masculine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le café\" — masculine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"un café, s'il vous plaît\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"un café, s'il vous plaît\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the road — \"qahwa, kahve, caffè, café\" — one word, four stops",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the road — \"qahwa, kahve, caffè, café\" — one word, four stops]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the surprise — \"qahwa once meant wine\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the surprise — \"qahwa once meant **wine**\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -104,26 +135,26 @@
             },
             {
               "kind": "speech",
-              "text": "How do you turn a French statement into a question with no new words? (Raise your voice at the end.) Is that correct French, or a shortcut? (Correct, and the commonest form in speech.) And what does French put before a question mark? (A space.)"
+              "text": "Say \"coffee, please.\" (Un café, s'il vous plaît. — masculine.) What Arabic word is café from, and what did it mean before coffee existed? (Qahwa — \"wine.\") Name the road it travelled. (Arabic qahwa becomes Ottoman kahve becomes Italian caffè becomes French café, with English coffee and German Kaffee the same borrowing at other stops.) Is s'il vous plaît the right register here? (Yes — spoken, to someone you don't know well.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C32-est-ce-que",
-      "sequence": 1110,
-      "title": "est-ce que — the phrase that announces a question before it starts",
-      "headword": "est-ce que",
-      "romanization": "est-ce que",
-      "gloss": "the phrase that announces a question before it starts",
+      "id": "FR-C28-the",
+      "sequence": 980,
+      "title": "le thé — tea, the word that took the other road",
+      "headword": "le thé",
+      "romanization": "le thé",
+      "gloss": "tea — masculine, and the drink whose name split in two depending which Chinese port a trader dealt with",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f34c94be49030b6",
+      "sourceHash": "fnv1a64:3b5d18f5f620de7f",
       "notice": null,
       "blocks": [
         {
@@ -139,68 +170,95 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the previous piece before adding another."
+              "text": "You just saw café travel Europe as one word, unchanged at every stop. Tea took the opposite kind of trip — it split."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "input",
+          "title": "You'll want to know: the word",
           "segments": [
             {
               "kind": "speech",
-              "text": "The second way. Put est-ce que in front of a statement and it becomes a question:"
+              "text": "le thé — tea. Masculine."
             },
             {
               "kind": "speech",
-              "text": "Est-ce que tu parles français?"
-            },
-            {
-              "kind": "speech",
-              "text": "Nothing else moves. The statement stays exactly as it was; the phrase sits in front of it like a flag."
-            },
-            {
-              "kind": "speech",
-              "text": "It is worth taking apart, because it looks like three words and behaves like one. Literally it is est-ce que = \"is it that…\" — French built a question marker out of a tiny sentence, then wore it down until nobody hears the parts any more. A speaker says it as one word, roughly ESS-kuh."
-            },
-            {
-              "kind": "speech",
-              "text": "When you would choose it. It is more neutral than the voice-only question and less formal than the inversion coming next — the safe middle. In writing, where your voice cannot rise, it is the ordinary way to ask."
-            },
-            {
-              "kind": "speech",
-              "text": "English has no equivalent and does not need one, because English inverts instead: do you speak…. That English do is doing the same job — a meaningless word inserted to mark a question — so the device is familiar even though the word is not."
+              "text": "Un thé, s'il vous plaît. — \"A tea, please.\""
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "etymology",
+          "title": "The word, taken apart: two ports, two words",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "est-ce que",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *est-ce que*]"
+              "kind": "speech",
+              "text": "China writes \"tea\" with one character everywhere, but doesn't say it the same way everywhere. In Mandarin it's chá. In the Hokkien of the south-eastern coast — the Amoy dialect — it's tê."
             },
             {
-              "kind": "prompt",
-              "action": "ASK",
-              "instruction": "the same question all three ways you know so far",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU ASK: the same question all three ways you know so far]"
+              "kind": "speech",
+              "text": "Traders who bought the leaf overland or through Mandarin-speaking ports carried home chá: it travelled into Persian, into Arabic, into Hindi. Dutch traders bought their tea specifically at Amoy, in Hokkien territory, and carried home tê instead — which became Dutch thee, then French thé, English tea, German Tee."
+            },
+            {
+              "kind": "speech",
+              "text": "So café and thé make a matched pair with opposite stories: café is one word repeated unchanged at every stop; thé is the same original word, worn into two different shapes depending which Chinese port a trader happened to deal with."
             }
           ]
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le thé\" — masculine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le thé\" — masculine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"un café, un thé\" — both masculine, both borrowed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"un café, un thé\" — both masculine, both borrowed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fork — \"chá overland, tê by Dutch ship\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fork — \"chá overland, tê by Dutch ship\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"café: one road. thé: two.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"café: one road. thé: two.\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -212,26 +270,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does est-ce que do to a statement? (Turns it into a question, with nothing else moving.) What is it literally? (Is it that…) And which English word does the same job? (Do, as in do you speak.)"
+              "text": "Say \"tea, please.\" (Un thé, s'il vous plaît. — masculine.) What Chinese dialect gave French thé its shape, and by what route? (Hokkien tê, carried by Dutch ships from the port of Amoy.) What's the overland word that chá-family languages use instead? (Chá, into Persian, Arabic, Hindi.) How is thé's story different from café's? (Café stayed one word everywhere; thé split in two depending on the port.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C32-ou",
-      "sequence": 1120,
-      "title": "où — where",
-      "headword": "où",
-      "romanization": "où",
-      "gloss": "where — and the accent that separates it from a completely different word",
+      "id": "FR-C28-lait",
+      "sequence": 990,
+      "title": "le lait — milk, the word French never had to borrow",
+      "headword": "le lait",
+      "romanization": "le lait",
+      "gloss": "milk — masculine, and the one drink in this chapter French did not have to borrow",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55150ca89e6f6068",
+      "sourceHash": "fnv1a64:8bce53f7a0acd06a",
       "notice": null,
       "blocks": [
         {
@@ -247,76 +305,91 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the previous piece before adding another."
+              "text": "Café and thé both crossed an ocean to reach French. This word never left home."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "input",
+          "title": "You'll want to know: the word",
           "segments": [
             {
               "kind": "speech",
-              "text": "où — where."
+              "text": "le lait — milk. Masculine, like café and thé."
             },
             {
               "kind": "speech",
-              "text": "Où est la gare? — Where is the station? Tu vas où? — Where are you going?"
-            },
-            {
-              "kind": "speech",
-              "text": "Both are correct. The question word can open the sentence or sit at the end where the answer would go, and the second is what you will hear far more in speech."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the accent, which is not decoration. French has two words spelled o-u:"
-            },
-            {
-              "kind": "speech",
-              "text": "ou — or."
-            },
-            {
-              "kind": "speech",
-              "text": "où — where."
-            },
-            {
-              "kind": "speech",
-              "text": "The grave accent is the only difference in writing, and in speech there is no difference at all: both are oo. This is the one place in French where an accent does nothing to the sound and everything to the meaning, which is why it is never optional."
-            },
-            {
-              "kind": "speech",
-              "text": "You now hold the first question word, and with it a question you can actually use on the first day in a French city."
+              "text": "Du lait, s'il vous plaît. — \"Some milk, please.\""
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "etymology",
+          "title": "The word, taken apart: inherited, not borrowed",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "où",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *où*]"
+              "kind": "speech",
+              "text": "lait comes from Latin lac (stem lact-) — a word Latin-speakers in Gaul simply kept saying, generation after generation, until it wore down into lait. No port, no trade route: this one was inherited, not borrowed, unlike café's single road or thé's forked one."
             },
             {
-              "kind": "prompt",
-              "action": "ASK",
-              "instruction": "the same question all three ways you know so far",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU ASK: the same question all three ways you know so far]"
+              "kind": "speech",
+              "text": "English shows the same split tête showed for \"head\": the inherited, everyday English word for this drink is milk — and it has nothing to do with lac. Milk descends from a completely different Proto-Indo-European root, one meaning \"to milk a cow.\" English only meets lac's stem lact- in learned words borrowed straight from written Latin much later: lactic, lactose, lactate. So French lait and English lactic are close cousins; French lait and English milk are not related at all."
             }
           ]
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le lait\" — masculine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le lait\" — masculine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"un café, un thé, du lait\" — three drinks, one gender",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"un café, un thé, du lait\" — three drinks, one gender]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousins — \"lait, lactic, lactose\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousins — \"lait, lactic, lactose\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the non-cousins — \"lait and milk share no root at all\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the non-cousins — \"lait and milk share no root at all\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -328,26 +401,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does où mean? (Where.) What is the same word without the accent? (Or.) And do they sound different? (No — the accent is meaning only.)"
+              "text": "Say \"milk, please.\" (Du lait, s'il vous plaît. — masculine.) Is lait borrowed, like café and thé, or inherited straight from Latin? (Inherited — from lac, stem lact-.) Which English words are close cousins of lait? (Lactic, lactose, lactate — learned borrowings of the same stem.) Is English milk one of those cousins? (No — a completely different, unrelated root.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C32-quand",
-      "sequence": 1130,
-      "title": "quand — when",
-      "headword": "quand",
-      "romanization": "quand",
-      "gloss": "when — and a silent d that comes back to life",
+      "id": "FR-C28-sucre",
+      "sequence": 1000,
+      "title": "le sucre — sugar, the longest road of the four",
+      "headword": "le sucre",
+      "romanization": "le sucre",
+      "gloss": "sugar — masculine, closing a chapter where every drink-word is; the fourth and longest road of the four",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20037ff507526f2e",
+      "sourceHash": "fnv1a64:6c365ac38788b548",
       "notice": null,
       "blocks": [
         {
@@ -363,68 +436,121 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the previous piece before adding another."
+              "text": "Coffee took one road, tea forked into two, milk never left home. Sugar's road is the longest of all — and it ends the chapter with a whole table's worth of masculine drink-words."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "input",
+          "title": "You'll want to know: the word",
           "segments": [
             {
               "kind": "speech",
-              "text": "quand — when."
+              "text": "le sucre — sugar. Masculine."
             },
             {
               "kind": "speech",
-              "text": "Quand est-ce que tu arrives? — When do you arrive?"
-            },
-            {
-              "kind": "speech",
-              "text": "The d is silent. Quand is kahn, nasal, with nothing on the end — until the next word begins with a vowel, and then it comes back as a t:"
-            },
-            {
-              "kind": "speech",
-              "text": "Quand est-ce que… — kahn-TESS-kuh."
-            },
-            {
-              "kind": "speech",
-              "text": "That is liaison, and it is one of the things that makes fast French hard to cut into words: the consonants at the ends of words are silent alone and audible in company. Nobody writes it down; every speaker does it."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin quando is the ancestor, and it is worth spending: Spanish cuándo, Italian quando, Portuguese quando — and the qu- on all of them is the same Latin question-word opening you see in English query, question and quest."
+              "text": "Du sucre, s'il vous plaît. — \"Some sugar, please.\""
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "etymology",
+          "title": "The word, taken apart: grit, gravel, sugar",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "quand",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *quand*]"
+              "kind": "speech",
+              "text": "sucre from Old French çucre from Arabic sukkar from Persian shakar from Sanskrit śárkarā, which first meant \"grit, gravel\" — crystallized sugar looked like gravel to whoever named it first."
             },
             {
-              "kind": "prompt",
-              "action": "ASK",
-              "instruction": "the same question all three ways you know so far",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU ASK: the same question all three ways you know so far]"
+              "kind": "speech",
+              "text": "Sucre passed through Arabic just like café did, but through a different Arabic word (sukkar, not qahwa): a shared language of transmission, not a shared root. Where lait is inherited straight from Latin, sucre is borrowed — from further back than café or thé, all the way to Sanskrit."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a lean, and its one loud exception",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four drink-words, four masculine articles: le café, le thé, le lait, le sucre. Not a rule to trust — a lean: French tends to make plain substances masculine. This lean has a loud exception: l'eau, \"water,\" is feminine. You still learn each word with its article, the promise this book has kept since la main."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: si, not oui",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The si you learned — the \"yes\" for contradicting a negative — fits this table exactly:"
+            },
+            {
+              "kind": "speech",
+              "text": "Vous ne voulez pas de sucre? — Si, un peu. (\"You don't want sugar? — Yes, a little.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "Plain oui here would agree you don't want it; si is what pushes back. That same oui once mattered enough to split a country — langue d'oïl in the north, langue d'oc in the south."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le sucre\" — masculine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le sucre\" — masculine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — \"le café, le thé, le lait, le sucre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — \"le café, le thé, le lait, le sucre\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exception — \"l'eau\" — feminine, against the lean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exception — \"l'eau\" — feminine, against the lean]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contradiction — \"Vous ne voulez pas de sucre? — Si!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contradiction — \"Vous ne voulez pas de sucre ? — Si !\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -436,551 +562,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does quand mean? (When.) Is the d pronounced? (Not alone — but it returns as a t before a vowel.) What is that called? (Liaison.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C32-comment",
-      "sequence": 1140,
-      "title": "comment — how",
-      "headword": "comment",
-      "romanization": "comment",
-      "gloss": "how — a word you have been using since your first lesson",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:b6d57f93f2d3b69a",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Recall the previous piece before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "comment — how."
-            },
-            {
-              "kind": "speech",
-              "text": "You already say it. Comment allez-vous? is how are you, and you learned it before you knew it contained a question word."
-            },
-            {
-              "kind": "speech",
-              "text": "Comment tu dis ça? — How do you say that? Comment? — on its own: Sorry? / Pardon?"
-            },
-            {
-              "kind": "speech",
-              "text": "That last one is worth having. Used alone it is how a French speaker asks you to repeat — politer than quoi?, which is the blunt what?"
-            },
-            {
-              "kind": "speech",
-              "text": "The origin is Latin quomodo, \"in what manner\", and English took the same idea by a different road: mode, modal and manner are all from modus, the \"how\" half of it."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "comment",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *comment*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "ASK",
-              "instruction": "the same question all three ways you know so far",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU ASK: the same question all three ways you know so far]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does comment mean? (How.) Which phrase you already knew contains it? (Comment allez-vous — how are you.) And what does Comment? alone mean? (Sorry? / Pardon?)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C32-combien",
-      "sequence": 1150,
-      "title": "combien — how much and how many",
-      "headword": "combien",
-      "romanization": "combien",
-      "gloss": "how much and how many — one word where English needs two",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f3644626c4a5e82d",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Recall the previous piece before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "combien — how much, how many."
-            },
-            {
-              "kind": "speech",
-              "text": "C'est combien? — How much is it? Combien de personnes? — How many people?"
-            },
-            {
-              "kind": "speech",
-              "text": "English splits this and French does not. Much for things you measure, many for things you count — French uses combien for both and lets the noun sort it out. One word fewer to choose between, and one of the rare places French is simpler than English."
-            },
-            {
-              "kind": "speech",
-              "text": "Note combien de before a noun. The de is not optional and does not change for number: combien de personnes, combien d'argent."
-            },
-            {
-              "kind": "speech",
-              "text": "C'est combien? is the single most useful question in this chapter for a traveller, and it is three words long."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "combien",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *combien*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "ASK",
-              "instruction": "the same question all three ways you know so far",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU ASK: the same question all three ways you know so far]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does combien cover that English splits in two? (How much and how many.) What must follow it before a noun? (de.) And how do you ask a price? (C'est combien?)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C32-pourquoi",
-      "sequence": 1160,
-      "title": "pourquoi — why",
-      "headword": "pourquoi",
-      "romanization": "pourquoi",
-      "gloss": "why — and the answer word that is built to match it",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:6e72d8b643ede472",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Recall the previous piece before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "pourquoi — why."
-            },
-            {
-              "kind": "speech",
-              "text": "Take it apart: pour (\"for\") + quoi (\"what\"). For what? French built its why out of two words you can already see, and English does the same thing in what for?"
-            },
-            {
-              "kind": "speech",
-              "text": "And the answer is built to match:"
-            },
-            {
-              "kind": "speech",
-              "text": "Pourquoi? — Why? Parce que… — Because…"
-            },
-            {
-              "kind": "speech",
-              "text": "Par ce que is \"by that which\". So the question is for what and the answer is by that which — a matched pair, and the reason this book teaches them together rather than one now and one later."
-            },
-            {
-              "kind": "speech",
-              "text": "That gives you the last of the five question words, and with parce que you can now join two clauses into one sentence, which is more than a question: it is the beginning of connected speech."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "pourquoi",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *pourquoi*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "ASK",
-              "instruction": "the same question all three ways you know so far",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU ASK: the same question all three ways you know so far]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is pourquoi made of? (pour + quoi — for what.) What answers it? (Parce que… — because.) And what is parce que literally? (By that which.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C32-inversion",
-      "sequence": 1170,
-      "title": "parlez-vous — the third way to ask",
-      "headword": "parlez-vous",
-      "romanization": "parlez-vous",
-      "gloss": "the third way to ask — the formal one, and when it is worth the effort",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f80430d810076cbf",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Recall the previous piece before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The third and last way. Swap the verb and the subject, and join them with a hyphen:"
-            },
-            {
-              "kind": "speech",
-              "text": "Tu parles français. becomes Parles-tu français? Vous parlez français. becomes Parlez-vous français?"
-            },
-            {
-              "kind": "speech",
-              "text": "This is inversion, and it is the form English used to have — speak you French? — and lost, keeping it only in are you, have you, can you."
-            },
-            {
-              "kind": "speech",
-              "text": "Where the three ways differ is register, not meaning:"
-            },
-            {
-              "kind": "speech",
-              "text": "Tu parles français? — friends, family, shops. Commonest by far."
-            },
-            {
-              "kind": "speech",
-              "text": "Est-ce que tu parles français? — neutral, and the default in writing."
-            },
-            {
-              "kind": "speech",
-              "text": "Parlez-vous français? — formal, written, or deliberately polite."
-            },
-            {
-              "kind": "speech",
-              "text": "A beginner is often taught inversion first and then sounds like a textbook in every conversation. It is the one you need to recognise immediately and can afford to produce last."
-            },
-            {
-              "kind": "speech",
-              "text": "One sound rule: if the verb ends in a vowel and the subject begins with one, French inserts a -t- to keep them apart — parle-t-il, a-t-elle. It exists purely so two vowels do not collide."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "parlez-vous",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *parlez-vous*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "ASK",
-              "instruction": "the same question all three ways you know so far",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU ASK: the same question all three ways you know so far]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What are the three ways to ask a question? (Voice, est-ce que, inversion.) Which is commonest in speech? (Voice.) Which should you learn to recognise first and produce last? (Inversion.) And why the -t- in parle-t-il? (To keep two vowels apart.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C32-quel",
-      "sequence": 1180,
-      "title": "quel, quelle — which",
-      "headword": "quel, quelle",
-      "romanization": "quel, quelle",
-      "gloss": "which — the question word that agrees with its noun",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:acaecb00e1d7c820",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Recall the previous piece before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "quel — which, what."
-            },
-            {
-              "kind": "speech",
-              "text": "Every question word so far has been invariable. This one is not: quel is an adjective, and like every French adjective it agrees with the noun it asks about."
-            },
-            {
-              "kind": "speech",
-              "text": "Quel jour? — Which day? (masculine) Quelle heure? — What time? (feminine) Quels livres? — Which books? (masculine plural) Quelles questions? — Which questions? (feminine plural)."
-            },
-            {
-              "kind": "speech",
-              "text": "All four sound identical. Kell, every time. The agreement is entirely written — which makes it a spelling problem rather than a speaking one, and it is one of the commonest places a French exam takes marks off."
-            },
-            {
-              "kind": "speech",
-              "text": "You already use one of these without thinking: Quelle heure est-il? — what time is it. Heure is feminine, so quelle takes two ls and an e."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the fifth and last way this chapter teaches you to ask. Three structures, five question words, and one adjective that agrees."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "quel, quelle",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *quel, quelle*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "ASK",
-              "instruction": "the same question all three ways you know so far",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU ASK: the same question all three ways you know so far]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Why does quel change and où does not? (Quel is an adjective and agrees with its noun.) Do the four forms sound different? (No — all kell.) So what kind of problem is it? (A spelling one.)"
+              "text": "Say \"sugar, please.\" (Du sucre, s'il vous plaît. — masculine.) Trace sucre back to Sanskrit. (Sukkar from shakar from śárkarā, \"grit, gravel.\") Do café and sucre share a root? (No — a language of transmission, Arabic, not a root; qahwa and sukkar are different words.) What is the lean about French drink-words, and what breaks it? (Masculine by default — broken by l'eau, feminine.) When do you answer si instead of oui? (Contradicting a negative — the same word-pair that once split France into langue d'oïl and langue d'oc.)"
             }
           ]
         }

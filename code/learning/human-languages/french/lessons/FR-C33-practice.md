@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C33-practice
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1220
-chapter: 33
+sequence: 1320
+chapter: 37
 type: practice-mix
 headword: "je voudrais, je peux, je dois"
 gloss: "the three verbs that put another verb to work"

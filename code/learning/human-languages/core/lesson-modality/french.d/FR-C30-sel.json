@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C30-sel",
     "language": "french",
-    "chapter": 30,
-    "sequence": 970,
+    "chapter": 34,
+    "sequence": 1070,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:23d27e5fcc12d491"
+    "sourceHash": "fnv1a64:9145f0b709378219"
   },
   "findings": []
 }

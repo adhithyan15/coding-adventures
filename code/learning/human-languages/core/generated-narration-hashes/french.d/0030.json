@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 30,
-  "sourceHash": "fnv1a64:a8464c260a68a8a4",
+  "sourceHash": "fnv1a64:3bca0aa475afadf9",
   "lessonIds": [
-    "FR-C30-fromage",
-    "FR-C30-beurre",
-    "FR-C30-sel",
-    "FR-C30-oeuf"
+    "FR-C26-entendre",
+    "FR-C26-dormir",
+    "FR-C26-marcher",
+    "FR-C26-courir"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch30.txt",
   "json": "french/narration/ch30.json",
-  "textHash": "fnv1a64:d4801f5edb2116af",
-  "jsonHash": "fnv1a64:ecfced3f71aedab0",
+  "textHash": "fnv1a64:108925949728778b",
+  "jsonHash": "fnv1a64:d64bf1ecc1d2c361",
   "findings": []
 }

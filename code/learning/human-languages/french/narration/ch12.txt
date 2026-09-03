@@ -1,61 +1,264 @@
-French, chapter 12: Numbers Eleven to Twenty.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+French, chapter 12: Family, and the Oldest Words We Have.
+7 lessons. You can do the first 5 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
-onze becomes seize — six numbers welded together.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The six fusions until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 7.
+le père — father.
 
 Warm-up.
 [pause 2 seconds]
-You can count to ten. Now the teens — and they are not built the way you'd guess. French didn't say "ten-one, ten-two." It inherited six numbers already fused in Latin, and they came through almost unrecognisable.
+The calendar took you back two thousand years, to Rome. This word goes back further than Rome — further than Latin, further than any written language at all.
 
-The six fusions.
-There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, French, from Latin, literally. Come back and look at it when you have stopped.
-Look at the ending they all share: -ze. That is Latin decem ("ten"), worn down to almost nothing — the same ten you already know in dix (10) and décembre (the old 10th month). One root, three disguises.
-And the front of each word is the digit you already count with: un becomes on-, deux becomes dou-, trois becomes trei-, quatre becomes quator-, cinq becomes quin-, six becomes sei-. Say them slowly and the small number surfaces.
+Sounds you'll need.
+e-grave — the è is open, the mouth wider than for é. Think of the e in English bed, held a moment longer.
+r-uvular — the r is the French one, made at the back of the throat.
+Together: le père = luh PEHR, one syllable after the article.
+
+The word, taken apart.
+père is Latin pater, worn down by French mouths for fifteen centuries until only four letters were left.
+pater itself is inherited, not invented. Behind it stands Proto-Indo-European ph₂tḗr — a word nobody ever wrote down, reconstructed from the shapes its descendants kept. Sanskrit pitṛ́, Greek patḗr, Latin pater: the same word, spoken across a continent, for longer than anyone can document.
+English never borrowed père, but it borrowed pater itself, over and over, and left it visible every time:
+paternal, paternity — "of a father".
+patron — a man who stands to you as a father would.
+patriarch, expatriate, patrimony.
+So the French word is short and the English cousins are long, and they are the same word. When père looks like nothing you know, say paternal and the p and the t are still there.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "onze, douze, treize, quatorze, quinze, seize"]
+[your turn — say: "le père" — luh PEHR, the è open and the r in the throat]
 [pause 8 seconds for the answer]
-[your turn — say: hear the ten — "-ze = decem = dix"]
+[your turn — say: the ladder — "ph₂tḗr, pater, père"]
 [pause 8 seconds for the answer]
-[your turn — say: the digit inside — "deux becomes douze, six becomes seize"]
+[your turn — say: "père becomes paternal, patron" — the p and t still standing]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count 11 to 16. (Onze, douze, treize, quatorze, quinze, seize.) What does the shared -ze ending come from? (Latin decem, "ten" — the same ten as dix and décembre.) Is 13 built as "ten-three" or "three-ten"? ("Three- ten" — trēdecim, the digit first.) Next: at 17, French suddenly changes its mind.
+How do you say "the father"? (le père, luh PEHR.) Which article does it take, and what does that tell you? (le — it is masculine.) What Latin word is it? (pater.) Name two English words with that pater still inside them. (paternal, patron — also paternity, patriarch.) Next: the other half of the pair.
 
 
-Lesson 2 of 2.
-dix-sept becomes vingt — where French changes its mind.
+Lesson 2 of 7.
+la mère — mother.
 
 Warm-up.
 [pause 2 seconds]
-Here is something you can watch happen. Up to seize (16), French used the old welded-together Latin numbers. Then, at 17, it simply gives up — and starts saying the numbers plainly, the way a child would.
+The same word, one letter different, one article different — and a much stranger set of English cousins waiting at the end of it.
 
-The seam.
-[a table of 5 rows, read aloud]
-16. French: seize. how it's built: one fused word ( from sēdecim).
-17. French: dix-sept. how it's built: "ten-seven" — two words, plainly.
-18. French: dix-huit. how it's built: "ten-eight".
-19. French: dix-neuf. how it's built: "ten-nine".
-20. French: vingt. how it's built: from vīgintī.
-Notice the order flips too. In seize, the digit came first ("six-ten"). In dix-sept, the ten comes first ("ten-seven"). At exactly 17, French switched both its strategy and its direction — a visible seam in the counting system. (Latin itself wobbled here: it had septendecim for 17, but for 18 and 19 it counted down from twenty — duodēvīgintī, "two-from-twenty." The sisters all abandoned that subtraction trick.)
-vingt (20) from Latin vīgintī, the root behind English vigesimal ("counting by twenties") — and the reason French later builds quatre-vingts (80 = "four twenties").
+Sounds you'll need.
+la mère = lah MEHR. The vowel is the identical open è you just met in père; only the first consonant changes.
+Say them back to back — père, mère — and hear that the rhyme is exact. That rhyme is not a coincidence; it is two inherited words worn down by the same mouths in the same way.
+
+The word, taken apart.
+mère is Latin māter, from Proto-Indo-European méh₂tēr.
+The obvious English cousins are the ones you would guess:
+maternal, maternity — "of a mother".
+matron, matriarch, alma mater.
+And then there is one nobody guesses. Latin took māter and built materia from it — originally the usable wood of a tree, the growing part, the stuff a mother-trunk yields. Roman writers then stretched materia to mean the stuff anything is made of, and English inherited it twice over:
+material — what a thing is made of.
+matter — stuff itself, the physical world.
+So when a physicist says matter, the word underneath is mother. That is the kind of thing etymology is for: not a party trick, but a reminder that abstract vocabulary is almost always a concrete word that travelled.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: 16 becomes 20 — "seize, dix-sept, dix-huit, dix-neuf, vingt"]
+[your turn — say: "la mère" — lah MEHR]
 [pause 8 seconds for the answer]
-[your turn — say: the seam — "seize = six-ten (fused); dix-sept = ten-seven (plain)"]
+[your turn — say: the pair — "le père, la mère"; the rhyme is exact, the articles are not]
 [pause 8 seconds for the answer]
-[your turn — say: the whole run, 11 to 20]
+[your turn — say: the surprising one — "māter becomes materia becomes matter"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-At which number does French stop fusing? (At 17 — seize is fused, dix-sept is plain "ten-seven".) What two things change at that seam? (The strategy — fused becomes transparent — and the order, digit-first becomes ten-first.) What English word comes from vingt's root? (Vigesimal, from vīgintī.) Next chapter: putting numbers to work.
+How do you say "the mother"? (la mère, lah MEHR.) Which article, and why is it not the same as père's? (la — mère is feminine.) Give both parents together. (le père, la mère.) Which everyday English word for physical stuff comes from māter? (matter — through materia, the wood a tree yields.) Next: why English says father where French says père.
+
+
+Lesson 3 of 7.
+père / father — one sound-law.
+
+Warm-up.
+[pause 2 seconds]
+You have met two words that mean what English father and mother mean, and look almost nothing like them. That is about to stop being true.
+
+Grammar Lens: the same word went down two roads.
+French took pater and māter straight from Latin. English did not borrow them from anybody. It inherited the very same Proto-Indo-European words down a different branch of the family — and on that branch, one systematic change hit every word at once. It is called Grimm's law, and the part that matters here is short: p became f, and t became th.
+Apply it and watch the disguise fall off. Each row is one inherited word, shown first as it is reconstructed, then down each of the two roads:
+[a table of 2 rows, read aloud]
+Proto-Indo-European: ph₂tḗr. Latin becomes French: pater becomes père. English: father.
+Proto-Indo-European: méh₂tēr. Latin becomes French: māter becomes mère. English: mother.
+père keeps the p; father shifts it to f. The t of pater is still a t in French and has become th in English. Nothing else moved.
+This is why the resemblance between maternal and mother feels different from the resemblance between paternal and father: maternal came into English late, borrowed whole from Latin with its t intact, while mother came down the long way and took the sound-change with it. Two arrivals of one word, centuries apart.
+The point is not the pair. It is that sound-change is regular — it applies to a language wholesale, not word by word — which is exactly what makes a word you have never seen guessable.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the law — "p becomes f, t becomes th"]
+[pause 8 seconds for the answer]
+[your turn — say: "père, father" — then "mère, mother"; hear the same word twice]
+[pause 8 seconds for the answer]
+[your turn — say: the two arrivals — "maternal came by boat, mother came on foot"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two sounds does Grimm's law change, in the version you need here? (p becomes f and t becomes th.) Are père and father borrowed from each other? (No — they are the same inherited word, arriving by two different roads.) Why does maternal keep its t while mother does not? (maternal was borrowed late from Latin; mother came down the Germanic road and took the sound-change.) Next: the brother.
+
+
+Lesson 4 of 7.
+le frère — brother.
+
+Warm-up.
+[pause 2 seconds]
+Parents done. The next word rhymes with both of them, and it lets you use the sound-law you just learned instead of only hearing about it.
+
+Sounds you'll need.
+le frère = luh FREHR. The same open è, the same throat r — and now an r on each side of the vowel, which is the only hard part.
+Say père, then frère. One consonant has been added at the front; everything else is identical.
+
+The word, taken apart.
+frère is Latin frāter, from Proto-Indo-European bʰréh₂tēr.
+Now use what you have. English brother is that same PIE word down the Germanic road: the t became th, exactly as it did in father and mother. The law you just met explains a third pair without being told to.
+By the Latin road, English got the formal set:
+fraternal, fraternity, fraternize.
+and, softened through Old French frere, friar — a monk who is literally a brother of his order.
+Fraternity and friar are the same word twice, once in a lecture hall and once in a monastery, and the difference between them is only how long each spent in a French mouth on the way.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "le frère" — luh FREHR, an r on both sides of the vowel]
+[pause 8 seconds for the answer]
+[your turn — say: the three so far — "le père, la mère, le frère"]
+[pause 8 seconds for the answer]
+[your turn — say: the law again — "frāter, brother: the t went to th"]
+[pause 8 seconds for the answer]
+[your turn — say: "frère becomes fraternal, friar"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "the brother"? (le frère, luh FREHR.) What Latin word is behind it? (frāter.) Which sound-change turns frāter into English brother? (The same one: t becomes th.) What is a friar, underneath the word? (A brother — the same frère, worn down through Old French.) Next: the sister, and a letter you have not met.
+
+
+Lesson 5 of 7.
+la sœur — sister.
+
+Warm-up.
+[pause 2 seconds]
+Three words that rhyme, and then this one. Père, mère, frère — and sœur, which refuses the pattern and brings a letter with it.
+
+Sounds you'll need.
+la sœur = lah SUR, but not the sur of English sure. Round your lips as if to say oo, then say eh without moving them. That rounded front vowel is what œu spells.
+The r is the throat r, as in the other three.
+The strange letter is œ, an o and an e fused into one. It gets a lesson of its own next; for now, read it as the single vowel you just made.
+
+The word, taken apart.
+sœur is Latin soror — and you can watch it collapse:
+soror becomes seror becomes suer becomes sœur.
+Two syllables ground down into one, which is why it stopped rhyming with its three relatives. They were worn evenly; this one was worn out of shape.
+English kept soror whole in the borrowed words:
+sorority, sororal.
+and a nun is still addressed as Sister in English and ma sœur in French, the same word in both mouths.
+English sister is not from soror by borrowing — it comes down the Germanic road from the same PIE swésōr. So soror and sister are cousins who have not spoken since before either language existed.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "la sœur" — lips rounded, then eh without moving them]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "le frère, la sœur"]
+[pause 8 seconds for the answer]
+[your turn — say: the collapse — "soror, seror, sœur"]
+[pause 8 seconds for the answer]
+[your turn — say: all four — "le père, la mère, le frère, la sœur"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "the sister"? (la sœur, lah SUR with rounded lips.) What Latin word is behind it? (soror.) Why does it not rhyme with the other three? (It was worn down from two syllables to one — soror becomes sœur.) An English word that kept soror whole? (sorority.) Next: that fused letter, on its own.
+
+
+Lesson 6 of 7.
+œ — one letter, not two.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: œ, one letter and not two and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+You have just read a word containing a character English does not own. It is worth two minutes on its own, because it is not decoration and it is not rare.
+
+Script: œ, one letter and not two.
+œ is an o and an e pushed together into a single letter. French calls it e dans l'o — "e in the o" — which is exactly what it looks like.
+Three things follow, and they are the whole lesson:
+It counts as one letter when you spell aloud. sœur is spelled s-œ-u-r: four letters, not five.
+Writing it as two separate letters — soeur — is a substitution, the way writing ae for æ is. French readers accept it and French typography does not; a printed book, a newspaper and a road sign all use œ.
+It is not a separate sound of its own. In sœur the vowel is spelled œu, the rounded vowel you made in the last lesson.
+Its capital exists too, and looks like what you would expect: Œ.
+
+Writing: œ, and the four words that need it.
+The list of everyday œ words is short enough to hold in your head, and you already have one of them:
+la sœur — the sister, which you have.
+le cœur — the heart.
+l'œuf — the egg.
+l'œil — the eye.
+l'œuf and l'œil both come back later in this book as words in their own right, so learning the letter now means that when they arrive, only the meaning is new. le cœur is here because you will meet it everywhere else — it is one of the most common nouns in the language — and because four words is a short enough list to simply keep.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the name of the letter — "e dans l'o"]
+[pause 8 seconds for the answer]
+[your turn — say: spell it — "s-œ-u-r", four letters]
+[pause 8 seconds for the answer]
+[your turn — say: the short list — "sœur, cœur, œuf, œil"]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: œ three times: draw the o, then start the e inside its right edge]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many letters is œ? (One.) What does French call it? (e dans l'o — "e in the o".) How many letters in sœur? (Four — s-œ-u-r.) Name two other words that use it. (cœur, œuf, œil — any two.) Next: putting the family together.
+
+
+Lesson 7 of 7.
+Practice — four words, one law.
+
+Warm-up.
+[pause 2 seconds]
+Four words, learned one at a time. Run them as a set now, and then cash in what each one buys you in English.
+
+Guided Practice: the set, with articles.
+The article is half the word, and a family word said bare is a word half learned.
+[your turn — say: "le père, la mère" — the parents, masculine then feminine]
+[pause 8 seconds for the answer]
+[your turn — say: "le frère, la sœur" — the siblings, same order]
+[pause 8 seconds for the answer]
+[your turn — say: all four straight through, then in reverse]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"le père, la mère, le frère, la sœur".
+
+Guided Practice: the three that rhyme, and the one that does not.
+[pause 1 second]
+[your turn — say: "père, mère, frère" — one vowel, three times: the open è]
+[pause 8 seconds for the answer]
+[your turn — say: "sœur" after them, and hear the break]
+[pause 8 seconds for the answer]
+[your turn — say: why it broke — "soror ground down two syllables into one"]
+[pause 8 seconds for the answer]
+
+Guided Practice: cash in the English.
+Each French word hands you an English one you already knew and never thought about, and the French is the key rather than the lock.
+[your turn — say: "père becomes paternal, patron"]
+[pause 8 seconds for the answer]
+[your turn — say: "mère becomes maternal, matter"]
+[pause 8 seconds for the answer]
+[your turn — say: "frère becomes fraternal, friar"]
+[pause 8 seconds for the answer]
+[your turn — say: "sœur becomes sorority"]
+[pause 8 seconds for the answer]
+
+What you've built this chapter.
+four family words, each with its article.
+one sound-law — Grimm's law, p becomes f and t becomes th. It is why père is father, mère is mother and frāter is brother, and it turned three separate memorisations into one fact.
+a letter — œ, one character, waiting in cœur, œuf and œil.
+a habit worth more than any of them: when a French word looks like nothing, reach for the long formal English word rather than the short common one. Père is opaque next to father and obvious next to paternal.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give all four family words with their articles. (le père, la mère, le frère, la sœur.) Which two are feminine? (la mère, la sœur.) State Grimm's law in the form you need. (p becomes f, t becomes th.) Use it: what English word is frāter? (brother.) How many letters is œ, and name a word besides sœur that has it. (One; cœur, œuf or œil.) Which English word for physical stuff traces back to mère? (matter.)

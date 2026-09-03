@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C12-treize",
+    "language": "french",
+    "chapter": 14,
+    "sequence": 380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13b440f701b5d154"
+  },
+  "findings": []
+}

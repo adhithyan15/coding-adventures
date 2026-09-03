@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C25-ecrire
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 780
-chapter: 25
+sequence: 880
+chapter: 29
 type: word
 headword: écrire
 gloss: to write — Latin scrībere, "to scratch," with a propped-up é- that French added in front of every borrowed sc-, sp- and st- word

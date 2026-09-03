@@ -1,16 +1,21 @@
 {
   "language": "french",
   "chapter": 12,
-  "sourceHash": "fnv1a64:dfc2faa271f418ce",
+  "sourceHash": "fnv1a64:1762903b18d7a391",
   "lessonIds": [
-    "FR-C12-nombres-11-16",
-    "FR-C12-nombres-17-20"
+    "FR-C10-pere",
+    "FR-C10-mere",
+    "FR-C10-grimm",
+    "FR-C10-frere",
+    "FR-C10-soeur",
+    "FR-C10-oe",
+    "FR-C10-practice"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 6,
+  "drivablePrefix": 5,
   "text": "french/narration/ch12.txt",
   "json": "french/narration/ch12.json",
-  "textHash": "fnv1a64:1fa7802eb77e95dd",
-  "jsonHash": "fnv1a64:bc4701adc0b7c99f",
+  "textHash": "fnv1a64:badbd29f2610a6e3",
+  "jsonHash": "fnv1a64:e3a9763eb9938a04",
   "findings": []
 }

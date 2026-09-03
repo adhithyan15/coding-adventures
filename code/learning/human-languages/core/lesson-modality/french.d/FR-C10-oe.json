@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "FR-C10-oe",
+    "language": "french",
+    "chapter": 12,
+    "sequence": 325,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7f0eb40eccdfbf3c",
+    "detachableSegments": [
+      "Script: œ, one letter and not two",
+      "Writing: œ, and the four words that need it"
+    ]
+  },
+  "findings": []
+}

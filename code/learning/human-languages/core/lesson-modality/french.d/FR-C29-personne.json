@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C29-personne",
     "language": "french",
-    "chapter": 29,
-    "sequence": 940,
+    "chapter": 33,
+    "sequence": 1040,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e706ac7aac58b8db"
+    "sourceHash": "fnv1a64:e9fc8b09ce8c1106"
   },
   "findings": []
 }

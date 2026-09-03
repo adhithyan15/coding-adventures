@@ -1,34 +1,344 @@
-French, chapter 20: Sorry.
-1 lesson. All 1 can be done entirely by ear.
+French, chapter 20: The Past That Takes être.
+10 lessons. All 10 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-je suis désolé(e) — "I'm sorry" (literally "I am desolate").
+Lesson 1 of 10.
+je suis allé — the past built from "be".
 
 Warm-up.
 [pause 2 seconds]
-You already know s'il vous plaît, "please" — "if it pleases you." French's "sorry" is, secretly, a much bigger word than it sounds: désolé is the same word as English desolate.
+You built a past tense out of avoir. Now meet the verbs that will not have it.
 
-The phrase, taken apart.
-je suis = "I am."
-désolé (feminine désolée) = "sorry," but literally "made utterly alone / devastated." It comes from Latin dēsōlāre, "to make solitary" — dē- ("thoroughly, completely") + sōlus ("alone"), the very root of English sole, solo, solitary, and desolate itself.
-So je suis désolé(e) literally says "I am desolate" — French reaches for a word of real devastation to say a plain "sorry," the way English keeps "terribly sorry" as an option rather than a requirement.
-
-Why it's said this way: pardon and excusez-moi.
-French keeps two more courtesy words for different jobs:
-pardon — a quick, all-purpose "sorry / pardon me" (bumping someone, a small slip). It comes from pardonner, Latin per- ("thoroughly") + dōnāre ("to give") — "to give completely," i.e. to forgive. The neat part isn't that French and Spanish coined this separately — it's that they didn't have to: perdōnāre was already one word in Late Latin, so French pardonner and Spanish perdón/perdonar are simply two children of the same inherited word, not two languages independently landing on the same idea.
-excusez-moi — "excuse me," from excuser < Latin ex- ("out of, free from") + causa ("cause, charge") — literally "to free from a charge." Reach for this to get someone's attention, not to apologize for a real fault.
-Je suis désolé(e) carries the most regret; pardon is the quick, light reflex; excusez-moi is for getting attention. Native speakers slide between all three by feel.
+Grammar Lens: some verbs take être instead.
+The recipe is the same shape as before, with the other verb in front:
+être (conjugated) + past participle.
+aller, "to go," is the headline case. Its past is not j'ai allé. It is:
+je suis allé — I went.
+tu es allé — you went.
+il est allé — he went.
+nous sommes allés — we went.
+ils sont allés — they went.
+Say j'ai allé to a French speaker and it will land as clearly wrong, the way I have went lands in English.
+So you now have two past tenses that are really one tense with two auxiliaries, and the only question a verb ever raises is: which one? For the vast majority it is avoir, and this chapter is about the short list that says otherwise — what is on it, what is deceptively not on it, and the visible thing that happens to the participle when être is used.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "désolé" — sorry / desolate — then "je suis désolé," I am sorry]
+[your turn — say: "je suis allé, tu es allé, il est allé"]
 [pause 8 seconds for the answer]
-[your turn — say: the quick one — "pardon"]
+[your turn — say: the contrast — "j'ai parlé … je suis allé"]
 [pause 8 seconds for the answer]
-[your turn — say: the attention one — "excusez-moi"]
+[your turn — say: the error, so you can hear it — "j'ai allé is wrong, like I have went"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"j'ai parlé … je suis allé".
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "I went"? (Je suis allé.) Which auxiliary does aller take? (être.) What is wrong with j'ai allé? (The wrong auxiliary — it sounds like I have went.) Which auxiliary do most French verbs take? (avoir.) Next: which verbs are on the short list.
+
+
+Lesson 2 of 10.
+aller, venir, naître, mourir — the shape of the list.
+
+Warm-up.
+[pause 2 seconds]
+Textbooks give this as a list to memorise, usually a dozen verbs long. It is much easier to hold as a shape.
+
+Grammar Lens: arriving and leaving.
+The verbs that take être are these: aller (go), venir (come), partir (leave), arriver (arrive), entrer, sortir, monter, descendre, naître (be born), mourir (die), rester (stay), tomber (fall).
+Read them as a shape and the list stops needing memorising:
+going, coming, being born, dying — arriving and leaving, in space or in life.
+Every one of them is about crossing a threshold. Entering or leaving a place; entering or leaving the world; going up, going down, falling, staying put at the end of a movement. They are not verbs about doing something. They are verbs about ending up somewhere.
+Hold on to that phrasing, because it is what makes the next two lessons make sense. It is also why the participle behaves the way it does: if the verb describes where you ended up, the participle is describing you — and you will see it agree with you accordingly.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the four corners — "going, coming, born, dying"]
+[pause 8 seconds for the answer]
+[your turn — say: the shape — "arriving and leaving, in space or in life"]
+[pause 8 seconds for the answer]
+[your turn — say: the test — "not doing something; ending up somewhere"]
+[pause 8 seconds for the answer]
+[your turn — say: "je suis allé, je suis venu, je suis resté"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does désolé literally mean, and what English word is it identical to? ("Made utterly alone" — the same word as English desolate.) What is pardon built from, and why does Spanish perdón look just like it? (Per- "thoroughly" + dōnāre "to give" — both simply inherited the same already-formed Latin word, perdōnāre.) What's excusez-moi for? (Getting someone's attention, not apologizing for a real fault.)
+Give the shape of the être list in one line. (Arriving and leaving, in space or in life — going, coming, being born, dying.) What do all these verbs have in common? (They cross a threshold — they are about ending up somewhere, not about doing something.) Name three. (aller, venir, partir, naître, mourir, rester, tomber — any three.) Next: the verbs that look like they belong and do not.
+
+
+Lesson 3 of 10.
+j'ai couru — not every motion verb qualifies.
+
+Warm-up.
+[pause 2 seconds]
+"Verbs of motion take être" is the rule most learners are given, and it will mislead you within a week.
+
+Grammar Lens: moving is not arriving.
+These are all motion verbs, and every one of them takes avoir:
+marcher (walk) — j'ai marché.
+courir (run) — j'ai couru.
+nager (swim), danser (dance), voyager (travel).
+You can run for an hour and arrive nowhere. That is the whole distinction. The être verbs are not about movement; they are about arriving, leaving and changing state — crossing a threshold, as the last lesson put it.
+Courir describes what your legs did. Partir describes that you are no longer here. The first is an activity; the second is a change in where you are, and it is the change that takes être.
+So correct the rule in your head now, before it costs you anything: not motion — transition.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the avoir ones — "j'ai marché, j'ai couru, j'ai dansé"]
+[pause 8 seconds for the answer]
+[your turn — say: against the être ones — "je suis parti, je suis arrivé"]
+[pause 8 seconds for the answer]
+[your turn — say: the corrected rule — "not motion, transition"]
+[pause 8 seconds for the answer]
+[your turn — say: the test — "you can run for an hour and arrive nowhere"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which auxiliary does courir take? (avoir — j'ai couru.) But is it not a motion verb? (Yes — which is why "motion verbs take être" is the wrong rule.) State the right one. (Transition, not motion — arriving, leaving, changing state.) Next: the verbs that use both.
+
+
+Lesson 4 of 10.
+je suis monté / j'ai monté les valises — some verbs switch auxiliary the moment they take an object.
+
+Warm-up.
+[pause 2 seconds]
+A handful of verbs sit on both sides of the line, and which side they are on depends on the sentence rather than the verb.
+
+Grammar Lens: an object flips the auxiliary.
+monter, descendre, sortir, rentrer and passer take être when they stand alone, and avoir the moment they take a direct object:
+Je suis monté. — "I went up." No object; être.
+J'ai monté les valises. — "I took the suitcases up." An object; avoir.
+This looks like an extra rule to memorise. It is the opposite: it is the rule you already have, doing exactly what it said it would.
+Je suis monté describes where I ended up — a transition, so être. J'ai monté les valises describes something I did to the suitcases — an action on an object, so avoir. The verb has not changed its meaning much; what has changed is whether the sentence is about a transition or about an action, and that is the only thing the auxiliary has ever cared about.
+So these verbs are not exceptions. They are the clearest demonstration that the rule is about the sentence, not the verb.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "Je suis monté … J'ai monté les valises"]
+[pause 8 seconds for the answer]
+[your turn — say: the same for going out — "Je suis sorti … J'ai sorti le chien"]
+[pause 8 seconds for the answer]
+[your turn — say: the reason — "transition takes être; an action on an object takes avoir"]
+[pause 8 seconds for the answer]
+[your turn — say: the conclusion — "what decides it is the sentence, not the verb"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which auxiliary in je suis monté? (être — no object, a transition.) And in j'ai monté les valises? (avoir — a direct object.) Is this a new rule? (No — it is the same rule: transition takes être, an action on an object takes avoir.) Next: what happens to the participle.
+
+
+Lesson 5 of 10.
+elle est allée — the participle agrees.
+
+Warm-up.
+[pause 2 seconds]
+With avoir, the participle almost never moved. With être it moves every time, and this is the one agreement in French you can actually hear.
+
+Grammar Lens: it agrees with the subject.
+[a table of 4 rows, read aloud]
+Il est allé. means He went.
+Elle est allée. means She went.
+Ils sont allés. means They went.
+Elles sont allées. means They (f.) went.
+The participle takes the subject's gender and number — exactly like an adjective.
+And the reason is the same fossil you already met. Elle est allée began as a plain description: "she is gone," with gone describing her, in the same way elle est fatiguée describes her. It was never an action she performed on something. It was a state she was in — which is precisely the shape of every verb on this list. So the participle agreed with her, and it still does.
+One practical note. With aller you cannot hear the difference: allé and allée are identical aloud. But some of these verbs end in a consonant, and then you can — il est mort against elle est morte, where the t wakes up. That makes this the rare French agreement rule that is not purely a spelling problem.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the four — "il est allé, elle est allée, ils sont allés, elles sont allées"]
+[pause 8 seconds for the answer]
+[your turn — say: one you can hear — "il est mort, elle est morte"]
+[pause 8 seconds for the answer]
+[your turn — say: the reason — "she is gone: gone describes her"]
+[pause 8 seconds for the answer]
+[your turn — say: the parallel — "elle est fatiguée, elle est allée"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+With être, what does the participle agree with? (The subject.) Say "she went." (Elle est allée.) Why does it agree? (It began as a description of her — "she is gone" — so it behaved like an adjective.) Which example lets you hear the agreement? (il est mort against elle est morte.) Next: the one rule under both auxiliaries.
+
+
+Lesson 6 of 10.
+une seule règle — both halves are the same fact.
+
+Warm-up.
+[pause 2 seconds]
+You now have two agreement rules that look unrelated. They are one rule, and seeing that is worth more than either of them.
+
+Grammar Lens: the participle agrees with whatever it described.
+[a table of 2 rows, read aloud]
+auxiliary: avoir. the participle agrees with: a preceding object — les lettres que j'ai écrites. because it was…: "I have letters, written".
+auxiliary: être. the participle agrees with: the subject — elle est allée. because it was…: "she is gone".
+Two rules, two different targets — and one explanation covering both.
+The participle was an adjective, and an adjective agrees with the thing it describes. That is all either rule says.
+With avoir, the thing described was the object you possessed: the letters are the written ones. So the participle agrees with the object — and only when the object comes first, because that is where an adjective could still reach it.
+With être, the thing described was the subject: she is the gone one. So the participle agrees with her.
+Both are the same sentence-shape from Latin, one built on habēre and one built on esse, and in both the participle is doing an adjective's job.
+French textbooks teach these as two chapters and a long list of exceptions. They are one idea with a two-thousand-year memory, and once you have the idea most of those exceptions write themselves.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the avoir case — "les lettres que j'ai écrites"]
+[pause 8 seconds for the answer]
+[your turn — say: the être case — "elle est allée"]
+[pause 8 seconds for the answer]
+[your turn — say: the single rule — "the participle agrees with whatever it described"]
+[pause 8 seconds for the answer]
+[your turn — say: the two old sentences — "I have letters written … she is gone"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+With avoir, what does the participle agree with? (A preceding object.) With être? (The subject.) State the one rule underneath both. (The participle was an adjective and agrees with whatever it described.) Why does the avoir rule need the object to come first? (Because that is where an adjective could still reach it.) Next: the verbs that take être and ignore its rule.
+
+
+Lesson 7 of 10.
+je me suis levé — the pronominal family.
+
+Warm-up.
+[pause 2 seconds]
+The être list was short and closed. Here is one more family that takes être, and it has no end to it.
+
+Grammar Lens: all of them, without exception.
+A pronominal verb is one carrying the little reflexive pronoun you met when you learned to give your name — the me of je m'appelle, the se of s'appeler.
+Every one of them takes être in the past. No list, no shape to memorise, no exceptions:
+je me suis levé — I got up.
+elle s'est lavée — she washed.
+Notice the word order: the reflexive pronoun comes before the auxiliary, not after it. Je me suis levé, not je suis me levé.
+That gives you two ways into être, and they work differently. The verbs from the earlier list are a closed set you can hold as a shape. The pronominals are an open class identified by their form — if it has a me, te or se, it takes être, and you never have to ask.
+But be careful with what comes next. They take être, and they do not follow être's agreement rule.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "je me suis levé"]
+[pause 8 seconds for the answer]
+[your turn — say: "elle s'est lavée"]
+[pause 8 seconds for the answer]
+[your turn — say: the word order — "je me suis levé"; the pronoun comes first]
+[pause 8 seconds for the answer]
+[your turn — say: the rule — "if it has me, te or se, it takes être"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which auxiliary do pronominal verbs take? (être — all of them.) How do you recognise one? (It carries me, te or se.) Where does that pronoun sit? (Before the auxiliary — je me suis levé.) Is this a closed list like the earlier one? (No — it is an open class.) Next: the trap in their agreement.
+
+
+Lesson 8 of 10.
+elle s'est lavée — the auxiliary lies about the rule.
+
+Warm-up.
+[pause 2 seconds]
+Pronominal verbs take être. Now watch them ignore être's agreement rule completely.
+
+Grammar Lens: être on the outside, avoir underneath.
+They agree with a preceding direct object — which is avoir's rule, not être's. Usually that object is the reflexive pronoun, and sometimes it is not:
+Elle s'est lavée. — She washed herself. se is the direct object, and it comes first, so the participle agrees.
+Elle s'est lavé les mains. — She washed her hands. The object is les mains, and it follows, so there is no agreement.
+Elles se sont parlé. — They spoke to each other. se is indirect — you speak to someone — so there is no agreement.
+Which is, satisfyingly, the rule you already had. Nothing new has been introduced: the participle agrees with a preceding direct object, exactly as it did in les lettres que j'ai écrites.
+The lesson to take is about appearances. The auxiliary looks like être and the agreement behaves like avoir, and if you let the first tell you about the second you will get it wrong every time. The auxiliary is not what decides agreement; it never was. What decides it is what the participle is describing.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: agreement — "Elle s'est lavée"]
+[pause 8 seconds for the answer]
+[your turn — say: no agreement, object after — "Elle s'est lavé les mains"]
+[pause 8 seconds for the answer]
+[your turn — say: no agreement, indirect — "Elles se sont parlé"]
+[pause 8 seconds for the answer]
+[your turn — say: the warning — "the auxiliary looks like être; the agreement is avoir's"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which agreement rule do pronominal verbs follow? (avoir's — a preceding direct object.) Why does elle s'est lavée agree? (se is the direct object and comes first.) Why does elle s'est lavé les mains not? (The object is les mains and it follows.) Why does elles se sont parlé not? (se is indirect — you speak to someone.) Next: the group that escapes even this.
+
+
+Lesson 9 of 10.
+elles se sont souvenues — the verbs with no other form.
+
+Warm-up.
+[pause 2 seconds]
+One small group escapes even the rule you just learned, and it escapes for a reason you can work out rather than memorise.
+
+Grammar Lens: no object to be an object of.
+A few verbs exist only in pronominal form. There is no plain version of them at all:
+se souvenir — to remember.
+s'enfuir — to flee.
+s'évanouir — to faint.
+There is no souvenir quelqu'un, no enfuir quelque chose. The se is not doing a job you could describe as direct or indirect, because there is no non-reflexive verb for it to be the object of. It is simply part of the word.
+So the previous lesson's test cannot be run on them, and they fall back to agreeing with the subject:
+Elles se sont souvenues. — They remembered.
+Which is where this chapter's whole argument lands. The agreement is not decided by the auxiliary, and not by a list of verb types. It is decided by what the participle is describing — and when there is no object in the picture at all, the only thing left for it to describe is the subject.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three — "se souvenir, s'enfuir, s'évanouir"]
+[pause 8 seconds for the answer]
+[your turn — say: the example — "Elles se sont souvenues"]
+[pause 8 seconds for the answer]
+[your turn — say: the reason — "no plain verb, so the se is not an object of anything"]
+[pause 8 seconds for the answer]
+[your turn — say: the landing — "what is left for the participle to describe is the subject"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is special about se souvenir? (It exists only in pronominal form — there is no plain souvenir verb.) So what does its participle agree with? (The subject — elles se sont souvenues.) Why can the direct-object test not be applied? (There is no non-reflexive verb for se to be the object of.) Next: all of it together.
+
+
+Lesson 10 of 10.
+Practice — which auxiliary, and what agrees.
+
+Warm-up.
+[pause 2 seconds]
+Two questions cover this whole chapter: which auxiliary, and what does the participle describe. Run both.
+
+Guided Practice: which auxiliary.
+[pause 1 second]
+[your turn — say: the contrast — "j'ai parlé … je suis allé"]
+[pause 8 seconds for the answer]
+[your turn — say: the shape of the list — "arriving and leaving, in space or in life"]
+[pause 8 seconds for the answer]
+[your turn — say: the trap — "j'ai couru, j'ai marché"; motion is not transition]
+[pause 8 seconds for the answer]
+[your turn — say: the switch — "je suis monté … j'ai monté les valises"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"je suis allé, je suis venu, je suis resté".
+
+Guided Practice: what the participle agrees with.
+[pause 1 second]
+[your turn — say: the four — "il est allé, elle est allée, ils sont allés, elles sont allées"]
+[pause 8 seconds for the answer]
+[your turn — say: the audible one — "il est mort, elle est morte"]
+[pause 8 seconds for the answer]
+[your turn — say: the avoir side — "les lettres que j'ai écrites"]
+[pause 8 seconds for the answer]
+[your turn — say: the single rule — "it agrees with whatever it described"]
+[pause 8 seconds for the answer]
+
+Guided Practice: the pronominals.
+[pause 1 second]
+[your turn — say: "je me suis levé"]
+[pause 8 seconds for the answer]
+[your turn — say: the three cases — "elle s'est lavée; elle s'est lavé les mains; elles se sont parlé"]
+[pause 8 seconds for the answer]
+[your turn — say: the group with no plain form — "elles se sont souvenues"]
+[pause 8 seconds for the answer]
+
+What you've built this chapter.
+a second auxiliary, and a short closed list that is easier as a shape than a list: arriving and leaving, in space or in life.
+two corrections to the rule you would have been given. Motion verbs do not take être — transition verbs do; and five verbs switch the moment they take an object, which shows that what decides the auxiliary is the sentence, not the verb.
+an agreement you can hear — il est mort, elle est morte.
+one rule under everything: the participle was an adjective, and it agrees with whatever it described. Avoir's rule, être's rule and the pronominal rule are that one fact seen from three angles.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "she went." (Elle est allée.) Which auxiliary does courir take, and why? (avoir — it is motion, not transition.) What flips monter to avoir? (A direct object.) Which agreement rule do pronominal verbs follow? (avoir's — a preceding direct object.) State the one rule under all of it. (The participle agrees with whatever it described.)

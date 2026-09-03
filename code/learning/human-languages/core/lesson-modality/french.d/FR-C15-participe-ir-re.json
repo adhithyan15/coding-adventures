@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C15-participe-ir-re",
+    "language": "french",
+    "chapter": 18,
+    "sequence": 555,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9ec780305a32ab2"
+  },
+  "findings": []
+}

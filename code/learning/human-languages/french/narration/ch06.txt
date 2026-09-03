@@ -359,12 +359,12 @@ month: octobre. says: eight (octō). sits at: 10th.
 month: novembre. says: nine (novem). sits at: 11th.
 month: décembre. says: ten (decem). sits at: 12th.
 Every one is two places late, and all four are late by the same two places. A single event moved them.
-The old Roman year began in March, not January. Counting from March, September genuinely was the seventh month and December the tenth — the names were accurate. Later, two months named for two rulers, juillet (Julius) and août (Augustus), were fixed into the middle of the year, and the start of the year was moved back to January. The counting months were shoved two places along. Their Latin names never caught up.
+The old Roman year began in March, not January. Counting from March, September genuinely was the seventh month and December the tenth — the names were accurate. Later, two months named for Julius Caesar and the emperor Augustus were fixed into the middle of the year, and the start of the year was moved back to January. The counting months were shoved two places along. Their Latin names never caught up.
 So every December, in French and in English alike, you are saying the Roman word for ten. Spanish carries the identical fault: diciembre is decem too.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does septembre mean, and which month is it? (Seven — and it is the ninth.) In which month did the old Roman year begin? (March.) Which two months were pushed in, and for whom? (Juillet and août, for Julius and Augustus.) What number are you saying when you say décembre? (Ten, Latin decem.)
+What does septembre mean, and which month is it? (Seven — and it is the ninth.) In which month did the old Roman year begin? (March.) Which two months were pushed in, and for whom? (The two named for Julius Caesar and Augustus.) What number are you saying when you say décembre? (Ten, Latin decem.)
 
 
 Lesson 12 of 12.
@@ -398,8 +398,8 @@ What you've built this chapter.
 un to dix — the ten most-reused words in the language, each of them a Latin numeral that barely moved on the way in.
 un / une — the number one doubling as "a/an," and taking gender.
 liaison — six, dix and neuf changing their final sound to reach a following vowel.
-septembre to décembre — four months still counting seven to ten, two places out of place ever since the Roman year stopped starting in March.
+the four months at the end of the year — still counting seven to ten, two places out of place ever since the Roman year stopped starting in March.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count from one to ten without stopping. Now backwards. Which three numbers change their ending before a vowel, and how? (Six and dix to a z, neuf to a v.) What is the difference between un jour and une nuit? (Gender — the same word for "one" and "a," agreeing with the noun.) Why is décembre the twelfth month when it says ten? (The Roman year began in March, and two months were inserted.)
+Count from one to ten without stopping. Now backwards. Which three numbers change their ending before a vowel, and how? (Six and dix to a z, neuf to a v.) What is the difference between un jour and une nuit? (Gender — the same word for "one" and "a," agreeing with the noun.) Why does the twelfth month say ten? (The Roman year began in March, and two months were later inserted.)

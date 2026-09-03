@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 19,
-  "title": "Please",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c8088090a5484e16",
+  "title": "To Be, and the Three Verbs Inside It",
+  "drivablePrefix": 12,
+  "sourceHash": "fnv1a64:b63f663eed9ad73c",
   "lessons": [
     {
-      "id": "FR-C19-sil-vous-plait",
-      "sequence": 660,
-      "title": "s'il vous plaît — please",
-      "headword": "s'il vous plaît",
-      "romanization": "s'il vous plaît",
-      "gloss": "please (literally \"if it pleases you\")",
+      "id": "FR-C16-suis",
+      "sequence": 620,
+      "title": "je suis — I am",
+      "headword": "je suis",
+      "romanization": "je suis",
+      "gloss": "I am — from Latin sum, and one of the oldest word-shapes in Europe",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a96f28201509ab73",
+      "sourceHash": "fnv1a64:e7e2c4002f73559f",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,45 @@
             },
             {
               "kind": "speech",
-              "text": "French doesn't order you to do things — it asks, very politely, if it would please you."
+              "text": "The partner of avoir, and the most irregular verb in French. That irregularity is not carelessness; it is age."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "s'il vous plaît = please — but taken apart it's a tiny sentence:"
+              "text": "je suis = zhuh SWEE. The s at the end is silent."
             },
             {
               "kind": "speech",
-              "text": "s' (si, \"if\") + il (\"it\") + vous (\"you\") + plaît (\"pleases\") becomes \"if it pleases you.\""
+              "text": "The ui is a single glide: start at the tight u of tu and slide straight into ee."
             },
             {
               "kind": "speech",
-              "text": "You're not demanding; you're checking whether the favour would please them. It's the polite indirectness Spanish also uses in por favor (\"for a favour\") — same courtesy, built a different way."
-            },
-            {
-              "kind": "speech",
-              "text": "The verb plaît is from Latin placēre, \"to please\" — which English borrowed wholesale: please, pleasure, pleasant, and (via \"calm, pleasing\") even placid."
+              "text": "Do not hear an English swiss; there is no s at the end."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: Formal and familiar",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "French chooses the word for \"you\" by who you're talking to — and please comes in both:"
+              "text": "suis is Latin sum, \"I am.\""
             },
             {
               "kind": "speech",
-              "text": "s'il vous plaît — vous, the formal / plural you (a stranger, an elder, a room). Often written SVP."
+              "text": "Before you go looking for a pattern in this verb: there is not one. être is the most irregular verb in French, and it is irregular for the same reason English be / am / is / was is. These are among the oldest word-shapes in Europe, said millions of times a day for three thousand years, and constant use does not regularise a word — it protects it. Rare verbs get tidied up by analogy; the commonest ones are said too often for anyone to forget them, so they keep whatever shape history left them with."
             },
             {
               "kind": "speech",
-              "text": "s'il te plaît — te, the familiar you (a friend, a child)."
-            },
-            {
-              "kind": "speech",
-              "text": "Two sounds to respect: the final ‑t of plaît is silent (pleh), and plaît itself carries the ai = eh you've met."
+              "text": "So the six forms are six things to learn, and that is the honest situation. What this chapter can give you instead of a pattern is an explanation — because the irregularity turns out to have a shape once you know where the pieces came from."
             }
           ]
         },
@@ -99,29 +91,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"s'il vous plaît\" — final t silent, see voo pleh",
+              "instruction": "\"je suis\" — zhuh SWEE, the final s silent",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"s'il vous plaît\" — final t silent, *see voo pleh*]"
+              "source": "[YOU SAY: \"je suis\" — *zhuh SWEE*, the final *s* silent]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "taken apart — \"if it pleases you\"",
+              "instruction": "a whole sentence — \"Je suis fatigué\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: taken apart — \"if it pleases you\"]"
+              "source": "[YOU SAY: a whole sentence — \"Je suis fatigué\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "familiar — \"s'il te plaît\" to a friend",
+              "instruction": "the Latin — \"sum, suis\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: familiar — \"s'il te plaît\" to a friend]"
+              "source": "[YOU SAY: the Latin — \"sum, suis\"]"
             }
           ]
         },
@@ -138,7 +130,1574 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say please in French? (s'il vous plaît.) What does it literally mean? (\"If it pleases you.\") Which Latin verb is plaît from, and what English words come from it? (placēre — please, pleasure, placid.) When do you say s'il te plaît instead? (To someone you address as tu — a friend or child.)"
+              "text": "How do you say \"I am\"? (je suis, zhuh SWEE.) Is the final s pronounced? (No.) What Latin word is it? (sum.) Why is this verb so irregular? (It is very old and very common — constant use protects a shape rather than tidying it.) Next: the same verb, to a friend."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-es",
+      "sequence": 625,
+      "title": "tu es — you are",
+      "headword": "tu es",
+      "romanization": "tu es",
+      "gloss": "you are — two letters, and it sounds like a single vowel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a58607a670569e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After suis, the shortest form in the verb — and one that is easy to swallow entirely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tu es = tü ay. Two letters, one vowel sound."
+            },
+            {
+              "kind": "speech",
+              "text": "The s is silent, as it was in tu as."
+            },
+            {
+              "kind": "speech",
+              "text": "Careful: tu es and tu as differ only in that vowel — ay against ah. Say them back to back until the difference is deliberate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "es is Latin es, unchanged. Latin said es for \"you are\" and French still does, which for a form this heavily used is unusual — most such words are ground down past recognition."
+            },
+            {
+              "kind": "speech",
+              "text": "The pair to watch is not Latin, though. It is tu es against tu as: \"you are\" and \"you have,\" one vowel apart, both extremely common, both with a silent s. English keeps them far apart; French does not."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the practical difficulty of this verb. Not the etymology — the fact that its forms are short, unstressed, and easily confused with avoir's."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tu es\" — tü ay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tu es\" — *tü ay*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair to keep apart — \"tu es, tu as\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair to keep apart — \"tu es, tu as\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both verbs together — \"je suis, j'ai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both verbs together — \"je suis, j'ai\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"you are\" to a friend? (tu es, tü ay.) Which other very common form does it nearly collide with? (tu as, \"you have\".) What is the difference? (Only the vowel — ay against ah.) What Latin word is es? (es — unchanged.) Next: he and she."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-est",
+      "sequence": 630,
+      "title": "il est, elle est — he is, she is",
+      "headword": "il est, elle est",
+      "romanization": "il est, elle est",
+      "gloss": "he is, she is — the most frequently said word in the language",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:211cd8ee5b39ad43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have said this one already, many times, without knowing it was part of a verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il est = ee-LAY. The s and t are both silent, and the l of il runs into the vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a vowel the buried t wakes: est-il? = eh-TEEL."
+            },
+            {
+              "kind": "speech",
+              "text": "elle est = el-AY."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "est is Latin est, also unchanged — and it is very probably the single most frequently said word-form in French."
+            },
+            {
+              "kind": "speech",
+              "text": "You already own it. il est trois heures, \"it is three o'clock,\" is this exact form; so is every time you have said what time it was. The clock chapter handed you a piece of être several chapters before the verb arrived, which is the ordinary way a language teaches itself: the commonest forms turn up inside fixed phrases long before anybody explains them."
+            },
+            {
+              "kind": "speech",
+              "text": "Note also that il here is not \"he.\" In il est trois heures it refers to nothing at all — French requires a subject even when there is nobody to be one. That is the same reason the pronoun cannot be dropped: the sentence needs the slot filled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"il est, elle est\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"il est, elle est\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you already knew — \"il est trois heures\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you already knew — \"il est trois heures\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three singulars — \"je suis, tu es, il est\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three singulars — \"je suis, tu es, il est\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"he is\"? (il est, ee-LAY.) Where have you said this form before? (Telling the time — il est trois heures.) Who is il in that sentence? (Nobody — French needs the subject slot filled even when there is no subject.) Next: the plural, and a form with no French shape at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-sommes",
+      "sequence": 635,
+      "title": "nous sommes — we are",
+      "headword": "nous sommes",
+      "romanization": "nous sommes",
+      "gloss": "we are — and the only plural that keeps the regular ending",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a9b0b9588e5a89d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every verb you have met marks nous with -ons. Watch what this one does."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nous sommes = noo SOM. The s of nous buzzes across into the vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "The final -es is silent; the word ends on the m."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare nous avons, which ends in a nasal. This one does not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sommes is Latin sumus."
+            },
+            {
+              "kind": "speech",
+              "text": "And notice what is missing. Every other verb you have met marks nous with -ons: nous avons, nous parlons. This verb does not. There is no -ons here at all, and no way to derive sommes from anything."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the shape of this verb's irregularity: it does not bend the rules, it predates them. The -ons ending is a regularity French built up over centuries, and être was already too well-worn and too heavily used to be dragged into it."
+            },
+            {
+              "kind": "speech",
+              "text": "So sommes is not an exception to a rule. It is a survival from before the rule existed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nous sommes\" — noo SOM",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nous sommes\" — *noo SOM*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the missing ending — \"nous avons, nous parlons, nous sommes\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the missing ending — \"nous avons, nous parlons, nous sommes\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reason — \"it predates the rule, it does not break it\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reason — \"it predates the rule, it does not break it\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"we are\"? (nous sommes, noo SOM.) Which usual ending is missing? (-ons.) Why? (être is older than that regularity and was too common to be pulled into it.) What Latin word is it? (sumus.) Next: the form that keeps a hat."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-etes",
+      "sequence": 640,
+      "title": "vous êtes — you are",
+      "headword": "vous êtes",
+      "romanization": "vous êtes",
+      "gloss": "you are — and the circumflex marks the s that used to be there",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ebdddef4846d09c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The politeness form, and the one that wears its history on the page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vous êtes = voo-ZET. The s of vous buzzes into the vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "circumflex — the hat on ê marks a lost s, the same gravestone you met on août and âge."
+            },
+            {
+              "kind": "speech",
+              "text": "The final -es is silent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "êtes is Latin estis, \"you are\" — and you can read the erosion straight off the page."
+            },
+            {
+              "kind": "speech",
+              "text": "estis becomes estes becomes êtes. The s after the first vowel fell silent and then fell out of the spelling, and the circumflex was put there to mark where it had been. This is the third time you have met that hat doing exactly this job, and by now it should be a reflex: see a circumflex, try putting an s back."
+            },
+            {
+              "kind": "speech",
+              "text": "Do it here and êtes becomes estes, which is visibly Latin estis. Do it on août and you get aoust. Do it on âge and you get aage, from aetāticum."
+            },
+            {
+              "kind": "speech",
+              "text": "The infinitive works the same way: être was estre, from Vulgar Latin essere. The hat is not decoration on any of them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vous êtes\" — voo-ZET",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vous êtes\" — *voo-ZET*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "put the s back — \"êtes, estes, estis\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: put the *s* back — \"êtes, estes, estis\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same trick on the infinitive — \"être, estre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same trick on the infinitive — \"être, estre\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two plurals — \"nous sommes, vous êtes\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two plurals — \"nous sommes, vous êtes\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"you are\" politely? (vous êtes, voo-ZET.) What does the circumflex mark? (A lost s.) Put it back — what do you get? (estes, from Latin estis.) And on the infinitive être? (estre.) Next: the last form, and the one you must not confuse with avoir."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-sont",
+      "sequence": 645,
+      "title": "ils sont, elles sont — they are",
+      "headword": "ils sont, elles sont",
+      "romanization": "ils sont, elles sont",
+      "gloss": "they are — the hiss against ils ont's buzz",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab5e7b26e8f0f50a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The sixth form, and the one you were warned about two chapters ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ils sont = eel SO(N). The on is nasal; the t is silent."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the pair to drill: ils sont hisses, ils ont buzzes. eel-so(n) against eel-zo(n)."
+            },
+            {
+              "kind": "speech",
+              "text": "That single consonant is the whole difference between they are and they have."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sont is Latin sunt."
+            },
+            {
+              "kind": "speech",
+              "text": "You now have both of the verbs French is built on, and their ils forms are one sound apart. That is worth two minutes of drilling on its own, because the two sentences it distinguishes are both things you will say constantly."
+            },
+            {
+              "kind": "speech",
+              "text": "The full set, and you built every piece of it:"
+            },
+            {
+              "kind": "speech",
+              "text": "je suis, tu es, il est, nous sommes, vous êtes, ils sont."
+            },
+            {
+              "kind": "speech",
+              "text": "Six forms and no pattern — which is what the next three lessons are about, because the reason there is no pattern turns out to be more interesting than a pattern would have been."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ils sont\" — eel SO(N), hissing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ils sont\" — *eel SO(N)*, hissing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"ils sont, ils ont\"; hiss for are, buzz for have",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"ils sont, ils ont\"; hiss for are, buzz for have]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all six — \"je suis, tu es, il est, nous sommes, vous êtes, ils sont\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all six — \"je suis, tu es, il est, nous sommes, vous êtes, ils sont\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"they are\"? (ils sont, eel SO(N).) How do you hear it against ils ont? (A hiss against a buzz.) Give all six forms of être. Is there a pattern in them? (No — and the next lessons explain why.) Next: where these forms actually came from."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-esse",
+      "sequence": 650,
+      "title": "esse — the first stem",
+      "headword": "esse",
+      "romanization": "esse",
+      "gloss": "the first stem — where suis, es, est, sommes, êtes and sont all come from",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98002456b98c5b71",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six forms with no pattern between them. Put them beside their Latin and something appears — not a pattern, but a seam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every present form of être comes from Latin esse, \"to be\":"
+            },
+            {
+              "kind": "speech",
+              "text": "je suis from sum, nous sommes from sumus, ils sont from sunt."
+            },
+            {
+              "kind": "speech",
+              "text": "and the two short ones, tu es from es, il est from est, arrived practically untouched."
+            },
+            {
+              "kind": "speech",
+              "text": "Say each pair aloud and the irregularity stops looking random. The s- is there every time, and the forms are as scattered in Latin as they are in French — sum, es, est, sumus, estis, sunt is not a tidy paradigm either. French did not break this verb. It received it broken, and Latin had received it broken too."
+            },
+            {
+              "kind": "speech",
+              "text": "The infinitive comes from the same place, by a detour. Classical Latin's infinitive was esse, which is short and odd; Vulgar Latin rebuilt it on the ordinary pattern as essere, and essere becomes estre becomes être."
+            },
+            {
+              "kind": "speech",
+              "text": "So one stem, es-, accounts for the present tense and the infinitive. That is most of what you have learned so far. The rest of the verb comes from somewhere else entirely."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pairs — \"sum suis, sumus sommes, sunt sont\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pairs — \"sum suis, sumus sommes, sunt sont\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the stem — \"es-, for the present and the infinitive\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the stem — \"es-, for the present and the infinitive\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rebuild — \"esse, essere, estre, être\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rebuild — \"esse, essere, estre, être\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin verb are all the present forms from? (esse.) Was Latin's version regular? (No — sum, es, est, sumus, estis, sunt is already scattered; French inherited the mess.) Where does the infinitive être come from? (Vulgar Latin essere, a rebuild of esse.) Next: a part of the verb that is not from esse at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-fu",
+      "sequence": 655,
+      "title": "je fus — the second stem",
+      "headword": "je fus",
+      "romanization": "je fus",
+      "gloss": "the second stem — not related to suis at all, and the source of English \"be\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:989a5eaa7e5d8404",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The past of this verb does not begin with an s. That is not a sound change. It is a different verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The passé simple of être — the literary past you learned to recognise — is je fus, il fut."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no way to get fus from suis, and nobody has ever tried. It comes from Latin fuī, and fuī comes from Proto-Indo-European bʰuH-, \"to grow, to become.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That root went somewhere you will recognise. bʰuH- is also the source of English be. So English's be and French's fus are the same ancient word, and neither of them is related to French suis — which is the cousin of English is and am."
+            },
+            {
+              "kind": "speech",
+              "text": "English has exactly the same patchwork, and nobody notices because it is their own: am and is from one root, be from another, was and were from a third. French is doing what English does. It is only visible here because it is somebody else's language."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the form — \"je fus, il fut\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the form — \"je fus, il fut\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root — \"fuī, from bʰuH-: to grow, to become\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root — \"fuī, from \\*bʰuH-: to grow, to become\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the surprise — \"that root is English be\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the surprise — \"that root is English *be*\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English patchwork — \"am, is, be, was: three roots\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English patchwork — \"am, is, be, was: three roots\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is je fus? (The passé simple of être — \"I was\".) Is it related to suis? (No — different root entirely.) Which Latin word is it from? (fuī.) Which English word comes from the same root? (be.) Does English do the same thing? (Yes — am/is, be, and was come from three different roots.) Next: the third stem, and it is a verb about standing."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-stare",
+      "sequence": 660,
+      "title": "été — the third stem",
+      "headword": "été",
+      "romanization": "été",
+      "gloss": "the third stem — every ét- form of être is really the Latin verb for standing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7aac7811f8550b10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two stems so far. The third is the largest, and it is not a form of \"to be\" in any language — it is a verb about standing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The past participle of être is été. It has nothing to do with suis and nothing to do with fus. It comes from Latin stāre, \"to stand.\""
+            },
+            {
+              "kind": "speech",
+              "text": "And it is not one stray form. Every être form beginning ét- comes from the standing verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "été — the past participle from stātum."
+            },
+            {
+              "kind": "speech",
+              "text": "étant — the present participle from stantem."
+            },
+            {
+              "kind": "speech",
+              "text": "j'étais, il était — the imperfect from stābam."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a whole limb of the verb, borrowed wholesale from a different one."
+            },
+            {
+              "kind": "speech",
+              "text": "The idea is not far-fetched. \"How are you?\" is how do you stand? in more languages than not — English still says how do you stand on this, and standing means status. A verb for standing drifting into a verb for being is one of the best-worn paths in language."
+            },
+            {
+              "kind": "speech",
+              "text": "Stāre left French other things too, outside être: rester from re-stāre, \"to stay,\" and coûter from constāre, \"to cost.\" What it did not do in French is survive as a separate verb meaning \"to be.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the participle — \"été\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the participle — \"été\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the limb — \"été, étant, j'étais\": all from stāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the limb — \"été, étant, j'étais\": all from *stāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the meaning — \"to stand\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the meaning — \"to stand\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its other children — \"rester, coûter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its other children — \"rester, coûter\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the past participle of être? (été.) Which Latin verb is it from? (stāre, \"to stand\".) Which other être forms come from the same place? (Every one beginning ét- — étant, j'étais, il était.) Name two French verbs outside être from stāre. (rester, coûter.) Next: the name for what this verb is doing."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-suppletion",
+      "sequence": 665,
+      "title": "suppletion — three verbs in a trench coat",
+      "headword": "suppletion",
+      "romanization": "suppletion",
+      "gloss": "one verb's paradigm filled in with pieces of another — go/went, and être three times over",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa0c8495e6cf64a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have three stems and three different origins. There is a name for this, and having the name makes it stop being strange."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a paradigm filled in from elsewhere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Lay out what être is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "es- — the present tense and the infinitive, from esse."
+            },
+            {
+              "kind": "speech",
+              "text": "fu- — the passé simple, from fuī."
+            },
+            {
+              "kind": "speech",
+              "text": "ét- — the participles and the imperfect, from stāre."
+            },
+            {
+              "kind": "speech",
+              "text": "One verb, three ancestors, and the joins are invisible unless somebody points at them."
+            },
+            {
+              "kind": "speech",
+              "text": "The name for this is suppletion: one verb's paradigm filled in with pieces of another. It is not a French disease and not a sign of decay. It happens to the most used verbs in every language, and only to them — a verb has to be extremely common for speakers to tolerate a completely unpredictable form, and extremely common verbs are also the ones people reach for when another verb is missing a form."
+            },
+            {
+              "kind": "speech",
+              "text": "English does it constantly and you have never thought about it:"
+            },
+            {
+              "kind": "speech",
+              "text": "go / went — went was stolen outright from wend."
+            },
+            {
+              "kind": "speech",
+              "text": "am / is / be / was — the same three-way patchwork as être."
+            },
+            {
+              "kind": "speech",
+              "text": "good / better — better is not from good at all."
+            },
+            {
+              "kind": "speech",
+              "text": "So the answer to \"why is être so irregular?\" is now complete. It is irregular because it is old, common, and assembled from three verbs. There was never a pattern to find, and the time you might have spent hunting for one is better spent on the six forms themselves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three stems — \"es-, fu-, ét-\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three stems — \"es-, fu-, ét-\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word — \"suppletion\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word — \"suppletion\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English case — \"go, went; and went was taken from wend\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English case — \"go, went; and went was taken from wend\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the conclusion — \"no pattern, because it is three verbs\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the conclusion — \"no pattern, because it is three verbs\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name être's three stems and what each covers. (es- present and infinitive, fu- the passé simple, ét- participles and imperfect.) What is the name for a paradigm filled in from another verb? (Suppletion.) Give an English example. (go/went, or am/be/was, or good/better.) Which verbs does it happen to? (The most used ones — only they are common enough to survive it.) Next: what Spanish did with the same two verbs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-ser-estar",
+      "sequence": 670,
+      "title": "être / ser, estar — the same two verbs, twice",
+      "headword": "être / ser · estar",
+      "romanization": "être / ser · estar",
+      "gloss": "the same two Latin verbs, and the opposite solution — Spanish kept them apart",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73c931c9dfe23ed6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Stāre should have rung a bell. If you have ever looked at Spanish, you have met it wearing its own name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish has two verbs for \"to be,\" and choosing between them is famously the hardest thing about beginner Spanish:"
+            },
+            {
+              "kind": "speech",
+              "text": "ser from esse."
+            },
+            {
+              "kind": "speech",
+              "text": "estar from stāre."
+            },
+            {
+              "kind": "speech",
+              "text": "Those are the same two Latin verbs French has. French did not get a different inheritance; it made a different decision with the same one."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish kept them apart as two verbs, and made every speaker choose between them for the rest of their life."
+            },
+            {
+              "kind": "speech",
+              "text": "French kept one verb, être from esse, and quietly swallowed a large limb of stāre — the ét- forms — into it."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither language invented anything. They took the same two words and resolved the overlap in opposite directions, and the result is that a French speaker never thinks about stāre while a Spanish speaker thinks about it every day."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth carrying beyond this chapter, because it is the general shape of how related languages differ. They rarely differ because one has something the other lacks. They differ because both inherited the same crowded set of options and tidied it up differently."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Spanish pair — \"ser, estar\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Spanish pair — \"ser, estar\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "their sources — \"ser from esse, estar from stāre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: their sources — \"ser from esse, estar from stāre\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the French answer — \"one verb, être, which absorbed the ét- limb\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the French answer — \"one verb, être, which absorbed the ét- limb\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the finding — \"same two words, opposite solutions\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the finding — \"same two words, opposite solutions\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two Latin verbs lie behind Spanish ser and estar? (esse and stāre.) Are they the same two behind French être? (Yes — the identical inheritance.) What did each language do? (Spanish kept them apart as two verbs; French kept one and absorbed stāre's ét- forms.) Why do related languages usually differ? (They inherited the same options and tidied them differently.) Next: all six forms, together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-practice",
+      "sequence": 675,
+      "title": "Practice — the whole of être",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "the six forms, and the three verbs hiding inside them",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:032d353f7ffcd85f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six forms and three ancestors. Run the forms first; the history is what makes them stay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: the six",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je suis, tu es, il est, nous sommes, vous êtes, ils sont\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je suis, tu es, il est, nous sommes, vous êtes, ils sont\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "backwards — \"ils sont, vous êtes, nous sommes, il est, tu es, je suis\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: backwards — \"ils sont, vous êtes, nous sommes, il est, tu es, je suis\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two sentences — \"Je suis français\", \"Je suis fatigué\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two sentences — \"Je suis français\", \"Je suis fatigué\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"je suis, tu es, il est, nous sommes, vous êtes, ils sont\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the two verbs side by side",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the buzz and the hiss — \"ils ont, ils sont\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the buzz and the hiss — \"ils ont, ils sont\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the vowel pair — \"tu as, tu es\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the vowel pair — \"tu as, tu es\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both verbs from the top — \"j'ai … je suis\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both verbs from the top — \"j'ai … je suis\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: the three stems",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"es- from esse: the present and the infinitive\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"es- from esse: the present and the infinitive\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"fu- from fuī: the passé simple, and English be\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"fu- from fuī: the passé simple, and English *be*\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ét- from stāre: to stand\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ét- from stāre: to stand\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the name — \"suppletion\"; and \"go, went\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the name — \"suppletion\"; and \"go, went\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "the second verb the language rests on, six forms, one lesson each."
+            },
+            {
+              "kind": "speech",
+              "text": "an explanation instead of a pattern. There is no pattern in être because it is three verbs: esse, fuī and stāre, patched into one paradigm."
+            },
+            {
+              "kind": "speech",
+              "text": "a word for that — suppletion — and the knowledge that English does exactly the same with go/went and am/be/was."
+            },
+            {
+              "kind": "speech",
+              "text": "a comparison that generalises. Spanish kept ser and estar apart; French kept one verb and absorbed the other's limb. Related languages usually differ not by what they inherited but by how they tidied it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give all six forms of être. How do you hear ils sont against ils ont? (Hiss against buzz.) Name the three stems and their sources. (es- from esse, fu- from fuī, ét- from stāre.) What is the process called? (Suppletion.) Which Spanish verb is stāre? (estar.)"
             }
           ]
         }

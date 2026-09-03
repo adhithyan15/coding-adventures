@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 28,
-  "title": "Coffee, Tea, Milk, Sugar",
+  "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1f4507b2ea6abc38",
+  "sourceHash": "fnv1a64:7162857ddf3ba262",
   "lessons": [
     {
-      "id": "FR-C28-cafe",
-      "sequence": 870,
-      "title": "le café — coffee, one word the whole road agrees on",
-      "headword": "le café",
-      "romanization": "le café",
-      "gloss": "coffee — masculine, and the one drink-word nearly all of Europe borrowed along the same single road",
+      "id": "FR-C24-prendre",
+      "sequence": 810,
+      "title": "prendre — \"to take,\" the verb your hand does",
+      "headword": "prendre",
+      "romanization": "prendre",
+      "gloss": "to take — the grasping verb English borrowed a dozen times over, from prehensile to prison to surprise",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44483f1e104e5e61",
+      "sourceHash": "fnv1a64:30cd9f8a293e9a57",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already know how to ask nicely — s'il vous plaît. Now something worth asking for: the first of four everyday words for what's on the table."
+              "text": "You already have la main, the hand. Here is the verb that hand performs — and it turns out to be hiding inside a surprising number of English words you use without thinking."
             }
           ]
         },
@@ -46,462 +46,94 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "le café — coffee. Masculine."
+              "text": "prendre — to take. Said PRAHN-druh: the -en- is the nasal vowel of an, sent through the nose, not a clean en. Je prends le pain. — I take the bread."
             },
             {
               "kind": "speech",
-              "text": "Un café, s'il vous plaît. — \"A coffee, please.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Café also names the place you drink it, exactly the way English cafe does — one word, two jobs, in both languages at once."
+              "text": "The -ds of je prends is silent. You say prahn, and stop."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: one road, not four",
+          "title": "The word, taken apart: prendre",
           "segments": [
             {
               "kind": "speech",
-              "text": "café comes from Ottoman Turkish kahve, which comes from Arabic qahwa. Arabic lexicographers record qahwa as an older word for wine — it only attached to the coffee bean once the drink spread out of Yemen, in the fifteenth century."
+              "text": "prendre from Latin prehendere, \"to grasp, to seize,\" which Romans themselves shortened to prendere. That short form is the one French inherited — and English borrowed the family repeatedly:"
             },
             {
               "kind": "speech",
-              "text": "From Ottoman kahve, the word crossed into Europe through Italian caffè — and stopped there. French café, English coffee, German Kaffee, Italian caffè itself: every one of these is the same borrowing, taken at a different stop on a single road out of the Ottoman Empire. Nobody translated it; everybody just repeated it."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"le café\" — masculine",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"le café\" — masculine]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"un café, s'il vous plaît\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"un café, s'il vous plaît\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the road — \"qahwa, kahve, caffè, café\" — one word, four stops",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the road — \"qahwa, kahve, caffè, café\" — one word, four stops]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the surprise — \"qahwa once meant wine\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the surprise — \"qahwa once meant **wine**\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "text": "prehensile — a tail that grasps."
             },
             {
               "kind": "speech",
-              "text": "Say \"coffee, please.\" (Un café, s'il vous plaît. — masculine.) What Arabic word is café from, and what did it mean before coffee existed? (Qahwa — \"wine.\") Name the road it travelled. (Arabic qahwa becomes Ottoman kahve becomes Italian caffè becomes French café, with English coffee and German Kaffee the same borrowing at other stops.) Is s'il vous plaît the right register here? (Yes — spoken, to someone you don't know well.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C28-the",
-      "sequence": 880,
-      "title": "le thé — tea, the word that took the other road",
-      "headword": "le thé",
-      "romanization": "le thé",
-      "gloss": "tea — masculine, and the drink whose name split in two depending which Chinese port a trader dealt with",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:1fa0bad096f50f69",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
+              "text": "apprehend — to seize (ad- \"toward\" + grasp); reprehensible, something to be seized back on."
             },
             {
               "kind": "speech",
-              "text": "You just saw café travel Europe as one word, unchanged at every stop. Tea took the opposite kind of trip — it split."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "le thé — tea. Masculine."
+              "text": "prison from Latin prehensiō, \"a seizing\" — a jail is, literally, a taking-hold."
             },
             {
               "kind": "speech",
-              "text": "Un thé, s'il vous plaît. — \"A tea, please.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: two ports, two words",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "China writes \"tea\" with one character everywhere, but doesn't say it the same way everywhere. In Mandarin it's chá. In the Hokkien of the south-eastern coast — the Amoy dialect — it's tê."
+              "text": "surprise — French sur- \"over\" + prendre: an over-taking."
             },
             {
               "kind": "speech",
-              "text": "Traders who bought the leaf overland or through Mandarin-speaking ports carried home chá: it travelled into Persian, into Arabic, into Hindi. Dutch traders bought their tea specifically at Amoy, in Hokkien territory, and carried home tê instead — which became Dutch thee, then French thé, English tea, German Tee."
+              "text": "enterprise, something undertaken; apprentice, one who takes on."
             },
             {
               "kind": "speech",
-              "text": "So café and thé make a matched pair with opposite stories: café is one word repeated unchanged at every stop; thé is the same original word, worn into two different shapes depending which Chinese port a trader happened to deal with."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"le thé\" — masculine",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"le thé\" — masculine]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"un café, un thé\" — both masculine, both borrowed",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"un café, un thé\" — both masculine, both borrowed]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the fork — \"chá overland, tê by Dutch ship\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the fork — \"chá overland, tê by Dutch ship\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — \"café: one road. thé: two.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"café: one road. thé: two.\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
+              "text": "impregnable — from Old French imprenable, \"not takeable.\" Nothing to do with pregnancy."
             },
             {
               "kind": "speech",
-              "text": "Say \"tea, please.\" (Un thé, s'il vous plaît. — masculine.) What Chinese dialect gave French thé its shape, and by what route? (Hokkien tê, carried by Dutch ships from the port of Amoy.) What's the overland word that chá-family languages use instead? (Chá, into Persian, Arabic, Hindi.) How is thé's story different from café's? (Café stayed one word everywhere; thé split in two depending on the port.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C28-lait",
-      "sequence": 890,
-      "title": "le lait — milk, the word French never had to borrow",
-      "headword": "le lait",
-      "romanization": "le lait",
-      "gloss": "milk — masculine, and the one drink in this chapter French did not have to borrow",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:b18e21017071db56",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Café and thé both crossed an ocean to reach French. This word never left home."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "le lait — milk. Masculine, like café and thé."
-            },
-            {
-              "kind": "speech",
-              "text": "Du lait, s'il vous plaît. — \"Some milk, please.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: inherited, not borrowed",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "lait comes from Latin lac (stem lact-) — a word Latin-speakers in Gaul simply kept saying, generation after generation, until it wore down into lait. No port, no trade route: this one was inherited, not borrowed, unlike café's single road or thé's forked one."
-            },
-            {
-              "kind": "speech",
-              "text": "English shows the same split tête showed for \"head\": the inherited, everyday English word for this drink is milk — and it has nothing to do with lac. Milk descends from a completely different Proto-Indo-European root, one meaning \"to milk a cow.\" English only meets lac's stem lact- in learned words borrowed straight from written Latin much later: lactic, lactose, lactate. So French lait and English lactic are close cousins; French lait and English milk are not related at all."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"le lait\" — masculine",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"le lait\" — masculine]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"un café, un thé, du lait\" — three drinks, one gender",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"un café, un thé, du lait\" — three drinks, one gender]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousins — \"lait, lactic, lactose\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"lait, lactic, lactose\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the non-cousins — \"lait and milk share no root at all\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the non-cousins — \"lait and milk share no root at all\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"milk, please.\" (Du lait, s'il vous plaît. — masculine.) Is lait borrowed, like café and thé, or inherited straight from Latin? (Inherited — from lac, stem lact-.) Which English words are close cousins of lait? (Lactic, lactose, lactate — learned borrowings of the same stem.) Is English milk one of those cousins? (No — a completely different, unrelated root.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C28-sucre",
-      "sequence": 900,
-      "title": "le sucre — sugar, the longest road of the four",
-      "headword": "le sucre",
-      "romanization": "le sucre",
-      "gloss": "sugar — masculine, closing a chapter where every drink-word is; the fourth and longest road of the four",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:af9c69e942317355",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Coffee took one road, tea forked into two, milk never left home. Sugar's road is the longest of all — and it ends the chapter with a whole table's worth of masculine drink-words."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: the word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "le sucre — sugar. Masculine."
-            },
-            {
-              "kind": "speech",
-              "text": "Du sucre, s'il vous plaît. — \"Some sugar, please.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: grit, gravel, sugar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sucre from Old French çucre from Arabic sukkar from Persian shakar from Sanskrit śárkarā, which first meant \"grit, gravel\" — crystallized sugar looked like gravel to whoever named it first."
-            },
-            {
-              "kind": "speech",
-              "text": "Sucre passed through Arabic just like café did, but through a different Arabic word (sukkar, not qahwa): a shared language of transmission, not a shared root. Where lait is inherited straight from Latin, sucre is borrowed — from further back than café or thé, all the way to Sanskrit."
+              "text": "Manus gave you a hand that holds — manual, maintain. Prendere gives you the hand that closes."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: a lean, and its one loud exception",
+          "title": "Grammar Lens: the stem that doubles",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four drink-words, four masculine articles: le café, le thé, le lait, le sucre. Not a rule to trust — a lean: French tends to make plain substances masculine. This lean has a loud exception: l'eau, \"water,\" is feminine. You still learn each word with its article, the promise this book has kept since la main."
+              "text": "Prendre is irregular, and its irregularity is one clean rule: the stem loses its d, and in the ils form it doubles its n. Say the six:"
+            },
+            {
+              "kind": "speech",
+              "text": "je prends — prahn."
+            },
+            {
+              "kind": "speech",
+              "text": "tu prends — prahn."
+            },
+            {
+              "kind": "speech",
+              "text": "il prend — prahn (all three identical to the ear)."
+            },
+            {
+              "kind": "speech",
+              "text": "nous prenons — pruh-NOHN, and the nasal is gone."
+            },
+            {
+              "kind": "speech",
+              "text": "vous prenez — pruh-NAY, nasal gone again."
+            },
+            {
+              "kind": "speech",
+              "text": "ils prennent — PREN, a doubled n and a flat e."
+            },
+            {
+              "kind": "speech",
+              "text": "So the nasal survives in the singular and dies in the plural. That is the whole verb."
             }
           ]
         },
         {
           "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: si, not oui",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The si you learned — the \"yes\" for contradicting a negative — fits this table exactly:"
-            },
-            {
-              "kind": "speech",
-              "text": "Vous ne voulez pas de sucre? — Si, un peu. (\"You don't want sugar? — Yes, a little.\")"
-            },
-            {
-              "kind": "speech",
-              "text": "Plain oui here would agree you don't want it; si is what pushes back. That same oui once mattered enough to split a country — langue d'oïl in the north, langue d'oc in the south."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -514,43 +146,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le sucre\" — masculine",
+              "instruction": "\"prendre\" — PRAHN-druh, nasal in the middle",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le sucre\" — masculine]"
+              "source": "[YOU SAY: \"prendre\" — *PRAHN-druh*, nasal in the middle]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four — \"le café, le thé, le lait, le sucre\"",
+              "instruction": "\"je prends le pain\" then \"nous prenons le pain\" — nasal, then no nasal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"le café, le thé, le lait, le sucre\"]"
+              "source": "[YOU SAY: \"je prends le pain\" then \"nous prenons le pain\" — nasal, then no nasal]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exception — \"l'eau\" — feminine, against the lean",
+              "instruction": "\"je prends la main\" — I take the hand, the manus you already have",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exception — \"l'eau\" — feminine, against the lean]"
+              "source": "[YOU SAY: \"je prends la main\" — I take the hand, the *manus* you already have]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contradiction — \"Vous ne voulez pas de sucre? — Si!\"",
+              "instruction": "the family — \"prehensile, apprehend, prison, surprise\" — all a grasp",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contradiction — \"Vous ne voulez pas de sucre ? — Si !\"]"
+              "source": "[YOU SAY: the family — \"prehensile, apprehend, prison, surprise\" — all a **grasp**]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -562,7 +194,520 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"sugar, please.\" (Du sucre, s'il vous plaît. — masculine.) Trace sucre back to Sanskrit. (Sukkar from shakar from śárkarā, \"grit, gravel.\") Do café and sucre share a root? (No — a language of transmission, Arabic, not a root; qahwa and sukkar are different words.) What is the lean about French drink-words, and what breaks it? (Masculine by default — broken by l'eau, feminine.) When do you answer si instead of oui? (Contradicting a negative — the same word-pair that once split France into langue d'oïl and langue d'oc.)"
+              "text": "Say \"I take the bread.\" (Je prends le pain — and the -ds is silent.) What happens to the nasal in nous prenons? (It disappears; the stem flattens to pruh-.) What did Latin prehendere mean, and what is a prison literally? (To grasp; a prison is \"a seizing\".) And the hand that does the taking? (La main.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C24-demander",
+      "sequence": 820,
+      "title": "demander — \"to ask,\" and the trap it sets in English",
+      "headword": "demander",
+      "romanization": "demander",
+      "gloss": "to ask — an ordinary, polite, everyday word, and one of the sharpest false friends French holds for an English speaker",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fd5c8a237871ef0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Prendre was taking. This one is the opposite move: putting a question out. And it is the word most likely to make you sound furious when you meant to sound polite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "demander — to ask. Said duh-mahn-DAY: the -an- is that same nasal from prendre, and the -er ending is a clean ay. Je demande l'heure. — I ask the time."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an ordinary -er verb, so nothing in it breaks: je demande, tu demandes, il demande, nous demandons, vous demandez, ils demandent. Only nous and vous are audible; the other four all sound duh-MAHND."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: a thing put in your hand",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "demander from Latin dēmandāre, \"to hand over, to entrust\" — dē- plus mandāre. And mandāre is itself two words: manus, \"hand,\" plus dare, \"to give.\" Giving into the hand."
+            },
+            {
+              "kind": "speech",
+              "text": "So the manus you met in la main is sitting inside this verb too:"
+            },
+            {
+              "kind": "speech",
+              "text": "mandate — what was placed in someone's hands to carry out."
+            },
+            {
+              "kind": "speech",
+              "text": "command — com- + mandāre: to entrust an order; and commandment, ten of them."
+            },
+            {
+              "kind": "speech",
+              "text": "mandatory — handed over as an obligation; remand, handed back."
+            },
+            {
+              "kind": "speech",
+              "text": "One family, two very different jobs: manual is work done by the hand, mandate is a charge given into it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the false friend",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Careful. French demander means simply \"to ask.\" It is neutral, everyday and perfectly polite. English demand is forceful — a thing you insist on."
+            },
+            {
+              "kind": "speech",
+              "text": "Je demande l'heure is \"I'm asking the time,\" not \"I demand the time.\" The English word drifted toward force; the French one never did. Translate demander as ask, every time, and you will never be rude by accident."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"demander\" — duh-mahn-DAY, nasal in the middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"demander\" — *duh-mahn-DAY*, nasal in the middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je demande l'heure\" — I ask the time, not demand it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je demande l'heure\" — I **ask** the time, not demand it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je prends, je demande\" — take, then ask",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je prends, je demande\" — take, then ask]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family — \"mandate, command, mandatory\" — a hand and a giving",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family — \"mandate, command, mandatory\" — a **hand** and a **giving**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I ask the time.\" (Je demande l'heure.) Does demander carry the force of English demand? (No — it is the ordinary, polite word for asking.) What two Latin words are inside mandāre, and which one do you already know? (Manus \"hand\" — the source of la main — plus dare, \"to give.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C24-aider",
+      "sequence": 830,
+      "title": "aider — \"to help,\" and the English word that is really the same word",
+      "headword": "aider",
+      "romanization": "aider",
+      "gloss": "to help — English aid arriving by the Latin road, while English help came by the Germanic one; the two words are unrelated",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63d3523c390c1b55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can ask for something now. This is the verb for what you hope the other person then does — and it is one of the rare cases where the English cousin is not a distant relative but the very same word, spelled shorter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aider — to help. Said ay-DAY: the ai- is a plain ay, the -er ending is another ay. Two of them in a row. Vous m'aidez. — You are helping me."
+            },
+            {
+              "kind": "speech",
+              "text": "Another ordinary -er verb: j'aide, tu aides, il aide, nous aidons, vous aidez, ils aident. The j' is the elision you already make in j'ai."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: aid, by the other road",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aider from Latin adiūtāre, a repeated-action form of adiuvāre — ad- \"toward\" plus iuvāre, \"to help.\" English took the same verb through French and clipped it:"
+            },
+            {
+              "kind": "speech",
+              "text": "aid — the noun and verb; aide, a person who is your help."
+            },
+            {
+              "kind": "speech",
+              "text": "aide-de-camp — literally a \"camp helper,\" an officer's assistant."
+            },
+            {
+              "kind": "speech",
+              "text": "adjutant, the officer who assists; adjuvant, a substance in medicine that helps another one work."
+            },
+            {
+              "kind": "speech",
+              "text": "Two honesty notes. English help is Germanic and has no connection to aider whatsoever. And juvenile is not in this family: that is Latin iuvenis, \"young,\" a different word that merely resembles iuvāre."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: asking for it politely",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put the verb together with the courtesy you already have:"
+            },
+            {
+              "kind": "speech",
+              "text": "Vous m'aidez, s'il vous plaît. — Help me, please. Tu m'aides, s'il te plaît. — the same request, to a friend."
+            },
+            {
+              "kind": "speech",
+              "text": "The register has to match on both halves. Vous takes s'il vous plaît; tu takes s'il te plaît. Mixing them — tu m'aides, s'il vous plaît — is the mistake a beginner makes most, and a French ear catches it instantly."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"aider\" — ay-DAY, two ay sounds",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"aider\" — *ay-DAY*, two *ay* sounds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'aide\" then \"vous aidez\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'aide\" then \"vous aidez\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vous m'aidez, s'il vous plaît\" — both halves formal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vous m'aidez, s'il vous plaît\" — both halves formal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tu m'aides, s'il te plaît\" — both halves familiar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tu m'aides, s'il te plaît\" — both halves familiar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je demande, vous aidez\" — I ask, you help",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je demande, vous aidez\" — I ask, you help]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask a stranger for help, politely. (Vous m'aidez, s'il vous plaît.) And a friend? (Tu m'aides, s'il te plaît — both halves change together.) What Latin verb is aider from, and which English word is the same word? (Adiūtāre; English aid.) Is English help related? (No — it is Germanic, unrelated.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C24-aimer",
+      "sequence": 840,
+      "title": "aimer — one verb for \"like\" and \"love,\" and the word that weakens it",
+      "headword": "aimer",
+      "romanization": "aimer",
+      "gloss": "to like AND to love — one French verb where English keeps two, so the strength comes from what follows it, and adding bien makes it WEAKER",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cc5cea1c5584cd2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three verbs so far: je prends, je demande, j'aide. The fourth does a job English needs two words for — and the way you soften it is the opposite of what you would guess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aimer — to like and to love. Said ay-MAY: the ai- is ay, the -mer is may. J'aime le chien. — I like the dog. J'aime le chat. — I like the cat."
+            },
+            {
+              "kind": "speech",
+              "text": "An ordinary -er verb: j'aime, tu aimes, il aime, nous aimons, vous aimez, ils aiment. French does not choose between \"like\" and \"love\" — the thing you name does. A dog, a colour, a food: that reads as like. A person: love."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: amāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aimer from Latin amāre, \"to love,\" and English is full of it:"
+            },
+            {
+              "kind": "speech",
+              "text": "amateur — one who does a thing for love, not for money."
+            },
+            {
+              "kind": "speech",
+              "text": "amorous, full of love; enamoured, in it; paramour, beside it."
+            },
+            {
+              "kind": "speech",
+              "text": "amiable and amicable — from amīcus, \"friend\"; amity between nations."
+            },
+            {
+              "kind": "speech",
+              "text": "An honest stop, though: unlike viridis behind vert, amāre has no agreed ancestor beyond Latin. It is often guessed to be a nursery word, a baby's amma, but that is a guess. The trail genuinely ends at Latin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: bien makes it weaker",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Je t'aime. — I love you. Full strength. Je t'aime bien. — I like you. Much weaker."
+            },
+            {
+              "kind": "speech",
+              "text": "Every English speaker gets this backwards. Bien means \"well,\" so je t'aime bien looks like it ought to be more. It is less. Adding bien — or beaucoup — downgrades love to friendly liking, which is exactly why je t'aime bien is the polite way to turn someone down."
+            },
+            {
+              "kind": "speech",
+              "text": "With a thing, no such danger: j'aime bien le chat is simply \"I quite like the cat.\" The trap only bites when the object is a person."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'aime le chien\" then \"j'aime le chat\" — liking, because they are animals",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'aime le chien\" then \"j'aime le chat\" — liking, because they are animals]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'aime le vert\" — I like green",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'aime le vert\" — I like green]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je t'aime\" then \"je t'aime bien\" — love, then only liking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je t'aime\" then \"je t'aime bien\" — love, then only liking]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four verbs — \"je prends, je demande, j'aide, j'aime\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four verbs — \"je prends, je demande, j'aide, j'aime\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vous m'aidez, s'il vous plaît\" — the request, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vous m'aidez, s'il vous plaît\" — the request, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"aimer, amateur, amiable\" — the amāre family, which stops at Latin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"aimer, amateur, amiable\" — the *amāre* family, which stops at Latin]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which is stronger, je t'aime or je t'aime bien? (Je t'aime — bien makes it weaker.) Say \"I like the dog\" and \"I like green.\" (J'aime le chien. J'aime le vert.) What does amateur literally mean, and how far back does amāre go? (One who does it for love; the trail stops at Latin.) Say the chapter's four verbs with je. (Je prends, je demande, j'aide, j'aime.)"
             }
           ]
         }

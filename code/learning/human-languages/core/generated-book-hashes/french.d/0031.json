@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 31,
-  "sourceHash": "fnv1a64:a1d7adb041293ae7",
+  "sourceHash": "fnv1a64:68153058a6e32875",
   "lessonIds": [
-    "FR-C31-oeil",
-    "FR-C31-nez",
-    "FR-C31-bouche",
-    "FR-C31-ventre"
+    "FR-C27-sasseoir",
+    "FR-C27-se-lever",
+    "FR-C27-ouvrir",
+    "FR-C27-fermer"
   ],
-  "tex": "french/book/chapters/ch31-eyes-nose-mouth-stomach.tex"
+  "tex": "french/book/chapters/ch31-sitting-standing-opening-closing.tex"
 }

@@ -1,16 +1,24 @@
 {
   "chapter": 9,
-  "title": "Months and Seasons",
-  "label": "ch:months-seasons",
-  "canDo": "I can name the months and seasons in French and say when something happens.",
+  "title": "The Months: Gods and Beginnings",
+  "label": "ch:months-gods",
+  "canDo": "I can name the first six months in French and say which Roman figure each one carries.",
   "spineNodes": [
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C09-saisons",
+    "lesson": "FR-C09-mois-practice-1",
     "kind": "task",
-    "summary": "Complete FR-C09-saisons, the canonical closing checkpoint, and demonstrate the chapter promise: name the months and seasons in French and say when something happens.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Six months, and not one of them is a number. The calendar is a procession of Roman gods and festivals carried almost unchanged out of Latin -- Janus in the doorway of the year, the Februa that cleaned the city before it turned, and the war-god who already owns a weekday.",
+    "assesses": [
+      "FR-LEX-JANVIER-01",
+      "FR-LEX-FEVRIER-02",
+      "FR-LEX-MARS-03",
+      "FR-ETYMON-MARS-MARDI-04",
+      "FR-LEX-AVRIL-05",
+      "FR-LEX-MAI-06",
+      "FR-LEX-JUIN-07"
+    ],
+    "note": "Authored as part of the chapter-9 split: length is never a cost, so sixteen months-and-seasons became three chapters rather than one dense one. The payoff is atom-scored -- it assesses every atom its chapter introduces."
   }
 }

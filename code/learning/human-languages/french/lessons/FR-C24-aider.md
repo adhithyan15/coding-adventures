@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C24-aider
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 730
-chapter: 24
+sequence: 830
+chapter: 28
 type: word
 headword: aider
 gloss: to help — English aid arriving by the Latin road, while English help came by the Germanic one; the two words are unrelated
