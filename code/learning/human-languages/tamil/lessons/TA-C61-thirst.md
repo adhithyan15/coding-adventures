@@ -9,7 +9,7 @@ headword: "தாகம்"
 gloss: "thirst"
 romanization: "tākam"
 concept_tag: TA-NOUN-THIRST
-prerequisites: [TA-C61-hunger]
+prerequisites: [TA-C61-hunger, TA-C59-ghee, TA-C60-rope]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C61-FEEL-02]
 practises:
-  knowledge: [TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02]
+  knowledge: [TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C59-KITCHEN-02, TA-LEX-C60-MADE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is answered with தண்ணீர் and with nothing else in particular, a
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02, TA-LEX-C59-KITCHEN-02, TA-LEX-C60-MADE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tākam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pasi*, then *tākam*, and say what each of the two is answered with]
+- [YOU RECALL: read **நெய்**, then say *kayiṟu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01, TA-LEX-C61-FEEL-02] -->

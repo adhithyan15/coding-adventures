@@ -9,7 +9,7 @@ headword: "நிலா"
 gloss: "the moon"
 romanization: "nilā"
 concept_tag: TA-NOUN-MOON
-prerequisites: [TA-C51-sun]
+prerequisites: [TA-C51-sun, TA-C49-gladness, TA-C50-flower]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C51-SKY-03]
 practises:
-  knowledge: [TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03]
+  knowledge: [TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C49-COURTESY-03, TA-LEX-C50-WELCOME-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Let the ஆ at the end run long. It is the length that makes the word.
 Three: the space, the day light, and the night one.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C49-COURTESY-03, TA-LEX-C50-WELCOME-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nilā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūriyaṉ*, then *nilā*, and let the second one end long]
+- [YOU RECALL: say *santōṣam*, then read **மலர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03] -->

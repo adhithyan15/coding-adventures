@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e2248563cac4a3c0",
+  "sourceHash": "fnv1a64:2a823848f13a927c",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9971d226c492c443",
+      "sourceHash": "fnv1a64:fd100592ff26aa70",
       "notice": null,
       "blocks": [
         {
@@ -96,6 +96,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONNECT: Urdu **khudā** ← Persian **khodā**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kaise / kaisī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kaise / kaisī*]"
             }
           ]
         },

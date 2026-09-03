@@ -9,7 +9,7 @@ headword: "வாழ்த்து"
 gloss: "a good wish"
 romanization: "vāḻttu"
 concept_tag: TA-COURTESY-GOOD-WISH
-prerequisites: [TA-C49-gladness]
+prerequisites: [TA-C49-gladness, TA-C47-perhaps, TA-C48-later]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C49-COURTESY-04]
 practises:
-  knowledge: [TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04]
+  knowledge: [TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04, TA-LEX-C47-REPLY-04, TA-LEX-C48-LEAVE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Straight off *vāḻ*, 'to live, to flourish', which you had early. To give some
 Four, and the fourth one is given rather than felt.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04, TA-LEX-C47-REPLY-04, TA-LEX-C48-LEAVE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vāḻttu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *santōṣam*, then *vāḻttu*, and feel the ழ glide in the second]
+- [YOU RECALL: read **ஒருவேளை**, then say *piṟaku*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04] -->

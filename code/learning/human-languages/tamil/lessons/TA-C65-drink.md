@@ -9,7 +9,7 @@ headword: "குடி"
 gloss: "drink"
 romanization: "kuḍi"
 concept_tag: TA-VERB-KUDI
-prerequisites: [TA-C64-harvest]
+prerequisites: [TA-C64-harvest, TA-C63-request, TA-C64-paddy]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C65-DOING-01]
 practises:
-  knowledge: [TA-LEX-C64-HARVEST-05, TA-LEX-C65-DOING-01]
+  knowledge: [TA-LEX-C64-HARVEST-05, TA-LEX-C65-DOING-01, TA-LEX-C63-MANNERS-01, TA-LEX-C64-HARVEST-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -71,7 +71,7 @@ The first of five everyday doings, and the one that completes the pair you had
 half of.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-05, TA-LEX-C65-DOING-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-05, TA-LEX-C65-DOING-01, TA-LEX-C63-MANNERS-01, TA-LEX-C64-HARVEST-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kuḍi*]
@@ -79,6 +79,7 @@ half of.
 - [YOU SAY: *tēnīr kuḍi*, then *pāl kuḍi*]
 - [YOU SAY: which of *sāppiḍu* and *kuḍi* takes *sādam*, and which takes
   *taṇṇīr*]
+- [YOU RECALL: say *vēṇḍukōḷ*, then read **நெல்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-05, TA-LEX-C65-DOING-01] -->

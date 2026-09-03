@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Water, Tea, Milk, Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4b66b6362b1e06d9",
+  "sourceHash": "fnv1a64:b05966d398592d60",
   "lessons": [
     {
       "id": "UR-C12-pani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5618dfb9620d7678",
+      "sourceHash": "fnv1a64:c4350d7a47befb57",
       "notice": null,
       "blocks": [
         {
@@ -111,6 +111,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONNECT: **pānī** ← *pā-* → Latin *potare* → English **potion**, **poison** — not **water**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say madad karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *madad karnā*]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:68319c21bd1ab3eb",
+      "sourceHash": "fnv1a64:b29741bfef2a2f9b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -264,6 +273,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONTRAST: **merā pānī** — **merī chāy**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pasand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pasand*]"
             }
           ]
         },

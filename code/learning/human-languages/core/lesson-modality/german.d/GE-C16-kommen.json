@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-kommen",
     "language": "german",
-    "chapter": 24,
-    "sequence": 565,
+    "chapter": 25,
+    "sequence": 575,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6f66e2688910e803"
+    "sourceHash": "fnv1a64:123394e75a13e025"
   },
   "findings": []
 }

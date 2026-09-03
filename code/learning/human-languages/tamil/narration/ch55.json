@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "The Rest of You",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d207a9552db063ff",
+  "sourceHash": "fnv1a64:d3873f25dd465764",
   "lessons": [
     {
       "id": "TA-C55-neck",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de253ae0714f536c",
+      "sourceHash": "fnv1a64:1ca68bfab9737189",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *peṭṭi*, then *kaḻuttu*, and hold the ழ in the middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nadi, then read பாய்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nadi*, then read **பாய்**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2d541ee587c5739",
+      "sourceHash": "fnv1a64:fc7e55af3761637f",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kaḻuttu*, then *mutuku*, the top of you and the length below it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read மலை, then say kūṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **மலை**, then say *kūṭai*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce5043b6602cb0eb",
+      "sourceHash": "fnv1a64:bcfe38abcadd58f7",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mutuku*, then *utaṭu*, and curl the tongue back for the ட]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vayal, then read கத்தி",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vayal*, then read **கத்தி**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61fb26330d91ecb9",
+      "sourceHash": "fnv1a64:d84fb2253f9248db",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *utaṭu*, then *nakam*, the softest part of you and the hardest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read பாதை, then say kiṇṇam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **பாதை**, then say *kiṇṇam*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2ee4149f75b35b3",
+      "sourceHash": "fnv1a64:0d6c3dac4f0d9927",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *kaḻuttu*, *mutuku*, *utaṭu*, *nakam*, *elumbu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kirāmam, then read பெட்டி",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kirāmam*, then read **பெட்டி**]"
             }
           ]
         },

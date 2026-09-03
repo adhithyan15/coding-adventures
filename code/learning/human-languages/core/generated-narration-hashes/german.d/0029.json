@@ -1,15 +1,15 @@
 {
   "language": "german",
   "chapter": 29,
-  "sourceHash": "fnv1a64:355f052b655070de",
+  "sourceHash": "fnv1a64:7441965a7e474532",
   "lessonIds": [
-    "GE-C21-das-wetter"
+    "GE-C20-entschuldigung"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "german/narration/ch29.txt",
   "json": "german/narration/ch29.json",
-  "textHash": "fnv1a64:1ff1d22230239411",
-  "jsonHash": "fnv1a64:8fd185e3f863b397",
+  "textHash": "fnv1a64:b513358afe8f1b62",
+  "jsonHash": "fnv1a64:cc2e81d7bdc8ec96",
   "findings": []
 }

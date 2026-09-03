@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-gestern
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 375
-chapter: 19
+sequence: 385
+chapter: 20
 type: word
 headword: gestern
 gloss: yesterday — the word that fills the middle of a Perfekt sentence, and morgen's opposite number

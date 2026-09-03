@@ -9,7 +9,7 @@ headword: "வேண்டுகோள்"
 gloss: "a request"
 romanization: "vēṇḍukōḷ"
 concept_tag: TA-NOUN-REQUEST
-prerequisites: [TA-C62-first-of-all]
+prerequisites: [TA-C62-first-of-all, TA-C61-hunger, TA-C62-only]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C63-MANNERS-01]
 practises:
-  knowledge: [TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01]
+  knowledge: [TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01, TA-LEX-C61-FEEL-01, TA-LEX-C62-JOIN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Kannada ವಿನಂತಿ (*vinanti*) and Telugu మనవి (*manavi*) both w
 The first of five.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01, TA-LEX-C61-FEEL-01, TA-LEX-C62-JOIN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vēṇḍukōḷ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vēṇḍukōḷ*, then *tayavu seytu*, and say which one dresses the other]
+- [YOU RECALL: say *pasi*, then read **மட்டும்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01] -->

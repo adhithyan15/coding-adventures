@@ -1,18 +1,18 @@
 {
   "language": "german",
   "chapter": 39,
-  "sourceHash": "fnv1a64:bcc08bdef58438df",
+  "sourceHash": "fnv1a64:f0241ff09b07abf3",
   "lessonIds": [
-    "GE-C31-arm",
-    "GE-C31-finger",
-    "GE-C31-fuss",
-    "GE-C31-herz"
+    "GE-C30-auge",
+    "GE-C30-ohr",
+    "GE-C30-mund",
+    "GE-C30-nase"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "german/narration/ch39.txt",
   "json": "german/narration/ch39.json",
-  "textHash": "fnv1a64:4931483a64c15f64",
-  "jsonHash": "fnv1a64:cd668482304de9bb",
+  "textHash": "fnv1a64:2d81eedcbf3fa1f0",
+  "jsonHash": "fnv1a64:3086b54d04c214b1",
   "findings": []
 }

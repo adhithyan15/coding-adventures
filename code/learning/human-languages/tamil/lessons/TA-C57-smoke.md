@@ -9,7 +9,7 @@ headword: "புகை"
 gloss: "smoke"
 romanization: "pukai"
 concept_tag: TA-NOUN-SMOKE
-prerequisites: [TA-C57-mud]
+prerequisites: [TA-C57-mud, TA-C55-nail, TA-C56-no-need]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C57-FIRE-04]
 practises:
-  knowledge: [TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04]
+  knowledge: [TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04, TA-LEX-C55-BODY-04, TA-LEX-C56-AMOUNT-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Malayalam പുക (*puka*) is the same word one step shorter. Tamil's ends in 
 Four, and this one you can only see because of what it comes off.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04, TA-LEX-C55-BODY-04, TA-LEX-C56-AMOUNT-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pukai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sēṟu*, then *pukai*, and let the *-ai* open at the end]
+- [YOU RECALL: read **நகம்**, then say *tēvaiyillai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04] -->

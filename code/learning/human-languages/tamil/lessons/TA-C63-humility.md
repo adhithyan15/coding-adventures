@@ -9,7 +9,7 @@ headword: "பணிவு"
 gloss: "humility"
 romanization: "paṇivu"
 concept_tag: TA-NOUN-HUMILITY
-prerequisites: [TA-C63-trust]
+prerequisites: [TA-C63-trust, TA-C61-pain, TA-C62-first-of-all]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C63-MANNERS-05]
 practises:
-  knowledge: [TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05]
+  knowledge: [TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05, TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Telugu's మర్యాద (*maryāda*) is the same word as your மரிய�
 Five, and the run is closed: a request, permission, hesitancy, trust, and humility.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05, TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *paṇivu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *vēṇḍukōḷ*, *aṉumati*, *tayakkam*, *nambikkai*, *paṇivu*]
+- [YOU RECALL: say *vali*, then read **முதலில்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05] -->

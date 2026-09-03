@@ -57,7 +57,12 @@ class ValidateIdentifiersTests(unittest.TestCase):
 
 
 class ArtifactNamesTests(unittest.TestCase):
-    def test_names_the_web_and_desktop_payloads(self) -> None:
+    def test_names_the_web_desktop_and_compose_payloads(self) -> None:
+        # Spelled out rather than derived from the tables this asserts against,
+        # so adding a payload has to be a deliberate edit here as well. The
+        # publish job compares the files on disk to this set, and a list that
+        # silently grew with its source would let a release ship a payload
+        # nobody decided to ship.
         self.assertEqual(
             engram_release.artifact_names("0.4.0"),
             [
@@ -65,6 +70,9 @@ class ArtifactNamesTests(unittest.TestCase):
                 "engram-desktop-linux-v0.4.0.AppImage",
                 "engram-desktop-macos-v0.4.0.zip",
                 "engram-desktop-windows-v0.4.0.exe",
+                "engram-compose-linux-v0.4.0.zip",
+                "engram-compose-macos-v0.4.0.zip",
+                "engram-compose-windows-v0.4.0.zip",
             ],
         )
 
@@ -78,6 +86,30 @@ class ArtifactNamesTests(unittest.TestCase):
             self.assertIn(
                 engram_release.desktop_artifact_name("0.4.0", platform), declared
             )
+
+    def test_compose_names_match_the_declared_set(self) -> None:
+        # Same reasoning as the desktop names: the publish job asserts the files
+        # on disk equal `artifact_names`, so a Compose payload named one way and
+        # declared another turns a successful build into a failed release.
+        declared = set(engram_release.artifact_names("0.4.0"))
+        for platform in engram_release.COMPOSE_TARGETS:
+            self.assertIn(
+                engram_release.compose_artifact_name("0.4.0", platform), declared
+            )
+
+    def test_compose_ships_every_platform(self) -> None:
+        # Electron alone would not demonstrate the thing Mosaic exists to prove:
+        # that one declarative package yields real native apps everywhere. The
+        # JVM makes Compose the cheapest breadth of the five native backends, so
+        # a release missing a platform here is a gap worth failing on.
+        self.assertEqual(
+            sorted(engram_release.COMPOSE_TARGETS),
+            ["linux", "macos", "windows"],
+        )
+
+    def test_compose_rejects_an_unknown_platform(self) -> None:
+        with self.assertRaises(ValueError):
+            engram_release.compose_artifact_name("0.4.0", "solaris")
 
     def test_macos_ships_a_zip_not_a_dmg(self) -> None:
         # Deliberate: signing and notarisation need credentials this build does

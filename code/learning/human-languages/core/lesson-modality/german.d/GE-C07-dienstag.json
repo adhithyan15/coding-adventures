@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C07-dienstag",
+    "language": "german",
+    "chapter": 10,
+    "sequence": 230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:544e57b81b0028c7"
+  },
+  "findings": []
+}

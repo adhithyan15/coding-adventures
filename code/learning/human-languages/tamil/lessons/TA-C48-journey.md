@@ -9,7 +9,7 @@ headword: "பயணம்"
 gloss: "a journey"
 romanization: "payaṇam"
 concept_tag: TA-LEAVE-JOURNEY
-prerequisites: [TA-C48-time]
+prerequisites: [TA-C48-time, TA-C46-doctor, TA-C47-certainly]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C48-LEAVE-03]
 practises:
-  knowledge: [TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03]
+  knowledge: [TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C46-ROLE-03, TA-LEX-C47-REPLY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Somebody travelling is a *payaṇi*, with the same *-i* ending that made the far
 Three, and the third one takes you somewhere.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C46-ROLE-03, TA-LEX-C47-REPLY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *payaṇam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nēram*, then *payaṇam*, and hear both endings agree]
+- [YOU RECALL: say *maruttuvar*, then read **நிச்சயமாக**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03] -->

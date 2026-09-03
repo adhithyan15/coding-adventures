@@ -9,7 +9,7 @@ headword: "சீக்கிரம்"
 gloss: "soon"
 romanization: "sīkkiram"
 concept_tag: TA-REPLY-SOON
-prerequisites: [TA-C62-still]
+prerequisites: [TA-C62-still, TA-C60-umbrella, TA-C61-sleep]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C62-JOIN-03]
 practises:
-  knowledge: [TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03]
+  knowledge: [TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C60-MADE-03, TA-LEX-C61-FEEL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Set it against பிறகு and the pair covers the whole span: சீக்�
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C60-MADE-03, TA-LEX-C61-FEEL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sīkkiram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sīkkiram*, then *piṟaku*, and say which of the two commits you]
+- [YOU RECALL: say *kuṭai*, then read **தூக்கம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03] -->

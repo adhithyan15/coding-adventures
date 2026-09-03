@@ -9,7 +9,7 @@ headword: "மேகம்"
 gloss: "a cloud"
 romanization: "mēkam"
 concept_tag: TA-NOUN-CLOUD
-prerequisites: [TA-C51-star]
+prerequisites: [TA-C51-star, TA-C49-many-thanks, TA-C50-welcome]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C51-SKY-05]
 practises:
-  knowledge: [TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05]
+  knowledge: [TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05, TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Telugu did not borrow here at all: its cloud is *mabbu*, its own. Which words a 
 That is the whole sky: the space, the sun, the moon, the small lights, and the thing that hides them.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05, TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mēkam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *ākāyam*, *sūriyaṉ*, *nilā*, *viṇmīṉ*, *mēkam*]
+- [YOU RECALL: say *mikka naṉṟi*, then read **வரவேற்பு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05] -->

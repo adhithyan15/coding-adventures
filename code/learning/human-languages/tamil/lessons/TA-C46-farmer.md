@@ -9,7 +9,7 @@ headword: "விவசாயி"
 gloss: "a farmer"
 romanization: "vivasāyi"
 concept_tag: TA-ROLE-FARMER
-prerequisites: [TA-C46-doctor]
+prerequisites: [TA-C46-doctor, TA-C44-salt, TA-C45-tooth]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C46-ROLE-04]
 practises:
-  knowledge: [TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04]
+  knowledge: [TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04, TA-LEX-C44-ASK-04, TA-LEX-C45-BODY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The stem is borrowed. The inherited word is உழவன் (*uḻavaṉ*), buil
 Four, and the fourth one feeds the other three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04, TA-LEX-C44-ASK-04, TA-LEX-C45-BODY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vivasāyi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maruttuvar*, then *vivasāyi*, and let the second end on *-i*]
+- [YOU RECALL: read **உப்பு**, then say *pal*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04] -->

@@ -9,7 +9,7 @@ headword: "யார்"
 gloss: "who? — asking about a person"
 romanization: "yār"
 concept_tag: TA-DEIXIS-WHO
-prerequisites: [TA-C40-there]
+prerequisites: [TA-C40-there, TA-C38-vidai, TA-C39-oru]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C40-DEIXIS-05]
 practises:
-  knowledge: [TA-LEX-C40-DEIXIS-03, TA-LEX-C40-DEIXIS-04, TA-LEX-C40-DEIXIS-05]
+  knowledge: [TA-LEX-C40-DEIXIS-03, TA-LEX-C40-DEIXIS-04, TA-LEX-C40-DEIXIS-05, TA-LEX-VIDAI-01, TA-ETYMON-VIDAI-02, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **e-** for ask — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-05, TA-LEX-VIDAI-01, TA-ETYMON-VIDAI-02, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "யார்" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *viḍai*, then read **ஒரு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-05] -->

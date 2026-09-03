@@ -9,7 +9,7 @@ headword: ہوا
 romanization: hawā
 gloss: air, wind — Persian, and Persian's own loan from Arabic, a loan of a loan rather than two roads from one root
 concept_tag: UR-WIND
-prerequisites: [UR-C15-dhoop]
+prerequisites: [UR-C15-dhoop, UR-C11-dil]
 sounds: [rtl, alif-madd, long-a]
 roots: [classical-persian-hawa, arabic-hawa]
 etymology_hook: hawā is borrowed from Classical Persian hawā, itself borrowed from Arabic هَوَاء (hawā). Unlike دل or سفید, which split from one PIE root into two independent Indo-Iranian roads, ہوا is a single word passed twice: Arabic to Persian, Persian to Urdu -- a loan of a loan, not a shared inheritance.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-LEX-HAWA, UR-REGISTER-DOUBLE-LOAN, UR-LEX-BAHAN, UR-LEX-DOST]
+  knowledge: [UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-LEX-HAWA, UR-REGISTER-DOUBLE-LOAN, UR-LEX-BAHAN, UR-LEX-DOST, UR-LEX-DIL, UR-ETYMON-DIL-HEART-PIE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,7 +65,7 @@ single word passed hand to hand, Arabic to Persian, Persian to Urdu — a
 loan of a loan, not a shared inheritance at all.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-HAWA, UR-REGISTER-DOUBLE-LOAN, UR-LEX-DHOOP] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-HAWA, UR-REGISTER-DOUBLE-LOAN, UR-LEX-DHOOP, UR-LEX-DIL, UR-ETYMON-DIL-HEART-PIE] -->
 
 - [YOU SAY: **hawā** — wind; then **āj hawā chal rahī hai**]
 - [YOU NAME: three shapes a word's history can take — one root split two
@@ -73,6 +73,7 @@ loan of a loan, not a shared inheritance at all.
   (*khudā*), or borrowed twice in a row (**ہوا**)]
 - [YOU SAY: *bārish, dhūp, aur hawā* — rain, sunshine, and wind]
 - [YOU CONNECT: **ہوا** ← Persian ← Arabic **hawā**, a loan of a loan]
+- [YOU RECALL: say *dil*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-HAWA, UR-REGISTER-DOUBLE-LOAN, UR-LEX-BAHAN, UR-LEX-DOST] -->

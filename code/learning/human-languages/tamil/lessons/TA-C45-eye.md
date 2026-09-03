@@ -9,7 +9,7 @@ headword: "கண்"
 gloss: "an eye"
 romanization: "kaṇ"
 concept_tag: TA-NOUN-EYE
-prerequisites: [TA-C44-book]
+prerequisites: [TA-C44-book, TA-C43-child, TA-C44-fruit]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C45-BODY-01]
 practises:
-  knowledge: [TA-LEX-C44-ASK-04, TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01]
+  knowledge: [TA-LEX-C44-ASK-04, TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01, TA-LEX-CHILD, TA-LEX-C44-ASK-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It reaches well past the face. A *kaṇ* is the joint on a stalk of sugarcane an
 The first of five more parts of the body.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-04, TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-04, TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01, TA-LEX-CHILD, TA-LEX-C44-ASK-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kaṇ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kaṇ*, then *talai*, so the part and the whole sit together]
+- [YOU RECALL: say *kuḻandai*, then read **பழம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-04, TA-LEX-C44-ASK-05, TA-LEX-C45-BODY-01] -->

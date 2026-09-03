@@ -9,7 +9,7 @@ headword: بہن
 romanization: bahan
 gloss: sister — feminine, where بھائی was masculine, and the reason میرا has to change shape
 concept_tag: UR-SISTER
-prerequisites: [UR-C09-bhai]
+prerequisites: [UR-C09-bhai, UR-C06-janna]
 sounds: [rtl, short-vowels-unwritten]
 roots: [sanskrit-bhagini, sanskrit-bhaj]
 etymology_hook: bahan continues Sanskrit bhaginī, traditionally tied to bhaj- "to share, to portion out" — a sister as a co-heir sharing the family's portion — though specialists flag the sound-history as genuinely debated, so this one is held loosely, unlike bhāī's settled cousin brother.
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-BHAI, UR-ETYMON-BHAI-BROTHER, UR-LEX-BAHAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-ETYMON-BAHAN-SHARE]
+  knowledge: [UR-LEX-BHAI, UR-ETYMON-BHAI-BROTHER, UR-LEX-BAHAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-ETYMON-BAHAN-SHARE, UR-LEX-JANNA, UR-SCRIPT-JANNA-DOUBLE-NUN, UR-ETYMON-JANNA-KNOW]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -76,12 +76,13 @@ derivation needs it to. Hold this one loosely, the way *pasand*'s *candēre*
 link was held loosely — a plausible story, not a settled one like *bhāī*'s.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BAHAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-ETYMON-BAHAN-SHARE, UR-LEX-BHAI] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BAHAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-ETYMON-BAHAN-SHARE, UR-LEX-BHAI, UR-LEX-JANNA, UR-SCRIPT-JANNA-DOUBLE-NUN, UR-ETYMON-JANNA-KNOW] -->
 
 - [YOU SAY: **bahan** — sister; then **merī bahan**]
 - [YOU CONTRAST: **merā bhāī** — **merī bahan**]
 - [YOU SAY: why **merā** changed — the noun's gender, not the speaker's]
 - [YOU SAY: **bahan** ← *bhaginī* ← *bhaj-*, "to share" — held loosely]
+- [YOU RECALL: say *jānnā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BAHAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-ETYMON-BAHAN-SHARE, UR-LEX-BHAI] -->

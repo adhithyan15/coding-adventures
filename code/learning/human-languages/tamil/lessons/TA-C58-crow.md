@@ -9,7 +9,7 @@ headword: "காக்கை"
 gloss: "a crow"
 romanization: "kākkai"
 concept_tag: TA-NOUN-CROW
-prerequisites: [TA-C58-hen]
+prerequisites: [TA-C58-hen, TA-C56-no-need, TA-C57-smoke]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C58-ANIMAL-04]
 practises:
-  knowledge: [TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04]
+  knowledge: [TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04, TA-LEX-C56-AMOUNT-04, TA-LEX-C57-FIRE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Of everything with wings around a Tamil house this is the one the house deals wi
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04, TA-LEX-C56-AMOUNT-04, TA-LEX-C57-FIRE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kākkai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kākkai*, then *kōḻi*, and say which one is kept and which one turns up]
+- [YOU RECALL: read **தேவையில்லை**, then say *pukai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04] -->

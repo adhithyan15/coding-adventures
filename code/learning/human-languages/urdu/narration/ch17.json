@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Sentence Learns to End",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:665dffab75bdc10e",
+  "sourceHash": "fnv1a64:e2260e5db6cae7cb",
   "lessons": [
     {
       "id": "UR-C17-yih",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77b61ee0472d500d",
+      "sourceHash": "fnv1a64:61326d1dd023a8fe",
       "notice": null,
       "blocks": [
         {
@@ -129,6 +129,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the near word **yih**, and name what it still needs to become a sentence — *hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say roṭī, then read لال, then say safed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *roṭī*, then read **لال**, then say *safed*]"
             }
           ]
         },
@@ -189,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eab369fc4cf4b7c0",
+      "sourceHash": "fnv1a64:403629ac4d93466c",
       "notice": null,
       "blocks": [
         {
@@ -299,6 +308,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU TRACE: **kām** ← Prakrit *kamma* ← Sanskrit *karman* → borrowed into English as **karma**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read کالا, then say nīlā, then say qamīz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **کالا**, then say *nīlā*, then say *qamīz*]"
             }
           ]
         },
@@ -359,7 +377,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:831938622498e3e2",
+      "sourceHash": "fnv1a64:14fce698fbc7c6d8",
       "notice": null,
       "blocks": [
         {
@@ -481,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU TRACE: **kahāṅ** ← Prakrit *kahiṅ* ← Sanskrit *kasmin* ← PIE *\\*kʷis* → English **where**, Latin **quis**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jūtā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jūtā*]"
             }
           ]
         },

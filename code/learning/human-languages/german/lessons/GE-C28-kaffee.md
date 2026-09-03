@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C28-kaffee
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 870
-chapter: 36
+sequence: 880
+chapter: 37
 type: word
 headword: der Kaffee
 gloss: coffee — a loanword that crossed from Arabic to German by way of Turkish and Italian, and the first word in a new polite request

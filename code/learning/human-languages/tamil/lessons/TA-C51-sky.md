@@ -9,7 +9,7 @@ headword: "ஆகாயம்"
 gloss: "the sky"
 romanization: "ākāyam"
 concept_tag: TA-NOUN-SKY
-prerequisites: [TA-C50-welcome]
+prerequisites: [TA-C50-welcome, TA-C49-affection, TA-C50-threshold]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C51-SKY-01]
 practises:
-  knowledge: [TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01]
+  knowledge: [TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01, TA-LEX-C49-COURTESY-01, TA-LEX-C50-WELCOME-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Tamil's own inherited word for the same overhead space is *vāṉ*, which you ha
 The first of five things above you.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01, TA-LEX-C49-COURTESY-01, TA-LEX-C50-WELCOME-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ākāyam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vaṇakkam*, then *ākāyam*, as you would greet somebody out of doors]
+- [YOU RECALL: say *aṉbu*, then read **வாசல்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01] -->

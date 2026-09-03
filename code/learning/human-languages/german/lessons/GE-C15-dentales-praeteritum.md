@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-dentales-praeteritum
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 405
-chapter: 20
+sequence: 415
+chapter: 21
 type: etymology
 headword: das dentale Präteritum
 gloss: the dental preterite — the Germanic invention that gives German -te and English -ed

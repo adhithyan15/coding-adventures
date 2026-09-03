@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Four Colors",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:80ba835a808d79ce",
+  "sourceHash": "fnv1a64:af1c6caafb2a00ff",
   "lessons": [
     {
       "id": "UR-C13-lal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cec4e4b6e1b189f4",
+      "sourceHash": "fnv1a64:355896e11df95d13",
       "notice": null,
       "blocks": [
         {
@@ -107,6 +107,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONNECT: **lāl** ← Persian, no further root — like *roṭī*'s Sanskrit root, but on the other side of the book's two layers]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bhāī, then say bahan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bhāī*, then say *bahan*]"
             }
           ]
         },

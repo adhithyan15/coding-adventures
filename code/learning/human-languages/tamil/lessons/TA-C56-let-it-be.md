@@ -9,7 +9,7 @@ headword: "ஆகட்டும்"
 gloss: "let it be so"
 romanization: "ākaṭṭum"
 concept_tag: TA-REPLY-LET-IT-BE
-prerequisites: [TA-C56-no-need]
+prerequisites: [TA-C56-no-need, TA-C54-box, TA-C55-bone]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C56-AMOUNT-05]
 practises:
-  knowledge: [TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05]
+  knowledge: [TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05, TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The *ām* you have been saying for yes is that same *āku* worn down by a great 
 Five answers to an offer: a little, a lot, not enough, no need, and yes — let it happen.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05, TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ākaṭṭum*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *siṟitu*, *niṟaiya*, *kuṟaivu*, *tēvaiyillai*, *ākaṭṭum*]
+- [YOU RECALL: say *peṭṭi*, then read **எலும்பு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05] -->

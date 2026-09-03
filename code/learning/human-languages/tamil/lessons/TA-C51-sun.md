@@ -9,7 +9,7 @@ headword: "சூரியன்"
 gloss: "the sun"
 romanization: "sūriyaṉ"
 concept_tag: TA-NOUN-SUN
-prerequisites: [TA-C51-sky]
+prerequisites: [TA-C51-sky, TA-C49-respect, TA-C50-kolam]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C51-SKY-02]
 practises:
-  knowledge: [TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02]
+  knowledge: [TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C49-COURTESY-02, TA-LEX-C50-WELCOME-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Tamil's inherited sun is *ñāyiṟu*, the word standing behind the name of the 
 Two: the space, and the thing that lights it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C49-COURTESY-02, TA-LEX-C50-WELCOME-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sūriyaṉ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākāyam*, then *sūriyaṉ*, the sky first and then what is in it]
+- [YOU RECALL: read **மரியாதை**, then say *kōlam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02] -->

@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f90e598b6c702d83",
+  "sourceHash": "fnv1a64:1fe36bfb7595b6e6",
   "lessons": [
     {
       "id": "TA-C45-eye",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e00f4fa3acc5ca7d",
+      "sourceHash": "fnv1a64:16ba9cfe61b22e29",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kaṇ*, then *talai*, so the part and the whole sit together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kuḻandai, then read பழம்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kuḻandai*, then read **பழம்**]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b30e0f76c20f5c19",
+      "sourceHash": "fnv1a64:d915fe4078c21872",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kaṇ*, then *kādu*, and hear the long *ā* arrive in the second]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read மகன், then say tuṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **மகன்**, then say *tuṇi*]"
             }
           ]
         },
@@ -267,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7acb72201fe16e82",
+      "sourceHash": "fnv1a64:dd9b00333af8dd4c",
       "notice": null,
       "blocks": [
         {
@@ -354,6 +372,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kādu*, then *mūkku*, and let the second start long]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say makaḷ, then read விளக்கு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *makaḷ*, then read **விளக்கு**]"
             }
           ]
         },
@@ -389,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2964ebbccad74fac",
+      "sourceHash": "fnv1a64:1dde12418095c9f9",
       "notice": null,
       "blocks": [
         {
@@ -476,6 +503,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *mūkku*, then *pal*, and cut the second one short]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read குடும்பம், then say uppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **குடும்பம்**, then say *uppu*]"
             }
           ]
         },

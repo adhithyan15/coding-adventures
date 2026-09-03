@@ -9,7 +9,7 @@ headword: "விளையாடு"
 gloss: "to play"
 romanization: "viḷaiyāḍu"
 concept_tag: TA-VERB-VILAIYADU
-prerequisites: [TA-C71-wash]
+prerequisites: [TA-C71-wash, TA-C69-station, TA-C70-roof]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C71-DAY-05]
 practises:
-  knowledge: [TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02, TA-LEX-C71-DAY-05]
+  knowledge: [TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02, TA-LEX-C71-DAY-05, TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -55,13 +55,14 @@ usually has a short one you already own hiding at one end of it.
 Five verbs — get up, sleep, run, wash, play — and one new letter.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02, TA-LEX-C71-DAY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02, TA-LEX-C71-DAY-05, TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *viḷaiyāḍu*]
 - [YOU SAY: *āḍu* on its own, and name the two things it can mean]
 - [YOU SAY: all five — *eḻu*, *tūṅgu*, *ōḍu*, *kaḻuvu*, *viḷaiyāḍu*]
 - [YOU RECALL: say *ōḍu*, then say *kaḻuvu*, then say *viḷaiyāḍu*]
+- [YOU RECALL: say *nilaiyam*, then read **கூரை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02, TA-LEX-C71-DAY-05] -->

@@ -9,7 +9,7 @@ headword: "வாசல்"
 gloss: "a doorway"
 romanization: "vāsal"
 concept_tag: TA-WELCOME-THRESHOLD
-prerequisites: [TA-C49-many-thanks]
+prerequisites: [TA-C49-many-thanks, TA-C48-now, TA-C49-affection]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C50-WELCOME-01]
 practises:
-  knowledge: [TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01]
+  knowledge: [TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01, TA-LEX-C48-LEAVE-01, TA-LEX-C49-COURTESY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Almost everything that happens when a guest arrives happens at the *vāsal* rath
 The first of five things a guest meets at a Tamil door.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01, TA-LEX-C48-LEAVE-01, TA-LEX-C49-COURTESY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vāsal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kadavu*, then *vāsal*, so the door and its opening sit together]
+- [YOU RECALL: say *ippōdu*, then read **அன்பு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05, TA-LEX-C50-WELCOME-01] -->

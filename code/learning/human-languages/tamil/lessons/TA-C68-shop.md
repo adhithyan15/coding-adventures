@@ -9,7 +9,7 @@ headword: "கடை"
 gloss: "a shop"
 romanization: "kaḍai"
 concept_tag: TA-NOUN-SHOP
-prerequisites: [TA-C67-cap]
+prerequisites: [TA-C67-cap, TA-C66-up, TA-C66-down, TA-C67-shirt]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C68-SHOP-01]
 practises:
-  knowledge: [TA-LEX-C67-WEAR-04, TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01]
+  knowledge: [TA-LEX-C67-WEAR-04, TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01, TA-LEX-C66-WHICHWAY-01, TA-LEX-C66-WHICHWAY-02, TA-LEX-C67-WEAR-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ came from.
 The place the next four words happen in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-04, TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-04, TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01, TA-LEX-C66-WHICHWAY-01, TA-LEX-C66-WHICHWAY-02, TA-LEX-C67-WEAR-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kaḍai*]
 - [YOU SAY: *kaḍai*, then name one thing from last chapter you would go there for]
 - [YOU RECALL: say *seruppu*, then say *toppi*, then say *kaḍai*]
+- [YOU RECALL: say *mēlē*, then read **கீழே**, then say *saṭṭai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-04, TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01] -->

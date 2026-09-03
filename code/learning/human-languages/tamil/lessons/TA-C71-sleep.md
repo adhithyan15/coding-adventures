@@ -9,7 +9,7 @@ headword: "தூங்கு"
 gloss: "to sleep"
 romanization: "tūṅgu"
 concept_tag: TA-VERB-TUUNGU
-prerequisites: [TA-C71-rise]
+prerequisites: [TA-C71-rise, TA-C69-bus, TA-C70-bed]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C71-DAY-02]
 practises:
-  knowledge: [TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02]
+  knowledge: [TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02, TA-LEX-C69-GOING-02, TA-LEX-C70-ROOM-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,13 +54,14 @@ Its **ங்க** is the same nasal-plus-க you say inside வாங்கு.
 Two verbs, and the day has both ends.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02, TA-LEX-C69-GOING-02, TA-LEX-C70-ROOM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tūṅgu*]
 - [YOU SAY: *tūkkam*, then *tūṅgu* — the thing, then the doing]
 - [YOU SAY: *vāṅgu*, then *tūṅgu*, and find the sound they share]
 - [YOU RECALL: say *kūrai*, then say *eḻu*, then say *tūṅgu*]
+- [YOU RECALL: read **பேருந்து**, then say *kaṭṭil*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02] -->

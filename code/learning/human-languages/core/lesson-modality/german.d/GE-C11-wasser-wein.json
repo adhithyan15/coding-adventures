@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C11-wasser-wein",
     "language": "german",
-    "chapter": 14,
-    "sequence": 270,
+    "chapter": 15,
+    "sequence": 280,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:470f7cded4cca7e1"
+    "sourceHash": "fnv1a64:9e650ffeae351c51"
   },
   "findings": []
 }

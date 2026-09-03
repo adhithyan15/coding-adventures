@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C14-alter-sein-haben
 spine_node: SPINE-TIME-OF-DAY
-sequence: 496
-chapter: 22
+sequence: 506
+chapter: 23
 type: grammar
 headword: sein, nicht haben
 gloss: Germanic IS its years where Romance HAS them — the one place German refuses haben

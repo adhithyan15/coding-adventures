@@ -9,7 +9,7 @@ headword: "அழு"
 gloss: "to cry"
 romanization: "aḻu"
 concept_tag: TA-VERB-AZHU
-prerequisites: [TA-C72-laugh]
+prerequisites: [TA-C72-laugh, TA-C70-roof, TA-C71-play]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C72-FEEL-05]
 practises:
-  knowledge: [TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02, TA-LEX-C72-FEEL-05]
+  knowledge: [TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02, TA-LEX-C72-FEEL-05, TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -55,13 +55,14 @@ Five feelings now: three you can have — கோபம், பயம், வர�
 Five: three nouns and two verbs.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02, TA-LEX-C72-FEEL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02, TA-LEX-C72-FEEL-05, TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *aḻu*]
 - [YOU SAY: *siri*, then *aḻu* — the pair, one after the other]
 - [YOU SAY: all five — *kōpam*, *payam*, *varuttam*, *siri*, *aḻu*]
 - [YOU RECALL: say *varuttam*, then say *siri*, then say *aḻu*]
+- [YOU RECALL: say *kūrai*, then read **விளையாடு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02, TA-LEX-C72-FEEL-05] -->

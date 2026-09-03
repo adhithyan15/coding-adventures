@@ -9,7 +9,7 @@ headword: "பறவை"
 gloss: "a bird"
 romanization: "paṟavai"
 concept_tag: TA-NOUN-BIRD
-prerequisites: [TA-C58-crow]
+prerequisites: [TA-C58-crow, TA-C56-let-it-be, TA-C57-ember]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C58-ANIMAL-05]
 practises:
-  knowledge: [TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05]
+  knowledge: [TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05, TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Here the three go three ways: Kannada ಹಕ್ಕಿ (*hakki*), Telugu పక�
 Five, and the run is closed: a cow, a goat, a hen, a crow, and the word for everything that flies.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05, TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *paṟavai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *pasu*, *āṭu*, *kōḻi*, *kākkai*, *paṟavai*]
+- [YOU RECALL: say *ākaṭṭum*, then read **கனல்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05] -->

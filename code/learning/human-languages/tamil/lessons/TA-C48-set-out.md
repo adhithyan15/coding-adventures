@@ -9,7 +9,7 @@ headword: "புறப்படு"
 gloss: "to set out"
 romanization: "puṟappaḍu"
 concept_tag: TA-LEAVE-SET-OUT
-prerequisites: [TA-C48-later]
+prerequisites: [TA-C48-later, TA-C46-guest, TA-C47-just-so]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C48-LEAVE-05]
 practises:
-  knowledge: [TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05]
+  knowledge: [TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05, TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Two pieces, both still visible. *puṟam* is the outside, and *paḍu* is the al
 That closes the run: now, time, a journey, afterwards, and getting up to go.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05, TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *puṟappaḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *ippōdu*, *nēram*, *payaṇam*, *piṟaku*, *puṟappaḍu*]
+- [YOU RECALL: say *viruntāḷi*, then read **அப்படியே**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05] -->

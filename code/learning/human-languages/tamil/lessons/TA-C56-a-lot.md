@@ -9,7 +9,7 @@ headword: "நிறைய"
 gloss: "a lot"
 romanization: "niṟaiya"
 concept_tag: TA-REPLY-A-LOT
-prerequisites: [TA-C56-a-little]
+prerequisites: [TA-C56-a-little, TA-C54-basket, TA-C55-back]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C56-AMOUNT-02]
 practises:
-  knowledge: [TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02]
+  knowledge: [TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C54-HOUSE-02, TA-LEX-C55-BODY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Telugu says ఎక్కువ (*ekkuva*) and builds it out of nothing to do wit
 Two, and they are opposite ends of one question.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C54-HOUSE-02, TA-LEX-C55-BODY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *niṟaiya*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *siṟitu*, then *niṟaiya*, the little and the lot]
+- [YOU RECALL: read **கூடை**, then say *mutuku*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02] -->

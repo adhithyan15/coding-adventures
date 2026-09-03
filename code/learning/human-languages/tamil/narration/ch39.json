@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Asking for What You Want",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3ae034c67771783b",
+  "sourceHash": "fnv1a64:e05616b309f94765",
   "lessons": [
     {
       "id": "TA-C39-vendum",
@@ -375,7 +375,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e44d69fb4d5bfdf6",
+      "sourceHash": "fnv1a64:0a2c8705ff3145a5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -517,6 +517,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONTRAST: \"oṉṟu\" alone, \"oru tēnīr\" in front of a noun]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ūr, then read நண்பன், then say ivar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ūr*, then read **நண்பன்**, then say *ivar*]"
             }
           ]
         },

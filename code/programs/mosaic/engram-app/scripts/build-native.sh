@@ -332,6 +332,80 @@ case "$BACKEND" in
     echo ""
     echo "Built: $APP/publish"
     ;;
+  compose)
+    # Compose Desktop, on the JVM, so one lane covers Linux, macOS and Windows
+    # -- the cheapest breadth of the five backends.
+    #
+    # `createDistributable` rather than `packageDistributionForCurrentOS`: the
+    # latter builds a .dmg/.msi/.deb, which needs platform packaging tools and
+    # produces something that has to be installed before it can be checked. The
+    # distributable is the same application tree, inspectable in place.
+    if ! command -v gradle >/dev/null 2>&1; then
+      echo "error: gradle is required to build the Compose backend." >&2
+      echo "       The project is emitted at $APP with the engine in place;" >&2
+      echo "       install Gradle (or use mise) and re-run." >&2
+      exit 3
+    fi
+
+    ( cd "$APP" && gradle --quiet createDistributable )
+
+    DIST="$APP/build/compose/binaries/main/app"
+    if [[ ! -d "$DIST" ]]; then
+      echo "error: gradle produced no distribution at $DIST" >&2
+      exit 1
+    fi
+
+    # THE trap this backend has, and the reason compiling is not enough.
+    #
+    # `MosaicHost.loadCapi` resolves the engine at RUNTIME, trying the working
+    # directory and then the directory holding its own jar. Compose Desktop
+    # packages the jars and nothing else, so a distribution built without this
+    # step launches into an app where every deck operation silently does
+    # nothing -- and it compiles perfectly, which is exactly why CI's
+    # acceptance lane cannot catch it.
+    #
+    # The jar directory is found rather than assumed: it is
+    # `Contents/app` inside a macOS .app bundle and `lib/app` on Linux and
+    # Windows, and hard-coding either would break the other two silently.
+    HOST_JAR="$(find "$DIST" -name '*.jar' -exec sh -c '
+      unzip -l "$1" 2>/dev/null | grep -q "MosaicHost.class" && echo "$1"
+    ' _ {} \; | head -1)"
+    if [[ -z "$HOST_JAR" ]]; then
+      echo "error: no jar in $DIST contains MosaicHost; cannot place the engine" >&2
+      exit 1
+    fi
+    JAR_DIR="$(dirname "$HOST_JAR")"
+    cp "$LIB_PATH" "$JAR_DIR/$LIB_NAME"
+
+    # Asserted, not assumed: the copy above could silently no-op if the
+    # distribution were rebuilt afterwards, and the failure mode is an app that
+    # starts and does nothing.
+    if [[ ! -f "$JAR_DIR/$LIB_NAME" ]]; then
+      echo "error: the engine is not beside the host jar at $JAR_DIR" >&2
+      echo "       the app would launch with every deck operation unavailable" >&2
+      exit 1
+    fi
+
+    # Present is not the same as usable. Re-check the SHIPPED copy exports the
+    # engine's symbols, rather than trusting that the one verified in step [1]
+    # arrived intact -- a truncated or wrong-architecture copy is a file that
+    # exists and cannot be loaded, which is the same silent failure one step
+    # further along.
+    case "$(uname -s)" in
+      Darwin) SHIPPED="$(nm -gU "$JAR_DIR/$LIB_NAME" 2>/dev/null | grep -c ' _eg_' || true)" ;;
+      Linux)  SHIPPED="$(nm -D --defined-only "$JAR_DIR/$LIB_NAME" 2>/dev/null | grep -c ' eg_' || true)" ;;
+      *)      SHIPPED="unknown" ;;
+    esac
+    if [[ "$SHIPPED" != "unknown" && "$SHIPPED" -lt 20 ]]; then
+      echo "error: the engine beside the host jar exports only $SHIPPED eg_* symbols" >&2
+      echo "       the app would launch and every deck operation would fail" >&2
+      exit 1
+    fi
+    echo "  engine placed beside the host jar at $JAR_DIR/$LIB_NAME"
+    echo "  shipped engine exports $SHIPPED eg_* symbols"
+    echo ""
+    echo "Built: $DIST"
+    ;;
   *)
     echo "error: the $BACKEND compile step is not wired yet." >&2
     echo "       The project is emitted at $APP with the engine in place;" >&2

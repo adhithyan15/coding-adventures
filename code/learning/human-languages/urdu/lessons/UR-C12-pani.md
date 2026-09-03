@@ -9,7 +9,7 @@ headword: پانی
 romanization: pānī
 gloss: water — the first word you would actually ask for, and a verb from three chapters ago put back to work
 concept_tag: UR-WATER
-prerequisites: [UR-C11-dil]
+prerequisites: [UR-C11-dil, UR-C08-madad]
 sounds: [rtl, long-a, long-i]
 roots: [sanskrit-paniya, pie-peh3]
 etymology_hook: pani continues Sanskrit pānīya, "water, drink," from the root pā-, "to drink," ultimately Proto-Indo-European *peh₃-; English water is unrelated, from a different PIE root entirely, but *peh₃- itself surfaces in English potion and poison, by way of Latin potare, "to drink."
@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-DIL, UR-ETYMON-DIL-HEART-PIE, UR-LEX-LENA, UR-ETYMON-LENA-TAKE, UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-PANI, UR-ETYMON-PANI-DRINK]
+  knowledge: [UR-LEX-DIL, UR-ETYMON-DIL-HEART-PIE, UR-LEX-LENA, UR-ETYMON-LENA-TAKE, UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-PANI, UR-ETYMON-PANI-DRINK, UR-LEX-MADAD-KARNA, UR-GRAMMAR-CONJUNCT-VERB, UR-ETYMON-MADAD-EXTEND]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -75,12 +75,13 @@ drinkable thing" — the same idea English kept for what you drink, not for
 the substance itself.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-PANI, UR-ETYMON-PANI-DRINK, UR-LEX-LENA, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-PANI, UR-ETYMON-PANI-DRINK, UR-LEX-LENA, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-MADAD-KARNA, UR-GRAMMAR-CONJUNCT-VERB, UR-ETYMON-MADAD-EXTEND] -->
 
 - [YOU SAY: **pānī** — water; then **merā pānī**]
 - [YOU SAY: **maiṅ pānī letā hūṅ**, then **maiṅ pānī letī hūṅ**]
 - [YOU CONNECT: **pānī** ← *pā-* → Latin *potare* → English **potion**,
   **poison** — not **water**]
+- [YOU RECALL: say *madad karnā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-PANI, UR-ETYMON-PANI-DRINK, UR-LEX-LENA] -->

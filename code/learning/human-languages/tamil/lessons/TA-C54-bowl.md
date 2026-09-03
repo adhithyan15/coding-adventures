@@ -9,7 +9,7 @@ headword: "கிண்ணம்"
 gloss: "a bowl"
 romanization: "kiṇṇam"
 concept_tag: TA-NOUN-BOWL
-prerequisites: [TA-C54-knife]
+prerequisites: [TA-C54-knife, TA-C52-root, TA-C53-path]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C54-HOUSE-04]
 practises:
-  knowledge: [TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04]
+  knowledge: [TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04, TA-LEX-C52-TREE-04, TA-LEX-C53-LAND-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Malayalam reaches past both and takes the Sanskrit പാത്രം (*pātra�
 Four: to sit on, to carry in, to cut with, and to eat from.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04, TA-LEX-C52-TREE-04, TA-LEX-C53-LAND-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kiṇṇam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *katti*, then *kiṇṇam*, and let the ண double this time]
+- [YOU RECALL: read **வேர்**, then say *pātai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04] -->

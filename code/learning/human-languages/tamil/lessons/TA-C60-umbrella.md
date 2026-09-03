@@ -9,7 +9,7 @@ headword: "குடை"
 gloss: "an umbrella"
 romanization: "kuṭai"
 concept_tag: TA-NOUN-UMBRELLA
-prerequisites: [TA-C60-rope]
+prerequisites: [TA-C60-rope, TA-C58-hen, TA-C59-oil]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C60-MADE-03]
 practises:
-  knowledge: [TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03]
+  knowledge: [TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C58-ANIMAL-03, TA-LEX-C59-KITCHEN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Kannada ಕೊಡೆ (*koḍe*) is the same word. It ends on the ை you already
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C58-ANIMAL-03, TA-LEX-C59-KITCHEN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kuṭai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kuṭai*, then *maḻai*, and say which one you take out for the other]
+- [YOU RECALL: say *kōḻi*, then read **எண்ணெய்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03] -->

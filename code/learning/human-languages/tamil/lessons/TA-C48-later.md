@@ -9,7 +9,7 @@ headword: "பிறகு"
 gloss: "afterwards"
 romanization: "piṟaku"
 concept_tag: TA-LEAVE-LATER
-prerequisites: [TA-C48-journey]
+prerequisites: [TA-C48-journey, TA-C46-farmer, TA-C47-perhaps]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C48-LEAVE-04]
 practises:
-  knowledge: [TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04]
+  knowledge: [TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04, TA-LEX-C46-ROLE-04, TA-LEX-C47-REPLY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ As a way of parting it is gentle and slightly vague: *piṟaku pārkkalām*, "we
 Four, and the fourth one puts off the parting.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04, TA-LEX-C46-ROLE-04, TA-LEX-C47-REPLY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *piṟaku*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *payaṇam*, then *piṟaku*, and let the hard *ṟ* land in the second]
+- [YOU RECALL: read **விவசாயி**, then say *oruvēḷai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04] -->

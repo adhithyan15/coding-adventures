@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C07-sabbat",
+    "language": "german",
+    "chapter": 11,
+    "sequence": 238,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c00b57e02c81f0d4"
+  },
+  "findings": []
+}

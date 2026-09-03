@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C15-du-hast-gesagt
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 355
-chapter: 19
+sequence: 365
+chapter: 20
 type: phrase
 headword: du hast gesagt
 gloss: you said — the second slot, where haben drops its b exactly as English have does

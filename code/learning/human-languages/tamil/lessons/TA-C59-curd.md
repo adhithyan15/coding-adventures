@@ -9,7 +9,7 @@ headword: "தயிர்"
 gloss: "curd"
 romanization: "tayir"
 concept_tag: TA-NOUN-CURD
-prerequisites: [TA-C58-bird]
+prerequisites: [TA-C58-bird, TA-C57-wind, TA-C58-cow]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C59-KITCHEN-01]
 practises:
-  knowledge: [TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01]
+  knowledge: [TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01, TA-LEX-C57-FIRE-01, TA-LEX-C58-ANIMAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The sisters do not agree here at all: Kannada ಮೊಸರು (*mosaru*), Telugu
 The first of five kitchen words.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01, TA-LEX-C57-FIRE-01, TA-LEX-C58-ANIMAL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tayir*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tayir*, then *sādam*, and say which one goes on top of the other]
+- [YOU RECALL: say *kāṟṟu*, then read **பசு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01] -->

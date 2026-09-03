@@ -9,7 +9,7 @@ headword: "பசு"
 gloss: "a cow"
 romanization: "pasu"
 concept_tag: TA-NOUN-COW
-prerequisites: [TA-C57-ember]
+prerequisites: [TA-C57-ember, TA-C56-a-little, TA-C57-wind]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C58-ANIMAL-01]
 practises:
-  knowledge: [TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01]
+  knowledge: [TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01, TA-LEX-C56-AMOUNT-01, TA-LEX-C57-FIRE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It belongs to a விவசாயி before it belongs to anybody, and in a க
 The first of five animals.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01, TA-LEX-C56-AMOUNT-01, TA-LEX-C57-FIRE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pasu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pasu*, then *kirāmam*, and put the one inside the other]
+- [YOU RECALL: say *siṟitu*, then read **காற்று**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01] -->

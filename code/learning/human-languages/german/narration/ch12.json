@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 12,
-  "title": "Months and Seasons",
+  "title": "Telling the Time",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ee2b969b08054ad0",
+  "sourceHash": "fnv1a64:d5f7ca8d40827b53",
   "lessons": [
     {
-      "id": "GE-C09-monate",
+      "id": "GE-C08-uhr",
       "sequence": 245,
-      "title": "die Monate — Rome's calendar in German",
-      "headword": "die Monate",
-      "romanization": "die Monate",
-      "gloss": "the months — Latin loans, like the clock-word Uhr",
+      "title": "Uhr — the clock, and a Roman word in the German day",
+      "headword": "Uhr",
+      "romanization": "Uhr",
+      "gloss": "clock / o'clock — and a Latin word inside German",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5716b3d196979797",
+      "sourceHash": "fnv1a64:4c33b7e459b8039b",
       "notice": null,
       "blocks": [
         {
@@ -35,59 +35,76 @@
             },
             {
               "kind": "speech",
-              "text": "Here's the German pattern again. Its numbers are homegrown (eins, zwei), its weekday-gods are Germanic (Donnerstag). But its months — like its clock-word Uhr — are borrowed straight from Latin. Time-reckoning, again, came to the German world from Rome."
+              "text": "Something new happens here. German's numbers were homegrown (eins, zwei), and its weekdays were Germanic gods (Donnerstag). But its word for the clock — Uhr — is borrowed from Latin. Time-keeping came to the German world with Roman and monastic clocks, and the Latin word rode in with them."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The months, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "German",
-                "from Latin",
-                "who / what"
-              ],
-              "columns": 3,
-              "rowCount": 12,
-              "utterances": [
-                "German: Januar. from Latin: Januarius. who / what: Janus, god of doors & beginnings.",
-                "German: Februar. from Latin: Februarius. who / what: the Februa purification festival.",
-                "German: März. from Latin: Martius. who / what: Mars, the war-god — the same Mars as English Tuesday / French mardi.",
-                "German: April. from Latin: Aprilis. who / what: perhaps aperire \"to open\".",
-                "German: Mai. from Latin: Maius. who / what: Maia, goddess of growth.",
-                "German: Juni. from Latin: Junius. who / what: Juno, queen of the gods.",
-                "German: Juli. from Latin: Julius. who / what: Julius Caesar.",
-                "German: August. from Latin: Augustus. who / what: the emperor Augustus.",
-                "German: September. from Latin: september. who / what: \"7th\" (septem).",
-                "German: Oktober. from Latin: october. who / what: \"8th\" (octo).",
-                "German: November. from Latin: november. who / what: \"9th\" (novem).",
-                "German: Dezember. from Latin: december. who / what: \"10th\" (decem)."
-              ]
-            },
-            {
               "kind": "speech",
-              "text": "Two familiar payoffs:"
-            },
-            {
-              "kind": "speech",
-              "text": "März = Mars. German borrowed the Roman war-god's month whole — the same god behind English March and, as Tuesday (Tiw = Mars), behind German's own Dienstag. The god came in twice, once by name, once by translation."
-            },
-            {
-              "kind": "speech",
-              "text": "September–Dezember = 7–10. Even in German, these keep the Latin numbers septem…decem (the Roman year began in March). So German's own numbers are sieben, acht, neun, zehn — but its month names count in Latin."
-            },
-            {
-              "kind": "speech",
-              "text": "Three layers of the German calendar, three origins: numbers native, weekdays Germanic gods, months (and the clock, Uhr) Latin."
+              "text": "vowel-u-long — Uhr = oor, a long u then a soft r: one syllable."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — a Latin loan among Germanic natives",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uhr comes from Latin hōra, \"hour\" — the same word that became French heure, Italian ora, and English hour. German took it in (through medieval Latin/Low German ūr(e)) and made it Uhr."
+            },
+            {
+              "kind": "speech",
+              "text": "That's the striking part: three layers of the German day, three different origins —."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what",
+                "German",
+                "origin"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "what: the numbers. German: eins, zwei, drei. origin: native Germanic (twins of English).",
+                "what: the weekdays. German: Montag, Donnerstag. origin: Germanic gods (Latin months).",
+                "what: the clock. German: Uhr. origin: Latin loan (hōra)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "German kept its own numbers and gods, but for the machine that measures hours, it reached for Rome. (German also has a native word, Stunde, \"an hour's span\" — but for clock-reading, \"o'clock,\" it's Uhr.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: \"Es ist … Uhr\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To tell the time, German says es ist (\"it is\") + the number + Uhr:"
+            },
+            {
+              "kind": "speech",
+              "text": "Es ist ein Uhr. — \"It is one o'clock.\" Es ist zwei Uhr. — \"It is two o'clock.\" Es ist zehn Uhr. — \"It is ten o'clock.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Uhr doesn't add a plural here (not \"zwei Uhren\" for the time) — it works like English o'clock: zwei Uhr = \"two o'clock.\" (Uhren, plural, means \"clocks\" the objects.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -100,34 +117,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twelve — \"Januar, Februar, März … November, Dezember\"",
+              "instruction": "\"Uhr\" — oor",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twelve — \"Januar, Februar, März … November, Dezember\"]"
+              "source": "[YOU SAY: \"Uhr\" — *oor*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"März = Mars = Dienstag's god (Tiw)\"",
+              "instruction": "\"Es ist ein Uhr, zwei Uhr, drei Uhr\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"März = Mars = Dienstag's god (Tiw)\"]"
+              "source": "[YOU SAY: \"Es ist ein Uhr, zwei Uhr, drei Uhr\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"September = 7, Dezember = 10 — Latin numbers in German months\"",
+              "instruction": "\"Uhr / heure / hour\" — all from Latin hōra",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"September = 7, Dezember = 10 — Latin numbers in German months\"]"
+              "source": "[YOU SAY: \"Uhr / heure / hour\" — all from Latin *hōra*]"
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -139,26 +156,26 @@
             },
             {
               "kind": "speech",
-              "text": "Are German month names native or borrowed, and like which other German word? (Borrowed from Latin — like the clock-word Uhr.) What links März to Dienstag? (The war-god Mars = Germanic Tiw.) Why is Dezember Latin for \"ten\"? (The Roman year began in March.) Next: the seasons — where German goes native again."
+              "text": "Where does Uhr come from, and why is that notable? (Latin hōra — a loanword, unlike German's native numbers and Germanic day-gods.) Two French/English cousins of Uhr? (heure, hour.) How does German say \"it is three o'clock\"? (Es ist drei Uhr.) Next: Mittag and Mitternacht — noon and midnight."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C09-jahreszeiten",
+      "id": "GE-C08-mittag-mitternacht",
       "sequence": 250,
-      "title": "die Jahreszeiten — the seasons go native",
-      "headword": "die Jahreszeiten",
-      "romanization": "die Jahreszeiten",
-      "gloss": "the seasons — native Germanic, unlike the Latin months",
+      "title": "Mittag and Mitternacht — the native middle of day and night",
+      "headword": "Mittag, Mitternacht",
+      "romanization": "Mittag, Mitternacht",
+      "gloss": "noon and midnight — native \"mid-day\" and \"mid-night\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4874c7be9420a39",
+      "sourceHash": "fnv1a64:3f32771ef9ee665f",
       "notice": null,
       "blocks": [
         {
@@ -174,46 +191,52 @@
             },
             {
               "kind": "speech",
-              "text": "The months were Latin. The seasons swing back to native German — and one of them, Herbst, is the same word as English harvest. The word for \"season\" itself is transparent: Jahres-zeit = \"year-time.\""
+              "text": "The clock-word Uhr was Latin. But noon and midnight swing back to native German: Mittag and Mitternacht are plain Germanic compounds — \"the day's middle\" and \"the night's middle\" — built from words you can already almost read."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The four seasons, taken apart",
+          "title": "The two words, taken apart",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Both start with Mitte, \"middle\" (cousin of English mid, middle, and of Latin medius):"
+            },
             {
               "kind": "table",
               "headers": [
                 "German",
                 "=",
-                "English twin"
+                "literally"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 2,
               "utterances": [
-                "German: der Frühling (spring). =: früh \"early\" + -ling. English twin: early-season (from früh, cousin of English early).",
-                "German: der Sommer (summer). =: native Germanic. English twin: summer.",
-                "German: der Herbst (autumn). =: native Germanic. English twin: harvest.",
-                "German: der Winter (winter). =: native Germanic. English twin: winter."
+                "German: Mittag. =: Mitte + Tag. literally: \"mid-day\" (noon).",
+                "German: Mitternacht. =: Mitter (Mitte) + Nacht. literally: \"mid-night\" (midnight)."
               ]
             },
             {
               "kind": "speech",
-              "text": "All four are homegrown Germanic, and three are the plain twins of English summer, winter, and — the surprise — harvest:"
+              "text": "Mittag = \"mid-day.\" Tag (\"day\") you met in Montag, Dienstag; put \"middle\" in front and you get noon. Its meaning matches French midi (medius diēs) exactly — same idea, but German built it from its own words instead of borrowing the Latin one."
             },
             {
               "kind": "speech",
-              "text": "Frühling is built from früh (\"early\") — literally the \"early-season,\" the year's first. (German also uses Lenz, an old poetic word for spring.)"
+              "text": "Mitternacht = \"mid-night.\" Nacht (\"night\") is the twin of English night (remember acht/eight, Nacht/night — the -cht/-ght pair). So Mitternacht and English mid-night are the same compound in two Germanic tongues."
             },
             {
               "kind": "speech",
-              "text": "Herbst corresponds to harvest. They're the same Germanic word: the reaping season. English kept harvest but narrowed it to the act of gathering and reached for Latin-derived autumn for the season; German kept the old word for the season itself. Two languages, one word, split in meaning."
+              "text": "To tell the time with them:"
             },
             {
               "kind": "speech",
-              "text": "So the German year splits cleanly: Latin for the months (like Uhr, the clock), native Germanic for the seasons (like the numbers and Mittag/Mitternacht)."
+              "text": "Es ist Mittag. — \"It is noon.\" Es ist Mitternacht. — \"It is midnight.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So German splits the day three ways by origin: Uhr (Latin) for the hours, Mittag/Mitternacht (native) for its pivots."
             }
           ]
         },
@@ -231,29 +254,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Frühling, der Sommer, der Herbst, der Winter\"",
+              "instruction": "\"Mittag\" (noon), \"Mitternacht\" (midnight)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Frühling, der Sommer, der Herbst, der Winter\"]"
+              "source": "[YOU SAY: \"Mittag\" (noon), \"Mitternacht\" (midnight)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twins — \"Sommer/summer, Winter/winter, Herbst/harvest\"",
+              "instruction": "break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twins — \"Sommer/summer, Winter/winter, Herbst/**harvest**\"]"
+              "source": "[YOU SAY: break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Frühling = früh (early) + -ling — the early season\"",
+              "instruction": "\"Mitternacht / mid-night\" — the same Germanic compound",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Frühling = früh (early) + -ling — the early season\"]"
+              "source": "[YOU SAY: \"Mitternacht / mid-night\" — the same Germanic compound]"
             }
           ]
         },
@@ -270,7 +293,7 @@
             },
             {
               "kind": "speech",
-              "text": "Are German seasons native or Latin, unlike the months? (Native Germanic.) What English word is Herbst the twin of, and what happened to it? (Harvest — English narrowed it to the reaping act and took autumn from Latin for the season.) What is Frühling built from? (früh \"early\" — the early season.) Next chapter builds on this toward family and food."
+              "text": "What do Mittag and Mitternacht literally mean, and from what native word? (\"Mid-day\" / \"mid-night\"; from Mitte \"middle\" + Tag/Nacht.) How does this differ from Uhr? (Uhr is a Latin loan; these are native compounds.) What English word is Mitternacht the twin of? (Midnight.) Next chapter builds on this toward months and family."
             }
           ]
         }

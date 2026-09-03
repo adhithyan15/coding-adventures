@@ -1,323 +1,328 @@
-German, chapter 21: I Am, You Are.
-9 lessons. You can do the first 8 of them in the car; after that you will want to have stopped.
+German, chapter 21: The Simple Past.
+10 lessons. All 10 can be done entirely by ear.
 
 
-Lesson 1 of 9.
-sein — "to be".
+Lesson 1 of 10.
+-te — the one-word past.
 
 Warm-up.
 [pause 2 seconds]
-You have met the German verb for to have. Here is its partner — the most irregular verb in German, and the one verb whose forms you will not be able to guess.
+German has a second past tense. It needs no helper verb and no participle — just a stem and an ending.
 
-You'll want to know: sein.
-sein — "to be."
-The -en on the end is the infinitive ending you already own from gehen and sehen: the dictionary form of a German verb wears it, and sein wears it too.
-That is where the resemblance stops. Gehen and sehen keep their stem in every form — ich gehe, ich sehe. Sein keeps nothing. Not one of its present forms contains the letters s-e-i-n in that order.
-This is the only verb in the book that has to be met one form at a time, and the next several lessons do exactly that: one form each, said until it is automatic, before any of them are ever seen side by side.
-
-Sounds you'll need.
-s-voiced — a German s before a vowel buzzes like English z, exactly as it does in sehen. So sein opens with a z.
-diphthong-ei — German ei is the vowel of English eye, never "ee".
-final-t — worth having ready now, because two of the forms coming up end in a crisp, fully released t.
-Put together, sein sounds like English zine.
+Grammar Lens: add -te to the stem.
+Take a regular verb's stem and put -te on it.
+The tense that ending builds is called the Präteritum. Where the Perfekt spends two words and a bracket, this one spends a single word: sag- plus -te and the sentence is done.
+The two tenses report the same events. That is worth saying plainly, because a learner reasonably expects a language with two pasts to be drawing a distinction with them, the way English draws one between I said and I have said. German draws none. What separates its two pasts is something else entirely, and it takes a few more lessons to arrive at.
+The -te itself has a history reaching well beyond German, and that comes first.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "sein" (zine) — buzzing z, ei as in eye]
+[your turn — say: the recipe — "stem plus te"]
 [pause 8 seconds for the answer]
-[your turn — say: "gehen, sehen, sein" — three infinitives, one ending]
+[your turn — say: the name — "das Präteritum"]
 [pause 8 seconds for the answer]
-[your turn — say: "sein — to be"]
+[your turn — say: how many words it takes — "one"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"sein, sein — zine."
+"stem plus -te."
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does sein mean? ("To be.") Which ending does it share with gehen and sehen? (-en, the infinitive.) How does the s sound? (Like English z.) And the ei? (Like English eye.) Next: the first form, and it looks nothing like the word you just learned.
+Which ending builds the Präteritum on a regular verb? (-te.) How many words does it need? (One.) How many does the Perfekt need? (Two.) Do the two tenses mean different things? (No.) Next: the first verb through the new ending.
 
 
-Lesson 2 of 9.
-ich bin — "I am".
+Lesson 2 of 10.
+ich sagte — "I said," in one word.
 
 Warm-up.
 [pause 2 seconds]
-You have ich, and you have the infinitive sein. Put them together and you get a form that shares no letters with either half of that sentence except the i.
+Run the new ending on the verb this chapter started from.
 
-You'll want to know: ich bin.
-ich bin — "I am."
-One syllable, short i, ordinary b, ordinary n. There is no rule behind it and nothing to derive it from: bin is simply the form that goes with ich, and it is learned the way you learned hallo.
-It rhymes with English bin, and that rhyme is not an accident — see below.
+You'll want to know: ich sagte.
+ich sagte — "I said."
+Stem sag-, ending -te. Two syllables and it is finished, where the Perfekt took three words to say the same thing:
+ich sagte, ich habe gesagt.
+Both are "I said." Neither is more past than the other, neither is more polite, and neither is wrong. Hold that in mind while the differences that do exist arrive.
 
 Sounds you'll need.
-ich-laut — ich still ends in the soft breathy sound you met when you first said "I": tongue where it sits for ee, air pushed past it, no scrape.
-i-short — the i of bin is short and clipped, the vowel of English bin, not the long ee of ihm.
+long-a — the stem vowel is the same long a as in sagen; the new ending does not shorten it.
+final-te — the -te is a full unstressed syllable, tuh, not a bare t. Hear the difference against the participle: ge-SAHKT has one syllable at the end, SAHK-tuh has two.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ich sagte"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair back to back — "ich sagte … ich habe gesagt"]
+[pause 8 seconds for the answer]
+[your turn — say: the two endings apart — "gesagt, sagte"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich sagte, ich habe gesagt."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I said" in one word. (Ich sagte.) And in three. (Ich habe gesagt.) Which of them is further in the past? (Neither.) How many syllables does sagte have? (Two.) Next: the same ending on the verb for doing.
+
+
+Lesson 3 of 10.
+ich machte — "I made," "I did".
+
+Warm-up.
+[pause 2 seconds]
+You have gemacht. Build the other past of the same verb before reading on.
+
+You'll want to know: ich machte.
+ich machte — "I made," "I did."
+Mach- plus -te. Notice what the two pasts of this verb have in common: the stem. Gemacht wrapped it and machte suffixed it, and neither touched a letter inside it.
+That is the whole promise of a weak verb. Whatever German asks of it, the middle stays put — which is why the four participles of the last chapter and the -te forms of this one can be built from any regular verb you meet, on the spot, without a list.
+er machte das, er hat das gemacht.
+Same person, same event, two tenses.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ich machte"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "er machte das … er hat das gemacht"]
+[pause 8 seconds for the answer]
+[your turn — say: both new forms — "sagte, machte"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich sagte, ich machte."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I did" in one word. (Ich machte.) What do machte and gemacht share? (The stem mach-.) Does either change the stem? (No.) Say "he did that" both ways. (Er machte das; er hat das gemacht.) Next: where that -te came from, and the English ending that is the same thing.
+
+
+Lesson 4 of 10.
+The dental preterite — a Germanic invention.
+
+Warm-up.
+[pause 2 seconds]
+Say sagte, then say walked. Both endings are made with the tongue against the teeth, and that is not a coincidence.
 
 The word, taken apart.
-Bin rhymes with English be for a reason, even though the vowels have drifted apart. Both come from Proto-Indo-European bʰuH- — "to grow, to become."
-So German kept that ancient root in the present tense and English kept it as the infinitive: be and bin are the same old word wearing different jobs. Hold on to that; two lessons from now it explains something about the whole verb.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ich bin" — short i, soft ending on ich]
-[pause 8 seconds for the answer]
-[your turn — say: "ich bin Anna." "ich bin Peter."]
-[pause 8 seconds for the answer]
-[your turn — say: "bin — be" — the same old root]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ich bin, ich bin."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I am." (Ich bin.) Is the i of bin long or short? (Short — English bin.) Which English word comes from the same root as bin? (Be.) Next: the same verb for the person you are talking to.
-
-
-Lesson 3 of 9.
-du bist — "you are".
-
-Warm-up.
-[pause 2 seconds]
-Du is the familiar "you" — the one for a friend. Its verb ending is -st, and for once sein uses it.
-
-You'll want to know: du bist.
-du bist — "you are."
-Take bin, drop the n, add the familiar -st: bi- plus -st is bist. That is the same ending as du gehst, du heißt, du siehst.
-Of the six present forms of sein, this is the only one that can be derived from another one. Enjoy it; it does not happen again.
-
-Sounds you'll need.
-u-long — du has a long, rounded oo, the vowel of English do, held.
-final-t — German releases a final t fully and audibly. Bist ends with a small puff of air; English tends to swallow it.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "du bist" — long u, crisp final t]
-[pause 8 seconds for the answer]
-[your turn — say: "ich bin … du bist" — the pair]
-[pause 8 seconds for the answer]
-[your turn — say: "du bist Peter."]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ich bin, du bist."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "you are," to a friend. (Du bist.) Which ending is that? (-st, the familiar one.) Which form is bist built on? (Bin.) Is the final t released or swallowed? (Released.) Next: the form for everybody else.
-
-
-Lesson 4 of 9.
-er ist — "he is".
-
-Warm-up.
-[pause 2 seconds]
-Bin and bist both start with b. The third form does not, and it is the one you will hear most.
-
-You'll want to know: er ist.
-er ist — "he is."
-er is "he." The same ist serves three more subjects without changing at all: sie ist ("she is"), es ist ("it is"), and das ist ("that is") — es and das both already yours.
-So one two-letter word covers everything that is not ich and not du, in the singular. It is the workhorse of the whole verb.
-
-Sounds you'll need.
-r-final — the r at the end of er is not a full English r. It softens towards a vowel, close to air said without the tongue curling.
-final-t — ist ends in the same released t as bist.
-
-The word, taken apart.
-Ist is the one form of sein whose relatives you can name on sight:
-[a table of 4 rows, read aloud]
-language: German. "is": ist.
-language: English. "is": is.
-language: Latin. "is": est.
-language: French. "is": est.
-All from Proto-Indo-European h₁es-, "to be" — and the infinitive sein is built on that root too. So sein and ist really do belong to each other; it is bin and bist that came from somewhere else.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "er ist, sie ist, es ist"]
-[pause 8 seconds for the answer]
-[your turn — say: "Das ist gut." — "that is good"]
-[pause 8 seconds for the answer]
-[your turn — say: "ich bin, du bist, er ist"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"Das ist gut."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "he is." (Er ist.) Which other subjects take the same form? (Sie, es, das.) Say "that is good." (Das ist gut.) Which Latin word is ist? (Est.) Next: the form for more than one.
-
-
-Lesson 5 of 9.
-wir sind — "we are".
-
-Warm-up.
-[pause 2 seconds]
-Three singular forms down. The plural starts here, and after bin, bist, ist, this one will finally look like the verb it belongs to.
-
-You'll want to know: wir sind.
-wir sind — "we are."
-wir is "we." And sind shares its first two letters with the infinitive sein, which is the first visible family resemblance in this verb.
-Its Latin twin is sunt, "they are" — same s, same n, same closing stop, the same root wearing a different vowel.
-
-Sounds you'll need.
-w-as-v — German w is English v. Wir begins like veer.
-ie-long-ee — ie is a long ee. Wir is veer, not wire.
-d-t-final — the d at the end of sind is spoken as a t, the same final devoicing you met on und. Say zint.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "wir sind" — veer zint, final d as t]
-[pause 8 seconds for the answer]
-[your turn — say: "wir sind gut."]
-[pause 8 seconds for the answer]
-[your turn — say: "sein … sind" — the family resemblance]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"wir sind, wir sind."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "we are." (Wir sind.) How is the final d pronounced? (As a t.) How does wir begin? (Like English v.) Which Latin word is sind? (Sunt.) Next: the plural "you."
-
-
-Lesson 6 of 9.
-ihr seid — "you are," to several people.
-
-Warm-up.
-[pause 2 seconds]
-Du is one friend. For two or more friends German has a separate word, and English used to have one as well.
-
-You'll want to know: ihr seid.
-ihr seid — "you are," said to more than one person you would each call du.
-ihr is the familiar plural "you" — a crowd of friends, a group of children, your own family. English once had ye here and let it go, which is why one English you now does the work of four German words.
-seid opens exactly like the infinitive: sei- is sein without its n. Both the s and the ei behave as they did there.
-
-Sounds you'll need.
-ie-long-ee — ihr is eer, one long vowel; the h only stretches it.
-s-voiced — seid opens with the buzzing z of sein.
-diphthong-ei — and carries the eye vowel through. Say zite.
-Wir sind and ihr seid are the two plural forms, and they sound nothing alike, which makes them easy to keep apart.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ihr seid" — eer zite]
-[pause 8 seconds for the answer]
-[your turn — say: "wir sind … ihr seid"]
-[pause 8 seconds for the answer]
-[your turn — say: "sein … seid" — the same opening]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"ihr seid, ihr seid."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "you are" to a group of friends. (Ihr seid.) Which English word did that job before English dropped it? (Ye.) Which part of seid comes straight out of sein? (sei-.) Next: the last form, and the one that does double duty.
-
-
-Lesson 7 of 9.
-sie sind / Sie sind — "they are," and "you are," politely.
-
-Warm-up.
-[pause 2 seconds]
-The polite Sie is literally the word for "they," worn as a courtesy. Its verb form follows from that, and costs you nothing new.
-
-You'll want to know: sie sind and Sie sind.
-sie sind — "they are." Sie sind — "you are," to someone you would address formally.
-The form is sind, the very same word you learned for wir. Nothing changes in the mouth at all: wir sind, sie sind, Sie sind are three subjects and one verb form.
-
-Grammar Lens: the capital carries the politeness.
-On the page, sie and Sie differ by exactly one capital letter — and German already spends capitals on grammar rather than decoration. In speech there is no difference at all; the context tells you which one is meant.
-[a table of 2 rows, read aloud]
-sie sind means they are.
-Sie sind means you are, formally.
-That is the whole of it. Six subjects, and you have now met every present form of the verb.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "sie sind" — "they are"]
-[pause 8 seconds for the answer]
-[your turn — say: "Sie sind Herr Peter Schmidt?" — politely]
-[pause 8 seconds for the answer]
-[your turn — say: "wir sind, sie sind, Sie sind" — one form, three subjects]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"sie sind, Sie sind."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "they are." (Sie sind.) Say "you are" to a stranger. (Sie sind — same sound.) What separates the two on paper? (The capital S.) How many different present forms of this verb have you now met? (Five — bin, bist, ist, sind, seid.) Next: one adjective, so you can finally say something about yourself.
-
-
-Lesson 8 of 9.
-müde — "tired".
-
-Warm-up.
-[pause 2 seconds]
-Ich bin is a sentence waiting for one more word. Here is the word that finishes it most often.
-
-You'll want to know: müde.
-müde — "tired."
-Ich bin müde. — "I am tired."
-Two syllables, stress on the first: mü-duh. It is an adjective, and after sein an adjective takes no ending at all — the same bare form serves every subject. Ich bin müde, du bist müde, wir sind müde.
-That is worth noticing, because German adjectives are famous for their endings. They only take them in front of a noun. Standing after sein, they stand still.
-
-Sounds you'll need.
-umlaut-ue — ü is the vowel you make by rounding your lips for oo and then saying ee without moving them. The dots are the fronting mark you already know: the mouth shifts forward, the lips stay round.
-The final -e is a soft uh, never silent. mü-duh, two beats, the weight on the first.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "müde" — round the lips, say ee]
-[pause 8 seconds for the answer]
-[your turn — say: "Ich bin müde."]
-[pause 8 seconds for the answer]
-[your turn — say: "Er ist müde. Wir sind müde." — the adjective never changes]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"Ich bin müde."
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I am tired." (Ich bin müde.) How do you make the ü? (Round for oo, say ee.) Does müde change after sein? (No — no ending.) Say "we are tired." (Wir sind müde.) Next: everything at once, on purpose.
-
-
-Lesson 9 of 9.
-Practice — the whole present of sein.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
-Warm-up.
-[pause 2 seconds]
-No new words. Every form below has had its own lesson, so this is the first time it is safe to put them all on one page — as a recap, not as something to memorise from cold.
-
-Grammar Lens: the six forms, assembled.
+The German -te is what linguists call the dental preterite: a past tense made by bolting a t or d sound onto a stem. Dental, because those sounds are made at the teeth.
 [a table of 3 rows, read aloud]
-singular: ich bin. plural: wir sind.
-singular: du bist. plural: ihr seid.
-singular: er/sie/es ist. plural: sie/Sie sind.
-Six subjects, five different forms — sind does double duty. Look at that with fresh eyes now that you can say all of it: bin and ist do not look like forms of the same word, and the next chapter explains why they aren't.
-
-The exchange.
-[a table of 5 rows, read aloud]
-Hallo! Wie geht es dir? means Hello! How are you?
-Danke, ich bin müde. means Thanks — I am tired.
-Du bist müde? Ich auch. means You are tired? Me too.
-Dann sind wir müde. Aber das ist gut. means Then we are tired. But that is good.
-Bis morgen! means See you tomorrow!
-Three small joining words slip in there without needing lessons of their own, because each can be read straight off the translation: auch ("too"), dann ("then") and aber ("but").
+language: German. present: sag-. past: sagte.
+language: English. present: walk. past: walked.
+language: Dutch. present: werk-. past: werkte.
+Three languages, one device, inherited rather than borrowed — this is a Germanic invention, and it is one of the features that identifies the family. Everything with a -t or -d past in Germanic comes from the same ancestor.
+Latin built nothing of the kind. Its past came from inherited perfect endings and from reduplication, and its descendants carried that on: French parla, Spanish habló. So sagte and walked are one machine, and parla and habló are a different one — which is why an English speaker recognises the German ending on sight and a Spanish speaker does not.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the six in order — "ich bin, du bist, er ist, wir sind, ihr seid, sie sind"]
+[your turn — say: the three together — "sagte, walked, werkte"]
 [pause 8 seconds for the answer]
-[your turn — say: the same six backwards]
+[your turn — say: the name — "the dental preterite"]
 [pause 8 seconds for the answer]
-[your turn — say: "Ich bin müde." "Du bist müde." "Wir sind müde."]
-[pause 8 seconds for the answer]
-[your turn — say: the whole exchange, both voices]
+[your turn — say: the two machines — "sagte and walked; parla and habló"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-"ich bin, du bist, er ist, wir sind, ihr seid, sie sind."
+"sagte, walked — the same ending."
 
 Wrap-up Recall.
 [pause 3 seconds]
-Run the six forms without looking. Which one form covers wir, sie and Sie? (Sind.) Which is the only form built out of another one? (Bist, from bin.) Say "that is good." (Das ist gut.) Say "you are tired" to a group. (Ihr seid müde.) Next: where these forms came from — three different verbs, none of them each other.
+What is the -te called? (The dental preterite.) Why dental? (It is made at the teeth.) Which English ending is the same thing? (-ed.) Did Latin have it? (No — Romance builds its past another way.) Next: the one verb whose -te form you will hear constantly.
+
+
+Lesson 5 of 10.
+ich hatte — "I had".
+
+Warm-up.
+[pause 2 seconds]
+The dental ending on the verb you have been leaning on for two chapters.
+
+You'll want to know: ich hatte.
+ich hatte — "I had."
+Haben drops its b — the same b that goes missing in du hast and er hat — and the dental ending lands on what is left, doubling the t in the spelling: hat-te. Two syllables, both short.
+English did the identical thing to the identical verb and then wore the result down further: have lost its consonant and took a -d, giving had. So hatte and had are the same word doing the same job.
+Haben has a Perfekt of its own as well — ich habe gehabt, "I have had" — built by the ordinary recipe, since haben is a perfectly ordinary verb when it is not busy helping another one.
+
+Sounds you'll need.
+d-t-final — the doubled tt is one sharp t, and the vowel in front of it is short and clipped. HAT-tuh, never HAH-tuh.
+final-te — the ending is still a full unstressed syllable.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ich hatte"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "ich hatte … ich habe gehabt"]
+[pause 8 seconds for the answer]
+[your turn — say: the English twin — "hatte, had"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich hatte, ich hatte."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I had." (Ich hatte.) Which letter of haben is missing? (The b.) Say the same thing in the Perfekt. (Ich habe gehabt.) Which English word is hatte? (Had.) Next: which of the two pasts a German actually reaches for, and where.
+
+
+Lesson 6 of 10.
+Which past, and where — what separates the two pasts — not meaning, but speech against writing, and north against south.
+
+Warm-up.
+[pause 2 seconds]
+Two tenses, one meaning. Time to answer the question that has been waiting since the -te arrived: when does a German say which?
+
+Grammar Lens: speech takes one, writing takes the other.
+The Perfekt belongs to speech. The Präteritum belongs to narrative writing.
+[a table of 2 rows, read aloud]
+tense: Perfekt. where it lives: everyday conversation, and dominant there.
+tense: Präteritum. where it lives: novels, reports, anything told on the page.
+Open a German novel and the story runs in Präteritum from the first page to the last. Stand in a German kitchen and you will barely hear it. Neither audience thinks it is choosing a tense; each is simply doing what that setting does.
+So the practical instruction for a speaker is lopsided and easy: produce the Perfekt, recognise the Präteritum. You will read far more of it than you will ever need to say.
+
+Why it's said this way.
+There is a second axis, and it is geographic. Spoken Präteritum has largely vanished from conversation in southern Germany, Austria and Switzerland; further north it survives noticeably better. A Hamburg speaker will use forms in conversation that a Munich speaker would find bookish.
+That map is not decoration — the next lessons turn out to explain it — and it means the honest answer to "do Germans say ich sagte?" is: some of them, some of the time, and it depends where you are standing.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the split — "Perfekt for speech, Präteritum for writing"]
+[pause 8 seconds for the answer]
+[your turn — say: your own instruction — "produce the Perfekt, recognise the Präteritum"]
+[pause 8 seconds for the answer]
+[your turn — say: the map — "weaker in the south, stronger in the north"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Perfekt spoken, Präteritum written."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which past does a novel use? (The Präteritum.) Which does a conversation use? (The Perfekt.) Which should you produce? (The Perfekt.) Where is spoken Präteritum weakest? (The south.) Next: the forms that ignore all of this and stay spoken everywhere.
+
+
+Lesson 7 of 10.
+ich konnte — "I could".
+
+Warm-up.
+[pause 2 seconds]
+The last new form of the chapter, and a Präteritum nobody thinks twice about saying out loud.
+
+You'll want to know: ich konnte.
+ich konnte — "I could," "I was able to."
+The dental ending again, doubled in the spelling as it was in hatte: konn-te. It belongs to a small family of verbs German calls modal — the ones that lean on another verb, the way English can, must and may do.
+Those verbs are the Präteritum's stronghold in ordinary speech. Nobody in Munich says ich habe gekonnt over dinner; they say ich konnte.
+
+The word, taken apart.
+Konnte and English could descend from one Germanic verb, kunnaną, which meant "to know how" rather than "to be physically able." Ability arrived later, out of knowledge.
+That older sense is still visible in the English relatives: know, cunning (originally "knowing"), and uncouth, which began as "unknown." The l that English wrote into could is pure accident — it was copied from would and should centuries after anyone stopped pronouncing it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ich konnte"]
+[pause 8 seconds for the answer]
+[your turn — say: the two doubled forms — "hatte, konnte"]
+[pause 8 seconds for the answer]
+[your turn — say: the old meaning — "konnte, could — knew how"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich konnte, ich hatte."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I could." (Ich konnte.) What did the verb behind it originally mean? ("To know how.") Name an English cousin. (Know, cunning, or uncouth.) Is konnte bookish? (No — it is said out loud everywhere.) Next: why a handful of forms get that exemption.
+
+
+Lesson 8 of 10.
+The forms that stayed spoken — the short list of Präteritum forms that stay spoken everywhere, and the reason the list is short.
+
+Warm-up.
+[pause 2 seconds]
+Hatte. Konnte. Both are Präteritum, and both come out of a German mouth without a second thought. So the writing-only rule has holes in it.
+
+Grammar Lens: a short list of survivors.
+A handful of very common verbs keep their one-word past in speech, everywhere in the German-speaking world.
+Three groups make up almost the whole list:
+hatte — the past of haben;
+konnte and its modal siblings — musste, wollte, durfte;
+the past of the verb for "to be," which arrives two chapters from now and is the most-said of them all.
+Everything else in the Präteritum obeys the split you learned last: written, not spoken.
+Why these? Because they are the verbs said most often, and frequency protects a form the way it protects an irregularity. A shape you produce fifty times a day is never up for replacement; a shape you produce once a month quietly gets swapped for the compound version and nobody notices the swap happening.
+So the practical list is genuinely short, and it is worth having by heart rather than by rule.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the survivors you own — "hatte, konnte"]
+[pause 8 seconds for the answer]
+[your turn — say: the modal siblings — "musste, wollte, durfte"]
+[pause 8 seconds for the answer]
+[your turn — say: the reason — "frequency protects a form"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"hatte, konnte — spoken everywhere."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name two Präteritum forms a German says out loud. (Hatte, konnte.) Which family does konnte belong to? (The modals.) Why did these survive? (They are said most often.) Next: why the rest of the tense retreated, and where the retreat came from.
+
+
+Lesson 9 of 10.
+The same retreat, three times over — an areal change — the same retreat happened in German, French and Italian at once, because their speakers are neighbours.
+
+Warm-up.
+[pause 2 seconds]
+German is not the only language that let a two-word past crowd out a one-word one. Two of its neighbours did the identical thing at the identical time.
+
+The word, taken apart.
+[a table of 3 rows, read aloud]
+language: German. one-word past: Präteritum. what took it over in speech: Perfekt.
+language: French. one-word past: passé simple. what took it over in speech: passé composé.
+language: Italian. one-word past: passato remoto. what took it over in speech: passato prossimo.
+Two Romance languages and one Germanic one, doing the same thing over the same centuries — and not by coincidence. The dental -te and the Romance endings came from completely different ancestors, so nothing inherited can account for three languages arriving at the same answer.
+Geography can. Southern Germany, France and northern Italy are one connected block of territory, and the change spread through it by contact: speakers who live near each other borrow habits, and a habit of speech travels across a language boundary as easily as across a dialect one. Linguists call a change that spreads that way an areal change.
+
+Why it's said this way.
+Two pieces of evidence make the contact story stick rather than merely sound good.
+The first is what did not happen at the western edge. Spanish and Portuguese kept their one-word past far more fully in speech, and they are the two languages furthest from that connected block.
+The second is the map inside German itself, which you already met: the Präteritum is weakest in the south, nearest the centre of the change, and strongest in the north, furthest from it. A change spreading outward from a region should thin as it goes, and that is exactly what German shows.
+Geography did not dictate any single sentence. But it explains why a Germanic language and two Romance ones moved in step, and why one end of Germany sounds older than the other.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three languages — "German, French, Italian: the same retreat"]
+[pause 8 seconds for the answer]
+[your turn — say: the name — "an areal change, spread by contact"]
+[pause 8 seconds for the answer]
+[your turn — say: the inside map — "south more Perfekt, north more Präteritum"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"areal change — it spread by contact."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two neighbours made the same change? (French and Italian.) Did German inherit it from Latin? (No — the two families build their pasts from different material.) What is a change that spreads by contact called? (An areal change.) Which two languages at the western edge kept their one-word past? (Spanish and Portuguese.) Next: the chapter run through end to end.
+
+
+Lesson 10 of 10.
+Practice — the two pasts, side by side.
+
+Warm-up.
+[pause 2 seconds]
+No new words. The point of this one is to hear, in your own voice, that two different-sounding sentences report the same event.
+
+Grammar Lens: one meaning, two shapes.
+[a table of 3 rows, read aloud]
+meaning: I said. Präteritum: ich sagte. Perfekt: ich habe gesagt.
+meaning: I made. Präteritum: ich machte. Perfekt: ich habe gemacht.
+meaning: I had. Präteritum: ich hatte. Perfekt: ich habe gehabt.
+Say each pair back to back — ich sagte … ich habe gesagt — and then er machte das … er hat das gemacht. Nothing about the meaning has moved. All that has changed is which room you are standing in.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "ich sagte … ich habe gesagt"]
+[pause 8 seconds for the answer]
+[your turn — say: the other pair — "er machte das … er hat das gemacht"]
+[pause 8 seconds for the answer]
+[your turn — say: the survivors — "ich hatte, ich konnte"]
+[pause 8 seconds for the answer]
+[your turn — say: your own instruction — "produce the Perfekt, recognise the Präteritum"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich sagte, ich habe gesagt."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I made" both ways. (Ich machte; ich habe gemacht.) Which of the two would a novel use? (The Präteritum.) Which would you say out loud? (The Perfekt — except for the survivors.) What is the -te called? (The dental preterite.) What kind of change pushed the tense out of speech? (An areal one.) Next: the verb every one of these sentences has been waiting for.

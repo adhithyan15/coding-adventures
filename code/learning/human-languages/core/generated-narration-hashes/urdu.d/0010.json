@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 10,
-  "sourceHash": "fnv1a64:f53e1edfd3d3198c",
+  "sourceHash": "fnv1a64:0d38898305516864",
   "lessonIds": [
     "UR-C10-kaan",
     "UR-C10-naak",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "urdu/narration/ch10.txt",
   "json": "urdu/narration/ch10.json",
-  "textHash": "fnv1a64:4b5f313566621a93",
-  "jsonHash": "fnv1a64:db9f57079074cfe8",
+  "textHash": "fnv1a64:e7b951c6399e56d1",
+  "jsonHash": "fnv1a64:63fbfa13ae5b4de5",
   "findings": []
 }

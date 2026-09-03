@@ -9,7 +9,7 @@ headword: "மற்றது"
 gloss: the other one
 romanization: "maṟṟadu"
 concept_tag: TA-DEIXIS-OTHER
-prerequisites: [TA-C79-when-clause]
+prerequisites: [TA-C79-when-clause, TA-C78-why, TA-C78-because, TA-C78-therefore]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C80-OTHER-01]
 practises:
-  knowledge: [TA-SCRIPT-READ-EPPOTHU-01, TA-GRAMMAR-C79-WHEN-03, TA-LEX-C80-OTHER-01, TA-PRAGMATICS-C75-ANSWER-02, TA-SCRIPT-READ-KUDI-01, TA-GRAMMAR-C78-WHY-04]
+  knowledge: [TA-SCRIPT-READ-EPPOTHU-01, TA-GRAMMAR-C79-WHEN-03, TA-LEX-C80-OTHER-01, TA-PRAGMATICS-C75-ANSWER-02, TA-SCRIPT-READ-KUDI-01, TA-GRAMMAR-C78-WHY-04, TA-LEX-C78-WHY-01, TA-LEX-C78-WHY-02, TA-LEX-C78-WHY-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -57,7 +57,7 @@ usually guess what the longer one is doing.
 A third way to point at a thing, once two of them are on the table.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-EPPOTHU-01, TA-GRAMMAR-C79-WHEN-03, TA-LEX-C80-OTHER-01, TA-PRAGMATICS-C75-ANSWER-02, TA-SCRIPT-READ-KUDI-01, TA-GRAMMAR-C78-WHY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-EPPOTHU-01, TA-GRAMMAR-C79-WHEN-03, TA-LEX-C80-OTHER-01, TA-PRAGMATICS-C75-ANSWER-02, TA-SCRIPT-READ-KUDI-01, TA-GRAMMAR-C78-WHY-04, TA-LEX-C78-WHY-01, TA-LEX-C78-WHY-02, TA-LEX-C78-WHY-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *maṟṟadu*]
@@ -65,6 +65,7 @@ A third way to point at a thing, once two of them are on the table.
 - [YOU NOTICE: the அது at the end of மற்றது and at the start of அதனால்]
 - [YOU RECALL: read **எப்போது**, then say *varum pōdu*, then say *maṟṟadu*]
 - [YOU RETURN TO: say *ām / illai*, read **குடி** and say *-kkāga* — three distances back — then set two of them against each other, one and the other]
+- [YOU RECALL: say *ēṉ*, then read **ஏனென்றால்**, then say *adaṉāl*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-EPPOTHU-01, TA-GRAMMAR-C79-WHEN-03, TA-LEX-C80-OTHER-01, TA-PRAGMATICS-C75-ANSWER-02, TA-SCRIPT-READ-KUDI-01, TA-GRAMMAR-C78-WHY-04] -->

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C14-alter-sein-haben",
     "language": "german",
-    "chapter": 22,
-    "sequence": 496,
+    "chapter": 23,
+    "sequence": 506,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d0de17ef53999dc0"
+    "sourceHash": "fnv1a64:527232675e8f5f81"
   },
   "findings": []
 }

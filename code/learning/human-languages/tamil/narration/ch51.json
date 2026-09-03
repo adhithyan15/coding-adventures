@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Overhead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7f0385d4692f0090",
+  "sourceHash": "fnv1a64:2e3797a4b8338ff7",
   "lessons": [
     {
       "id": "TA-C51-sky",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f33f88ba8ca7722",
+      "sourceHash": "fnv1a64:e5cd761bdfdea8a0",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vaṇakkam*, then *ākāyam*, as you would greet somebody out of doors]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aṉbu, then read வாசல்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aṉbu*, then read **வாசல்**]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb69fb5562a91c2e",
+      "sourceHash": "fnv1a64:f39461b2d373ac90",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ākāyam*, then *sūriyaṉ*, the sky first and then what is in it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read மரியாதை, then say kōlam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **மரியாதை**, then say *kōlam*]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf6f82c652fa6be8",
+      "sourceHash": "fnv1a64:3645a02335118722",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sūriyaṉ*, then *nilā*, and let the second one end long]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say santōṣam, then read மலர்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *santōṣam*, then read **மலர்**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aac55c323316a5c7",
+      "sourceHash": "fnv1a64:c952023734b5d57f",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nilā*, then *viṇmīṉ*, the big light and then the small ones]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read வாழ்த்து, then say veṟṟilai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **வாழ்த்து**, then say *veṟṟilai*]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:642ddc1bd7deba8b",
+      "sourceHash": "fnv1a64:a34f01bfb4edee08",
       "notice": null,
       "blocks": [
         {
@@ -594,6 +630,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *ākāyam*, *sūriyaṉ*, *nilā*, *viṇmīṉ*, *mēkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mikka naṉṟi, then read வரவேற்பு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mikka naṉṟi*, then read **வரவேற்பு**]"
             }
           ]
         },

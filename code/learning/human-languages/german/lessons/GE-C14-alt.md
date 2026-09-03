@@ -2,8 +2,8 @@
 schema_version: 2
 id: GE-C14-alt
 spine_node: SPINE-TIME-OF-DAY
-sequence: 491
-chapter: 22
+sequence: 501
+chapter: 23
 type: word
 headword: alt
 gloss: old — the adjective the German age sentence is built on

@@ -9,7 +9,7 @@ headword: "ரயில்"
 gloss: "a train"
 romanization: "rayil"
 concept_tag: TA-NOUN-TRAIN
-prerequisites: [TA-W25-read-vandi]
+prerequisites: [TA-W25-read-vandi, TA-C67-sari, TA-C68-money]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C69-GOING-03]
 practises:
-  knowledge: [TA-LEX-C69-GOING-02, TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03]
+  knowledge: [TA-LEX-C69-GOING-02, TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03, TA-LEX-C67-WEAR-03, TA-LEX-C68-SHOP-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -53,12 +53,13 @@ test you can run on a word before anyone tells you where it is from.
 Three, and one of them is a visitor.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-02, TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-02, TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03, TA-LEX-C67-WEAR-03, TA-LEX-C68-SHOP-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *rayil*]
 - [YOU SAY: *vaṇḍi*, then *rayil* — and say which one is Tamil's own]
 - [YOU RECALL: say *pērundu*, then read **வண்டி**, then say *rayil*]
+- [YOU RECALL: say *puḍavai*, then read **பணம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-02, TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03] -->

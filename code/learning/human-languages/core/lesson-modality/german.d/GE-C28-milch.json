@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C28-milch",
     "language": "german",
-    "chapter": 36,
-    "sequence": 890,
+    "chapter": 37,
+    "sequence": 900,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7b895b93e80ebc81"
+    "sourceHash": "fnv1a64:53ed2e9f8036de86"
   },
   "findings": []
 }

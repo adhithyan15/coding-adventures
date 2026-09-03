@@ -2,8 +2,8 @@
   "lesson": {
     "id": "GE-C16-war-practice",
     "language": "german",
-    "chapter": 23,
-    "sequence": 545,
+    "chapter": 24,
+    "sequence": 555,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3b62671b07b903f2"
+    "sourceHash": "fnv1a64:d5d9ea93711203a0"
   },
   "findings": []
 }

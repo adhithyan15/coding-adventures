@@ -9,7 +9,7 @@ headword: "நட"
 gloss: "walk"
 romanization: "naḍa"
 concept_tag: TA-VERB-NADA
-prerequisites: [TA-C65-drink]
+prerequisites: [TA-C65-drink, TA-C63-permission, TA-C64-grass]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C65-DOING-02]
 practises:
-  knowledge: [TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02]
+  knowledge: [TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C63-MANNERS-02, TA-LEX-C64-HARVEST-02]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -60,13 +60,14 @@ drinking word split Telugu off, the walking word holds the family together.
 Two doings. One of them fills in what the other leaves open.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C63-MANNERS-02, TA-LEX-C64-HARVEST-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *naḍa*]
 - [YOU SAY: *pō*, then *naḍa*, and say which one names the feet]
 - [YOU SAY: *naḍa*, then *naṭu*, and hear the hook arrive]
 - [YOU SAY: *kuḍi*, then *naḍa*]
+- [YOU RECALL: read **அனுமதி**, then say *pul*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02] -->

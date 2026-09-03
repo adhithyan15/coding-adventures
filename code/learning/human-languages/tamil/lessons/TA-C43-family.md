@@ -9,7 +9,7 @@ headword: "குடும்பம்"
 gloss: "family"
 romanization: "kuṭumbam"
 concept_tag: TA-NOUN-FAMILY
-prerequisites: [TA-C43-daughter]
+prerequisites: [TA-C43-daughter, TA-C41-old]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-FAMILY]
 practises:
-  knowledge: [TA-LEX-DAUGHTER, TA-LEX-FAMILY]
+  knowledge: [TA-LEX-DAUGHTER, TA-LEX-FAMILY, TA-LEX-C41-ADJ-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ The collective word the family lesson never needed, because அப்பா, அ
 That closes the run: child, son, daughter, and the word for all of them together.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-DAUGHTER, TA-LEX-FAMILY] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-DAUGHTER, TA-LEX-FAMILY, TA-LEX-C41-ADJ-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kuṭumbam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *makaḷ*, so the two sit together]
+- [YOU RECALL: read **பழைய**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-DAUGHTER, TA-LEX-FAMILY] -->

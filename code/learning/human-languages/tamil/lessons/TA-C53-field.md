@@ -9,7 +9,7 @@ headword: "வயல்"
 gloss: "a paddy field"
 romanization: "vayal"
 concept_tag: TA-NOUN-FIELD
-prerequisites: [TA-C53-hill]
+prerequisites: [TA-C53-hill, TA-C51-moon, TA-C52-shoot]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C53-LAND-03]
 practises:
-  knowledge: [TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03]
+  knowledge: [TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C51-SKY-03, TA-LEX-C52-TREE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ The dry field is a *kollai*, a different word altogether, and the split earns it
 Three: high ground, and now the flat wet ground under it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03, TA-LEX-C51-SKY-03, TA-LEX-C52-TREE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vayal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *malai*, then *vayal*, the high ground and the flat]
+- [YOU RECALL: say *nilā*, then read **தளிர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03] -->

@@ -1,26 +1,25 @@
 {
   "chapter": 20,
-  "title": "The Simple Past",
-  "label": "ch:ge-praeteritum",
-  "canDo": "I can recognise the one-word past German uses in writing, produce the handful of its forms that people actually say out loud, and explain why the rest of it retreated.",
+  "title": "The Past Built From Have",
+  "label": "ch:perfekt",
+  "canDo": "I can say what I did in German — haben in second place, the participle waiting at the end of the clause — and read it as a plain past rather than as “have done”.",
   "spineNodes": [
     "SPINE-TALK-ABOUT-PAST"
   ],
   "payoff": {
-    "lesson": "GE-C15-praeteritum-practice",
+    "lesson": "GE-C15-perfekt-practice",
     "kind": "task",
-    "summary": "German's second past means exactly what the first one means, so this chapter separates the two by register rather than by tense: produce the Perfekt, recognise the Präteritum, and learn the short list of forms that ignore the rule. It ends with the reason the tense retreated at all — the same change ran through French and Italian over the same centuries, because their speakers are neighbours.",
+    "summary": "The Perfekt is haben plus a participle, and its cost is the four person slots rather than the recipe: ich habe, du hast, er hat, wir haben each get their own lesson before any of them share a page. The bracket that leaves the participle stranded at the end of the clause gets one of its own too, then gestern to fill the gap it opens, and finally the translation trap — ich habe gesagt is “I said”.",
     "assesses": [
-      "GE-GRAMMAR-PRAETERITUM-TE-01",
-      "GE-LEX-SAGTE-01",
-      "GE-LEX-MACHTE-01",
-      "GE-ETYMON-DENTALES-PRAETERITUM-01",
-      "GE-LEX-HATTE-01",
-      "GE-GRAMMAR-PRAETERITUM-SCHRIFTSPRACHE-01",
-      "GE-LEX-KONNTE-01",
-      "GE-GRAMMAR-PRAETERITUM-GESPROCHEN-01",
-      "GE-ETYMON-AREALE-VERAENDERUNG-01"
+      "GE-GRAMMAR-PERFEKT-HABEN-01",
+      "GE-GRAMMAR-PERFEKT-ICH-01",
+      "GE-GRAMMAR-PERFEKT-DU-01",
+      "GE-GRAMMAR-PERFEKT-ER-01",
+      "GE-GRAMMAR-PERFEKT-WIR-01",
+      "GE-GRAMMAR-PARTIZIP-FINAL-01",
+      "GE-LEX-GESTERN-01",
+      "GE-GRAMMAR-PERFEKT-ALS-VERGANGENHEIT-01"
     ],
-    "note": "Chapter 17 is generated from schema-v2 lessons, so the payoff is atom-scored. It claims every atom the chapter introduces; the Präteritum-against-Perfekt table in the practice lesson pairs forms that have each had a lesson, and its first column is a meaning rather than a person, so it is a comparison rather than a paradigm."
+    "note": "Chapter 16 is generated from schema-v2 lessons, so the payoff is atom-scored. The four-slot table in the practice lesson is a recap of four lessons rather than an introduction to four forms, which is what makes printing it permissible."
   }
 }

@@ -66,6 +66,31 @@ DESKTOP_TARGETS = {
 }
 
 
+# The Compose Desktop platforms. Every one is a zip because
+# `createDistributable` produces an application DIRECTORY -- a `.app` bundle on
+# macOS, a plain tree elsewhere -- rather than a single installer file.
+#
+# Electron is not the point of shipping these. The whole argument for Mosaic is
+# that one declarative package yields real native apps on every platform, and a
+# release carrying only an Electron build has demonstrated nothing a web bundle
+# could not. Compose is the cheapest breadth of the five native backends: it
+# runs on the JVM, so one job definition covers all three platforms.
+COMPOSE_TARGETS = {
+    "linux": "zip",
+    "macos": "zip",
+    "windows": "zip",
+}
+
+
+def compose_artifact_name(version: str, platform: str) -> str:
+    """The published name for one platform's Compose Desktop build."""
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}")
+    if platform not in COMPOSE_TARGETS:
+        raise ValueError(f"unknown Compose platform: {platform}")
+    return f"engram-compose-{platform}-v{version}.{COMPOSE_TARGETS[platform]}"
+
+
 def artifact_names(version: str) -> list[str]:
     """Every payload this release publishes.
 
@@ -80,6 +105,10 @@ def artifact_names(version: str) -> list[str]:
     names.extend(
         f"engram-desktop-{platform}-v{version}.{extension}"
         for platform, extension in sorted(DESKTOP_TARGETS.items())
+    )
+    names.extend(
+        compose_artifact_name(version, platform)
+        for platform in sorted(COMPOSE_TARGETS)
     )
     return names
 
@@ -199,6 +228,11 @@ def _cmd_artifact_names(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_compose_name(args: argparse.Namespace) -> int:
+    print(compose_artifact_name(args.version, args.platform))
+    return 0
+
+
 def _cmd_desktop_name(args: argparse.Namespace) -> int:
     print(desktop_artifact_name(args.version, args.platform))
     return 0
@@ -229,6 +263,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     names.add_argument("--version", required=True)
     names.set_defaults(handler=_cmd_artifact_names)
+
+    compose = subcommands.add_parser(
+        "compose-name", help="The published name for one platform's Compose build"
+    )
+    compose.add_argument("--version", required=True)
+    compose.add_argument("--platform", required=True)
+    compose.set_defaults(handler=_cmd_compose_name)
 
     desktop = subcommands.add_parser(
         "desktop-name", help="The published name for one platform's desktop build"

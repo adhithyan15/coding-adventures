@@ -9,7 +9,7 @@ headword: "வேர்"
 gloss: "a root"
 romanization: "vēr"
 concept_tag: TA-NOUN-ROOT
-prerequisites: [TA-C52-shoot]
+prerequisites: [TA-C52-shoot, TA-C50-betel-leaf, TA-C51-star]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-C52-TREE-04]
 practises:
-  knowledge: [TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04]
+  knowledge: [TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04, TA-LEX-C50-WELCOME-04, TA-LEX-C51-SKY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is the root of a plant and the bottom of anything else: a tooth has a வே�
 Four: everything above ground, and now the part under it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04, TA-LEX-C50-WELCOME-04, TA-LEX-C51-SKY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vēr*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *taḷir*, then *vēr*, the top of the tree and the bottom of it]
+- [YOU RECALL: read **வெற்றிலை**, then say *viṇmīṉ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04] -->
