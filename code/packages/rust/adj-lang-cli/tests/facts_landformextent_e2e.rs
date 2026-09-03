@@ -101,3 +101,31 @@ fn landform_extent_abstains_honestly_on_canyon() {
         "canyon's own cited span states no extent descriptor -- honest abstention: {out}"
     );
 }
+
+const LANDFORM_EXTENT_PIN: &str = r#""bindings":{"Extent":"great_extent"},"citations":[{"source":"Comparatively flat areas of great extent and elevation; specif. extensive land regions considerably above the adjacent country or above sea level; commonly limited on at least one side by an abrupt descent, have flat or nearly smooth surfaces but are often dissected by deep valleys and surmounted by high hills or mountains, and have a large part of their total surface at or near the summit level.","locator":"https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3","trust":"authoritative""#;
+
+#[test]
+fn landform_extent_citation_is_the_pages_whole_sentence() {
+    let dir = scratch("reground");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"landform-extent.adj\"\n? landform_extent(plateau, $Extent)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The value carried a MARKED trailing ellipsis on a 209-character prefix,
+    // and the same 209 characters are shipped by two libraries.
+    //
+    // DROPPING THE ELLIPSIS ALONE WAS THE FIRST REPAIR AND IT WAS WORSE. It
+    // removed a declared elision and left an undeclared one: a mid-sentence
+    // truncation with no terminal punctuation and no signal that the sentence
+    // continues. An ellipsis ADMITS its omission; a bare prefix HIDES one.
+    // The value is now the page's complete 399-character sentence.
+    assert!(
+        out.contains(LANDFORM_EXTENT_PIN),
+        "the plateau citation is a contiguous page span: {out}"
+    );
+}

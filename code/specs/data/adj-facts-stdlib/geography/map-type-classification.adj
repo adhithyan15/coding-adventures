@@ -35,7 +35,7 @@
 %     ? map_type_classification($Type, reference_map)   % topographic
 %
 % A recall on `political` or `physical` -- real, already-tabled map types in
-% `map-type.adj`, but whose own quoted spans ("Political maps show
+% `map-type.adj`, but whose own quoted spans ("Political Maps show
 % boundaries between countries, states, counties, and other political
 % units." and "Physical maps are designed to show the natural landscape
 % features of Earth.") never classify the map as a KIND of map the way the

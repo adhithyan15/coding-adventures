@@ -25,7 +25,7 @@
 %
 %     type           description                                                                    quote (verbatim)
 %     -------------  -----------------------------------------------------------------------------  --------------------------------------------------------------------------------
-%     political       shows_boundaries_between_countries_states_counties_and_other_political_units    "Political maps show boundaries between countries, states, counties, and other political units."
+%     political       shows_boundaries_between_countries_states_counties_and_other_political_units    "Political Maps show boundaries between countries, states, counties, and other political units."
 %     physical        shows_the_natural_landscape_features_of_earth                                   "Physical maps are designed to show the natural landscape features of Earth."
 %     topographic     shows_the_shape_of_earths_surface                                               "Topographic maps are reference maps that show the shape of Earth's surface."
 %
@@ -54,7 +54,7 @@ table map_type {
     row (physical, shows_the_natural_landscape_features_of_earth)
     row (topographic, shows_the_shape_of_earths_surface)
 
-    source "Political maps show boundaries between countries, states, counties, and other political units."
+    source "Political Maps show boundaries between countries, states, counties, and other political units."
     locator "https://geology.com/maps/types-of-maps/"
     trust consensus
 }
