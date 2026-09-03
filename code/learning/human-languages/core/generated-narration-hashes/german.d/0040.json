@@ -1,17 +1,18 @@
 {
   "language": "german",
   "chapter": 40,
-  "sourceHash": "fnv1a64:e517aa151ed345d0",
+  "sourceHash": "fnv1a64:bc022238f41444f0",
   "lessonIds": [
-    "GE-C28-kaffee",
-    "GE-C28-tee",
-    "GE-C28-milch"
+    "GE-C27-gehen",
+    "GE-C27-laufen",
+    "GE-C27-oeffnen",
+    "GE-C27-schliessen"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "german/narration/ch40.txt",
   "json": "german/narration/ch40.json",
-  "textHash": "fnv1a64:86d04c84fda89352",
-  "jsonHash": "fnv1a64:1666151dad864403",
+  "textHash": "fnv1a64:abdcc93bee8440be",
+  "jsonHash": "fnv1a64:54cb6f01fe94e470",
   "findings": []
 }

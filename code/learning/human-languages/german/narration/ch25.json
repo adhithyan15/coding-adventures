@@ -2,24 +2,24 @@
   "version": 1,
   "language": "german",
   "chapter": 25,
-  "title": "I Am, You Are",
-  "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:68ea0407c0f14cd9",
+  "title": "The Simple Past",
+  "drivablePrefix": 10,
+  "sourceHash": "fnv1a64:448c0f298ea27ffb",
   "lessons": [
     {
-      "id": "GE-C16-sein",
-      "sequence": 500,
-      "title": "sein — \"to be\"",
-      "headword": "sein",
-      "romanization": "sein",
-      "gloss": "to be — the partner of haben, and the most irregular verb German has",
+      "id": "GE-C15-praeteritum",
+      "sequence": 440,
+      "title": "-te — the one-word past",
+      "headword": "-te",
+      "romanization": "-te",
+      "gloss": "the Präteritum — German's second past tense, made from one word and an ending",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9396891f4860b398",
+      "sourceHash": "fnv1a64:ff1063f38e42ede9",
       "notice": null,
       "blocks": [
         {
@@ -35,30 +35,154 @@
             },
             {
               "kind": "speech",
-              "text": "You have met the German verb for to have. Here is its partner — the most irregular verb in German, and the one verb whose forms you will not be able to guess."
+              "text": "German has a second past tense. It needs no helper verb and no participle — just a stem and an ending."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: add -te to the stem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take a regular verb's stem and put -te on it."
+            },
+            {
+              "kind": "speech",
+              "text": "The tense that ending builds is called the Präteritum. Where the Perfekt spends two words and a bracket, this one spends a single word: sag- plus -te and the sentence is done."
+            },
+            {
+              "kind": "speech",
+              "text": "The two tenses report the same events. That is worth saying plainly, because a learner reasonably expects a language with two pasts to be drawing a distinction with them, the way English draws one between I said and I have said. German draws none. What separates its two pasts is something else entirely, and it takes a few more lessons to arrive at."
+            },
+            {
+              "kind": "speech",
+              "text": "The -te itself has a history reaching well beyond German, and that comes first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the recipe — \"stem plus te\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the recipe — \"stem plus te\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the name — \"das Präteritum\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the name — \"das Präteritum\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many words it takes — \"one\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many words it takes — \"one\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"stem plus -te.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending builds the Präteritum on a regular verb? (-te.) How many words does it need? (One.) How many does the Perfekt need? (Two.) Do the two tenses mean different things? (No.) Next: the first verb through the new ending."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-sagte",
+      "sequence": 445,
+      "title": "ich sagte — \"I said,\" in one word",
+      "headword": "ich sagte",
+      "romanization": "ich sagte",
+      "gloss": "I said, in one word — the Präteritum of sagen, beside the Perfekt that means exactly the same",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3afa675418acc47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the new ending on the verb this chapter started from."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: sein",
+          "title": "You'll want to know: ich sagte",
           "segments": [
             {
               "kind": "speech",
-              "text": "sein — \"to be.\""
+              "text": "ich sagte — \"I said.\""
             },
             {
               "kind": "speech",
-              "text": "The -en on the end is the infinitive ending you already own from gehen and sehen: the dictionary form of a German verb wears it, and sein wears it too."
+              "text": "Stem sag-, ending -te. Two syllables and it is finished, where the Perfekt took three words to say the same thing:"
             },
             {
               "kind": "speech",
-              "text": "That is where the resemblance stops. Gehen and sehen keep their stem in every form — ich gehe, ich sehe. Sein keeps nothing. Not one of its present forms contains the letters s-e-i-n in that order."
+              "text": "ich sagte, ich habe gesagt."
             },
             {
               "kind": "speech",
-              "text": "This is the only verb in the book that has to be met one form at a time, and the next several lessons do exactly that: one form each, said until it is automatic, before any of them are ever seen side by side."
+              "text": "Both are \"I said.\" Neither is more past than the other, neither is more polite, and neither is wrong. Hold that in mind while the differences that do exist arrive."
             }
           ]
         },
@@ -69,19 +193,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "s-voiced — a German s before a vowel buzzes like English z, exactly as it does in sehen. So sein opens with a z."
+              "text": "long-a — the stem vowel is the same long a as in sagen; the new ending does not shorten it."
             },
             {
               "kind": "speech",
-              "text": "diphthong-ei — German ei is the vowel of English eye, never \"ee\"."
-            },
-            {
-              "kind": "speech",
-              "text": "final-t — worth having ready now, because two of the forms coming up end in a crisp, fully released t."
-            },
-            {
-              "kind": "speech",
-              "text": "Put together, sein sounds like English zine."
+              "text": "final-te — the -te is a full unstressed syllable, tuh, not a bare t. Hear the difference against the participle: ge-SAHKT has one syllable at the end, SAHK-tuh has two."
             }
           ]
         },
@@ -99,29 +215,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sein\" (zine) — buzzing z, ei as in eye",
+              "instruction": "\"ich sagte\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sein\" (*zine*) — buzzing *z*, *ei* as in *eye*]"
+              "source": "[YOU SAY: \"ich sagte\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"gehen, sehen, sein\" — three infinitives, one ending",
+              "instruction": "the pair back to back — \"ich sagte … ich habe gesagt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"gehen, sehen, sein\" — three infinitives, one ending]"
+              "source": "[YOU SAY: the pair back to back — \"ich sagte … ich habe gesagt\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sein — to be\"",
+              "instruction": "the two endings apart — \"gesagt, sagte\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sein — to be\"]"
+              "source": "[YOU SAY: the two endings apart — \"gesagt, sagte\"]"
             },
             {
               "kind": "repeat",
@@ -130,7 +246,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"sein, sein — zine.\""
+              "text": "\"ich sagte, ich habe gesagt.\""
             }
           ]
         },
@@ -147,26 +263,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does sein mean? (\"To be.\") Which ending does it share with gehen and sehen? (-en, the infinitive.) How does the s sound? (Like English z.) And the ei? (Like English eye.) Next: the first form, and it looks nothing like the word you just learned."
+              "text": "Say \"I said\" in one word. (Ich sagte.) And in three. (Ich habe gesagt.) Which of them is further in the past? (Neither.) How many syllables does sagte have? (Two.) Next: the same ending on the verb for doing."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-ich-bin",
-      "sequence": 505,
-      "title": "ich bin — \"I am\"",
-      "headword": "ich bin",
-      "romanization": "ich bin",
-      "gloss": "I am — the first form of sein, and it comes from a different verb than the infinitive does",
+      "id": "GE-C15-machte",
+      "sequence": 450,
+      "title": "ich machte — \"I made,\" \"I did\"",
+      "headword": "ich machte",
+      "romanization": "ich machte",
+      "gloss": "I made, I did — the second verb through the -te ending",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1d6fdc2dfe37560",
+      "sourceHash": "fnv1a64:db3c4800a7a1813d",
       "notice": null,
       "blocks": [
         {
@@ -182,361 +298,174 @@
             },
             {
               "kind": "speech",
-              "text": "You have ich, and you have the infinitive sein. Put them together and you get a form that shares no letters with either half of that sentence except the i."
+              "text": "You have gemacht. Build the other past of the same verb before reading on."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: ich bin",
+          "title": "You'll want to know: ich machte",
           "segments": [
             {
               "kind": "speech",
-              "text": "ich bin — \"I am.\""
+              "text": "ich machte — \"I made,\" \"I did.\""
             },
             {
               "kind": "speech",
-              "text": "One syllable, short i, ordinary b, ordinary n. There is no rule behind it and nothing to derive it from: bin is simply the form that goes with ich, and it is learned the way you learned hallo."
+              "text": "Mach- plus -te. Notice what the two pasts of this verb have in common: the stem. Gemacht wrapped it and machte suffixed it, and neither touched a letter inside it."
             },
             {
               "kind": "speech",
-              "text": "It rhymes with English bin, and that rhyme is not an accident — see below."
+              "text": "That is the whole promise of a weak verb. Whatever German asks of it, the middle stays put — which is why the four participles of the last chapter and the -te forms of this one can be built from any regular verb you meet, on the spot, without a list."
+            },
+            {
+              "kind": "speech",
+              "text": "er machte das, er hat das gemacht."
+            },
+            {
+              "kind": "speech",
+              "text": "Same person, same event, two tenses."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "ich-laut — ich still ends in the soft breathy sound you met when you first said \"I\": tongue where it sits for ee, air pushed past it, no scrape."
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich machte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich machte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"er machte das … er hat das gemacht\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"er machte das … er hat das gemacht\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both new forms — \"sagte, machte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both new forms — \"sagte, machte\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "speech",
-              "text": "i-short — the i of bin is short and clipped, the vowel of English bin, not the long ee of ihm."
+              "text": "\"ich sagte, ich machte.\""
             }
           ]
         },
         {
           "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I did\" in one word. (Ich machte.) What do machte and gemacht share? (The stem mach-.) Does either change the stem? (No.) Say \"he did that\" both ways. (Er machte das; er hat das gemacht.) Next: where that -te came from, and the English ending that is the same thing."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-dentales-praeteritum",
+      "sequence": 455,
+      "title": "The dental preterite — a Germanic invention",
+      "headword": "das dentale Präteritum",
+      "romanization": "das dentale Präteritum",
+      "gloss": "the dental preterite — the Germanic invention that gives German -te and English -ed",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d39307e538d974eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say sagte, then say walked. Both endings are made with the tongue against the teeth, and that is not a coincidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Bin rhymes with English be for a reason, even though the vowels have drifted apart. Both come from Proto-Indo-European bʰuH- — \"to grow, to become.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So German kept that ancient root in the present tense and English kept it as the infinitive: be and bin are the same old word wearing different jobs. Hold on to that; two lessons from now it explains something about the whole verb."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich bin\" — short i, soft ending on ich",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin\" — short *i*, soft ending on *ich*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich bin Anna.\" \"ich bin Peter.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin Anna.\" \"ich bin Peter.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bin — be\" — the same old root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bin — be\" — the same old root]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"ich bin, ich bin.\""
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I am.\" (Ich bin.) Is the i of bin long or short? (Short — English bin.) Which English word comes from the same root as bin? (Be.) Next: the same verb for the person you are talking to."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-du-bist",
-      "sequence": 510,
-      "title": "du bist — \"you are\"",
-      "headword": "du bist",
-      "romanization": "du bist",
-      "gloss": "you are — bin plus the -st ending you already know, and the one place sein behaves",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:46668bc244346330",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Du is the familiar \"you\" — the one for a friend. Its verb ending is -st, and for once sein uses it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: du bist",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "du bist — \"you are.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Take bin, drop the n, add the familiar -st: bi- plus -st is bist. That is the same ending as du gehst, du heißt, du siehst."
-            },
-            {
-              "kind": "speech",
-              "text": "Of the six present forms of sein, this is the only one that can be derived from another one. Enjoy it; it does not happen again."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "u-long — du has a long, rounded oo, the vowel of English do, held."
-            },
-            {
-              "kind": "speech",
-              "text": "final-t — German releases a final t fully and audibly. Bist ends with a small puff of air; English tends to swallow it."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"du bist\" — long u, crisp final t",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"du bist\" — long *u*, crisp final *t*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich bin … du bist\" — the pair",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin … du bist\" — the pair]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"du bist Peter.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"du bist Peter.\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"ich bin, du bist.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"you are,\" to a friend. (Du bist.) Which ending is that? (-st, the familiar one.) Which form is bist built on? (Bin.) Is the final t released or swallowed? (Released.) Next: the form for everybody else."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-er-ist",
-      "sequence": 515,
-      "title": "er ist — \"he is\"",
-      "headword": "er ist",
-      "romanization": "er ist",
-      "gloss": "he is — the form that also serves sie, es and das, and the one that matches Latin est",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:fa6f903651c12734",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Bin and bist both start with b. The third form does not, and it is the one you will hear most."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: er ist",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "er ist — \"he is.\""
-            },
-            {
-              "kind": "speech",
-              "text": "er is \"he.\" The same ist serves three more subjects without changing at all: sie ist (\"she is\"), es ist (\"it is\"), and das ist (\"that is\") — es and das both already yours."
-            },
-            {
-              "kind": "speech",
-              "text": "So one two-letter word covers everything that is not ich and not du, in the singular. It is the workhorse of the whole verb."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "r-final — the r at the end of er is not a full English r. It softens towards a vowel, close to air said without the tongue curling."
-            },
-            {
-              "kind": "speech",
-              "text": "final-t — ist ends in the same released t as bist."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Ist is the one form of sein whose relatives you can name on sight:"
+              "text": "The German -te is what linguists call the dental preterite: a past tense made by bolting a t or d sound onto a stem. Dental, because those sounds are made at the teeth."
             },
             {
               "kind": "table",
               "headers": [
                 "language",
-                "\"is\""
+                "present",
+                "past"
               ],
-              "columns": 2,
-              "rowCount": 4,
+              "columns": 3,
+              "rowCount": 3,
               "utterances": [
-                "language: German. \"is\": ist.",
-                "language: English. \"is\": is.",
-                "language: Latin. \"is\": est.",
-                "language: French. \"is\": est."
+                "language: German. present: sag-. past: sagte.",
+                "language: English. present: walk. past: walked.",
+                "language: Dutch. present: werk-. past: werkte."
               ]
             },
             {
               "kind": "speech",
-              "text": "All from Proto-Indo-European h₁es-, \"to be\" — and the infinitive sein is built on that root too. So sein and ist really do belong to each other; it is bin and bist that came from somewhere else."
+              "text": "Three languages, one device, inherited rather than borrowed — this is a Germanic invention, and it is one of the features that identifies the family. Everything with a -t or -d past in Germanic comes from the same ancestor."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin built nothing of the kind. Its past came from inherited perfect endings and from reduplication, and its descendants carried that on: French parla, Spanish habló. So sagte and walked are one machine, and parla and habló are a different one — which is why an English speaker recognises the German ending on sight and a Spanish speaker does not."
             }
           ]
         },
         {
-          "index": 4,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -549,29 +478,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"er ist, sie ist, es ist\"",
+              "instruction": "the three together — \"sagte, walked, werkte\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"er ist, sie ist, es ist\"]"
+              "source": "[YOU SAY: the three together — \"sagte, walked, werkte\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Das ist gut.\" — \"that is good\"",
+              "instruction": "the name — \"the dental preterite\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Das ist gut.\" — \"that is good\"]"
+              "source": "[YOU SAY: the name — \"the dental preterite\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ich bin, du bist, er ist\"",
+              "instruction": "the two machines — \"sagte and walked; parla and habló\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich bin, du bist, er ist\"]"
+              "source": "[YOU SAY: the two machines — \"sagte and walked; parla and habló\"]"
             },
             {
               "kind": "repeat",
@@ -580,12 +509,12 @@
             },
             {
               "kind": "speech",
-              "text": "\"Das ist gut.\""
+              "text": "\"sagte, walked — the same ending.\""
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -597,26 +526,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"he is.\" (Er ist.) Which other subjects take the same form? (Sie, es, das.) Say \"that is good.\" (Das ist gut.) Which Latin word is ist? (Est.) Next: the form for more than one."
+              "text": "What is the -te called? (The dental preterite.) Why dental? (It is made at the teeth.) Which English ending is the same thing? (-ed.) Did Latin have it? (No — Romance builds its past another way.) Next: the one verb whose -te form you will hear constantly."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-wir-sind",
-      "sequence": 520,
-      "title": "wir sind — \"we are\"",
-      "headword": "wir sind",
-      "romanization": "wir sind",
-      "gloss": "we are — the plural form, and the first one that looks like the infinitive",
+      "id": "GE-C15-hatte",
+      "sequence": 460,
+      "title": "ich hatte — \"I had\"",
+      "headword": "ich hatte",
+      "romanization": "ich hatte",
+      "gloss": "I had — haben's own Präteritum, and one of the handful that everybody says out loud",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5011058d2527aa9",
+      "sourceHash": "fnv1a64:953a2d8d8c4bc9ec",
       "notice": null,
       "blocks": [
         {
@@ -632,26 +561,30 @@
             },
             {
               "kind": "speech",
-              "text": "Three singular forms down. The plural starts here, and after bin, bist, ist, this one will finally look like the verb it belongs to."
+              "text": "The dental ending on the verb you have been leaning on for two chapters."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: wir sind",
+          "title": "You'll want to know: ich hatte",
           "segments": [
             {
               "kind": "speech",
-              "text": "wir sind — \"we are.\""
+              "text": "ich hatte — \"I had.\""
             },
             {
               "kind": "speech",
-              "text": "wir is \"we.\" And sind shares its first two letters with the infinitive sein, which is the first visible family resemblance in this verb."
+              "text": "Haben drops its b — the same b that goes missing in du hast and er hat — and the dental ending lands on what is left, doubling the t in the spelling: hat-te. Two syllables, both short."
             },
             {
               "kind": "speech",
-              "text": "Its Latin twin is sunt, \"they are\" — same s, same n, same closing stop, the same root wearing a different vowel."
+              "text": "English did the identical thing to the identical verb and then wore the result down further: have lost its consonant and took a -d, giving had. So hatte and had are the same word doing the same job."
+            },
+            {
+              "kind": "speech",
+              "text": "Haben has a Perfekt of its own as well — ich habe gehabt, \"I have had\" — built by the ordinary recipe, since haben is a perfectly ordinary verb when it is not busy helping another one."
             }
           ]
         },
@@ -662,15 +595,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "w-as-v — German w is English v. Wir begins like veer."
+              "text": "d-t-final — the doubled tt is one sharp t, and the vowel in front of it is short and clipped. HAT-tuh, never HAH-tuh."
             },
             {
               "kind": "speech",
-              "text": "ie-long-ee — ie is a long ee. Wir is veer, not wire."
-            },
-            {
-              "kind": "speech",
-              "text": "d-t-final — the d at the end of sind is spoken as a t, the same final devoicing you met on und. Say zint."
+              "text": "final-te — the ending is still a full unstressed syllable."
             }
           ]
         },
@@ -688,29 +617,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"wir sind\" — veer zint, final d as t",
+              "instruction": "\"ich hatte\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"wir sind\" — *veer zint*, final *d* as *t*]"
+              "source": "[YOU SAY: \"ich hatte\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"wir sind gut.\"",
+              "instruction": "the pair — \"ich hatte … ich habe gehabt\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"wir sind gut.\"]"
+              "source": "[YOU SAY: the pair — \"ich hatte … ich habe gehabt\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sein … sind\" — the family resemblance",
+              "instruction": "the English twin — \"hatte, had\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sein … sind\" — the family resemblance]"
+              "source": "[YOU SAY: the English twin — \"hatte, had\"]"
             },
             {
               "kind": "repeat",
@@ -719,7 +648,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"wir sind, wir sind.\""
+              "text": "\"ich hatte, ich hatte.\""
             }
           ]
         },
@@ -736,26 +665,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"we are.\" (Wir sind.) How is the final d pronounced? (As a t.) How does wir begin? (Like English v.) Which Latin word is sind? (Sunt.) Next: the plural \"you.\""
+              "text": "Say \"I had.\" (Ich hatte.) Which letter of haben is missing? (The b.) Say the same thing in the Perfekt. (Ich habe gehabt.) Which English word is hatte? (Had.) Next: which of the two pasts a German actually reaches for, and where."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-ihr-seid",
-      "sequence": 525,
-      "title": "ihr seid — \"you are,\" to several people",
-      "headword": "ihr seid",
-      "romanization": "ihr seid",
-      "gloss": "you are, to more than one person — the form English lost when it dropped its plural you",
+      "id": "GE-C15-register",
+      "sequence": 465,
+      "title": "Which past, and where",
+      "headword": "gesprochen oder geschrieben",
+      "romanization": "gesprochen oder geschrieben",
+      "gloss": "what separates the two pasts — not meaning, but speech against writing, and north against south",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0d0f94af108b5b5",
+      "sourceHash": "fnv1a64:b08f71c6d35b9796",
       "notice": null,
       "blocks": [
         {
@@ -771,193 +700,54 @@
             },
             {
               "kind": "speech",
-              "text": "Du is one friend. For two or more friends German has a separate word, and English used to have one as well."
+              "text": "Two tenses, one meaning. Time to answer the question that has been waiting since the -te arrived: when does a German say which?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: ihr seid",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ihr seid — \"you are,\" said to more than one person you would each call du."
-            },
-            {
-              "kind": "speech",
-              "text": "ihr is the familiar plural \"you\" — a crowd of friends, a group of children, your own family. English once had ye here and let it go, which is why one English you now does the work of four German words."
-            },
-            {
-              "kind": "speech",
-              "text": "seid opens exactly like the infinitive: sei- is sein without its n. Both the s and the ei behave as they did there."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ie-long-ee — ihr is eer, one long vowel; the h only stretches it."
-            },
-            {
-              "kind": "speech",
-              "text": "s-voiced — seid opens with the buzzing z of sein."
-            },
-            {
-              "kind": "speech",
-              "text": "diphthong-ei — and carries the eye vowel through. Say zite."
-            },
-            {
-              "kind": "speech",
-              "text": "Wir sind and ihr seid are the two plural forms, and they sound nothing alike, which makes them easy to keep apart."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ihr seid\" — eer zite",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ihr seid\" — *eer zite*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"wir sind … ihr seid\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"wir sind … ihr seid\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sein … seid\" — the same opening",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sein … seid\" — the same opening]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"ihr seid, ihr seid.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"you are\" to a group of friends. (Ihr seid.) Which English word did that job before English dropped it? (Ye.) Which part of seid comes straight out of sein? (sei-.) Next: the last form, and the one that does double duty."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-sie-sind",
-      "sequence": 530,
-      "title": "sie sind / Sie sind — \"they are,\" and \"you are,\" politely",
-      "headword": "sie sind / Sie sind",
-      "romanization": "sie sind / Sie sind",
-      "gloss": "they are, and the polite you are — one form, and the capital letter is the only difference",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:ce6a390a88a1a187",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The polite Sie is literally the word for \"they,\" worn as a courtesy. Its verb form follows from that, and costs you nothing new."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: sie sind and Sie sind",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sie sind — \"they are.\" Sie sind — \"you are,\" to someone you would address formally."
-            },
-            {
-              "kind": "speech",
-              "text": "The form is sind, the very same word you learned for wir. Nothing changes in the mouth at all: wir sind, sie sind, Sie sind are three subjects and one verb form."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: the capital carries the politeness",
+          "title": "Grammar Lens: speech takes one, writing takes the other",
           "segments": [
             {
               "kind": "speech",
-              "text": "On the page, sie and Sie differ by exactly one capital letter — and German already spends capitals on grammar rather than decoration. In speech there is no difference at all; the context tells you which one is meant."
+              "text": "The Perfekt belongs to speech. The Präteritum belongs to narrative writing."
             },
             {
               "kind": "table",
               "headers": [
-                "written",
-                "means"
+                "tense",
+                "where it lives"
               ],
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "sie sind means they are.",
-                "Sie sind means you are, formally."
+                "tense: Perfekt. where it lives: everyday conversation, and dominant there.",
+                "tense: Präteritum. where it lives: novels, reports, anything told on the page."
               ]
             },
             {
               "kind": "speech",
-              "text": "That is the whole of it. Six subjects, and you have now met every present form of the verb."
+              "text": "Open a German novel and the story runs in Präteritum from the first page to the last. Stand in a German kitchen and you will barely hear it. Neither audience thinks it is choosing a tense; each is simply doing what that setting does."
+            },
+            {
+              "kind": "speech",
+              "text": "So the practical instruction for a speaker is lopsided and easy: produce the Perfekt, recognise the Präteritum. You will read far more of it than you will ever need to say."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "There is a second axis, and it is geographic. Spoken Präteritum has largely vanished from conversation in southern Germany, Austria and Switzerland; further north it survives noticeably better. A Hamburg speaker will use forms in conversation that a Munich speaker would find bookish."
+            },
+            {
+              "kind": "speech",
+              "text": "That map is not decoration — the next lessons turn out to explain it — and it means the honest answer to \"do Germans say ich sagte?\" is: some of them, some of the time, and it depends where you are standing."
             }
           ]
         },
@@ -975,29 +765,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sie sind\" — \"they are\"",
+              "instruction": "the split — \"Perfekt for speech, Präteritum for writing\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sie sind\" — \"they are\"]"
+              "source": "[YOU SAY: the split — \"Perfekt for speech, Präteritum for writing\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Sie sind Herr Peter Schmidt?\" — politely",
+              "instruction": "your own instruction — \"produce the Perfekt, recognise the Präteritum\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Sie sind Herr Peter Schmidt?\" — politely]"
+              "source": "[YOU SAY: your own instruction — \"produce the Perfekt, recognise the Präteritum\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"wir sind, sie sind, Sie sind\" — one form, three subjects",
+              "instruction": "the map — \"weaker in the south, stronger in the north\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"wir sind, sie sind, Sie sind\" — one form, three subjects]"
+              "source": "[YOU SAY: the map — \"weaker in the south, stronger in the north\"]"
             },
             {
               "kind": "repeat",
@@ -1006,7 +796,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"sie sind, Sie sind.\""
+              "text": "\"Perfekt spoken, Präteritum written.\""
             }
           ]
         },
@@ -1023,26 +813,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"they are.\" (Sie sind.) Say \"you are\" to a stranger. (Sie sind — same sound.) What separates the two on paper? (The capital S.) How many different present forms of this verb have you now met? (Five — bin, bist, ist, sind, seid.) Next: one adjective, so you can finally say something about yourself."
+              "text": "Which past does a novel use? (The Präteritum.) Which does a conversation use? (The Perfekt.) Which should you produce? (The Perfekt.) Where is spoken Präteritum weakest? (The south.) Next: the forms that ignore all of this and stay spoken everywhere."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-muede",
-      "sequence": 535,
-      "title": "müde — \"tired\"",
-      "headword": "müde",
-      "romanization": "müde",
-      "gloss": "tired — the first adjective that says something about a person, and it needs no ending here",
+      "id": "GE-C15-konnte",
+      "sequence": 470,
+      "title": "ich konnte — \"I could\"",
+      "headword": "ich konnte",
+      "romanization": "ich konnte",
+      "gloss": "I could — a Präteritum that survives in ordinary speech everywhere, north and south alike",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9401930b1c5b3093",
+      "sourceHash": "fnv1a64:0addee6ed5c20319",
       "notice": null,
       "blocks": [
         {
@@ -1058,45 +848,41 @@
             },
             {
               "kind": "speech",
-              "text": "Ich bin is a sentence waiting for one more word. Here is the word that finishes it most often."
+              "text": "The last new form of the chapter, and a Präteritum nobody thinks twice about saying out loud."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: müde",
+          "title": "You'll want to know: ich konnte",
           "segments": [
             {
               "kind": "speech",
-              "text": "müde — \"tired.\""
+              "text": "ich konnte — \"I could,\" \"I was able to.\""
             },
             {
               "kind": "speech",
-              "text": "Ich bin müde. — \"I am tired.\""
+              "text": "The dental ending again, doubled in the spelling as it was in hatte: konn-te. It belongs to a small family of verbs German calls modal — the ones that lean on another verb, the way English can, must and may do."
             },
             {
               "kind": "speech",
-              "text": "Two syllables, stress on the first: mü-duh. It is an adjective, and after sein an adjective takes no ending at all — the same bare form serves every subject. Ich bin müde, du bist müde, wir sind müde."
-            },
-            {
-              "kind": "speech",
-              "text": "That is worth noticing, because German adjectives are famous for their endings. They only take them in front of a noun. Standing after sein, they stand still."
+              "text": "Those verbs are the Präteritum's stronghold in ordinary speech. Nobody in Munich says ich habe gekonnt over dinner; they say ich konnte."
             }
           ]
         },
         {
           "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "umlaut-ue — ü is the vowel you make by rounding your lips for oo and then saying ee without moving them. The dots are the fronting mark you already know: the mouth shifts forward, the lips stay round."
+              "text": "Konnte and English could descend from one Germanic verb, kunnaną, which meant \"to know how\" rather than \"to be physically able.\" Ability arrived later, out of knowledge."
             },
             {
               "kind": "speech",
-              "text": "The final -e is a soft uh, never silent. mü-duh, two beats, the weight on the first."
+              "text": "That older sense is still visible in the English relatives: know, cunning (originally \"knowing\"), and uncouth, which began as \"unknown.\" The l that English wrote into could is pure accident — it was copied from would and should centuries after anyone stopped pronouncing it."
             }
           ]
         },
@@ -1114,29 +900,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"müde\" — round the lips, say ee",
+              "instruction": "\"ich konnte\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"müde\" — round the lips, say *ee*]"
+              "source": "[YOU SAY: \"ich konnte\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Ich bin müde.\"",
+              "instruction": "the two doubled forms — \"hatte, konnte\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich bin müde.\"]"
+              "source": "[YOU SAY: the two doubled forms — \"hatte, konnte\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Er ist müde. Wir sind müde.\" — the adjective never changes",
+              "instruction": "the old meaning — \"konnte, could — knew how\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Er ist müde. Wir sind müde.\" — the adjective never changes]"
+              "source": "[YOU SAY: the old meaning — \"konnte, could — knew how\"]"
             },
             {
               "kind": "repeat",
@@ -1145,7 +931,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Ich bin müde.\""
+              "text": "\"ich konnte, ich hatte.\""
             }
           ]
         },
@@ -1162,34 +948,27 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I am tired.\" (Ich bin müde.) How do you make the ü? (Round for oo, say ee.) Does müde change after sein? (No — no ending.) Say \"we are tired.\" (Wir sind müde.) Next: everything at once, on purpose."
+              "text": "Say \"I could.\" (Ich konnte.) What did the verb behind it originally mean? (\"To know how.\") Name an English cousin. (Know, cunning, or uncouth.) Is konnte bookish? (No — it is said out loud everywhere.) Next: why a handful of forms get that exemption."
             }
           ]
         }
       ]
     },
     {
-      "id": "GE-C16-praesens-practice",
-      "sequence": 540,
-      "title": "Practice — the whole present of sein",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "chapter payoff — the six forms of sein side by side for the first time, and a conversation that uses them",
+      "id": "GE-C15-hochfrequent",
+      "sequence": 475,
+      "title": "The forms that stayed spoken",
+      "headword": "hatte, konnte",
+      "romanization": "hatte, konnte",
+      "gloss": "the short list of Präteritum forms that stay spoken everywhere, and the reason the list is short",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ead3af95e10a88bb",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:e86eb58c8596e3ca",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1204,59 +983,200 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. Every form below has had its own lesson, so this is the first time it is safe to put them all on one page — as a recap, not as something to memorise from cold."
+              "text": "Hatte. Konnte. Both are Präteritum, and both come out of a German mouth without a second thought. So the writing-only rule has holes in it."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the six forms, assembled",
+          "title": "Grammar Lens: a short list of survivors",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "singular",
-                "plural"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "singular: ich bin. plural: wir sind.",
-                "singular: du bist. plural: ihr seid.",
-                "singular: er/sie/es ist. plural: sie/Sie sind."
-              ]
+              "kind": "speech",
+              "text": "A handful of very common verbs keep their one-word past in speech, everywhere in the German-speaking world."
             },
             {
               "kind": "speech",
-              "text": "Six subjects, five different forms — sind does double duty. Look at that with fresh eyes now that you can say all of it: bin and ist do not look like forms of the same word, and the next chapter explains why they aren't."
+              "text": "Three groups make up almost the whole list:"
+            },
+            {
+              "kind": "speech",
+              "text": "hatte — the past of haben;"
+            },
+            {
+              "kind": "speech",
+              "text": "konnte and its modal siblings — musste, wollte, durfte;"
+            },
+            {
+              "kind": "speech",
+              "text": "the past of the verb for \"to be,\" which arrives two chapters from now and is the most-said of them all."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything else in the Präteritum obeys the split you learned last: written, not spoken."
+            },
+            {
+              "kind": "speech",
+              "text": "Why these? Because they are the verbs said most often, and frequency protects a form the way it protects an irregularity. A shape you produce fifty times a day is never up for replacement; a shape you produce once a month quietly gets swapped for the compound version and nobody notices the swap happening."
+            },
+            {
+              "kind": "speech",
+              "text": "So the practical list is genuinely short, and it is worth having by heart rather than by rule."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the survivors you own — \"hatte, konnte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the survivors you own — \"hatte, konnte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the modal siblings — \"musste, wollte, durfte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the modal siblings — \"musste, wollte, durfte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reason — \"frequency protects a form\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reason — \"frequency protects a form\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"hatte, konnte — spoken everywhere.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name two Präteritum forms a German says out loud. (Hatte, konnte.) Which family does konnte belong to? (The modals.) Why did these survive? (They are said most often.) Next: why the rest of the tense retreated, and where the retreat came from."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-praeteritum-map",
+      "sequence": 480,
+      "title": "The same retreat, three times over",
+      "headword": "areale Veränderung",
+      "romanization": "areale Veränderung",
+      "gloss": "an areal change — the same retreat happened in German, French and Italian at once, because their speakers are neighbours",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ae38b99e7831626",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "German is not the only language that let a two-word past crowd out a one-word one. Two of its neighbours did the identical thing at the identical time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "German",
-                "English"
+                "language",
+                "one-word past",
+                "what took it over in speech"
               ],
-              "columns": 2,
-              "rowCount": 5,
+              "columns": 3,
+              "rowCount": 3,
               "utterances": [
-                "Hallo! Wie geht es dir? means Hello! How are you?",
-                "Danke, ich bin müde. means Thanks — I am tired.",
-                "Du bist müde? Ich auch. means You are tired? Me too.",
-                "Dann sind wir müde. Aber das ist gut. means Then we are tired. But that is good.",
-                "Bis morgen! means See you tomorrow!"
+                "language: German. one-word past: Präteritum. what took it over in speech: Perfekt.",
+                "language: French. one-word past: passé simple. what took it over in speech: passé composé.",
+                "language: Italian. one-word past: passato remoto. what took it over in speech: passato prossimo."
               ]
             },
             {
               "kind": "speech",
-              "text": "Three small joining words slip in there without needing lessons of their own, because each can be read straight off the translation: auch (\"too\"), dann (\"then\") and aber (\"but\")."
+              "text": "Two Romance languages and one Germanic one, doing the same thing over the same centuries — and not by coincidence. The dental -te and the Romance endings came from completely different ancestors, so nothing inherited can account for three languages arriving at the same answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Geography can. Southern Germany, France and northern Italy are one connected block of territory, and the change spread through it by contact: speakers who live near each other borrow habits, and a habit of speech travels across a language boundary as easily as across a dialect one. Linguists call a change that spreads that way an areal change."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two pieces of evidence make the contact story stick rather than merely sound good."
+            },
+            {
+              "kind": "speech",
+              "text": "The first is what did not happen at the western edge. Spanish and Portuguese kept their one-word past far more fully in speech, and they are the two languages furthest from that connected block."
+            },
+            {
+              "kind": "speech",
+              "text": "The second is the map inside German itself, which you already met: the Präteritum is weakest in the south, nearest the centre of the change, and strongest in the north, furthest from it. A change spreading outward from a region should thin as it goes, and that is exactly what German shows."
+            },
+            {
+              "kind": "speech",
+              "text": "Geography did not dictate any single sentence. But it explains why a Germanic language and two Romance ones moved in step, and why one end of Germany sounds older than the other."
             }
           ]
         },
@@ -1274,38 +1194,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the six in order — \"ich bin, du bist, er ist, wir sind, ihr seid, sie sind\"",
+              "instruction": "the three languages — \"German, French, Italian: the same retreat\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the six in order — \"ich bin, du bist, er ist, wir sind, ihr seid, sie sind\"]"
+              "source": "[YOU SAY: the three languages — \"German, French, Italian: the same retreat\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the same six backwards",
+              "instruction": "the name — \"an areal change, spread by contact\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the same six backwards]"
+              "source": "[YOU SAY: the name — \"an areal change, spread by contact\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Ich bin müde.\" \"Du bist müde.\" \"Wir sind müde.\"",
+              "instruction": "the inside map — \"south more Perfekt, north more Präteritum\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ich bin müde.\" \"Du bist müde.\" \"Wir sind müde.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the whole exchange, both voices",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the whole exchange, both voices]"
+              "source": "[YOU SAY: the inside map — \"south more Perfekt, north more Präteritum\"]"
             },
             {
               "kind": "repeat",
@@ -1314,7 +1225,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"ich bin, du bist, er ist, wir sind, ihr seid, sie sind.\""
+              "text": "\"areal change — it spread by contact.\""
             }
           ]
         },
@@ -1331,7 +1242,143 @@
             },
             {
               "kind": "speech",
-              "text": "Run the six forms without looking. Which one form covers wir, sie and Sie? (Sind.) Which is the only form built out of another one? (Bist, from bin.) Say \"that is good.\" (Das ist gut.) Say \"you are tired\" to a group. (Ihr seid müde.) Next: where these forms came from — three different verbs, none of them each other."
+              "text": "Which two neighbours made the same change? (French and Italian.) Did German inherit it from Latin? (No — the two families build their pasts from different material.) What is a change that spreads by contact called? (An areal change.) Which two languages at the western edge kept their one-word past? (Spanish and Portuguese.) Next: the chapter run through end to end."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C15-praeteritum-practice",
+      "sequence": 485,
+      "title": "Practice — the two pasts, side by side",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "chapter payoff — the two pasts said back to back until it is audible that nothing about the meaning has moved",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da74c7b673c76c8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. The point of this one is to hear, in your own voice, that two different-sounding sentences report the same event."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one meaning, two shapes",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "meaning",
+                "Präteritum",
+                "Perfekt"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "meaning: I said. Präteritum: ich sagte. Perfekt: ich habe gesagt.",
+                "meaning: I made. Präteritum: ich machte. Perfekt: ich habe gemacht.",
+                "meaning: I had. Präteritum: ich hatte. Perfekt: ich habe gehabt."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say each pair back to back — ich sagte … ich habe gesagt — and then er machte das … er hat das gemacht. Nothing about the meaning has moved. All that has changed is which room you are standing in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"ich sagte … ich habe gesagt\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"ich sagte … ich habe gesagt\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the other pair — \"er machte das … er hat das gemacht\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the other pair — \"er machte das … er hat das gemacht\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the survivors — \"ich hatte, ich konnte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the survivors — \"ich hatte, ich konnte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own instruction — \"produce the Perfekt, recognise the Präteritum\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own instruction — \"produce the Perfekt, recognise the Präteritum\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"ich sagte, ich habe gesagt.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I made\" both ways. (Ich machte; ich habe gemacht.) Which of the two would a novel use? (The Präteritum.) Which would you say out loud? (The Perfekt — except for the survivors.) What is the -te called? (The dental preterite.) What kind of change pushed the tense out of speech? (An areal one.) Next: the verb every one of these sentences has been waiting for."
             }
           ]
         }

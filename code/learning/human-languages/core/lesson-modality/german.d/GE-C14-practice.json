@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C14-practice",
     "language": "german",
-    "chapter": 21,
+    "chapter": 22,
     "sequence": 352,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2d8cb64a7bdee91c"
+    "sourceHash": "fnv1a64:c7f63aad64764ff7"
   },
   "findings": []
 }

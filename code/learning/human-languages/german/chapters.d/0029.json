@@ -1,21 +1,25 @@
 {
   "chapter": 29,
-  "title": "Head and Hand",
-  "label": "ch:ge-head-and-hand",
-  "canDo": "I can name the head and the hand in German, devoice the final d of Hand, and say where the Germanic and Latin families stop matching.",
+  "title": "The Past That Takes To Be",
+  "label": "ch:ge-perfekt-sein",
+  "canDo": "I can build the German past of verbs of motion and change with the verb for “to be” instead of the verb for “to have”, and say why the participle never changes.",
   "spineNodes": [
-    "SPINE-CHECK-WELLBEING"
+    "SPINE-TALK-ABOUT-PAST"
   ],
   "payoff": {
-    "lesson": "GE-C17-hand",
-    "kind": "production",
-    "summary": "Say die Hand with its final d spoken as t, bring the d back in die Hände, run the Germanic body set Hand/Arm/Finger/Fuß/Herz, and name the gap: main, mano, mão — but Hand.",
+    "lesson": "GE-C16-haben-oder-sein",
+    "kind": "task",
+    "summary": "Motion and change of state build their perfect on sein rather than haben — ich bin gegangen beside ich habe gelernt. The chapter teaches the rule, then the four verbs that follow it (kommen, fahren, werden, bleiben), then the short list that has to be learned outright, and finally the one place German is simpler than French: the participle in the perfect agrees with nothing at all.",
     "assesses": [
-      "GE-LEX-HAND-02",
-      "GE-SOUND-HAND-03",
-      "GE-ETYMON-HAND-04",
-      "GE-ETYMON-HAND-MANUS-05"
+      "GE-GRAMMAR-PERFEKT-SEIN-01",
+      "GE-LEX-KOMMEN-01",
+      "GE-LEX-FAHREN-01",
+      "GE-LEX-WERDEN-01",
+      "GE-LEX-BLEIBEN-01",
+      "GE-GRAMMAR-PERFEKT-SEIN-AUSNAHMEN-01",
+      "GE-GRAMMAR-PERFEKT-KEINE-KONGRUENZ-01",
+      "GE-GRAMMAR-PARTIZIP-ATTRIBUTIV-01"
     ],
-    "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence and reaches only its own third of the chapter (4 of 12 atoms, below the 0.5 floor)."
+    "note": "The second half of the hand-written chapter 16, now a chapter of its own. The payoff claims all eight atoms: the practice lesson runs the whole haben/sein table, the French comparison that shows the missing agreement, and the attributive participle that is the one place the ending returns."
   }
 }

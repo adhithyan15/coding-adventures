@@ -1,15 +1,15 @@
 {
   "language": "german",
   "chapter": 32,
-  "sourceHash": "fnv1a64:2b3183d21a48af88",
+  "sourceHash": "fnv1a64:c212262523f63c8c",
   "lessonIds": [
-    "GE-C20-entschuldigung"
+    "GE-C19-bitte-requests"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "german/narration/ch32.txt",
   "json": "german/narration/ch32.json",
-  "textHash": "fnv1a64:527d6713ab6ddb5e",
-  "jsonHash": "fnv1a64:1e31d64bb2f3c412",
+  "textHash": "fnv1a64:67f3e256aefd0848",
+  "jsonHash": "fnv1a64:17bbded4791426af",
   "findings": []
 }

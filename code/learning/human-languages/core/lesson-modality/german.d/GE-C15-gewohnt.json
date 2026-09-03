@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C15-gewohnt",
     "language": "german",
-    "chapter": 22,
+    "chapter": 23,
     "sequence": 380,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:43503e5a123c53ee"
+    "sourceHash": "fnv1a64:4c372656e1cbe8bb"
   },
   "findings": []
 }

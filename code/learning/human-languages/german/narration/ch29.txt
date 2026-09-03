@@ -1,133 +1,368 @@
-German, chapter 29: Head and Hand.
-3 lessons. All 3 can be done entirely by ear.
+German, chapter 29: The Past That Takes To Be.
+9 lessons. You can do the first 8 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
-Der Kopf — “the head”.
-
-Warm-up.
-[pause 2 seconds]
-Learn the first body part with its article and its characteristic final sound.
-
-You'll want to know: der Kopf.
-der Kopf — the head.
-It is masculine and capitalised because every German noun begins with a capital letter.
-
-Sounds you'll need: Make the -pf sequence.
-At the end of Kopf, close for p and release directly into f. English has no identical native ending, so practise it slowly:
-Ko-p-f becomes Kopf.
-
-Grammar Lens: Kopf + Schmerzen.
-A useful phrase is:
-Ich habe Kopfschmerzen. — I have a headache.
-German compounds simply place nouns together: Kopf (head) + Schmerzen (pains).
-
-The word, taken apart: The old cup.
-Kopf originally meant a cup or bowl. It is related to English cup; both were early borrowings of Late Latin cuppa. A container word became slang for the skull and eventually took over the everyday job.
-German’s older inherited head-word did not disappear completely. The next micro-lesson follows it into compounds and compares the same container metaphor in French.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “der Kopf” — release p into f]
-[pause 8 seconds for the answer]
-[your turn — say: “Ich habe Kopfschmerzen.”]
-[pause 8 seconds for the answer]
-[your turn — say: “Kopf — cup or bowl”]
-[pause 8 seconds for the answer]
-[repeat that twice]
-“Der Kopf — masculine, capitalised.”
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say “the head.” (Der Kopf.) Give its gender. (Masculine.) Why the capital? (It is a noun.) What did Kopf first mean? (A cup or bowl.) Name the related English word. (Cup.) Next: find the inherited word Haupt.
-
-
-Lesson 2 of 3.
-Kopf / Haupt — two head-words.
+Lesson 1 of 9.
+ich bin gegangen — the perfect built on sein.
 
 Warm-up.
 [pause 2 seconds]
-Kopf began as “cup.” German’s inherited word for “head” is Haupt, a cousin of English head and Latin caput.
+You built the everyday past with haben — ich habe gelernt. A particular family of verbs refuses haben and takes this chapter's verb instead.
 
-The word, taken apart: inherited Haupt.
-[a table of 3 rows, read aloud]
-language: Latin. inherited form: caput.
-language: German. inherited form: Haupt.
-language: English. inherited form: head.
-The initial k becomes h relationship reflects Grimm’s law, the same systematic Germanic sound shift seen in Latin pater beside English father. The later consonants have their own history; use the initial pair as the clear signal.
-Haupt survives in compounds and formal vocabulary:
-Hauptstadt — capital, literally “head city”;
-Hauptbahnhof — main station;
-Hauptsache — main thing.
-
-Why it's said this way: Two container metaphors.
-[a table of 2 rows, read aloud]
-language: German. everyday word: Kopf. older picture: cuppa, cup.
-language: French. everyday word: tête. older picture: testa, pot.
-Both languages independently promoted a vessel-word to “head,” while keeping the older head-root in words for chiefs, capitals, or main things. The vocabulary sources are both Latin loans, but the metaphor was applied separately: heads look like bowls in many languages.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “Kopf — everyday cup-word”]
-[pause 8 seconds for the answer]
-[your turn — say: “Haupt — inherited head-word”]
-[pause 8 seconds for the answer]
-[your turn — say: “Hauptstadt, Hauptbahnhof”]
-[pause 8 seconds for the answer]
-[repeat that twice]
-“Kopf took the job; Haupt stayed in compounds.”
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which word is everyday “head”? (Kopf.) Which inherited word survives in compounds? (Haupt.) Name two compounds. (Hauptstadt, Hauptbahnhof.) What parallel metaphor did French use? (Tête, originally a pot.) Next: the hand.
-[question — say your answer, then pause 8 seconds]
-Which inherited German head-word survives in compounds such as Hauptstadt?
-
-
-Lesson 3 of 3.
-die Hand — "the hand".
-
-Warm-up.
-[pause 2 seconds]
-After the tangle of Kopf and Haupt, here is the easiest word in the chapter — and a useful lesson about when languages don't match.
-
-You'll want to know: die Hand.
-die Hand — the hand. Feminine, and spelled exactly like English.
-
-Sounds you'll need: Final devoicing.
-One pronunciation note: the final d is said as a t. German devoices a consonant at the end of a word, so Hand ends like English hunt — but with the open ah of Tag, not hunt's vowel. Add an ending and the d comes back: die Hände ("the hands").
-
-The word, taken apart: It is the English word.
-Hand is Germanic handuz, and English inherited it directly. Same word, same meaning, two thousand years apart. German and English are close relatives, and body parts are where you feel it most:
-[a table of 5 rows, read aloud]
-Hand means hand.
-Arm means arm.
-Finger means finger.
-Fuß means foot.
-Herz means heart.
-
-Why it's said this way: Where the family tree stops.
-Now the interesting part. Every Romance language builds "hand" on Latin manus:
+Grammar Lens: which verbs take sein.
+Verbs of motion and change of state build their perfect with sein, not haben.
+An action that leaves you somewhere else, or leaves you something else, takes sein. An ordinary activity that leaves you where you were keeps haben: ich habe gearbeitet, ich habe getanzt.
+Gehen is the model, and because every present form of sein now belongs to you, the whole thing reads off without a single new word:
 [a table of 4 rows, read aloud]
-French, la main.
-Italian, la mano.
-Portuguese, a mão.
-Spanish, la mano.
-And Germanic — German, English — has handuz, which is not related to manus at all. The two families simply have different words here.
-That is worth noticing, because these connections keep turning up, and it can start to feel as though everything must connect. It doesn't. Indo-European languages share a great deal, and then diverge, and "hand" is one of the places where they diverged early and completely.
-The Latin word did reach German — but only as borrowed vocabulary: Manuskript, Maniküre, manuell. Learned imports, sitting beside the native word without displacing it.
+ich bin gegangen means I went / I have gone.
+du bist gegangen means you went.
+er ist gegangen means he went.
+wir sind gegangen means we went.
+The recipe is the one you already know, with the helper swapped:
+present form of sein + past participle, and the participle goes last.
+
+Sounds you'll need.
+ge-prefix — gegangen opens with the same unstressed ge- that wrapped gelernt and gesagt. It is never stressed; the weight falls on -gang-.
+ich-laut — and ich keeps its soft ending right before it, so the phrase runs ich bin ge-GANG-en without a break.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "die Hand" — final d said as t]
+[your turn — say: "ich bin gegangen; du bist gegangen; er ist gegangen; wir sind gegangen"]
 [pause 8 seconds for the answer]
-[your turn — say: the plural, and hear the d return — "die Hände"]
+[your turn — say: the contrast — "ich habe gelernt … ich bin gegangen"]
 [pause 8 seconds for the answer]
-[your turn — say: the Germanic set — "Hand, Arm, Finger, Fuß, Herz"]
+[your turn — say: the rule — "motion and change take sein"]
 [pause 8 seconds for the answer]
-[your turn — say: the gap — "main, mano, mão … but Hand"]
+[repeat that twice]
+"ich bin gegangen."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which family of verbs takes sein? (Motion and change of state.) Say "I went." (Ich bin gegangen.) Where does the participle sit? (At the end.) Which helper does arbeiten take? (Haben — it is an activity, not a change.) Next: the first of the family, and it is the one you say most.
+
+
+Lesson 2 of 9.
+kommen — "to come".
+
+Warm-up.
+[pause 2 seconds]
+Motion takes sein. Here is the motion verb you will use as often as gehen, and it is an English word you already own.
+
+You'll want to know: kommen.
+kommen — "to come."
+ich bin gekommen — "I came."
+The infinitive wears the -en you know. The participle is gekommen: the ge- wrap in front, and -en rather than -t at the back, because this is one of the old strong verbs rather than a regular one.
+Coming is arriving somewhere you were not. That is motion with a result, so it takes sein, exactly as gehen does.
+
+The word, taken apart.
+kommen and English come are the same word, both from Germanic kwemaną. No Latin anywhere in the line — French venir and Spanish venir come from Latin venīre instead, which is where English gets advent, convene and venue.
+So English, as usual, owns both halves: the everyday come from the Germanic side, the formal convene from the Latin.
+
+Sounds you'll need.
+vowel-o — the o is short and open, the vowel of English cot, not the uh English puts in come.
+ge-prefix — gekommen keeps the unstressed ge-; the stress is on -KOMM-.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "kommen" — short open o]
+[pause 8 seconds for the answer]
+[your turn — say: "ich bin gekommen"]
+[pause 8 seconds for the answer]
+[your turn — say: "ich bin gegangen … ich bin gekommen"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich bin gekommen."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does kommen mean? ("To come.") Say "I came." (Ich bin gekommen.) Which helper, and why? (Sein — it is motion.) Which English word is it? (Come.) Next: the verb that covers everything with a vehicle under it.
+
+
+Lesson 3 of 9.
+fahren — "to travel, to drive".
+
+Warm-up.
+[pause 2 seconds]
+Gehen is going on your feet. When there is a vehicle under you, German changes the verb.
+
+You'll want to know: fahren.
+fahren — "to travel, to go by vehicle, to drive."
+ich bin gefahren — "I travelled, I drove."
+German keeps two verbs where English makes do with go. You gehen on foot and you fahren in anything with wheels — a car, a bus, a train, a bicycle. Getting that pair right is one of the first things that makes a learner sound German rather than translated.
+It is motion, so the helper is sein.
+
+Sounds you'll need.
+vowel-a-long — the a is long and open, as in war.
+h-silent-lengthening — and the h after it is the silent stretcher you met in gehen and sehen: it is not breathed, it only holds the vowel. FAH-ren rhymes with the way gehen and sehen are built.
+
+The word, taken apart.
+fahren is English fare — the old verb meaning "to travel," which English demoted to a noun and then almost forgot. It is still there in:
+[a table of 4 rows, read aloud]
+English word: farewell. what it is really saying: travel well.
+English word: thoroughfare. what it is really saying: a way you can travel through.
+English word: seafaring. what it is really saying: sea-travelling.
+English word: the fare you pay. what it is really saying: what the travelling costs.
+So auf Wiedersehen and farewell are built the same way: both are a wish handed over at the door, one about seeing again, one about travelling well.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "fahren" — long a, silent h]
+[pause 8 seconds for the answer]
+[your turn — say: "ich bin gefahren"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "gehen on foot, fahren with wheels"]
+[pause 8 seconds for the answer]
+[your turn — say: "fahren — fare — farewell"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Ich bin gefahren."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does fahren mean? ("To travel, to go by vehicle.") Which verb would you use walking to the shop? (Gehen.) Say "I drove." (Ich bin gefahren.) Which English word is fahren? (Fare — as in farewell.) Next: the verb for becoming something else.
+
+
+Lesson 4 of 9.
+werden — "to become".
+
+Warm-up.
+[pause 2 seconds]
+The rule has two halves. Gehen, kommen and fahren are the motion half. This one word is the whole of the other half.
+
+You'll want to know: werden.
+werden — "to become."
+ich bin geworden — "I became."
+Sein says what you are. Werden says what you turn into. Where sein sits still, werden moves — and that is exactly why it takes sein as its helper: becoming is change of state in its purest form.
+Ich bin müde geworden. — "I got tired."
+Notice what that sentence does. The adjective you learned with sein now describes an arrival rather than a condition. German makes the difference with the verb; English does it with be against get.
+
+Sounds you'll need.
+w-as-v — the w is English v, as in war and wir.
+d-t-final — and in wird ("he becomes") the final d devoices to a t, the same rule that turned sind into zint.
+
+The word, taken apart.
+werden is a lost English verb — weorthan, "to turn, to come to be" — and its bones are still in the language:
+[a table of 3 rows, read aloud]
+English: toward. the buried meaning: turning to.
+English: backward. the buried meaning: turning back.
+English: worth. the buried meaning: what a thing turns out to be.
+So werden means "to turn into," and every time you say toward you are using the same root without knowing it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "werden" — VAIR-den]
+[pause 8 seconds for the answer]
+[your turn — say: "ich bin geworden"]
+[pause 8 seconds for the answer]
+[your turn — say: "Ich bin müde geworden." — "I got tired"]
+[pause 8 seconds for the answer]
+[your turn — say: "werden — toward — worth"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Ich bin müde geworden."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does werden mean? ("To become.") Why does it take sein? (It is change of state — the other half of the rule.) Say "I became." (Ich bin geworden.) Which English words hide the same root? (Toward, backward, worth.) Next: the two verbs that break the rule by standing still.
+
+
+Lesson 5 of 9.
+bleiben — "to stay".
+
+Warm-up.
+[pause 2 seconds]
+Werden takes sein because it is pure change. This verb takes sein too — and it means staying exactly where you are.
+
+You'll want to know: bleiben.
+bleiben — "to stay, to remain."
+ich bin geblieben — "I stayed."
+By the rule as stated, this verb should take haben. Staying is not motion and it is not change; it is the absence of both. It takes sein anyway, and every German learner meets it as a fact rather than a consequence.
+The honest way to hold it: bleiben is on the sein list because it is about where you are rather than what you do, and that is the deeper thing the motion rule was pointing at all along.
+
+Sounds you'll need.
+diphthong-ei — ei is the eye vowel again, exactly as in sein. So bleiben is BLY-ben, never blee-ben. The two verbs of this chapter that break the rule both carry that vowel.
+
+The word, taken apart.
+bleiben is be- plus an old Germanic verb lība-, "to remain." English lost the verb and kept its leavings — literally: what remains after everything else has gone is what English calls the leftovers, and leave in the sense of what is left belongs to the same family.
+German still uses the verb every day; English kept only the residue of it, which is a fitting fate for a word meaning "to be left over."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "bleiben" — BLY-ben, the eye vowel]
+[pause 8 seconds for the answer]
+[your turn — say: "ich bin geblieben"]
+[pause 8 seconds for the answer]
+[your turn — say: the odd pair — "ich bin geworden … ich bin geblieben"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Ich bin geblieben."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does bleiben mean? ("To stay.") Say "I stayed." (Ich bin geblieben.) Does the motion rule predict its helper? (No — it has to be learned.) How is ei pronounced? (Like English eye.) Next: the rest of the verbs that have to be learned, including this chapter's own verb.
+
+
+Lesson 6 of 9.
+ich bin gewesen — and the rest of the learned list.
+
+Warm-up.
+[pause 2 seconds]
+Bleiben was the first verb the rule failed to predict. Here is the whole of the rest of that list, and it is short.
+
+Grammar Lens: the verbs you simply learn.
+Besides motion and change, a small fixed set of verbs takes sein and has to be learned.
+[a table of 6 rows, read aloud]
+verb: sein. perfect: ich bin gewesen. meaning: I have been.
+verb: bleiben. perfect: ich bin geblieben. meaning: I stayed.
+verb: gelingen. perfect: es ist gelungen. meaning: it succeeded.
+verb: geschehen. perfect: es ist geschehen. meaning: it happened.
+verb: passieren. perfect: es ist passiert. meaning: it happened.
+verb: begegnen. perfect: ich bin begegnet. meaning: I met.
+Sein and bleiben head the list because they are the two that most clearly contradict the rule: one says a thing simply is, the other says it stays. The rest are events that arrive of their own accord — succeeding, happening, running into somebody — and German treats an arrival as a change.
+
+The word, taken apart.
+Look closely at gewesen. Strip the ge- wrap and the -en ending and what is left is wes- — the third of the three roots inside this verb, the one that gave war and English was.
+So sein reaches for that root twice: once for its past tense, once for its participle. The infinitive comes from one root, the present from two, the past and participle from a third. There is no part of this verb that belongs to all of it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ich bin gewesen; ich bin geblieben"]
+[pause 8 seconds for the answer]
+[your turn — say: "es ist passiert" — "it happened"]
+[pause 8 seconds for the answer]
+[your turn — say: "war … gewesen" — the same root twice]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich bin gewesen."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name the two verbs at the head of the learned list. (Sein and bleiben.) Say "I have been." (Ich bin gewesen.) Say "it happened." (Es ist passiert — or es ist geschehen.) Which root is hiding inside gewesen? (wes-, the one behind war.) Next: the ending German does not put on any of these.
+
+
+Lesson 7 of 9.
+gegangen — the participle that never changes.
+
+Warm-up.
+[pause 2 seconds]
+French draws the same have-against-be line German does. Here is the place the two languages part company, and German comes out easier.
+
+Grammar Lens: German agrees with nothing here.
+Inside the perfect, the German participle takes no ending at all. Gegangen is gegangen for every person, number and gender.
+[a table of 3 rows, read aloud]
+he went. French: il est allé. German: er ist gegangen.
+she went. French: elle est allée. German: sie ist gegangen.
+they went. French: ils sont allés. German: sie sind gegangen.
+French makes the participle agree with its subject and spells the agreement out three different ways. German changes the helper — ist, sind — and leaves the participle exactly where it found it.
+Old High German did inflect it here, at least some of the time. Modern German lost that, along with most of its other adjective-like endings in this position. So the simplicity is not a design; it is an erosion, and German happens to have come out ahead.
+
+Why it's said this way.
+It would be easy to assume German copied this split from Latin, the way it borrowed so much else. It did not.
+The haben-perfect and the sein-perfect are native Germanic developments. They grew up alongside the Romance ones rather than out of them: neighbouring languages drifting the same way over centuries of contact, the same areal spread that pushed the simple past out of everyday speech in French, German and Italian together.
+Two things to carry forward, and they point in opposite directions:
+the split between the two helpers is shared with French;
+the agreement is not.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "er ist gegangen; sie ist gegangen; sie sind gegangen"]
+[pause 8 seconds for the answer]
+[your turn — say: the participle, unchanged, three times — "gegangen, gegangen, gegangen"]
+[pause 8 seconds for the answer]
+[your turn — say: the comparison — "elle est allée … sie ist gegangen"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"sie ist gegangen; sie sind gegangen."
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does the German participle agree with its subject in the perfect? (No — never.) What changes instead? (The helper — ist, sind.) Does French agree? (Yes.) Did German take this split from Latin? (No — it grew in parallel.) Next: the one place a German participle does take an ending.
+
+
+Lesson 8 of 9.
+der angekommene Zug — where the ending comes back.
+
+Warm-up.
+[pause 2 seconds]
+The participle takes no ending in the perfect. That is a fact about the perfect, not about participles — and the difference matters.
+
+Grammar Lens: in front of a noun, it inflects.
+A German participle standing in front of a noun is working as an adjective, and it takes the endings adjectives take there.
+[a table of 3 rows, read aloud]
+ein geschriebener Brief means a written letter.
+der angekommene Zug means the arrived train.
+die eingeschlafene Katze means the fallen-asleep cat.
+Each noun keeps its capital, and each participle now carries a small ending chosen by the article in front of it. That is the ordinary German adjective machine, applied to a participle. (Katze, "cat", gets a lesson of its own later; here it is only carrying the ending.)
+So German did not lose participle endings everywhere. It lost them in exactly one construction: the perfect.
+
+Sounds you'll need.
+ge-prefix — all three participles above still carry their ge- wrap, and it is still unstressed. In angekommen it has slid into the middle of the word, behind an-, which is where German puts it when a prefix comes first.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der angekommene Zug"]
+[pause 8 seconds for the answer]
+[your turn — say: "die eingeschlafene Katze"]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — "sie ist gegangen" (no ending) … "die eingeschlafene Katze" (ending)]
+[pause 8 seconds for the answer]
+[your turn — say: "die müde Mutter" — an ordinary adjective doing the same thing]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the hand." (Die Hand — feminine.) How is the final d pronounced, and why? (As a t — German devoices final consonants; the d returns in Hände.) Is Hand related to French main? (No — Germanic handuz against Latin manus; the families differ here.) How did manus reach German anyway? (As borrowed learned words — Manuskript, manuell.) Next: the rest of the body.
+Where does a German participle still take an ending? (In front of a noun, as an adjective.) Where does it never take one? (In the perfect.) Say "the arrived train." (Der angekommene Zug.) What is the participle behaving as, in that phrase? (An adjective.) Next: choosing between the two helpers, on the spot.
+
+
+Lesson 9 of 9.
+Practice — haben or sein?
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+No new words. The only skill left in this chapter is picking the right helper without stopping to think, and that is drill.
+
+Grammar Lens: the whole family in one place.
+[a table of 8 rows, read aloud]
+verb: gehen. perfect: ich bin gegangen. why: motion.
+verb: kommen. perfect: ich bin gekommen. why: motion.
+verb: fahren. perfect: ich bin gefahren. why: motion.
+verb: werden. perfect: ich bin geworden. why: change of state.
+verb: bleiben. perfect: ich bin geblieben. why: learned.
+verb: sein. perfect: ich bin gewesen. why: learned.
+verb: lernen. perfect: ich habe gelernt. why: ordinary activity.
+verb: machen. perfect: ich habe gemacht. why: ordinary activity.
+Read the right-hand column and you can see how much of the work the motion rule does on its own: only two rows have to be memorised outright.
+
+The exchange.
+[a table of 5 rows, read aloud]
+Wo bist du gewesen? means Where have you been?
+Ich bin nach Berlin gefahren. means I travelled to Berlin.
+Und Anna? Ist sie gekommen? means And Anna? Did she come?
+Anna ist zu Hause geblieben. means Anna stayed at home.
+Ich habe viel gelernt. Jetzt bin ich müde. means I learned a lot. Now I am tired.
+Note the third and fourth lines: ist sie gekommen, Anna ist geblieben — a feminine subject both times, and not one letter added to either participle.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the contrast pair — "ich habe gelernt … ich bin gegangen"]
+[pause 8 seconds for the answer]
+[your turn — say: the family — "bin gekommen, bin gefahren, bin geworden, bin geblieben, bin gewesen"]
+[pause 8 seconds for the answer]
+[your turn — say: the French comparison — "elle est allée … sie ist gegangen", no ending at all]
+[pause 8 seconds for the answer]
+[your turn — say: the one place the ending returns — "der angekommene Zug"]
+[pause 8 seconds for the answer]
+[your turn — say: the whole exchange, both voices]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"ich habe gelernt … ich bin gegangen."
+
+What you've built — where this volume pauses.
+You have gone from guten Tag to two working past tenses, and the method has not changed once: take the word apart, find the English cousin sleeping inside it, and let the family tree do the memorising for you.
+The next volume picks the thread back up with describing what you see.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which helper for tanzen, "to dance"? (Haben — an activity.) Which for fahren? (Sein — motion.) Which two verbs on the sein list mean the opposite of change? (Sein and bleiben.) Say "she stayed." (Sie ist geblieben — no ending on the participle.)

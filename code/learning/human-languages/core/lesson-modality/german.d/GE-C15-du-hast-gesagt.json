@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C15-du-hast-gesagt",
     "language": "german",
-    "chapter": 23,
+    "chapter": 24,
     "sequence": 405,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bdee13d060b3c0b9"
+    "sourceHash": "fnv1a64:1333b27332f215a4"
   },
   "findings": []
 }

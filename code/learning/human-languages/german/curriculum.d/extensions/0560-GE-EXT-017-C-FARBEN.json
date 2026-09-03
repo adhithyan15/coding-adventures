@@ -3,10 +3,15 @@
   "stage": "A1",
   "kind": "required",
   "category": "language-specific",
-  "canDo": "I can name the basic colours in German.",
+  "canDo": "I can say black and white in German, and name the German word Romance borrowed for white.",
   "prerequisites": [],
   "lessons": [
-    "GE-C13-schwarz-weiss",
-    "GE-C13-rot-blau"
+    "GE-C13-schwarz",
+    "GE-C13-schwarz-swarthy",
+    "GE-C13-weiss",
+    "GE-C13-weiss-white",
+    "GE-C13-blank",
+    "GE-C13-blank-blanc",
+    "GE-C13-schwarz-weiss"
   ]
 }

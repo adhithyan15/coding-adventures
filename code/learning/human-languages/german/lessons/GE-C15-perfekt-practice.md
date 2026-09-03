@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C15-perfekt-practice
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 435
-chapter: 23
+chapter: 24
 type: practice
 headword: (practice)
 gloss: chapter payoff — the four Perfekt slots on one page for the first time, and a sentence with something in the middle

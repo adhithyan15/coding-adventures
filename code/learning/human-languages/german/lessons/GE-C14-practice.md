@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C14-practice
 spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
 sequence: 352
-chapter: 21
+chapter: 22
 type: practice
 headword: (practice)
 gloss: chapter payoff — the six forms on one page for the first time, four of them free and two of them earned

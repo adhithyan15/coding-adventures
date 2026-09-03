@@ -2,8 +2,13 @@
   "id": "GE-PATH-017-C",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "GE-C13-schwarz-weiss",
-    "GE-C13-rot-blau"
+    "GE-C13-schwarz",
+    "GE-C13-schwarz-swarthy",
+    "GE-C13-weiss",
+    "GE-C13-weiss-white",
+    "GE-C13-blank",
+    "GE-C13-blank-blanc",
+    "GE-C13-schwarz-weiss"
   ],
   "before": [],
   "inline": [

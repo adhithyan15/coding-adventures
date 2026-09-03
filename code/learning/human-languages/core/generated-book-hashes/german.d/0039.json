@@ -1,12 +1,12 @@
 {
   "language": "german",
   "chapter": 39,
-  "sourceHash": "fnv1a64:d0c55571d6691f23",
+  "sourceHash": "fnv1a64:f45ad16cdf641d41",
   "lessonIds": [
-    "GE-C27-gehen",
-    "GE-C27-laufen",
-    "GE-C27-oeffnen",
-    "GE-C27-schliessen"
+    "GE-C26-sitzen",
+    "GE-C26-stehen",
+    "GE-C26-schlafen",
+    "GE-C26-hoeren"
   ],
-  "tex": "german/book/chapters/ch39-moving-verbs.tex"
+  "tex": "german/book/chapters/ch39-still-verbs.tex"
 }

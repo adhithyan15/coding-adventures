@@ -1,24 +1,23 @@
 {
   "chapter": 27,
-  "title": "Three Verbs Under One Roof",
-  "label": "ch:ge-sein-drei-wurzeln",
-  "canDo": "I can put the German verb for “to be” into the past, and say why its forms look like three unrelated words — because they are.",
+  "title": "Being Your Years",
+  "label": "ch:ge-alter",
+  "canDo": "I can ask how old somebody is and say my own age in German, using the verb German insists on for it.",
   "spineNodes": [
-    "SPINE-TALK-ABOUT-PAST"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "GE-C16-war-practice",
+    "lesson": "GE-C14-alter-practice",
     "kind": "task",
-    "summary": "The past of sein is the tidy half of the verb: one stem war-, ordinary endings, and ich war identical to er war. The chapter teaches those four cells one at a time and then answers the question the present tense raised — bin, ist and war come from three different Proto-Indo-European verbs, which is called suppletion, and it survives because the words you never have to guess at are the words analogy never reaches.",
+    "summary": "This material was the second half of the hand-written haben chapter, and it could not stay there: ich bin zwanzig Jahre alt needs ich bin, and Wie alt bist du? needs du bist — both of which the chapter on sein teaches. It sits here instead, immediately after that chapter, where every word it needs is already owned, and it closes the haben chapter's open question by showing the one everyday sentence where German refuses that verb.",
     "assesses": [
-      "GE-GRAMMAR-SEIN-ICH-WAR-01",
-      "GE-GRAMMAR-SEIN-DU-WARST-01",
-      "GE-GRAMMAR-SEIN-ER-WAR-01",
-      "GE-GRAMMAR-SEIN-WIR-WAREN-01",
-      "GE-ETYMON-SEIN-DREI-WURZELN-01",
-      "GE-GRAMMAR-SUPPLETION-01",
-      "GE-GRAMMAR-HAEUFIG-UNREGELMAESSIG-01"
+      "GE-LEX-ALT-01",
+      "GE-LEX-JAHR-01",
+      "GE-ETYMON-JAHR-ALT-01",
+      "GE-LEX-WIE-ALT-BIST-DU-01",
+      "GE-LEX-ICH-BIN-JAHRE-ALT-01",
+      "GE-GRAMMAR-ALTER-MIT-SEIN-01"
     ],
-    "note": "Split out of the hand-written chapter 16, which carried the present, the past and the sein-perfect in one chapter and could not hold them inside maxNewAtomsPerChapter at one atom per grammar cell. The payoff claims all seven of this chapter's atoms: the practice lesson drills the four past cells and then asks for the three roots, the name suppletion, and the reason the verb was never tidied up."
+    "note": "Chapter 19 is generated from schema-v2 lessons, so the payoff is atom-scored. Lesson ids keep the GE-C14-* prefix because that is the chapter they were written for; the Spanish convention lets ids stay put while chapter numbers move."
   }
 }

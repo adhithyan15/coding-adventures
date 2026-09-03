@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:6fabd34e95d4f902",
+  "lessonIds": [
+    "GE-C13-schwarz",
+    "GE-C13-schwarz-swarthy",
+    "GE-C13-weiss",
+    "GE-C13-weiss-white",
+    "GE-C13-blank",
+    "GE-C13-blank-blanc",
+    "GE-C13-schwarz-weiss"
+  ],
+  "tex": "german/book/chapters/ch20-schwarz-weiss.tex"
+}

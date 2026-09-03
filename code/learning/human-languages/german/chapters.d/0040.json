@@ -1,27 +1,34 @@
 {
   "chapter": 40,
-  "title": "Coffee, Tea, and Milk",
-  "label": "ch:ge-coffee-tea-milk",
-  "canDo": "I can politely ask for coffee, tea, or milk in German, and say which of the three words is native and which two are loans.",
+  "title": "Going, Running, Opening, Closing",
+  "label": "ch:ge-moving-verbs",
+  "canDo": "I can say I go, I run and I open and close my hand in German, split a separable verb so its prefix waits at the end of the sentence, and say why German's line between walking and running is not where English draws it.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GE-C28-milch",
+    "lesson": "GE-C27-schliessen",
     "kind": "production",
-    "summary": "The chapter closes on Milch, the native word beside two loans: the reader produces all three drinks with der/die articles, extends Chapter 19's Wasser, bitte pattern to Kaffee, bitte and Tee, bitte, and states each word's route — Kaffee overland through Arabic, Turkish and Italian; Tee by sea from Hokkien Chinese by way of Dutch; Milch never borrowed at all. It reaches back to Chapter 19's bitte pattern and rescues Chapter 27's final atoms, GE-LEX-SCHLIESSEN-10 and GE-ETYMON-SCHLIESSEN-11, which no lesson had revisited.",
+    "summary": "The chapter closes on schließen, the second verb in these chapters that German kept and English lost: the reader produces all of Chapter 27's verbs, splits both aufmachen and zumachen around die Hand, names Schloss, Schlüssel and Schluss as the household built on the kept verb, and runs the eight-verb morning that closes Chapters 26 and 27 together. It reaches back to Chapter 25's nehmen and the second shift on helfen, to Chapter 17's Hand and its final-d devoicing, which had never been revisited, and to Chapter 26's sitzen, stehen and hören.",
     "assesses": [
-      "GE-LEX-KAFFEE-02",
-      "GE-SOUND-KAFFEE-03",
-      "GE-ETYMON-KAFFEE-04",
-      "GE-LEX-TEE-02",
-      "GE-SOUND-TEE-03",
-      "GE-ETYMON-TEE-04",
-      "GE-LEX-MILCH-02",
-      "GE-SOUND-MILCH-03",
-      "GE-ETYMON-MILCH-04",
-      "GE-LEX-BITTE-PLEASE-02",
-      "GE-PHRASE-WASSER-BITTE-03"
+      "GE-LEX-GEHEN-02",
+      "GE-ETYMON-GEHEN-03",
+      "GE-LEX-LAUFEN-04",
+      "GE-ETYMON-LAUFEN-05",
+      "GE-LEX-RENNEN-06",
+      "GE-LEX-OEFFNEN-07",
+      "GE-ETYMON-OFFEN-08",
+      "GE-GRAMMAR-SEPARABLE-09",
+      "GE-LEX-SCHLIESSEN-10",
+      "GE-ETYMON-SCHLIESSEN-11",
+      "GE-LEX-NEHMEN-02",
+      "GE-ETYMON-NEHMEN-03",
+      "GE-ETYMON-HELFEN-08",
+      "GE-LEX-HAND-02",
+      "GE-SOUND-HAND-03",
+      "GE-LEX-SITZEN-02",
+      "GE-LEX-STEHEN-04",
+      "GE-LEX-HOEREN-09"
     ]
   }
 }

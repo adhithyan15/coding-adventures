@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C26-stehen
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 850
-chapter: 38
+chapter: 39
 type: word
 headword: stehen
 gloss: to stand — the verb hiding inside verstehen, and the one place German keeps a letter English put in the wrong tense

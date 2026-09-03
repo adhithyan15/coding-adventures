@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C16-haben-oder-sein",
     "language": "german",
-    "chapter": 28,
+    "chapter": 29,
     "sequence": 650,
     "modality": "sight",
     "derived": "sight",
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:06ca38f98da29d86"
+    "sourceHash": "fnv1a64:4f7acd3a09a786cb"
   },
   "findings": []
 }

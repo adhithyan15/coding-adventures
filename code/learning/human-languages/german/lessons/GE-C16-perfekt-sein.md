@@ -3,7 +3,7 @@ schema_version: 2
 id: GE-C16-perfekt-sein
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 610
-chapter: 28
+chapter: 29
 type: grammar
 headword: ich bin gegangen
 gloss: the perfect built on sein — the family of verbs that refuses haben

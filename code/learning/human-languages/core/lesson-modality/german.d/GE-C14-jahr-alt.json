@@ -2,7 +2,7 @@
   "lesson": {
     "id": "GE-C14-jahr-alt",
     "language": "german",
-    "chapter": 26,
+    "chapter": 27,
     "sequence": 543,
     "modality": "voice",
     "derived": "voice",
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:287c671727e3bdd3"
+    "sourceHash": "fnv1a64:f1587bcf2e453f90"
   },
   "findings": []
 }
