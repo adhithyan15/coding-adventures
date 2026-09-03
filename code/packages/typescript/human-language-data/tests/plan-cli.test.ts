@@ -113,7 +113,10 @@ describe("the plan CLI", () => {
     // proxy reason plus one of its own: Punjabi is written in two scripts and
     // this track covers only Gurmukhi, which the file records as a point rather
     // than leaving in a spec.
-    expect(out).toMatch(/0 complete and 12 partial of 138/);
+    // 12 -> 13 partial: `exam-inventory-gujarati-a1.json`. Partial for the usual
+    // proxy reason plus one of its own: the track has a pre-A1 task shape and no
+    // A1 one, so nothing here can be checked against a paper.
+    expect(out).toMatch(/0 complete and 13 partial of 138/);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -146,7 +149,8 @@ describe("the plan CLI", () => {
     // 9 -> 10: Malayalam A1 joins it too. French is still the only file this
     // test corrupts, so this number stays the written total minus exactly one.
     // 10 -> 11: Punjabi A1 joins it too.
-    expect(out).toMatch(/0 complete and 11 partial of 138/);
+    // 11 -> 12: Gujarati A1 joins it as well.
+    expect(out).toMatch(/0 complete and 12 partial of 138/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
