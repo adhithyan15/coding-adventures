@@ -1,16 +1,26 @@
 {
   "language": "french",
   "chapter": 18,
-  "sourceHash": "fnv1a64:e5e33f58fada17a0",
+  "sourceHash": "fnv1a64:a15d536715eef86f",
   "lessonIds": [
-    "FR-C18-oui",
-    "FR-C18-non"
+    "FR-C15-participe-er",
+    "FR-C15-jai-parle",
+    "FR-C15-parler-parle-parlez",
+    "FR-C15-participe-ir-re",
+    "FR-C15-participe-latin",
+    "FR-C15-possessif",
+    "FR-C15-accord",
+    "FR-C15-practice-compose",
+    "FR-C15-passe-simple",
+    "FR-C15-soeurs",
+    "FR-C15-areal",
+    "FR-C15-practice"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 12,
+  "drivablePrefix": 12,
   "text": "french/narration/ch18.txt",
   "json": "french/narration/ch18.json",
-  "textHash": "fnv1a64:f9499173477cb6d8",
-  "jsonHash": "fnv1a64:688029fdd580446e",
+  "textHash": "fnv1a64:87d121e3eb3b7f31",
+  "jsonHash": "fnv1a64:b5008c133747a71c",
   "findings": []
 }

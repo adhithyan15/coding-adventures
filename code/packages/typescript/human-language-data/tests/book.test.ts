@@ -125,6 +125,31 @@ describe("canonical LaTeX chapter rendering", () => {
     expect(generated.tex).toContain("I & \\textbf{hablo} \\\\");
   });
 
+  it("brace-protects a table row that opens with an asterisk", () => {
+    // `\\` followed by `*` is LaTeX's starred line break, so an asterisk opening
+    // a table row is eaten by the row separator above it. The row still
+    // typesets, one character short, and the .tex on disk still CONTAINS the
+    // asterisk -- so this is invisible to every text assertion and every hash
+    // check, and only a rendered page shows it. Reconstructed proto-forms are
+    // written exactly this way, so a column of them loses the mark that says
+    // they are reconstructed.
+    //
+    // The first body row is safe on its own (it follows `\midrule`), which is
+    // why this fixture checks the SECOND row: that is where the bug lives, and a
+    // one-row table would have passed while the real defect shipped.
+    const lesson = parseLesson(
+      source("A", 10, "père").replace(
+        "## Guided Practice",
+        "## Grammar Lens: two roads\n\n| root | English |\n|---|---|\n| \\*ph2ter | father |\n| \\*meh2ter | mother |\n\n## Guided Practice",
+      ),
+      "test",
+    );
+    const generated = renderBookChapter(target, [lesson]);
+    expect(generated.tex).toContain("{*}ph2ter & father \\\\");
+    expect(generated.tex).toContain("{*}meh2ter & mother \\\\");
+    expect(generated.tex).not.toContain("\\\\\n*meh2ter");
+  });
+
   it("renders safe block and inline images through the generated PDF view", () => {
     const lesson = parseLesson(
       source("A", 10, "café").replace(

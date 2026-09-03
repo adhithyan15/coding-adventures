@@ -1,19 +1,27 @@
 {
   "chapter": 19,
-  "title": "Please",
-  "label": "ch:fr-please",
-  "canDo": "I can say please in French and choose between s'il vous plaît and s'il te plaît depending on who I am speaking to.",
+  "title": "To Be, and the Three Verbs Inside It",
+  "label": "ch:etre",
+  "canDo": "I can use all six forms of être, and explain why it has no pattern to find.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "FR-C19-sil-vous-plait",
-    "kind": "production",
-    "summary": "Say s'il vous plaît with its silent final -t, take it apart into 'if it pleases you', then switch to s'il te plaît for a friend. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "lesson": "FR-C16-practice",
+    "kind": "task",
+    "summary": "The most irregular verb in French, and the irregularity turns out to have a shape. There is no pattern in être because être is THREE verbs: es- from esse for the present and infinitive, fu- from fuī for the passé simple — the same root as English be — and ét- from stāre, 'to stand', which supplied a whole limb of participles and the imperfect. The patching is called suppletion, and English does it too, with go and went. Spanish inherited the same two Latin verbs and made the opposite choice: it kept ser and estar apart and made you pick.",
     "assesses": [
-      "FR-LEX-PLEASE-02",
-      "FR-ETYMON-PLAIRE-03",
-      "FR-GRAMMAR-PLEASE-REGISTER-04"
-    ]
+      "FR-VERB-ETRE-SUIS-01",
+      "FR-VERB-ETRE-ES-02",
+      "FR-VERB-ETRE-EST-03",
+      "FR-VERB-ETRE-SOMMES-04",
+      "FR-VERB-ETRE-ETES-05",
+      "FR-VERB-ETRE-SONT-06",
+      "FR-ETYMON-ETRE-ESSE-07",
+      "FR-ETYMON-ETRE-FU-08",
+      "FR-ETYMON-ETRE-STARE-09",
+      "FR-GRAM-SUPPLETION-10"
+    ],
+    "note": "Authored when chapter 19 was split in two: être plus its past held a six-cell paradigm, three stem etymologies, the être-verb list with two exceptions, two agreement rules and the pronominal system -- around nineteen atoms against a ceiling of twelve. This half is the verb. The payoff is atom-scored -- it assesses every knowledge atom its chapter introduces; the chapter's culture claim is assessed by FR-C16-ser-estar."
   }
 }

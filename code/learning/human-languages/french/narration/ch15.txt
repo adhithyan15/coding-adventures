@@ -1,108 +1,242 @@
-French, chapter 15: The Compound Past.
-2 lessons. All 2 can be done entirely by ear.
+French, chapter 15: Where French Changes Its Mind.
+7 lessons. All 7 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-j'ai parlé — the past built from "have".
+Lesson 1 of 7.
+dix-sept — seventeen.
 
 Warm-up.
 [pause 2 seconds]
-French's everyday past tense. You already have both halves of it: the verb avoir from last chapter, and your first regular verbs.
+Six words in a row arrived from Latin already welded. Here is the seventh, and you can read it at sight — which is exactly the surprise.
 
-The recipe.
-avoir (conjugated) + past participle.
-[a table of 4 rows, read aloud]
-infinitive: parler. ends in: -er. participle: parlé.
-infinitive: habiter. ends in: -er. participle: habité.
-infinitive: finir. ends in: -ir. participle: fini.
-infinitive: vendre. ends in: -re. participle: vendu.
-So:
-[a table of 5 rows, read aloud]
-j'ai parlé, I spoke / I have spoken.
-tu as parlé, you spoke.
-il a parlé, he spoke.
-nous avons parlé, we spoke.
-ils ont parlé, they spoke.
-Only avoir changes. The participle sits there unchanged.
-Note the sound: parler, parlé and parlez are all pronounced the same. Three spellings, one sound — the context tells you which.
+Sounds you'll need.
+dix-sept = dees-SET. The x of dix becomes an s sound here, and the p of sept is silent as always.
+final-consonant — the t of sept is pronounced. That is unusual for a final consonant in French, and sept keeps it in every position.
+Two words, one hyphen, one number.
 
-Where the endings come from.
-[a table of 3 rows, read aloud]
-French: parlé. from Latin: -ātum.
-French: fini. from Latin: -ītum.
-French: vendu. from Latin: -ūtum.
-The same -t- that English kept in finite, acute, statute.
-A footnote on the third one: -ūtus was a rare ending in Latin (minūtus, tribūtus). French and Italian took that small class and spread it over a whole conjugation. So -é and -i are straight inheritance; -u is mostly the language tidying up by analogy.
-
-The buried possessive.
-Here is why this tense exists. Latin could say:
-habeō litterās scriptās — "I have letters written."
-That is not a past tense. It is avoir in its ordinary sense — I possess some letters — with scriptās as an adjective describing them, agreeing with litterās in gender and number.
-Over centuries the phrase stopped meaning "I possess a written thing" and started meaning simply "I wrote." A possessive construction hardened into a tense.
-And the fossil is still visible: when the object comes first, the participle still agrees with it, exactly as an adjective would.
-Les lettres que j'ai écrites. — "The letters that I wrote."
-That -es is a two-thousand-year-old adjective ending doing its old job.
+The word, taken apart.
+There is no Latin ancestor to trace here, and that is the point.
+dix-sept is dix and sept, the two words you have had since the counting chapter, put side by side with a hyphen. Nothing has been worn down, nothing is hiding, nothing needs an etymology. It says ten-seven and it means seventeen.
+Latin did have a fused word for this — septendecim — and French threw it away. After six inherited compounds the language simply stopped, and started building numbers out of parts the speaker already had.
+You have just watched a language change its mind mid-count. The next lesson is about what exactly changed, because it is two things and not one.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "j'ai parlé, tu as parlé, il a parlé, nous avons parlé, ils ont parlé"]
+[your turn — say: "dix-sept" — dees-SET, and the final t is heard]
 [pause 8 seconds for the answer]
-[your turn — say: the three homophones — "parler, parlé, parlez"]
+[your turn — say: the seam — "seize, dix-sept"; one is welded, one is built]
 [pause 8 seconds for the answer]
-[your turn — say: "J'ai travaillé" ("I worked") — Ch. 5's verb]
-[pause 8 seconds for the answer]
-[your turn — say: the old meaning — "I have a thing spoken"]
+[your turn — say: the parts — "dix, sept, dix-sept"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two pieces make the passé composé? (Avoir + the past participle.) What is parler's participle? (Parlé from -ātum.) What did j'ai parlé originally mean? ("I have [a thing] spoken" — a possessive.) Why does the participle sometimes agree? (Because it was an adjective describing the object.) Next: what this tense pushed out of the language.
+How do you say seventeen? (dix-sept, dees-SET.) What two words is it made of? (dix and sept.) Did French inherit this one from Latin the way it inherited seize? (No — Latin had septendecim and French abandoned it, building the number out of parts instead.) Next: the two things that changed at this exact number.
 
 
-Lesson 2 of 2.
-il parla — the past you read but never say.
+Lesson 2 of 7.
+seize / dix-sept — the seam.
 
 Warm-up.
 [pause 2 seconds]
-French has a second past tense. You will meet it in every novel and never hear it spoken. Knowing why is worth more than knowing its endings.
+Put the two words side by side — seize, then dix-sept — and something changed between them. Two things did, and most people only notice one.
 
-What it looks like.
-[a table of 3 rows, read aloud]
-he spoke. passé simple: il parla. passé composé: il a parlé.
-they spoke. passé simple: ils parlèrent. passé composé: ils ont parlé.
-he had. passé simple: il eut. passé composé: il a eu.
-You do not need to produce these. You need to recognise them, because they fill the past tense of essentially all French literature.
-
-The direct inheritance.
-il parla from Vulgar Latin parabolāvit — the plain Latin perfect, handed straight down. Which means the passé simple is the same tense as:
-[a table of 4 rows, read aloud]
-language: French. "he spoke": il parla. status: books only.
-language: Spanish. "he spoke": habló. status: everyday speech.
-language: Portuguese. "he spoke": falou. status: everyday speech.
-language: Italian. "he spoke": parlò. status: regional — see below.
-Same Latin ancestor, four different fates.
-
-The retreat, three times over.
-Now the striking part. French is not alone:
-[a table of 3 rows, read aloud]
-language: French. simple past: passé simple. what replaced it in speech: passé composé (j'ai parlé).
-language: German. simple past: Präteritum. what replaced it in speech: Perfekt (ich habe gesagt).
-language: Italian. simple past: passato remoto. what replaced it in speech: passato prossimo (ho parlato).
-Three languages — two Romance, one Germanic — each built a compound past out of "have," and each let that compound push the inherited simple past out of everyday conversation and into writing.
-Not three separate inventions, though. They are neighbours: France, southern Germany and northern Italy form a connected block, and the change spread through it by contact over the same few centuries. Linguists call this an areal change — one that travels across language boundaries because the speakers do.
-And Spanish and Portuguese, out at the western edge of that block, largely didn't get it. They kept their simple past where it was. (Though Spain's Spanish has since started drifting the same way, with he hablado taking ground from habló — the change reaching the edge late.)
+Grammar Lens: strategy and direction, both at once.
+The obvious change is strategy. Up to sixteen the numbers are fused — single words inherited whole and worn down. From seventeen they are transparent — built in the open out of words you already have.
+The change nobody notices is direction, and it is a question of which half comes first:
+[a table of 2 rows, read aloud]
+number: seize. shape: sē-decim, fused. what comes first: the digit: six-ten.
+number: dix-sept. shape: dix + sept, built. what comes first: the ten: ten-seven.
+Seize is six-ten. Dix-sept is ten-seven. The two halves have swapped places. So at exactly one number, French changed how it makes the word and which way round the parts go — and it never went back.
+That is worth seeing because it is a rare thing to catch. Languages usually change too slowly to point at. Here the join is visible between two consecutive numbers, and you can say both sides of it out loud.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the pair — "il parla … il a parlé"]
+[your turn — say: across the seam — "seize, dix-sept"]
 [pause 8 seconds for the answer]
-[your turn — say: the sisters — "il parla, habló, falou, parlò"]
+[your turn — say: the first change — "fused, then built"]
 [pause 8 seconds for the answer]
-[your turn — say: where you'd meet it — "in a novel, not a conversation"]
+[your turn — say: the second change — "six-ten, then ten-seven"]
 [pause 8 seconds for the answer]
-[your turn — say: the three retreats — "passé simple, Präteritum, passato remoto"]
+[your turn — say: the summary — "at seventeen, both the method and the order flipped"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does the passé simple live? (In writing — literature, not speech.) What is il parla descended from? (Vulgar Latin parabolāvit, the plain perfect.) Which languages still use that same tense in ordinary speech? (Spanish and Portuguese — habló, falou.) Which three languages replaced it with a compound? (French, German, Italian — a connected, contact-driven change.) Next chapter: the other auxiliary, and the verbs that refuse avoir.
+Name the two things that change between seize and dix-sept. (The strategy — fused becomes built; and the direction — digit-first becomes ten-first.) Which half comes first in seize? (The digit: six-ten.) And in dix-sept? (The ten: ten-seven.) Next: eighteen, which now costs you nothing.
+
+
+Lesson 3 of 7.
+dix-huit — eighteen.
+
+Warm-up.
+[pause 2 seconds]
+This is the first number in the book that costs you nothing. You already know the rule; this is just applying it.
+
+Sounds you'll need.
+dix-huit = dee-ZWEET. The x of dix buzzes into a z here, because huit begins with a vowel sound.
+silent-h — the h of huit is not said, which is why the z can carry straight across into it.
+The final t of huit is pronounced.
+
+The word, taken apart.
+dix + huit, ten and eight. Nothing more.
+What is worth a moment is what Latin did here instead, because it is stranger than anything French does. For 18 and 19 Latin did not add — it subtracted. Eighteen was duodēvīgintī: "two from twenty." Nineteen was ūndēvīgintī, "one from twenty."
+Every language descended from Latin dropped that. French, Spanish and Italian all count up to twenty rather than down from it. So the plain ten-eight in front of you is not a lazy simplification — it is the survivor of a competition, and the elegant subtraction trick is the thing that lost.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "dix-huit" — dee-ZWEET, the x buzzing into the vowel]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "dix-sept, dix-huit"; hear dees- then dee-z-]
+[pause 8 seconds for the answer]
+[your turn — say: what Latin said — "two from twenty"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say eighteen? (dix-huit, dee-ZWEET.) Why does the x buzz here but hiss in dix-sept? (huit begins with a vowel sound; sept does not.) How did Latin build eighteen? (By subtracting — duodē- vīgintī, "two from twenty".) Did French keep that? (No.) Next: nineteen.
+
+
+Lesson 4 of 7.
+dix-neuf — nineteen.
+
+Warm-up.
+[pause 2 seconds]
+The last of the built teens — and a word that quietly means two different things.
+
+Sounds you'll need.
+dix-neuf = dees-NUF. The x hisses as an s here, the way it does in dix-sept, because neuf begins with a consonant.
+The eu is the rounded vowel you made in sœur: lips rounded, tongue forward.
+The final f is pronounced.
+
+The word, taken apart.
+dix + neuf, ten and nine.
+The interesting part is neuf itself, which is two words wearing one coat:
+neuf = nine, from Latin novem.
+neuf = new, from Latin novus.
+Those were distinct in Latin and French wore them into the same four letters. So un livre neuf is "a new book," and neuf livres is "nine books," and only the position tells you which.
+They are not unrelated, either. The same nov- is behind English novel, novice, innovate and November — the old ninth month, which is the counting month you already met. Novem and novus are cousins from far enough back that nobody is quite sure which sense came first.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "dix-neuf" — dees-NUF, the f heard]
+[pause 8 seconds for the answer]
+[your turn — say: all three built teens — "dix-sept, dix-huit, dix-neuf"]
+[pause 8 seconds for the answer]
+[your turn — say: the double word — "neuf is nine, and neuf is new"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say nineteen? (dix-neuf, dees-NUF.) What are its two parts? (dix and neuf.) What else does neuf mean besides nine? (New — from novus, where the number is from novem.) Which month carries the same nov-? (novembre.) Next: twenty, and a different system again.
+
+
+Lesson 5 of 7.
+vingt — twenty.
+
+Warm-up.
+[pause 2 seconds]
+Three built numbers in a row, and then this — which is not built out of anything at all.
+
+Sounds you'll need.
+vingt = VA(N). The in is the nasal vowel you have in vin and pain.
+silent-final — the g and the t are both silent. Four written letters after the vowel, none of them heard.
+Say vin and vingt aloud: standing alone they are identical. Only the spelling and the sentence tell them apart.
+
+The word, taken apart.
+vingt is Latin vīgintī, and that is the whole story: an old, single, inherited word, like dix and unlike dix-sept.
+So the count you have just walked through has three systems in it, not two:
+11–16 — inherited, fused, digit first.
+17–19 — built, transparent, ten first.
+20 — inherited again, a single word built from nothing.
+Twenty is not the end of a pattern. It is the start of a different one, because vingt is the number French will later count in.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "vingt" — VA(N), everything after the vowel silent]
+[pause 8 seconds for the answer]
+[your turn — say: the homophones — "vin, vingt"; identical on their own]
+[pause 8 seconds for the answer]
+[your turn — say: the last four — "dix-sept, dix-huit, dix-neuf, vingt"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say twenty? (vingt, VA(N).) How many of its letters after the vowel are pronounced? (None.) Which word from the table chapter sounds exactly the same? (vin, wine.) Is vingt built out of smaller numbers? (No — it is a single inherited word, from vīgintī.) Next: what that vīgintī went on to do.
+
+
+Lesson 6 of 7.
+vīgintī — the number French counts in.
+
+Warm-up.
+[pause 2 seconds]
+Vingt looks like an ending. It is a beginning, and this lesson is here so that a famous French oddity is already explained before you meet it.
+
+The word, taken apart.
+Latin vīgintī did not only give French vingt. It gave English a word for an idea:
+vigesimal — counting in twenties, the way decimal is counting in tens.
+Most of Europe counts in tens. But a way of counting in twenties survived underneath French, and it surfaces in the higher numbers. Eighty in French is not "eight-ten." It is:
+quatre-vingts — literally four twenties.
+Four twenties is eighty. And ninety-nine, famously, is quatre-vingt-dix-neuf — "four twenties, ten, nine."
+You are not learning those numbers here. You are learning why they will look the way they do, so that when they arrive they are a consequence rather than a shock. English keeps one fossil of the same habit: a score is twenty, and "four score and seven years ago" is quatre-vingt-sept in a different language.
+So vingt is the base of a second counting system hiding inside a decimal one — which is a much better thing to know at twenty than at eighty.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the English word — "vigesimal: counting by twenties"]
+[pause 8 seconds for the answer]
+[your turn — say: the preview — "quatre-vingts, four twenties, eighty"]
+[pause 8 seconds for the answer]
+[your turn — say: the English fossil — "four score and seven"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does vigesimal mean? (Counting by twenties.) What does quatre-vingts literally say, and what number is it? ("Four twenties" — eighty.) Which English word for twenty preserves the same habit? (A score.) Next: all ten numbers together.
+
+
+Lesson 7 of 7.
+Practice — across the seam, and up to twenty.
+
+Warm-up.
+[pause 2 seconds]
+You can now count to twenty. Run the whole thing, and listen for the place where the machine changes.
+
+Guided Practice: the full count.
+[pause 1 second]
+[your turn — say: eleven to twenty — "onze, douze, treize, quatorze, quinze, seize, dix-sept, dix-huit, dix-neuf, vingt"]
+[pause 8 seconds for the answer]
+[your turn — say: from one, the whole way]
+[pause 8 seconds for the answer]
+[your turn — say: the four new ones alone — "dix-sept, dix-huit, dix-neuf, vingt"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"dix-sept, dix-huit, dix-neuf, vingt".
+
+Guided Practice: hear the seam.
+[pause 1 second]
+[your turn — say: the two words either side — "seize, dix-sept"]
+[pause 8 seconds for the answer]
+[your turn — say: what changed first — "fused, then built"]
+[pause 8 seconds for the answer]
+[your turn — say: what changed second — "six-ten, then ten-seven"]
+[pause 8 seconds for the answer]
+
+Guided Practice: the x that cannot decide.
+[pause 1 second]
+[your turn — say: hissing — "dix-sept, dix-neuf"; both follow a consonant]
+[pause 8 seconds for the answer]
+[your turn — say: buzzing — "dix-huit"; it follows a vowel sound]
+[pause 8 seconds for the answer]
+[your turn — say: the reason aloud — "the x buzzes into a vowel and hisses before a consonant"]
+[pause 8 seconds for the answer]
+
+What you've built this chapter.
+four numbers, seventeen to twenty, and with them the whole count to 20.
+a seam you can point at — at seventeen French changed both its strategy and its direction, and never went back. Most language change is too slow to witness; this one sits between two consecutive numbers.
+three systems in ten numbers — inherited and fused, built and transparent, then a single inherited word again at vingt.
+an oddity explained before you meet it — vīgintī is why eighty will be quatre-vingts, four twenties.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Count from eleven to twenty without stopping. Which number is the seam, and what two things change there? (Seventeen — fused becomes built, and digit-first becomes ten-first.) Why does the x of dix buzz in dix-huit but hiss in dix-neuf? (huit begins with a vowel sound.) What will quatre-vingts mean, and why? ("Four twenties" — eighty; from vīgintī, the vigesimal habit.)

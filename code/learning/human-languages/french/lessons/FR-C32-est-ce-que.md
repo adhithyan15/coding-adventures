@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C32-est-ce-que
 spine_node: SPINE-ASK-LOCATION
-sequence: 1110
-chapter: 32
+sequence: 1210
+chapter: 36
 type: grammar
 headword: est-ce que
 gloss: "the phrase that announces a question before it starts"

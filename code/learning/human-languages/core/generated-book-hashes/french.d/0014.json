@@ -1,0 +1,17 @@
+{
+  "language": "french",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:068e7a931e3c5e0c",
+  "lessonIds": [
+    "FR-C12-onze",
+    "FR-C12-douze",
+    "FR-C12-ze-decem",
+    "FR-C12-treize",
+    "FR-C12-quatorze",
+    "FR-C12-quinze",
+    "FR-C12-seize",
+    "FR-C12-digit-first",
+    "FR-C12-practice-teens"
+  ],
+  "tex": "french/book/chapters/ch14-numbers-11-16.tex"
+}

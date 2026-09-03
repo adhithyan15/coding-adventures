@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C12-quatorze",
+    "language": "french",
+    "chapter": 14,
+    "sequence": 385,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b12fdec626d0e70"
+  },
+  "findings": []
+}

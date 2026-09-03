@@ -672,7 +672,23 @@ describe("the committed French A1 inventory", () => {
     // it was written, and types the chain rule besides. The point was reading as
     // a content gap and would have sent an author to write what already exists,
     // which is the failure mode an inventory is supposed to PREVENT.
-    expect(coverage.covered).toBe(32);
+        // 27 -> 28: the chapter-9 split closed A1-LEX-06, days/months/seasons. This
+    // one was deliberately held back through two earlier tranches: the days were
+    // taught, but the track owned two headwords -- `les mois` and `les saisons`
+    // -- for twelve months and four seasons, so any probe naming a month would
+    // have been a claim the corpus could not support. Splitting chapter 9 into
+    // three chapters taught all sixteen, and the probe resolves honestly.
+    // Both closures were authored on separate branches from the same base of 27
+    // and met in this merge, so the figure below is RE-MEASURED against the merged
+    // tree rather than obtained by adding three and one to twenty-seven.
+    // The two branches above met in this merge, each written from its own base,
+    // so the figure below is RE-MEASURED against the merged tree by running the
+    // suite, never obtained by adding the two branches' deltas.
+    //
+    // 31 -> 33: retiring chapters 17 and 19 gave `avoir` and `etre` a typed atom
+    // per person instead of one lesson holding each whole paradigm, which is
+    // what the two remaining verb points were waiting for.
+    expect(coverage.covered).toBe(33);
     expect(coverage.byCategory["L'interrogation"]).toEqual({ enumerated: 5, covered: 5 });
     // The shape, not the score: vocabulary is still a strong column and the
     // sentence-level categories are still empty. No quantity of headwords moves

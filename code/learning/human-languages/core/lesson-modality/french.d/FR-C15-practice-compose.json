@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C15-practice-compose",
+    "language": "french",
+    "chapter": 18,
+    "sequence": 575,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3a83f885ee1932a"
+  },
+  "findings": []
+}

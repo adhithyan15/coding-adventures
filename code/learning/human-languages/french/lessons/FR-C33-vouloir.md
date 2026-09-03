@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C33-vouloir
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1190
-chapter: 33
+sequence: 1290
+chapter: 37
 type: word
 headword: vouloir
 gloss: "to want — and why je voudrais is the form you will actually use"

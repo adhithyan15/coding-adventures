@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 13,
-  "title": "Colours",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:065584545ac3079c",
+  "title": "Bread, Water, Wine",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0af71ba45a14dd7e",
   "lessons": [
     {
-      "id": "FR-C13-noir-blanc",
-      "sequence": 275,
-      "title": "noir, blanc — one inherited, one borrowed",
-      "headword": "noir, blanc",
-      "romanization": "noir, blanc",
-      "gloss": "black and white — one word inherited from Latin, one borrowed from the Germanic neighbours",
+      "id": "FR-C11-pain",
+      "sequence": 335,
+      "title": "le pain — bread",
+      "headword": "le pain",
+      "romanization": "le pain",
+      "gloss": "bread — and the companion who is, literally, someone you share it with",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48154d37f1bceac1",
+      "sourceHash": "fnv1a64:fbfb4f44cf3fd5c9",
       "notice": null,
       "blocks": [
         {
@@ -35,69 +35,62 @@
             },
             {
               "kind": "speech",
-              "text": "Two colours, two completely different life stories. One walked straight down from Latin. The other was borrowed from the Germanic neighbours — and that direction, Germanic into Romance, is the opposite of what usually happens."
+              "text": "Food at last. This one word sits at the centre of the French table, and it hides what may be the loveliest word-story English has."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "noir — the expected one",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "noir (\"black\") from Latin niger. No surprises: niger becomes negro/nero in the sister languages, and into English in denigrate (\"to blacken someone's name\")."
+              "text": "nasal-in — the -ain is a nasal vowel: the air goes through the nose and the n is never said as a consonant of its own."
+            },
+            {
+              "kind": "speech",
+              "text": "silent-final — nothing after that vowel is pronounced."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: le pain = luh PA(N), where the (n) is the nose and not a letter you hear. It is masculine: le pain."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "blanc — the imported one",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "You'd expect Latin albus (\"white\"). It's not there. French says blanc, from Frankish blank — a Germanic word meaning \"shining, gleaming.\" The Franks who gave France its name gave it its word for white too."
+              "text": "pain is Latin pānis, \"bread.\" That much is unremarkable. What the root did in English is not."
             },
             {
               "kind": "speech",
-              "text": "Why did albus lose? Probably because blank was vivid: not just \"white\" but \"bright, flashing.\" Colour words often get replaced by the more dramatic option."
+              "text": "Take com-, \"with,\" and put pānis after it. com + pānis — \"one you break bread with.\" That is a companion, and the word means nothing else:"
+            },
+            {
+              "kind": "speech",
+              "text": "companion, company — a company was first a group who ate together, and only later a body of soldiers or a business."
+            },
+            {
+              "kind": "speech",
+              "text": "pantry — the room the bread is kept in."
+            },
+            {
+              "kind": "speech",
+              "text": "pannier — a bread-basket, now the bag slung over a bicycle or a donkey."
+            },
+            {
+              "kind": "speech",
+              "text": "So le pain and companion are the same root wearing two different jobs. French kept the bread; English kept the friendship built on it."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Where albus went",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "It didn't die — it stopped being a colour:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "word",
-                "meaning",
-                "the white inside"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "word: aube. meaning: dawn. the white inside: the sky going white.",
-                "word: aubépine. meaning: hawthorn. the white inside: the \"white thorn\".",
-                "word: album (Eng.) meaning: album. the white inside: a blank white tablet.",
-                "word: albinos (Eng.) meaning: albino. the white inside: white-skinned."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So Latin's white is still all around you — just never where you'd look for it."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -110,43 +103,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"noir, blanc\"",
+              "instruction": "\"le pain\" — luh PA(N), the vowel through the nose",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"noir, blanc\"]"
+              "source": "[YOU SAY: \"le pain\" — *luh PA(N)*, the vowel through the nose]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le vin blanc, le vin rouge\" — wine you already know from Ch.11",
+              "instruction": "the sum — \"com + pānis: one you break bread with\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le vin blanc, le vin rouge\" — wine you already know from Ch.11]"
+              "source": "[YOU SAY: the sum — \"com + pānis: one you break bread with\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pairing — \"noir from Latin, blanc from the Franks\"",
+              "instruction": "\"pain becomes companion, company, pantry\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pairing — \"*noir* from Latin, *blanc* from the Franks\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"l'aube\" — and hear the old Latin white in it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"l'**aube**\" — and hear the old Latin white in it]"
+              "source": "[YOU SAY: \"pain → companion, company, pantry\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -158,26 +142,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the two is inherited from Latin? (Noir from niger.) Where does blanc come from? (Frankish blank, \"shining\" — a Germanic word borrowed into French.) Why is that direction surprising? (Latin usually lends to Germanic, not the other way.) Where did Latin albus end up? (In aube, \"dawn,\" and album — no longer a colour.) Next: red and blue, and one more borrowing."
+              "text": "How do you say \"the bread\"? (le pain, luh PA(N).) Is the n a consonant here? (No — it marks the vowel as nasal.) What Latin word is it? (pānis.) What does companion literally mean? (\"One you break bread with\" — com- + pānis.) Next: the drink that wore away to a single vowel."
             }
           ]
         }
       ]
     },
     {
-      "id": "FR-C13-rouge-bleu",
-      "sequence": 280,
-      "title": "rouge, bleu — an ancient word and a borrowed one",
-      "headword": "rouge, bleu",
-      "romanization": "rouge, bleu",
-      "gloss": "red and blue — one ancient inherited root, and a second Germanic loan",
+      "id": "FR-C11-eau",
+      "sequence": 340,
+      "title": "l'eau — water",
+      "headword": "l'eau",
+      "romanization": "l'eau",
+      "gloss": "water — the most worn-down word French ever took from Latin",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98c15c36506b7ed0",
+      "sourceHash": "fnv1a64:eec90a920fc54055",
       "notice": null,
       "blocks": [
         {
@@ -193,82 +177,62 @@
             },
             {
               "kind": "speech",
-              "text": "Last lesson: one inherited colour, one borrowed. This lesson repeats the pattern — and shows that French's borrowing from Germanic wasn't a one-off."
+              "text": "Every word so far has been worn down a little. This one was worn down almost completely — and you can still hear what it used to be, in English."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "rouge — very, very old",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "rouge from Latin rubeus (\"reddish\"). But rubeus itself descends from a root so old it predates Latin: PIE h₁rewdʰ-. Its children are everywhere:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "word"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "language: Latin. word: ruber, rubeus becomes rouge, ruby, rubric.",
-                "language: English. word: red, rust, ruddy.",
-                "language: German. word: rot."
-              ]
+              "text": "o-eau — eau is pronounced \"oh.\" That is the entire word. Three written letters, e-a-u, spelling one vowel sound and nothing else."
             },
             {
               "kind": "speech",
-              "text": "So rouge and red are not lookalikes — they are actual cousins, separated for maybe five thousand years. Red is one of humanity's oldest named colours."
+              "text": "elision — it begins with a vowel sound, so the article elides: l'eau, not le eau. The same elision you met on l'été."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: l'eau = loh. Two letters heard, four written."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "bleu — borrowed, then lent onward",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "bleu from Frankish blāo. Another Germanic word, borrowed exactly like blanc. And then something neat happened: English took bleu from French — so English blue is a Germanic word that went to France, changed clothes, and came back. German kept the original at home: blau."
+              "text": "eau is Latin aqua. Say those two aloud, one after the other, and the distance is almost comic."
             },
             {
               "kind": "speech",
-              "text": "French also has azur (from the same source as Spanish azul, ultimately Arabic lāzaward, \"lapis lazuli\") — the poetic blue of the sky, and the Côte d'Azur."
+              "text": "Watch the erosion happen, though, and each step is small:"
+            },
+            {
+              "kind": "speech",
+              "text": "aqua becomes ewe becomes eaue becomes eau."
+            },
+            {
+              "kind": "speech",
+              "text": "The q goes, then the w-sound goes, then the final vowel goes, and what is left is a held \"oh\" with a spelling that remembers the rest. French, quite literally, drank the consonants out of aqua."
+            },
+            {
+              "kind": "speech",
+              "text": "Meanwhile the loud original survived — in English, which borrowed the Latin word whole and never wore it at all: aquatic, aquarium, aqueduct, aqualung. Italian barely touched it either: acqua."
+            },
+            {
+              "kind": "speech",
+              "text": "So l'eau and aquarium are the two far ends of one word, and English is holding the end that still looks like Latin."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "The pattern of the chapter",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "colour",
-                "source"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "colour: noir. source: Latin niger.",
-                "colour: blanc. source: Germanic blank.",
-                "colour: rouge. source: Latin rubeus (ancient PIE root).",
-                "colour: bleu. source: Germanic blāo."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Half of French's basic colour vocabulary walked in from the north."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -281,38 +245,541 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"rouge, bleu\"",
+              "instruction": "\"l'eau\" — loh, one vowel and no more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"rouge, bleu\"]"
+              "source": "[YOU SAY: \"l'eau\" — *loh*, one vowel and no more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le vin rouge\" — Ch.11's wine, now with its colour",
+              "instruction": "the erosion — \"aqua, ewe, eaue, eau\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le vin rouge\" — Ch.11's wine, now with its colour]"
+              "source": "[YOU SAY: the erosion — \"aqua, ewe, eaue, eau\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"bleu, blanc, rouge\" — the flag, all three learned",
+              "instruction": "the two ends — \"l'eau, aquarium\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"bleu, blanc, rouge\" — the flag, all three learned]"
+              "source": "[YOU SAY: the two ends — \"l'eau, aquarium\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the cousins — \"rouge, red, rot\"",
+              "instruction": "\"le pain, l'eau\" — and notice why one elides and the other does not",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"rouge · red · rot\"]"
+              "source": "[YOU SAY: \"le pain, l'eau\" — and notice why one elides and the other does not]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"the water\"? (l'eau, loh.) How many sounds are in eau? (One.) Why is the article l' and not le? (eau begins with a vowel sound.) What Latin word is underneath it? (aqua.) Where can you still hear aqua loud and whole? (English — aquatic, aquarium, aqueduct; and Italian acqua.) Next: the drink that refused to wear down."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C11-vin",
+      "sequence": 345,
+      "title": "le vin — wine",
+      "headword": "le vin",
+      "romanization": "le vin",
+      "gloss": "wine — the word that refused to wear down, in any language",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9af3be7d2586d20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Eau dissolved down to one vowel. This word, sitting on the same table, did the opposite — and the reason is not linguistic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nasal-in — the same nasal you met in pain, spelled -in this time rather than -ain. Two spellings, one vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "silent-final — again, the n is the nose and not a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: le vin = luh VA(N). Say pain and vin back to back and hear that only the first consonant differs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vin is Latin vīnum — and unlike aqua, it is still recognisable everywhere it went."
+            },
+            {
+              "kind": "speech",
+              "text": "English has it several times over, by several routes:"
+            },
+            {
+              "kind": "speech",
+              "text": "wine — vīnum borrowed into early Germanic, long before French existed."
+            },
+            {
+              "kind": "speech",
+              "text": "vine, vineyard — the plant it comes from."
+            },
+            {
+              "kind": "speech",
+              "text": "vinegar — French vin + aigre, \"sour wine,\" which is exactly what vinegar is."
+            },
+            {
+              "kind": "speech",
+              "text": "vintage, vinyl — the harvest year, and a plastic named from wine spirit."
+            },
+            {
+              "kind": "speech",
+              "text": "Why did aqua dissolve while vīnum held? Because words wear down with use and hold their shape when they are traded. Water is what you have; wine is what you buy, ship, tax and write down. A word that keeps appearing on a bill of lading in three countries stays legible in all three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le vin\" — luh VA(N), the nose again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le vin\" — *luh VA(N)*, the nose again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the near-pair — \"le pain, le vin\"; one consonant apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the near-pair — \"le pain, le vin\"; one consonant apart]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vin becomes wine, vine, vinegar\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vin → wine, vine, vinegar\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"l'eau wore away, le vin did not\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"l'eau wore away, le vin did not\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"the wine\"? (le vin, luh VA(N).) Which other word this chapter has the same vowel? (le pain.) What Latin word is behind it? (vīnum.) What does vinegar literally say? (Sour wine — vin + aigre.) Next: how to ask for some of any of them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C11-du",
+      "sequence": 350,
+      "title": "du pain, de l'eau — asking for some",
+      "headword": "du pain, de l'eau",
+      "romanization": "du pain, de l'eau",
+      "gloss": "asking for SOME of something — the one word English leaves out and French does not",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06dc502f04cb6505",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have three things on the table and no way to ask for any of them yet. le pain is the bread — a particular loaf. What you actually want at a table is some bread, and French makes you say so."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: French says \"of the\", where English says nothing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English can drop the word entirely. \"I'd like bread\" is perfectly good English. French cannot: it marks an unmeasured amount of a thing with de plus the article the noun already takes."
+            },
+            {
+              "kind": "speech",
+              "text": "de + le pain becomes du pain — some bread."
+            },
+            {
+              "kind": "speech",
+              "text": "de + le vin becomes du vin — some wine."
+            },
+            {
+              "kind": "speech",
+              "text": "de + l'eau becomes de l'eau — some water."
+            },
+            {
+              "kind": "speech",
+              "text": "That is one rule, not three. de + le always contracts to du; de + l' has nothing to contract, so it simply stays apart. You are not learning a new list here — you are putting de in front of the article you already know, and letting the vowel rule you already met decide the shape."
+            },
+            {
+              "kind": "speech",
+              "text": "And the contrast is worth hearing directly:"
+            },
+            {
+              "kind": "speech",
+              "text": "le pain — the bread, that loaf, the one on the table."
+            },
+            {
+              "kind": "speech",
+              "text": "un pain — a loaf, one whole item you could pick up."
+            },
+            {
+              "kind": "speech",
+              "text": "du pain — some bread, an amount with no edges."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three — \"du pain, du vin, de l'eau\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three — \"du pain, du vin, de l'eau\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reason — \"de plus the article; du where it contracts\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reason — \"de plus the article; du where it contracts\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ladder on one noun — \"le pain, un pain, du pain\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ladder on one noun — \"le pain, un pain, du pain\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"du pain, du vin, de l'eau\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"some bread\"? (du pain.) Some wine? (du vin.) Some water? (de l'eau — eau takes l', so there is nothing to contract.) What are the two words hiding inside du? (de + le.) What is the difference between un pain and du pain? (un pain is a loaf, one whole item; du pain is some bread, an amount with no edges.) Next: all three together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C11-practice",
+      "sequence": 355,
+      "title": "Practice — the table, and asking for some of it",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "bread, water and wine — and asking for some of each",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f85a287fc747021e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three nouns and one rule. Run the nouns first, then put the rule on each of them in turn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: the three, with their articles",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le pain, l'eau, le vin\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le pain, l'eau, le vin\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the odd one — \"l'eau elides, because it opens with a vowel\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the odd one — \"l'eau elides, because it opens with a vowel\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the near-pair — \"le pain, le vin\"; the same nasal, one consonant apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the near-pair — \"le pain, le vin\"; the same nasal, one consonant apart]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"le pain, l'eau, le vin\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: now ask for some",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"du pain, du vin, de l'eau\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"du pain, du vin, de l'eau\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each noun three ways — \"le pain, un pain, du pain\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each noun three ways — \"le pain, un pain, du pain\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same three ways for wine — \"le vin, un vin, du vin\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same three ways for wine — \"le vin, un vin, du vin\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: two words that wore differently",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the erosion — \"aqua, ewe, eaue, eau\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the erosion — \"aqua, ewe, eaue, eau\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the survival — \"vīnum: wine, vine, vinegar\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the survival — \"vīnum: wine, vine, vinegar\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sum — \"com plus pānis: companion\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sum — \"com plus pānis: companion\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "three nouns you can put on a table, each with the right article."
+            },
+            {
+              "kind": "speech",
+              "text": "one rule for \"some\" — de plus the article, contracting to du where it can. It is the first time French has asked you to say something English simply leaves out."
+            },
+            {
+              "kind": "speech",
+              "text": "two opposite fates for one kind of word. aqua dissolved into eau; vīnum is still legible in four English words. Everyday things wear down, traded things stay legible — which is a rule you can use on words you have not met yet."
+            },
+            {
+              "kind": "speech",
+              "text": "a root that paid twice — pānis gave French its bread and English its companions."
             }
           ]
         },
@@ -329,7 +796,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are rouge and English red to each other? (Cousins — both from PIE h₁rewdʰ-.) Where does bleu come from? (Germanic blāo — the second Germanic colour loan.) What did English do with it? (Borrowed it back from French as blue.) What are the three flag colours? (Bleu, blanc, rouge — and two of the three are loanwords.) Next chapter: describing what you see."
+              "text": "Give all three with their articles. (le pain, l'eau, le vin.) Why does only one of them elide? (eau begins with a vowel sound.) Ask for some of each. (du pain, du vin, de l'eau.) What two words are inside du? (de + le.) Which Latin word wore down to a single vowel, and which one barely moved? (aqua becomes eau; vīnum becomes vin.)"
             }
           ]
         }

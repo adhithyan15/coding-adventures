@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C30-beurre",
     "language": "french",
-    "chapter": 30,
-    "sequence": 960,
+    "chapter": 34,
+    "sequence": 1060,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0524a1dfaa3af78d"
+    "sourceHash": "fnv1a64:0ebe51b60a81e13f"
   },
   "findings": []
 }

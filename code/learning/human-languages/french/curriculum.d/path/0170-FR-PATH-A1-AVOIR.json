@@ -2,9 +2,19 @@
   "id": "FR-PATH-A1-AVOIR",
   "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
   "lessons": [
-    "FR-C14-avoir"
+    "FR-C14-jai",
+    "FR-C14-as",
+    "FR-C14-a",
+    "FR-C14-ai-as-a",
+    "FR-C14-avons",
+    "FR-C14-avez",
+    "FR-C14-ont",
+    "FR-C14-habere",
+    "FR-C14-practice-avoir"
   ],
   "before": [],
   "inline": [],
-  "after": []
+  "after": [
+    "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC"
+  ]
 }

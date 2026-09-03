@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C32-ou",
     "language": "french",
-    "chapter": 32,
-    "sequence": 1120,
+    "chapter": 36,
+    "sequence": 1220,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:55150ca89e6f6068"
+    "sourceHash": "fnv1a64:3382adead379fb5d"
   },
   "findings": []
 }

@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:0173cb984b01316e",
+  "lessonIds": [
+    "FR-C09-janvier",
+    "FR-C09-fevrier",
+    "FR-C09-mars",
+    "FR-C09-avril",
+    "FR-C09-mai",
+    "FR-C09-juin",
+    "FR-C09-mois-practice-1"
+  ],
+  "tex": "french/book/chapters/ch09-months-gods.tex"
+}

@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C26-marcher
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 810
-chapter: 26
+sequence: 910
+chapter: 30
 type: word
 headword: marcher
 gloss: to walk — and also to work, so ça marche is the most useful two words in the chapter; its own origin is genuinely unsettled between a Frankish verb and a Latin hammer

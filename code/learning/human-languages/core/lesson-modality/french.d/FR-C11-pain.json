@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C11-pain",
     "language": "french",
-    "chapter": 11,
-    "sequence": 255,
+    "chapter": 13,
+    "sequence": 335,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4e73393a322bd9ed"
+    "sourceHash": "fnv1a64:fbfb4f44cf3fd5c9"
   },
   "findings": []
 }

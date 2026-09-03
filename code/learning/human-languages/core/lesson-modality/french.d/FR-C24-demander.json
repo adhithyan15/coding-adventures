@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C24-demander",
     "language": "french",
-    "chapter": 24,
-    "sequence": 720,
+    "chapter": 28,
+    "sequence": 820,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:52431af88d633ed1"
+    "sourceHash": "fnv1a64:9fd5c8a237871ef0"
   },
   "findings": []
 }

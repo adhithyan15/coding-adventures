@@ -1,18 +1,18 @@
 {
   "language": "french",
   "chapter": 28,
-  "sourceHash": "fnv1a64:1f4507b2ea6abc38",
+  "sourceHash": "fnv1a64:7162857ddf3ba262",
   "lessonIds": [
-    "FR-C28-cafe",
-    "FR-C28-the",
-    "FR-C28-lait",
-    "FR-C28-sucre"
+    "FR-C24-prendre",
+    "FR-C24-demander",
+    "FR-C24-aider",
+    "FR-C24-aimer"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch28.txt",
   "json": "french/narration/ch28.json",
-  "textHash": "fnv1a64:3360c3081c76aa81",
-  "jsonHash": "fnv1a64:c89f94214f1d5d93",
+  "textHash": "fnv1a64:11b5f1e39b46a92a",
+  "jsonHash": "fnv1a64:06c248a46d22fe79",
   "findings": []
 }

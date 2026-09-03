@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C32-pourquoi
 spine_node: SPINE-ASK-LOCATION
-sequence: 1160
-chapter: 32
+sequence: 1260
+chapter: 36
 type: word
 headword: pourquoi
 gloss: "why — and the answer word that is built to match it"

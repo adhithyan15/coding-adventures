@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C25-comprendre
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 750
-chapter: 25
+sequence: 850
+chapter: 29
 type: word
 headword: comprendre
 gloss: to understand — literally com- + prendre, "to take together," so in French understanding IS grasping, and the verb conjugates exactly like the one it is built from

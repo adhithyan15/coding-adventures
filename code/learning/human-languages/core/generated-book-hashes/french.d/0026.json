@@ -1,12 +1,9 @@
 {
   "language": "french",
   "chapter": 26,
-  "sourceHash": "fnv1a64:a90508cbd39c7e6b",
+  "sourceHash": "fnv1a64:0af5804404ed1cc4",
   "lessonIds": [
-    "FR-C26-entendre",
-    "FR-C26-dormir",
-    "FR-C26-marcher",
-    "FR-C26-courir"
+    "FR-C22-chien-chat"
   ],
-  "tex": "french/book/chapters/ch26-hearing-sleeping-walking-running.tex"
+  "tex": "french/book/chapters/ch26-dog-and-cat.tex"
 }

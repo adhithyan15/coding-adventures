@@ -1,21 +1,19 @@
 {
   "chapter": 23,
-  "title": "Green and Yellow",
-  "label": "ch:fr-green-and-yellow",
-  "canDo": "I can name green and yellow in French, and say how solid the claimed link between jaune and German gelb actually is.",
+  "title": "Please",
+  "label": "ch:fr-please",
+  "canDo": "I can say please in French and choose between s'il vous plaît and s'il te plaît depending on who I am speaking to.",
   "spineNodes": [
-    "SPINE-DEFINITE-REFERENCE"
+    "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "FR-C23-vert-jaune",
+    "lesson": "FR-C19-sil-vous-plait",
     "kind": "production",
-    "summary": "Say vert as the ordinary Romance inheritance from viridis, say jaune as galbinus 'yellow-green', and state the jaune / gelb cousinhood as probable rather than certain. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "Say s'il vous plaît with its silent final -t, take it apart into 'if it pleases you', then switch to s'il te plaît for a friend. The chapter's only lesson, so the payoff covers everything it introduces.",
     "assesses": [
-      "FR-LEX-VERT-02",
-      "FR-ETYMON-VERT-03",
-      "FR-LEX-JAUNE-04",
-      "FR-ETYMON-JAUNE-05",
-      "FR-EVIDENCE-JAUNE-GELB-06"
+      "FR-LEX-PLEASE-02",
+      "FR-ETYMON-PLAIRE-03",
+      "FR-GRAMMAR-PLEASE-REGISTER-04"
     ]
   }
 }

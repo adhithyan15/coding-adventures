@@ -1,16 +1,23 @@
 {
   "language": "french",
   "chapter": 14,
-  "sourceHash": "fnv1a64:34537d5a86a25237",
+  "sourceHash": "fnv1a64:fd17c8353e5b5faa",
   "lessonIds": [
-    "FR-C14-avoir",
-    "FR-C14-age"
+    "FR-C12-onze",
+    "FR-C12-douze",
+    "FR-C12-ze-decem",
+    "FR-C12-treize",
+    "FR-C12-quatorze",
+    "FR-C12-quinze",
+    "FR-C12-seize",
+    "FR-C12-digit-first",
+    "FR-C12-practice-teens"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 9,
+  "drivablePrefix": 9,
   "text": "french/narration/ch14.txt",
   "json": "french/narration/ch14.json",
-  "textHash": "fnv1a64:45ee4492198308e0",
-  "jsonHash": "fnv1a64:f1631f473639d4b0",
+  "textHash": "fnv1a64:55671982c3ceec75",
+  "jsonHash": "fnv1a64:f27eeb64a2278f64",
   "findings": []
 }

@@ -1,16 +1,23 @@
 {
   "chapter": 15,
-  "title": "The Compound Past",
-  "label": "ch:passe-compose",
-  "canDo": "I can build the chapter's conversational past tense in French and say what happened.",
+  "title": "Where French Changes Its Mind",
+  "label": "ch:numbers-17-20",
+  "canDo": "I can count from seventeen to twenty in French, and name the two things that change at seventeen.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-DO"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C15-passe-simple",
+    "lesson": "FR-C12-practice-seam",
     "kind": "task",
-    "summary": "Complete FR-C15-passe-simple, the canonical closing checkpoint, and demonstrate the chapter promise: build the chapter's conversational past tense in French and say what happened.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "At exactly seventeen, French stops inheriting numbers and starts building them — and swaps the order of the parts while doing it. seize is six-ten, fused; dix-sept is ten-seven, built out of two words you already own. Most language change is too slow to point at; this seam sits between two consecutive numbers and you can say both sides of it aloud. Then vingt arrives as a single inherited word again, and it is the number French will later count in: quatre-vingts, four twenties.",
+    "assesses": [
+      "FR-LEX-DIX-SEPT-01",
+      "FR-GRAM-SEAM-DIX-SEPT-02",
+      "FR-LEX-DIX-HUIT-03",
+      "FR-LEX-DIX-NEUF-04",
+      "FR-LEX-VINGT-05",
+      "FR-ETYMON-VIGINTI-VINGT-06"
+    ],
+    "note": "Authored when chapter 14 was split in two. The split point is the chapter's own subject rather than a convenient midpoint. The payoff is atom-scored -- it assesses every atom its chapter introduces."
   }
 }

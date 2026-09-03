@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C16-ser-estar",
+    "language": "french",
+    "chapter": 19,
+    "sequence": 670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73c931c9dfe23ed6"
+  },
+  "findings": []
+}

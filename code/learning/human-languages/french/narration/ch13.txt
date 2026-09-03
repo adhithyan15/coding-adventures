@@ -1,84 +1,190 @@
-French, chapter 13: Colours.
-2 lessons. All 2 can be done entirely by ear.
+French, chapter 13: Bread, Water, Wine.
+5 lessons. All 5 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-noir, blanc — one inherited, one borrowed.
+Lesson 1 of 5.
+le pain — bread.
 
 Warm-up.
 [pause 2 seconds]
-Two colours, two completely different life stories. One walked straight down from Latin. The other was borrowed from the Germanic neighbours — and that direction, Germanic into Romance, is the opposite of what usually happens.
+Food at last. This one word sits at the centre of the French table, and it hides what may be the loveliest word-story English has.
 
-noir — the expected one.
-noir ("black") from Latin niger. No surprises: niger becomes negro/nero in the sister languages, and into English in denigrate ("to blacken someone's name").
+Sounds you'll need.
+nasal-in — the -ain is a nasal vowel: the air goes through the nose and the n is never said as a consonant of its own.
+silent-final — nothing after that vowel is pronounced.
+Together: le pain = luh PA(N), where the (n) is the nose and not a letter you hear. It is masculine: le pain.
 
-blanc — the imported one.
-You'd expect Latin albus ("white"). It's not there. French says blanc, from Frankish blank — a Germanic word meaning "shining, gleaming." The Franks who gave France its name gave it its word for white too.
-Why did albus lose? Probably because blank was vivid: not just "white" but "bright, flashing." Colour words often get replaced by the more dramatic option.
-
-Where albus went.
-It didn't die — it stopped being a colour:
-[a table of 4 rows, read aloud]
-word: aube. meaning: dawn. the white inside: the sky going white.
-word: aubépine. meaning: hawthorn. the white inside: the "white thorn".
-word: album (Eng.) meaning: album. the white inside: a blank white tablet.
-word: albinos (Eng.) meaning: albino. the white inside: white-skinned.
-So Latin's white is still all around you — just never where you'd look for it.
+The word, taken apart.
+pain is Latin pānis, "bread." That much is unremarkable. What the root did in English is not.
+Take com-, "with," and put pānis after it. com + pānis — "one you break bread with." That is a companion, and the word means nothing else:
+companion, company — a company was first a group who ate together, and only later a body of soldiers or a business.
+pantry — the room the bread is kept in.
+pannier — a bread-basket, now the bag slung over a bicycle or a donkey.
+So le pain and companion are the same root wearing two different jobs. French kept the bread; English kept the friendship built on it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "noir, blanc"]
+[your turn — say: "le pain" — luh PA(N), the vowel through the nose]
 [pause 8 seconds for the answer]
-[your turn — say: "le vin blanc, le vin rouge" — wine you already know from Ch.11]
+[your turn — say: the sum — "com + pānis: one you break bread with"]
 [pause 8 seconds for the answer]
-[your turn — say: the pairing — "noir from Latin, blanc from the Franks"]
-[pause 8 seconds for the answer]
-[your turn — say: "l'aube" — and hear the old Latin white in it]
+[your turn — say: "pain becomes companion, company, pantry"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two is inherited from Latin? (Noir from niger.) Where does blanc come from? (Frankish blank, "shining" — a Germanic word borrowed into French.) Why is that direction surprising? (Latin usually lends to Germanic, not the other way.) Where did Latin albus end up? (In aube, "dawn," and album — no longer a colour.) Next: red and blue, and one more borrowing.
+How do you say "the bread"? (le pain, luh PA(N).) Is the n a consonant here? (No — it marks the vowel as nasal.) What Latin word is it? (pānis.) What does companion literally mean? ("One you break bread with" — com- + pānis.) Next: the drink that wore away to a single vowel.
 
 
-Lesson 2 of 2.
-rouge, bleu — an ancient word and a borrowed one.
+Lesson 2 of 5.
+l'eau — water.
 
 Warm-up.
 [pause 2 seconds]
-Last lesson: one inherited colour, one borrowed. This lesson repeats the pattern — and shows that French's borrowing from Germanic wasn't a one-off.
+Every word so far has been worn down a little. This one was worn down almost completely — and you can still hear what it used to be, in English.
 
-rouge — very, very old.
-rouge from Latin rubeus ("reddish"). But rubeus itself descends from a root so old it predates Latin: PIE h₁rewdʰ-. Its children are everywhere:
-[a table of 3 rows, read aloud]
-language: Latin. word: ruber, rubeus becomes rouge, ruby, rubric.
-language: English. word: red, rust, ruddy.
-language: German. word: rot.
-So rouge and red are not lookalikes — they are actual cousins, separated for maybe five thousand years. Red is one of humanity's oldest named colours.
+Sounds you'll need.
+o-eau — eau is pronounced "oh." That is the entire word. Three written letters, e-a-u, spelling one vowel sound and nothing else.
+elision — it begins with a vowel sound, so the article elides: l'eau, not le eau. The same elision you met on l'été.
+Together: l'eau = loh. Two letters heard, four written.
 
-bleu — borrowed, then lent onward.
-bleu from Frankish blāo. Another Germanic word, borrowed exactly like blanc. And then something neat happened: English took bleu from French — so English blue is a Germanic word that went to France, changed clothes, and came back. German kept the original at home: blau.
-French also has azur (from the same source as Spanish azul, ultimately Arabic lāzaward, "lapis lazuli") — the poetic blue of the sky, and the Côte d'Azur.
-
-The pattern of the chapter.
-[a table of 4 rows, read aloud]
-colour: noir. source: Latin niger.
-colour: blanc. source: Germanic blank.
-colour: rouge. source: Latin rubeus (ancient PIE root).
-colour: bleu. source: Germanic blāo.
-Half of French's basic colour vocabulary walked in from the north.
+The word, taken apart.
+eau is Latin aqua. Say those two aloud, one after the other, and the distance is almost comic.
+Watch the erosion happen, though, and each step is small:
+aqua becomes ewe becomes eaue becomes eau.
+The q goes, then the w-sound goes, then the final vowel goes, and what is left is a held "oh" with a spelling that remembers the rest. French, quite literally, drank the consonants out of aqua.
+Meanwhile the loud original survived — in English, which borrowed the Latin word whole and never wore it at all: aquatic, aquarium, aqueduct, aqualung. Italian barely touched it either: acqua.
+So l'eau and aquarium are the two far ends of one word, and English is holding the end that still looks like Latin.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "rouge, bleu"]
+[your turn — say: "l'eau" — loh, one vowel and no more]
 [pause 8 seconds for the answer]
-[your turn — say: "le vin rouge" — Ch.11's wine, now with its colour]
+[your turn — say: the erosion — "aqua, ewe, eaue, eau"]
 [pause 8 seconds for the answer]
-[your turn — say: "bleu, blanc, rouge" — the flag, all three learned]
+[your turn — say: the two ends — "l'eau, aquarium"]
 [pause 8 seconds for the answer]
-[your turn — say: the cousins — "rouge, red, rot"]
+[your turn — say: "le pain, l'eau" — and notice why one elides and the other does not]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What are rouge and English red to each other? (Cousins — both from PIE h₁rewdʰ-.) Where does bleu come from? (Germanic blāo — the second Germanic colour loan.) What did English do with it? (Borrowed it back from French as blue.) What are the three flag colours? (Bleu, blanc, rouge — and two of the three are loanwords.) Next chapter: describing what you see.
+How do you say "the water"? (l'eau, loh.) How many sounds are in eau? (One.) Why is the article l' and not le? (eau begins with a vowel sound.) What Latin word is underneath it? (aqua.) Where can you still hear aqua loud and whole? (English — aquatic, aquarium, aqueduct; and Italian acqua.) Next: the drink that refused to wear down.
+
+
+Lesson 3 of 5.
+le vin — wine.
+
+Warm-up.
+[pause 2 seconds]
+Eau dissolved down to one vowel. This word, sitting on the same table, did the opposite — and the reason is not linguistic.
+
+Sounds you'll need.
+nasal-in — the same nasal you met in pain, spelled -in this time rather than -ain. Two spellings, one vowel.
+silent-final — again, the n is the nose and not a consonant.
+Together: le vin = luh VA(N). Say pain and vin back to back and hear that only the first consonant differs.
+
+The word, taken apart.
+vin is Latin vīnum — and unlike aqua, it is still recognisable everywhere it went.
+English has it several times over, by several routes:
+wine — vīnum borrowed into early Germanic, long before French existed.
+vine, vineyard — the plant it comes from.
+vinegar — French vin + aigre, "sour wine," which is exactly what vinegar is.
+vintage, vinyl — the harvest year, and a plastic named from wine spirit.
+Why did aqua dissolve while vīnum held? Because words wear down with use and hold their shape when they are traded. Water is what you have; wine is what you buy, ship, tax and write down. A word that keeps appearing on a bill of lading in three countries stays legible in all three.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "le vin" — luh VA(N), the nose again]
+[pause 8 seconds for the answer]
+[your turn — say: the near-pair — "le pain, le vin"; one consonant apart]
+[pause 8 seconds for the answer]
+[your turn — say: "vin becomes wine, vine, vinegar"]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — "l'eau wore away, le vin did not"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "the wine"? (le vin, luh VA(N).) Which other word this chapter has the same vowel? (le pain.) What Latin word is behind it? (vīnum.) What does vinegar literally say? (Sour wine — vin + aigre.) Next: how to ask for some of any of them.
+
+
+Lesson 4 of 5.
+du pain, de l'eau — asking for some.
+
+Warm-up.
+[pause 2 seconds]
+You have three things on the table and no way to ask for any of them yet. le pain is the bread — a particular loaf. What you actually want at a table is some bread, and French makes you say so.
+
+Grammar Lens: French says "of the", where English says nothing.
+English can drop the word entirely. "I'd like bread" is perfectly good English. French cannot: it marks an unmeasured amount of a thing with de plus the article the noun already takes.
+de + le pain becomes du pain — some bread.
+de + le vin becomes du vin — some wine.
+de + l'eau becomes de l'eau — some water.
+That is one rule, not three. de + le always contracts to du; de + l' has nothing to contract, so it simply stays apart. You are not learning a new list here — you are putting de in front of the article you already know, and letting the vowel rule you already met decide the shape.
+And the contrast is worth hearing directly:
+le pain — the bread, that loaf, the one on the table.
+un pain — a loaf, one whole item you could pick up.
+du pain — some bread, an amount with no edges.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three — "du pain, du vin, de l'eau"]
+[pause 8 seconds for the answer]
+[your turn — say: the reason — "de plus the article; du where it contracts"]
+[pause 8 seconds for the answer]
+[your turn — say: the ladder on one noun — "le pain, un pain, du pain"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"du pain, du vin, de l'eau".
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say "some bread"? (du pain.) Some wine? (du vin.) Some water? (de l'eau — eau takes l', so there is nothing to contract.) What are the two words hiding inside du? (de + le.) What is the difference between un pain and du pain? (un pain is a loaf, one whole item; du pain is some bread, an amount with no edges.) Next: all three together.
+
+
+Lesson 5 of 5.
+Practice — the table, and asking for some of it.
+
+Warm-up.
+[pause 2 seconds]
+Three nouns and one rule. Run the nouns first, then put the rule on each of them in turn.
+
+Guided Practice: the three, with their articles.
+[pause 1 second]
+[your turn — say: "le pain, l'eau, le vin"]
+[pause 8 seconds for the answer]
+[your turn — say: the odd one — "l'eau elides, because it opens with a vowel"]
+[pause 8 seconds for the answer]
+[your turn — say: the near-pair — "le pain, le vin"; the same nasal, one consonant apart]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"le pain, l'eau, le vin".
+
+Guided Practice: now ask for some.
+[pause 1 second]
+[your turn — say: "du pain, du vin, de l'eau"]
+[pause 8 seconds for the answer]
+[your turn — say: each noun three ways — "le pain, un pain, du pain"]
+[pause 8 seconds for the answer]
+[your turn — say: the same three ways for wine — "le vin, un vin, du vin"]
+[pause 8 seconds for the answer]
+
+Guided Practice: two words that wore differently.
+[pause 1 second]
+[your turn — say: the erosion — "aqua, ewe, eaue, eau"]
+[pause 8 seconds for the answer]
+[your turn — say: the survival — "vīnum: wine, vine, vinegar"]
+[pause 8 seconds for the answer]
+[your turn — say: the sum — "com plus pānis: companion"]
+[pause 8 seconds for the answer]
+
+What you've built this chapter.
+three nouns you can put on a table, each with the right article.
+one rule for "some" — de plus the article, contracting to du where it can. It is the first time French has asked you to say something English simply leaves out.
+two opposite fates for one kind of word. aqua dissolved into eau; vīnum is still legible in four English words. Everyday things wear down, traded things stay legible — which is a rule you can use on words you have not met yet.
+a root that paid twice — pānis gave French its bread and English its companions.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give all three with their articles. (le pain, l'eau, le vin.) Why does only one of them elide? (eau begins with a vowel sound.) Ask for some of each. (du pain, du vin, de l'eau.) What two words are inside du? (de + le.) Which Latin word wore down to a single vowel, and which one barely moved? (aqua becomes eau; vīnum becomes vin.)

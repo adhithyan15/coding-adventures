@@ -1,19 +1,26 @@
 {
   "chapter": 20,
-  "title": "Sorry",
-  "label": "ch:fr-sorry",
-  "canDo": "I can apologise in French and pick between je suis désolé(e), pardon and excusez-moi for the situation I am actually in.",
+  "title": "The Past That Takes être",
+  "label": "ch:passe-compose-etre",
+  "canDo": "I can choose between avoir and être in the past, and say what the participle agrees with and why.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "FR-C20-je-suis-desole",
-    "kind": "production",
-    "summary": "Say je suis désolé(e) knowing it literally means 'I am desolate', then place pardon as the quick reflex and excusez-moi as the attention-getter. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "lesson": "FR-C16-practice-etre-past",
+    "kind": "task",
+    "summary": "A short closed list of verbs refuses avoir and takes être, and it is easier as a shape than a list: arriving and leaving, in space or in life. Two corrections come with it — motion verbs like courir take avoir, because motion is not transition, and five verbs switch to avoir the moment they take an object, which shows the rule is about the sentence rather than the verb. Then the agreement, which is audible for once: elle est morte. And underneath avoir's rule, être's rule and the pronominal rule sits one fact — the participle was an adjective, and it agrees with whatever it described.",
     "assesses": [
-      "FR-LEX-DESOLE-02",
-      "FR-ETYMON-DESOLE-03",
-      "FR-PRAGMATICS-SORRY-04"
-    ]
+      "FR-GRAM-PASSE-COMPOSE-ETRE-01",
+      "FR-GRAM-ETRE-FAMILLE-02",
+      "FR-GRAM-ETRE-PAS-MOUVEMENT-03",
+      "FR-GRAM-ETRE-AVOIR-BASCULE-04",
+      "FR-GRAM-ACCORD-SUJET-05",
+      "FR-GRAM-ACCORD-UNIFIE-06",
+      "FR-GRAM-PRONOMINAL-ETRE-07",
+      "FR-GRAM-PRONOMINAL-ACCORD-08",
+      "FR-GRAM-PRONOMINAL-SEUL-09"
+    ],
+    "note": "Authored when chapter 19 was split in two. This half is the past built on the verb, including the pronominal system, whose agreement follows AVOIR's rule despite taking être. The payoff is atom-scored -- it assesses every atom its chapter introduces."
   }
 }

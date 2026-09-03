@@ -49,7 +49,7 @@ in whole.
 
 Numbers are the first kind. German counts with its own inherited words, and so
 does English. Month names are the second kind: they arrived with the Roman
-calendar, and both languages simply took them.
+calendar, and both languages took them whole.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-NATIVE-VS-LOAN-01, GE-LEX-SIEBEN-01, GE-LEX-ZEHN-01] -->
@@ -74,7 +74,7 @@ was never any reason to.
 
 You will meet the German month names themselves in a later chapter. What matters
 now is that when you get there, they will look Latin, and the numbers you have
-just learned will still be German.
+already learned will still be German.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-NATIVE-VS-LOAN-01] -->

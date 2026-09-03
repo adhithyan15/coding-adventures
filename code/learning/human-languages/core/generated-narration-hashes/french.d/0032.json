@@ -1,23 +1,18 @@
 {
   "language": "french",
   "chapter": 32,
-  "sourceHash": "fnv1a64:1bf458e5f324bb00",
+  "sourceHash": "fnv1a64:018a9a0efe26a8d7",
   "lessonIds": [
-    "FR-C32-intonation",
-    "FR-C32-est-ce-que",
-    "FR-C32-ou",
-    "FR-C32-quand",
-    "FR-C32-comment",
-    "FR-C32-combien",
-    "FR-C32-pourquoi",
-    "FR-C32-inversion",
-    "FR-C32-quel"
+    "FR-C28-cafe",
+    "FR-C28-the",
+    "FR-C28-lait",
+    "FR-C28-sucre"
   ],
-  "voiceLessons": 9,
-  "drivablePrefix": 9,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "french/narration/ch32.txt",
   "json": "french/narration/ch32.json",
-  "textHash": "fnv1a64:f09f8d778d1153e2",
-  "jsonHash": "fnv1a64:09ff6492c2e4e0ac",
+  "textHash": "fnv1a64:a59ad4dd118ccba6",
+  "jsonHash": "fnv1a64:45796f4d5b56f5b7",
   "findings": []
 }

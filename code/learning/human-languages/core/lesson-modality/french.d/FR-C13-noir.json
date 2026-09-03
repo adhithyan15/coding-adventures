@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C13-noir",
+    "language": "french",
+    "chapter": 16,
+    "sequence": 447,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ce242fec2839681"
+  },
+  "findings": []
+}

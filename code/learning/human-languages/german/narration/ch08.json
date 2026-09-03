@@ -4,12 +4,12 @@
   "chapter": 8,
   "title": "Six, Seven, Eight",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2aba825788deea4b",
+  "sourceHash": "fnv1a64:e8453f6923c376b8",
   "lessons": [
     {
       "id": "GE-C06-sechs",
       "sequence": 219,
-      "title": "sechs — \"six,\" where chs is just an x",
+      "title": "sechs — \"six,\" where chs is a plain x",
       "headword": "sechs",
       "romanization": "sechs",
       "gloss": "six — where chs is simply an x",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba44096b37f207e3",
+      "sourceHash": "fnv1a64:49d95702b92b3fc7",
       "notice": null,
       "blocks": [
         {

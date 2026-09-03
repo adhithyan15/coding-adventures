@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 23,
-  "title": "Green and Yellow",
+  "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1a8564ce5039677f",
+  "sourceHash": "fnv1a64:292b0fbd0695b25f",
   "lessons": [
     {
-      "id": "FR-C23-vert-jaune",
-      "sequence": 700,
-      "title": "vert, jaune — the expected inheritance, and a hidden PIE-level cousin",
-      "headword": "vert, jaune",
-      "romanization": "vert, jaune",
-      "gloss": "green and yellow — vert is the standard, expected Latin viridis descendant shared by nearly every Romance language; jaune comes from a Latin word that literally meant \"yellow-GREEN,\" and is usually said to share its ultimate PIE root with German's gelb, though that particular link is less secure than it first appears",
+      "id": "FR-C19-sil-vous-plait",
+      "sequence": 760,
+      "title": "s'il vous plaît — please",
+      "headword": "s'il vous plaît",
+      "romanization": "s'il vous plaît",
+      "gloss": "please (literally \"if it pleases you\")",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:747416bc2584da54",
+      "sourceHash": "fnv1a64:8c1501e241afb67d",
       "notice": null,
       "blocks": [
         {
@@ -35,29 +35,53 @@
             },
             {
               "kind": "speech",
-              "text": "French's green word is exactly what you'd expect. Its yellow word hides something you won't expect at all — a secret cousin sitting inside German."
+              "text": "French doesn't order you to do things — it asks, very politely, if it would please you."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: vert",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "vert (\"green\") from Latin viridis — and this is genuinely the standard source of \"green\" across nearly every Romance language: Spanish verde, Italian verde, Portuguese verde, Catalan verd. No surprise here — a clean, shared inheritance."
+              "text": "s'il vous plaît = please — but taken apart it's a tiny sentence:"
+            },
+            {
+              "kind": "speech",
+              "text": "s' (si, \"if\") + il (\"it\") + vous (\"you\") + plaît (\"pleases\") becomes \"if it pleases you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You're not demanding; you're checking whether the favour would please them. It's the polite indirectness Spanish also uses in por favor (\"for a favour\") — same courtesy, built a different way."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb plaît is from Latin placēre, \"to please\" — which English borrowed wholesale: please, pleasure, pleasant, and (via \"calm, pleasing\") even placid."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: jaune",
+          "type": "grammar",
+          "title": "Grammar Lens: Formal and familiar",
           "segments": [
             {
               "kind": "speech",
-              "text": "jaune (\"yellow\") from Latin galbinus, which literally meant \"yellow-green\" — an extended form of galbus, from Proto-Indo- European ghel-, \"to shine\" (with derivatives covering green, yellow, and gold alike — the same root gives Greek khlōros, \"greenish- yellow\"). Here's the genuinely surprising part: this same PIE root, ghel-, is also usually cited as the source of German's gelb and English's yellow — by a completely separate, Germanic path (Proto- Germanic gelwaz). Honesty check, though: the galbus becomes ghel- link itself is less secure than it looks — some modern Latin scholarship treats galbus's origin as unknown rather than confirming the connection. So jaune and gelb are probably cousins at the Proto-Indo-European level, despite one reaching French through Latin and the other reaching German directly through Germanic — just don't treat that link as airtight."
+              "text": "French chooses the word for \"you\" by who you're talking to — and please comes in both:"
+            },
+            {
+              "kind": "speech",
+              "text": "s'il vous plaît — vous, the formal / plural you (a stranger, an elder, a room). Often written SVP."
+            },
+            {
+              "kind": "speech",
+              "text": "s'il te plaît — te, the familiar you (a friend, a child)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two sounds to respect: the final ‑t of plaît is silent (pleh), and plaît itself carries the ai = eh you've met."
             }
           ]
         },
@@ -75,29 +99,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"vert\" — green, the standard Romance word",
+              "instruction": "\"s'il vous plaît\" — final t silent, see voo pleh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"vert\" — green, the standard Romance word]"
+              "source": "[YOU SAY: \"s'il vous plaît\" — final t silent, *see voo pleh*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"jaune\" — yellow, literally \"yellow-green\"",
+              "instruction": "taken apart — \"if it pleases you\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"jaune\" — yellow, literally \"yellow-green\"]"
+              "source": "[YOU SAY: taken apart — \"if it pleases you\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the probable cousin — \"jaune, gelb\" — likely the same ancient PIE root, two completely different paths, though the link isn't airtight",
+              "instruction": "familiar — \"s'il te plaît\" to a friend",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the probable cousin — \"jaune, gelb\" — likely the same ancient PIE root, two completely different paths, though the link isn't airtight]"
+              "source": "[YOU SAY: familiar — \"s'il te plaît\" to a friend]"
             }
           ]
         },
@@ -114,7 +138,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is vert a typical or unusual Romance word for \"green\"? (Typical — the standard source across nearly all Romance languages.) What did Latin galbinus, the source of jaune, literally mean? (\"Yellow-green.\") What German word is usually called jaune's deep PIE cousin, and how solid is that link? (Gelb — both usually traced to PIE ghel-, \"to shine,\" though modern Latin scholarship treats galbus's origin as genuinely unknown, so the connection is probable, not certain.)"
+              "text": "How do you say please in French? (s'il vous plaît.) What does it literally mean? (\"If it pleases you.\") Which Latin verb is plaît from, and what English words come from it? (placēre — please, pleasure, placid.) When do you say s'il te plaît instead? (To someone you address as tu — a friend or child.)"
             }
           ]
         }

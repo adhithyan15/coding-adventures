@@ -1,15 +1,16 @@
 {
   "language": "french",
   "chapter": 21,
-  "sourceHash": "fnv1a64:7e75bbea32d4d7a6",
+  "sourceHash": "fnv1a64:9a629b110ea4b38b",
   "lessonIds": [
-    "FR-C21-le-temps"
+    "FR-C17-tete",
+    "FR-C17-main"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "drivablePrefix": 0,
   "text": "french/narration/ch21.txt",
   "json": "french/narration/ch21.json",
-  "textHash": "fnv1a64:b6b6643ea92e5448",
-  "jsonHash": "fnv1a64:b0f844fa5559a099",
+  "textHash": "fnv1a64:17d427dc6cd11adb",
+  "jsonHash": "fnv1a64:d30f760ae6664603",
   "findings": []
 }

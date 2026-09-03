@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C10-pere",
+    "language": "french",
+    "chapter": 12,
+    "sequence": 300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ba819bb91c5336e"
+  },
+  "findings": []
+}

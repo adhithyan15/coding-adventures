@@ -1,24 +1,26 @@
 {
   "chapter": 29,
-  "title": "The People You Introduce",
-  "label": "ch:fr-the-people-you-introduce",
-  "canDo": "I can introduce a friend, name my family, name a child and name any person, using French's four different relationships between grammatical gender and the person meant, and elide le or la to l' before a vowel.",
+  "title": "Verbs of the Mind",
+  "label": "ch:fr-verbs-of-the-mind",
+  "canDo": "I can say what I understand, think, read and write in French, and take comprendre apart into com- plus prendre — so understanding, in French, is grasping.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "FR-C29-personne",
+    "lesson": "FR-C25-ecrire",
     "kind": "task",
-    "summary": "Say la personne, always feminine even naming a man, then line the chapter's four words up by how each one handles gender: l'ami changes, la famille is fixed, l'enfant is one spelling with two articles, la personne is fixed regardless of sex. Reaches back to Chapter 18's non for a sound contrast (personne's double -nn- blocks the nasal non has) and to its ne ... pas negation, which personne itself joins as \"nobody.\"",
+    "summary": "Say the chapter's four with je — je comprends, je pense, je lis, j'écris — and take écrire apart into scrībere 'to scratch' plus the propped-up é- that also made école and étoile. Reaches back past the chapter to la main and manus from Chapter 17, which meet écrire inside the single word manuscript, and to prendre and aimer from Chapter 24.",
     "assesses": [
-      "FR-LEX-PERSONNE-08",
-      "FR-ETYMON-PERSONNE-09",
-      "FR-LEX-AMI-01",
-      "FR-GRAMMAR-ELISION-ARTICLE-02",
-      "FR-LEX-FAMILLE-04",
-      "FR-LEX-ENFANT-06",
-      "FR-SOUND-NON-03",
-      "FR-GRAMMAR-NEGATION-04"
+      "FR-LEX-COMPRENDRE-01",
+      "FR-LEX-PENSER-04",
+      "FR-LEX-LIRE-06",
+      "FR-ETYMON-LIRE-07",
+      "FR-LEX-ECRIRE-08",
+      "FR-ETYMON-ECRIRE-09",
+      "FR-LEX-MAIN-02",
+      "FR-ETYMON-MAIN-04",
+      "FR-LEX-PRENDRE-01",
+      "FR-LEX-AIMER-09"
     ]
   }
 }

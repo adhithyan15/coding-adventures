@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C12-practice-seam",
+    "language": "french",
+    "chapter": 15,
+    "sequence": 445,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bab5fd648684bb6d"
+  },
+  "findings": []
+}

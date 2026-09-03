@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C27-fermer",
     "language": "french",
-    "chapter": 27,
-    "sequence": 860,
+    "chapter": 31,
+    "sequence": 960,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:dc6a120bc7e54756"
+    "sourceHash": "fnv1a64:7020b33c01fc956c"
   },
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Nine, Ten, and the Months That Are Numbers",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:202c993342c741d7",
+  "sourceHash": "fnv1a64:f8af8980ac361107",
   "lessons": [
     {
       "id": "GE-C06-neun",
@@ -423,7 +423,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93a65b56f64cd288",
+      "sourceHash": "fnv1a64:a586d08c03b9a2f4",
       "notice": null,
       "blocks": [
         {
@@ -454,7 +454,7 @@
             },
             {
               "kind": "speech",
-              "text": "Numbers are the first kind. German counts with its own inherited words, and so does English. Month names are the second kind: they arrived with the Roman calendar, and both languages simply took them."
+              "text": "Numbers are the first kind. German counts with its own inherited words, and so does English. Month names are the second kind: they arrived with the Roman calendar, and both languages took them whole."
             }
           ]
         },
@@ -492,7 +492,7 @@
             },
             {
               "kind": "speech",
-              "text": "You will meet the German month names themselves in a later chapter. What matters now is that when you get there, they will look Latin, and the numbers you have just learned will still be German."
+              "text": "You will meet the German month names themselves in a later chapter. What matters now is that when you get there, they will look Latin, and the numbers you have already learned will still be German."
             }
           ]
         },

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C13-vin-rouge",
+    "language": "french",
+    "chapter": 16,
+    "sequence": 462,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1322b2e29046bd8"
+  },
+  "findings": []
+}

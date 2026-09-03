@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C32-inversion",
     "language": "french",
-    "chapter": 32,
-    "sequence": 1170,
+    "chapter": 36,
+    "sequence": 1270,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f80430d810076cbf"
+    "sourceHash": "fnv1a64:3596e1ef94f9a170"
   },
   "findings": []
 }

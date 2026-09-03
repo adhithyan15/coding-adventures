@@ -109,7 +109,7 @@ You have ten numbers and not one of them came from Latin. That is worth holding 
 
 Grammar Lens: a language keeps some words and buys others.
 A language does not import evenly. The words people use every hour of every day are the hardest to displace, and the words that arrive with an institution come in whole.
-Numbers are the first kind. German counts with its own inherited words, and so does English. Month names are the second kind: they arrived with the Roman calendar, and both languages simply took them.
+Numbers are the first kind. German counts with its own inherited words, and so does English. Month names are the second kind: they arrived with the Roman calendar, and both languages took them whole.
 
 Why it's said this way.
 The Roman year began in March. Count from there and the last four months of the year land on the Latin words for seven, eight, nine and ten — which is why those four month names are numbers wearing a disguise, in German exactly as in English.
@@ -120,7 +120,7 @@ The Latin number inside: octo — eight. German counts it: acht.
 The Latin number inside: novem — nine. German counts it: neun.
 The Latin number inside: decem — ten. German counts it: zehn.
 Not one pair sounds like a pair. The month names came from one language and the counting words from another, and German never reconciled them — because there was never any reason to.
-You will meet the German month names themselves in a later chapter. What matters now is that when you get there, they will look Latin, and the numbers you have just learned will still be German.
+You will meet the German month names themselves in a later chapter. What matters now is that when you get there, they will look Latin, and the numbers you have already learned will still be German.
 
 Guided Practice.
 [pause 1 second]

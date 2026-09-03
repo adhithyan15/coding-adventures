@@ -66,12 +66,110 @@ it("pins French modality", () => expectLanguageModality("french"));
 // 20 -> 21 culture claims: French PREFERS the verb-based je m'appelle to the literal
 // mon nom est, which exists, is understood, and sounds like a passport desk. It was the
 // hand-written chapter's only `culture` block and no lesson owned it.
+// 108 -> 128 lessons: retiring handwritten chapter 9, which is the first FRENCH
+// CHAPTER SPLIT. Its two schema-v1 lessons owned `les mois` and `les saisons` --
+// two headwords for TWELVE months and FOUR seasons. Sixteen words plus the
+// au/en rule cannot fit `maxNewAtomsPerChapter` at one atom per word, and length
+// is never a cost here, so chapter 9 became three chapters: the months to juin,
+// the months from juillet, and the seasons. Twenty lessons replace two, and
+// every later French chapter renumbered by +2 (old 10-33 -> 12-35).
+// 17 -> 19 culture claims: the Februa, the purification festival February is
+// named for; and the two men who put themselves in a calendar of gods. Both
+// lived only in hand-written blocks and are now owned by FR-C09-fevrier and
+// FR-C09-aout.
+// 128 -> 135 lessons: retiring handwritten chapter 12, Family. Its two
+// schema-v1 lessons held FOUR headwords between them -- `le pere, la mere` in
+// one and `le frere, la soeur` in the other -- so no word in the chapter had a
+// lesson of its own. Seven schema-v2 lessons replace them: one per word, one
+// for Grimm's law (which the .tex hid inside a `grammarlens` and no lesson
+// owned), and one for the oe ligature, which is a LETTER and pays forward to
+// l'oeuf and l'oeil. Net +7 measured rather than +5, because the two retired
+// lessons were schema-v1 and never counted toward this budget.
+// 135 -> 140 lessons: retiring handwritten chapter 13, Bread, Water, Wine. Two
+// schema-v1 lessons held THREE headwords -- `le pain` in one and `l'eau, le vin`
+// in the other -- and the chapter's own canDo promised the reader could REQUEST
+// them, which nothing taught: `du pain` appeared in a Guided Practice line and
+// in a `culture` block, and no lesson owned the partitive. Five lessons now do:
+// one per noun, one for `de` + article, and the payoff. Net +5 measured rather
+// than +3, because the two retired lessons were schema-v1 and never counted.
+// 140 -> 156 lessons: retiring handwritten chapter 14, Numbers Eleven to
+// Twenty, which is the SECOND French chapter split. Two schema-v1 lessons owned
+// TEN numbers between them plus the formation rules, and ten numbers plus their
+// formation cannot fit `maxNewAtomsPerChapter` at one atom per word. The chapter
+// supplies its own seam: at seventeen French stops inheriting fused Latin teens
+// and starts building numbers out of parts, AND reverses the order of those
+// parts. So chapter 14 keeps the six welded ones (onze..seize, 8 atoms) and a
+// new chapter 15 takes the built ones (dix-sept..vingt, 6 atoms). Every later
+// French chapter renumbered by +1 (old 15-35 -> 16-36). Sixteen lessons replace
+// two; net +16 measured, since the retired pair were schema-v1.
+// Chapter 1 and chapters 9/12/13/14 were authored on separate branches from the
+// same base of 108 and met here. Every total below is RE-MEASURED against the
+// merged tree by running the suite, not obtained by adding the two branches'
+// deltas: composing this line by arithmetic has been wrong before. Measured:
+// 167 lessons, and 22 culture claims -- chapter 9's Februa and its two emperors,
+// plus chapter 1's three register claims, on a base of 17.
+// 167 -> 175 lessons, and 22 -> 23 culture claims: retiring handwritten chapter
+// 16, Colours. Two schema-v1 lessons held FOUR colours, and the .tex taught
+// adjective POSITION inside a `grammarlens` -- `le vin blanc, le vin rouge`,
+// with the colour AFTER the noun, which is the opposite of English and which no
+// lesson owned. Eight lessons now own one thing each: a lesson per colour, one
+// for where Latin's `albus` went when `blanc` displaced it, one for adjective
+// position, and one for the flag. The culture claim is that one: the tricolour
+// is two-thirds Germanic, because `bleu` and `blanc` are Frankish borrowings
+// inside a Romance language. It was a `culture` block owned by nobody.
+// 175 -> 189 lessons, and 23 -> 24 culture claims: retiring handwritten chapter
+// 17, To Have and How Old You Are. This chapter's cost is a PARADIGM, not
+// vocabulary, and only the fourth reading finds it: the .tex's opening table has
+// ONE ROW PER PERSON -- j'ai, tu as, il a, nous avons, vous avez, ils ont -- and
+// `maxNewGrammarCellsPerLesson` is 1, so six cells is six lessons. Two schema-v1
+// lessons held all six plus the age idiom. Fourteen lessons now own one thing
+// each: six for the paradigm, one for the fact that the three singular forms are
+// homophones (which is WHY French keeps subject pronouns), one for the habere
+// root it shares with `habiter`, and five for having your years. The culture
+// claim is the Romance/Germanic split -- every Romance language on the continent
+// HAS its years and every Germanic one IS them -- which was a bare table in a
+// `culture` block that no lesson owned.
+// 189 -> 201 lessons: retiring handwritten chapter 18, The Compound Past. Two
+// schema-v1 lessons held the whole participle system (three classes), the tense
+// built on it, the Latin endings behind it, the possessive construction it grew
+// out of, the agreement fossil that construction left, AND a second past tense
+// with its Romance sisters and the areal change that retired it. Twelve lessons
+// now own one thing each; nine atoms, well under the ceiling.
+//
+// `finir` and `vendre` appear as EXAMPLES of the -ir and -re participle classes
+// and are deliberately not taught as vocabulary -- neither verb exists anywhere
+// in this corpus, and smuggling two headwords in to illustrate a pattern would
+// have been exactly the cramming the atom ceiling exists to prevent. The lesson
+// says so in as many words.
+// 24 -> 25 culture claims: the areal change. French, German and Italian each
+// swapped a simple past for a compound one, and they did it as NEIGHBOURS --
+// one change spreading by contact across a connected block -- while Spanish and
+// Portuguese at the western edge kept theirs. That was a `culture` block owned
+// by nobody.
+// 201 -> 223 lessons: retiring handwritten chapter 19, To Be and the Past That
+// Takes It -- the THIRD French chapter split, and the one HL-C286 flagged in
+// advance. Four schema-v1 lessons held a six-cell paradigm, three stem
+// etymologies, the etre-verb list with two exceptions, two agreement rules and
+// the whole pronominal system: about nineteen atoms against a ceiling of twelve.
+// The chapter's own structure supplies the seam -- the verb, then the past built
+// on it -- so chapter 19 keeps etre (10 atoms) and a new chapter 20 takes the
+// past that selects it, pronominals included (9 atoms). Every later French
+// chapter renumbered by +1 (old 20-36 -> 21-37). Twenty-two lessons replace four.
+// 25 -> 26 culture claims: Spanish kept ser and estar apart as two verbs and
+// made every speaker choose, where French kept one verb and swallowed stare's
+// whole et- limb. Same two Latin sources, opposite solutions -- a `culture`
+// block that no lesson owned.
+// The two branches above met in this merge, each written from its own base.
+// Every figure below is RE-MEASURED against the merged tree by running the
+// suite, never obtained by adding the two branches' deltas. Measured after the
+// merge: 232 lessons and 27 culture claims -- chapter 2 landed from main while
+// chapters 9-19 landed here.
 it("pins French lesson-content budgets", () =>
   expectLanguageLessonBudgets("french", {
-    lessons: 128,
+    lessons: 232,
     idioms: 3,
     senses: 7,
-    cultureClaims: 21,
+    cultureClaims: 27,
     unitPrefix: "FR",
   }));
 

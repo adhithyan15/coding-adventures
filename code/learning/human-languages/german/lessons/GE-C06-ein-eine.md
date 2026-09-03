@@ -67,7 +67,7 @@ Tag* and *gute Nacht*:
 **Counting form: *eins*. In front of a naming word: *ein* / *eine*.** The *-s*
 belongs to counting and to nothing else.
 
-English does the identical thing, and hides it just as well. *One* in front of a
+English does the identical thing, and hides it every bit as well. *One* in front of a
 naming word wore down to **a** and **an** — *an apple* really is *one apple*,
 said quickly for a thousand years. So both languages have a special worn-down
 shape of "one", and both use it as the word for "a".

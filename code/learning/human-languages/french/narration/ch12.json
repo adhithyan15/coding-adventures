@@ -2,155 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 12,
-  "title": "Numbers Eleven to Twenty",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dfc2faa271f418ce",
+  "title": "Family, and the Oldest Words We Have",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1762903b18d7a391",
   "lessons": [
     {
-      "id": "FR-C12-nombres-11-16",
-      "sequence": 265,
-      "title": "onze becomes seize — six numbers welded together",
-      "headword": "onze — seize",
-      "romanization": "onze — seize",
-      "gloss": "11–16, the six fused numbers French inherited whole from Latin",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "sight-cue",
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:39499961d8e8b20a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down",
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The six fusions"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The six fusions until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can count to ten. Now the teens — and they are not built the way you'd guess. French didn't say \"ten-one, ten-two.\" It inherited six numbers already fused in Latin, and they came through almost unrecognisable."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The six fusions",
-          "segments": [
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 6,
-              "headers": [
-                "",
-                "French",
-                "from Latin",
-                "literally"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, French, from Latin, literally. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "Look at the ending they all share: -ze. That is Latin decem (\"ten\"), worn down to almost nothing — the same ten you already know in dix (10) and décembre (the old 10th month). One root, three disguises."
-            },
-            {
-              "kind": "speech",
-              "text": "And the front of each word is the digit you already count with: un becomes on-, deux becomes dou-, trois becomes trei-, quatre becomes quator-, cinq becomes quin-, six becomes sei-. Say them slowly and the small number surfaces."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"onze, douze, treize, quatorze, quinze, seize\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"onze, douze, treize, quatorze, quinze, seize\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "hear the ten — \"-ze = decem = dix\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: hear the ten — \"-ze = *decem* = dix\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the digit inside — \"deux becomes douze, six becomes seize\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the digit inside — \"**deux** → **dou**ze, **six** → **sei**ze\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Count 11 to 16. (Onze, douze, treize, quatorze, quinze, seize.) What does the shared -ze ending come from? (Latin decem, \"ten\" — the same ten as dix and décembre.) Is 13 built as \"ten-three\" or \"three-ten\"? (\"Three- ten\" — trēdecim, the digit first.) Next: at 17, French suddenly changes its mind."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C12-nombres-17-20",
-      "sequence": 270,
-      "title": "dix-sept becomes vingt — where French changes its mind",
-      "headword": "dix-sept — vingt",
-      "romanization": "dix-sept — vingt",
-      "gloss": "17–20 — the seam where French gives up fusing and just says \"ten-seven\"",
+      "id": "FR-C10-pere",
+      "sequence": 300,
+      "title": "le père — father",
+      "headword": "le père",
+      "romanization": "le père",
+      "gloss": "father — one of the oldest words anyone can reconstruct",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b19e86d25a617ea",
+      "sourceHash": "fnv1a64:1ba819bb91c5336e",
       "notice": null,
       "blocks": [
         {
@@ -166,39 +35,340 @@
             },
             {
               "kind": "speech",
-              "text": "Here is something you can watch happen. Up to seize (16), French used the old welded-together Latin numbers. Then, at 17, it simply gives up — and starts saying the numbers plainly, the way a child would."
+              "text": "The calendar took you back two thousand years, to Rome. This word goes back further than Rome — further than Latin, further than any written language at all."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The seam",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "e-grave — the è is open, the mouth wider than for é. Think of the e in English bed, held a moment longer."
+            },
+            {
+              "kind": "speech",
+              "text": "r-uvular — the r is the French one, made at the back of the throat."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: le père = luh PEHR, one syllable after the article."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "père is Latin pater, worn down by French mouths for fifteen centuries until only four letters were left."
+            },
+            {
+              "kind": "speech",
+              "text": "pater itself is inherited, not invented. Behind it stands Proto-Indo-European ph₂tḗr — a word nobody ever wrote down, reconstructed from the shapes its descendants kept. Sanskrit pitṛ́, Greek patḗr, Latin pater: the same word, spoken across a continent, for longer than anyone can document."
+            },
+            {
+              "kind": "speech",
+              "text": "English never borrowed père, but it borrowed pater itself, over and over, and left it visible every time:"
+            },
+            {
+              "kind": "speech",
+              "text": "paternal, paternity — \"of a father\"."
+            },
+            {
+              "kind": "speech",
+              "text": "patron — a man who stands to you as a father would."
+            },
+            {
+              "kind": "speech",
+              "text": "patriarch, expatriate, patrimony."
+            },
+            {
+              "kind": "speech",
+              "text": "So the French word is short and the English cousins are long, and they are the same word. When père looks like nothing you know, say paternal and the p and the t are still there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le père\" — luh PEHR, the è open and the r in the throat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le père\" — *luh PEHR*, the **è** open and the **r** in the throat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ladder — \"ph₂tḗr, pater, père\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ladder — \"\\*ph₂tḗr, pater, père\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"père becomes paternal, patron\" — the p and t still standing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"père → paternal, patron\" — the *p* and *t* still standing]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"the father\"? (le père, luh PEHR.) Which article does it take, and what does that tell you? (le — it is masculine.) What Latin word is it? (pater.) Name two English words with that pater still inside them. (paternal, patron — also paternity, patriarch.) Next: the other half of the pair."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C10-mere",
+      "sequence": 305,
+      "title": "la mère — mother",
+      "headword": "la mère",
+      "romanization": "la mère",
+      "gloss": "mother — and the reason English calls physical stuff \"matter\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:487d855e5bad883e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The same word, one letter different, one article different — and a much stranger set of English cousins waiting at the end of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la mère = lah MEHR. The vowel is the identical open è you just met in père; only the first consonant changes."
+            },
+            {
+              "kind": "speech",
+              "text": "Say them back to back — père, mère — and hear that the rhyme is exact. That rhyme is not a coincidence; it is two inherited words worn down by the same mouths in the same way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mère is Latin māter, from Proto-Indo-European méh₂tēr."
+            },
+            {
+              "kind": "speech",
+              "text": "The obvious English cousins are the ones you would guess:"
+            },
+            {
+              "kind": "speech",
+              "text": "maternal, maternity — \"of a mother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "matron, matriarch, alma mater."
+            },
+            {
+              "kind": "speech",
+              "text": "And then there is one nobody guesses. Latin took māter and built materia from it — originally the usable wood of a tree, the growing part, the stuff a mother-trunk yields. Roman writers then stretched materia to mean the stuff anything is made of, and English inherited it twice over:"
+            },
+            {
+              "kind": "speech",
+              "text": "material — what a thing is made of."
+            },
+            {
+              "kind": "speech",
+              "text": "matter — stuff itself, the physical world."
+            },
+            {
+              "kind": "speech",
+              "text": "So when a physicist says matter, the word underneath is mother. That is the kind of thing etymology is for: not a party trick, but a reminder that abstract vocabulary is almost always a concrete word that travelled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la mère\" — lah MEHR",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la mère\" — *lah MEHR*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"le père, la mère\"; the rhyme is exact, the articles are not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"le père, la mère\"; the rhyme is exact, the articles are not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the surprising one — \"māter becomes materia becomes matter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the surprising one — \"māter → materia → matter\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"the mother\"? (la mère, lah MEHR.) Which article, and why is it not the same as père's? (la — mère is feminine.) Give both parents together. (le père, la mère.) Which everyday English word for physical stuff comes from māter? (matter — through materia, the wood a tree yields.) Next: why English says father where French says père."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C10-grimm",
+      "sequence": 310,
+      "title": "père / father — one sound-law",
+      "headword": "père / father",
+      "romanization": "père / father",
+      "gloss": "one sound-law — why the same inherited word starts with p in French and f in English",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5843614da8b84694",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have met two words that mean what English father and mother mean, and look almost nothing like them. That is about to stop being true."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the same word went down two roads",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "French took pater and māter straight from Latin. English did not borrow them from anybody. It inherited the very same Proto-Indo-European words down a different branch of the family — and on that branch, one systematic change hit every word at once. It is called Grimm's law, and the part that matters here is short: p became f, and t became th."
+            },
+            {
+              "kind": "speech",
+              "text": "Apply it and watch the disguise fall off. Each row is one inherited word, shown first as it is reconstructed, then down each of the two roads:"
+            },
             {
               "kind": "table",
               "headers": [
-                "",
-                "French",
-                "how it's built"
+                "Proto-Indo-European",
+                "Latin becomes French",
+                "English"
               ],
               "columns": 3,
-              "rowCount": 5,
+              "rowCount": 2,
               "utterances": [
-                "16. French: seize. how it's built: one fused word ( from sēdecim).",
-                "17. French: dix-sept. how it's built: \"ten-seven\" — two words, plainly.",
-                "18. French: dix-huit. how it's built: \"ten-eight\".",
-                "19. French: dix-neuf. how it's built: \"ten-nine\".",
-                "20. French: vingt. how it's built: from vīgintī."
+                "Proto-Indo-European: ph₂tḗr. Latin becomes French: pater becomes père. English: father.",
+                "Proto-Indo-European: méh₂tēr. Latin becomes French: māter becomes mère. English: mother."
               ]
             },
             {
               "kind": "speech",
-              "text": "Notice the order flips too. In seize, the digit came first (\"six-ten\"). In dix-sept, the ten comes first (\"ten-seven\"). At exactly 17, French switched both its strategy and its direction — a visible seam in the counting system. (Latin itself wobbled here: it had septendecim for 17, but for 18 and 19 it counted down from twenty — duodēvīgintī, \"two-from-twenty.\" The sisters all abandoned that subtraction trick.)"
+              "text": "père keeps the p; father shifts it to f. The t of pater is still a t in French and has become th in English. Nothing else moved."
             },
             {
               "kind": "speech",
-              "text": "vingt (20) from Latin vīgintī, the root behind English vigesimal (\"counting by twenties\") — and the reason French later builds quatre-vingts (80 = \"four twenties\")."
+              "text": "This is why the resemblance between maternal and mother feels different from the resemblance between paternal and father: maternal came into English late, borrowed whole from Latin with its t intact, while mother came down the long way and took the sound-change with it. Two arrivals of one word, centuries apart."
+            },
+            {
+              "kind": "speech",
+              "text": "The point is not the pair. It is that sound-change is regular — it applies to a language wholesale, not word by word — which is exactly what makes a word you have never seen guessable."
             }
           ]
         },
@@ -216,29 +386,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "16 becomes 20 — \"seize, dix-sept, dix-huit, dix-neuf, vingt\"",
+              "instruction": "the law — \"p becomes f, t becomes th\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: 16→20 — \"seize, dix-sept, dix-huit, dix-neuf, vingt\"]"
+              "source": "[YOU SAY: the law — \"p becomes f, t becomes th\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the seam — \"seize = six-ten (fused); dix-sept = ten-seven (plain)\"",
+              "instruction": "\"père, father\" — then \"mère, mother\"; hear the same word twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the seam — \"*seize* = six-ten (fused); *dix-sept* = ten-seven (plain)\"]"
+              "source": "[YOU SAY: \"père, father\" — then \"mère, mother\"; hear the same word twice]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole run, 11 to 20",
+              "instruction": "the two arrivals — \"maternal came by boat, mother came on foot\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole run, 11 to 20]"
+              "source": "[YOU SAY: the two arrivals — \"maternal came by boat, mother came on foot\"]"
             }
           ]
         },
@@ -255,7 +425,694 @@
             },
             {
               "kind": "speech",
-              "text": "At which number does French stop fusing? (At 17 — seize is fused, dix-sept is plain \"ten-seven\".) What two things change at that seam? (The strategy — fused becomes transparent — and the order, digit-first becomes ten-first.) What English word comes from vingt's root? (Vigesimal, from vīgintī.) Next chapter: putting numbers to work."
+              "text": "Which two sounds does Grimm's law change, in the version you need here? (p becomes f and t becomes th.) Are père and father borrowed from each other? (No — they are the same inherited word, arriving by two different roads.) Why does maternal keep its t while mother does not? (maternal was borrowed late from Latin; mother came down the Germanic road and took the sound-change.) Next: the brother."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C10-frere",
+      "sequence": 315,
+      "title": "le frère — brother",
+      "headword": "le frère",
+      "romanization": "le frère",
+      "gloss": "brother — and the friar who is one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:820c3037ef67354e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Parents done. The next word rhymes with both of them, and it lets you use the sound-law you just learned instead of only hearing about it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le frère = luh FREHR. The same open è, the same throat r — and now an r on each side of the vowel, which is the only hard part."
+            },
+            {
+              "kind": "speech",
+              "text": "Say père, then frère. One consonant has been added at the front; everything else is identical."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "frère is Latin frāter, from Proto-Indo-European bʰréh₂tēr."
+            },
+            {
+              "kind": "speech",
+              "text": "Now use what you have. English brother is that same PIE word down the Germanic road: the t became th, exactly as it did in father and mother. The law you just met explains a third pair without being told to."
+            },
+            {
+              "kind": "speech",
+              "text": "By the Latin road, English got the formal set:"
+            },
+            {
+              "kind": "speech",
+              "text": "fraternal, fraternity, fraternize."
+            },
+            {
+              "kind": "speech",
+              "text": "and, softened through Old French frere, friar — a monk who is literally a brother of his order."
+            },
+            {
+              "kind": "speech",
+              "text": "Fraternity and friar are the same word twice, once in a lecture hall and once in a monastery, and the difference between them is only how long each spent in a French mouth on the way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le frère\" — luh FREHR, an r on both sides of the vowel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le frère\" — *luh FREHR*, an *r* on both sides of the vowel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three so far — \"le père, la mère, le frère\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three so far — \"le père, la mère, le frère\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the law again — \"frāter, brother: the t went to th\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the law again — \"frāter, brother: the *t* went to *th*\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"frère becomes fraternal, friar\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"frère → fraternal, friar\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"the brother\"? (le frère, luh FREHR.) What Latin word is behind it? (frāter.) Which sound-change turns frāter into English brother? (The same one: t becomes th.) What is a friar, underneath the word? (A brother — the same frère, worn down through Old French.) Next: the sister, and a letter you have not met."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C10-soeur",
+      "sequence": 320,
+      "title": "la sœur — sister",
+      "headword": "la sœur",
+      "romanization": "la sœur",
+      "gloss": "sister — the one family word that broke the pattern",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51c72185bed9864d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words that rhyme, and then this one. Père, mère, frère — and sœur, which refuses the pattern and brings a letter with it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la sœur = lah SUR, but not the sur of English sure. Round your lips as if to say oo, then say eh without moving them. That rounded front vowel is what œu spells."
+            },
+            {
+              "kind": "speech",
+              "text": "The r is the throat r, as in the other three."
+            },
+            {
+              "kind": "speech",
+              "text": "The strange letter is œ, an o and an e fused into one. It gets a lesson of its own next; for now, read it as the single vowel you just made."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sœur is Latin soror — and you can watch it collapse:"
+            },
+            {
+              "kind": "speech",
+              "text": "soror becomes seror becomes suer becomes sœur."
+            },
+            {
+              "kind": "speech",
+              "text": "Two syllables ground down into one, which is why it stopped rhyming with its three relatives. They were worn evenly; this one was worn out of shape."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept soror whole in the borrowed words:"
+            },
+            {
+              "kind": "speech",
+              "text": "sorority, sororal."
+            },
+            {
+              "kind": "speech",
+              "text": "and a nun is still addressed as Sister in English and ma sœur in French, the same word in both mouths."
+            },
+            {
+              "kind": "speech",
+              "text": "English sister is not from soror by borrowing — it comes down the Germanic road from the same PIE swésōr. So soror and sister are cousins who have not spoken since before either language existed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la sœur\" — lips rounded, then eh without moving them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la sœur\" — lips rounded, then *eh* without moving them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"le frère, la sœur\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"le frère, la sœur\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the collapse — \"soror, seror, sœur\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the collapse — \"soror, seror, sœur\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — \"le père, la mère, le frère, la sœur\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — \"le père, la mère, le frère, la sœur\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"the sister\"? (la sœur, lah SUR with rounded lips.) What Latin word is behind it? (soror.) Why does it not rhyme with the other three? (It was worn down from two syllables to one — soror becomes sœur.) An English word that kept soror whole? (sorority.) Next: that fused letter, on its own."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C10-oe",
+      "sequence": 325,
+      "title": "œ — one letter, not two",
+      "headword": "œ",
+      "romanization": "œ",
+      "gloss": "the fused letter — one character, and the four words that need it",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7f0eb40eccdfbf3c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: œ, one letter and not two",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: œ, one letter and not two and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have just read a word containing a character English does not own. It is worth two minutes on its own, because it is not decoration and it is not rare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: œ, one letter and not two",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "œ is an o and an e pushed together into a single letter. French calls it e dans l'o — \"e in the o\" — which is exactly what it looks like."
+            },
+            {
+              "kind": "speech",
+              "text": "Three things follow, and they are the whole lesson:"
+            },
+            {
+              "kind": "speech",
+              "text": "It counts as one letter when you spell aloud. sœur is spelled s-œ-u-r: four letters, not five."
+            },
+            {
+              "kind": "speech",
+              "text": "Writing it as two separate letters — soeur — is a substitution, the way writing ae for æ is. French readers accept it and French typography does not; a printed book, a newspaper and a road sign all use œ."
+            },
+            {
+              "kind": "speech",
+              "text": "It is not a separate sound of its own. In sœur the vowel is spelled œu, the rounded vowel you made in the last lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Its capital exists too, and looks like what you would expect: Œ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: œ, and the four words that need it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The list of everyday œ words is short enough to hold in your head, and you already have one of them:"
+            },
+            {
+              "kind": "speech",
+              "text": "la sœur — the sister, which you have."
+            },
+            {
+              "kind": "speech",
+              "text": "le cœur — the heart."
+            },
+            {
+              "kind": "speech",
+              "text": "l'œuf — the egg."
+            },
+            {
+              "kind": "speech",
+              "text": "l'œil — the eye."
+            },
+            {
+              "kind": "speech",
+              "text": "l'œuf and l'œil both come back later in this book as words in their own right, so learning the letter now means that when they arrive, only the meaning is new. le cœur is here because you will meet it everywhere else — it is one of the most common nouns in the language — and because four words is a short enough list to simply keep."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the name of the letter — \"e dans l'o\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the name of the letter — \"e dans l'o\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spell it — \"s-œ-u-r\", four letters",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: spell it — \"s-œ-u-r\", four letters]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the short list — \"sœur, cœur, œuf, œil\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the short list — \"sœur, cœur, œuf, œil\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "œ three times: draw the o, then start the e inside its right edge",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **œ** three times: draw the *o*, then start the *e* inside its right edge]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many letters is œ? (One.) What does French call it? (e dans l'o — \"e in the o\".) How many letters in sœur? (Four — s-œ-u-r.) Name two other words that use it. (cœur, œuf, œil — any two.) Next: putting the family together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C10-practice",
+      "sequence": 330,
+      "title": "Practice — four words, one law",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "the four family words, and the one law that unlocks their English cousins",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd5956ab4d016d59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, learned one at a time. Run them as a set now, and then cash in what each one buys you in English."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: the set, with articles",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The article is half the word, and a family word said bare is a word half learned."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le père, la mère\" — the parents, masculine then feminine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le père, la mère\" — the parents, masculine then feminine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le frère, la sœur\" — the siblings, same order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le frère, la sœur\" — the siblings, same order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four straight through, then in reverse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four straight through, then in reverse]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"le père, la mère, le frère, la sœur\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the three that rhyme, and the one that does not",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"père, mère, frère\" — one vowel, three times: the open è",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"père, mère, frère\" — one vowel, three times: the open **è**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sœur\" after them, and hear the break",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sœur\" after them, and hear the break]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why it broke — \"soror ground down two syllables into one\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why it broke — \"soror ground down two syllables into one\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: cash in the English",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Each French word hands you an English one you already knew and never thought about, and the French is the key rather than the lock."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"père becomes paternal, patron\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"père → paternal, patron\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mère becomes maternal, matter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mère → maternal, matter\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"frère becomes fraternal, friar\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"frère → fraternal, friar\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sœur becomes sorority\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sœur → sorority\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "four family words, each with its article."
+            },
+            {
+              "kind": "speech",
+              "text": "one sound-law — Grimm's law, p becomes f and t becomes th. It is why père is father, mère is mother and frāter is brother, and it turned three separate memorisations into one fact."
+            },
+            {
+              "kind": "speech",
+              "text": "a letter — œ, one character, waiting in cœur, œuf and œil."
+            },
+            {
+              "kind": "speech",
+              "text": "a habit worth more than any of them: when a French word looks like nothing, reach for the long formal English word rather than the short common one. Père is opaque next to father and obvious next to paternal."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give all four family words with their articles. (le père, la mère, le frère, la sœur.) Which two are feminine? (la mère, la sœur.) State Grimm's law in the form you need. (p becomes f, t becomes th.) Use it: what English word is frāter? (brother.) How many letters is œ, and name a word besides sœur that has it. (One; cœur, œuf or œil.) Which English word for physical stuff traces back to mère? (matter.)"
             }
           ]
         }

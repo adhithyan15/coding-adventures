@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C15-jai-parle",
+    "language": "french",
+    "chapter": 18,
+    "sequence": 545,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cc1bb9a485936dc"
+  },
+  "findings": []
+}

@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C25-comprendre",
     "language": "french",
-    "chapter": 25,
-    "sequence": 750,
+    "chapter": 29,
+    "sequence": 850,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6d8b262a4e6ebdd9"
+    "sourceHash": "fnv1a64:f8ca13bd0783be22"
   },
   "findings": []
 }

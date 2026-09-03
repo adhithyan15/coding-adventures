@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C15-passe-simple",
     "language": "french",
-    "chapter": 15,
-    "sequence": 300,
+    "chapter": 18,
+    "sequence": 580,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bae97afc5edf8312"
+    "sourceHash": "fnv1a64:88b5a4d1ee5fd39a"
   },
   "findings": []
 }

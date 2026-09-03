@@ -31,7 +31,7 @@ variety: standard-contemporary
 reviews_of: [GE-C06-zahlen-1-5, GE-C05-machen]
 ---
 
-# sechs — "six," where *chs* is just an *x*
+# sechs — "six," where *chs* is a plain *x*
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ZAEHLEN-1-5-01, GE-LEX-FUENF-01] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C14-jai-vingt-ans",
+    "language": "french",
+    "chapter": 17,
+    "sequence": 520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02475bdf7551eb9d"
+  },
+  "findings": []
+}

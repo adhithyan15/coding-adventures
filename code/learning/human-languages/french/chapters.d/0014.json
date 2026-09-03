@@ -1,16 +1,25 @@
 {
   "chapter": 14,
-  "title": "To Have, and How Old You Are",
-  "label": "ch:avoir-age",
-  "canDo": "I can use the French verb for “to have” to talk about possession and age.",
+  "title": "The Welded Teens",
+  "label": "ch:numbers-11-16",
+  "canDo": "I can count from eleven to sixteen in French, and say which half of each word is the digit and which is the ten.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-DO"
+    "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "FR-C14-age",
+    "lesson": "FR-C12-practice-teens",
     "kind": "task",
-    "summary": "Complete FR-C14-age, the canonical closing checkpoint, and demonstrate the chapter promise: use the French verb for “to have” to talk about possession and age.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Six numbers French did not build. It inherited them from Latin already welded shut — ūndecim, duodecim, trēdecim — and wore them down to one syllable each. The -ze they all share is decem, the same ten already hiding in dix and in décembre, and the front of every one of them is its own digit: deux in douze, six in seize. The digit comes first and the ten comes second, which is a choice, and French is about to make the other one.",
+    "assesses": [
+      "FR-LEX-ONZE-01",
+      "FR-LEX-DOUZE-02",
+      "FR-ETYMON-ZE-DECEM-03",
+      "FR-LEX-TREIZE-04",
+      "FR-LEX-QUATORZE-05",
+      "FR-LEX-QUINZE-06",
+      "FR-LEX-SEIZE-07",
+      "FR-GRAM-DIGIT-FIRST-08"
+    ],
+    "note": "Authored when chapter 14 was split in two: ten numbers plus their formation cannot fit maxNewAtomsPerChapter at one atom per word, and the chapter's own subject supplies the seam -- at seventeen French changes both strategy and direction. This half holds the six inherited ones. The payoff is atom-scored -- it assesses every atom its chapter introduces."
   }
 }

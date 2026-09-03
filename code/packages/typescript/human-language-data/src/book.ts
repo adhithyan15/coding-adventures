@@ -987,6 +987,31 @@ function renderMarkdown(
       Array.from({ length: header.length }, (_, index) =>
         renderInlineMarkdown(row[index] ?? "", options),
       );
+    // A row's first cell is whatever follows the previous row's `\\`, and `\\*`
+    // is a LaTeX command in its own right -- the starred line break, "no page
+    // break here". So a table row beginning with an asterisk has that asterisk
+    // SWALLOWED by the `\\` above it: the row still typesets, one character
+    // short, and nothing complains. The .tex on disk contains the asterisk, so
+    // every text assertion and every hash check passes; only the printed page is
+    // wrong, and only the second row onward, because the first body row follows
+    // `\midrule` instead.
+    //
+    // This is not hypothetical padding against a rule nobody breaks. Every
+    // reconstructed proto-form is written with a leading asterisk -- `*ph2ter`,
+    // `*swesor` -- and the moment a lesson puts a column of them in a table, the
+    // convention that MARKS them as reconstructed is the thing that disappears.
+    // French chapter 12 did exactly that and lost the star from `*meh2ter`.
+    //
+    // Bracing hides the `*` from `\\`'s lookahead and typesets identically.
+    // `[` needs no such guard: it is already escaped to `{[}` upstream, which
+    // would otherwise be read as `\\[<length>]`.
+    const protectLeadingStar = (cell: string): string =>
+      cell.startsWith("*") ? `{*}${cell.slice(1)}` : cell;
+    const bodyRow = (row: string[]): string => {
+      const rendered = cells(row);
+      const [first, ...rest] = rendered;
+      return [protectLeadingStar(first ?? ""), ...rest].join(" & ");
+    };
     output.push(
       "\\noindent",
       `\\begin{tabularx}{\\linewidth}{@{}${columns}@{}}`,
@@ -995,7 +1020,7 @@ function renderMarkdown(
         .map((cell) => `\\textbf{${cell}}`)
         .join(" & ")} \\\\`,
       "\\midrule",
-      ...body.map((row) => `${cells(row).join(" & ")} \\\\`),
+      ...body.map((row) => `${bodyRow(row)} \\\\`),
       "\\bottomrule",
       "\\end{tabularx}",
       "",

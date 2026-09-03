@@ -2,219 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 17,
-  "title": "Head and Hand",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c6ff20dadd4a9448",
+  "title": "To Have, and How Old You Are",
+  "drivablePrefix": 14,
+  "sourceHash": "fnv1a64:4eac8a4773390e29",
   "lessons": [
     {
-      "id": "FR-C17-tete",
-      "sequence": 620,
-      "title": "la tête — \"the head\"",
-      "headword": "la tête",
-      "romanization": "la tête",
-      "gloss": "the head — from Latin for a clay pot",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:5e2fddb422fadef4",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The first body part, and one of the best etymologies in French. The word for head is not the Latin word for head."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know: The word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "la tête — the head. Feminine, so la."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: Latin had a perfectly good word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin's word for \"head\" was caput. You can see it surviving all over Europe:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "Portuguese, cabeça.",
-                "Spanish, cabeza.",
-                "Italian, capo (now \"chief, boss\").",
-                "English, captain, capital, decapitate."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "French has caput too, and in two layers. Inherited, worn down by use: chef (\"chief,\" originally \"head\"), chapitre, cap (a headland), achever (\"to finish\" — to bring to a head). Re-borrowed later, straight from written Latin: capital, capitaine, décapiter."
-            },
-            {
-              "kind": "speech",
-              "text": "What French does not use it for is the thing on your shoulders."
-            },
-            {
-              "kind": "speech",
-              "text": "Tête comes from Latin testa: an earthenware pot, a shell, a potsherd."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: Why a pot?",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Soldiers' slang. Roman troops called the skull a testa the way English speakers say someone got hit on the noggin — a noggin being a small mug. It was a joke, it spread, and eventually the joke replaced the real word in Gaul and Italy."
-            },
-            {
-              "kind": "speech",
-              "text": "So a French speaker saying j'ai mal à la tête is, historically, saying \"my pot hurts.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Testa is still visible in English test — which began as the shallow pot an alchemist used to assay metals."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "pronunciation",
-          "title": "Sounds you'll need: The circumflex is a receipt",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Look at the accent: tête. Chapter W01 taught what a circumflex records — a letter that used to be there, almost always an s."
-            },
-            {
-              "kind": "speech",
-              "text": "testa becomes Old French teste becomes modern tête."
-            },
-            {
-              "kind": "speech",
-              "text": "The s stopped being pronounced, and the accent was put in to mark the grave. That is why English, which borrowed from Old French before the s fell, still has it in test."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"la tête\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"la tête\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"j'ai mal à la tête\" — \"my head hurts\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'ai mal à la tête\" — \"my head hurts\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the joke — \"testa = a pot\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the joke — \"*testa* = a **pot**\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the receipt — \"teste becomes tê-te\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the receipt — \"te**s**te → tê-te\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"the head.\" (La tête — feminine.) Does it come from Latin caput? (No — from testa, an earthenware pot.) Why a pot? (Roman soldiers' slang for the skull, which replaced the proper word.) Where did caput survive in French? (Inherited in chef, chapitre, cap, achever; re-borrowed in capital, capitaine, décapiter — just never for the head itself.) What does the circumflex on tête record? (A lost s — teste, still visible in English test.) Next: the hand."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C17-main",
-      "sequence": 630,
-      "title": "la main — \"the hand\"",
-      "headword": "la main",
-      "romanization": "la main",
-      "gloss": "the hand — feminine despite ending in a consonant, and the root of half the words you know",
+      "id": "FR-C14-jai",
+      "sequence": 470,
+      "title": "j'ai — I have",
+      "headword": "j'ai",
+      "romanization": "j'ai",
+      "gloss": "I have — one syllable, one vowel, and all that is left of Latin habeō",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df3ac09eef11c7f7",
+      "sourceHash": "fnv1a64:f6e191913e483c5e",
       "notice": null,
       "blocks": [
         {
@@ -230,74 +35,54 @@
             },
             {
               "kind": "speech",
-              "text": "Where tête abandoned its Latin ancestor, this one kept it — and then lent it to English several dozen times over."
+              "text": "The verb French leans on hardest starts here, with the form you will say most — and it is one sound long."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know: The word",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "la main — the hand. Feminine, and worth flagging: it ends in a consonant and still takes la. French gender is not predictable from the ending, which is why this book always gives you the article."
+              "text": "elision — it is j'ai, never je ai. Before a vowel je drops its e, the same move that turns le eau into l'eau."
             },
             {
               "kind": "speech",
-              "text": "The -ain is the nasal vowel of pain, the bread — say them together: pain, main."
+              "text": "The ai is a single vowel, close to English eh."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: j'ai = zhay. One syllable, and the whole of \"I have.\""
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: manus in English",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Main comes from Latin manus, \"hand.\" That word is inside an enormous number of English words, and once you see it you cannot unsee it:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English",
-                "literally"
-              ],
-              "columns": 2,
-              "rowCount": 6,
-              "utterances": [
-                "English: manual. literally: done by hand.",
-                "English: manufacture. literally: made by hand (manus + facere \"to make\").",
-                "English: manuscript. literally: written by hand (manus + scrībere).",
-                "English: maintain. literally: hold in the hand (manū tenēre).",
-                "English: manage. literally: to handle — via Italian maneggiare, of horses.",
-                "English: manoeuvre. literally: work by hand (manū operārī)."
-              ]
+              "text": "j'ai is Latin habeō, \"I have.\""
             },
             {
               "kind": "speech",
-              "text": "Manufacture is the one worth pausing on. It means \"made by hand\" — and it now names precisely the thing that isn't."
+              "text": "Say those two aloud: ha-be-o, then zhay. Three syllables become one, and not one consonant of the Latin survives into the vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "French does this harder than any of its sisters. Italian kept ho, Spanish kept he — both still a whole syllable with a consonant. French kept a vowel. It is the same appetite that ground aqua down to eau, and you will see it again every time a very common word looks like nothing."
+            },
+            {
+              "kind": "speech",
+              "text": "The rule of thumb is worth having now: the more often a word is said, the more of it wears away. That is why the most useful words in a language are usually its least recognisable ones."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The phrase, taken apart: French kept it too",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Maintenir / English maintain is Latin manū tenēre, \"to hold in the hand\" — a hand, plus the verb tenēre, \"to hold.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So maintenance — the least romantic word in any office — is literally keeping something in hand."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -310,38 +95,1164 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"la main\" — and hear pain, main",
+              "instruction": "\"j'ai\" — zhay, one syllable",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"la main\" — and hear *pain*, *main*]"
+              "source": "[YOU SAY: \"j'ai\" — *zhay*, one syllable]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"j'ai mal à la main\"",
+              "instruction": "the erosion — \"habeō, ho, he, j'ai\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"j'ai mal à la main\"]"
+              "source": "[YOU SAY: the erosion — \"habeō, ho, he, j'ai\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"manual, manuscript, maintain — all a hand\"",
+              "instruction": "a whole sentence — \"J'ai un frère\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"manual, manuscript, maintain — all a **hand**\"]"
+              "source": "[YOU SAY: a whole sentence — \"J'ai un frère\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"I have\"? (j'ai, zhay.) Why is it not je ai? (Elision — je drops its e before a vowel.) What Latin word is it from? (habeō.) What do Italian and Spanish still keep that French does not? (A whole syllable — ho, he.) Next: the same verb, said to one person."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-as",
+      "sequence": 475,
+      "title": "tu as — you have",
+      "headword": "tu as",
+      "romanization": "tu as",
+      "gloss": "you have — the informal one, and it sounds exactly like the last one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d2b5c49b5b4fadf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second form of the verb, and the first sign that this paradigm is easier to say than it looks to read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "silent-final — the s of as is not pronounced."
+            },
+            {
+              "kind": "speech",
+              "text": "tu as = tü ah. The u of tu is the tight front-rounded vowel; the as is a bare open ah."
+            },
+            {
+              "kind": "speech",
+              "text": "Say j'ai and tu as back to back and notice how little work the verb is doing in either."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "as is the tu form — the one you use with a friend, a child, or anyone you would call by their first name. It is the same tu you met when you learned which \"you\" to pick."
+            },
+            {
+              "kind": "speech",
+              "text": "The written s is a signal to the eye and nothing to the ear. That is the normal state of affairs in French verbs: the endings are alive on the page and almost dead in the mouth. It is why the pronoun is not optional — as on its own would tell a listener nothing about who has something."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep that in mind as the paradigm fills in. You are learning six written forms and rather fewer sounds."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the irony — \"manufacture = made by hand\"",
+              "instruction": "\"tu as\" — tü ah, the s silent",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the irony — \"**manufacture** = made by hand\"]"
+              "source": "[YOU SAY: \"tu as\" — *tü ah*, the *s* silent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"j'ai, tu as\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"j'ai, tu as\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with a noun — \"Tu as un frère\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with a noun — \"Tu as un frère\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"you have\" to a friend? (tu as, tü ah.) Is the s pronounced? (No.) Why can you not drop the pronoun? (The verb form alone does not say who — the pronoun carries it.) Next: he and she."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-a",
+      "sequence": 480,
+      "title": "il a, elle a — he has, she has",
+      "headword": "il a, elle a",
+      "romanization": "il a, elle a",
+      "gloss": "he has, she has — the verb worn down to a single letter",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7eb4b338e1e3cc2e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The third form, and the shortest verb you will ever meet: one letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a is a bare open ah — the same sound as tu as, with nothing written after it."
+            },
+            {
+              "kind": "speech",
+              "text": "il a = eel ah. elle a = el ah."
+            },
+            {
+              "kind": "speech",
+              "text": "All three singular forms are now in your mouth, and the next lesson is about what they have in common."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a is the form for il (he) and elle (she), and it is a single letter carrying an entire verb."
+            },
+            {
+              "kind": "speech",
+              "text": "You already know the two pronouns from the articles: le and la split the world into masculine and feminine, and il and elle do the same for people. French has no separate word for it — a table is elle, a book is il, because the noun's gender decides."
+            },
+            {
+              "kind": "speech",
+              "text": "One thing to notice for later. When French turns this into a question by putting the verb first, two vowels would collide — a il? — so a t is pushed in between them: a-t-il?, \"has he?\" That t means nothing at all. It is there purely so the mouth has something to land on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"il a, elle a\" — eel ah, el ah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"il a, elle a\" — *eel ah*, *el ah*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three singulars — \"j'ai, tu as, il a\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three singulars — \"j'ai, tu as, il a\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question shape — \"a-t-il?\"; the t is only there for the mouth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question shape — \"a-t-il ?\"; the *t* is only there for the mouth]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"he has\"? (il a.) And \"she has\"? (elle a.) How many letters is the verb? (One.) What is the t doing in a-t-il? (Nothing — it keeps two vowels from colliding.) Next: why those three forms are harder to hear than to read."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-ai-as-a",
+      "sequence": 485,
+      "title": "ai, as, a — three spellings, one ear",
+      "headword": "ai · as · a",
+      "romanization": "ai · as · a",
+      "gloss": "three written forms, and your ear cannot tell them apart",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d768d2cd827bfe2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have the three singular forms. Say them one after another and listen to how much difference there actually is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the endings are for the eye",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Written, the three singular forms are ai, as, a — three different words. Spoken, as and a are the same bare ah, and ai is a single vowel too. The written endings differ; your ear has almost nothing to work with."
+            },
+            {
+              "kind": "speech",
+              "text": "This is not a quirk of avoir. It is the central fact about French verbs, and it has one large consequence: the pronoun is compulsory."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish can say tengo and drop the yo, because -o means \"I\" out loud. French cannot drop the je, because the ending that would have carried it went silent centuries ago. So French kept the pronoun and Spanish did not, and the two languages ended up in different places for the same reason: what the ear can still hear decides what the sentence must carry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three verb forms bare — \"ai, as, a\"; hear how close they are",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three verb forms bare — \"ai, as, a\"; hear how close they are]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "them with their pronouns — \"j'ai, tu as, il a\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: them with their pronouns — \"j'ai, tu as, il a\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the consequence — \"the pronoun does the work the ending stopped doing\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the consequence — \"the pronoun does the work the ending stopped doing\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"j'ai, tu as, il a\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the three singular forms. (ai, as, a.) How many distinct sounds are there? (Effectively one — a bare vowel.) Why can French not drop its subject pronouns the way Spanish can? (Because the endings are silent — the pronoun is the only thing left that says who.) Next: the plural, where the endings come back to life."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-avons",
+      "sequence": 490,
+      "title": "nous avons — we have",
+      "headword": "nous avons",
+      "romanization": "nous avons",
+      "gloss": "we have — and the ending is finally something you can hear",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d4e39a99041128e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three forms that sound alike, and then this: an ending you can actually hear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nous avons = noo-za-VO(N). The s of nous wakes up and buzzes into the vowel — that is the liaison you already know."
+            },
+            {
+              "kind": "speech",
+              "text": "nasal-on — the -ons ending is a nasal vowel; the n is the nose, not a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "Weight on the last syllable, as almost always in French."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "avons is Latin habēmus, \"we have.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Here the paradigm turns around. The three singular endings wore away to nothing; -ons did not. It is a full syllable, it is unmistakable, and it belongs to nous and nothing else."
+            },
+            {
+              "kind": "speech",
+              "text": "That pattern holds across French verbs: -ons for nous, -ez for vous. Once you have those two you can hear the plural coming in any verb in the language, regular or not. avoir is one of the most irregular verbs French has, and it still obeys this."
+            },
+            {
+              "kind": "speech",
+              "text": "So the difficulty is not spread evenly. The singular is a listening problem and the plural is not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nous avons\" — noo-za-VO(N), the s buzzing across",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nous avons\" — *noo-za-VO(N)*, the *s* buzzing across]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"il a\" then \"nous avons\"; one is a vowel, one is a syllable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"il a\" then \"nous avons\"; one is a vowel, one is a syllable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ending alone — \"-ons is always nous\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ending alone — \"-ons is always nous\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"we have\"? (nous avons, noo-za-VO(N).) Which ending marks nous? (-ons.) Why is this form easier to hear than il a? (The plural endings survived where the singular ones went silent.) Next: the other you."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-avez",
+      "sequence": 495,
+      "title": "vous avez — you have",
+      "headword": "vous avez",
+      "romanization": "vous avez",
+      "gloss": "you have — plural, and polite to one person",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0be4ebc84d25413",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second plural ending, and a form you will use with strangers far more often than with crowds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vous avez = voo-za-VAY. The same buzzing liaison as nous avons."
+            },
+            {
+              "kind": "speech",
+              "text": "vowel-e-acute — the -ez is the bright, narrow ay of février. The z is silent."
+            },
+            {
+              "kind": "speech",
+              "text": "Say nous avons, vous avez together: -ons, -ez, the two plural endings of nearly every French verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "avez is Latin habētis, and it goes with vous."
+            },
+            {
+              "kind": "speech",
+              "text": "vous is two things at once. It is the plural \"you\" — several people. And it is the polite \"you\" for one person, which is the use you will need first and most: a shopkeeper, a stranger, anyone you have not been invited to call tu."
+            },
+            {
+              "kind": "speech",
+              "text": "So vous avez is what you say to one person you are being careful with. Getting this wrong is one of the few grammar mistakes in French that a listener hears as a mistake about them rather than about the language, which is why tu and vous is worth more attention than most endings."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb form does not change between the two meanings. Only who you are looking at does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vous avez\" — voo-za-VAY",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vous avez\" — *voo-za-VAY*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two plural endings — \"nous avons, vous avez\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two plural endings — \"nous avons, vous avez\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two jobs — \"vous to a group, vous to one stranger\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two jobs — \"vous to a group, vous to one stranger\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"you have\" politely? (vous avez, voo-za-VAY.) What are the two jobs vous does? (Plural you, and polite you to one person.) Which ending marks vous? (-ez.) Next: the last form, and the odd one."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-ont",
+      "sequence": 500,
+      "title": "ils ont, elles ont — they have",
+      "headword": "ils ont, elles ont",
+      "romanization": "ils ont, elles ont",
+      "gloss": "they have — the form that refuses to look like the rest",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7801093cbc3f3092",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The sixth and last form, and the one that does not resemble the other five."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ils ont = eel-ZO(N). The s of ils buzzes across into the vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "nasal-on — ont is one nasal vowel; the n and t are both silent."
+            },
+            {
+              "kind": "speech",
+              "text": "elles ont = el-ZO(N), identical but for the first vowel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ont is Latin habent, and it is the odd one out: every other form of avoir has an a in it, and this one does not."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a trap here worth meeting before you fall into it. ils ont is \"they have.\" ils sont is \"they are.\" One consonant apart, and both extremely common. The way to keep them apart is the liaison: ils ont buzzes — eel-z-o(n) — while ils sont hisses, eel so(n). The buzz means have."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole paradigm. Six forms, and you now have all of them:"
+            },
+            {
+              "kind": "speech",
+              "text": "j'ai, tu as, il a, nous avons, vous avez, ils ont."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ils ont\" — eel-ZO(N), the buzz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ils ont\" — *eel-ZO(N)*, the buzz]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the trap — \"ils ont\" then \"ils sont\"; buzz means have",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the trap — \"ils ont\" then \"ils sont\"; buzz means have]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all six in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all six in order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"they have\"? (ils ont, eel-ZO(N).) What does ils sont mean instead? (They are.) How do you tell them apart by ear? (ils ont buzzes; ils sont hisses.) What is unusual about ont among the six forms? (It is the only one with no a in it.) Next: where the whole verb came from."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-habere",
+      "sequence": 505,
+      "title": "habēre — the root you already met",
+      "headword": "habēre",
+      "romanization": "habēre",
+      "gloss": "the root under avoir — and under habiter, and under four English words",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1094c6500a15bf83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have all six forms of avoir. You have also, without being told, already learned its root — in a different verb, several chapters ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "avoir is Latin habēre, \"to have.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Now recall habiter, \"to live somewhere.\" That is Latin habitāre — and habitāre is just habēre run through a pattern that means \"keep doing it.\" To habitāre a place is to keep having it."
+            },
+            {
+              "kind": "speech",
+              "text": "So avoir and habiter are the same verb twice: one wore down to a vowel, the other kept the h, the b and the t because it was said far less often. The two French verbs sitting at opposite ends of the same root are a compact demonstration of the rule you met with j'ai: frequency is what erodes a word."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed the Latin whole and shows the root undisguised every time:"
+            },
+            {
+              "kind": "speech",
+              "text": "habit — what you have regularly."
+            },
+            {
+              "kind": "speech",
+              "text": "inhabit — to have a place; the exact twin of habiter."
+            },
+            {
+              "kind": "speech",
+              "text": "exhibit — to hold out."
+            },
+            {
+              "kind": "speech",
+              "text": "prohibit — to hold back."
+            },
+            {
+              "kind": "speech",
+              "text": "Four English words, one French verb you use constantly, and one French verb you met learning to say where you live — all the same handful of Latin letters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root — \"habēre\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root — \"habēre\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two French verbs — \"avoir, habiter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two French verbs — \"avoir, habiter\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English four — \"habit, inhabit, exhibit, prohibit\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English four — \"habit, inhabit, exhibit, prohibit\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the twins — \"habiter, inhabit\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the twins — \"habiter, inhabit\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin verb is avoir from? (habēre.) Which other French verb you already know comes from it? (habiter — from habitāre, \"to keep having a place\".) Which English word is habiter's exact twin? (inhabit.) Why did avoir wear down so much further than habiter? (It is said far more often — frequency erodes a word.) Next: all six forms, together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-practice-avoir",
+      "sequence": 510,
+      "title": "Practice — the whole of avoir",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "the six forms of avoir, run together for the first time",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99c53fde728dcc99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six forms, learned one at a time. This is the first time they stand together — and a paradigm you have already built is a recap, not a wall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: the six in order",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"j'ai, tu as, il a, nous avons, vous avez, ils ont\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"j'ai, tu as, il a, nous avons, vous avez, ils ont\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the singulars alone — \"j'ai, tu as, il a\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the singulars alone — \"j'ai, tu as, il a\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plurals alone — \"nous avons, vous avez, ils ont\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plurals alone — \"nous avons, vous avez, ils ont\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"j'ai, tu as, il a, nous avons, vous avez, ils ont\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the two halves sound different",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three that blur — \"ai, as, a\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three that blur — \"ai, as, a\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two that do not — \"-ons, -ez\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two that do not — \"-ons, -ez\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the trap — \"ils ont, ils sont\"; buzz for have, hiss for are",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the trap — \"ils ont, ils sont\"; buzz for have, hiss for are]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: use it",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"J'ai un frère\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"J'ai un frère\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Tu as une sœur\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Tu as une sœur\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Nous avons du pain\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Nous avons du pain\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root — \"avoir, habiter, inhabit\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root — \"avoir, habiter, inhabit\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built so far",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "six forms of the verb French leans on hardest, one lesson each."
+            },
+            {
+              "kind": "speech",
+              "text": "a listening fact — the singular endings are silent, so French keeps its subject pronouns where Spanish drops them."
+            },
+            {
+              "kind": "speech",
+              "text": "a root that pays twice — habēre gave French avoir and habiter, and English habit, inhabit, exhibit, prohibit."
             }
           ]
         },
@@ -358,7 +1269,809 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the hand.\" (La main — feminine, despite the consonant ending.) What Latin word is it from? (Manus.) Give three English words built on it. (Manual, manufacture, manuscript, maintain, manage, manoeuvre.) What does manufacture literally mean? (\"Made by hand\" — now the name for the opposite.) And maintenir? (Manū tenēre, \"hold in the hand\".) Next: the rest of the body."
+              "text": "Give all six forms without stopping. Which three sound effectively the same? (ai, as, a.) Which two endings can you always hear? (-ons and -ez.) How do you hear the difference between ils ont and ils sont? (The buzz — ont takes a liaison z, sont hisses.) What Latin verb is behind all of it? (habēre.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-an",
+      "sequence": 515,
+      "title": "un an — a year",
+      "headword": "un an, des ans",
+      "romanization": "un an, des ans",
+      "gloss": "a year — and the annual, the anniversary and the annals inside it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2839c6ef6c0a56f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One small word, and it unlocks the single most common question anyone will ask you in a new language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nasal-an — an is a nasal vowel, the same one in blanc and janvier. The n is the nose, not a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "silent-final — the plural ans adds a written s and no sound at all."
+            },
+            {
+              "kind": "speech",
+              "text": "un an = a(n)-NA(N): the n of un links across into the vowel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "an is Latin annus, \"year,\" and English kept it whole in a whole shelf of words:"
+            },
+            {
+              "kind": "speech",
+              "text": "annual — happening each year."
+            },
+            {
+              "kind": "speech",
+              "text": "anniversary — literally the year turning (annus + vertere, \"to turn\")."
+            },
+            {
+              "kind": "speech",
+              "text": "annals — a record kept year by year."
+            },
+            {
+              "kind": "speech",
+              "text": "per annum — English never even translated this one."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met annus's neighbours already: the months came out of the same Roman calendar, and janvier stands at the door of exactly this word."
+            },
+            {
+              "kind": "speech",
+              "text": "French also has a second word for year, année, and the difference is real but small: an counts years, année describes them as a stretch of time. For counting — which is what the next lesson does — you want an."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"un an\" — a(n)-NA(N), both vowels through the nose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"un an\" — *a(n)-NA(N)*, both vowels through the nose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plural — \"deux ans, dix ans\"; the s is silent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plural — \"deux ans, dix ans\"; the *s* is silent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English family — \"annual, anniversary, annals\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English family — \"annual, anniversary, annals\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say \"a year\"? (un an.) What Latin word is it? (annus.) Does the plural ans sound different from an? (No — the s is silent.) What does anniversary literally say? (The year turning.) Next: what French does with avoir and ans together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-jai-vingt-ans",
+      "sequence": 520,
+      "title": "j'ai vingt ans — having your years",
+      "headword": "j'ai vingt ans",
+      "romanization": "j'ai vingt ans",
+      "gloss": "French does not BE twenty — it HAS twenty years",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02475bdf7551eb9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the first thing French lets you say that English cannot say the same way at all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: age is something you have",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English is its age: I am twenty. French has it:"
+            },
+            {
+              "kind": "speech",
+              "text": "J'ai vingt ans. — literally, \"I have twenty years.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two things follow, and both are absolute."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is avoir, never être. Je suis vingt ans is not a stylistic choice; it is simply wrong, and it is the single most common thing an English speaker gets wrong in their first month."
+            },
+            {
+              "kind": "speech",
+              "text": "And ans cannot be dropped. English says \"I'm twenty\" with no noun at all. French must name the years: J'ai vingt on its own means nothing."
+            },
+            {
+              "kind": "speech",
+              "text": "One sound to get right. vingt normally ends in silence — you learned it as VA(N), with the g and t both dead. Put ans after it and the t wakes up: vin-t-a(n). That is liaison, doing what it always does — reviving a buried consonant when a vowel follows it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"J'ai vingt ans\" — with the liaison, vin-t-a(n)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"J'ai vingt ans\" — with the liaison, *vin-t-a(n)*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rule — \"avoir, never être\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rule — \"avoir, never être\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the buried t waking — \"vingt\" alone, then \"vingt ans\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the buried t waking — \"vingt\" alone, then \"vingt ans\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own age, with the numbers you have",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own age, with the numbers you have]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"J'ai vingt ans\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does French say \"I am twenty\"? (J'ai vingt ans — \"I have twenty years\".) Which verb, and which is wrong? (avoir; être is wrong.) Can you drop ans the way English drops \"years\"? (No.) What happens to the t of vingt before ans? (It wakes up — vin-t-a(n), a liaison.) Next: how to ask."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-quel-age",
+      "sequence": 525,
+      "title": "Quel âge as-tu? — asking someone's age",
+      "headword": "Quel âge as-tu ?",
+      "romanization": "Quel âge as-tu ?",
+      "gloss": "asking someone's age — a fixed phrase you can use whole",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86b374c15c6e25c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can answer the question. Now you can ask it — and this is a phrase worth taking whole rather than building."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Quel âge as-tu? = kel AHZH ah-tü."
+            },
+            {
+              "kind": "speech",
+              "text": "circumflex — the hat on â is the gravestone you met on août: it marks a lost s. Older French wrote aage, and before that Latin had aetāticum."
+            },
+            {
+              "kind": "speech",
+              "text": "The g of âge is the soft zh of rouge."
+            },
+            {
+              "kind": "speech",
+              "text": "The polite form is Quel âge avez-vous? — kel AHZH ah-vay-VOO."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take it as one unit, the way you took Comment vous appelez-vous?"
+            },
+            {
+              "kind": "speech",
+              "text": "— Quel âge as-tu? — \"What age do you have?\""
+            },
+            {
+              "kind": "speech",
+              "text": "— J'ai vingt ans. — \"I have twenty years.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the question uses avoir as well. The whole exchange is built on having, on both sides — which is what makes it a pair worth memorising together rather than two separate facts."
+            },
+            {
+              "kind": "speech",
+              "text": "And âge is a word you already own in English. Age came into English from French, hat and all, having lost its s on the way: Latin aetāticum becomes aage becomes âge becomes English age."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Quel âge as-tu?\" — kel AHZH ah-tü",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Quel âge as-tu ?\" — *kel AHZH ah-tü*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the polite one — \"Quel âge avez-vous?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the polite one — \"Quel âge avez-vous ?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both halves — \"Quel âge as-tu? J'ai vingt ans.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both halves — \"Quel âge as-tu ? J'ai vingt ans.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hat's meaning — \"â marks a lost s, like août\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hat's meaning — \"â marks a lost s, like août\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Quel âge as-tu? J'ai vingt ans.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you ask a friend their age? (Quel âge as-tu?) And a stranger? (Quel âge avez-vous?) Which verb does the question use? (avoir — the same as the answer.) What does the circumflex on â mark? (A lost s.) Next: who else in Europe does it this way."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-avoir-etre-langues",
+      "sequence": 530,
+      "title": "\"having\" your years — who else does it",
+      "headword": "j'ai vingt ans / I am twenty",
+      "romanization": "j'ai vingt ans / I am twenty",
+      "gloss": "a clean split down Europe — Romance HAS its years, Germanic IS its years",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bcbe06b5c8b204a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "French is not being strange here. It is on one side of a line that runs straight across Europe, and the line is exactly where you would draw it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ask the same question in six languages and count the verbs."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "\"I am 20\"",
+                "verb"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "language: French. \"I am 20\": j'ai vingt ans. verb: have.",
+                "language: Spanish. \"I am 20\": tengo veinte años. verb: have.",
+                "language: Italian. \"I am 20\": ho venti anni. verb: have.",
+                "language: Portuguese. \"I am 20\": tenho vinte anos. verb: have.",
+                "language: German. \"I am 20\": ich bin zwanzig Jahre alt. verb: be.",
+                "language: English. \"I am 20\": I am twenty. verb: be."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A clean split, and not a coincidental one: every Romance language on that list has its years, and every Germanic one is them."
+            },
+            {
+              "kind": "speech",
+              "text": "French treats age as something you carry: a count of years in your possession, which grows. English treats it as something you are, a property like tall or tired."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither is more logical. What matters is that the choice is inherited rather than reasoned: French did not decide this, it received it, along with the rest of what Latin left behind. And it means the mistake you are most likely to make — je suis vingt ans — is you importing your own family's habit into another one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four that have — \"j'ai, tengo, ho, tenho\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four that have — \"j'ai, tengo, ho, tenho\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two that are — \"ich bin, I am\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two that are — \"ich bin, I am\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the line — \"Romance has its years; Germanic is its years\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the line — \"Romance has its years; Germanic is its years\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the French one again, correctly — \"J'ai vingt ans\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the French one again, correctly — \"J'ai vingt ans\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which language family uses have for age? (Romance — French, Spanish, Italian, Portuguese.) Which uses be? (Germanic — German, English.) Is either one more logical? (No — the choice is inherited, not reasoned.) Which error does that make an English speaker likely to commit? (Je suis vingt ans — importing English's be.) Next: all of it together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C14-practice",
+      "sequence": 535,
+      "title": "Practice — to have, and how old you are",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "the verb, and the sentence it exists to let you say",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e05a988c22e96356",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A verb and a sentence. Run the verb first, then use it for the thing it will earn its keep on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: the paradigm, cold",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all six — \"j'ai, tu as, il a, nous avons, vous avez, ils ont\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all six — \"j'ai, tu as, il a, nous avons, vous avez, ils ont\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "backwards — \"ils ont, vous avez, nous avons, il a, tu as, j'ai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: backwards — \"ils ont, vous avez, nous avons, il a, tu as, j'ai\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the trap — \"ils ont, ils sont\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the trap — \"ils ont, ils sont\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"j'ai, tu as, il a, nous avons, vous avez, ils ont\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Quel âge as-tu?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Quel âge as-tu ?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"J'ai vingt ans\" — with the liaison, vin-t-a(n)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"J'ai vingt ans\" — with the liaison, *vin-t-a(n)*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the polite pair — \"Quel âge avez-vous?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the polite pair — \"Quel âge avez-vous ?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own age",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own age]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: use the verb on what you own",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"J'ai un frère, j'ai une sœur\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"J'ai un frère, j'ai une sœur\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Nous avons du pain et du vin\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Nous avons du pain et du vin\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root pair — \"avoir, habiter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root pair — \"avoir, habiter\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "the whole of avoir, six forms, one lesson each, and a paradigm you built rather than one you were handed."
+            },
+            {
+              "kind": "speech",
+              "text": "why French keeps its pronouns — the singular endings went silent, so je, tu and il carry what the verb stopped saying."
+            },
+            {
+              "kind": "speech",
+              "text": "age is something you have — J'ai vingt ans, never je suis, and ans is compulsory. Every Romance language on the continent agrees with French, and every Germanic one disagrees."
+            },
+            {
+              "kind": "speech",
+              "text": "one root, two verbs, four English words — habēre gave avoir and habiter, plus habit, inhabit, exhibit, prohibit."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the six forms of avoir. Ask a friend their age. (Quel âge as-tu?) Answer with your own. Which verb must you never use for age? (être.) Can ans be left out? (No.) Which other French verb shares avoir's root? (habiter.) How do you hear ils ont against ils sont? (The buzz against the hiss.)"
             }
           ]
         }

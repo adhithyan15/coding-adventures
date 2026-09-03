@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "One, Two, Three",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:0af049e21f563c41",
+  "sourceHash": "fnv1a64:94f0803076fc1318",
   "lessons": [
     {
       "id": "GE-C06-eins",
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:537d4f48d472db8a",
+      "sourceHash": "fnv1a64:cecdbbf3f7f1de8e",
       "notice": null,
       "blocks": [
         {
@@ -172,7 +172,7 @@
             },
             {
               "kind": "speech",
-              "text": "One down. The second number has the same ei you just learned, and one letter that does not say what an English reader expects."
+              "text": "One down. The second number has the same ei you met a moment ago, and one letter that does not say what an English reader expects."
             }
           ]
         },
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcbda45adc0ac85c",
+      "sourceHash": "fnv1a64:4e634533738b62ec",
       "notice": null,
       "blocks": [
         {
@@ -332,7 +332,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "drei is English three. German simply has no th, and where English says one, German says d. That is not a fact about numbers — it is a fact about the whole language, and you have been using it since your first danke:"
+              "text": "drei is English three. German has no th at all, and where English says one, German says d. That is not a fact about numbers — it is a fact about the whole language, and you have been using it since your first danke:"
             },
             {
               "kind": "table",

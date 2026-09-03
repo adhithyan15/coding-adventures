@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C10-frere",
+    "language": "french",
+    "chapter": 12,
+    "sequence": 315,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:820c3037ef67354e"
+  },
+  "findings": []
+}

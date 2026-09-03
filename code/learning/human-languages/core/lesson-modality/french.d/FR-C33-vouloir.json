@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C33-vouloir",
     "language": "french",
-    "chapter": 33,
-    "sequence": 1190,
+    "chapter": 37,
+    "sequence": 1290,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4cd2d2610e3163f6"
+    "sourceHash": "fnv1a64:16dd350a27f16901"
   },
   "findings": []
 }

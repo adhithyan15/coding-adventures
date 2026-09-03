@@ -1,15 +1,24 @@
 {
   "language": "french",
   "chapter": 20,
-  "sourceHash": "fnv1a64:868cc9f53978abd8",
+  "sourceHash": "fnv1a64:ea532af11402347e",
   "lessonIds": [
-    "FR-C20-je-suis-desole"
+    "FR-C16-suis-alle",
+    "FR-C16-famille-etre",
+    "FR-C16-pas-tout-mouvement",
+    "FR-C16-bascule",
+    "FR-C16-accord-sujet",
+    "FR-C16-accord-unifie",
+    "FR-C16-pronominal-etre",
+    "FR-C16-pronominal-accord",
+    "FR-C16-pronominal-seul",
+    "FR-C16-practice-etre-past"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 10,
+  "drivablePrefix": 10,
   "text": "french/narration/ch20.txt",
   "json": "french/narration/ch20.json",
-  "textHash": "fnv1a64:50fe95c927349137",
-  "jsonHash": "fnv1a64:10e8e2147d4eea8f",
+  "textHash": "fnv1a64:dcba810cbfd50f5e",
+  "jsonHash": "fnv1a64:77233a9093416227",
   "findings": []
 }

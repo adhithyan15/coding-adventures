@@ -2,8 +2,8 @@
   "lesson": {
     "id": "FR-C17-tete",
     "language": "french",
-    "chapter": 17,
-    "sequence": 620,
+    "chapter": 21,
+    "sequence": 720,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:5e2fddb422fadef4"
+    "sourceHash": "fnv1a64:9c3d9060333f97c4"
   },
   "findings": []
 }

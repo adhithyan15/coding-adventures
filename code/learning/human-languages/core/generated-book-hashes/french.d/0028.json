@@ -1,12 +1,12 @@
 {
   "language": "french",
   "chapter": 28,
-  "sourceHash": "fnv1a64:ee3622ff8c2a07d3",
+  "sourceHash": "fnv1a64:3beba686b2396c80",
   "lessonIds": [
-    "FR-C28-cafe",
-    "FR-C28-the",
-    "FR-C28-lait",
-    "FR-C28-sucre"
+    "FR-C24-prendre",
+    "FR-C24-demander",
+    "FR-C24-aider",
+    "FR-C24-aimer"
   ],
-  "tex": "french/book/chapters/ch28-coffee-tea-milk-sugar.tex"
+  "tex": "french/book/chapters/ch28-taking-asking-helping-loving.tex"
 }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C32-inversion
 spine_node: SPINE-ASK-LOCATION
-sequence: 1170
-chapter: 32
+sequence: 1270
+chapter: 36
 type: grammar
 headword: parlez-vous
 gloss: "the third way to ask — the formal one, and when it is worth the effort"

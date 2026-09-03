@@ -1,9 +1,10 @@
 {
   "language": "french",
   "chapter": 21,
-  "sourceHash": "fnv1a64:196e39f1b6cb40f2",
+  "sourceHash": "fnv1a64:f58ba564c2233e7f",
   "lessonIds": [
-    "FR-C21-le-temps"
+    "FR-C17-tete",
+    "FR-C17-main"
   ],
-  "tex": "french/book/chapters/ch21-weather.tex"
+  "tex": "french/book/chapters/ch21-head-and-hand.tex"
 }

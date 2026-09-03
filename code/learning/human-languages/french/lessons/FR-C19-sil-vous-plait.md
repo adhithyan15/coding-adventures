@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C19-sil-vous-plait
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 660
-chapter: 19
+sequence: 760
+chapter: 23
 type: phrase
 headword: s'il vous plaît
 gloss: please (literally "if it pleases you")

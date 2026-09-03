@@ -1,148 +1,291 @@
-French, chapter 16: To Be, and the Past That Takes It.
-4 lessons. All 4 can be done entirely by ear.
+French, chapter 16: Colours.
+8 lessons. All 8 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-être — “to be”.
+Lesson 1 of 8.
+noir — black.
 
 Warm-up.
 [pause 2 seconds]
-You have avoir, “to have.” Meet its partner être, the auxiliary and everyday verb “to be.”
+Four colours in this chapter, and they do not have four similar stories. Start with the one that behaves exactly as you would expect, so the surprises stand out later.
 
-The six forms.
-[a table of 3 rows, read aloud]
-je suis, nous sommes.
-tu es, vous êtes.
-il/elle est, ils/elles sont.
-These forms are old and frequent, so sound change has worn away any neat modern pattern. Learn the row as a rhythm:
-suis, es, est — sommes, êtes, sont.
-Use the subject pronoun every time; unlike Spanish or Italian, French verb sounds often do not identify the person by themselves.
-Examples:
-Je suis français. — I am French.
-Elle est fatiguée. — She is tired.
-Nous sommes prêts. — We are ready.
-The present forms continue Latin esse, “to be”: suis beside sum, est beside est, sommes beside sumus, and sont beside sunt. Other tenses draw on different roots; the next micro-lesson maps those seams.
+Sounds you'll need.
+vowel-oi — the oi is wa, one gliding vowel. It is the same oi you have in trois and soir.
+r-uvular — the final r is sounded here, made in the throat.
+Together: noir = NWAR, one syllable.
+
+The word, taken apart.
+noir is Latin niger, "black." Nothing was borrowed and nothing is hiding: the word walked straight down from Rome into French, and did the same into its sisters — Spanish negro, Italian nero.
+English took niger too, but only as a metaphor. To denigrate someone is, literally, to blacken them — to darken a name rather than a thing. The colour stayed in the Romance languages; the insult is what crossed into English.
+So noir is the plain case. Hold on to that, because the next colour is not plain at all.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “je suis, tu es, il est”]
+[your turn — say: "noir" — NWAR, the oi a single gliding vowel]
 [pause 8 seconds for the answer]
-[your turn — say: “nous sommes, vous êtes, ils sont”]
+[your turn — say: the family — "niger, noir, negro, nero"]
 [pause 8 seconds for the answer]
-[your turn — say: “Je suis français. Elle est fatiguée.”]
+[your turn — say: the English one — "denigrate: to blacken a name"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say black? (noir, NWAR.) What Latin word is it from? (niger.) What does denigrate literally mean? (To blacken — to darken someone's name.) Next: white, which did not come from Latin at all.
+
+
+Lesson 2 of 8.
+blanc — white.
+
+Warm-up.
+[pause 2 seconds]
+Every word in this book so far has come down from Latin. This one did not, and the direction it came from is the opposite of what usually happens.
+
+Sounds you'll need.
+nasal-an — the an is the nasal vowel you have in janvier.
+silent-final — the c at the end is not pronounced.
+Together: blanc = BLA(N), one syllable, nothing after the nose.
+
+The word, taken apart.
+Latin had a perfectly good word for white: albus. French does not use it.
+blanc is Frankish — a Germanic word, from blank, meaning not "white" exactly but "shining, gleaming, flashing." The Franks are the people who gave France its name, and they gave it its word for white as well.
+That direction is the surprising part. Latin words pour into Germanic languages constantly; English is more than half built of them. Traffic the other way, a Germanic word displacing a Latin one inside a Romance language, is much rarer.
+Why did albus lose? Most likely because blank was more vivid. Albus is a flat, plain white; blank is a white that shines. Colour words are replaced by the more dramatic option surprisingly often — the exciting word wins and then calms down into the ordinary one.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "blanc" — BLA(N), the c silent]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — "noir, blanc"]
+[pause 8 seconds for the answer]
+[your turn — say: the origin — "Frankish blank: shining"]
+[pause 8 seconds for the answer]
+[your turn — say: the two stories — "noir walked down from Rome, blanc walked in from the north"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say white? (blanc, BLA(N).) Is the final c sounded? (No.) Which language did it come from? (Frankish — Germanic, not Latin.) What did blank actually mean? ("Shining, gleaming.") What was the Latin word it displaced? (albus.) Next: where albus went instead.
+
+
+Lesson 3 of 8.
+l'aube — the white that stopped being a colour.
+
+Warm-up.
+[pause 2 seconds]
+Blanc took the job. That does not mean albus was thrown away — words that lose an argument usually go and do something else.
+
+The word, taken apart.
+Latin albus is still all around you. It simply stopped being the word for the colour, and survives inside words for things that are white:
+l'aube — the dawn: the sky going white. French, and pronounced lohb.
+l'aubépine — the hawthorn, literally the "white thorn".
+album — English, from a blank white tablet you wrote on.
+albino — English, someone white-skinned.
+That is a pattern worth naming, because it will keep happening. When a newer word takes over a plain everyday meaning, the older one does not vanish. It gets pushed into the specific — a time of day, a particular tree, a technical term — and stays there for centuries, unnoticed.
+So French has two whites after all. One you say when you mean the colour, and one you say without knowing you are saying it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "l'aube" — lohb, the dawn]
+[pause 8 seconds for the answer]
+[your turn — say: the white inside it — "albus: the sky going white"]
+[pause 8 seconds for the answer]
+[your turn — say: the English survivors — "album, albino"]
+[pause 8 seconds for the answer]
+[your turn — say: the two whites — "blanc for the colour, aube for the hour"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does l'aube mean, and what is white about it? (The dawn — the sky going white.) Which Latin word is inside it? (albus.) Name two English words that kept the same albus. (album, albino.) What happens to a word when a newer one takes its everyday job? (It survives in the specific — a time, a tree, a technical term.) Next: red, which is older than Latin.
+
+
+Lesson 4 of 8.
+rouge — red.
+
+Warm-up.
+[pause 2 seconds]
+Noir came from Latin and blanc from the Franks. This one goes back further than either — further than Latin itself.
+
+Sounds you'll need.
+vowel-ou — the ou is the pure oo you have in douze.
+soft-j — the g here is the soft zh of measure, the same sound as the j in janvier.
+Together: rouge = ROOZH, one syllable. English borrowed the word whole for makeup and kept the French sound with it.
+
+The word, taken apart.
+rouge is Latin rubeus, "reddish." But rubeus is itself inherited, from a Proto-Indo-European root h₁rewdʰ- so old that its children are scattered across the whole family:
+Latin ruber, rubeus becomes French rouge, and English ruby, rubric.
+English red, rust, ruddy.
+German rot.
+So rouge and red are not lookalikes that happen to mean the same thing. They are actual cousins, separated for something like five thousand years and still saying the same colour.
+That is not an accident of this one word. Red is one of the oldest colours any language names — after black and white, it is almost always the third colour a language gets a word for, and often the only other one for a long time. A word that old survives everywhere because it was never not needed.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "rouge" — ROOZH, the soft g]
+[pause 8 seconds for the answer]
+[your turn — say: the cousins in a row — "rouge, red, rot"]
+[pause 8 seconds for the answer]
+[your turn — say: the Latin ones — "ruber, ruby, rubric"]
+[pause 8 seconds for the answer]
+[your turn — say: the three you have — "noir, blanc, rouge"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say red? (rouge, ROOZH.) How is the g pronounced? (Soft — the zh of measure.) Are rouge and English red borrowed from each other? (No — they are cousins from the same Proto-Indo-European root.) Name two more of that root's children. (rust, ruddy, ruby, rubric, German rot — any two.) Next: blue, which went abroad and came home.
+
+
+Lesson 5 of 8.
+bleu — blue.
+
+Warm-up.
+[pause 2 seconds]
+The fourth colour, and the second one that is not Latin. Once is a curiosity; twice is a pattern about who was actually living in France.
+
+Sounds you'll need.
+vowel-eu — the eu is the rounded front vowel you made in sœur: lips rounded, tongue forward.
+silent-final — there is no consonant after it to say.
+Together: bleu = BLUH, one syllable, and shorter than English speakers expect.
+
+The word, taken apart.
+bleu is Frankish blāo — Germanic again, borrowed exactly the way blanc was.
+Then something neat happened. English took bleu from French. So English blue is a Germanic word that walked into France, spent centuries there changing its shape, and was then borrowed back into a Germanic language. It went abroad and came home wearing different clothes.
+Meanwhile German never sent its copy anywhere: it still says blau, which is what blāo sounded like all along. Say blau, bleu, blue in a row and you are hearing one word at three stages of one journey.
+(French has a second, more poetic blue as well — azur, ultimately from Arabic lāzaward, "lapis lazuli." You have almost certainly seen it already, on the map: the Côte d'Azur.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "bleu" — BLUH, lips rounded, and keep it short]
+[pause 8 seconds for the answer]
+[your turn — say: the round trip — "blau, bleu, blue"]
+[pause 8 seconds for the answer]
+[your turn — say: the two Frankish ones — "blanc, bleu"]
+[pause 8 seconds for the answer]
+[your turn — say: all four — "noir, blanc, rouge, bleu"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say blue? (bleu, BLUH.) Which language did it come from? (Frankish — Germanic, like blanc.) What is odd about English blue? (It is a Germanic word that English borrowed from French — it went abroad and came back.) What did German keep? (blau.) Next: where the colour goes in the sentence.
+
+
+Lesson 6 of 8.
+le vin rouge — where the colour goes.
+
+Warm-up.
+[pause 2 seconds]
+You have four colours and a table full of nouns. Putting them together takes one rule, and English gets it the other way round.
+
+Grammar Lens: the colour comes second.
+English puts the colour in front of the noun: red wine, white bread. French puts it behind:
+le vin rouge — the wine red.
+le pain blanc — the bread white.
+The order feels backwards for about a week and then stops feeling like anything. What makes it stick faster is noticing that you already say the exception.
+bonjour is bon + jour — a good day, with the adjective in front. So French does both, and the split is not random: a small handful of very common, very short adjectives go before the noun — bon, bonne, and a few others you will meet — while nearly everything else, colours included, goes after.
+That is the useful form of the rule. Not "French adjectives follow the noun," which the word bonjour would immediately contradict, but: the short common ones lead, and everything else follows.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the two wines — "le vin rouge, le vin blanc"]
+[pause 8 seconds for the answer]
+[your turn — say: with bread — "le pain blanc"]
+[pause 8 seconds for the answer]
+[your turn — say: the exception you already own — "bonjour: bon comes first"]
+[pause 8 seconds for the answer]
+[your turn — say: the rule as one line — "short and common in front, everything else behind"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-“Suis, es, est — sommes, êtes, sont.”
+"le vin rouge, le vin blanc".
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the six present forms. (Suis, es, est, sommes, êtes, sont.) Which pronoun goes with êtes? (Vous.) Which Latin verb supplies this row? (Esse.) Next: find the fu- and ét- pieces inside the wider paradigm.
+How do you say "red wine"? (le vin rouge — the colour second.) White bread? (le pain blanc.) Which everyday word puts its adjective first? (bonjour — bon + jour.) State the rule in one line. (Short, common adjectives go in front; everything else, colours included, goes after.) Next: the three colours on the flag.
 
 
-Lesson 2 of 4.
-suis / fus / étais — three stems.
+Lesson 7 of 8.
+bleu, blanc, rouge — the flag.
 
 Warm-up.
 [pause 2 seconds]
-The present of être comes from Latin esse. Its other forms expose two more historical pieces.
-[a table of 3 rows, read aloud]
-French: suis, es, est, sommes, êtes, sont. source: Latin esse, “be”.
-French: fus, fut. source: ancient perfect stem fuī.
-French: été, étant, étais, était. source: Latin stāre, “stand”.
-Every ét- form comes from the standing verb: participle été, present participle étant, imperfect étais / était. A paradigm patched from different roots is suppletive, like English go / went.
-The fu- stem is related to the root of English be. The ét- limb is even more striking because Spanish kept the same stāre source as a separate verb, estar.
-[a table of 2 rows, read aloud]
-language: Spanish. what happened to esse and stāre: kept ser and estar separate.
-language: French. what happened to esse and stāre: kept être and absorbed a whole ét- limb.
-French also preserves stāre outside être, for example in rester, “stay.” But it no longer has a separate standing-based “to be.”
+Three of your four colours are the flag, and saying them in its order is the easiest way to keep them. There is also a joke buried in them.
+
+Why it's said this way.
+The French flag is named by its colours, left to right:
+bleu, blanc, rouge.
+Say it in that order and it comes as one unit rather than three words. French speakers say it that way constantly — le drapeau bleu-blanc-rouge — and it is by far the most common context in which all three appear together.
+Now count where they came from:
+bleu — Frankish, Germanic.
+blanc — Frankish, Germanic.
+rouge — Latin, from a root older than Latin.
+So the tricolour is two-thirds Germanic. The flag of the most self-consciously Latin nation in Europe names itself with two borrowed Germanic words and one inherited one, and no one notices, because a word stops being foreign the moment everybody uses it.
+That is the honest summary of this chapter: of four basic colours, half came from the north. Half of French's most everyday vocabulary is not doing what the label "Romance language" would lead you to expect.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “suis from esse”]
+[your turn — say: the flag — "bleu, blanc, rouge"]
 [pause 8 seconds for the answer]
-[your turn — say: “fus from fuī”]
+[your turn — say: all four colours — "noir, blanc, rouge, bleu"]
 [pause 8 seconds for the answer]
-[your turn — say: “été, étant, étais from stāre”]
+[your turn — say: the sources — "Latin, Frankish, Latin, Frankish"]
+[pause 8 seconds for the answer]
+[your turn — say: the finding — "the tricolour is two-thirds Germanic"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-“Es-, fu-, ét-: three stems, one verb.”
+"bleu, blanc, rouge".
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which root supplies the present? (Esse.) Which supplies fus? (Fuī.) Which supplies every ét- form? (Stāre, “stand.”) What is such patching called? (Suppletion.) What did Spanish do differently? (Kept the two verbs separate.) Next: build the compound past with être.
+Name the flag's colours in order. (bleu, blanc, rouge.) Which two of them are Germanic borrowings? (bleu and blanc.) So what fraction of the tricolour is Germanic? (Two-thirds.) And of the chapter's four colours? (Half.) Next: all four, put to work.
 
 
-Lesson 3 of 4.
-Je suis allé — the past built from “be”.
+Lesson 8 of 8.
+Practice — four colours and where they came from.
 
 Warm-up.
 [pause 2 seconds]
-The compound past built j’ai parlé with avoir. A smaller family uses être, and its participle agrees with the subject.
+Four words, and then the thing that makes them worth more than four words: each one has a passport.
 
-Start with aller.
-[a table of 5 rows, read aloud]
-je suis allé, I went.
-tu es allé, you went.
-il est allé, he went.
-nous sommes allés, we went.
-ils sont allés, they went.
-The family centres on arriving, leaving, and changing state: aller, venir, partir, arriver, entrer, sortir, naître, mourir, rester, tomber.
-Do not interpret that as “every verb involving movement.” Marcher, courir, nager, and danser take avoir. Some verbs switch with a direct object: je suis monté (“I went up”) but j’ai monté les valises (“I took the suitcases up”).
-
-Agreement with the subject.
-[a table of 4 rows, read aloud]
-subject: il. sentence: Il est allé.
-subject: elle. sentence: Elle est allée.
-subject: ils. sentence: Ils sont allés.
-subject: elles. sentence: Elles sont allées.
-The participle takes the subject’s gender and number like an adjective. That is its history: elle est allée began as “she is gone,” with gone describing her state just as fatiguée would.
-This connects both auxiliary systems:
-with avoir, agreement can follow a preceding object;
-with être, agreement follows the subject.
-Underneath both, the participle was an adjective agreeing with what it described.
-
-Guided Practice.
+Guided Practice: the four.
 [pause 1 second]
-[your turn — say: “je suis allé; elle est allée”]
+[your turn — say: "noir, blanc, rouge, bleu"]
 [pause 8 seconds for the answer]
-[your turn — say: “ils sont allés; elles sont allées”]
+[your turn — say: the flag order — "bleu, blanc, rouge"]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — “j’ai parlé; je suis allé”]
+[your turn — say: the two nasal ones — "blanc"; and the two that end in a vowel sound — "bleu"]
 [pause 8 seconds for the answer]
+[repeat that twice]
+"noir, blanc, rouge, bleu".
+
+Guided Practice: put them on nouns.
+[pause 1 second]
+[your turn — say: "le vin rouge, le vin blanc"]
+[pause 8 seconds for the answer]
+[your turn — say: "le pain blanc"]
+[pause 8 seconds for the answer]
+[your turn — say: the order out loud — "the noun, then the colour"]
+[pause 8 seconds for the answer]
+[your turn — say: the exception — "bonjour"]
+[pause 8 seconds for the answer]
+
+Guided Practice: where each one came from.
+[pause 1 second]
+[your turn — say: "noir — Latin niger; denigrate"]
+[pause 8 seconds for the answer]
+[your turn — say: "blanc — Frankish blank, shining"]
+[pause 8 seconds for the answer]
+[your turn — say: "rouge — Latin rubeus; red, rot, ruby"]
+[pause 8 seconds for the answer]
+[your turn — say: "bleu — Frankish blao; blau, bleu, blue"]
+[pause 8 seconds for the answer]
+[your turn — say: the one that changed jobs — "albus became l'aube, the dawn"]
+[pause 8 seconds for the answer]
+
+What you've built this chapter.
+four colours, and the flag as a set.
+word order — the colour goes after the noun, and bonjour is the exception you already said before you knew it was one.
+half of them are not Latin. blanc and bleu are Frankish, which runs against the usual direction of traffic: Latin words flood into Germanic languages, not the reverse.
+a word that lost and survived anyway — albus gave up the colour and kept the dawn. That is what usually happens to a displaced word, and it is worth looking for.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which broad family takes être? (Arriving, leaving, and change of state.) Does courir? (No: j’ai couru.) What does the participle agree with here? (The subject.) Why? (It began as an adjective.) Next: the special agreement logic of pronominal verbs.
-
-
-Lesson 4 of 4.
-Elle s’est lavée — pronominal past agreement.
-
-Warm-up.
-[pause 2 seconds]
-All pronominal verbs use être in the compound past: je me suis levé, elle s’est lavée. Their agreement, however, follows the direct object rather than blindly following the subject.
-[a table of 3 rows, read aloud]
-sentence: Elle s’est lavée. why: se means “herself,” a preceding direct object.
-sentence: Elle s’est lavé les mains. why: direct object les mains follows, so no agreement.
-sentence: Elles se sont parlé. why: se means “to each other,” an indirect object.
-The auxiliary looks like être, but the decision is the same one used with avoir: agree with a preceding direct object.
-Ask two questions:
-What received the action directly?
-Does that direct object come before the participle?
-In elle s’est lavée, se is direct and precedes, so add -e. In elle s’est lavé les mains, les mains is direct but follows, so leave lavé unchanged. In se parler, the person is indirect — you speak to someone — so there is no agreement.
-
-Verbs that exist only pronominally.
-Verbs such as se souvenir (remember), s’enfuir (flee), and s’évanouir (faint) have no ordinary non-reflexive partner. They simply agree with the subject: elles se sont souvenues.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “Elle s’est lavée.”]
-[pause 8 seconds for the answer]
-[your turn — say: “Elle s’est lavé les mains.”]
-[pause 8 seconds for the answer]
-[your turn — say: “Elles se sont parlé.”]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which auxiliary do pronominal verbs take? (Être.) Do they always agree with the subject? (No.) What controls ordinary pronominal agreement? (A preceding direct object.) Why no agreement in se sont parlé? (Se is indirect.) How do inherently pronominal verbs behave? (They agree with the subject.)
+Give the four colours. (noir, blanc, rouge, bleu.) Which two are Germanic? (blanc and bleu.) Say "red wine." (le vin rouge — the colour second.) Which Latin word for white did French drop, and where did it end up? (albus — in l'aube, the dawn, and in English album and albino.) Are rouge and red borrowed from each other? (No — cousins, from one Proto-Indo-European root.)

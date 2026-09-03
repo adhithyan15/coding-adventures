@@ -81,7 +81,7 @@ word in it is already yours, from this chapter or from the first.
 - **un / une** — the number one doubling as "a/an," and taking gender.
 - **liaison** — *six*, *dix* and *neuf* changing their final sound to reach a
   following vowel.
-- **septembre** to **décembre** — four months still counting seven to ten, two
+- **the four months at the end of the year** — still counting seven to ten, two
   places out of place ever since the Roman year stopped starting in March.
 
 ## Wrap-up Recall
@@ -91,5 +91,5 @@ word in it is already yours, from this chapter or from the first.
 numbers change their ending before a vowel, and how? (*Six* and *dix* to a
 **z**, *neuf* to a **v**.) What is the difference between *un jour* and *une
 nuit*? (Gender — the same word for "one" and "a," agreeing with the noun.)
-Why is *décembre* the twelfth month when it says ten? (The Roman year began in
-**March**, and two months were inserted.)
+Why does the twelfth month say **ten**? (The Roman year began in **March**, and
+two months were later inserted.)

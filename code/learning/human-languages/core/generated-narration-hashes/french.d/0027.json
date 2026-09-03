@@ -1,18 +1,15 @@
 {
   "language": "french",
   "chapter": 27,
-  "sourceHash": "fnv1a64:cc7506d89c3d7682",
+  "sourceHash": "fnv1a64:0d74f382273fb2e0",
   "lessonIds": [
-    "FR-C27-sasseoir",
-    "FR-C27-se-lever",
-    "FR-C27-ouvrir",
-    "FR-C27-fermer"
+    "FR-C23-vert-jaune"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "french/narration/ch27.txt",
   "json": "french/narration/ch27.json",
-  "textHash": "fnv1a64:c8b6a96ad0343b93",
-  "jsonHash": "fnv1a64:87fb4c4ce5f2d090",
+  "textHash": "fnv1a64:75971e8719572345",
+  "jsonHash": "fnv1a64:bf0919462933f26d",
   "findings": []
 }

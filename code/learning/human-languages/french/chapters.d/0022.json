@@ -1,20 +1,21 @@
 {
   "chapter": 22,
-  "title": "Dog and Cat",
-  "label": "ch:fr-dog-and-cat",
-  "canDo": "I can name a dog and a cat in French and say why chien is the regular descendant of canis while chat is a word that travelled out of Egypt.",
+  "title": "Yes and No",
+  "label": "ch:fr-yes-and-no",
+  "canDo": "I can answer yes or no in French, send non through my nose as a nasal vowel, and recognise the ne … pas pair that carries negation inside a sentence.",
   "spineNodes": [
-    "SPINE-DEFINITE-REFERENCE"
+    "SPINE-RESPOND-BASIC"
   ],
   "payoff": {
-    "lesson": "FR-C22-chien-chat",
+    "lesson": "FR-C18-non",
     "kind": "production",
-    "summary": "Say chien and check its ca- → cha- shift against champ and chanter, then say chat and place it beside Spanish gato and Italian gatto as one inherited cattus. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "summary": "The oui / non pair said back to back, non's -on nasal placed against bon and bonjour, and the ne … pas frame named as the sentence-level negation to come.",
     "assesses": [
-      "FR-LEX-CHIEN-02",
-      "FR-ETYMON-CHIEN-03",
-      "FR-LEX-CHAT-04",
-      "FR-ETYMON-CHAT-05"
-    ]
+      "FR-LEX-OUI-02",
+      "FR-LEX-NON-02",
+      "FR-SOUND-NON-03",
+      "FR-GRAMMAR-NEGATION-04"
+    ],
+    "note": "Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess oui."
   }
 }

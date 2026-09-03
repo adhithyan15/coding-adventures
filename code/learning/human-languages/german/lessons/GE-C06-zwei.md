@@ -36,7 +36,8 @@ reviews_of: [GE-C06-eins]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-EINS-01, GE-SOUND-EI-AS-EYE-01] -->
 
-[PAUSE 2s] One down. The second number has the same *ei* you just learned, and
+[PAUSE 2s] One down. The second number has the same *ei* you met a moment ago,
+and
 one letter that does not say what an English reader expects.
 
 ## You'll want to know: zwei

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C14-avons",
+    "language": "french",
+    "chapter": 17,
+    "sequence": 490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d4e39a99041128e"
+  },
+  "findings": []
+}

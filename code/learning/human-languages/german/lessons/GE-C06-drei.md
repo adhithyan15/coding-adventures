@@ -50,7 +50,7 @@ Said *dry*: the scraped *r* you met in *lernen*, and the *ei* saying *eye*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[GE-ETYMON-DREI-THREE-02]; assesses=[GE-LEX-DREI-01, GE-LEX-DER-DIE-DAS-02] -->
 
-**drei** is English **three**. German simply has no *th*, and where English says
+**drei** is English **three**. German has no *th* at all, and where English says
 one, German says **d**. That is not a fact about numbers — it is a fact about
 the whole language, and you have been using it since your first *danke*:
 

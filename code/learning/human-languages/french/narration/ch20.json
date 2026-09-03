@@ -2,24 +2,24 @@
   "version": 1,
   "language": "french",
   "chapter": 20,
-  "title": "Sorry",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:868cc9f53978abd8",
+  "title": "The Past That Takes être",
+  "drivablePrefix": 10,
+  "sourceHash": "fnv1a64:ea532af11402347e",
   "lessons": [
     {
-      "id": "FR-C20-je-suis-desole",
-      "sequence": 670,
-      "title": "je suis désolé(e) — \"I'm sorry\" (literally \"I am desolate\")",
-      "headword": "je suis désolé(e)",
-      "romanization": "je suis désolé(e)",
-      "gloss": "I'm sorry (literally \"I am desolate\")",
+      "id": "FR-C16-suis-alle",
+      "sequence": 682,
+      "title": "je suis allé — the past built from \"be\"",
+      "headword": "je suis allé",
+      "romanization": "je suis allé",
+      "gloss": "a small group of verbs refuses avoir in the past and takes être instead",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82d3d8c643908c28",
+      "sourceHash": "fnv1a64:5165168213038e4b",
       "notice": null,
       "blocks": [
         {
@@ -35,54 +35,59 @@
             },
             {
               "kind": "speech",
-              "text": "You already know s'il vous plaît, \"please\" — \"if it pleases you.\" French's \"sorry\" is, secretly, a much bigger word than it sounds: désolé is the same word as English desolate."
+              "text": "You built a past tense out of avoir. Now meet the verbs that will not have it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: some verbs take être instead",
           "segments": [
             {
               "kind": "speech",
-              "text": "je suis = \"I am.\""
+              "text": "The recipe is the same shape as before, with the other verb in front:"
             },
             {
               "kind": "speech",
-              "text": "désolé (feminine désolée) = \"sorry,\" but literally \"made utterly alone / devastated.\" It comes from Latin dēsōlāre, \"to make solitary\" — dē- (\"thoroughly, completely\") + sōlus (\"alone\"), the very root of English sole, solo, solitary, and desolate itself."
+              "text": "être (conjugated) + past participle."
             },
             {
               "kind": "speech",
-              "text": "So je suis désolé(e) literally says \"I am desolate\" — French reaches for a word of real devastation to say a plain \"sorry,\" the way English keeps \"terribly sorry\" as an option rather than a requirement."
+              "text": "aller, \"to go,\" is the headline case. Its past is not j'ai allé. It is:"
+            },
+            {
+              "kind": "speech",
+              "text": "je suis allé — I went."
+            },
+            {
+              "kind": "speech",
+              "text": "tu es allé — you went."
+            },
+            {
+              "kind": "speech",
+              "text": "il est allé — he went."
+            },
+            {
+              "kind": "speech",
+              "text": "nous sommes allés — we went."
+            },
+            {
+              "kind": "speech",
+              "text": "ils sont allés — they went."
+            },
+            {
+              "kind": "speech",
+              "text": "Say j'ai allé to a French speaker and it will land as clearly wrong, the way I have went lands in English."
+            },
+            {
+              "kind": "speech",
+              "text": "So you now have two past tenses that are really one tense with two auxiliaries, and the only question a verb ever raises is: which one? For the vast majority it is avoir, and this chapter is about the short list that says otherwise — what is on it, what is deceptively not on it, and the visible thing that happens to the participle when être is used."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: pardon and excusez-moi",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "French keeps two more courtesy words for different jobs:"
-            },
-            {
-              "kind": "speech",
-              "text": "pardon — a quick, all-purpose \"sorry / pardon me\" (bumping someone, a small slip). It comes from pardonner, Latin per- (\"thoroughly\") + dōnāre (\"to give\") — \"to give completely,\" i.e. to forgive. The neat part isn't that French and Spanish coined this separately — it's that they didn't have to: perdōnāre was already one word in Late Latin, so French pardonner and Spanish perdón/perdonar are simply two children of the same inherited word, not two languages independently landing on the same idea."
-            },
-            {
-              "kind": "speech",
-              "text": "excusez-moi — \"excuse me,\" from excuser < Latin ex- (\"out of, free from\") + causa (\"cause, charge\") — literally \"to free from a charge.\" Reach for this to get someone's attention, not to apologize for a real fault."
-            },
-            {
-              "kind": "speech",
-              "text": "Je suis désolé(e) carries the most regret; pardon is the quick, light reflex; excusez-moi is for getting attention. Native speakers slide between all three by feel."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -95,34 +100,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"désolé\" — sorry / desolate — then \"je suis désolé,\" I am sorry",
+              "instruction": "\"je suis allé, tu es allé, il est allé\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"désolé\" — sorry / desolate — then \"je suis désolé,\" I am sorry]"
+              "source": "[YOU SAY: \"je suis allé, tu es allé, il est allé\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the quick one — \"pardon\"",
+              "instruction": "the contrast — \"j'ai parlé … je suis allé\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the quick one — \"pardon\"]"
+              "source": "[YOU SAY: the contrast — \"j'ai parlé … je suis allé\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the attention one — \"excusez-moi\"",
+              "instruction": "the error, so you can hear it — \"j'ai allé is wrong, like I have went\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the attention one — \"excusez-moi\"]"
+              "source": "[YOU SAY: the error, so you can hear it — \"j'ai allé is wrong, like *I have went*\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"j'ai parlé … je suis allé\"."
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -134,7 +148,1314 @@
             },
             {
               "kind": "speech",
-              "text": "What does désolé literally mean, and what English word is it identical to? (\"Made utterly alone\" — the same word as English desolate.) What is pardon built from, and why does Spanish perdón look just like it? (Per- \"thoroughly\" + dōnāre \"to give\" — both simply inherited the same already-formed Latin word, perdōnāre.) What's excusez-moi for? (Getting someone's attention, not apologizing for a real fault.)"
+              "text": "How do you say \"I went\"? (Je suis allé.) Which auxiliary does aller take? (être.) What is wrong with j'ai allé? (The wrong auxiliary — it sounds like I have went.) Which auxiliary do most French verbs take? (avoir.) Next: which verbs are on the short list."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-famille-etre",
+      "sequence": 685,
+      "title": "aller, venir, naître, mourir — the shape of the list",
+      "headword": "aller · venir · naître · mourir",
+      "romanization": "aller · venir · naître · mourir",
+      "gloss": "the shape of the list — arriving and leaving, in space or in life",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68c1dfe64975ca05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Textbooks give this as a list to memorise, usually a dozen verbs long. It is much easier to hold as a shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: arriving and leaving",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The verbs that take être are these: aller (go), venir (come), partir (leave), arriver (arrive), entrer, sortir, monter, descendre, naître (be born), mourir (die), rester (stay), tomber (fall)."
+            },
+            {
+              "kind": "speech",
+              "text": "Read them as a shape and the list stops needing memorising:"
+            },
+            {
+              "kind": "speech",
+              "text": "going, coming, being born, dying — arriving and leaving, in space or in life."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of them is about crossing a threshold. Entering or leaving a place; entering or leaving the world; going up, going down, falling, staying put at the end of a movement. They are not verbs about doing something. They are verbs about ending up somewhere."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold on to that phrasing, because it is what makes the next two lessons make sense. It is also why the participle behaves the way it does: if the verb describes where you ended up, the participle is describing you — and you will see it agree with you accordingly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four corners — \"going, coming, born, dying\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four corners — \"going, coming, born, dying\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shape — \"arriving and leaving, in space or in life\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shape — \"arriving and leaving, in space or in life\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the test — \"not doing something; ending up somewhere\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the test — \"not doing something; ending up somewhere\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je suis allé, je suis venu, je suis resté\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je suis allé, je suis venu, je suis resté\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the shape of the être list in one line. (Arriving and leaving, in space or in life — going, coming, being born, dying.) What do all these verbs have in common? (They cross a threshold — they are about ending up somewhere, not about doing something.) Name three. (aller, venir, partir, naître, mourir, rester, tomber — any three.) Next: the verbs that look like they belong and do not."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-pas-tout-mouvement",
+      "sequence": 688,
+      "title": "j'ai couru — not every motion verb qualifies",
+      "headword": "j'ai couru",
+      "romanization": "j'ai couru",
+      "gloss": "not every motion verb qualifies — moving your legs is not crossing a threshold",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:004b818a441947e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Verbs of motion take être\" is the rule most learners are given, and it will mislead you within a week."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: moving is not arriving",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These are all motion verbs, and every one of them takes avoir:"
+            },
+            {
+              "kind": "speech",
+              "text": "marcher (walk) — j'ai marché."
+            },
+            {
+              "kind": "speech",
+              "text": "courir (run) — j'ai couru."
+            },
+            {
+              "kind": "speech",
+              "text": "nager (swim), danser (dance), voyager (travel)."
+            },
+            {
+              "kind": "speech",
+              "text": "You can run for an hour and arrive nowhere. That is the whole distinction. The être verbs are not about movement; they are about arriving, leaving and changing state — crossing a threshold, as the last lesson put it."
+            },
+            {
+              "kind": "speech",
+              "text": "Courir describes what your legs did. Partir describes that you are no longer here. The first is an activity; the second is a change in where you are, and it is the change that takes être."
+            },
+            {
+              "kind": "speech",
+              "text": "So correct the rule in your head now, before it costs you anything: not motion — transition."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the avoir ones — \"j'ai marché, j'ai couru, j'ai dansé\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the avoir ones — \"j'ai marché, j'ai couru, j'ai dansé\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "against the être ones — \"je suis parti, je suis arrivé\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: against the être ones — \"je suis parti, je suis arrivé\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the corrected rule — \"not motion, transition\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the corrected rule — \"not motion, transition\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the test — \"you can run for an hour and arrive nowhere\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the test — \"you can run for an hour and arrive nowhere\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which auxiliary does courir take? (avoir — j'ai couru.) But is it not a motion verb? (Yes — which is why \"motion verbs take être\" is the wrong rule.) State the right one. (Transition, not motion — arriving, leaving, changing state.) Next: the verbs that use both."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-bascule",
+      "sequence": 691,
+      "title": "je suis monté / j'ai monté les valises",
+      "headword": "je suis monté / j'ai monté les valises",
+      "romanization": "je suis monté / j'ai monté les valises",
+      "gloss": "some verbs switch auxiliary the moment they take an object",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd528eb9c6308359",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A handful of verbs sit on both sides of the line, and which side they are on depends on the sentence rather than the verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: an object flips the auxiliary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "monter, descendre, sortir, rentrer and passer take être when they stand alone, and avoir the moment they take a direct object:"
+            },
+            {
+              "kind": "speech",
+              "text": "Je suis monté. — \"I went up.\" No object; être."
+            },
+            {
+              "kind": "speech",
+              "text": "J'ai monté les valises. — \"I took the suitcases up.\" An object; avoir."
+            },
+            {
+              "kind": "speech",
+              "text": "This looks like an extra rule to memorise. It is the opposite: it is the rule you already have, doing exactly what it said it would."
+            },
+            {
+              "kind": "speech",
+              "text": "Je suis monté describes where I ended up — a transition, so être. J'ai monté les valises describes something I did to the suitcases — an action on an object, so avoir. The verb has not changed its meaning much; what has changed is whether the sentence is about a transition or about an action, and that is the only thing the auxiliary has ever cared about."
+            },
+            {
+              "kind": "speech",
+              "text": "So these verbs are not exceptions. They are the clearest demonstration that the rule is about the sentence, not the verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"Je suis monté … J'ai monté les valises\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"Je suis monté … J'ai monté les valises\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same for going out — \"Je suis sorti … J'ai sorti le chien\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same for going out — \"Je suis sorti … J'ai sorti le chien\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reason — \"transition takes être; an action on an object takes avoir\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reason — \"transition takes être; an action on an object takes avoir\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the conclusion — \"what decides it is the sentence, not the verb\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the conclusion — \"what decides it is the sentence, not the verb\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which auxiliary in je suis monté? (être — no object, a transition.) And in j'ai monté les valises? (avoir — a direct object.) Is this a new rule? (No — it is the same rule: transition takes être, an action on an object takes avoir.) Next: what happens to the participle."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-accord-sujet",
+      "sequence": 694,
+      "title": "elle est allée — the participle agrees",
+      "headword": "elle est allée",
+      "romanization": "elle est allée",
+      "gloss": "with être, the participle agrees with the subject — and you can hear this one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d47f56f46e7cf0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With avoir, the participle almost never moved. With être it moves every time, and this is the one agreement in French you can actually hear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: it agrees with the subject",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "French",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "Il est allé. means He went.",
+                "Elle est allée. means She went.",
+                "Ils sont allés. means They went.",
+                "Elles sont allées. means They (f.) went."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The participle takes the subject's gender and number — exactly like an adjective."
+            },
+            {
+              "kind": "speech",
+              "text": "And the reason is the same fossil you already met. Elle est allée began as a plain description: \"she is gone,\" with gone describing her, in the same way elle est fatiguée describes her. It was never an action she performed on something. It was a state she was in — which is precisely the shape of every verb on this list. So the participle agreed with her, and it still does."
+            },
+            {
+              "kind": "speech",
+              "text": "One practical note. With aller you cannot hear the difference: allé and allée are identical aloud. But some of these verbs end in a consonant, and then you can — il est mort against elle est morte, where the t wakes up. That makes this the rare French agreement rule that is not purely a spelling problem."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four — \"il est allé, elle est allée, ils sont allés, elles sont allées\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four — \"il est allé, elle est allée, ils sont allés, elles sont allées\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one you can hear — \"il est mort, elle est morte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one you can hear — \"il est mort, elle est morte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reason — \"she is gone: gone describes her\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reason — \"she is gone: gone describes her\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the parallel — \"elle est fatiguée, elle est allée\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the parallel — \"elle est fatiguée, elle est allée\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With être, what does the participle agree with? (The subject.) Say \"she went.\" (Elle est allée.) Why does it agree? (It began as a description of her — \"she is gone\" — so it behaved like an adjective.) Which example lets you hear the agreement? (il est mort against elle est morte.) Next: the one rule under both auxiliaries."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-accord-unifie",
+      "sequence": 697,
+      "title": "une seule règle — both halves are the same fact",
+      "headword": "une seule règle",
+      "romanization": "une seule règle",
+      "gloss": "both agreement rules are one rule — the participle agrees with whatever it described",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3c4589cafe0b215",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You now have two agreement rules that look unrelated. They are one rule, and seeing that is worth more than either of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the participle agrees with whatever it described",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "auxiliary",
+                "the participle agrees with",
+                "because it was…"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "auxiliary: avoir. the participle agrees with: a preceding object — les lettres que j'ai écrites. because it was…: \"I have letters, written\".",
+                "auxiliary: être. the participle agrees with: the subject — elle est allée. because it was…: \"she is gone\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two rules, two different targets — and one explanation covering both."
+            },
+            {
+              "kind": "speech",
+              "text": "The participle was an adjective, and an adjective agrees with the thing it describes. That is all either rule says."
+            },
+            {
+              "kind": "speech",
+              "text": "With avoir, the thing described was the object you possessed: the letters are the written ones. So the participle agrees with the object — and only when the object comes first, because that is where an adjective could still reach it."
+            },
+            {
+              "kind": "speech",
+              "text": "With être, the thing described was the subject: she is the gone one. So the participle agrees with her."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are the same sentence-shape from Latin, one built on habēre and one built on esse, and in both the participle is doing an adjective's job."
+            },
+            {
+              "kind": "speech",
+              "text": "French textbooks teach these as two chapters and a long list of exceptions. They are one idea with a two-thousand-year memory, and once you have the idea most of those exceptions write themselves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the avoir case — \"les lettres que j'ai écrites\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the avoir case — \"les lettres que j'ai écrites\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the être case — \"elle est allée\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the être case — \"elle est allée\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the single rule — \"the participle agrees with whatever it described\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the single rule — \"the participle agrees with whatever it described\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two old sentences — \"I have letters written … she is gone\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two old sentences — \"I have letters written … she is gone\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With avoir, what does the participle agree with? (A preceding object.) With être? (The subject.) State the one rule underneath both. (The participle was an adjective and agrees with whatever it described.) Why does the avoir rule need the object to come first? (Because that is where an adjective could still reach it.) Next: the verbs that take être and ignore its rule."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-pronominal-etre",
+      "sequence": 700,
+      "title": "je me suis levé — the pronominal family",
+      "headword": "je me suis levé",
+      "romanization": "je me suis levé",
+      "gloss": "every pronominal verb takes être — a whole extra family, with no list to learn",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6647beaac5127d1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The être list was short and closed. Here is one more family that takes être, and it has no end to it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: all of them, without exception",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A pronominal verb is one carrying the little reflexive pronoun you met when you learned to give your name — the me of je m'appelle, the se of s'appeler."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of them takes être in the past. No list, no shape to memorise, no exceptions:"
+            },
+            {
+              "kind": "speech",
+              "text": "je me suis levé — I got up."
+            },
+            {
+              "kind": "speech",
+              "text": "elle s'est lavée — she washed."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the word order: the reflexive pronoun comes before the auxiliary, not after it. Je me suis levé, not je suis me levé."
+            },
+            {
+              "kind": "speech",
+              "text": "That gives you two ways into être, and they work differently. The verbs from the earlier list are a closed set you can hold as a shape. The pronominals are an open class identified by their form — if it has a me, te or se, it takes être, and you never have to ask."
+            },
+            {
+              "kind": "speech",
+              "text": "But be careful with what comes next. They take être, and they do not follow être's agreement rule."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je me suis levé\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je me suis levé\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"elle s'est lavée\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"elle s'est lavée\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word order — \"je me suis levé\"; the pronoun comes first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word order — \"je *me* suis levé\"; the pronoun comes first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rule — \"if it has me, te or se, it takes être\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rule — \"if it has me, te or se, it takes être\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which auxiliary do pronominal verbs take? (être — all of them.) How do you recognise one? (It carries me, te or se.) Where does that pronoun sit? (Before the auxiliary — je me suis levé.) Is this a closed list like the earlier one? (No — it is an open class.) Next: the trap in their agreement."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-pronominal-accord",
+      "sequence": 703,
+      "title": "elle s'est lavée — the auxiliary lies about the rule",
+      "headword": "elle s'est lavée / elle s'est lavé les mains",
+      "romanization": "elle s'est lavée / elle s'est lavé les mains",
+      "gloss": "they take être but agree like avoir — the auxiliary lies about the rule",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:273d39437d338b07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pronominal verbs take être. Now watch them ignore être's agreement rule completely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: être on the outside, avoir underneath",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "They agree with a preceding direct object — which is avoir's rule, not être's. Usually that object is the reflexive pronoun, and sometimes it is not:"
+            },
+            {
+              "kind": "speech",
+              "text": "Elle s'est lavée. — She washed herself. se is the direct object, and it comes first, so the participle agrees."
+            },
+            {
+              "kind": "speech",
+              "text": "Elle s'est lavé les mains. — She washed her hands. The object is les mains, and it follows, so there is no agreement."
+            },
+            {
+              "kind": "speech",
+              "text": "Elles se sont parlé. — They spoke to each other. se is indirect — you speak to someone — so there is no agreement."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is, satisfyingly, the rule you already had. Nothing new has been introduced: the participle agrees with a preceding direct object, exactly as it did in les lettres que j'ai écrites."
+            },
+            {
+              "kind": "speech",
+              "text": "The lesson to take is about appearances. The auxiliary looks like être and the agreement behaves like avoir, and if you let the first tell you about the second you will get it wrong every time. The auxiliary is not what decides agreement; it never was. What decides it is what the participle is describing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agreement — \"Elle s'est lavée\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: agreement — \"Elle s'est lavée\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no agreement, object after — \"Elle s'est lavé les mains\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: no agreement, object after — \"Elle s'est lavé les mains\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no agreement, indirect — \"Elles se sont parlé\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: no agreement, indirect — \"Elles se sont parlé\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the warning — \"the auxiliary looks like être; the agreement is avoir's\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the warning — \"the auxiliary looks like être; the agreement is avoir's\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which agreement rule do pronominal verbs follow? (avoir's — a preceding direct object.) Why does elle s'est lavée agree? (se is the direct object and comes first.) Why does elle s'est lavé les mains not? (The object is les mains and it follows.) Why does elles se sont parlé not? (se is indirect — you speak to someone.) Next: the group that escapes even this."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-pronominal-seul",
+      "sequence": 706,
+      "title": "elles se sont souvenues — the verbs with no other form",
+      "headword": "elles se sont souvenues",
+      "romanization": "elles se sont souvenues",
+      "gloss": "verbs that exist only in pronominal form — nothing for the pronoun to be an object of",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd4d041d8f76517c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One small group escapes even the rule you just learned, and it escapes for a reason you can work out rather than memorise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: no object to be an object of",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A few verbs exist only in pronominal form. There is no plain version of them at all:"
+            },
+            {
+              "kind": "speech",
+              "text": "se souvenir — to remember."
+            },
+            {
+              "kind": "speech",
+              "text": "s'enfuir — to flee."
+            },
+            {
+              "kind": "speech",
+              "text": "s'évanouir — to faint."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no souvenir quelqu'un, no enfuir quelque chose. The se is not doing a job you could describe as direct or indirect, because there is no non-reflexive verb for it to be the object of. It is simply part of the word."
+            },
+            {
+              "kind": "speech",
+              "text": "So the previous lesson's test cannot be run on them, and they fall back to agreeing with the subject:"
+            },
+            {
+              "kind": "speech",
+              "text": "Elles se sont souvenues. — They remembered."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is where this chapter's whole argument lands. The agreement is not decided by the auxiliary, and not by a list of verb types. It is decided by what the participle is describing — and when there is no object in the picture at all, the only thing left for it to describe is the subject."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three — \"se souvenir, s'enfuir, s'évanouir\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three — \"se souvenir, s'enfuir, s'évanouir\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the example — \"Elles se sont souvenues\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the example — \"Elles se sont souvenues\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reason — \"no plain verb, so the se is not an object of anything\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reason — \"no plain verb, so the *se* is not an object of anything\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the landing — \"what is left for the participle to describe is the subject\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the landing — \"what is left for the participle to describe is the subject\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is special about se souvenir? (It exists only in pronominal form — there is no plain souvenir verb.) So what does its participle agree with? (The subject — elles se sont souvenues.) Why can the direct-object test not be applied? (There is no non-reflexive verb for se to be the object of.) Next: all of it together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C16-practice-etre-past",
+      "sequence": 709,
+      "title": "Practice — which auxiliary, and what agrees",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "which auxiliary, and what the participle agrees with",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b48d984ab52c125a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two questions cover this whole chapter: which auxiliary, and what does the participle describe. Run both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: which auxiliary",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"j'ai parlé … je suis allé\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"j'ai parlé … je suis allé\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shape of the list — \"arriving and leaving, in space or in life\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shape of the list — \"arriving and leaving, in space or in life\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the trap — \"j'ai couru, j'ai marché\"; motion is not transition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the trap — \"j'ai couru, j'ai marché\"; motion is not transition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the switch — \"je suis monté … j'ai monté les valises\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the switch — \"je suis monté … j'ai monté les valises\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"je suis allé, je suis venu, je suis resté\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: what the participle agrees with",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four — \"il est allé, elle est allée, ils sont allés, elles sont allées\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four — \"il est allé, elle est allée, ils sont allés, elles sont allées\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the audible one — \"il est mort, elle est morte\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the audible one — \"il est mort, elle est morte\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the avoir side — \"les lettres que j'ai écrites\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the avoir side — \"les lettres que j'ai écrites\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the single rule — \"it agrees with whatever it described\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the single rule — \"it agrees with whatever it described\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: the pronominals",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je me suis levé\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je me suis levé\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three cases — \"elle s'est lavée; elle s'est lavé les mains; elles se sont parlé\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three cases — \"elle s'est lavée; elle s'est lavé les mains; elles se sont parlé\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the group with no plain form — \"elles se sont souvenues\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the group with no plain form — \"elles se sont souvenues\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a second auxiliary, and a short closed list that is easier as a shape than a list: arriving and leaving, in space or in life."
+            },
+            {
+              "kind": "speech",
+              "text": "two corrections to the rule you would have been given. Motion verbs do not take être — transition verbs do; and five verbs switch the moment they take an object, which shows that what decides the auxiliary is the sentence, not the verb."
+            },
+            {
+              "kind": "speech",
+              "text": "an agreement you can hear — il est mort, elle est morte."
+            },
+            {
+              "kind": "speech",
+              "text": "one rule under everything: the participle was an adjective, and it agrees with whatever it described. Avoir's rule, être's rule and the pronominal rule are that one fact seen from three angles."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"she went.\" (Elle est allée.) Which auxiliary does courir take, and why? (avoir — it is motion, not transition.) What flips monter to avoir? (A direct object.) Which agreement rule do pronominal verbs follow? (avoir's — a preceding direct object.) State the one rule under all of it. (The participle agrees with whatever it described.)"
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C23-vert-jaune
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 700
-chapter: 23
+sequence: 800
+chapter: 27
 type: word
 headword: vert, jaune
 gloss: green and yellow — vert is the standard, expected Latin viridis descendant shared by nearly every Romance language; jaune comes from a Latin word that literally meant "yellow-GREEN," and is usually said to share its ultimate PIE root with German's gelb, though that particular link is less secure than it first appears

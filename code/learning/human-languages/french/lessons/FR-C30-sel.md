@@ -2,8 +2,8 @@
 schema_version: 2
 id: FR-C30-sel
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 970
-chapter: 30
+sequence: 1070
+chapter: 34
 type: word
 headword: le sel
 gloss: salt — masculine, cousin of English salt by common descent, and the source of a salary story no ancient writer actually tells
