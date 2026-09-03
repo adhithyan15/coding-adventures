@@ -123,3 +123,34 @@ fn syllable_segmentation_abstains_honestly_on_an_untabled_word() {
         "pretzel -> ? has no shipped row -- honest abstention, never invented: {out}"
     );
 }
+
+
+const SEGMENTATION_PEANUT_PIN: &str = r#""bindings":{"S1":"pea","S2":"nut"},"citations":[{"source":"I say the whole word: ‘Peanut’. I say each syllable and put down a card: ‘pea’ [place a card] ‘nut’ [place a card so it appears left-to-right for students].","locator":"https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice","trust":"consensus""#;
+
+#[test]
+fn syllable_segmentation_citation_keeps_the_pages_curly_quotes_and_full_bracket() {
+    let dir = scratch("reground_4e");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"syllable-segmentation.adj\"\n? syllable_segmentation(peanut, $S1, $S2)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // TWO DEFECTS IN ONE VALUE. Reading Rockets uses CURLY quotes throughout,
+    // and its bracket is longer than what was shipped:
+    //
+    //   ... 'pea' [place a card] 'nut' [place a card so it appears
+    //   left-to-right for students].
+    //
+    // The value used ASCII quotes and stopped at "[place a card].", losing
+    // "so it appears left-to-right for students" with no elision marker --
+    // the glyph class the early screens were built for, plus the silent
+    // elision class, in a single string.
+    assert!(
+        out.contains(SEGMENTATION_PEANUT_PIN),
+        "the segmentation citation matches its page: {out}"
+    );
+}

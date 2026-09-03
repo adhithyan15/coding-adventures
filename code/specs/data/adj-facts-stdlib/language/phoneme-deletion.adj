@@ -41,7 +41,7 @@
 %
 %   "I will change ‘bike’ to ‘by’."
 %     (states the transformation: bike -> by)
-%   "The last sound in 'bike' is /k/."
+%   "The last sound in ‘bike’ is /k/."
 %     (states which sound was removed: k)
 %
 % `trust consensus` — the same tier `phoneme-substitution.adj`'s and

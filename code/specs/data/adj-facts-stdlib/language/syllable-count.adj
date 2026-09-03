@@ -38,14 +38,14 @@
 %      card: ‘pea’ [place a card] ‘nut’ [place a card so it appears
 %      left-to-right for students]."
 %   pencil -> 2
-%     "The word is: 'pencil'. 'Pen' 'cil' [place a card for each syllable
-%      so it appears left-to-right for students]."
+%     "The word is: ‘pencil’. ‘Pen’ ‘cil’ [place a card for each syllable so
+%      it appears left-to-right for students]."
 %   sunset -> 2
-%     "I say the whole word: 'sunset'. I say each syllable and put down a
-%      card: 'sun' [place a card] 'set' [place a card so it appears
+%     "I say the whole word: ‘sunset’. I say each syllable and put down a
+%      card: ‘sun’ [place a card] ‘set’ [place a card so it appears
 %      left-to-right for students]."
 %   laptop -> 2
-%     "I say each syllable and put down a card: 'lap' [place a card] 'top'
+%     "I say each syllable and put down a card: ‘lap’ [place a card] ‘top’
 %      [place a card so it appears left-to-right for students]."
 %
 % All four happen to be two-syllable words in this cited source — the page's

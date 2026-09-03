@@ -8,7 +8,8 @@
 % breaks into, not just their count. Discovered via a header-revisit:
 % `syllable-count.adj`'s own header already quotes, verbatim, the exact
 % syllable split for every one of its four words ("I say each syllable and
-% put down a card: 'pea' [place a card] 'nut' [place a card]", etc.) — but
+% put down a card: ‘pea’ [place a card] ‘nut’ [place a card so it
+% appears left-to-right for students]", etc.) — but
 % that table's `syllable_count(word, count)` schema has no room for the
 % actual syllable text, only the count. Since the split IS cleanly grounded
 % in the SAME already-cited sentences, it earns its own sibling table with a
@@ -50,16 +51,19 @@
 % both byte-identical to `syllable-count.adj`'s existing quotes:
 %
 %   peanut -> pea, nut
-%     "I say the whole word: 'Peanut'. I say each syllable and put down a
-%      card: 'pea' [place a card] 'nut' [place a card]."
+%     "I say the whole word: ‘Peanut’. I say each syllable and put down a
+%      card: ‘pea’ [place a card] ‘nut’ [place a card so it appears
+%      left-to-right for students]."
 %   pencil -> pen, cil
-%     "The word is: 'pencil'. 'Pen' 'cil' [place a card for each syllable]."
+%     "The word is: ‘pencil’. ‘Pen’ ‘cil’ [place a card for each syllable so
+%      it appears left-to-right for students]."
 %   sunset -> sun, set
-%     "I say the whole word: 'sunset'. I say each syllable and put down a
-%      card: 'sun' [place a card] 'set' [place a card]."
+%     "I say the whole word: ‘sunset’. I say each syllable and put down a
+%      card: ‘sun’ [place a card] ‘set’ [place a card so it appears
+%      left-to-right for students]."
 %   laptop -> lap, top
-%     "I say each syllable and put down a card: 'lap' [place a card] 'top'
-%      [place a card]."
+%     "I say each syllable and put down a card: ‘lap’ [place a card] ‘top’
+%      [place a card so it appears left-to-right for students]."
 %
 % `trust consensus` — the same tier `syllable-count.adj` already uses for
 % this same page. Deliberately scoped to ONLY these four segmentations the
@@ -77,7 +81,7 @@ table syllable_segmentation {
     row (sunset, sun, set)
     row (laptop, lap, top)
 
-    source "I say the whole word: 'Peanut'. I say each syllable and put down a card: 'pea' [place a card] 'nut' [place a card]."
+    source "I say the whole word: ‘Peanut’. I say each syllable and put down a card: ‘pea’ [place a card] ‘nut’ [place a card so it appears left-to-right for students]."
     locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
     trust consensus
 }
