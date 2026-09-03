@@ -407,10 +407,77 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  # macOS only, and deliberately so: this is a SwiftUI app, so there is nowhere
+  # else for it to run.
+  build-swiftui:
+    name: Build the SwiftUI app (macos)
+    needs: validate
+    runs-on: macos-latest
+    steps:
+      - name: Checkout the validated release commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      # SwiftUI is the one backend that LINKS `engram-capi` statically rather
+      # than loading it at runtime, so there is no library beside the binary to
+      # check -- the engine is either inside the executable or every deck
+      # operation silently does nothing. The script asserts DEFINED `_eg_`
+      # symbols; an earlier form also accepted UNDEFINED ones, which is exactly
+      # the binary that does NOT contain the engine.
+      - name: Build the SwiftUI app bundle
+        shell: bash
+        env:
+          ENGRAM_VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          set -euo pipefail
+          bash code/programs/mosaic/engram-app/scripts/build-native.sh \
+            --backend swiftui --output "$RUNNER_TEMP/engram-swiftui" --build
+
+      # Only the `.app` is published. Archiving the SwiftPM project directory
+      # instead sweeps in `.build/` -- module caches, object files, the dSYM,
+      # the static archive -- which turned a 3.8 MB app into a 47 MB download.
+      # The app ran perfectly either way, so only reading the member list
+      # caught it.
+      - name: Archive the artifact for publication
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          bundle="$RUNNER_TEMP/engram-swiftui/swiftui/Engram.app"
+          if [ ! -d "$bundle" ]; then
+            echo "no SwiftUI bundle at $bundle" >&2
+            exit 1
+          fi
+          mkdir -p release-assets
+          python code/scripts/engram_release.py archive-swiftui \
+            --version "$RELEASE_VERSION" --platform macos \
+            --source "$bundle" --output-dir release-assets \
+            --commit "$RELEASE_COMMIT"
+          ls -la release-assets
+
+      - name: Upload the SwiftUI payload
+        uses: actions/upload-artifact@v7
+        with:
+          name: engram-swiftui-macos
+          path: release-assets/*
+          if-no-files-found: error
+          retention-days: 7
+
   publish:
     name: Publish one Engram release
     if: github.event_name == 'workflow_dispatch'
-    needs: [validate, build-web, build-desktop, build-compose]
+    needs: [validate, build-web, build-desktop, build-compose, build-swiftui]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -479,6 +546,13 @@ jobs:
             every deck operation silently unavailable.
 
             These bundle a JVM, so they are larger than the Electron builds.
+
+            **A SwiftUI build is included for macOS** — a genuine AppKit
+            application from the same Mosaic package, with no JVM and no web
+            view. It is by far the smallest payload here, a few megabytes
+            against a hundred, because SwiftUI is the one backend that links
+            the engine into the executable instead of loading it at runtime.
+            The release lane asserts those symbols are in the packaged binary.
 
             The macOS and Windows builds are **unsigned**. macOS will refuse to
             open the app on first launch; right-click and choose Open, or clear
