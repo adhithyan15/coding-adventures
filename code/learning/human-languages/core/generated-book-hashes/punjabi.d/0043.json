@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:a4759bfc3b5d4a39",
+  "lessonIds": [
+    "PA-C43-kaun",
+    "PA-C43-kadon",
+    "PA-W10-thatha",
+    "PA-C43-kitthe",
+    "PA-C43-kinne"
+  ],
+  "tex": "punjabi/book/chapters/ch43-question-words.tex"
+}

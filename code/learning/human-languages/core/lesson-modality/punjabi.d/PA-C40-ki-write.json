@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-C40-ki-write",
+    "language": "punjabi",
+    "chapter": 40,
+    "sequence": 2340,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:98f608b260c8cc43",
+    "detachableSegments": [
+      "Script — one stroke is the whole lesson",
+      "Writing — guided copy, model in view"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

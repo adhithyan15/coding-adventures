@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C38-jaan",
+    "language": "punjabi",
+    "chapter": 38,
+    "sequence": 2250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d98c6e136b19329"
+  },
+  "findings": []
+}

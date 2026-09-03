@@ -1,0 +1,16 @@
+{
+  "id": "PA-PATH-039",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "PA-C37-nahin-vaak",
+    "PA-C37-samajh-nahin",
+    "PA-C37-nahin-write",
+    "PA-C37-nahin-pata",
+    "PA-C37-nahin-checkpoint"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-059-NEGATED-CLAUSE"
+  ],
+  "after": []
+}

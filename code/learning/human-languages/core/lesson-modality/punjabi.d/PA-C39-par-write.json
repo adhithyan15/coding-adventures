@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-C39-par-write",
+    "language": "punjabi",
+    "chapter": 39,
+    "sequence": 2290,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:10ea42b4a27154b1",
+    "detachableSegments": [
+      "Script — two signs, and a caution worth more than the signs",
+      "Writing — guided copy, model in view"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
