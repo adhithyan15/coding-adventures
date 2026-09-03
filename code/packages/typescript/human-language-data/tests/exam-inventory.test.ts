@@ -1740,35 +1740,50 @@ describe("the committed Gujarati A1 inventory", () => {
     }
   });
 
-  it("reports an EMPTY joining column, a CLOSED gender column, and no digits at all", () => {
+  it("reports a joining column that is no longer empty, and the digits that still are", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(210);
-    expect(coverage.covered).toBe(100);
-    expect(coverage.unmapped).toBe(110);
+    // 100 -> 120. Chapters 35-41 answer this file's own uncovered list: seven
+    // chapters, five items each, one new item per lesson.
+    expect(coverage.covered).toBe(120);
+    expect(coverage.unmapped).toBe(90);
     expect(coverage.partial).toBe(0);
-    // The headline, and the second empty joining column in this series. `ane`
-    // ("and") returns ZERO occurrences in 228 files — the word is simply not in
-    // the corpus — and every raw match for `ke`, `jo` and `je` was checked in
-    // context and is a substring of `kem`, `aavjo`, `jovu` or `aavje`. Punjabi's
-    // column is also 0/11; Malayalam's came back 2/11. Each was measured.
+    // THE HEADLINE HAS CHANGED, and this assertion is the record of it. It read
+    // `covered: 0` and was the starkest finding in the file: `ane` returned ZERO
+    // occurrences in 228 lessons, so a learner could not say "tea and milk"
+    // although both words were taught on facing pages.
+    //
+    // The finding under the finding is why it was cheap to fix. TEN of the
+    // eleven joining devices needed NO NEW SIGN -- ane, athava, pan, ke, kemke,
+    // maate, tethi, jo, jyaare and je are all spelled in glyphs the track taught
+    // before chapter 30. This was never a script debt. Nobody had written the
+    // words down.
     expect(coverage.byCategory["Jodaan (joining and subordination)"]!).toEqual({
       enumerated: 11,
-      covered: 0,
+      covered: 10,
     });
-    // The other end. Gender is the one thing this track teaches deeply, and it
-    // is the only FULL column in the file.
+    // The one left open is the distributive, and it needs no new glyph either --
+    // it needs a paired correlative, which is a lesson rather than a script step.
+    // Gender is unchanged and still the only FULL column in the file.
     expect(coverage.byCategory["Ling (grammatical gender, of which Gujarati has three)"]!).toEqual({
       enumerated: 7,
       covered: 7,
     });
-    // Script closure over the corpus is exact (43 of 43, holding even over
-    // lesson bodies) while fourteen alphabet letters and ALL TEN DIGITS are
-    // never taught. Reading the first number alone would say the script is
-    // finished; the uncovered points in this column are that distinction.
+    // Unchanged, and deliberately so. Script closure over the corpus stays exact
+    // -- now 44 of 44, because this tranche spent exactly ONE new letter, the
+    // `pha` that `maaf karo` required -- while fourteen alphabet letters and ALL
+    // TEN DIGITS are still never taught. Reading the first number alone would say
+    // the script is finished; the uncovered points in this column are that
+    // distinction, and seven chapters of joining did not touch it.
     expect(coverage.byCategory["Lipi (script and orthography)"]!.covered).toBe(9);
+    // The columns the tranche moved that it was not aiming at: the negator alone
+    // closed the can't-say-I-don't-understand function, and the question family
+    // closed four at once.
+    expect(coverage.byCategory["Nakaar (negation)"]!).toEqual({ enumerated: 4, covered: 3 });
+    expect(coverage.byCategory["Prashna (asking questions)"]!).toEqual({ enumerated: 10, covered: 8 });
     expect(formatExamCoverage(coverage)).toContain(
-      "gujarati A1 (partial inventory): 100/210 points covered (48%)",
+      "gujarati A1 (partial inventory): 120/210 points covered (57%)",
     );
   }, 60_000);
 });

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C35-condition-checkpoint",
+    "language": "gujarati",
+    "chapter": 39,
+    "sequence": 2020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93e4a7c6d99fb4dd"
+  },
+  "findings": []
+}

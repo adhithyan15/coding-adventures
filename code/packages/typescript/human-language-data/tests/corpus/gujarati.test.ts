@@ -21,10 +21,14 @@ it("pins Gujarati lesson-content budgets", () =>
     // 31-34 each teach five new pre-A1 headwords one lesson at a time, ear
     // first, and write exactly one of them. None declares an idiom, sense, or
     // culture claim, so only the lesson total moves.
-    lessons: 228,
+    // 228 -> 263, and 15 -> 16 culture claims. Seven chapters, five lessons each,
+    // closing the joining column the A1 inventory measured at 0 of 11. The single
+    // culture claim is that mataf karo both apologises AND stops a stranger, which
+    // is why one phrase closes a courtesy function and a repair strategy at once.
+    lessons: 263,
     idioms: 12,
     senses: 6,
-    cultureClaims: 15,
+    cultureClaims: 16,
     unitPrefix: "GU",
   }));
 
@@ -123,6 +127,8 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     const chapter = lesson.frontmatter.chapter;
     chapterSizes.set(chapter, (chapterSizes.get(chapter) ?? 0) + 1);
   }
+  // Chapters 35-41 are the joining tranche: seven chapters of exactly five,
+  // one new item per lesson with the writing lesson third in every one.
   expect([...chapterSizes.entries()]).toEqual([
     ["1", 11],
     ["2", 15],
@@ -167,6 +173,13 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["32", 8],
     ["33", 8],
     ["34", 8],
+    ["35", 5],
+    ["36", 5],
+    ["37", 5],
+    ["38", 5],
+    ["39", 5],
+    ["40", 5],
+    ["41", 5],
   ]);
 });
 
@@ -369,6 +382,19 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "dictation-transcription",
     "guided-copy",
     "dictation-transcription",
+    // 189 -> 197. The joining tranche adds eight: GU-W08-pha is the only new
+    // LETTER in seven chapters and contributes an observe-trace and a guided
+    // copy, and the six word-writing lessons -- ane, ke, kemke, jo, te, kyaan --
+    // contribute one guided copy each. Every one of those six spends ZERO new
+    // signs: the words this book most needed were never a writing problem.
+    "observe-trace",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
   ]);
 });
 
@@ -709,7 +735,22 @@ it("closes Gujarati doorway R4 at position 134", () => {
   // atoms are now measurable at their third window and the last two chapters
   // sit too close to the end of the book to service theirs; that residue is
   // filed rather than hidden.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(283);
+  // 283 -> 364. Decomposed against the same corpus measured without chapters
+  // 35-41, because a bare rise here says nothing about whose debt it is:
+  //   +41  the tranche's OWN atoms -- the last chapters in the book, whose R3
+  //        and R4 windows fall past the final lesson and cannot be serviced.
+  //   +47  PRE-EXISTING atoms whose windows did not exist until the track grew.
+  //        R4 is distance 80-250; at 228 lessons an atom introduced at position
+  //        151 had no R4 to miss, and at 263 it does. Nothing about those
+  //        lessons changed.
+  //   -4   of those 47, closed deliberately: chapter 41's `where` lesson reads
+  //        the chapter-22 row (shaalaa, rasto, route-three) cold at distance
+  //        ~106, which is inside R4 rather than decorative.
+  //   -3   pre-existing misses closed outright by the chapter-opening
+  //        retrievals: chhe, hun and kem all reach their R4 for the first time.
+  // The doorway assertion below is unchanged and still passes, which is the
+  // property this test actually owns.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(364);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),

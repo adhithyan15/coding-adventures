@@ -1,0 +1,22 @@
+{
+  "chapter": 39,
+  "title": "If, and When",
+  "label": "ch:gu-if-and-when",
+  "canDo": "I can suppose something with a two-part condition and place one event against another in time.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "GU-C35-condition-checkpoint",
+    "kind": "task",
+    "summary": "The first joining words that open their clause rather than following it. Gujarati marks BOTH ends of a condition -- jo ... to ... -- where English marks only the first, and the writing lesson carries the warning that jo hides inside aavjo and jovun, which is why the inventory found sixteen apparent hits and no real ones.",
+    "assesses": [
+      "GU-JOIN-JO-01",
+      "GU-JOIN-JO-TO-01",
+      "GU-SCRIPT-JO-01",
+      "GU-JOIN-JYAARE-01",
+      "GU-PERFORMANCE-CONDITION-01"
+    ],
+    "note": "Carried on SPINE-SAY-WHAT-I-WANT, an A1 node, with track-local concepts: the spine stages CONNECTIVE-IF and CONDITIONAL-REAL at B1, so the canonical concept is deliberately NOT claimed here. What A1 needs is the two-clause sentence, not the full conditional system."
+  }
+}

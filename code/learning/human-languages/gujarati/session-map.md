@@ -73,16 +73,28 @@ canonical `sequence` order.
 | 205-212 | 32 | Inside the House | `GU-C28-hear-baarnun` -> `GU-C28-hear-baari` -> `GU-C28-hear-khurshi` -> `GU-C28-hear-chaavi` -> `GU-C28-hear-divo` -> `GU-C28-house-five` -> `GU-C28-baari` -> `GU-R28-house-five-r1` |
 | 213-220 | 33 | Sun, Sky, and River | `GU-C29-hear-sooraj` -> `GU-C29-hear-chandra` -> `GU-C29-hear-aakaash` -> `GU-C29-hear-varsaad` -> `GU-C29-hear-nadi` -> `GU-C29-sky-five` -> `GU-C29-nadi` -> `GU-R29-sky-five-r1` |
 | 221-228 | 34 | People, Paper, and a Book | `GU-C30-hear-chhokro` -> `GU-C30-hear-chhokri` -> `GU-C30-hear-maanas` -> `GU-C30-hear-pustak` -> `GU-C30-hear-kaagal` -> `GU-C30-people-five` -> `GU-C30-kaagal` -> `GU-R30-people-five-r1` |
+| 229-233 | 35 | The Word for Not, and the Word for Sorry | `GU-C31-nathi` -> `GU-C31-samajto-nathi` -> `GU-W08-pha` -> `GU-C31-maaf` -> `GU-C31-repair-five` |
+| 234-238 | 36 | And, Or, But | `GU-C32-ane` -> `GU-C32-ane-clauses` -> `GU-C32-ane-write` -> `GU-C32-athava` -> `GU-C32-pan` |
+| 239-243 | 37 | The Word That Carries a Thought | `GU-C33-ke` -> `GU-C33-vichaarun-ke` -> `GU-C33-ke-write` -> `GU-C33-jaanun-ke` -> `GU-C33-ke-checkpoint` |
+| 244-248 | 38 | Because, and Therefore | `GU-C34-kemke` -> `GU-C34-kem-kemke` -> `GU-C34-kemke-write` -> `GU-C34-maate` -> `GU-C34-tethi` |
+| 249-253 | 39 | If, and When | `GU-C35-jo` -> `GU-C35-jo-to` -> `GU-C35-jo-write` -> `GU-C35-jyaare` -> `GU-C35-condition-checkpoint` |
+| 254-258 | 40 | He, She, We, and the One Who | `GU-C36-te` -> `GU-C36-ame-aapne` -> `GU-C36-te-write` -> `GU-C36-je` -> `GU-C36-je-te` |
+| 259-263 | 41 | Who, Where, When, How Many | `GU-C37-kon` -> `GU-C37-kyaan` -> `GU-C37-kyaan-write` -> `GU-C37-kyaare` -> `GU-C37-ketla` |
 
 ## Current boundary
 
-The current book contains 34 chapters and 228 lessons. It teaches all 41
+The current book contains 41 chapters and 263 lessons. It teaches all 41
 Gujarati forms that the book shows, includes the complete pre-A1 writing-stage
 ladder, and carries the doorway, conversation, number and core-verb material
 through measured distant retrieval. Every native-script headword carries a
 romanization, so no lesson asks the reader to decode a sign nobody taught, and
 no lesson shows a glyph the book has not already introduced. It has begun, but
 has not completed, the 300-headword pre-A1 vocabulary target, which now stands
-at 72. Later vocabulary, composition, timed mocks, rubrics, calibration, and
+at 72. Chapters 35-41 close the joining column, which stood at 0 of 11: the
+book can now negate a sentence, apologise, join two clauses, report a thought,
+give a reason, suppose a condition, describe rather than name, and ask who,
+where, when and how many. Ten of the eleven joining devices needed no new sign
+at all, and the run spends exactly one — the ફ that માફ કરો required. Later
+vocabulary, composition, timed mocks, rubrics, calibration, and
 book-only learner evidence remain explicit backlog rather than present-tense
 readiness claims.

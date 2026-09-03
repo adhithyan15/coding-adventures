@@ -1,0 +1,22 @@
+{
+  "chapter": 37,
+  "title": "The Word That Carries a Thought",
+  "label": "ch:gu-that-clause",
+  "canDo": "I can say what I think and what I know, hand a whole sentence to a verb with ke, and say plainly that I do not know.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "GU-C33-ke-checkpoint",
+    "kind": "task",
+    "summary": "The complementiser. ane and pan set two sentences side by side; ke puts one INSIDE another, which is what a verb of thinking or knowing needs before it can be given anything to think or know. vicharvu and jaanvu were both taught twenty-nine chapters ago and neither has ever had an object; both get one here, and jaanto nathi supplies the flat I-do-not-know that sits beside chapter 35s I-do-not-understand.",
+    "assesses": [
+      "GU-JOIN-KE-01",
+      "GU-JOIN-VICHAARUN-KE-01",
+      "GU-SCRIPT-KE-01",
+      "GU-JOIN-JAANUN-KE-01",
+      "GU-PERFORMANCE-KE-FRAMES-01"
+    ],
+    "note": "Carried on SPINE-SAY-WHAT-I-LIKE, an A1 node, with a track-local concept: the spine has no canonical complementiser concept at any level."
+  }
+}

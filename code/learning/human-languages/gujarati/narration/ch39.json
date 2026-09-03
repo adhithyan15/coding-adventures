@@ -1,0 +1,597 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 39,
+  "title": "If, and When",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:6ba47c9af5b024e7",
+  "lessons": [
+    {
+      "id": "GU-C35-jo",
+      "sequence": 1980,
+      "title": "જો (jo) — if",
+      "headword": "જો",
+      "romanization": "jo",
+      "gloss": "if — the word that makes a sentence conditional",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af98d67c646d4a95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One chapter back, the word that draws a conclusion. Three chapters back, at the end of its chapter, the word that means both but and also."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "tethī, then paṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *tethī*, then *paṇ*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every joining word so far has taken two things that are true and put them together. This one takes something that might not be."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જો (jo) (something that might be so) …"
+            },
+            {
+              "kind": "speech",
+              "text": "જો (jo) stands at the front of the condition, where English also puts if. That is unusual for this book: most of the small words you have met — માટે, પણ in its also sense, the postpositions — come after what they apply to. જો (jo) comes first, and that alone tells your ear a condition is starting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo, then any sentence you can already say.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo*, then any sentence you can already say.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the sentence flat, then the same sentence with jo in front.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the sentence flat, then the same sentence with *jo* in front.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jo and māṭe back to back — one leads, one follows.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jo* and *māṭe* back to back — one leads, one follows.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does જો (jo) stand, and why is that worth noticing? (At the front — most small words in this book come after what they apply to.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C35-jo-to",
+      "sequence": 1990,
+      "title": "જો … તો … (jo … to …) — if … then …",
+      "headword": "જો … તો …",
+      "romanization": "jo … to …",
+      "gloss": "if … then … — the two-part condition Gujarati prefers",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4088471f5da82cec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back: the word that opens a condition. Four chapters back, at the head of the repair chapter: the negator."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "jo, and nathī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *jo*, and *nathī*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The pattern, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gujarati usually marks both ends of a condition:"
+            },
+            {
+              "kind": "speech",
+              "text": "જો (jo) (condition), તો (result)."
+            },
+            {
+              "kind": "speech",
+              "text": "English says if it is late, I will go and marks only the front. Gujarati puts તો at the head of the result as well, so the sentence announces its two halves. Beginners often leave તો out; it is understood, but the full pair is what you will hear."
+            },
+            {
+              "kind": "speech",
+              "text": "તો is a worn-down demonstrative — the sentence says, in effect, if … that … — which is why it sits at the head of the result rather than inside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "jo + a condition, to + a result.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: *jo* + a condition, *to* + a result.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "the same, with the result negative.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: the same, with the result negative.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the pair with to, then without it. Both are grammatical.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the pair with *to*, then without it. Both are grammatical.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Make a two-part condition. Which half does English leave unmarked that Gujarati marks? (The result — to.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C35-jo-write",
+      "sequence": 2000,
+      "title": "જો (jo) reaches the page",
+      "headword": "જો",
+      "romanization": "jo",
+      "gloss": "if, on two signs — and a warning about a word it is not",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d80261ed3fdef024",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — two signs, and a caution"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — two signs, and a caution until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three chapters back you wrote the joining word. Write અને once from memory before anything is uncovered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — two signs, and a caution",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જ — ja, ો — the o stroke."
+            },
+            {
+              "kind": "speech",
+              "text": "Both old. But જો (jo) is worth extra care for a reason the other words in this run did not have: the same two letters appear inside words you already know that have nothing to do with if. They turn up at the end of the farewell આવજો, and at the start of the verb જોવું, to see."
+            },
+            {
+              "kind": "speech",
+              "text": "So when you meet જો (jo) on a page, check that it is standing alone and at the front of its clause. Inside a longer word it is not this word at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, model in view",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy જો (jo) once with the model in view. Then write it again with a space after it, at the front of a line, which is where it belongs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you tell the if જો (jo) from the same two signs inside a longer word? (It stands alone, at the front of its clause.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C35-jyaare",
+      "sequence": 2010,
+      "title": "જ્યારે (jyāre) — when",
+      "headword": "જ્યારે",
+      "romanization": "jyāre",
+      "gloss": "when — locating one event against another",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d0d3c87bce1118e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back you wrote જો (jo). One chapter back, the word that answers why."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "જો (jo), and kemke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **જો**, and *kemke*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જ્યારે (jyāre) (one event), (the other)."
+            },
+            {
+              "kind": "speech",
+              "text": "જ્યારે (jyāre) sets two events against each other in time — when this, that. Like જો (jo), it opens its clause rather than following it."
+            },
+            {
+              "kind": "speech",
+              "text": "It is not a random shape. The જ્- at its front belongs to a large family: Gujarati builds a whole set of clause-openers on that one stem, and you are learning a single member of it here rather than the pattern all at once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "jyāre + an event, then a second event.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: *jyāre* + an event, then a second event.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "jo and jyāre on the same two clauses — one supposes, one times.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *jo* and *jyāre* on the same two clauses — one supposes, one times.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jyāre slowly; the જ્યા- is one sound, not two.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jyāre* slowly; the **જ્યા-** is one sound, not two.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a when sentence. What is the difference between opening with જો and opening with જ્યારે? (jo supposes something might be so; jyāre places it in time.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C35-condition-checkpoint",
+      "sequence": 2020,
+      "title": "Conditions and times, all together",
+      "headword": "જો … તો … — જ્યારે …",
+      "romanization": "jo … to … — jyāre …",
+      "gloss": "conditions and times, scored as one performance",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93e4a7c6d99fb4dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. One run through the two clause-openers this chapter added, against the ones behind them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જો (jo) — if, standing at the front of its clause."
+            },
+            {
+              "kind": "speech",
+              "text": "જો … તો … (jo … to …) — both ends marked, which is what you will hear."
+            },
+            {
+              "kind": "speech",
+              "text": "જો (jo) on the page, and how to tell it from the same signs inside આવજો."
+            },
+            {
+              "kind": "speech",
+              "text": "જ્યારે (jyāre) — when, placing one event against another."
+            },
+            {
+              "kind": "speech",
+              "text": "Five chapters ago this book could not join two sentences at all. It can now suppose one, time one against another, give a reason for one, and set two against each other."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "one jo … to … sentence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: one *jo … to …* sentence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "one jyāre sentence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: one *jyāre* sentence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "one kemke answer, from the chapter before.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: one *kemke* answer, from the chapter before.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two things joined by ane, from three chapters back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two things joined by *ane*, from three chapters back.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Suppose something, then time something. Next chapter: he, she, we, and the word that lets you say the one who."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
