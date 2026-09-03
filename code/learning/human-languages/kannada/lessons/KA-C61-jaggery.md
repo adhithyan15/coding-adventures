@@ -9,7 +9,7 @@ headword: "ಬೆಲ್ಲ"
 gloss: "jaggery"
 romanization: "bella"
 concept_tag: KA-NOUN-JAGGERY
-prerequisites: [KA-C61-oil]
+prerequisites: [KA-C61-oil, KA-C59-mud]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C61-KITCHEN-04]
 practises:
-  knowledge: [KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C61-KITCHEN-04]
+  knowledge: [KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C61-KITCHEN-04, KA-LEX-C59-GROUND-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ South Karnataka cooking puts a piece of it into food that is not a sweet at all 
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C61-KITCHEN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C61-KITCHEN-04, KA-LEX-C59-GROUND-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bella*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bella*, then *uppu*, and say which two go into the same pot]
+- [YOU RECALL: read **ಕೆಸರು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C61-KITCHEN-04] -->

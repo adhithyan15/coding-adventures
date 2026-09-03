@@ -9,7 +9,7 @@ headword: "ನಾನೂ"
 gloss: "I too, me as well"
 romanization: "nānū"
 concept_tag: KA-SUFFIX-ALSO
-prerequisites: [KA-C67-but, KA-C64-also, KA-C39-haalu, KA-C51-salutation, KA-C48-doctor, KA-C48-student, KA-C48-teacher]
+prerequisites: [KA-C67-but, KA-C64-also, KA-C39-haalu, KA-C51-salutation, KA-C48-doctor, KA-C48-student, KA-C48-teacher, KA-C65-manners, KA-C66-field]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C67-LINK-05, KA-GRAMMAR-C67-LINK-06]
 practises:
-  knowledge: [KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C67-LINK-06, KA-LEX-C39-HAALU-01, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C51-COURTESY-05, KA-LEX-C64-JOIN-02, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-03, KA-LEX-C67-LINK-05, KA-SCRIPT-RECOG-134]
+  knowledge: [KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C67-LINK-06, KA-LEX-C39-HAALU-01, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C51-COURTESY-05, KA-LEX-C64-JOIN-02, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-03, KA-LEX-C67-LINK-05, KA-SCRIPT-RECOG-134, KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -66,7 +66,7 @@ Four ways to put two ideas side by side: ಮತ್ತು, ಅಥವಾ, ಆದ�
 ending **-ೂ**.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C67-LINK-06, KA-LEX-C39-HAALU-01, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C51-COURTESY-05, KA-LEX-C64-JOIN-02, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-03, KA-LEX-C67-LINK-05, KA-SCRIPT-RECOG-134] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C67-LINK-06, KA-LEX-C39-HAALU-01, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C51-COURTESY-05, KA-LEX-C64-JOIN-02, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-03, KA-LEX-C67-LINK-05, KA-SCRIPT-RECOG-134, KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nānu*, then *nānū*, and say which one adds you to somebody else]
@@ -74,6 +74,7 @@ ending **-ೂ**.
 - [YOU SAY: all four joins in a row — *mattu*, *athavā*, *ādare*, and *-ū* on a noun]
 - [YOU RECALL: say *kūḍa*, then say *nānū*, and say what the two have in common]
 - [YOU RECALL: from much earlier — say *vandane*, *vaidya*, *vidyārthi*, *śikṣaka*, and say what each one means]
+- [YOU RECALL: read **ಸೌಜನ್ಯ**, then say *hola*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C67-LINK-06, KA-LEX-C39-HAALU-01, KA-LEX-C48-ROLE-01, KA-LEX-C48-ROLE-02, KA-LEX-C48-ROLE-03, KA-LEX-C51-COURTESY-05, KA-LEX-C64-JOIN-02, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-LEX-C67-LINK-03, KA-LEX-C67-LINK-05, KA-SCRIPT-RECOG-134] -->

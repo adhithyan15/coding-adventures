@@ -9,7 +9,7 @@ headword: "കനൽ"
 gloss: "an ember, a live coal"
 romanization: "kanal"
 concept_tag: ML-NOUN-EMBER
-prerequisites: [ML-C59-smoke]
+prerequisites: [ML-C59-smoke, ML-C57-bone]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C59-AIR-05]
 practises:
-  knowledge: [ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C59-AIR-04, ML-LEX-C59-AIR-05]
+  knowledge: [ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C59-AIR-04, ML-LEX-C59-AIR-05, ML-LEX-C57-FRAME-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The chillu ൽ closes it, the same bare *l* that closed the sand-word and the fi
 Five, and the run is closed: the wind, the sand, the mud, the smoke, and the ember that outlasts the fire.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C59-AIR-04, ML-LEX-C59-AIR-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C59-AIR-04, ML-LEX-C59-AIR-05, ML-LEX-C57-FRAME-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kanal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *kāṟṟŭ*, *maṇal*, *ceḷi*, *puka*, *kanal*]
+- [YOU RECALL: say *ellŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C59-AIR-04, ML-LEX-C59-AIR-05] -->

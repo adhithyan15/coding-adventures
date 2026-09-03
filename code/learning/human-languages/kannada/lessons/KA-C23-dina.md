@@ -9,7 +9,7 @@ headword: ದಿನ
 gloss: "day" — a Sanskrit tatsama word, kept whole and unworn, unlike Hindi's own eroded din; Kannada also has a real native Dravidian word, hagalu, but it means specifically "daytime," not "a day"
 romanization: "dina"
 concept_tag: TIME-DAY
-prerequisites: [KA-C17-madhyaahna-madhyaraatri]
+prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C18-gante]
 sounds: [kannada-vowel-sign-i, kannada-na]
 roots: [sanskrit-dina, dravidian-hagalu-daytime]
 etymology_hook: "ದಿನ (dina, 'day') is a Sanskrit tatsama word, borrowed whole and unworn — the SAME Sanskrit दिन already behind Hindi's own दिन (din), but Hindi's din is a tadbhava form, eroded by centuries of ordinary sound change (Sanskrit dina → Prakrit → din), while Kannada's dina keeps the full, unshortened Sanskrit shape; Kannada also has a genuine native Dravidian word, ಹಗಲು (hagalu), but it specifically means 'daytime' (as opposed to night), not 'a day' as a calendar unit"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03]
 practises:
-  knowledge: [KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03]
+  knowledge: [KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03, KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -68,7 +68,7 @@ daylight hours, as opposed to night), not "**a day**" as a calendar unit.
 It's not a synonym for *dina*; it's a different sense of "day" entirely.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03, KA-ETYMON-C18-GANTE-01, KA-PRAGMATICS-C18-GANTE-02, KA-GRAMMAR-C18-GANTE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "dina" — "day," Sanskrit tatsama, kept whole]
@@ -76,6 +76,7 @@ It's not a synonym for *dina*; it's a different sense of "day" entirely.
   borrowing vs. natural erosion]
 - [YOU SAY: hagalu — native Dravidian, "daytime," a different sense than
   dina]
+- [YOU RECALL: say *gaṇṭe*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03] -->

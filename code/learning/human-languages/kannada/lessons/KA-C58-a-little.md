@@ -9,7 +9,7 @@ headword: "ಸ್ವಲ್ಪ"
 gloss: "a little, a bit"
 romanization: "svalpa"
 concept_tag: KA-WORD-A-LITTLE
-prerequisites: [KA-C57-bone]
+prerequisites: [KA-C57-bone, KA-C56-mat]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C58-REPLY-01]
 practises:
-  knowledge: [KA-LEX-C57-BODY-04, KA-LEX-C57-BODY-05, KA-LEX-C58-REPLY-01]
+  knowledge: [KA-LEX-C57-BODY-04, KA-LEX-C57-BODY-05, KA-LEX-C58-REPLY-01, KA-LEX-C56-HOUSE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The word measures a quantity in the dictionary and a manner in the mouth. Englis
 A word that softens the next one.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-04, KA-LEX-C57-BODY-05, KA-LEX-C58-REPLY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-04, KA-LEX-C57-BODY-05, KA-LEX-C58-REPLY-01, KA-LEX-C56-HOUSE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *svalpa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nīru koḍi*, then *svalpa nīru koḍi*, and hear how much softer the second one is]
+- [YOU RECALL: say *cāpe*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-04, KA-LEX-C57-BODY-05, KA-LEX-C58-REPLY-01] -->

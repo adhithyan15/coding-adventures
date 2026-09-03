@@ -9,7 +9,7 @@ headword: ഞാൻ
 gloss: I
 romanization: "ñān"
 concept_tag: PRONOUN-I
-prerequisites: [ML-C02-enre]
+prerequisites: [ML-C02-enre, ML-C02-entu]
 sounds: [nya-initial, long-aa]
 roots: [njaan-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-NJAAN-01, ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01]
 practises:
-  knowledge: [ML-LEX-NJAAN-01, ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01]
+  knowledge: [ML-LEX-NJAAN-01, ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01, ML-LEX-ENTU-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -61,12 +61,13 @@ change for person at all** (you'll see this in Chapter 5) — so the pronoun *ñ
 must be said. It cannot be left out, because the verb won't tell you who acts.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NJAAN-01, ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NJAAN-01, ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01, ML-LEX-ENTU-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ñān" — start with the "ny" sound]
 - [YOU SAY: the pair — *ñān* (I), *enṟe* (my)]
 - [YOU SAY: can Malayalam drop "I" like Tamil? (No — its verbs don't mark person)]
+- [YOU RECALL: read **എന്ത്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NJAAN-01, ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01] -->

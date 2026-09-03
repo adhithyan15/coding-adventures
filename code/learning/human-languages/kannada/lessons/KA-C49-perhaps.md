@@ -9,7 +9,7 @@ headword: "ಬಹುಶಃ"
 gloss: "perhaps"
 romanization: "bahuśaḥ"
 concept_tag: KA-WORD-PERHAPS
-prerequisites: [KA-C49-certainly]
+prerequisites: [KA-C49-certainly, KA-C47-finger]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C49-REPLY-04]
 practises:
-  knowledge: [KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04]
+  knowledge: [KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C47-BODY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Notice the last mark: ಃ, the *visarga*, a light breath let out at the end of a
 Four, and the fourth one takes back what the third one promised.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C47-BODY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bahuśaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *khaṇḍita*, then *bahuśaḥ*, and hear the certainty drain out]
+- [YOU RECALL: read **ಬೆರಳು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04] -->

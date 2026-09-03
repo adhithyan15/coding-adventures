@@ -9,7 +9,7 @@ headword: "നക്ഷത്രം"
 gloss: "a star"
 romanization: "nakṣatraṁ"
 concept_tag: ML-NOUN-STAR
-prerequisites: [ML-C53-moon]
+prerequisites: [ML-C53-moon, ML-C51-blessing]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C53-SKY-04]
 practises:
-  knowledge: [ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C53-SKY-04]
+  knowledge: [ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C53-SKY-04, ML-LEX-C51-COURTESY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Tamil reaches for the same borrowed word, *naṭcattiram*, worn down a little fu
 Four, and this one keeps a calendar.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C53-SKY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C53-SKY-04, ML-LEX-C51-COURTESY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nakṣatraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nakṣatraṁ*, then *candran*, and say which of the two moves through the other]
+- [YOU RECALL: read **അനുഗ്രഹം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C53-SKY-04] -->

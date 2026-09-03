@@ -9,7 +9,7 @@ headword: সাদা
 romanization: shada
 gloss: white — a tadbhava worn down from Sanskrit, and the one color where Bengali and Hindi genuinely parted ways
 concept_tag: BN-COLOR-WHITE
-prerequisites: [BN-C14-kalo]
+prerequisites: [BN-C14-kalo, BN-C13-doya-kore]
 sounds: [s-to-sh-review]
 roots: [shveta-white]
 etymology_hook: "সাদা is usually traced to Sanskrit shveta, 'white', worn down through Middle Bengali rather than kept whole -- a tadbhava, like bhAi and bon before it -- with a tatsama twin, shveto, still alive inside compounds like shvetAngo, 'pale-skinned'; this is the one color in this small set where Bengali and Hindi genuinely diverge, since Hindi replaced its own Sanskrit-derived word for white with the Persian loan safed, while Bengali kept the native one as its everyday word"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C14-SHADA-01]
 practises:
-  knowledge: [BN-LEX-C14-KALO-01, BN-LEX-C12-MUKH-01, BN-LEX-C14-SHADA-01]
+  knowledge: [BN-LEX-C14-KALO-01, BN-LEX-C12-MUKH-01, BN-LEX-C14-SHADA-01, BN-LEX-C13-DOYAKORE-01, BN-GRAMMAR-C13-KORE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -68,12 +68,13 @@ it kept the native word as its everyday one, and the Persian loan never
 took hold here the way it did next door.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-SHADA-01, BN-LEX-C14-KALO-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-SHADA-01, BN-LEX-C14-KALO-01, BN-LEX-C13-DOYAKORE-01, BN-GRAMMAR-C13-KORE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "shādā" — white]
 - [YOU SAY: "shādā dudh" — white milk]
 - [YOU SAY: the compound cousin — "śveto … śvetāngo"]
+- [YOU RECALL: read **দয়া করে**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-SHADA-01, BN-LEX-C12-MUKH-01] -->

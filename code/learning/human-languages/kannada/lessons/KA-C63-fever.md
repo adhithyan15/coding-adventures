@@ -9,7 +9,7 @@ headword: "ಜ್ವರ"
 gloss: "a fever"
 romanization: "jvara"
 concept_tag: KA-NOUN-FEVER
-prerequisites: [KA-C63-sleep]
+prerequisites: [KA-C63-sleep, KA-C61-oil]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C63-HEALTH-03]
 practises:
-  knowledge: [KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03]
+  knowledge: [KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C61-KITCHEN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It is the word you hand a ವೈದ್ಯ first. ನನಗೆ ಜ್ವರ, with
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C61-KITCHEN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *jvara*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *jvara*, then *vaidya*, and say which one you go to]
+- [YOU RECALL: say *eṇṇe*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03] -->

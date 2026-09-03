@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "River and Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:11754f9ff606df3c",
+  "sourceHash": "fnv1a64:7b99c46734d15bdc",
   "lessons": [
     {
       "id": "KA-C55-river",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5dedbec77f8a840e",
+      "sourceHash": "fnv1a64:b0e34bee2f806d44",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nadi elli?* — \"where is the river?\" — with the asking word at the end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ākāśa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ākāśa*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:969d89704394d95c",
+      "sourceHash": "fnv1a64:34e147b69cd21ad5",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nadi*, then *kere*, and say which one of them people made]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಬಿಸಿಲು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಬಿಸಿಲು**]"
             }
           ]
         },
@@ -267,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:743d92d21397abe0",
+      "sourceHash": "fnv1a64:7288b54f18afc778",
       "notice": null,
       "blocks": [
         {
@@ -358,6 +376,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *doḍḍa beṭṭa*, then *cikka guḍḍa*, and hear the size words doing the sorting]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say candra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *candra*]"
             }
           ]
         },
@@ -393,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61699eab1184f6cb",
+      "sourceHash": "fnv1a64:0607b4b1b60c65c5",
       "notice": null,
       "blocks": [
         {
@@ -484,6 +511,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *haṇṇu*, then *haḷḷi*, and hear the one law opening both]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಚುಕ್ಕಿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಚುಕ್ಕಿ**]"
             }
           ]
         },
@@ -519,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d5df260e7f676cd",
+      "sourceHash": "fnv1a64:3003eefa5f8c19f5",
       "notice": null,
       "blocks": [
         {
@@ -610,6 +646,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *dayaviṭṭu dāri hēḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mōḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mōḍa*]"
             }
           ]
         },

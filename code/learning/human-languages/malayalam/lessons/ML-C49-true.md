@@ -9,7 +9,7 @@ headword: "സത്യം"
 gloss: "true, the truth"
 romanization: "satyaṁ"
 concept_tag: ML-WORD-TRUE
-prerequisites: [ML-C48-guest]
+prerequisites: [ML-C48-guest, ML-C47-leg]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C49-REPLY-01]
 practises:
-  knowledge: [ML-LEX-C48-ROLE-04, ML-LEX-C48-ROLE-05, ML-LEX-C49-REPLY-01]
+  knowledge: [ML-LEX-C48-ROLE-04, ML-LEX-C48-ROLE-05, ML-LEX-C49-REPLY-01, ML-LEX-C47-BODY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada answers with ನಿಜ (*nija*), a different Sanskrit word, whose older 
 The first of five short replies.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-04, ML-LEX-C48-ROLE-05, ML-LEX-C49-REPLY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-04, ML-LEX-C48-ROLE-05, ML-LEX-C49-REPLY-01, ML-LEX-C47-BODY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *satyaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *satyaṁ*, then *śari*, and hear the weight shift between them]
+- [YOU RECALL: say *kāl*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-04, ML-LEX-C48-ROLE-05, ML-LEX-C49-REPLY-01] -->

@@ -9,7 +9,7 @@ headword: "ಅಂತ"
 gloss: "that — the word that closes a quotation"
 romanization: "anta"
 concept_tag: KA-QUOTATIVE
-prerequisites: [KA-C70-say, KA-C49-true, KA-C54-branch, KA-C42-small, KA-C41-there, KA-C41-here]
+prerequisites: [KA-C70-say, KA-C49-true, KA-C54-branch, KA-C42-small, KA-C41-there, KA-C41-here, KA-C68-is-not, KA-C68-neither]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C70-TELL-02, KA-GRAMMAR-C70-TELL-03]
 practises:
-  knowledge: [KA-GRAMMAR-C69-ASK-02, KA-GRAMMAR-C70-TELL-03, KA-LEX-C01-ILLA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-03, KA-LEX-C41-DEIXIS-04, KA-LEX-C42-ADJ-02, KA-LEX-C49-REPLY-01, KA-LEX-C54-TREE-02, KA-LEX-C69-ASK-01, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-02]
+  knowledge: [KA-GRAMMAR-C69-ASK-02, KA-GRAMMAR-C70-TELL-03, KA-LEX-C01-ILLA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-03, KA-LEX-C41-DEIXIS-04, KA-LEX-C42-ADJ-02, KA-LEX-C49-REPLY-01, KA-LEX-C54-TREE-02, KA-LEX-C69-ASK-01, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-02, KA-LEX-C68-DENY-01, KA-GRAMMAR-C68-DENY-02, KA-PRAGMATICS-C68-DENY-03, KA-GRAMMAR-C68-DENY-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -74,7 +74,7 @@ A whole sentence, used as the object of another one. That is the first
 piece of Kannada in this book that is bigger than a phrase.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C69-ASK-02, KA-GRAMMAR-C70-TELL-03, KA-LEX-C01-ILLA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-03, KA-LEX-C41-DEIXIS-04, KA-LEX-C42-ADJ-02, KA-LEX-C49-REPLY-01, KA-LEX-C54-TREE-02, KA-LEX-C69-ASK-01, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C69-ASK-02, KA-GRAMMAR-C70-TELL-03, KA-LEX-C01-ILLA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-03, KA-LEX-C41-DEIXIS-04, KA-LEX-C42-ADJ-02, KA-LEX-C49-REPLY-01, KA-LEX-C54-TREE-02, KA-LEX-C69-ASK-01, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-02, KA-LEX-C68-DENY-01, KA-GRAMMAR-C68-DENY-02, KA-PRAGMATICS-C68-DENY-03, KA-GRAMMAR-C68-DENY-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *anta*]
@@ -83,6 +83,7 @@ piece of Kannada in this book that is bigger than a phrase.
 - [YOU RECALL: say *hēḷu*, then *hēḷi*]
 - [YOU RECALL: say *gottā* once more]
 - [YOU RECALL: from much earlier — say *kombe*, *cikka*, *alli*, *illi*, and say what each one means]
+- [YOU RECALL: read **ಅಲ್ಲ**, then say *hālū illa, nīrū illa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C69-ASK-02, KA-GRAMMAR-C70-TELL-03, KA-LEX-C01-ILLA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C41-DEIXIS-01, KA-LEX-C41-DEIXIS-03, KA-LEX-C41-DEIXIS-04, KA-LEX-C42-ADJ-02, KA-LEX-C49-REPLY-01, KA-LEX-C54-TREE-02, KA-LEX-C69-ASK-01, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-02] -->

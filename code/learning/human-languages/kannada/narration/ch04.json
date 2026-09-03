@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:71f029f448ab8346",
+  "sourceHash": "fnv1a64:64c70aec7976ccad",
   "lessons": [
     {
       "id": "KA-C04-hoogu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bf66926a5c326ebc",
+      "sourceHash": "fnv1a64:edfa61759a8a288b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -98,6 +98,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: why you need both to say goodbye (Kannada's farewell is \"I'll go and come back\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hēge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hēge*]"
             }
           ]
         },

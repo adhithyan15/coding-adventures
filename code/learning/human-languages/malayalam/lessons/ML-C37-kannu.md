@@ -9,7 +9,7 @@ headword: കണ്ണ്
 gloss: eye — Proto-Dravidian, nearly identical across all four literary Dravidian languages
 romanization: kaṇṇŭ
 concept_tag: ML-EYE
-prerequisites: [ML-C36-makal, ML-C13-shareera-bhaagangal]
+prerequisites: [ML-C36-makal, ML-C13-shareera-bhaagangal, ML-C34-edukkuka]
 sounds: [malayalam-geminate-nna]
 roots: [proto-dravidian-kan-eye]
 etymology_hook: "കണ്ണ് continues Proto-Dravidian *kaN, 'eye' -- Tamil கண் (kaN), Telugu కన్ను (kannu) and Kannada ಕಣ್ಣು (kaNNu) all sit within one sound of Malayalam's own കണ്ണ്; four languages that otherwise diverge sharply on tense, half their vocabulary, and even their scripts agree almost completely on this one word -- the first body word since Chapter 13's തല and കൈ"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02]
 practises:
-  knowledge: [ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02]
+  knowledge: [ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C34-EDUKKUKA-01, ML-CONCEPT-C34-EDUKKUKA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -58,7 +58,7 @@ earlier, as the third body word, and the first to show this exact,
 near-total four-way match.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C34-EDUKKUKA-01, ML-CONCEPT-C34-EDUKKUKA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ente kaṇṇŭ" — my eye]
@@ -66,6 +66,7 @@ near-total four-way match.
   kaṇṇu"]
 - [YOU SAY: three body words now — "thala, kai, kaṇṇŭ"]
 - [YOU SAY: family, then body — "makan, makaḷ … kaṇṇŭ"]
+- [YOU RECALL: say *eṭukkuka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02, ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02] -->

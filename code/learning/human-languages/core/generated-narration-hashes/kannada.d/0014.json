@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 14,
-  "sourceHash": "fnv1a64:c21cc4881db5cefe",
+  "sourceHash": "fnv1a64:9ea22ba4f486cfad",
   "lessonIds": [
     "KA-C14-kaalagalu",
     "KA-S123-sign-anusvara",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch14.txt",
   "json": "kannada/narration/ch14.json",
-  "textHash": "fnv1a64:bd2f197dd4e09edd",
-  "jsonHash": "fnv1a64:b5791501acd39685",
+  "textHash": "fnv1a64:12b440286019ab67",
+  "jsonHash": "fnv1a64:83157837bd60b9c6",
   "findings": []
 }

@@ -9,7 +9,7 @@ headword: "പുറപ്പെടുക"
 gloss: "to set out"
 romanization: "puṟappeṭuka"
 concept_tag: ML-VERB-SET-OUT
-prerequisites: [ML-C50-journey]
+prerequisites: [ML-C50-journey, ML-C48-farmer]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C50-LEAVE-04]
 practises:
-  knowledge: [ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C50-LEAVE-04]
+  knowledge: [ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C50-LEAVE-04, ML-LEX-C48-ROLE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada says ಹೊರಡು (*horaḍu*), built on its own outside-word, and th
 Four. Now, the day after tomorrow, a journey, setting out.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C50-LEAVE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C50-LEAVE-04, ML-LEX-C48-ROLE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *puṟappeṭuka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *puṟappeṭuka*, then *jōli ceyyuka*, two verbs built the same way]
+- [YOU RECALL: read **കർഷകൻ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02, ML-LEX-C50-LEAVE-03, ML-LEX-C50-LEAVE-04] -->

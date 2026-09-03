@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fc55961f988dd256",
+  "sourceHash": "fnv1a64:668a4e76037da3a1",
   "lessons": [
     {
       "id": "ML-C24-rathri",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1d7ead4c17e2697",
+      "sourceHash": "fnv1a64:97cfd51d87eea3cd",
       "notice": null,
       "blocks": [
         {
@@ -89,6 +89,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the honest PIE echo — *h₁reh₁-, \"to rest,\" like Hindi's raat, NOT related to Latin's nox]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pathinonnŭ — irupathŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pathinonnŭ — irupathŭ*]"
             }
           ]
         },

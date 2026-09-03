@@ -9,7 +9,7 @@ headword: "ಹಾಗೆ"
 gloss: "that way, just so"
 romanization: "hāge"
 concept_tag: KA-WORD-JUST-SO
-prerequisites: [KA-C49-perhaps]
+prerequisites: [KA-C49-perhaps, KA-C47-stomach]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C49-REPLY-05]
 practises:
-  knowledge: [KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C49-REPLY-05]
+  knowledge: [KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C49-REPLY-05, KA-LEX-C47-BODY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -54,12 +54,13 @@ That is the same three-way grid as ಇದು, ಅದು and ಎಲ್ಲಿ: ಇ
 Five replies: true, enough, certainly, perhaps, just so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C49-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C49-REPLY-05, KA-LEX-C47-BODY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hāge*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *hīge*, *hāge*, *hēge* as one run]
+- [YOU RECALL: say *hoṭṭe*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C49-REPLY-05] -->

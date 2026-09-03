@@ -9,7 +9,7 @@ headword: "ಮೇಕೆ"
 gloss: "a goat"
 romanization: "mēke"
 concept_tag: KA-NOUN-GOAT
-prerequisites: [KA-C60-cow]
+prerequisites: [KA-C60-cow, KA-C58-more]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C60-ANIMAL-02]
 practises:
-  knowledge: [KA-LEX-C59-GROUND-05, KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02]
+  knowledge: [KA-LEX-C59-GROUND-05, KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C58-REPLY-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ A ಹಸು is walked to flat ground. A ಮೇಕೆ is let up a ಬೆಟ್ಟ
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-05, KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-05, KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C58-REPLY-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *mēke*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hasu*, then *mēke*, and say which one climbs]
+- [YOU RECALL: read **ಹೆಚ್ಚು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-05, KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02] -->

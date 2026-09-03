@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "In the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d2ebe18a18d878e5",
+  "sourceHash": "fnv1a64:6c2fc2a9d433a3be",
   "lessons": [
     {
       "id": "KA-C56-mat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45d10cbc19ccf8b6",
+      "sourceHash": "fnv1a64:1191151c21819848",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kuḷitukō*, then *cāpe*, and say who is offered which]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mara*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db87a4e9d1aad76f",
+      "sourceHash": "fnv1a64:4a2128e30e6ff9a0",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *haṇṇina buṭṭi*, then *hūvina buṭṭi*, and hear the joining piece in the middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಕೊಂಬೆ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಕೊಂಬೆ**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:191a3b28dddb701c",
+      "sourceHash": "fnv1a64:ab6d7795cb5f57c2",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kurci*, then *cāku*, and say what the two of them have in common]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ele",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ele*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df280058cb60fb13",
+      "sourceHash": "fnv1a64:7436e3c6972aec26",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pātre*, then *nīru*, and say which one holds the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಬೇರು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಬೇರು**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ef4a4c3cf091d7c",
+      "sourceHash": "fnv1a64:c51376be4915ce91",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say which three of them hold something]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bīja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bīja*]"
             }
           ]
         },

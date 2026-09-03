@@ -9,7 +9,7 @@ headword: പോകുക
 gloss: to go (and വരിക, to come)
 romanization: "pōkuka"
 concept_tag: ML-VERB-POKUKA
-prerequisites: [ML-C03-njaan]
+prerequisites: [ML-C03-njaan, ML-C03-engane, ML-C03-sukham]
 sounds: [long-o, ka-infinitive]
 roots: [po-go-dravidian, va-come-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-POKUKA-VARIKA-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01]
 practises:
-  knowledge: [ML-LEX-POKUKA-VARIKA-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01]
+  knowledge: [ML-LEX-POKUKA-VARIKA-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01, ML-LEX-ENGANE-01, ML-LEX-NJAAN-01, ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01, ML-LEX-SUKHAM-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -51,11 +51,12 @@ Malayalam, like all its family, does not say a plain "goodbye": it says "I go,
 and I **come back**."
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-POKUKA-VARIKA-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-POKUKA-VARIKA-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01, ML-LEX-ENGANE-01, ML-LEX-NJAAN-01, ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01, ML-LEX-SUKHAM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "pōkuka" (to go) and "varika" (to come)]
 - [YOU SAY: the "to ___" ending every Malayalam verb takes (*-uka*)]
+- [YOU RECALL: say *eṅṅane*, then say *ñān*, then say *sukhaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-POKUKA-VARIKA-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01] -->

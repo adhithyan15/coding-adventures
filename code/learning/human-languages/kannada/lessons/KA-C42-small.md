@@ -9,7 +9,7 @@ headword: "ಚಿಕ್ಕ"
 gloss: "small"
 romanization: "cikka"
 concept_tag: KA-ADJ-SMALL
-prerequisites: [KA-C42-big]
+prerequisites: [KA-C42-big, KA-C39-haalu]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C42-ADJ-02]
 practises:
-  knowledge: [KA-LEX-C42-ADJ-01, KA-LEX-C42-ADJ-02]
+  knowledge: [KA-LEX-C42-ADJ-01, KA-LEX-C42-ADJ-02, KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -49,11 +49,12 @@ The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-02, KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ಚಿಕ್ಕ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: read **ಹಾಲು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-02] -->

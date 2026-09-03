@@ -9,7 +9,7 @@ headword: "കാറ്റ്"
 gloss: "wind"
 romanization: "kāṟṟŭ"
 concept_tag: ML-NOUN-WIND
-prerequisites: [ML-C58-that-will-do]
+prerequisites: [ML-C58-that-will-do, ML-C57-neck]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C59-AIR-01]
 practises:
-  knowledge: [ML-LEX-C58-ANSWER-04, ML-LEX-C58-ANSWER-05, ML-LEX-C59-AIR-01]
+  knowledge: [ML-LEX-C58-ANSWER-04, ML-LEX-C58-ANSWER-05, ML-LEX-C59-AIR-01, ML-LEX-C57-FRAME-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It also does the work English gives to *air*, so a room with no കാറ്റ�
 The first of five things the weather brings.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-04, ML-LEX-C58-ANSWER-05, ML-LEX-C59-AIR-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-04, ML-LEX-C58-ANSWER-05, ML-LEX-C59-AIR-01, ML-LEX-C57-FRAME-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kāṟṟŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pōruṁ*, then *kāṟṟŭ*, and hold the doubled sound in the middle]
+- [YOU RECALL: say *kaḻuttŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-ANSWER-04, ML-LEX-C58-ANSWER-05, ML-LEX-C59-AIR-01] -->

@@ -9,7 +9,7 @@ headword: ಕ್ಷಮಿಸಿ
 gloss: forgive me / sorry (kṣamisi — imperative of kṣamisu, "to forgive," from Sanskrit kṣamā)
 romanization: "kṣamisi"
 concept_tag: COURTESY-SORRY
-prerequisites: [KA-C08-dayavittu]
+prerequisites: [KA-C08-dayavittu, KA-C07-aidu, KA-C07-aaru]
 sounds: [kannada-conjunct-kssa, kannada-vowel-sign-i]
 roots: [kshama-sanskrit]
 etymology_hook: "ಕ್ಷಮಿಸಿ kṣamisi ← Sanskrit kṣamā 'patience/forgiveness' + Kannada verb-making -isu — the same trick Kannada uses to borrow Sanskrit nouns as verbs"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03]
 practises:
-  knowledge: [KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03]
+  knowledge: [KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03, KA-LEX-C07-AIDU-01, KA-LEX-C07-NUMBERS-6-10-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -77,12 +77,13 @@ but in casual conversation you'll also hear the softer **ಕ್ಷಮಿಸಿ �
 "**sorry**," which is extremely common in spoken Kannada.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03, KA-LEX-C07-AIDU-01, KA-LEX-C07-NUMBERS-6-10-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kṣamā" — the Sanskrit noun, patience/forgiveness]
 - [YOU SAY: the verb — "kṣamisu," to forgive — then "kṣamisi," forgive!]
 - [YOU SAY: contrast — Tamil's maṉṉikkavum uses its own root instead]
+- [YOU RECALL: say *aidu*, then say *āru*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03] -->

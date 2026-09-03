@@ -9,7 +9,7 @@ headword: "ಬಾ"
 gloss: "come"
 romanization: "bā"
 concept_tag: KA-VERB-COME
-prerequisites: []
+prerequisites: [KA-C41-there, KA-C41-who]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-COME]
 practises:
-  knowledge: [KA-LEX-COME]
+  knowledge: [KA-LEX-COME, KA-LEX-C41-DEIXIS-04, KA-LEX-C41-DEIXIS-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,12 @@ One syllable, and a whole sentence. The commonest thing said at a doorway.
 One more everyday action. Three more follow, and each reuses the ones before it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-COME] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-COME, KA-LEX-C41-DEIXIS-04, KA-LEX-C41-DEIXIS-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bā*]
 - [YOU SAY: it again, to someone standing in a doorway]
-
+- [YOU RECALL: say *alli*, then read **ಯಾರು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-COME] -->

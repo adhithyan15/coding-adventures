@@ -9,7 +9,7 @@ headword: "കലപ്പ"
 gloss: "a plough"
 romanization: "kalappa"
 concept_tag: ML-NOUN-PLOUGH
-prerequisites: [ML-C66-ear-of-grain]
+prerequisites: [ML-C66-ear-of-grain, ML-C64-only, ML-C65-consent, ML-C65-manners]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C66-PADDY-04]
 practises:
-  knowledge: [ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04]
+  knowledge: [ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04, ML-LEX-C64-SMALL-04, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Which puts the *paśu* back to work: the animal of the first chapter in this run
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04, ML-LEX-C64-SMALL-04, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kalappa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *karṣakan*, then *kalappa*, and say which one holds the other]
+- [YOU RECALL: read **മാത്രം**, then say *sammataṁ*, then read **മര്യാദ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04] -->

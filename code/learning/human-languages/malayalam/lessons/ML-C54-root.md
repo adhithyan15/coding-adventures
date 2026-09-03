@@ -9,7 +9,7 @@ headword: "വേര്"
 gloss: "a root"
 romanization: "vērŭ"
 concept_tag: ML-NOUN-ROOT
-prerequisites: [ML-C54-trunk]
+prerequisites: [ML-C54-trunk, ML-C52-flower]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C54-TREE-04]
 practises:
-  knowledge: [ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C54-TREE-04]
+  knowledge: [ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C54-TREE-04, ML-LEX-C52-WELCOME-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The two languages arriving at the same figure from the same word is not a coinci
 Four: the tree, the branch, the trunk, and what holds it down.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C54-TREE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C54-TREE-04, ML-LEX-C52-WELCOME-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vērŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *taṭi*, then *vērŭ*, and say which end of the tree each one names]
+- [YOU RECALL: read **പൂവ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C54-TREE-04] -->

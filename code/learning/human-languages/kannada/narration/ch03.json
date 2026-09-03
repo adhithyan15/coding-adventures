@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:20401f59edddb996",
+  "sourceHash": "fnv1a64:d8c8b5cff9f2016d",
   "lessons": [
     {
       "id": "KA-C03-hege",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bc17f4a8d514cc89",
+      "sourceHash": "fnv1a64:d0d2cb45cf3dd8d3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -98,6 +98,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the question family — *ēnu, hēge, yāru, elli, yāvāga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sari, then read ಹೆಸರು, then say nanna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sari*, then read **ಹೆಸರು**, then say *nanna*]"
             }
           ]
         },
@@ -436,7 +445,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:417f940b7dbc21e6",
+      "sourceHash": "fnv1a64:6b08bc0ee5839969",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -535,6 +544,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: is it related to English *me*? (No — native Dravidian)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ನೀನು / ನೀವು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ನೀನು / ನೀವು**]"
             }
           ]
         },
@@ -570,7 +588,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a6581e194e82ec3e",
+      "sourceHash": "fnv1a64:624d49de1d76f83d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -673,6 +691,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: what *cennu* means at root (\"good / beautiful\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ēnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ēnu*]"
             }
           ]
         },

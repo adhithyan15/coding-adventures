@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8e232d680dfbcef3",
+  "sourceHash": "fnv1a64:8027435691aa58f7",
   "lessons": [
     {
       "id": "ML-S110-letter-va",
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2d93229b37eea9a4",
+      "sourceHash": "fnv1a64:4e2f817d55e72605",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -420,6 +420,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the \"to ___\" ending every Malayalam verb takes (*-uka*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eṅṅane, then say ñān, then say sukhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eṅṅane*, then say *ñān*, then say *sukhaṁ*]"
             }
           ]
         },

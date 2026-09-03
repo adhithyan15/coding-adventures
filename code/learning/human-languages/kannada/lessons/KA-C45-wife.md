@@ -9,7 +9,7 @@ headword: "ಹೆಂಡತಿ"
 gloss: "wife"
 romanization: "heṇḍati"
 concept_tag: KA-NOUN-WIFE
-prerequisites: [KA-C45-husband]
+prerequisites: [KA-C45-husband, KA-C43-sit]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-WIFE]
 practises:
-  knowledge: [KA-LEX-HUSBAND, KA-LEX-WIFE]
+  knowledge: [KA-LEX-HUSBAND, KA-LEX-WIFE, KA-LEX-SIT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ Built on ಹೆಣ್ಣು (*heṇṇu*), 'female', with a *-ti* ending. And *h
 That closes the run: grandfather, grandmother, husband, wife.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-HUSBAND, KA-LEX-WIFE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-HUSBAND, KA-LEX-WIFE, KA-LEX-SIT] -->
 
 [PAUSE 1s]
 - [YOU SAY: *heṇḍati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *gaṇḍa*, so the two sit together]
+- [YOU RECALL: read **ಕುಳಿತುಕೋ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-HUSBAND, KA-LEX-WIFE] -->

@@ -9,7 +9,7 @@ headword: "സമ്മതം"
 gloss: "consent, an agreeing"
 romanization: "sammataṁ"
 concept_tag: ML-NOUN-CONSENT
-prerequisites: [ML-C65-permission]
+prerequisites: [ML-C65-permission, ML-C63-pain]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C65-ASK-03]
 practises:
-  knowledge: [ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03]
+  knowledge: [ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C63-FEEL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Between the two you now have, *anuvādaṁ* comes down from somebody with the st
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C63-FEEL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sammataṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *anuvādaṁ*, then *sammataṁ*, and say which of the two is given from above]
+- [YOU RECALL: say *vēdana*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03] -->

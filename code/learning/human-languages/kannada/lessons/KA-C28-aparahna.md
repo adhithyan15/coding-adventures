@@ -9,7 +9,7 @@ headword: ಅಪರಾಹ್ನ
 gloss: "afternoon" (aparāhna) — a genuine Sanskrit tatsama distinct from ಮಧ್ಯಾಹ್ನ/madhyāhna ("noon"), sharing its "-ahna" ("day") suffix; apara ("latter") vs madhya ("middle"), the same clean structure applied to two different day-parts
 romanization: "aparāhna"
 concept_tag: TIME-AFTERNOON
-prerequisites: [KA-C17-madhyaahna-madhyaraatri]
+prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C21-naayi-bekku]
 sounds: [kannada-conjunct-hna, kannada-vowel-sign-aa]
 roots: [sanskrit-apara-latter, sanskrit-ahna-day]
 etymology_hook: "ಅಪರಾಹ್ನ (aparāhna, 'afternoon') is a genuine Sanskrit tatsama, distinct from ಮಧ್ಯಾಹ್ನ (madhyāhna, 'noon,' already met in Chapter 17) — both share the SAME '-ahna' suffix ('day,' related to ahan), differing only in the first piece: ಅಪರ (apara, 'latter, further') vs ಮಧ್ಯ (madhya, 'middle') — the classical five-part Sanskrit day division (prāta/saṅgava/madhyāhna/aparāhna/sāyāhna) kept this distinction sharp; in practice, though, some sources describe ಮಧ್ಯಾಹ್ನ ALSO being stretched loosely to cover the whole afternoon in casual modern speech — a MUCH more thinly sourced echo of Hindi's clearer दोपहर-widening story, worth flagging honestly rather than asserting as settled"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-ETYMON-C28-APARAHNA-01, KA-PRAGMATICS-C28-APARAHNA-02]
 practises:
-  knowledge: [KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C28-APARAHNA-01, KA-PRAGMATICS-C28-APARAHNA-02]
+  knowledge: [KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C28-APARAHNA-01, KA-PRAGMATICS-C28-APARAHNA-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,7 +67,7 @@ this as a plausible, hedged parallel, not a settled fact the way
 correct word for "afternoon" specifically.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C28-APARAHNA-01, KA-PRAGMATICS-C28-APARAHNA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C28-APARAHNA-01, KA-PRAGMATICS-C28-APARAHNA-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "aparāhna" — "afternoon," apara + ahna]
@@ -75,6 +75,7 @@ correct word for "afternoon" specifically.
 - [YOU SAY: the honest hedge — madhyāhna MAY also loosely cover
   "afternoon" in casual speech, but this is far less certain than
   Hindi's dopahar-widening story]
+- [YOU RECALL: say *nāyi, bekku*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C28-APARAHNA-01, KA-PRAGMATICS-C28-APARAHNA-02] -->

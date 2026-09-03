@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1a2fac7d7aeba08f",
+  "sourceHash": "fnv1a64:0b411246ac29a44a",
   "lessons": [
     {
       "id": "KA-C57-neck",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b591ce5f75de135b",
+      "sourceHash": "fnv1a64:a28b1a5ffd148167",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nanna kuttige* — \"my neck\" — with the possessing word in front]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nadi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nadi*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2047f780998e898",
+      "sourceHash": "fnv1a64:cc643f65979e7251",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bennu*, then *bēru*, then *beṭṭa*, and hear the one letter they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಕೆರೆ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಕೆರೆ**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46c6fa5c12a3886c",
+      "sourceHash": "fnv1a64:e1939eff63ddb399",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bāyi*, then *tuṭi*, and say which one is the edge of the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say beṭṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *beṭṭa*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb65399f90bb7e34",
+      "sourceHash": "fnv1a64:86c78cc10e9b8a23",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bhuja*, then *kuttige*, and say which of the two the ಹೂಮಾಲೆ passes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಹಳ್ಳಿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಹಳ್ಳಿ**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a1faf38708b3c3e",
+      "sourceHash": "fnv1a64:cd2ef414ac710a67",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say which of them is the odd one in the family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dāri*]"
             }
           ]
         },

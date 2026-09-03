@@ -9,7 +9,7 @@ headword: "തടി"
 gloss: "a trunk, timber"
 romanization: "taṭi"
 concept_tag: ML-NOUN-TRUNK
-prerequisites: [ML-C54-branch]
+prerequisites: [ML-C54-branch, ML-C52-kolam]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C54-TREE-03]
 practises:
-  knowledge: [ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03]
+  knowledge: [ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C52-WELCOME-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Beside it sits തടിയൻ (*taṭiyan*), a heavy-set man, carrying that sam
 Three, and this one describes people as well as trees.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C52-WELCOME-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *taṭi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kompŭ*, then *taṭi*, and say which of the two you could saw]
+- [YOU RECALL: say *kōlaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03] -->

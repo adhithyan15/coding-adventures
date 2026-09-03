@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "How the Body Reports",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:97fdcb6836b22a31",
+  "sourceHash": "fnv1a64:a39dab3f84e9e039",
   "lessons": [
     {
       "id": "ML-C63-hunger",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb260fe0789ec858",
+      "sourceHash": "fnv1a64:0c32bc393a080e59",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vayaṟŭ*, then *viśappŭ*, and say which of the two is a feeling]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tēṅṅa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tēṅṅa*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97b8cfdfa619d0d6",
+      "sourceHash": "fnv1a64:a74b994e1d3d44d5",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kṣamikkaṇaṁ*, then *kṣīṇaṁ*, and hear the same opening twice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read എണ്ണ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **എണ്ണ**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e3f8cffbb4dc7dc",
+      "sourceHash": "fnv1a64:7c0161a03c0d3a92",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vaidyan*, then *vēdana*, and say which of the two is the reason for the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tairŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tairŭ*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de2a193272609910",
+      "sourceHash": "fnv1a64:2151160e734352e6",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kākka*, then *cuma*, and say what the making of the two words has in common]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ശർക്കര",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ശർക്കര**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1277a74f66e6f73",
+      "sourceHash": "fnv1a64:ba897d140ec85f6a",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *viśappŭ*, *kṣīṇaṁ*, *vēdana*, *cuma*, *pani*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say muḷakŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *muḷakŭ*]"
             }
           ]
         },

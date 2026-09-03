@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea, Coffee, Milk",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:9a3c4256160740ee",
+  "sourceHash": "fnv1a64:035e607a8eb1d324",
   "lessons": [
     {
       "id": "ML-C39-chaaya",
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b78a9516917d3a5",
+      "sourceHash": "fnv1a64:7cf8eb59e7c06177",
       "notice": null,
       "blocks": [
         {
@@ -266,6 +266,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: two hearts, still — \"hṛdayaṁ … nenchŭ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read മകൻ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **മകൻ**]"
             }
           ]
         },
@@ -301,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a252e2a9f2e7190",
+      "sourceHash": "fnv1a64:913e2b73c5bd3b9c",
       "notice": null,
       "blocks": [
         {
@@ -406,6 +415,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the long road, once more — \"qahwah … kahve … caffè … kāppi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say makaḷ, then read കണ്ണ്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *makaḷ*, then read **കണ്ണ്**]"
             }
           ]
         },

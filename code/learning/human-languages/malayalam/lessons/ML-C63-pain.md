@@ -9,7 +9,7 @@ headword: "വേദന"
 gloss: "pain"
 romanization: "vēdana"
 concept_tag: ML-NOUN-PAIN
-prerequisites: [ML-C63-tiredness]
+prerequisites: [ML-C63-tiredness, ML-C61-curd]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C63-FEEL-03]
 practises:
-  knowledge: [ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03]
+  knowledge: [ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C61-SHELF-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Malayalam keeps it for bodily pain first and lets the wider sense follow, so a s
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C61-SHELF-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vēdana*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vaidyan*, then *vēdana*, and say which of the two is the reason for the other]
+- [YOU RECALL: say *tairŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03] -->

@@ -9,7 +9,7 @@ headword: "ವಂದನೆ"
 gloss: "a salutation"
 romanization: "vandane"
 concept_tag: KA-NOUN-SALUTATION
-prerequisites: [KA-C51-blessing]
+prerequisites: [KA-C51-blessing, KA-C49-just-so]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C51-COURTESY-05]
 practises:
-  knowledge: [KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C51-COURTESY-04, KA-LEX-C51-COURTESY-05]
+  knowledge: [KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C51-COURTESY-04, KA-LEX-C51-COURTESY-05, KA-LEX-C49-REPLY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Five courtesies: gratitude, a good turn, respect, a blessing, a salutation.
 Five courtesies, and two words for one gesture.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C51-COURTESY-04, KA-LEX-C51-COURTESY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C51-COURTESY-04, KA-LEX-C51-COURTESY-05, KA-LEX-C49-REPLY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vandane*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *vandane* and *namaskāra*, the two bows]
+- [YOU RECALL: say *hāge*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C51-COURTESY-04, KA-LEX-C51-COURTESY-05] -->

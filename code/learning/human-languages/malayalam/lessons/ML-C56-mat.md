@@ -9,7 +9,7 @@ headword: "പായ"
 gloss: "a mat"
 romanization: "pāya"
 concept_tag: ML-NOUN-MAT
-prerequisites: [ML-C55-field]
+prerequisites: [ML-C55-field, ML-C54-tree]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C56-HOUSE-01]
 practises:
-  knowledge: [ML-LEX-C55-GROUND-04, ML-LEX-C55-GROUND-05, ML-LEX-C56-HOUSE-01]
+  knowledge: [ML-LEX-C55-GROUND-04, ML-LEX-C55-GROUND-05, ML-LEX-C56-HOUSE-01, ML-LEX-C54-TREE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The mat and the chair answer the same question by different means, and the older
 The first of five things a Kerala house keeps.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-04, ML-LEX-C55-GROUND-05, ML-LEX-C56-HOUSE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-04, ML-LEX-C55-GROUND-05, ML-LEX-C56-HOUSE-01, ML-LEX-C54-TREE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pāya*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vayal*, then *pāya*, and say which of the two is woven]
+- [YOU RECALL: say *maraṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-04, ML-LEX-C55-GROUND-05, ML-LEX-C56-HOUSE-01] -->

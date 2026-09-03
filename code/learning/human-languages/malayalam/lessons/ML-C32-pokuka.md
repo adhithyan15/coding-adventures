@@ -9,7 +9,7 @@ headword: പോകുക
 gloss: to go — one stem, three tense endings, and each of the three is the entire conjugation
 romanization: pōkuka
 concept_tag: VERB-GO
-prerequisites: [ML-C32-undu]
+prerequisites: [ML-C32-undu, ML-C23-divasam]
 sounds: [long-o, ka-infinitive]
 roots: [dravidian-poo-go]
 etymology_hook: "പോകുക is native Dravidian *pō-, the same verb as Tamil போ and Telugu పోవు, and Kannada's ಹೋಗು is that old p softened to h; its three forms pōkunnu / pōyi / pōkuṁ are each a complete conjugation, because no person ending follows"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02]
 practises:
-  knowledge: [ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02]
+  knowledge: [ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -86,13 +86,14 @@ That is the bargain. Nothing to memorise on the verb — and the pronoun in fron
 can never be dropped, since it is now the only thing telling you who went.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "pōkuka" — to go]
 - [YOU SAY: the three times — "pōkunnu … pōyi … pōkuṁ"]
 - [YOU SAY: the pair that shares one sound-law — "pattŭ … hattu", "pō … hōgu"]
 - [YOU SAY: four people, one verb — "ñān, nī, avan, avar … pōkunnu"]
+- [YOU RECALL: read **ദിവസം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02] -->

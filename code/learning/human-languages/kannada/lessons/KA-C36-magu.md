@@ -9,7 +9,7 @@ headword: ಮಗು
 gloss: baby, child — gender-neutral, and the root that the next two lessons split by gender
 romanization: magu
 concept_tag: KA-CHILD
-prerequisites: [KA-C35-snehita]
+prerequisites: [KA-C35-snehita, KA-C33-yocisu]
 sounds: [kannada-ga, u-vowel-sign]
 roots: [proto-dravidian-maka-child]
 etymology_hook: "ಮಗು is Proto-Dravidian *maka, 'child' — a plain, ancient root with no gender built in yet; the next two lessons put a different ending on this exact root to say 'son' and 'daughter,' the way Chapter 12 put different endings on nothing at all and just used four separate words instead"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02]
 practises:
-  knowledge: [KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02, KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02]
+  knowledge: [KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02, KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02, KA-LEX-C33-YOCISU-01, KA-ETYMON-C33-YOCISU-02, KA-ETYMON-C33-YOCISU-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -56,12 +56,13 @@ apart — with four completely separate words. This root solves a smaller
 problem the opposite way: one shape, several endings.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02, KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02, KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02, KA-LEX-C33-YOCISU-01, KA-ETYMON-C33-YOCISU-02, KA-ETYMON-C33-YOCISU-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "idu nanna magu" — this is my child]
 - [YOU SAY: the root to hold onto — "maka"]
 - [YOU SAY: friend, then child — "snēhita … magu"]
+- [YOU RECALL: say *yōcisu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02, KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02] -->

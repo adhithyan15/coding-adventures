@@ -9,7 +9,7 @@ headword: "ನೋಡು"
 gloss: "look"
 romanization: "nōḍu"
 concept_tag: KA-VERB-LOOK
-prerequisites: []
+prerequisites: [KA-C42-small]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-LOOK]
 practises:
-  knowledge: [KA-LEX-LOOK]
+  knowledge: [KA-LEX-LOOK, KA-LEX-C42-ADJ-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,12 @@ Also 'to see' and, in the right sentence, 'to look after'. One stem covering wat
 One more. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-LOOK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-LOOK, KA-LEX-C42-ADJ-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nōḍu*]
 - [YOU SAY: it once more, slowly]
-
+- [YOU RECALL: say *cikka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-LOOK] -->

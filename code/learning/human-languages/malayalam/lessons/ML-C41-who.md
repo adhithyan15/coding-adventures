@@ -9,7 +9,7 @@ headword: "ആര്"
 gloss: "who? — asking about a person"
 romanization: "ārŭ"
 concept_tag: ML-DEIXIS-WHO
-prerequisites: [ML-C41-there]
+prerequisites: [ML-C41-there, ML-C38-nenchu]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C41-DEIXIS-05]
 practises:
-  knowledge: [ML-LEX-C41-DEIXIS-03, ML-LEX-C41-DEIXIS-04, ML-LEX-C41-DEIXIS-05]
+  knowledge: [ML-LEX-C41-DEIXIS-03, ML-LEX-C41-DEIXIS-04, ML-LEX-C41-DEIXIS-05, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **e-** for ask — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-05, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ആര്" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *nenchŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-05] -->

@@ -9,7 +9,7 @@ headword: নাম
 romanization: "nām"
 gloss: name
 concept_tag: WORD-NAME
-prerequisites: []
+prerequisites: [BN-C01-dhonnobad, BN-C01-hyan-na, BN-C01-achchha]
 sounds: [long-aa]
 roots: [naaman-sanskrit]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [BN-CONCEPT-C02-NAAM-01]
 practises:
-  knowledge: [BN-CONCEPT-C02-NAAM-01]
+  knowledge: [BN-CONCEPT-C02-NAAM-01, BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01, BN-CONCEPT-C01-ACHCHHA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -52,11 +52,12 @@ the long-*ā* sign overrides the inherent *ô*, so it is *nām*, not "nôm."
 threads tying the Indian and European branches of one family.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-NAAM-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-NAAM-01, BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01, BN-CONCEPT-C01-ACHCHHA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nām"]
 - [YOU SAY: the family — *nām* / English *name* / Latin *nōmen* / Greek *onoma*]
+- [YOU RECALL: say *dhônyobad*, then say *hyã / nā*, then say *āchchhā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-NAAM-01] -->

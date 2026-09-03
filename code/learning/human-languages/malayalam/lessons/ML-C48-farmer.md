@@ -9,7 +9,7 @@ headword: "കർഷകൻ"
 gloss: "a farmer"
 romanization: "karṣakan"
 concept_tag: ML-NOUN-FARMER
-prerequisites: [ML-C48-doctor]
+prerequisites: [ML-C48-doctor, ML-C46-salt]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C48-ROLE-04]
 practises:
-  knowledge: [ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C48-ROLE-04]
+  knowledge: [ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C48-ROLE-04, ML-LEX-C46-ASK-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada went elsewhere again and says ರೈತ (*raita*), a word that came into
 Four. A teacher, a student, a doctor, a farmer.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C48-ROLE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C48-ROLE-04, ML-LEX-C46-ASK-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *karṣakan*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *karṣakan*, then *adhyāpakan*, and count the chillus in each]
+- [YOU RECALL: read **ഉപ്പ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02, ML-LEX-C48-ROLE-03, ML-LEX-C48-ROLE-04] -->

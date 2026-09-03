@@ -9,7 +9,7 @@ headword: "ഉടനെ"
 gloss: "soon, right away"
 romanization: "uṭane"
 concept_tag: ML-WORD-SOON
-prerequisites: [ML-C64-then]
+prerequisites: [ML-C64-then, ML-C62-thread]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C64-SMALL-02]
 practises:
-  knowledge: [ML-LEX-C63-FEEL-05, ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02]
+  knowledge: [ML-LEX-C63-FEEL-05, ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C62-HAND-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ In Kerala speech it also softens a refusal: not now, but not far off either.
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-05, ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-05, ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C62-HAND-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *uṭane*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pinne*, then *uṭane*, and say which of the two leaves a gap]
+- [YOU RECALL: read **നൂല്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-05, ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02] -->

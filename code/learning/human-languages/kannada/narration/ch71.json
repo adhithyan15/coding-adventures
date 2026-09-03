@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Once More, and Which One",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4a81193c91447fc4",
+  "sourceHash": "fnv1a64:653310bfea9e658d",
   "lessons": [
     {
       "id": "KA-C71-another",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7eb532bb53ff0a38",
+      "sourceHash": "fnv1a64:cd136d070b4d7dd3",
       "notice": null,
       "blocks": [
         {
@@ -161,6 +161,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *nadi*, *kaṇṇu*, *magaḷu*, *maga*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gottā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gottā*]"
             }
           ]
         },
@@ -358,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e503c8a5456f8c2f",
+      "sourceHash": "fnv1a64:cd5c105086548692",
       "notice": null,
       "blocks": [
         {
@@ -485,6 +494,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *beṭṭa*, *sahāya māḍu*, *kēḷu*, *tegeduko*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಅಲ್ವಾ, then say yāke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಅಲ್ವಾ**, then say *yāke*]"
             }
           ]
         },

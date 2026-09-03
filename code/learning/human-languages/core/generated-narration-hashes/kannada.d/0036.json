@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 36,
-  "sourceHash": "fnv1a64:a9f129f06c399190",
+  "sourceHash": "fnv1a64:481551ab8293b355",
   "lessonIds": [
     "KA-C36-magu",
     "KA-C36-maga",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "kannada/narration/ch36.txt",
   "json": "kannada/narration/ch36.json",
-  "textHash": "fnv1a64:f6409a1a9af81048",
-  "jsonHash": "fnv1a64:5ca4a96f0d8d5df0",
+  "textHash": "fnv1a64:2c17d4e74f3d250c",
+  "jsonHash": "fnv1a64:307edcbbd2f8fba6",
   "findings": []
 }

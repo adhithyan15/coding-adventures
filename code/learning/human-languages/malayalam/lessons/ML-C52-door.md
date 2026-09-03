@@ -9,7 +9,7 @@ headword: "വാതിൽ"
 gloss: "a door"
 romanization: "vātil"
 concept_tag: ML-NOUN-DOOR
-prerequisites: [ML-C51-salutation]
+prerequisites: [ML-C51-salutation, ML-C50-now]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C52-WELCOME-01]
 practises:
-  knowledge: [ML-LEX-C51-COURTESY-04, ML-LEX-C51-COURTESY-05, ML-LEX-C52-WELCOME-01]
+  knowledge: [ML-LEX-C51-COURTESY-04, ML-LEX-C51-COURTESY-05, ML-LEX-C52-WELCOME-01, ML-LEX-C50-LEAVE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada says ಬಾಗಿಲು (*bāgilu*), which is a different word altogethe
 The first of five things a guest meets at the door.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-04, ML-LEX-C51-COURTESY-05, ML-LEX-C52-WELCOME-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-04, ML-LEX-C51-COURTESY-05, ML-LEX-C52-WELCOME-01, ML-LEX-C50-LEAVE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vātil*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vātil*, then *vāy*, and hear what a doorway is named for]
+- [YOU RECALL: say *ippōḷ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-04, ML-LEX-C51-COURTESY-05, ML-LEX-C52-WELCOME-01] -->

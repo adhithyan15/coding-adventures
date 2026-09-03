@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:66667c99a353244b",
+  "sourceHash": "fnv1a64:1ef29e819884f2c4",
   "lessons": [
     {
       "id": "ML-C17-ucha-paathira",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:128d3273c3920f51",
+      "sourceHash": "fnv1a64:f42308e749d53e71",
       "notice": null,
       "blocks": [
         {
@@ -89,6 +89,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the honest contrast — Kannada/Telugu's noon word means \"middle\"; Malayalam's most likely means \"peak\" — both probably still Sanskrit, just different Sanskrit roots]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say acchan amma cēṭṭan aniyan cēcci aniyatti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *acchan amma cēṭṭan aniyan cēcci aniyatti*]"
             }
           ]
         },
@@ -124,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2ea46269c3d834c",
+      "sourceHash": "fnv1a64:4f2cfa27a8650569",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +209,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: Malayalam *paathi* versus Sanskrit *ardha* — same job, different roots]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read തല കൈ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **തല കൈ**]"
             }
           ]
         },

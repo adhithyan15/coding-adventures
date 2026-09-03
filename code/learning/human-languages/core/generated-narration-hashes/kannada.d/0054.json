@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 54,
-  "sourceHash": "fnv1a64:817313e9f3d74cfa",
+  "sourceHash": "fnv1a64:2b380fb18f38dc5a",
   "lessonIds": [
     "KA-C54-tree",
     "KA-C54-branch",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch54.txt",
   "json": "kannada/narration/ch54.json",
-  "textHash": "fnv1a64:26ef05dddd652c04",
-  "jsonHash": "fnv1a64:fb58d26c57e7c05b",
+  "textHash": "fnv1a64:470f50192a8b9b59",
+  "jsonHash": "fnv1a64:84d5da497e3cdd0b",
   "findings": []
 }

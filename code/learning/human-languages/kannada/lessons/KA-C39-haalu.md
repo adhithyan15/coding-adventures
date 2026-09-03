@@ -9,7 +9,7 @@ headword: ಹಾಲು
 gloss: milk — a word Chapter 32 already used, unexplained, as one of its four proof-pairs for the sound law that made Kannada sound like Kannada
 romanization: hālu
 concept_tag: KA-MILK
-prerequisites: [KA-C39-kaapi, KA-C32-hoogu, KA-C22-hasiru-haladi]
+prerequisites: [KA-C39-kaapi, KA-C32-hoogu, KA-C22-hasiru-haladi, KA-C36-maga]
 sounds: [kannada-ha, long-aa]
 roots: [proto-south-dravidian-pal-milk, proto-dravidian-p-to-h]
 etymology_hook: "ಹಾಲು continues Old Kannada pālu, from Proto-South-Dravidian *pāl, 'milk' — Tamil keeps the p unchanged, பால் (pāl); Chapter 32 already named this exact pair, pāl → hālu, as one of its four proofs of Kannada's p → h law, right beside pōgu → hōgu, pattu → hattu and peyar → hesaru, but never once said what hālu itself meant, the same gap Chapter 37 found for bāyi; and hālu is not only a drink on its own — ಅರಿಶಿನ ಹಾಲು, turmeric milk, pairs it directly with Chapter 22's ಹಳದಿ"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02]
 practises:
-  knowledge: [KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-ETYMON-C22-HASIRU-HALADI-02, KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02]
+  knowledge: [KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-ETYMON-C22-HASIRU-HALADI-02, KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02, KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -64,7 +64,7 @@ You have said *pāl … hālu* before. Nobody told you then that it meant
 color Chapter 22's other word, **ಹಳದಿ**.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-ETYMON-C22-HASIRU-HALADI-02, KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-ETYMON-C22-HASIRU-HALADI-02, KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02, KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "dayaviṭṭu hālu" — milk, please]
@@ -72,6 +72,7 @@ color Chapter 22's other word, **ಹಳದಿ**.
   pāl, hālu … peyar, hesaru"]
 - [YOU SAY: turmeric milk, and its color — "ariśina hālu … haḷadi"]
 - [YOU SAY: three drinks now — "cahā, kāphi, hālu"]
+- [YOU RECALL: say *maga*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-ETYMON-C22-HASIRU-HALADI-02, KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02] -->

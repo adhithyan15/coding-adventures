@@ -9,7 +9,7 @@ headword: "അപേക്ഷ"
 gloss: "a request"
 romanization: "apēkṣa"
 concept_tag: ML-NOUN-REQUEST
-prerequisites: [ML-C64-but]
+prerequisites: [ML-C64-but, ML-C63-hunger]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C65-ASK-01]
 practises:
-  knowledge: [ML-LEX-C64-SMALL-04, ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01]
+  knowledge: [ML-LEX-C64-SMALL-04, ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01, ML-LEX-C63-FEEL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Beside *dayavāyi*, which softens whatever follows it, അപേക്ഷ names 
 The first of five words for asking well.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-04, ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-04, ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01, ML-LEX-C63-FEEL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *apēkṣa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dayavāyi*, then *apēkṣa*, and say which of the two is the asking itself]
+- [YOU RECALL: say *viśappŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-04, ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01] -->

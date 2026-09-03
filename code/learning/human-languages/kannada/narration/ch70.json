@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Saying So, and Saying Why",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4b1f846bd6742e6e",
+  "sourceHash": "fnv1a64:511b1ef02e3b8acb",
   "lessons": [
     {
       "id": "KA-C70-say",
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1d57f2e09a71526a",
+      "sourceHash": "fnv1a64:2d39e0b7f7ccbe5d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -338,6 +338,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *kombe*, *cikka*, *alli*, *illi*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಅಲ್ಲ, then say hālū illa, nīrū illa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಅಲ್ಲ**, then say *hālū illa, nīrū illa*]"
             }
           ]
         },
@@ -542,7 +551,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23918f4ec04e962f",
+      "sourceHash": "fnv1a64:9c53f0e9ee726e07",
       "notice": null,
       "blocks": [
         {
@@ -679,6 +688,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU RECALL: from much earlier — say *bēru*, *ele*, *ūṭa*, *hṛdaya*, and say what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gottilla, then read ನನಗೂ ಗೊತ್ತಿಲ್ಲ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gottilla*, then read **ನನಗೂ ಗೊತ್ತಿಲ್ಲ**]"
             }
           ]
         },

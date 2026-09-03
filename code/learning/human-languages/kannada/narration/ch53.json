@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4509a64f9341bcc0",
+  "sourceHash": "fnv1a64:79fec3a818018a53",
   "lessons": [
     {
       "id": "KA-C53-sky",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12e60d2002f010b8",
+      "sourceHash": "fnv1a64:dd56c1de27054875",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ākāśa*, then *namaskāra*, as you would greet somebody out of doors]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kṛtajñate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kṛtajñate*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:335c5831caac166e",
+      "sourceHash": "fnv1a64:c464e3bb7b4db0ec",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bisi*, then *bisilu*, and hear the shorter word standing inside the longer one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಉಪಕಾರ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಉಪಕಾರ**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdf7244a758e35e8",
+      "sourceHash": "fnv1a64:f0e093abc4ed5af0",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ākāśa*, then *candra*, and say which of the two is the container]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gaurava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gaurava*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ab485aad69d7679",
+      "sourceHash": "fnv1a64:8d1c2892e458a86b",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *cukki*, then *raṅgōli*, and say how the two meet on the ground]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಆಶೀರ್ವಾದ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಆಶೀರ್ವಾದ**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fafd04657bdb0f1",
+      "sourceHash": "fnv1a64:64d77621f64c06a7",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then say which two of them Kannada borrowed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vandane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vandane*]"
             }
           ]
         },

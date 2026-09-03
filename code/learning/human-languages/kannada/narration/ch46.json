@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Things You Ask For",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:38f58df481aeaec5",
+  "sourceHash": "fnv1a64:5b2cd1c4b3291cb5",
   "lessons": [
     {
       "id": "KA-C46-fruit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a47f523d4118a16",
+      "sourceHash": "fnv1a64:b964d837966b0cbb",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *haṇṇu*, then *dayaviṭṭu haṇṇu koḍi* — \"please give a fruit\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nillu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nillu*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f088e874037255e",
+      "sourceHash": "fnv1a64:b8c210637c90072f",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +241,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *haṇṇu*, then *baṭṭe*, and ask for each one with *dayaviṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಕೊಡು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಕೊಡು**]"
             }
           ]
         },
@@ -267,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14cd80ed78d78656",
+      "sourceHash": "fnv1a64:73362d05cf3e8518",
       "notice": null,
       "blocks": [
         {
@@ -358,6 +376,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all three so far, and say which of them a potter makes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nōḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nōḍu*]"
             }
           ]
         },
@@ -393,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fedefcbfe63fe45",
+      "sourceHash": "fnv1a64:c9481e2d41cb4c21",
       "notice": null,
       "blocks": [
         {
@@ -480,6 +507,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *uppu*, then *haṇṇu*, and hear the *p* survive in one and vanish from the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಕೇಳು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಕೇಳು**]"
             }
           ]
         },
@@ -515,7 +551,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:572365c5c68d92ab",
+      "sourceHash": "fnv1a64:99b42bf5ba1ef44f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -613,6 +649,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then sort them into the inherited and the borrowed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mātāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mātāḍu*]"
             }
           ]
         },

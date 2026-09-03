@@ -9,7 +9,7 @@ headword: "ആകാശം"
 gloss: "the sky"
 romanization: "ākāśaṁ"
 concept_tag: ML-NOUN-SKY
-prerequisites: [ML-C52-garland]
+prerequisites: [ML-C52-garland, ML-C51-gratitude]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C53-SKY-01]
 practises:
-  knowledge: [ML-LEX-C52-WELCOME-04, ML-LEX-C52-WELCOME-05, ML-LEX-C53-SKY-01]
+  knowledge: [ML-LEX-C52-WELCOME-04, ML-LEX-C52-WELCOME-05, ML-LEX-C53-SKY-01, ML-LEX-C51-COURTESY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Malayalam keeps an inherited word for the same overhead space, വാനം (*v�
 The space the rest of this run hangs in.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-04, ML-LEX-C52-WELCOME-05, ML-LEX-C53-SKY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-04, ML-LEX-C52-WELCOME-05, ML-LEX-C53-SKY-01, ML-LEX-C51-COURTESY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ākāśaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākāśaṁ*, then *namaskāraṁ*, as you would greet somebody out of doors]
+- [YOU RECALL: say *kṛtajñata*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-04, ML-LEX-C52-WELCOME-05, ML-LEX-C53-SKY-01] -->

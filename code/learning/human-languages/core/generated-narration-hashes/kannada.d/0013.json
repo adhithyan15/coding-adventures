@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 13,
-  "sourceHash": "fnv1a64:3fe53775c7e338bc",
+  "sourceHash": "fnv1a64:0f57bcd640395e1a",
   "lessonIds": [
     "KA-C13-dehada-bhagagalu",
     "KA-S122-letter-ca",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch13.txt",
   "json": "kannada/narration/ch13.json",
-  "textHash": "fnv1a64:8730ab80dcf5c407",
-  "jsonHash": "fnv1a64:ef92d4e211ea0880",
+  "textHash": "fnv1a64:df49f010516121fb",
+  "jsonHash": "fnv1a64:3a68a9ec7da5cae3",
   "findings": []
 }

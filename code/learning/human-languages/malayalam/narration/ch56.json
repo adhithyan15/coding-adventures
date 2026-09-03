@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "Things About the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d4181d2efb9889d8",
+  "sourceHash": "fnv1a64:d799470bd4f4817c",
   "lessons": [
     {
       "id": "ML-C56-mat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd6290f77b185311",
+      "sourceHash": "fnv1a64:ddcfa687c042d95b",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *vayal*, then *pāya*, and say which of the two is woven]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say maraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *maraṁ*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15347e9e1e41f9a5",
+      "sourceHash": "fnv1a64:fb5d2d8bb601c8c2",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pāya*, then *koṭṭa*, and hold the doubled sound in the second]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read കൊമ്പ്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **കൊമ്പ്**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69dc7ba3da123991",
+      "sourceHash": "fnv1a64:5ff5341c808bc3f5",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *koṭṭa*, then *katti*, and hear the same held sound in both]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say taṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *taṭi*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b23a8a9fdf8cf96d",
+      "sourceHash": "fnv1a64:b18a098782a0dabc",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *pātraṁ*, and then say which of its two senses a cook means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read വേര്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **വേര്**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b92e19a33cb94495",
+      "sourceHash": "fnv1a64:8b0d06dd18f3f1a8",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *pāya*, *koṭṭa*, *katti*, *pātraṁ*, *peṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vittŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vittŭ*]"
             }
           ]
         },

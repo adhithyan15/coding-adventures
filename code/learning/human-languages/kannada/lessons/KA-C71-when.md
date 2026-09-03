@@ -9,7 +9,7 @@ headword: "ಯಾವಾಗ"
 gloss: "when?"
 romanization: "yāvāga"
 concept_tag: KA-Q-WHEN
-prerequisites: [KA-C71-say-again, KA-C50-now, KA-C55-hill, KA-C34-sahaya-maadu, KA-C34-keelu, KA-C34-tegeduko]
+prerequisites: [KA-C71-say-again, KA-C50-now, KA-C55-hill, KA-C34-sahaya-maadu, KA-C34-keelu, KA-C34-tegeduko, KA-C69-isnt-it, KA-C69-why]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C71-MORE-04]
 practises:
-  knowledge: [KA-LEX-C34-KEELU-01, KA-LEX-C34-SAHAYA-MAADU-01, KA-LEX-C34-TEGEDUKO-01, KA-LEX-C41-DEIXIS-06, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C55-ROAD-03, KA-LEX-C67-LINK-02, KA-LEX-C69-ASK-05, KA-LEX-C71-MORE-03, KA-LEX-C71-MORE-04, KA-SCRIPT-RECOG-138]
+  knowledge: [KA-LEX-C34-KEELU-01, KA-LEX-C34-SAHAYA-MAADU-01, KA-LEX-C34-TEGEDUKO-01, KA-LEX-C41-DEIXIS-06, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C55-ROAD-03, KA-LEX-C67-LINK-02, KA-LEX-C69-ASK-05, KA-LEX-C71-MORE-03, KA-LEX-C71-MORE-04, KA-SCRIPT-RECOG-138, KA-LEX-C69-ASK-03, KA-PRAGMATICS-C69-ASK-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -57,7 +57,7 @@ Five question words. Who, where, what, why, when — and a reason and an
 opinion to answer them with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C34-KEELU-01, KA-LEX-C34-SAHAYA-MAADU-01, KA-LEX-C34-TEGEDUKO-01, KA-LEX-C41-DEIXIS-06, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C55-ROAD-03, KA-LEX-C67-LINK-02, KA-LEX-C69-ASK-05, KA-LEX-C71-MORE-03, KA-LEX-C71-MORE-04, KA-SCRIPT-RECOG-138] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C34-KEELU-01, KA-LEX-C34-SAHAYA-MAADU-01, KA-LEX-C34-TEGEDUKO-01, KA-LEX-C41-DEIXIS-06, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C55-ROAD-03, KA-LEX-C67-LINK-02, KA-LEX-C69-ASK-05, KA-LEX-C71-MORE-03, KA-LEX-C71-MORE-04, KA-SCRIPT-RECOG-138, KA-LEX-C69-ASK-03, KA-PRAGMATICS-C69-ASK-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *yāvāga*]
@@ -67,6 +67,7 @@ opinion to answer them with.
 - [YOU RECALL: say *athavā* once more]
 - [YOU RECALL: say *ೇ* once more]
 - [YOU RECALL: from much earlier — say *beṭṭa*, *sahāya māḍu*, *kēḷu*, *tegeduko*, and say what each one means]
+- [YOU RECALL: read **ಅಲ್ವಾ**, then say *yāke*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C34-KEELU-01, KA-LEX-C34-SAHAYA-MAADU-01, KA-LEX-C34-TEGEDUKO-01, KA-LEX-C41-DEIXIS-06, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C55-ROAD-03, KA-LEX-C67-LINK-02, KA-LEX-C69-ASK-05, KA-LEX-C71-MORE-03, KA-LEX-C71-MORE-04, KA-SCRIPT-RECOG-138] -->

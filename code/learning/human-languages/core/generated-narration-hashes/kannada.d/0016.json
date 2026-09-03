@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 16,
-  "sourceHash": "fnv1a64:e3a39671976a3d83",
+  "sourceHash": "fnv1a64:bbe59189b4377be2",
   "lessonIds": [
     "KA-C16-tingalugalu",
     "KA-S126-letter-u",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch16.txt",
   "json": "kannada/narration/ch16.json",
-  "textHash": "fnv1a64:b436c0761a7c31ee",
-  "jsonHash": "fnv1a64:2978100e5c99b3a8",
+  "textHash": "fnv1a64:ed89b8d517ffb392",
+  "jsonHash": "fnv1a64:9659ef20426e4ff7",
   "findings": []
 }

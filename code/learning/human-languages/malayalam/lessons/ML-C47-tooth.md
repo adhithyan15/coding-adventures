@@ -9,7 +9,7 @@ headword: "പല്ല്"
 gloss: "a tooth"
 romanization: "pallŭ"
 concept_tag: ML-NOUN-TOOTH
-prerequisites: [ML-C47-leg]
+prerequisites: [ML-C47-leg, ML-C45-grandfather]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C47-BODY-02]
 practises:
-  knowledge: [ML-LEX-C46-ASK-05, ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02]
+  knowledge: [ML-LEX-C46-ASK-05, ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-GRANDFATHER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Malayalam doubles the *l* and then lets the word go with the half-vowel, the sam
 Two body words: a leg and a tooth.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-05, ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-05, ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-GRANDFATHER] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pallŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāl*, then *pallŭ*, and hear the doubled letter in the second]
+- [YOU RECALL: read **മുത്തച്ഛൻ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-05, ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02] -->

@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-SAMSAARIKKUKA-01, ML-CONCEPT-C05-VERB-NEVER-AGREES-01]
 practises:
-  knowledge: [ML-LEX-SAMSAARIKKUKA-01, ML-CONCEPT-C05-VERB-NEVER-AGREES-01]
+  knowledge: [ML-LEX-SAMSAARIKKUKA-01, ML-CONCEPT-C05-VERB-NEVER-AGREES-01, ML-LEX-POKUKA-VARIKA-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -69,12 +69,13 @@ exactly why (Chapter 3) it can never drop the pronoun: the verb won't tell you
 who. Of all its Dravidian sisters, Malayalam went the furthest here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SAMSAARIKKUKA-01, ML-CONCEPT-C05-VERB-NEVER-AGREES-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SAMSAARIKKUKA-01, ML-CONCEPT-C05-VERB-NEVER-AGREES-01, ML-LEX-POKUKA-VARIKA-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "saṁsārikkuka" (to speak)]
 - [YOU SAY: "I speak" — *ñān saṁsārikkunnu*]
 - [YOU SAY: "he speaks" — *avan saṁsārikkunnu* (the same verb!)]
+- [YOU RECALL: say *pōkuka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SAMSAARIKKUKA-01, ML-CONCEPT-C05-VERB-NEVER-AGREES-01] -->

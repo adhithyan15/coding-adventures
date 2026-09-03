@@ -9,7 +9,7 @@ headword: ভাবা
 romanization: bhābā
 gloss: to think — and the machinery that made a "become" verb into a "think" verb
 concept_tag: VERB-THINK
-prerequisites: [BN-C07-jana]
+prerequisites: [BN-C07-jana, BN-C05-kaj-kora, BN-C05-thaka]
 sounds: [bha-aspirate, long-aa]
 roots: [bhu-become, bhava-state]
 etymology_hook: "ভাবা is Sanskrit bhāvayati, the causative of √bhū 'to become' — the very root of Chapter 13's হওয়া — so to think is, at root, to make a thing be; and the same causative move is still alive in Bengali, turning দেখা 'see' into দেখানো 'show'"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C08-BHABA-01, BN-GRAMMAR-C08-BHABA-02]
 practises:
-  knowledge: [BN-LEX-C07-HOWA-01, BN-LEX-C07-DEKHA-01, BN-LEX-C07-KHAOWA-01, BN-LEX-C08-BHABA-01, BN-GRAMMAR-C08-BHABA-02]
+  knowledge: [BN-LEX-C07-HOWA-01, BN-LEX-C07-DEKHA-01, BN-LEX-C07-KHAOWA-01, BN-LEX-C08-BHABA-01, BN-GRAMMAR-C08-BHABA-02, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-THAKA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -80,12 +80,13 @@ That is the same machinery that built ভাবা itself, two thousand years ea
 and one language back.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C08-BHABA-01, BN-GRAMMAR-C08-BHABA-02, BN-LEX-C07-HOWA-01, BN-LEX-C07-DEKHA-01, BN-LEX-C07-KHAOWA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C08-BHABA-01, BN-GRAMMAR-C08-BHABA-02, BN-LEX-C07-HOWA-01, BN-LEX-C07-DEKHA-01, BN-LEX-C07-KHAOWA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-THAKA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bhābā" — think — then "āmi bhābi"]
 - [YOU SAY: the be-verb it was built from — "hôwā … āmi hôi"]
 - [YOU SAY: see, then make-see — "dækhā … dækhāno" — and eat, then feed — "khāwā … khāwāno"]
+- [YOU RECALL: say *kāj kôrā*, then say *thākā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C08-BHABA-01, BN-GRAMMAR-C08-BHABA-02, BN-LEX-C07-DEKHA-01] -->

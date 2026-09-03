@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 2,
-  "sourceHash": "fnv1a64:e375774bdd801998",
+  "sourceHash": "fnv1a64:7f2b9c16d73e21c0",
   "lessonIds": [
     "ML-C02-peru",
     "ML-S112-letter-pa",
@@ -28,7 +28,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch02.txt",
   "json": "malayalam/narration/ch02.json",
-  "textHash": "fnv1a64:54ab7660894cc285",
-  "jsonHash": "fnv1a64:ceb5793164f7503c",
+  "textHash": "fnv1a64:7f085a983733d5ae",
+  "jsonHash": "fnv1a64:bd75b69c9bb4359f",
   "findings": []
 }

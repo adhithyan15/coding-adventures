@@ -9,7 +9,7 @@ headword: "മുളക്"
 gloss: "a chilli"
 romanization: "muḷakŭ"
 concept_tag: ML-NOUN-CHILLI
-prerequisites: [ML-C61-jaggery]
+prerequisites: [ML-C61-jaggery, ML-C59-ember]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C61-SHELF-05]
 practises:
-  knowledge: [ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C61-SHELF-04, ML-LEX-C61-SHELF-05]
+  knowledge: [ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C61-SHELF-04, ML-LEX-C61-SHELF-05, ML-LEX-C59-AIR-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ So the basket of pepper going down to the market and the മുളക് in the 
 Five, and the shelf is stocked: a coconut, oil, curd, jaggery and a chilli.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C61-SHELF-04, ML-LEX-C61-SHELF-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C61-SHELF-04, ML-LEX-C61-SHELF-05, ML-LEX-C59-AIR-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *muḷakŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *tēṅṅa*, *eṇṇa*, *tairŭ*, *śarkkara*, *muḷakŭ*]
+- [YOU RECALL: say *kanal*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C61-SHELF-04, ML-LEX-C61-SHELF-05] -->

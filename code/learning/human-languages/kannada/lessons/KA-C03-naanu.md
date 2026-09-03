@@ -9,7 +9,7 @@ headword: ನಾನು
 gloss: I
 romanization: "nānu"
 concept_tag: PRONOUN-I
-prerequisites: [KA-C02-nanna]
+prerequisites: [KA-C02-nanna, KA-C02-niinu-niivu]
 sounds: [long-aa]
 roots: [naan-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C03-NAANU-01, KA-ETYMON-C03-NAANU-02, KA-GRAMMAR-C03-NAANU-03]
 practises:
-  knowledge: [KA-LEX-C03-NAANU-01, KA-ETYMON-C03-NAANU-02, KA-GRAMMAR-C03-NAANU-03]
+  knowledge: [KA-LEX-C03-NAANU-01, KA-ETYMON-C03-NAANU-02, KA-GRAMMAR-C03-NAANU-03, KA-LEX-C02-NIINU-NIIVU-01, KA-GRAMMAR-C02-NIINU-NIIVU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -58,12 +58,13 @@ Kannada verbs carry the person in their ending — *iddēne* already means "**I*
 *hēgiddīrā?* begins with it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C03-NAANU-01, KA-ETYMON-C03-NAANU-02, KA-GRAMMAR-C03-NAANU-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C03-NAANU-01, KA-ETYMON-C03-NAANU-02, KA-GRAMMAR-C03-NAANU-03, KA-LEX-C02-NIINU-NIIVU-01, KA-GRAMMAR-C02-NIINU-NIIVU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nānu"]
 - [YOU SAY: the pair — *nānu* (I), *nanna* (my)]
 - [YOU SAY: is it related to English *me*? (No — native Dravidian)]
+- [YOU RECALL: read **ನೀನು / ನೀವು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C03-NAANU-01, KA-ETYMON-C03-NAANU-02] -->

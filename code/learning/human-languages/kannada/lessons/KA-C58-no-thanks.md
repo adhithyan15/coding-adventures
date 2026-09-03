@@ -9,7 +9,7 @@ headword: "ಬೇಡ"
 gloss: "no thank you, I don't want it"
 romanization: "bēḍa"
 concept_tag: KA-WORD-NO-THANKS
-prerequisites: [KA-C58-less]
+prerequisites: [KA-C58-less, KA-C56-vessel]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C58-REPLY-04]
 practises:
-  knowledge: [KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C58-REPLY-04]
+  knowledge: [KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C58-REPLY-04, KA-LEX-C56-HOUSE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ At a Kannada table you will be offered more food several times after you are fin
 Four, and this one is the polite way out.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C58-REPLY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C58-REPLY-04, KA-LEX-C56-HOUSE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bēḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bēḍa*, then *illa*, and say which one refuses and which one denies]
+- [YOU RECALL: read **ಪಾತ್ರೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C58-REPLY-03, KA-LEX-C58-REPLY-04] -->

@@ -9,7 +9,7 @@ headword: കുട്ടി
 gloss: child, kid — the general word, native Dravidian, before Malayalam narrows to son or daughter
 romanization: kuṭṭi
 concept_tag: ML-CHILD
-prerequisites: [ML-C35-suhruthu]
+prerequisites: [ML-C35-suhruthu, ML-C33-cintikkuka, ML-C33-manassilaakkuka]
 sounds: [malayalam-geminate-tta]
 roots: [dravidian-kutti-child]
 etymology_hook: "കുട്ടി is native Dravidian, matching Tamil's குட்டி (kuṭṭi) closely; both languages use the same word for a human child and for the young of an animal, a single word doing double duty much the way English 'kid' straddles child and baby goat"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02]
 practises:
-  knowledge: [ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02]
+  knowledge: [ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02, ML-CONCEPT-C33-CINTIKKUKA-01, ML-CONCEPT-C33-CINTIKKUKA-02, ML-CONCEPT-C33-MANASSILAAKKUKA-01, ML-CONCEPT-C33-MANASSILAAKKUKA-02, ML-CONCEPT-C33-MANASSILAAKKUKA-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -59,7 +59,7 @@ with "kid," which covers both a child and a baby goat — one small word,
 carrying the same double duty in two unrelated language families.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02, ML-CONCEPT-C33-CINTIKKUKA-01, ML-CONCEPT-C33-CINTIKKUKA-02, ML-CONCEPT-C33-MANASSILAAKKUKA-01, ML-CONCEPT-C33-MANASSILAAKKUKA-02, ML-CONCEPT-C33-MANASSILAAKKUKA-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ithu ente kuṭṭiyāṇŭ" — this is my child]
@@ -67,6 +67,7 @@ carrying the same double duty in two unrelated language families.
 - [YOU SAY: the family and the friend, once more — "kuṭumbaṁ … suhṛttŭ"]
 - [YOU SAY: the six family people-words, and the group word — "acchan,
   amma … kuṭumbaṁ"]
+- [YOU RECALL: say *cintikkuka*, then read **മനസ്സിലാക്കുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->

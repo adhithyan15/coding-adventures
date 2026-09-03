@@ -9,7 +9,7 @@ headword: "ചൂല്"
 gloss: "a broom"
 romanization: "cūlŭ"
 concept_tag: ML-NOUN-BROOM
-prerequisites: [ML-C62-needle]
+prerequisites: [ML-C62-needle, ML-C60-crow]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C62-HAND-04]
 practises:
-  knowledge: [ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C62-HAND-04]
+  knowledge: [ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C62-HAND-04, ML-LEX-C60-ANIMAL-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ There is a second broom for indoors, softer, made of grass rather than leaf-rib,
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C62-HAND-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C62-HAND-04, ML-LEX-C60-ANIMAL-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cūlŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūci*, then *cūlŭ*, and say which of the two you hold in a fist]
+- [YOU RECALL: read **കാക്ക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C62-HAND-04] -->

@@ -9,7 +9,7 @@ headword: "ಅನುಮತಿ"
 gloss: "permission"
 romanization: "anumati"
 concept_tag: KA-NOUN-PERMISSION
-prerequisites: [KA-C65-request]
+prerequisites: [KA-C65-request, KA-C63-sleep]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C65-MANNERS-02]
 practises:
-  knowledge: [KA-LEX-C64-JOIN-05, KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02]
+  knowledge: [KA-LEX-C64-JOIN-05, KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C63-HEALTH-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ It belongs with ಹೊರಡು from the leave-taking chapter. In a Kannada hous
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-05, KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-05, KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C63-HEALTH-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *anumati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *anumati*, then *horaḍu*, and say which one comes first]
+- [YOU RECALL: read **ನಿದ್ದೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-05, KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02] -->

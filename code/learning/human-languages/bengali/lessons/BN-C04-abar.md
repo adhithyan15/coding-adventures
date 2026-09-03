@@ -9,7 +9,7 @@ headword: আবার
 romanization: "ābār"
 gloss: again
 concept_tag: BN-WORD-ABAR
-prerequisites: []
+prerequisites: [BN-C03-ami, BN-C03-kemon]
 sounds: [independent-aa, long-aa]
 roots: [abar-again]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [BN-CONCEPT-C04-ABAR-01]
 practises:
-  knowledge: [BN-CONCEPT-C04-ABAR-01]
+  knowledge: [BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-KEMON-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -50,11 +50,12 @@ English cognate, but a familiar *job*: it turns a parting into a promise. Chapte
 can say outright "we'll meet **again**."
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C04-ABAR-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-KEMON-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ābār"]
 - [YOU SAY: what it adds to a goodbye ("again")]
+- [YOU RECALL: say *āmi*, then read **কেমন**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C04-ABAR-01] -->

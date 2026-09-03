@@ -9,7 +9,7 @@ headword: জামা
 romanization: jama
 gloss: shirt — a second Persian loan for clothing, the same word behind Hindi's own jaamaa
 concept_tag: BN-CLOTHING-SHIRT
-prerequisites: [BN-C15-kapor]
+prerequisites: [BN-C15-kapor, BN-C14-lal, BN-C14-nil, BN-C14-kalo]
 sounds: [ja-review]
 roots: [jama-persian-robe]
 etymology_hook: "jAmA is a Persian loan, jAma, 'robe, garment' -- carried into Hindi and Urdu as jAmA too, so this is a third color-and-clothing word this small set has now shown arriving from Persian rather than Sanskrit, alongside lAl and shobuj"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [BN-LEX-C15-JAMA-01]
 practises:
-  knowledge: [BN-LEX-C15-KAPOR-01, BN-LEX-C15-JAMA-01, BN-LEX-C14-LAL-01]
+  knowledge: [BN-LEX-C15-KAPOR-01, BN-LEX-C15-JAMA-01, BN-LEX-C14-LAL-01, BN-LEX-C14-NIL-01, BN-LEX-C14-KALO-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,12 +60,13 @@ Sanskrit — **লাল**, **সবুজ**, and **জামা**. Bengali's ev
 vocabulary leans on the same trading world its colors did.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-JAMA-01, BN-LEX-C15-KAPOR-01, BN-LEX-C14-LAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-JAMA-01, BN-LEX-C15-KAPOR-01, BN-LEX-C14-LAL-01, BN-LEX-C14-NIL-01, BN-LEX-C14-KALO-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "jāmā" — shirt]
 - [YOU SAY: "lāl jāmā" — a red shirt]
 - [YOU SAY: the three Persian loans so far — "lāl … shôbuj … jāmā"]
+- [YOU RECALL: read **লাল**, then say *nil*, then read **কালো**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-JAMA-01] -->

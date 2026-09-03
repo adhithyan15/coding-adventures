@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 46,
-  "sourceHash": "fnv1a64:38f58df481aeaec5",
+  "sourceHash": "fnv1a64:5b2cd1c4b3291cb5",
   "lessonIds": [
     "KA-C46-fruit",
     "KA-C46-cloth",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "kannada/narration/ch46.txt",
   "json": "kannada/narration/ch46.json",
-  "textHash": "fnv1a64:7c74708e1d3f7ded",
-  "jsonHash": "fnv1a64:50e8a7d7d5c27e5e",
+  "textHash": "fnv1a64:5011d8a6ae937b94",
+  "jsonHash": "fnv1a64:8aebbf9bce7b71a9",
   "findings": []
 }

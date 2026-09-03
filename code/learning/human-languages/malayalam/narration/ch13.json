@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9fac3657646b7dc6",
+  "sourceHash": "fnv1a64:4ea7b102499b66cd",
   "lessons": [
     {
       "id": "ML-C13-shareera-bhaagangal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f48c09019d0bd0b",
+      "sourceHash": "fnv1a64:103e06e6621b1843",
       "notice": null,
       "blocks": [
         {
@@ -95,6 +95,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the match — nearly identical to Tamil's talai/kai]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dayavāyi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dayavāyi*]"
             }
           ]
         },

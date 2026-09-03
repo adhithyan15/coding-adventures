@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3f91db024ff9cd69",
+  "sourceHash": "fnv1a64:5482a02c112ae13f",
   "lessons": [
     {
       "id": "KA-C09-kshamisi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54df5b1d499cab4a",
+      "sourceHash": "fnv1a64:e742a8ffed5f8582",
       "notice": null,
       "blocks": [
         {
@@ -137,6 +137,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: contrast — Tamil's maṉṉikkavum uses its own root instead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aidu, then say āru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aidu*, then say *āru*]"
             }
           ]
         },

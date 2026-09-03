@@ -9,7 +9,7 @@ headword: "ಬೆಂಕಿ"
 gloss: "fire"
 romanization: "beṅki"
 concept_tag: KA-NOUN-FIRE
-prerequisites: [KA-C59-mud]
+prerequisites: [KA-C59-mud, KA-C57-bone]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C59-GROUND-05]
 practises:
-  knowledge: [KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C59-GROUND-04, KA-LEX-C59-GROUND-05]
+  knowledge: [KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C59-GROUND-04, KA-LEX-C59-GROUND-05, KA-LEX-C57-BODY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ And with ಬೆಂಕಿ the run closes the way it opened, on something you can 
 Five: ಗಾಳಿ, ಮಂಜು, ಮರಳು, ಕೆಸರು, ಬೆಂಕಿ. Air, water, ground and the thing that undoes all three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C59-GROUND-04, KA-LEX-C59-GROUND-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C59-GROUND-04, KA-LEX-C59-GROUND-05, KA-LEX-C57-BODY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *beṅki*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dīpa* and *beṅki*, and say which one needs the other]
+- [YOU RECALL: say *mūḷe*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C59-GROUND-04, KA-LEX-C59-GROUND-05] -->

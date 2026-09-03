@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 71,
-  "sourceHash": "fnv1a64:4a81193c91447fc4",
+  "sourceHash": "fnv1a64:653310bfea9e658d",
   "lessonIds": [
     "KA-C71-another",
     "KA-C71-say-again",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "kannada/narration/ch71.txt",
   "json": "kannada/narration/ch71.json",
-  "textHash": "fnv1a64:7d2f39bb99e781f0",
-  "jsonHash": "fnv1a64:4847792f5d592aba",
+  "textHash": "fnv1a64:31993ece9ef2e5de",
+  "jsonHash": "fnv1a64:36bbac55fcfc9bb4",
   "findings": []
 }

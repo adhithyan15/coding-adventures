@@ -9,7 +9,7 @@ headword: "കൊട്ട"
 gloss: "a basket"
 romanization: "koṭṭa"
 concept_tag: ML-NOUN-BASKET
-prerequisites: [ML-C56-mat]
+prerequisites: [ML-C56-mat, ML-C54-branch]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C56-HOUSE-02]
 practises:
-  knowledge: [ML-LEX-C55-GROUND-05, ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02]
+  knowledge: [ML-LEX-C55-GROUND-05, ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C54-TREE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The doubled ട in the middle is held, the way the doubled sound in the seed-wor
 Two, and both of them plaited.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-05, ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-05, ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C54-TREE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *koṭṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pāya*, then *koṭṭa*, and hold the doubled sound in the second]
+- [YOU RECALL: read **കൊമ്പ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-05, ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02] -->

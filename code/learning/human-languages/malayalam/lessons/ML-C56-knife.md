@@ -9,7 +9,7 @@ headword: "കത്തി"
 gloss: "a knife"
 romanization: "katti"
 concept_tag: ML-NOUN-KNIFE
-prerequisites: [ML-C56-basket]
+prerequisites: [ML-C56-basket, ML-C54-trunk]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C56-HOUSE-03]
 practises:
-  knowledge: [ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03]
+  knowledge: [ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C54-TREE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A word for a tool tends to outlast the tool's shape, and this one has outlasted 
 Three: something to sit on, something to carry with, something to cut with.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03, ML-LEX-C54-TREE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *katti*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *koṭṭa*, then *katti*, and hear the same held sound in both]
+- [YOU RECALL: say *taṭi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02, ML-LEX-C56-HOUSE-03] -->

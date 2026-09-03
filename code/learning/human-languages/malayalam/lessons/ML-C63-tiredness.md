@@ -9,7 +9,7 @@ headword: "ക്ഷീണം"
 gloss: "tiredness"
 romanization: "kṣīṇaṁ"
 concept_tag: ML-NOUN-TIREDNESS
-prerequisites: [ML-C63-hunger]
+prerequisites: [ML-C63-hunger, ML-C61-oil]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C63-FEEL-02]
 practises:
-  knowledge: [ML-LEX-C62-HAND-05, ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02]
+  knowledge: [ML-LEX-C62-HAND-05, ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C61-SHELF-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ It opens on the ക്ഷ pair that opens *kṣamikkaṇaṁ*, the sorry-word �
 Two.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-05, ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-05, ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C61-SHELF-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kṣīṇaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kṣamikkaṇaṁ*, then *kṣīṇaṁ*, and hear the same opening twice]
+- [YOU RECALL: read **എണ്ണ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-05, ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02] -->

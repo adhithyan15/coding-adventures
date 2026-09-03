@@ -9,7 +9,7 @@ headword: "ಬಂದಾಗ"
 gloss: "when (somebody) comes"
 romanization: "bandāga"
 concept_tag: KA-CLAUSE-WHEN
-prerequisites: [KA-C71-which, KA-C32-baa, KA-C04-hoogi-baruttene, KA-C56-mat, KA-C32-noodu, KA-C32-tinnu, KA-C32-iru]
+prerequisites: [KA-C71-which, KA-C32-baa, KA-C04-hoogi-baruttene, KA-C56-mat, KA-C32-noodu, KA-C32-tinnu, KA-C32-iru, KA-C70-say, KA-C70-quotative]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C72-WANT-01, KA-GRAMMAR-C72-WANT-02]
 practises:
-  knowledge: [KA-GRAMMAR-C04-HOOGI-BARUTTENE-02, KA-GRAMMAR-C32-BAA-02, KA-GRAMMAR-C71-MORE-02, KA-GRAMMAR-C72-WANT-02, KA-LEX-C32-BAA-01, KA-LEX-C32-IRU-01, KA-LEX-C32-NOODU-01, KA-LEX-C32-TINNU-01, KA-LEX-C56-HOUSE-01, KA-LEX-C71-MORE-01, KA-LEX-C71-MORE-04, KA-LEX-C71-MORE-05, KA-LEX-C72-WANT-01, KA-SCRIPT-RECOG-135]
+  knowledge: [KA-GRAMMAR-C04-HOOGI-BARUTTENE-02, KA-GRAMMAR-C32-BAA-02, KA-GRAMMAR-C71-MORE-02, KA-GRAMMAR-C72-WANT-02, KA-LEX-C32-BAA-01, KA-LEX-C32-IRU-01, KA-LEX-C32-NOODU-01, KA-LEX-C32-TINNU-01, KA-LEX-C56-HOUSE-01, KA-LEX-C71-MORE-01, KA-LEX-C71-MORE-04, KA-LEX-C71-MORE-05, KA-LEX-C72-WANT-01, KA-SCRIPT-RECOG-135, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-02, KA-GRAMMAR-C70-TELL-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -67,7 +67,7 @@ it*, ಬಂದಾಗ says *at the time of doing it*.
 Two events in one sentence, and one of them says when.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C04-HOOGI-BARUTTENE-02, KA-GRAMMAR-C32-BAA-02, KA-GRAMMAR-C71-MORE-02, KA-GRAMMAR-C72-WANT-02, KA-LEX-C32-BAA-01, KA-LEX-C32-IRU-01, KA-LEX-C32-NOODU-01, KA-LEX-C32-TINNU-01, KA-LEX-C56-HOUSE-01, KA-LEX-C71-MORE-01, KA-LEX-C71-MORE-04, KA-LEX-C71-MORE-05, KA-LEX-C72-WANT-01, KA-SCRIPT-RECOG-135] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C04-HOOGI-BARUTTENE-02, KA-GRAMMAR-C32-BAA-02, KA-GRAMMAR-C71-MORE-02, KA-GRAMMAR-C72-WANT-02, KA-LEX-C32-BAA-01, KA-LEX-C32-IRU-01, KA-LEX-C32-NOODU-01, KA-LEX-C32-TINNU-01, KA-LEX-C56-HOUSE-01, KA-LEX-C71-MORE-01, KA-LEX-C71-MORE-04, KA-LEX-C71-MORE-05, KA-LEX-C72-WANT-01, KA-SCRIPT-RECOG-135, KA-LEX-C70-TELL-01, KA-LEX-C70-TELL-02, KA-GRAMMAR-C70-TELL-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bandāga*]
@@ -77,6 +77,7 @@ Two events in one sentence, and one of them says when.
 - [YOU RECALL: say *ಅ* once more]
 - [YOU RECALL: say *innondu* once more]
 - [YOU RECALL: from much earlier — say *cāpe*, *nōḍu*, *tinnu*, *iru*, and say what each one means]
+- [YOU RECALL: say *hēḷu*, then read **ಅಂತ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C04-HOOGI-BARUTTENE-02, KA-GRAMMAR-C32-BAA-02, KA-GRAMMAR-C71-MORE-02, KA-GRAMMAR-C72-WANT-02, KA-LEX-C32-BAA-01, KA-LEX-C32-IRU-01, KA-LEX-C32-NOODU-01, KA-LEX-C32-TINNU-01, KA-LEX-C56-HOUSE-01, KA-LEX-C71-MORE-01, KA-LEX-C71-MORE-04, KA-LEX-C71-MORE-05, KA-LEX-C72-WANT-01, KA-SCRIPT-RECOG-135] -->

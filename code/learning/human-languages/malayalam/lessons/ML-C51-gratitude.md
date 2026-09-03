@@ -9,7 +9,7 @@ headword: "കൃതജ്ഞത"
 gloss: "gratitude"
 romanization: "kṛtajñata"
 concept_tag: ML-NOUN-GRATITUDE
-prerequisites: [ML-C50-farewell]
+prerequisites: [ML-C50-farewell, ML-C49-true]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C51-COURTESY-01]
 practises:
-  knowledge: [ML-LEX-C50-LEAVE-04, ML-LEX-C50-LEAVE-05, ML-LEX-C51-COURTESY-01]
+  knowledge: [ML-LEX-C50-LEAVE-04, ML-LEX-C50-LEAVE-05, ML-LEX-C51-COURTESY-01, ML-LEX-C49-REPLY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kannada has ಕೃತಜ್ಞತೆ (*kṛtajñate*), the same borrowing with a
 The first of five courtesies.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-04, ML-LEX-C50-LEAVE-05, ML-LEX-C51-COURTESY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-04, ML-LEX-C50-LEAVE-05, ML-LEX-C51-COURTESY-01, ML-LEX-C49-REPLY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kṛtajñata*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kṛtajñata*, then *nandi*, the formal and the everyday]
+- [YOU RECALL: say *satyaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-04, ML-LEX-C50-LEAVE-05, ML-LEX-C51-COURTESY-01] -->

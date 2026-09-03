@@ -9,7 +9,7 @@ headword: "പനി"
 gloss: "a fever"
 romanization: "pani"
 concept_tag: ML-NOUN-FEVER
-prerequisites: [ML-C63-cough]
+prerequisites: [ML-C63-cough, ML-C61-chilli]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C63-FEEL-05]
 practises:
-  knowledge: [ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C63-FEEL-04, ML-LEX-C63-FEEL-05]
+  knowledge: [ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C63-FEEL-04, ML-LEX-C63-FEEL-05, ML-LEX-C61-SHELF-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Kerala hangs the word on the season: the weeks after the monsoon breaks are feve
 Five, and the body has said its piece: hunger, tiredness, pain, a cough and a fever.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C63-FEEL-04, ML-LEX-C63-FEEL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C63-FEEL-04, ML-LEX-C63-FEEL-05, ML-LEX-C61-SHELF-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *pani*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *viśappŭ*, *kṣīṇaṁ*, *vēdana*, *cuma*, *pani*]
+- [YOU RECALL: say *muḷakŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C63-FEEL-04, ML-LEX-C63-FEEL-05] -->

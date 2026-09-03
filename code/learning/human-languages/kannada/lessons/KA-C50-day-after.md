@@ -9,7 +9,7 @@ headword: "ನಾಡಿದ್ದು"
 gloss: "the day after tomorrow"
 romanization: "nāḍiddu"
 concept_tag: KA-WORD-DAY-AFTER-TOMORROW
-prerequisites: [KA-C50-now]
+prerequisites: [KA-C50-now, KA-C48-student]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C50-LEAVE-02]
 practises:
-  knowledge: [KA-LEX-C49-REPLY-05, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02]
+  knowledge: [KA-LEX-C49-REPLY-05, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C48-ROLE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ You can hear ನಾಳೆ, 'tomorrow', at the front of ನಾಡಿದ್ದು 
 Two: now, and the day after tomorrow.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-05, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-05, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C48-ROLE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *nāḍiddu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *īga*, *nāḷe*, *nāḍiddu* — today's moment, then one day out, then two]
+- [YOU RECALL: read **ವಿದ್ಯಾರ್ಥಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C49-REPLY-05, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02] -->

@@ -9,7 +9,7 @@ headword: പതിനൊന്ന് — ഇരുപത്
 gloss: 11-20 — additive "ten-echo" compounds for the teens, then irupathu (20), transparently "two-tens" — iru ("two") + pathu ("ten"), matching Tamil closely
 romanization: "pathinonnŭ — irupathŭ"
 concept_tag: ML-NUM-11-20
-prerequisites: [ML-C19-vayassu]
+prerequisites: [ML-C19-vayassu, ML-C14-kaalangal, ML-C15-vellam-ari]
 sounds: [malayalam-virama-final, malayalam-vowel-sign-i]
 roots: [dravidian-pathu-ten, dravidian-iru-two]
 etymology_hook: "പതിനൊന്ന്-പത്തൊമ്പത് (11-19) echo പത്ത് (pathu, 'ten') + a digit — ഇരുപത് (irupathu, 'twenty') is transparently 'two-tens', ഇരു (iru, an older word for 'two') + പത്ത് (pathu, 'ten') — matching Tamil's own irupathu almost exactly, both languages keeping this compound visibly transparent where Telugu's has worn down further"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02]
 practises:
-  knowledge: [ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02]
+  knowledge: [ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02, ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -57,12 +57,13 @@ unlike Telugu's *iravai*, which most likely continues the same underlying
 pattern but has worn down past the point of visibly splitting apart.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02, ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "pathinonnu, panthraṇṭŭ" — 11, 12]
 - [YOU SAY: "iru" — an older word for two, "pathu" — ten]
 - [YOU SAY: "irupathu" — twenty, "two-tens," transparent]
+- [YOU RECALL: say *vasanthakālaṁ venalkkālaṁ mazhakkālaṁ śaithyakālaṁ*, then read **വെള്ളം അരി ചോറ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02] -->

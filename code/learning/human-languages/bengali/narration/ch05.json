@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:21ae27d970cf9ed1",
+  "sourceHash": "fnv1a64:afb9696826b6f2b7",
   "lessons": [
     {
       "id": "BN-C03-ami",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b0afcb98cef2639b",
+      "sourceHash": "fnv1a64:c51f6c7b1d2cda4a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -118,6 +118,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the English cousin hidden in it (*am* — from the same *asmi*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ki, then say tumi / āpni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ki*, then say *tumi / āpni*]"
             }
           ]
         },

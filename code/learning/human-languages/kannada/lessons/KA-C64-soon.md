@@ -9,7 +9,7 @@ headword: "ಬೇಗ"
 gloss: "soon, quickly"
 romanization: "bēga"
 concept_tag: KA-WORD-SOON
-prerequisites: [KA-C64-still]
+prerequisites: [KA-C64-still, KA-C62-broom]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C64-JOIN-04]
 practises:
-  knowledge: [KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C64-JOIN-04]
+  knowledge: [KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C64-JOIN-04, KA-LEX-C62-MADE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Set it against *īga*, the now-word from the leave-taking chapter. *Īga* is thi
 Four.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C64-JOIN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C64-JOIN-04, KA-LEX-C62-MADE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bēga*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *īga*, then *bēga*, and say which one has not happened yet]
+- [YOU RECALL: read **ಪೊರಕೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C64-JOIN-04] -->

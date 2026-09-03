@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 46,
-  "sourceHash": "fnv1a64:81257f5d7fc03bcb",
+  "sourceHash": "fnv1a64:69323b1d22e9a2ec",
   "lessonIds": [
     "ML-C46-fruit",
     "ML-C46-cloth",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch46.txt",
   "json": "malayalam/narration/ch46.json",
-  "textHash": "fnv1a64:8adea428692b0db7",
-  "jsonHash": "fnv1a64:b551dcc599cd3984",
+  "textHash": "fnv1a64:7d82140f4149a585",
+  "jsonHash": "fnv1a64:18295a5329eeb995",
   "findings": []
 }

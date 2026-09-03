@@ -9,7 +9,7 @@ headword: "ಪೆಟ್ಟಿಗೆ"
 gloss: "a box"
 romanization: "peṭṭige"
 concept_tag: KA-NOUN-BOX
-prerequisites: [KA-C56-vessel]
+prerequisites: [KA-C56-vessel, KA-C54-seed]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C56-HOUSE-05]
 practises:
-  knowledge: [KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C56-HOUSE-04, KA-LEX-C56-HOUSE-05]
+  knowledge: [KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C56-HOUSE-04, KA-LEX-C56-HOUSE-05, KA-LEX-C54-TREE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Notice how much of this chapter is containers. The ಬುಟ್ಟಿ carries, t
 Five: ಚಾಪೆ, ಬುಟ್ಟಿ, ಚಾಕು, ಪಾತ್ರೆ, ಪೆಟ್ಟಿಗೆ. You can furnish a room.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C56-HOUSE-04, KA-LEX-C56-HOUSE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C56-HOUSE-04, KA-LEX-C56-HOUSE-05, KA-LEX-C54-TREE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *peṭṭige*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say which three of them hold something]
+- [YOU RECALL: say *bīja*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02, KA-LEX-C56-HOUSE-03, KA-LEX-C56-HOUSE-04, KA-LEX-C56-HOUSE-05] -->

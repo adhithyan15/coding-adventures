@@ -9,7 +9,7 @@ headword: ಚೈತ್ರ ವೈಶಾಖ ಜ್ಯೇಷ್ಠ ಆಷಾಢ ಶ
 gloss: the twelve lunisolar months — NOT Kannada's own calendar like Tamil/Malayalam's, but the same pan-Indian Sanskritic system Hindi's Vikram Samvat uses
 romanization: "caitra vaiśākha jyēṣṭha āṣāḍha śrāvaṇa bhādrapada āśvayuja kārtīka mārgaśira puṣya māgha phālguṇa"
 concept_tag: KA-MONTHS
-prerequisites: [KA-C15-niiru-akki]
+prerequisites: [KA-C15-niiru-akki, KA-C13-dehada-bhagagalu]
 sounds: [kannada-conjunct-shtha, kannada-anusvara]
 roots: [sanskrit-lunisolar-chaitra-system]
 etymology_hook: "Unlike Tamil and Malayalam, which built their OWN solar calendars, Kannada uses the same pan-Indian Sanskritic lunisolar calendar as Hindi's Vikram Samvat — Ugadi falls on Chaitra Shukla Pratipada, the SAME calendar Telugu uses too"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02]
 practises:
-  knowledge: [KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02]
+  knowledge: [KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02, KA-LEX-C13-DEHADA-BHAGAGALU-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -58,7 +58,7 @@ calendars, Kannada didn't build its own separate system here — it shares
 this one with Hindi, Telugu, and much of the rest of the subcontinent.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02, KA-LEX-C13-DEHADA-BHAGAGALU-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: the twelve — "Caitra, Vaiśākha, Jyēṣṭha, Āṣāḍha, Śrāvaṇa,
@@ -66,6 +66,7 @@ this one with Hindi, Telugu, and much of the rest of the subcontinent.
 - [YOU SAY: "Ugadi — Chaitra Śukla Pratipada"]
 - [YOU SAY: the honest point — shared with Hindi, unlike Tamil/Malayalam's
   own calendars]
+- [YOU RECALL: say *tale kai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02] -->

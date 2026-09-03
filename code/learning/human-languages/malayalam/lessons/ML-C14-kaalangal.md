@@ -9,7 +9,7 @@ headword: വസന്തകാലം വേനൽക്കാലം മഴക�
 gloss: spring, summer, monsoon, winter — matching Tamil's pattern of native heat/rain/cold words plus a Sanskrit "spring"
 romanization: "vasanthakālaṁ venalkkālaṁ mazhakkālaṁ śaithyakālaṁ"
 concept_tag: ML-SEASONS
-prerequisites: [ML-C13-shareera-bhaagangal]
+prerequisites: [ML-C13-shareera-bhaagangal, ML-C09-kshamikkanam]
 sounds: [malayalam-chillu-l, malayalam-anusvara]
 roots: [dravidian-venal-mazha, sanskrit-vasantha]
 etymology_hook: "വേനൽ venal (summer heat) and മഴ mazha (rain) are native Dravidian, matching Tamil's kodai/mazhai closely — വസന്തം vasantham (spring) is the same Sanskrit loan Tamil uses too"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02]
 practises:
-  knowledge: [ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02]
+  knowledge: [ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02, ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -63,13 +63,14 @@ aren't a footnote to "summer" or "autumn" — they're their own major season,
 central to daily and agricultural life.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02, ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "venal" — summer heat — then "kaalam," season]
 - [YOU SAY: "mazhakkaalam" — the rains, the real central season]
 - [YOU SAY: "śaithyakaalam" — the cold season]
 - [YOU SAY: the shared loanword — "vasanthakaalam," spring, same as Tamil]
+- [YOU RECALL: say *kṣamikkaṇaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02] -->

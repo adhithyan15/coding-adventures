@@ -9,7 +9,7 @@ headword: "തേങ്ങ"
 gloss: "a coconut"
 romanization: "tēṅṅa"
 concept_tag: ML-NOUN-COCONUT
-prerequisites: [ML-C60-elephant]
+prerequisites: [ML-C60-elephant, ML-C59-wind]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C61-SHELF-01]
 practises:
-  knowledge: [ML-LEX-C60-ANIMAL-04, ML-LEX-C60-ANIMAL-05, ML-LEX-C61-SHELF-01]
+  knowledge: [ML-LEX-C60-ANIMAL-04, ML-LEX-C60-ANIMAL-05, ML-LEX-C61-SHELF-01, ML-LEX-C59-AIR-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ A തേങ്ങ is the ripe nut with the husk off. Almost everything on the sh
 The first of five things off a Kerala kitchen shelf.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-04, ML-LEX-C60-ANIMAL-05, ML-LEX-C61-SHELF-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-04, ML-LEX-C60-ANIMAL-05, ML-LEX-C61-SHELF-01, ML-LEX-C59-AIR-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *tēṅṅa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maraṁ*, then *tēṅṅa*, and say which one grows on the other]
+- [YOU RECALL: say *kāṟṟŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-04, ML-LEX-C60-ANIMAL-05, ML-LEX-C61-SHELF-01] -->

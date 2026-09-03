@@ -9,7 +9,7 @@ headword: "ಇದು"
 gloss: "this one — the thing near me"
 romanization: "idu"
 concept_tag: KA-DEIXIS-THIS
-prerequisites: []
+prerequisites: [KA-C37-kannu]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C41-DEIXIS-01]
 practises:
-  knowledge: [KA-LEX-C41-DEIXIS-01]
+  knowledge: [KA-LEX-C41-DEIXIS-01, KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,11 +48,12 @@ differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-01, KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ಇದು" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
+- [YOU RECALL: say *kaṇṇu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-01] -->

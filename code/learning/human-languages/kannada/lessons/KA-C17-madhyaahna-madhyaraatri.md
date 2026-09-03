@@ -9,7 +9,7 @@ headword: ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ
 gloss: noon and midnight — both direct Sanskrit tatsama compounds built on the SAME "middle" root, madhya
 romanization: "madhyāhna madhyarātri"
 concept_tag: KA-TIME-NOON-MIDNIGHT
-prerequisites: [KA-C16-tingalugalu]
+prerequisites: [KA-C16-tingalugalu, KA-C14-kaalagalu]
 sounds: [kannada-conjunct-dhya, kannada-vowel-sign-aa]
 roots: [sanskrit-madhya-middle]
 etymology_hook: "ಮಧ್ಯಾಹ್ನ (madhyāhna, noon) and ಮಧ್ಯರಾತ್ರಿ (madhyarātri, midnight) are both direct Sanskrit tatsama compounds on madhya, 'middle' — Kannada's everyday words for these times are the SAME Sanskrit-formal register that Hindi keeps as a bookish alternate to its own colloquial dopahar / aadhi raat"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03]
 practises:
-  knowledge: [KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03]
+  knowledge: [KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -70,12 +70,13 @@ everyday** word — there's no separate native-Dravidian doublet in common
 use here the way there is for some other concepts.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "madhyāhna" — noon, "middle of the day"]
 - [YOU SAY: "madhyarātri" — midnight, "middle of the night"]
 - [YOU SAY: the shared piece — "madhya," middle, in both words]
+- [YOU RECALL: say *vasanta ṛtu bēsige maḷegāla caḷigāla*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03] -->

@@ -9,7 +9,7 @@ headword: മകൾ
 gloss: daughter — identical to Tamil's own word, sound for sound, closer even than the son-word
 romanization: makaḷ
 concept_tag: ML-DAUGHTER
-prerequisites: [ML-C36-makan, ML-C19-vayassu]
+prerequisites: [ML-C36-makan, ML-C19-vayassu, ML-C33-ezhutuka]
 sounds: [malayalam-chillu-l]
 roots: [proto-dravidian-makal-daughter]
 etymology_hook: "മകൾ continues Proto-Dravidian *makaL, 'daughter' -- Tamil's மகள் (makaL) is not just close but identical in every sound, while Kannada's ಮಗಳು (magaLu) shows the same k-to-g softening as maga/makan and adds a closing -u; two sisters keep one root letter for letter, and Malayalam is one of them"
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02]
 practises:
-  knowledge: [ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C19-VAYASSU-01, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02]
+  knowledge: [ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C19-VAYASSU-01, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C33-EZHUTUKA-01, ML-CONCEPT-C33-EZHUTUKA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,7 +60,7 @@ someone new to ask it about: **ninṟe makanŭ ethra vayassuṇṭŭ?** — "how
 is your son?" — the same dative-subject-plus-*uṇṭŭ* shape, unchanged.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C19-VAYASSU-01, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C19-VAYASSU-01, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C33-EZHUTUKA-01, ML-CONCEPT-C33-EZHUTUKA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ithu ente makaḷāṇŭ" — this is my daughter]
@@ -71,6 +71,7 @@ is your son?" — the same dative-subject-plus-*uṇṭŭ* shape, unchanged.
   vayassuṇṭŭ?"]
 - [YOU SAY: general, then specific, twice over — "kuṭṭi … makan …
   makaḷ"]
+- [YOU RECALL: say *eḻutuka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C19-VAYASSU-01, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02] -->

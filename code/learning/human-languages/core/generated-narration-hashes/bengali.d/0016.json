@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 16,
-  "sourceHash": "fnv1a64:b0369f5dfdde1482",
+  "sourceHash": "fnv1a64:1cfd3ab5a503bf59",
   "lessonIds": [
     "BN-C10-cha",
     "BN-C10-jol",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch16.txt",
   "json": "bengali/narration/ch16.json",
-  "textHash": "fnv1a64:816e9ab1935c3bd7",
-  "jsonHash": "fnv1a64:66ec8cb72add6277",
+  "textHash": "fnv1a64:35a9cbb906705cf4",
+  "jsonHash": "fnv1a64:22d0911d064132ec",
   "findings": []
 }

@@ -9,7 +9,7 @@ headword: "ಅಥವಾ"
 gloss: "or"
 romanization: "athavā"
 concept_tag: KA-CONJ-OR
-prerequisites: [KA-C67-and, KA-S134-letter-ma, KA-C51-respect, KA-C51-favour, KA-C49-perhaps, KA-C49-certainly]
+prerequisites: [KA-C67-and, KA-S134-letter-ma, KA-C51-respect, KA-C51-favour, KA-C49-perhaps, KA-C49-certainly, KA-C65-hesitancy]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C67-LINK-02]
 practises:
-  knowledge: [KA-LEX-C39-CHAHA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-SCRIPT-RECOG-134]
+  knowledge: [KA-LEX-C39-CHAHA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-SCRIPT-RECOG-134, KA-LEX-C65-MANNERS-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -58,7 +58,7 @@ the one that makes the choice unmistakable.
 A pair, and now a choice.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-CHAHA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-SCRIPT-RECOG-134] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-CHAHA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-SCRIPT-RECOG-134, KA-LEX-C65-MANNERS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *athavā*]
@@ -66,6 +66,7 @@ A pair, and now a choice.
 - [YOU SAY: *cahā mattu kāphi*, then *cahā athavā kāphi* — and say which one is an offer of both]
 - [YOU RECALL: say *mattu*, then name the character you traced last]
 - [YOU RECALL: from much earlier — say *gaurava*, *upakāra*, *bahuśaḥ*, *khaṇḍita*, and say what each one means]
+- [YOU RECALL: read **ಸಂಕೋಚ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-CHAHA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C49-REPLY-03, KA-LEX-C49-REPLY-04, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C67-LINK-01, KA-LEX-C67-LINK-02, KA-SCRIPT-RECOG-134] -->

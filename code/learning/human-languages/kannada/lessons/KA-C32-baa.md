@@ -9,7 +9,7 @@ headword: ಬಾ
 gloss: come — the form you call the verb by is not the form the beads attach to
 romanization: bā / baru
 concept_tag: VERB-COME
-prerequisites: [KA-C32-hoogu]
+prerequisites: [KA-C32-hoogu, KA-C26-belagge]
 sounds: [long-aa, kannada-ba]
 roots: [baa-come-dravidian, proto-dravidian-v-to-b]
 etymology_hook: "ಬಾ is native Dravidian *vā 'come', with Kannada's own habit of turning word-initial *v- into b- (Tamil வா vā, வாய் vāy answer Kannada ಬಾ bā, ಬಾಯಿ bāyi) — a second Kannada-only initial-consonant law sitting right beside p→h; and the command form ಬಾ is not the stem, which is ಬರು-, the ಬರುತ್ತೇನೆ that Chapter 4's farewell ಹೋಗಿ ಬರುತ್ತೇನೆ has been carrying all along"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C32-BAA-01, KA-GRAMMAR-C32-BAA-02]
 practises:
-  knowledge: [KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-LEX-C32-BAA-01, KA-GRAMMAR-C32-BAA-02]
+  knowledge: [KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-LEX-C32-BAA-01, KA-GRAMMAR-C32-BAA-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -83,13 +83,14 @@ Two laws, both at the front of the word, both Kannada's own. Between them they
 account for much of why Kannada does not sound like its sisters.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-LEX-C32-BAA-01, KA-GRAMMAR-C32-BAA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-LEX-C32-BAA-01, KA-GRAMMAR-C32-BAA-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bā" — come! — then the stem, "baru-"]
 - [YOU SAY: "baruttēne" — I come]
 - [YOU SAY: the farewell, taken apart — "hōgi … baruttēne"]
 - [YOU SAY: the two Kannada laws together — "vā … bā" and "pōgu … hōgu"]
+- [YOU RECALL: say *beḷagge*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-LEX-C32-BAA-01, KA-GRAMMAR-C32-BAA-02] -->

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e28ee711ccef3ee4",
+  "sourceHash": "fnv1a64:f523319a7b12f9e4",
   "lessons": [
     {
       "id": "KA-C10-vaara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ac2bb5965959f29",
+      "sourceHash": "fnv1a64:06231d7d789dffdf",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the contrast — Hindi says Ravivāra (Ravi), Kannada says Bhānuvāra (Bhānu) — two different Sanskrit sun-names]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ēḷu, then read ಎಂಟು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ēḷu*, then read **ಎಂಟು**]"
             }
           ]
         },

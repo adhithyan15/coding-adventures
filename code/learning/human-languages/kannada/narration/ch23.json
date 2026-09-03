@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:407ea69c67f5e39a",
+  "sourceHash": "fnv1a64:fda9c648f908fa8d",
   "lessons": [
     {
       "id": "KA-C23-dina",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bde450231503c37",
+      "sourceHash": "fnv1a64:49bd60942a29a9d9",
       "notice": null,
       "blocks": [
         {
@@ -109,6 +109,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: hagalu — native Dravidian, \"daytime,\" a different sense than dina]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gaṇṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gaṇṭe*]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Courtesy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:333a2d525a83cbbe",
+  "sourceHash": "fnv1a64:423f5852d996e55f",
   "lessons": [
     {
       "id": "ML-C51-gratitude",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7baf76b477648645",
+      "sourceHash": "fnv1a64:2122f51aab4c186d",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kṛtajñata*, then *nandi*, the formal and the everyday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say satyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *satyaṁ*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e71a73941b250003",
+      "sourceHash": "fnv1a64:473fcb17e8c4415c",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *upakāraṁ*, then *dayavāyi*, two courtesies made the same way]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read മതി",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **മതി**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc3e868620a058a6",
+      "sourceHash": "fnv1a64:54e9a31b9155db05",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *bahumānaṁ*, then *manassilākkuka*, and find the piece they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tīrccayāyuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tīrccayāyuṁ*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84472ca46c8b725c",
+      "sourceHash": "fnv1a64:a291b40aec554af4",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *anugrahaṁ*, then *bahumānaṁ*, both of them things given rather than taken]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ഒരുപക്ഷേ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ഒരുപക്ഷേ**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08fbb5bf9835e914",
+      "sourceHash": "fnv1a64:3960c73132f6430d",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *kṛtajñata*, *upakāraṁ*, *bahumānaṁ*, *anugrahaṁ*, *vandanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aṅṅane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aṅṅane*]"
             }
           ]
         },

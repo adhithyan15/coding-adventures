@@ -9,7 +9,7 @@ headword: "ಭತ್ತ"
 gloss: "paddy, rice in the husk"
 romanization: "bhatta"
 concept_tag: KA-NOUN-PADDY
-prerequisites: [KA-C66-grass]
+prerequisites: [KA-C66-grass, KA-C64-still]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C66-FIELD-03]
 practises:
-  knowledge: [KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03]
+  knowledge: [KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C64-JOIN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ English makes do with *rice* for all three and adds a word when it must. Kannada
 Three.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C64-JOIN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bhatta*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bhatta*, then *akki*, then *anna*, in that order]
+- [YOU RECALL: say *innū*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03] -->

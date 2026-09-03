@@ -9,7 +9,7 @@ headword: "ಕೇಳು"
 gloss: "listen"
 romanization: "kēḷu"
 concept_tag: KA-VERB-LISTEN
-prerequisites: [KA-C44-look]
+prerequisites: [KA-C44-look, KA-C42-good]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-LISTEN]
 practises:
-  knowledge: [KA-LEX-LOOK, KA-LEX-LISTEN]
+  knowledge: [KA-LEX-LOOK, KA-LEX-LISTEN, KA-LEX-C42-ADJ-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ And 'to ask'. Kannada uses the same stem for taking in words and for requesting 
 One more. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-LOOK, KA-LEX-LISTEN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-LOOK, KA-LEX-LISTEN, KA-LEX-C42-ADJ-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kēḷu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *nōḍu*, so the two sit together]
+- [YOU RECALL: read **ಒಳ್ಳೆಯ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-LOOK, KA-LEX-LISTEN] -->

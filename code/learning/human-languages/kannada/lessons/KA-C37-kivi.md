@@ -9,7 +9,7 @@ headword: ಕಿವಿ
 gloss: ear — matching Tamil and Telugu's literary word, where everyday spoken Tamil actually reaches for a different one
 romanization: kivi
 concept_tag: KA-EAR
-prerequisites: [KA-C37-kannu]
+prerequisites: [KA-C37-kannu, KA-C34-tegeduko]
 sounds: [kannada-vowel-sign-i]
 roots: [proto-dravidian-kewi-ear]
 etymology_hook: "ಕಿವಿ continues Proto-Dravidian *kewi, 'ear' — the same root as Tamil's literary செவி (cevi) and Telugu's ordinary చెవి (cevi); but everyday spoken Tamil actually reaches for a different, unrelated word, காது (kātu), leaving cevi mostly to poetry — an honest split of the same shape Chapter 34 found in kēḷu against Telugu's vinu/aḍugu"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02]
 practises:
-  knowledge: [KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02, KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02]
+  knowledge: [KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02, KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02, KA-LEX-C34-TEGEDUKO-01, KA-ETYMON-C34-TEGEDUKO-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -57,13 +57,14 @@ living in one register of a language while everyday speech moves on to
 something else.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02, KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02, KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02, KA-LEX-C34-TEGEDUKO-01, KA-ETYMON-C34-TEGEDUKO-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nanna kivi" — my ear]
 - [YOU SAY: the shared root's two lives — "cevi, literary … kātu,
   everyday"]
 - [YOU SAY: eye, then ear — "kaṇṇu … kivi"]
+- [YOU RECALL: read **ತೆಗೆದುಕೊ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02, KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02] -->

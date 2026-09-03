@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "A Meal",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:792ebe28ac67d5bb",
+  "sourceHash": "fnv1a64:3675ca3ae37c2c2a",
   "lessons": [
     {
       "id": "KA-C40-oota",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b2d7e84bc9e7b120",
+      "sourceHash": "fnv1a64:3a3ed411cb4c8264",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -144,6 +144,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: this chapter's three drinks, once more — \"cahā, kāphi, hālu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say magaḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *magaḷu*]"
             }
           ]
         },

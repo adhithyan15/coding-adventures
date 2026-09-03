@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 23,
-  "sourceHash": "fnv1a64:ade1bd41b380ab86",
+  "sourceHash": "fnv1a64:b231028cc8404005",
   "lessonIds": [
     "ML-C23-divasam",
     "ML-C23-naal"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch23.txt",
   "json": "malayalam/narration/ch23.json",
-  "textHash": "fnv1a64:227e92e012a2f081",
-  "jsonHash": "fnv1a64:e255511b582dbf76",
+  "textHash": "fnv1a64:e434b9631150b1f0",
+  "jsonHash": "fnv1a64:6aeb8f0cd16735e1",
   "findings": []
 }

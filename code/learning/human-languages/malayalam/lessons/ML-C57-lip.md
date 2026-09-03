@@ -9,7 +9,7 @@ headword: "ചുണ്ട്"
 gloss: "a lip"
 romanization: "cuṇṭŭ"
 concept_tag: ML-NOUN-LIP
-prerequisites: [ML-C57-back]
+prerequisites: [ML-C57-back, ML-C55-homeland]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C57-FRAME-03]
 practises:
-  knowledge: [ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03]
+  knowledge: [ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C55-GROUND-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The ണ്ട cluster in the middle is the retroflex *ṇ* running straight into
 Three, and this one belongs to birds as well.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03, ML-LEX-C55-GROUND-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: *cuṇṭŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mutukŭ*, then *cuṇṭŭ*, and curl the tongue back for the middle of the second]
+- [YOU RECALL: say *nāṭŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02, ML-LEX-C57-FRAME-03] -->

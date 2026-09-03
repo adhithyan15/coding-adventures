@@ -9,7 +9,7 @@ headword: "ಹೊರಡು"
 gloss: "to set out"
 romanization: "horaḍu"
 concept_tag: KA-VERB-SET-OUT
-prerequisites: [KA-C50-journey]
+prerequisites: [KA-C50-journey, KA-C48-farmer]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C50-LEAVE-04]
 practises:
-  knowledge: [KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04]
+  knowledge: [KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C48-ROLE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ Its front half is ಹೊರ (*hora*), 'outside'. To set out is to go outward. An
 Four. Now, the day after tomorrow, a journey, and setting out on it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C48-ROLE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: *horaḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *horaḍu*, then *hōgu*, and say which of the two has a destination in it]
+- [YOU RECALL: read **ರೈತ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04] -->

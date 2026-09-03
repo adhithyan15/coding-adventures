@@ -9,7 +9,7 @@ headword: "വിശപ്പ്"
 gloss: "hunger"
 romanization: "viśappŭ"
 concept_tag: ML-NOUN-HUNGER
-prerequisites: [ML-C62-winnowing-tray]
+prerequisites: [ML-C62-winnowing-tray, ML-C61-coconut]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C63-FEEL-01]
 practises:
-  knowledge: [ML-LEX-C62-HAND-04, ML-LEX-C62-HAND-05, ML-LEX-C63-FEEL-01]
+  knowledge: [ML-LEX-C62-HAND-04, ML-LEX-C62-HAND-05, ML-LEX-C63-FEEL-01, ML-LEX-C61-SHELF-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ You already have the part of the body it reports from: *vayaṟŭ*, the stomach.
 The first of five things the body reports.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-04, ML-LEX-C62-HAND-05, ML-LEX-C63-FEEL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-04, ML-LEX-C62-HAND-05, ML-LEX-C63-FEEL-01, ML-LEX-C61-SHELF-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *viśappŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vayaṟŭ*, then *viśappŭ*, and say which of the two is a feeling]
+- [YOU RECALL: say *tēṅṅa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-04, ML-LEX-C62-HAND-05, ML-LEX-C63-FEEL-01] -->

@@ -9,7 +9,7 @@ headword: "കയർ"
 gloss: "coir rope"
 romanization: "kayaṟ"
 concept_tag: ML-NOUN-ROPE
-prerequisites: [ML-C61-chilli]
+prerequisites: [ML-C61-chilli, ML-C60-cow]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C62-HAND-01]
 practises:
-  knowledge: [ML-LEX-C61-SHELF-04, ML-LEX-C61-SHELF-05, ML-LEX-C62-HAND-01]
+  knowledge: [ML-LEX-C61-SHELF-04, ML-LEX-C61-SHELF-05, ML-LEX-C62-HAND-01, ML-LEX-C60-ANIMAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ English borrowed the word along with the trade: *coir* is this word, carried out
 The first of five things made by hand.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-04, ML-LEX-C61-SHELF-05, ML-LEX-C62-HAND-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-04, ML-LEX-C61-SHELF-05, ML-LEX-C62-HAND-01, ML-LEX-C60-ANIMAL-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kayaṟ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tēṅṅa*, then *kayaṟ*, and say which one the other is made from]
+- [YOU RECALL: say *paśu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-04, ML-LEX-C61-SHELF-05, ML-LEX-C62-HAND-01] -->

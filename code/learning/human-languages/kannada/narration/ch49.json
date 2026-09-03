@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Answering With More Than Yes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b3fd0578054eb63c",
+  "sourceHash": "fnv1a64:cb2e8780aecf82e1",
   "lessons": [
     {
       "id": "KA-C49-true",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29d11b36fe7e7224",
+      "sourceHash": "fnv1a64:92feee5cd010bee2",
       "notice": null,
       "blocks": [
         {
@@ -106,6 +106,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nija*, then *haudu*, and hear how much more the first one claims]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kālu*]"
             }
           ]
         },
@@ -141,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26d145ae7159cf57",
+      "sourceHash": "fnv1a64:e5db6e3543afc210",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +237,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sāku* over an imaginary plate, then *nija* to something just said]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಹಲ್ಲು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಹಲ್ಲು**]"
             }
           ]
         },
@@ -263,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f79afa2c84248d0",
+      "sourceHash": "fnv1a64:e6042b45e3344bce",
       "notice": null,
       "blocks": [
         {
@@ -350,6 +368,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *khaṇḍita* as an answer to an invitation, then *nija* as an answer to a claim]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kūdalu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kūdalu*]"
             }
           ]
         },
@@ -385,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a6f47b3bd217a5a",
+      "sourceHash": "fnv1a64:cbcc99ef80be8242",
       "notice": null,
       "blocks": [
         {
@@ -472,6 +499,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *khaṇḍita*, then *bahuśaḥ*, and hear the certainty drain out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಬೆರಳು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಬೆರಳು**]"
             }
           ]
         },
@@ -507,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ad2a1d7924a066b",
+      "sourceHash": "fnv1a64:3644531b32781a26",
       "notice": null,
       "blocks": [
         {
@@ -602,6 +638,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order, then *hīge*, *hāge*, *hēge* as one run]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hoṭṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hoṭṭe*]"
             }
           ]
         },

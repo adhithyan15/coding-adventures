@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea, Coffee, Milk",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1a5c7b9b093bef67",
+  "sourceHash": "fnv1a64:5fe29c9afd0e38f4",
   "lessons": [
     {
       "id": "KA-C39-chaha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d02e90cd241aaf2",
+      "sourceHash": "fnv1a64:066ab078a5b10d19",
       "notice": null,
       "blocks": [
         {
@@ -119,6 +119,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: land against sea — \"chai … tea\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say snēhita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *snēhita*]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9364014ea5e72f05",
+      "sourceHash": "fnv1a64:d23339936c94d8dd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -266,6 +275,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: two drinks, two roads — \"cahā, three languages … kāphi, five\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ಮಗು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ಮಗು**]"
             }
           ]
         },
@@ -301,7 +319,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a87916642761ef7",
+      "sourceHash": "fnv1a64:273858d48b9ef8ef",
       "notice": null,
       "blocks": [
         {
@@ -409,6 +427,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: three drinks now — \"cahā, kāphi, hālu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say maga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *maga*]"
             }
           ]
         },

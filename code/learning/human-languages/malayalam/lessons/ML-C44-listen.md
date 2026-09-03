@@ -9,7 +9,7 @@ headword: "കേൾക്കൂ"
 gloss: "listen"
 romanization: "kēḷkkū"
 concept_tag: ML-VERB-LISTEN
-prerequisites: [ML-C44-look]
+prerequisites: [ML-C44-look, ML-C42-small]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-LISTEN]
 practises:
-  knowledge: [ML-LEX-LOOK, ML-LEX-LISTEN]
+  knowledge: [ML-LEX-LOOK, ML-LEX-LISTEN, ML-LEX-C42-ADJ-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ And Kannada's *kēḷu* again. Malayalam separated from Tamil later than the oth
 One more. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-LOOK, ML-LEX-LISTEN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-LOOK, ML-LEX-LISTEN, ML-LEX-C42-ADJ-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kēḷkkū*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *nōkkū*, so the two sit together]
+- [YOU RECALL: read **ചെറിയ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-LOOK, ML-LEX-LISTEN] -->

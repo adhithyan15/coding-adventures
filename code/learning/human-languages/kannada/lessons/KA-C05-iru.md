@@ -9,7 +9,7 @@ headword: ಇರು
 gloss: to be, to stay, to live
 romanization: "iru"
 concept_tag: KA-VERB-IRU
-prerequisites: [KA-C05-maatanaadu, KA-C03-niivu-hegiddiira]
+prerequisites: [KA-C05-maatanaadu, KA-C03-niivu-hegiddiira, KA-C04-hoogu]
 sounds: [independent-i]
 roots: [iru-be-dravidian]
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C05-IRU-01, KA-GRAMMAR-C05-IRU-02]
 practises:
-  knowledge: [KA-LEX-C05-IRU-01, KA-GRAMMAR-C05-IRU-02]
+  knowledge: [KA-LEX-C05-IRU-01, KA-GRAMMAR-C05-IRU-02, KA-LEX-C04-HOOGU-01, KA-ETYMON-C04-HOOGU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -58,12 +58,13 @@ glued to the **end** of the noun. Kannada uses **post**positions (case-suffixes)
 where English uses prepositions: "Bangalore-in I am," the verb last.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C05-IRU-01, KA-GRAMMAR-C05-IRU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C05-IRU-01, KA-GRAMMAR-C05-IRU-02, KA-LEX-C04-HOOGU-01, KA-ETYMON-C04-HOOGU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "iru"]
 - [YOU SAY: "I live in Bangalore" — *nānu Beṅgaḷūrinalli iddēne*]
 - [YOU SAY: where "in" (*-alli*) sits — glued to the end of the noun]
+- [YOU RECALL: read **ಹೋಗು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C05-IRU-01, KA-GRAMMAR-C05-IRU-02] -->

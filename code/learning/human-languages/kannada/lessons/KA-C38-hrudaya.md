@@ -9,7 +9,7 @@ headword: ಹೃದಯ
 gloss: heart — a Sanskrit word that is, astonishingly, a genuine cousin of the English one
 romanization: hṛdaya
 concept_tag: KA-HEART
-prerequisites: [KA-C37-baayi]
+prerequisites: [KA-C37-baayi, KA-C35-kutumba]
 sounds: [kannada-vocalic-r-sign, kannada-ha]
 roots: [sanskrit-hrdaya-heart, indo-european-kerd-heart]
 etymology_hook: "ಹೃದಯ is Sanskrit हृदय hṛdaya, from Proto-Indo-European *ḱērd- — the very root behind English heart, Latin cor (English courage, cordial), and Greek kardía (English cardiac); Sanskrit and English are both Indo-European, so unlike every other cross-family match this book has drawn, this one is real common descent, not two languages arriving at the same idea separately"
@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02]
 practises:
-  knowledge: [KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02, KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02]
+  knowledge: [KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02, KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02, KA-LEX-C35-KUTUMBA-01, KA-ETYMON-C35-KUTUMBA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -70,7 +70,7 @@ This one is different: Sanskrit and English are both **Indo-European**, so
 from the very same word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02, KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02, KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02, KA-LEX-C35-KUTUMBA-01, KA-ETYMON-C35-KUTUMBA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nanna hṛdaya" — my heart]
@@ -78,6 +78,7 @@ from the very same word.
 - [YOU SAY: the real cousins — "hṛdaya … heart … cor … kardía"]
 - [YOU SAY: seven body words now — "tale, kai, kaṇṇu, kivi, mūgu, bāyi,
   hṛdaya"]
+- [YOU RECALL: say *kuṭumba*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02, KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02] -->

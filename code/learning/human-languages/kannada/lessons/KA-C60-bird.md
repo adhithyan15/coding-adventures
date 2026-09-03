@@ -9,7 +9,7 @@ headword: "ಹಕ್ಕಿ"
 gloss: "a bird"
 romanization: "hakki"
 concept_tag: KA-NOUN-BIRD
-prerequisites: [KA-C60-crow]
+prerequisites: [KA-C60-crow, KA-C58-thats-all]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C60-ANIMAL-05]
 practises:
-  knowledge: [KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C60-ANIMAL-04, KA-LEX-C60-ANIMAL-05]
+  knowledge: [KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C60-ANIMAL-04, KA-LEX-C60-ANIMAL-05, KA-LEX-C58-REPLY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -50,12 +50,13 @@ One warning before you say it out loud. Written in our letters, *hakki* is *akki
 Five: ಹಸು, ಮೇಕೆ, ಕೋಳಿ, ಕಾಗೆ, ಹಕ್ಕಿ. Enough to greet a house and name what lives in it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C60-ANIMAL-04, KA-LEX-C60-ANIMAL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C60-ANIMAL-04, KA-LEX-C60-ANIMAL-05, KA-LEX-C58-REPLY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hakki*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *namaskāra* to whoever keeps them]
+- [YOU RECALL: say *aṣṭē*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C60-ANIMAL-04, KA-LEX-C60-ANIMAL-05] -->

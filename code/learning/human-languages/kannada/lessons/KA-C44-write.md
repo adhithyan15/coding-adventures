@@ -9,7 +9,7 @@ headword: "ಬರೆ"
 gloss: "write"
 romanization: "bare"
 concept_tag: KA-VERB-WRITE
-prerequisites: [KA-C44-speak]
+prerequisites: [KA-C44-speak, KA-C42-old]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-WRITE]
 practises:
-  knowledge: [KA-LEX-SPEAK, KA-LEX-WRITE]
+  knowledge: [KA-LEX-SPEAK, KA-LEX-WRITE, KA-LEX-C42-ADJ-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -48,12 +48,13 @@ An old Dravidian stem, unrelated to the Sanskrit words for writing. It is the sa
 That closes the run: look, listen, speak, write.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-SPEAK, KA-LEX-WRITE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-SPEAK, KA-LEX-WRITE, KA-LEX-C42-ADJ-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *bare*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *mātāḍu*, so the two sit together]
+- [YOU RECALL: read **ಹಳೆಯ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-SPEAK, KA-LEX-WRITE] -->

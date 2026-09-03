@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:dab5c63c2f29f46a",
+  "sourceHash": "fnv1a64:7329a15cc6afe24d",
   "lessons": [
     {
       "id": "KA-C12-kutumba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c023f966a6867a9",
+      "sourceHash": "fnv1a64:e028cc3caa9ee2f0",
       "notice": null,
       "blocks": [
         {
@@ -118,6 +118,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"akka, tangi\" — older/younger sister]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dayaviṭṭu, then read ಕ್ಷಮಿಸಿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dayaviṭṭu*, then read **ಕ್ಷಮಿಸಿ**]"
             }
           ]
         },

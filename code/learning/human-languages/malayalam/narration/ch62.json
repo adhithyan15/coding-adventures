@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Made by Hand",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e6593c62fe206e4f",
+  "sourceHash": "fnv1a64:d9755fdc0d0b6696",
   "lessons": [
     {
       "id": "ML-C62-rope",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1eb72d3243c7904a",
+      "sourceHash": "fnv1a64:1140cb160da7c129",
       "notice": null,
       "blocks": [
         {
@@ -110,6 +110,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *tēṅṅa*, then *kayaṟ*, and say which one the other is made from]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say paśu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *paśu*]"
             }
           ]
         },
@@ -145,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ecbf56f90687216",
+      "sourceHash": "fnv1a64:355f22005d5744a2",
       "notice": null,
       "blocks": [
         {
@@ -236,6 +245,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *kayaṟ*, then *nūlŭ*, and say which of the two is thicker]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ആട്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ആട്**]"
             }
           ]
         },
@@ -271,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5332ecff7671bb45",
+      "sourceHash": "fnv1a64:7229b3b7443449b2",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +380,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *nūlŭ*, then *sūci*, and say which one goes through the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kōḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kōḻi*]"
             }
           ]
         },
@@ -397,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0abcd5ced9bf3225",
+      "sourceHash": "fnv1a64:fee861091bbb79c9",
       "notice": null,
       "blocks": [
         {
@@ -488,6 +515,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *sūci*, then *cūlŭ*, and say which of the two you hold in a fist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read കാക്ക",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **കാക്ക**]"
             }
           ]
         },
@@ -523,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2eccd1de9d3b473a",
+      "sourceHash": "fnv1a64:d3e4652000fe8a8f",
       "notice": null,
       "blocks": [
         {
@@ -614,6 +650,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: all five in order — *kayaṟ*, *nūlŭ*, *sūci*, *cūlŭ*, *muṟaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say āna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *āna*]"
             }
           ]
         },

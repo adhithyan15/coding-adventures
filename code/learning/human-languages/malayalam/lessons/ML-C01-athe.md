@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01]
 practises:
-  knowledge: [ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01]
+  knowledge: [ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01, ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -68,12 +68,13 @@ come?"). Bank *athe* as the simple word, but hear the logic underneath — you
 agree by confirming *that* is how things are.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01, ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: a · the → "athe"]
 - [YOU SAY: note the "e" sign sits *before* ത but is read *after* it]
 - [YOU SAY: "athe" — "yes, that's so"]
+- [YOU RECALL: say *namaskāram*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01] -->

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Please, Sorry, and Welcome",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f106f7fc2761eeec",
+  "sourceHash": "fnv1a64:98f197505338a055",
   "lessons": [
     {
       "id": "BN-C13-doya-kore",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3a6d95cd3710ee79",
+      "sourceHash": "fnv1a64:6ac328b6db150383",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -298,6 +298,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: last lesson's request again — \"doya kore bôshun\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "read ভাই",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: read **ভাই**]"
             }
           ]
         },

@@ -9,7 +9,7 @@ headword: "ದಾರಿ"
 gloss: "a way, a path"
 romanization: "dāri"
 concept_tag: KA-NOUN-PATH
-prerequisites: [KA-C55-village]
+prerequisites: [KA-C55-village, KA-C53-cloud]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [KA-LEX-C55-ROAD-05]
 practises:
-  knowledge: [KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C55-ROAD-04, KA-LEX-C55-ROAD-05]
+  knowledge: [KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C55-ROAD-04, KA-LEX-C55-ROAD-05, KA-LEX-C53-SKY-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ Put ದಾರಿ with the polite word you already have and you have the sentence
 Five: ನದಿ, ಕೆರೆ, ಬೆಟ್ಟ, ಹಳ್ಳಿ, ದಾರಿ. Four landmarks and the thread between them.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C55-ROAD-04, KA-LEX-C55-ROAD-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C55-ROAD-04, KA-LEX-C55-ROAD-05, KA-LEX-C53-SKY-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dāri*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dayaviṭṭu dāri hēḷi*]
+- [YOU RECALL: say *mōḍa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C55-ROAD-04, KA-LEX-C55-ROAD-05] -->

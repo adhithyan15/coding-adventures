@@ -9,7 +9,7 @@ headword: "കൊമ്പ്"
 gloss: "a branch"
 romanization: "kompŭ"
 concept_tag: ML-NOUN-BRANCH
-prerequisites: [ML-C54-tree]
+prerequisites: [ML-C54-tree, ML-C52-chair]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ML-LEX-C54-TREE-02]
 practises:
-  knowledge: [ML-LEX-C53-SKY-05, ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02]
+  knowledge: [ML-LEX-C53-SKY-05, ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C52-WELCOME-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -52,12 +52,13 @@ The elephant sense is the one you are most likely to hear in Kerala, where the a
 Two: the tree, and the part that reaches out from it.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-05, ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-05, ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C52-WELCOME-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *kompŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maraṁ*, then *kompŭ*, and name two other things the second word covers]
+- [YOU RECALL: read **കസേര**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-05, ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02] -->
