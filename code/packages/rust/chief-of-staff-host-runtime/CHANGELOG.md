@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Enforce D18S S-I7 in `HostProfile::from_manifest`: a manifest declaring a
+  tool whose schema names another agent is refused. `tools_naming_another_agent`
+  had existed as a conformance test since the S-I7 work, and a test is not a
+  boundary -- nothing consulted it, so a manifest declaring
+  `vault.request_direct` produced a working profile that let the agent name a
+  peer.
+- Deliberately NOT applied to `from_json`. That is the operator-config path for
+  supervisor-side profiles, where naming a consumer is the point and
+  `request_direct` is correct. S-I7 governs what an agent may be offered.
+- Tool ids this crate has no definition for are skipped rather than rejected:
+  `activate()` already refuses a host whose allowed tools were not all
+  registered, and this check must not quietly become a second, weaker existence
+  check.
 - Add `HostProfile::from_manifest`, deriving a host profile from a verified
   agent manifest so the surface a supervisor enforces comes from bytes inside
   the integrity boundary rather than operator config.

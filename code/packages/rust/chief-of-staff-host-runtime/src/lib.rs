@@ -12,9 +12,9 @@ pub use package::{
 
 use chief_of_staff_agent_manifest::AgentManifest;
 use chief_of_staff_tool_api::{
-    builtin_tool_definition, validate_tool_id, InMemoryToolRuntime, PrivilegeTier, RequestedBy,
-    ToolApiError, ToolApprovalGrant, ToolDefinition, ToolExecutionTrace, ToolHandler,
-    ToolInvocationRequest, ToolPolicyEngine,
+    builtin_tool_definition, tools_naming_another_agent, validate_tool_id, InMemoryToolRuntime,
+    PrivilegeTier, RequestedBy, ToolApiError, ToolApprovalGrant, ToolDefinition,
+    ToolExecutionTrace, ToolHandler, ToolInvocationRequest, ToolPolicyEngine,
 };
 use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
@@ -87,6 +87,28 @@ impl HostProfile {
             allowed_tools: manifest.allowed_tools.clone(),
             capabilities: manifest.tool_capabilities.clone(),
         };
+        // Enforce D18S S-I7 here, on the path that turns an AGENT's manifest
+        // into an agent's surface. `tools_naming_another_agent` has existed as
+        // a conformance test since the S-I7 work, and a test is not a
+        // boundary -- nothing consulted it, so a manifest declaring
+        // `vault.request_direct` produced a working profile that let the agent
+        // name a peer.
+        //
+        // Deliberately NOT applied to `from_json`. That is the operator-config
+        // path for supervisor-side profiles, where naming a consumer is the
+        // point; `request_direct` is correct there. The rule is about what an
+        // agent may be offered, so it belongs on the constructor that builds
+        // an agent's surface and nowhere else.
+        let offending = tools_naming_another_agent(&v1_denied_definitions(&profile.allowed_tools));
+        if let Some((tool_id, properties)) = offending.into_iter().next() {
+            return Err(HostRuntimeError::InvalidField {
+                field: "allowed_tools".to_string(),
+                message: format!(
+                    "{tool_id} names another agent ({}) and may not be offered to a V1 agent",
+                    properties.join(", ")
+                ),
+            });
+        }
         // Validate the profile's own bounds too. The manifest check above
         // covers the version-to-field binding this type knows nothing about;
         // this covers label shapes, the empty-catalog rule, and duplicates.
@@ -1249,6 +1271,21 @@ fn required_string_array(
 /// The manifest validates the 0..=3 range itself, but this is a trust boundary
 /// crossing and the numbers are not the enum, so the mapping is explicit and
 /// the out-of-range case is an error rather than a saturating cast.
+/// Resolve declared tool ids to built-in definitions, for the S-I7 check.
+///
+/// Unknown ids are skipped rather than rejected: a profile may legitimately
+/// name a tool registered by a plugin this crate has never heard of, and
+/// `activate()` already refuses a host whose allowed tools were not all
+/// registered. Skipping keeps this check to the one question it answers --
+/// does a tool we DO know about name a peer -- instead of quietly becoming a
+/// second, weaker existence check.
+fn v1_denied_definitions(allowed_tools: &[String]) -> Vec<ToolDefinition> {
+    allowed_tools
+        .iter()
+        .filter_map(|tool_id| builtin_tool_definition(tool_id))
+        .collect()
+}
+
 fn tier_from_declared(tier: u8) -> Result<PrivilegeTier, HostRuntimeError> {
     match tier {
         0 => Ok(PrivilegeTier::Tier0),
@@ -1379,6 +1416,90 @@ mod tests {
             .contains(&"smart_home.discover".to_string()));
         assert!(!profile.has_capability("smart_home:read"));
         assert_eq!(profile.max_tier, PrivilegeTier::Tier0);
+    }
+
+    #[test]
+    fn a_manifest_declaring_a_peer_naming_tool_cannot_become_an_agent_surface() {
+        // D18S S-I7, now a boundary rather than a test. `vault.request_direct`
+        // requires a caller-supplied `consumer_agent_id` -- it asks the host to
+        // hand a secret to a peer the caller names, which a V1 agent cannot
+        // know exists.
+        let manifest = chief_of_staff_agent_manifest::parse_manifest(
+            r#"{
+              "version": 4,
+              "agent": "curious-agent",
+              "description": "Declares a tool that requires naming another agent.",
+              "privilege_tier": 2,
+              "channels": {"reads": {"in-channel": 1}, "writes": {"out-channel": 1}},
+              "capabilities": [],
+              "allowed_tools": ["vault.request_direct"],
+              "tool_capabilities": ["vault:direct"],
+              "justification": "Exercises the S-I7 boundary on the manifest-derived path."
+            }"#,
+        )
+        .expect("manifest parses");
+
+        let error = HostProfile::from_manifest("orchestrator-1", &manifest)
+            .expect_err("a peer-naming tool must not reach an agent surface");
+        match error {
+            HostRuntimeError::InvalidField { field, message } => {
+                assert_eq!(field, "allowed_tools");
+                assert!(message.contains("vault.request_direct"), "{message}");
+                assert!(message.contains("consumer_agent_id"), "{message}");
+            }
+            other => panic!("expected InvalidField, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn the_lease_path_and_unknown_tools_are_unaffected() {
+        // The exclusion must be narrow. `vault.request_lease` returns a bearer
+        // capability for the caller itself and names no peer, so the useful
+        // half of vault access has to keep working.
+        let manifest = chief_of_staff_agent_manifest::parse_manifest(
+            r#"{
+              "version": 4,
+              "agent": "leasing-agent",
+              "description": "Declares the lease path and one tool this crate does not know.",
+              "privilege_tier": 2,
+              "channels": {"reads": {"in-channel": 1}, "writes": {"out-channel": 1}},
+              "capabilities": [],
+              "allowed_tools": ["plugin.custom_tool", "vault.request_lease"],
+              "tool_capabilities": ["vault:lease"],
+              "justification": "Exercises the narrowness of the S-I7 boundary."
+            }"#,
+        )
+        .expect("manifest parses");
+
+        // An id this crate has no definition for is skipped, not rejected:
+        // `activate()` already refuses a host whose tools were not registered,
+        // and this check must not quietly become a second existence check.
+        let profile = HostProfile::from_manifest("orchestrator-1", &manifest).unwrap();
+        assert!(profile
+            .allowed_tools
+            .contains(&"vault.request_lease".to_string()));
+        assert!(profile
+            .allowed_tools
+            .contains(&"plugin.custom_tool".to_string()));
+    }
+
+    #[test]
+    fn the_operator_config_path_is_deliberately_not_gated() {
+        // `from_json` builds supervisor-side profiles, where naming a consumer
+        // is the point and `request_direct` is correct. S-I7 governs what an
+        // AGENT may be offered, so gating this path too would break the
+        // legitimate use while protecting nothing.
+        let profile = HostProfile::from_json(
+            r#"{
+              "profile_id": "orchestrator-1",
+              "host_id": "vault-broker",
+              "max_tier": "tier2",
+              "allowed_tools": ["vault.request_direct"],
+              "capabilities": ["vault:direct"]
+            }"#,
+        )
+        .expect("operator profiles may still name a consumer");
+        assert_eq!(profile.allowed_tools, vec!["vault.request_direct"]);
     }
 
     #[test]
