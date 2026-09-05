@@ -116,7 +116,8 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("needs_mosaic_flutter_runtime == 'true'", workflow)
         self.assertIn("timeout-minutes: 25", workflow)
         self.assertIn("uses: subosito/flutter-action@v2", workflow)
-        self.assertIn("flutter-version: '3.44.0'", workflow)
+        self.assertIn("flutter-version: '3.47.0'", workflow)
+        self.assertIn("flutter config --enable-native-assets", workflow)
         self.assertIn("sudo apt-get install -y libgtk-3-dev", workflow)
         self.assertIn(
             "--backend flutter --output \"$taskapp_output\" --emit-project",
@@ -133,6 +134,12 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn('libtask_mosaic_app.so', workflow)
         self.assertIn('cmp "$task_runtime_library" "$bundled_taskapp_runtime"', workflow)
         self.assertIn('find "$taskapp_output/flutter/build/linux"', workflow)
+        self.assertIn(
+            '"$taskapp_output/flutter/build/native_assets/linux"', workflow
+        )
+        self.assertIn(
+            '"$taskapp_output/flutter/.dart_tool/hooks_runner/shared"', workflow
+        )
         self.assertIn('xvfb-run -a timeout 8s "$installed_taskapp"', workflow)
         self.assertIn('test "$taskapp_status" -eq 124', workflow)
         self.assertIn('Mosaic Rust runtime unavailable', workflow)
