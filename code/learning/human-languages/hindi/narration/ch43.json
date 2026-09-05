@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:11e20fef620724c2",
+  "sourceHash": "fnv1a64:4086fa60dd515d30",
   "lessons": [
     {
       "id": "HI-C43-look",
@@ -127,17 +127,17 @@
     {
       "id": "HI-C43-listen",
       "sequence": 1280,
-      "title": "सुनना (sunnā) — to listen, to hear",
-      "headword": "सुनना",
-      "romanization": "sunnā",
-      "gloss": "to listen, to hear",
+      "title": "सुनना / सुन / सुनता / सुनती / सुनते (sunnā / sun / suntā / suntī / sunte) — listening and hearing",
+      "headword": "सुनना / सुन / सुनता / सुनती / सुनते",
+      "romanization": "sunnā / sun / suntā / suntī / sunte",
+      "gloss": "to listen or hear / listen or hear — infinitive / stem / masculine / feminine / respectful or plural",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38c1306544d4d221",
+      "sourceHash": "fnv1a64:06b99694166c0a9e",
       "notice": null,
       "blocks": [
         {
@@ -169,6 +169,10 @@
             {
               "kind": "speech",
               "text": "Hindi does not separate listening from hearing; context does the work that a second verb does in English."
+            },
+            {
+              "kind": "speech",
+              "text": "Remove infinitive -ना to find the stem सुन-. Add the present endings you already know: सुनता (suntā, masculine), सुनती (suntī, feminine), and सुनते (sunte, respectful or plural). Later you will say आप सुनते हैं — \"you listen.\""
             }
           ]
         },
@@ -179,7 +183,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more. Three follow, and each reuses the ones before."
+              "text": "One more regular verb. Three follow, and each reuses the ones before."
             }
           ]
         },
@@ -206,11 +210,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it once more, slowly",
+              "instruction": "सुन / सुनता / सुनती / सुनते (sun / suntā / suntī / sunte)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it once more, slowly]"
+              "source": "[YOU SAY: **सुन / सुनता / सुनती / सुनते** (*sun / suntā / suntī / sunte*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"you (resp.) listen\" — आप सुनते हैं (āp sunte haiṁ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"you (resp.) listen\" — **आप सुनते हैं** (*āp sunte haiṁ*)]"
             },
             {
               "kind": "prompt",
@@ -245,7 +258,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does सुनना (sunnā) mean? (\"to listen, to hear\".) Say it once more."
+              "text": "What does सुनना mean? (\"to listen, to hear\".) Give its stem, then the masculine, feminine, and respectful or plural forms. (सुन; सुनता / सुनती / सुनते.)"
             }
           ]
         }
