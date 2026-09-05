@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - activate one-of slot-owned mosstyle states (UI49, #14336)
+
+Qt now selects mosstyle states owned by `one-of` slots from the generated QML
+component properties. Enum axes follow `.mil` declaration order, then existing
+`state-when-*` layers retain higher precedence. Generic styled containers and
+specialized `HostButton` controls share the same conditional color lowering,
+and style-only slots remain available as QML properties.
+
 ### Fixed - preserve dynamic HostButton accessible names (#13754)
 
 Qt buttons now lower literal, slot-bound, keyword-bound, and expression-bound
