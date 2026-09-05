@@ -859,6 +859,36 @@ boundary-only modification, deletion, or rename selects every registered
 consumer before ordinary dependent and prerequisite closure. Swift never
 widens traversal into a generated directory to reach an exception.
 
+The shared C#/F# v1 adopter keeps one immutable typed projection of both
+registries in the C# engine used by both front doors. Native adoption tests for
+each front door decode the checked registries, compare the complete projections
+field for field, recompute both domain-separated digests, and exercise the same
+production selectors against every package-local and repository-boundary
+`source_collection` case. The F# front door exposes explicit process-free
+source-selection and package-digest facade symbols rather than treating a C#
+test as sufficient evidence for the delegated lane. Neither executable locates
+or decodes the repository fixtures at runtime.
+
+The shared engine applies the language registry's exact generated-component
+pruning before extension or declared-source selection, rejects unknown
+languages before enumeration, and retains the repository root while collecting
+and hashing. Repository-boundary inputs require a pinned-registry match and a
+stable bounded Git-index projection proving tracked regular mode before and
+after the batch read. Package-local and boundary inputs are deduplicated by
+canonical repository-relative path, checked for NFC and portable-identity
+aliases, sorted by raw UTF-8 path bytes, and hashed as exact raw bytes with the
+Hashing v1 length frames. Collection is bounded to 100,000 candidates, 50,000
+selected inputs, 64 MiB per file, and 1 GiB per package; symbolic links,
+reparse points, non-regular files, containment escapes, directory or file
+mutation, index mutation, and limit overflow fail closed with one stable
+redacted package-hash diagnostic.
+
+This adoption owner covers source selection, boundary integration, reverse
+boundary-diff selection, and `package_digest` only. Dependency-name framing,
+decoded dependency digests, `dependencies_digest`, `combined_digest`, cache
+hit/miss/recovery classification, corrupt-cache diagnostics, and dependent
+invalidation remain the separate portable dependency-hashing contract.
+
 ### 6. Starlark
 
 Final parity requires:

@@ -11,22 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 14251,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/14251",
-    "branch": "codex/build-tool-ci-gate-registry-language-neutral-conformance",
-    "item_id": "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit",
-    "opened_at": "2026-09-05T07:57:14Z",
-    "opened_revision": "39a2ceacb56f0391bb42c3601ddd3693fb9a8faf"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-05T08:30:00Z",
+    "observed_at": "2026-09-05T09:05:04Z",
     "pr_number": 14251,
-    "status": "pending",
-    "notes": "PR #14251 remains conflict-free. The D18 TypeScript dependency repair now locks the complete affected chain: hkdf, ed25519, and x25519. The next CI wave reached the repo-wide TypeScript portability contract and correctly reported that the locked-compiler census increased from 466 to 469; the same branch updates that exact repository invariant. Clean npm ci and zero-vulnerability lockfile audits passed for all three packages, the exact eleven-package D18F TypeScript install sequence and all 10 fixture tests passed, and the focused portability suite passes; replacement CI must finish before guarded auto-merge can be enabled."
+    "status": "merged",
+    "notes": "All final-head checks for PR #14251 reached terminal acceptable conclusions and GitHub reported no merge conflict. Guarded squash auto-merge completed without a plain manual merge command as 7de0d5a974b66681ace92d794747d9070c8cce43."
   },
   "last_inventory": {
-    "revision": "8fe279a38603d7a53147624d65d6ecf288585199",
+    "revision": "11c3e0c83f3187aba1e667558592d3f5efea4c96",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1411,
@@ -1051,10 +1044,12 @@
     {
       "id": "build-tool-csharp-fsharp-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the shared C# and F# build tools",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair"],
-      "branch": null,
+      "branch": "codex/build-tool-csharp-fsharp-portable-source-hashing-conformance",
       "pr_number": null,
+      "selection_revision": "11c3e0c83f3187aba1e667558592d3f5efea4c96",
+      "selection_notes": "Selected after PR #14251 completed every final-head check acceptably and GitHub executed guarded squash auto-merge as 7de0d5a974b66681ace92d794747d9070c8cce43. A fresh collision-checked exact-main inventory remains unchanged at 15 established lanes, 1,411 implementation identities, 4,627 slots, 1,450 all-reported identities, bands 175/265, 123/934, 172/2,165, and 941/13,174, 752 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. Parallel audits found no identity or lane-topology change, confirmed every newly surfaced portable gap already has an explicit owner, and ranked 214 dependency-ready pending items. This bounded shared-engine repair covers both C# and F# front doors, immediately advances the source-hashing aggregate and unlocks the C#/F# dependency-hashing child, which in turn advances the dependency-hashing aggregate. Its four prerequisites are merged; dependency hashing remains a separate serial child. The target local branch, remote branch, prior PR, and fresh worktree path were verified absent before creating this exact-main branch. Reconciliation and selection leave the complete 666-owner/1,037-edge graph unique, dependency-complete, and acyclic at 203 merged, 462 pending, and exactly this owner in progress.",
       "notes": "Discovered by the post-#13544 source-hashing audit. The shared .NET collector reuses discovery skips but omits normalized path framing, exact per-language scope, and several hybrid inputs. Repair the shared engine once for both front doors and prove complete checked-registry equality for C#, F#, and delegated .NET lanes."
     },
     {
@@ -7916,7 +7911,7 @@
     {
       "id": "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit",
       "title": "Define the language-neutral CI gate selection corpus and audit build-tool engines",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-ci-gate-registry-language-neutral-conformance",
       "pr_number": 14251,
@@ -7932,6 +7927,10 @@
       "validation_notes": "Specification-first changes define the closed process-free ci_gate_selection boundary, and test-first execution failed on the deliberately absent domain case before implementation. The shared corpus now validates 139 cases and 283 retained files across 16 implementations, 15 established lanes, and 12 front doors; 23 schema tests and 74 semantic runner tests pass, with the complete runner at 90% branch-aware coverage. The Go oracle dynamically consumes all seven new cases, adds fail-closed Actions output-name collision rejection, passes every package test plus vet and trimpath build, and reaches 92.6% statement coverage in internal/cigates. A real forced Go dry-run evaluates 45 Starlark BUILD files, discovers 306 Go packages, and keeps the five-entry orphan ledger clean. Ten parity-report tests pass; the refreshed schema-3 inventory has 1,411 identities, 4,627 slots, 1,450 all-reported identities, 752 Rust singletons, zero collisions, and zero unknown buckets. The 666-owner/1,037-edge state is JSON-valid, unique, dependency-complete, and acyclic at 202 merged, 463 pending, and exactly this item in progress. Focused Ruff correctness rules, Bandit, compileall, strict schemas, and diff hygiene pass; no dependency, filesystem, Git, process, environment, network, credential, or workflow authority was added.",
       "final_review_notes": "The exact-diff review confirms every false and true verdict remains explicit and sorted, null snapshots are distinct from successful empty snapshots, the Python oracle matches Go globstar and machinery sentinel behavior, and registry output-name collisions now fail before emission. The 12-front-door audit finds only Go implemented, assigns ten collision-safe current-engine leaves, and binds JVM, Dart, and OCaml creation owners into the remaining aggregate. Five live open PRs have zero exact changed-path overlap, and the rebased worktree is clean apart from the intended validation/state follow-up.",
       "publication_notes": "Opened ready-for-review PR #14251 after a normal first push from exact rebased origin/main 8fe279a38603d7a53147624d65d6ecf288585199. Immediately before publication, the worktree was clean, no parity PR or prior same-branch PR existed, five live PRs had zero exact path overlap, and corpus, schema, semantic runner, Go package/coverage/vet/build, real build-file dry-run, package-parity, state-DAG, lint, security, and diff gates were acceptable. GitHub reports the PR mergeable with initial CI and CodeQL checks queued; auto-merge remains disabled until every required check is terminal and acceptable.",
+      "merged_head_revision": "e1e2d78c1cf913b189e40b5088e54555db31f22d",
+      "merged_at": "2026-09-05T09:05:04Z",
+      "merge_commit": "7de0d5a974b66681ace92d794747d9070c8cce43",
+      "merge_notes": "All final-head checks reached terminal acceptable conclusions, including the final CI gate. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged the PR without a plain manual merge command.",
       "notes": "Add the ci_gate_selection domain to the shared v1 corpus, consume it in the Go oracle, audit all current build-tool front doors, and decompose the remaining engine rollout without granting host or workflow authority."
     },
     {
