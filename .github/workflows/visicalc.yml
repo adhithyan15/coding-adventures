@@ -62,6 +62,11 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Test the standard Rust application and native ABI
         run: cargo test --manifest-path ../../../packages/rust/Cargo.toml -p visicalc-mosaic-app
+      - name: Build and exercise the standard WASM lifecycle bridge
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo build --manifest-path ../../../packages/rust/Cargo.toml -p mosaic-app-conformance -p visicalc-mosaic-app --target wasm32-unknown-unknown
+          node --test ../../../packages/rust/mosaic-app-wasm/js/conformance.test.mjs
       - name: Regenerate Mosaic controls and test the real WASM engine
         run: npm test
       - name: Check the production build
