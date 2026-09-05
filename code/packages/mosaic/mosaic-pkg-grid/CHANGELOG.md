@@ -6,6 +6,9 @@ the package follows semantic versioning.
 
 ## Unreleased
 
+- Forward rendered selection coordinates to HostTable so React can keep the
+  active cell visible inside a composed scroll frame.
+
 - Expose the `column-headings` part on HostTableHead for authored section styles.
 
 ## 0.2.3 — 2026-08-06 — Cell's click now carries its coordinate

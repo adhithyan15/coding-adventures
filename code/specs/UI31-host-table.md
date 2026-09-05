@@ -115,10 +115,10 @@ the same code path.
 | Prop              | Kind        | Required | Meaning                                                                 |
 |---|---|---|---|
 | `dir`             | slot/keyword| no       | `ltr` (default) / `rtl` / `auto`. Lowers to the `dir` attribute on the root `<table>` so the browser flips column order. Inherits from `<html dir=…>` when unset. *(UI31-added.)* |
-| `selected-row`    | slot/number | no       | Currently-selected row index (or -1). Future-binding for grid-style table UI; not yet inlined into JSX in the React emitter — slot is recognised + plumbed via `aria-rowindex` for screen-reader cursor placement. |
-| `selected-col`    | slot/number | no       | Same for columns.                                                       |
+| `selected-row`    | slot/number | no       | Rendered body-row index (or -1). In React, binding both selection slots reveals the cell within the nearest scroll frame after updates, allowing for sticky header height; it does not move keyboard focus. Out-of-range indices do nothing. Native reveal and accessibility cursor semantics require separate backend acceptance. |
+| `selected-col`    | slot/number | no       | Rendered column index, paired with selected-row for React reveal.                                                       |
 | `edit-row`        | slot/number | no       | Row index being edited (or -1). Same plumbing pattern as `selected-row`. |
-| `edit-col`        | slot/number | no       | Same for columns.                                                       |
+| `edit-col`        | slot/number | no       | Column index being edited (or -1).                                                       |
 | `sticky-header`   | keyword     | no       | `true` / `false`. When true, the rendered `<thead>` gets `position: sticky; top: 0` so the header pins on scroll. Default `false`. *(Existing built-in `Grid` uses this same prop name; HostTable adopts it.)* |
 | `total-height`    | slot/number | no       | Pixel height of the scroll viewport. Used together with `sticky-header: true` to bound the scrolling region. |
 | `onNavigate`      | emit        | no       | Fires when selection moves. Payload: `{row: number, col: number}`. Reserved for the [L10] grid-style binding; not yet wired in the v1 HostTable emitter. |

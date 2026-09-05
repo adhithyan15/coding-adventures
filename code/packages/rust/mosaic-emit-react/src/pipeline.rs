@@ -609,6 +609,11 @@ pub fn from_pipeline(
         writeln!(out).unwrap();
     }
 
+    if layout_has_table_selection(&layout.root) {
+        out.push_str(include_str!("table_selection.ts"));
+        writeln!(out).unwrap();
+    }
+
     // 3. Event union (UI24 §3.1).
     out.push_str(&emit_event_union(name, &interface.emits)?);
     writeln!(out).unwrap();
@@ -3678,6 +3683,19 @@ fn emit_host_table_jsx(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
+    let selection_ref = if let (Some(row), Some(col)) = (
+        find_slot_ref_prop(node, "selected-row"),
+        find_slot_ref_prop(node, "selected-col"),
+    ) {
+        let row = to_camel_case_first_lower(row);
+        let col = to_camel_case_first_lower(col);
+        validate_slot_or_field_name(&row).map_err(PipelineEmitError::UnsafeSlotName)?;
+        validate_slot_or_field_name(&col).map_err(PipelineEmitError::UnsafeSlotName)?;
+        format!(" ref={{table => {{ mosaic$revealTableCell(table, {row}, {col}); }}}}")
+    } else {
+        String::new()
+    };
+
     // Style attr (same part-name lookup as the rest of the tree).
     let part_style_str = node
         .part_name
@@ -3741,10 +3759,10 @@ fn emit_host_table_jsx(
     // Empty table — no sections present. Emit a single-line
     // `<table></table>` (still respecting any part-style attribute).
     if colgroup.is_none() && thead.is_none() && tbody.is_none() && tfoot.is_none() {
-        return Ok(format!("{pad}<table{style_attr}{dir_attr}></table>\n"));
+        return Ok(format!("{pad}<table{style_attr}{dir_attr}{selection_ref}></table>\n"));
     }
 
-    let mut out = format!("{pad}<table{style_attr}{dir_attr}>\n");
+    let mut out = format!("{pad}<table{style_attr}{dir_attr}{selection_ref}>\n");
 
     if let Some(cg) = colgroup {
         out.push_str(&emit_host_table_colgroup_jsx(cg, indent + 2, part_styles)?);
@@ -4452,6 +4470,13 @@ fn try_emit_colgroup_for_col_jsx(
 
 /// Find the *first* immediate child of `node` whose tag matches
 /// `section_tag`. Returns `None` if no such child exists.
+fn layout_has_table_selection(node: &LayoutNode) -> bool {
+    (node.tag == "HostTable"
+        && find_slot_ref_prop(node, "selected-row").is_some()
+        && find_slot_ref_prop(node, "selected-col").is_some())
+        || node.children.iter().any(layout_has_table_selection)
+}
+
 fn find_section_child<'a>(node: &'a LayoutNode, section_tag: &str) -> Option<&'a LayoutNode> {
     node.children.iter().find(|c| c.tag == section_tag)
 }
@@ -9862,6 +9887,24 @@ mod tests {
                 assert!(out.contains(&format!("<{html} style={{{{ position: \"sticky\" }}}}>")), "{out}");
             }
         }
+    }
+
+    #[test]
+    fn host_table_bound_selection_emits_scoped_reveal() {
+        let model = component("X", vec![
+            slot("active-row", SlotType::Number, true),
+            slot("active-col", SlotType::Number, true),
+        ], vec![]);
+        let mut layout = host_table_layout(vec![]);
+        layout.root.props = vec![
+            slot_ref_prop("selected-row", "active-row"),
+            slot_ref_prop("selected-col", "active-col"),
+        ];
+        let out = from_pipeline(&model, &layout, &empty_style("X")).unwrap().output;
+        assert!(out.contains("mosaic$revealTableCell(table, activeRow, activeCol)"));
+        assert_eq!(out.matches("function mosaic$revealTableCell").count(), 1);
+        let plain = from_pipeline(&component("X", vec![], vec![]), &host_table_layout(vec![]), &empty_style("X")).unwrap().output;
+        assert!(!plain.contains("mosaic$revealTableCell"));
     }
 
     /// UI29 §2.1 HostTable test 2 — a `HostTableHead` with one `Row` of

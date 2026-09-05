@@ -21,8 +21,11 @@ selection and amber editing states. Toolbar content wraps at narrow widths;
 the sheet frame contains overflow within a HostScroll bounded to 60vh. Authored
 column-headings styles pin the header in the React consumer. Browser Page Down
 moved the sheet by 364px while the header stayed at the same screen position,
-with 30 rows materialized. This does not yet synchronize scrolling with selection,
-resize the row window, or supply row labels (#14277); native acceptance remains.
+with 30 rows materialized. The shared React table now reveals the selected cell
+within that frame, including horizontal navigation and sticky-header clearance.
+Browser navigation verified A31 and Z31 at the lower/right edges, then Z2 below
+the header, while keeping 30 rows rendered; formula-editor focus survived edits.
+Responsive row-window sizing, row labels and native reveal remain under #14277.
 
 Browser review on 2026-09-05 covered both generated themes at desktop width
 and the real Rust app in a 375px-wide preview. The narrow root's scroll width
