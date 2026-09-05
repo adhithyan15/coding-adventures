@@ -808,7 +808,7 @@ function safeHref(value) {
     //    Build the author-declared part-style map first (UI28 — style
     //    inlining) so the HTML walker can attach `style="..."` to every
     //    element that carries a `part_name`.
-    let part_styles = build_part_style_map(style);
+    let part_styles = build_part_style_map(style, &interface.slots);
     out.push_str(&emit_render(
         &interface.slots,
         &interface.emits,
@@ -2834,10 +2834,37 @@ fn insert_attrs_before_close(open_tag: &str, attrs: &str) -> String {
 /// a composite key `"{part}:{state}"` (`cell:selected`, `cell:editing`)
 /// so the cell-state ternary can fetch them — mirroring the React
 /// backend's `build_part_style_map`.
-fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
+fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> HashMap<String, String> {
     let mut out = HashMap::with_capacity(style.parts.len());
     for part in &style.parts {
-        let frag = build_inline_css_fragment(&part.base);
+        let mut frag = build_inline_css_fragment(&part.base);
+
+        // UI49 — slot-owned enum states activate directly from their
+        // owning one-of slot. Walk slots first so multiple axes follow
+        // the model's declaration order. Existing state-when layers are
+        // appended later by build_style_attr, preserving their higher
+        // structural/interaction precedence.
+        for slot in slots {
+            let slot_ident = to_camel_case_first_lower(&slot.name);
+            for state in part
+                .states
+                .iter()
+                .filter(|state| state.slot.as_deref() == Some(slot.name.as_str()))
+            {
+                let state_css = build_inline_css_fragment(&state.props);
+                if state_css.is_empty() {
+                    continue;
+                }
+                write!(
+                    frag,
+                    r#"${{({slot_ident} === "{}") ? "{}" : ""}}"#,
+                    escape_js_string(&state.state),
+                    escape_js_string(&format!("; {state_css}"))
+                )
+                .unwrap();
+            }
+        }
+
         if !frag.is_empty() {
             out.insert(part.name.clone(), frag);
         }
@@ -4299,6 +4326,75 @@ mod tests {
             "HostButton part style missing from special-path output:\n{}",
             r.output
         );
+    }
+
+    #[test]
+    fn ui49_slot_states_emit_in_model_order_and_reach_host_button() {
+        let m = component(
+            "Btn",
+            vec![
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                    true,
+                ),
+                slot(
+                    "size",
+                    SlotType::OneOf(vec!["regular".to_string(), "compact".to_string()]),
+                    true,
+                ),
+            ],
+            vec![],
+        );
+        let l = root_layout(
+            "Btn",
+            LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Delete".to_string()),
+                }],
+                children: vec![],
+            },
+        );
+        let s = style_with_parts(
+            "Btn",
+            vec![part(
+                "button",
+                vec![prop("color", "#111111")],
+                // Deliberately reverse authored order. UI49 precedence follows
+                // the model slot declarations: variant, then size.
+                vec![
+                    StateStyle {
+                        slot: Some("size".to_string()),
+                        state: "compact".to_string(),
+                        transitions: vec![],
+                        props: vec![prop("padding", "4px")],
+                    },
+                    StateStyle {
+                        slot: Some("variant".to_string()),
+                        state: "danger".to_string(),
+                        transitions: vec![],
+                        props: vec![prop("background", "#dc3545")],
+                    },
+                ],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+
+        let variant_pos = out
+            .find("variant === \"danger\"")
+            .expect("variant condition should be emitted");
+        let size_pos = out
+            .find("size === \"compact\"")
+            .expect("size condition should be emitted");
+        assert!(variant_pos < size_pos, "model slot order must win:\n{out}");
+        assert!(out.contains("const variant = this.getAttribute(\"variant\")"));
+        assert!(out.contains("const size = this.getAttribute(\"size\")"));
+        assert!(out.contains(
+            r#"<button style="color: #111111${(variant === "danger") ? "; background: #dc3545" : ""}${(size === "compact") ? "; padding: 4px" : ""}">Delete</button>"#
+        ));
     }
 
     // -------- K5: HostButton with slot-ref label --------
@@ -6701,7 +6797,7 @@ mod tests {
                 }],
             )],
         );
-        let map = build_part_style_map(&s);
+        let map = build_part_style_map(&s, &[]);
         assert_eq!(map.get("cell").map(String::as_str), Some("padding: 2px"));
         assert_eq!(
             map.get("cell:selected").map(String::as_str),
@@ -6732,7 +6828,7 @@ mod tests {
                 }],
             )],
         );
-        let map = build_part_style_map(&s);
+        let map = build_part_style_map(&s, &[]);
         let base = map.get("panel").map(String::as_str).unwrap_or("");
         assert!(base.contains("padding: 8px"), "expected padding px: {base}");
         assert!(

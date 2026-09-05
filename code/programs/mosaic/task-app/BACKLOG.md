@@ -13,8 +13,9 @@
 >
 > The native release P0 (#14249) is now closed and the product-scoped SemVer
 > lane (#13543) has published `task-app-v0.1.0`. The UI49 model/compiler bridge
-> is complete through #14300; the current dependency is #14305, the React
-> reference lowering within #14036. The remaining backends and toolkit
+> is complete through #14300, and the React reference lowering landed in
+> #14306. The current dependency is #14312, the WebComponent runtime lowering
+> within #14036. The remaining backends and toolkit
 > retrofits still precede stories or trustworthy TaskApp composition coverage.
 >
 > The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
