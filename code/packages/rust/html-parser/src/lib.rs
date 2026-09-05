@@ -11119,20 +11119,23 @@ fn populate_select_selectedcontent(select: &mut Element) {
     let Some(option_children) = option_children else {
         return;
     };
-    for child in &mut select.children {
-        let Node::Element(button) = child else {
-            continue;
-        };
-        if button.name != "button" {
-            continue;
+    fn populate_enabled_selectedcontent(nodes: &mut [Node], option_children: &[Node]) {
+        for node in nodes {
+            let Node::Element(element) = node else {
+                continue;
+            };
+            if element.namespace.is_none() && element.name == "selectedcontent" {
+                element.children = option_children.to_vec();
+                continue;
+            }
+            if element.namespace.is_none() && matches!(element.name.as_str(), "option" | "select") {
+                continue;
+            }
+            populate_enabled_selectedcontent(&mut element.children, option_children);
         }
-        let Some(Node::Element(selectedcontent)) = button.children.iter_mut().find(
-            |child| matches!(child, Node::Element(element) if element.name == "selectedcontent"),
-        ) else {
-            continue;
-        };
-        selectedcontent.children = option_children.clone();
     }
+
+    populate_enabled_selectedcontent(&mut select.children, &option_children);
 }
 
 fn select_display_size(select: &Element) -> usize {
@@ -46761,6 +46764,90 @@ mod tests {
             },
             Token::EndTag {
                 name: "button".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("new".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "new"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_syncs_enabled_descendants_outside_buttons() {
+        let source = "<!doctype html><select><selectedcontent id=direct>old é\r\n</selectedcontent><div><selectedcontent id=wrapped>old</selectedcontent></div><option selected><b>new</b></option></select>";
+        let document = parse_html(source).unwrap();
+        for id in ["direct", "wrapped"] {
+            let selectedcontent = find_element_by_id(&document.children, id).unwrap();
+            assert_eq!(selectedcontent.children.len(), 1, "id {id}");
+            assert_eq!(element(&selectedcontent.children[0]).name, "b", "id {id}");
+            assert_eq!(element_text_content(selectedcontent), "new", "id {id}");
+        }
+        assert!(source.len() > source.chars().count());
+
+        let option_owned = parse_html(
+            "<!doctype html><select><option selected><selectedcontent id=owned>kept</selectedcontent></option></select>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(find_element_by_id(&option_owned.children, "owned").unwrap()),
+            "kept"
+        );
+
+        let foreign = parse_html(
+            "<!doctype html><select><svg><selectedcontent id=foreign>kept</selectedcontent></svg><option>new</option></select>",
+        )
+        .unwrap();
+        let foreign_selectedcontent =
+            find_element_by_id(&foreign.children, "foreign").unwrap();
+        assert_eq!(foreign_selectedcontent.namespace.as_deref(), Some("svg"));
+        assert_eq!(element_text_content(foreign_selectedcontent), "kept");
+
+        for nodes in [
+            parse_html_fragment_for_context(
+                "<select><selectedcontent id=target>old</selectedcontent><option>new</option></select>",
+                "body",
+            )
+            .unwrap(),
+            parse_html(
+                "<!doctype html><svg><foreignObject><select><selectedcontent id=target>old</selectedcontent><option>new</option></select></foreignObject></svg>",
+            )
+            .unwrap()
+            .children,
+        ] {
+            assert_eq!(
+                element_text_content(find_element_by_id(&nodes, "target").unwrap()),
+                "new"
+            );
+        }
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
             },
             Token::StartTag {
                 name: "option".to_string(),
