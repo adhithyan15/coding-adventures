@@ -10,8 +10,8 @@ levels: 3658 pre-A1, 1484 A1, 556 A2, 39 B1, 17 B2, 10 C1, 18 C2; 0 unmapped (10
 ramp: 40 lessons above 3 new atoms (53 unmeasurable, 99% measurable); 61 chapters above 12
 script ramp: 31 lessons above 3 new glyphs; 0 opening more than 1 writing system at once; steepest RU-C01-privet at 14
 cousin layer: 213 lessons show another script (max 26 glyphs) — context, never charged to the budget
-script closure: 269 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
-exposure: 46 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1368 glyphs and makes 376 lessons clean on its own
+script closure: 268 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
+exposure: 46 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1372 glyphs and makes 377 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 672 of 7473 atoms never revisited (9%); missed windows R1 1675, R2 3726, R3 5460, R4 3828
 forward references: 676 uses of material a later lesson teaches

@@ -26,8 +26,8 @@
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 31,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 269,
-    "scriptExposureExemptedGlyphs": 1368,
+    "scriptClosureViolations": 268,
+    "scriptExposureExemptedGlyphs": 1372,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
@@ -85198,9 +85198,9 @@
         "taughtGlyphs": 46,
         "shownGlyphs": 57,
         "neverTaughtGlyphs": 11,
-        "violations": 37,
-        "exposureOnly": 61,
-        "exposureExemptedGlyphs": 134,
+        "violations": 36,
+        "exposureOnly": 62,
+        "exposureExemptedGlyphs": 138,
         "headwordsWithoutRomanization": 1
       },
       {
@@ -86059,13 +86059,6 @@
         "language": "hindi",
         "chapter": 1,
         "glyphs": "दधनव",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C02-khushi",
-        "language": "hindi",
-        "chapter": 2,
-        "glyphs": "आईलह",
         "count": 4
       },
       {
@@ -87248,9 +87241,9 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 269,
-      "exposureOnly": 376,
-      "exposureExemptedGlyphs": 1368,
+      "violations": 268,
+      "exposureOnly": 377,
+      "exposureExemptedGlyphs": 1372,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
     },
@@ -103377,7 +103370,7 @@
         "atomChapterSpikes": 2,
         "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 37,
+        "scriptClosureViolations": 36,
         "neverTaughtGlyphs": 11,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
