@@ -19,7 +19,7 @@
     "notes": "PR #13841 merged externally through its enabled squash auto-merge after every final-head check reached an acceptable terminal conclusion and GitHub reported no conflict. No manual merge command was issued."
   },
   "last_inventory": {
-    "revision": "a1008a4d4cd262f44d1c7b0c87aa61003da14e31",
+    "revision": "8fe279a38603d7a53147624d65d6ecf288585199",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1411,
@@ -7913,8 +7913,14 @@
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-ci-gate-registry-language-neutral-conformance",
       "pr_number": null,
-      "selection_revision": "a1008a4d4cd262f44d1c7b0c87aa61003da14e31",
+      "selection_revision": "8fe279a38603d7a53147624d65d6ecf288585199",
       "selection_notes": "Selected after external merge of PR #13841 and a collision-checked exact-main refresh. PR #13854 introduced an unowned Go-only build-tool contract whose neutral oracle is required before twelve current front doors and future Java, Kotlin, Dart, and OCaml engines can claim parity. This bounded process-free tranche owns strict validated registry input, null-versus-empty snapshots, force and machinery fail-open behavior, exact package intersection, portable path globs, complete sorted verdicts, deterministic output names, and a production Go fixture consumer. It excludes registry and Git I/O, graph construction, workflow output, scheduling, branch protection, and host authority.",
+      "reconciliation_revision": "8fe279a38603d7a53147624d65d6ecf288585199",
+      "reconciliation_notes": "Before publication, origin/main advanced through four disjoint MOS model, human-language, TypeScript local-dependency, and SPICE parser commits. The implementation rebased cleanly, and the collision-checked schema-3 inventory retained all counts, zero collisions, zero unknown buckets, and the same seven newly owned Rust identities. Five live open PRs have no exact overlap with the 25 changed paths; PR #14244's separate CI repair touches the workflow but not this pure registry evaluator, corpus, or state surface.",
+      "implementation_revision": "71f986de6284089037618d8f011cfe118505aa7d",
+      "validation_revision": "71f986de6284089037618d8f011cfe118505aa7d",
+      "validation_notes": "Specification-first changes define the closed process-free ci_gate_selection boundary, and test-first execution failed on the deliberately absent domain case before implementation. The shared corpus now validates 139 cases and 283 retained files across 16 implementations, 15 established lanes, and 12 front doors; 23 schema tests and 74 semantic runner tests pass, with the complete runner at 90% branch-aware coverage. The Go oracle dynamically consumes all seven new cases, adds fail-closed Actions output-name collision rejection, passes every package test plus vet and trimpath build, and reaches 92.6% statement coverage in internal/cigates. A real forced Go dry-run evaluates 45 Starlark BUILD files, discovers 306 Go packages, and keeps the five-entry orphan ledger clean. Ten parity-report tests pass; the refreshed schema-3 inventory has 1,411 identities, 4,627 slots, 1,450 all-reported identities, 752 Rust singletons, zero collisions, and zero unknown buckets. The 666-owner/1,037-edge state is JSON-valid, unique, dependency-complete, and acyclic at 202 merged, 463 pending, and exactly this item in progress. Focused Ruff correctness rules, Bandit, compileall, strict schemas, and diff hygiene pass; no dependency, filesystem, Git, process, environment, network, credential, or workflow authority was added.",
+      "final_review_notes": "The exact-diff review confirms every false and true verdict remains explicit and sorted, null snapshots are distinct from successful empty snapshots, the Python oracle matches Go globstar and machinery sentinel behavior, and registry output-name collisions now fail before emission. The 12-front-door audit finds only Go implemented, assigns ten collision-safe current-engine leaves, and binds JVM, Dart, and OCaml creation owners into the remaining aggregate. Five live open PRs have zero exact changed-path overlap, and the rebased worktree is clean apart from the intended validation/state follow-up.",
       "notes": "Add the ci_gate_selection domain to the shared v1 corpus, consume it in the Go oracle, audit all current build-tool front doors, and decompose the remaining engine rollout without granting host or workflow authority."
     },
     {

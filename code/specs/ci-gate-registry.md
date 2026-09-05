@@ -144,7 +144,7 @@ gates with neither packages nor paths, and ids whose hyphen-to-underscore
 mapping would collide on the same output name.
 
 The exact-main front-door audit at
-`a1008a4d4cd262f44d1c7b0c87aa61003da14e31` found:
+`8fe279a38603d7a53147624d65d6ecf288585199` found:
 
 | Front door | Native `ci_gate_selection` | Delivery owner |
 |---|---:|---|

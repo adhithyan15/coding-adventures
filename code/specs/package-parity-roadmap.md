@@ -12623,7 +12623,7 @@ auto-merge as `0db71afde03b13bf3b3f5d1ef2dc18673a75fffc`; the parity loop issued
 no manual merge command.
 
 The collision-checked schema-3 inventory at exact current `origin/main`
-`a1008a4d4cd262f44d1c7b0c87aa61003da14e31` now records 15 established
+`8fe279a38603d7a53147624d65d6ecf288585199` now records 15 established
 lanes, 1,411 implementation identities, 4,627 implementation slots, and 1,450
 all-reported identities. Its bands are 175/265, 123/934, 172/2,165, and
 941/13,174; Rust has 752 singletons, OCaml remains emerging at zero packages,
@@ -12665,6 +12665,13 @@ is next-best but does not close the newly unowned cross-engine behavior.
 Reconciliation and selection leave 666 unique owners and 1,037 dependency
 edges: 202 merged, 463 pending, and exactly the CI gate corpus/audit owner in
 progress.
+
+Before publication, `origin/main` advanced through four disjoint MOS model,
+human-language, TypeScript local-dependency, and SPICE parser commits. The
+implementation rebased cleanly onto
+`8fe279a38603d7a53147624d65d6ecf288585199`; the refreshed inventory retained
+the exact counts above, and five live open PRs have no exact path overlap with
+this tranche.
 
 ## Autonomous Loop Protocol
 
