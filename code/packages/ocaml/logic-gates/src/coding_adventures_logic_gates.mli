@@ -8,7 +8,6 @@ type error =
   | Invalid_length of { name : string; expected : int; actual : int }
   | Invalid_power_of_two of { name : string; value : int }
   | Invalid_one_hot
-  | Invalid_direction of string
   | Invalid_counter_state
 
 module Basic : sig
