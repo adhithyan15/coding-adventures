@@ -91,6 +91,11 @@ intrinsically measured by default; `flex-grow` and `width: 100%` lower to a
 scoped `Modifier.weight(...)`, so one flexible child cannot push later controls
 beyond the native viewport.
 
+When a `.mil` slot uses `one-of`, a matching `.msl` state is activated by that
+slot's composable parameter. Enum axes layer in `.mil` declaration order, then
+`state-when-*` structural and interaction predicates apply on top. The same
+ordering is used for generic nodes and specialized host controls.
+
 ## Tests
 
 `cargo test -p mosaic-emit-compose` runs focused emitter tests. The
