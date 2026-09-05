@@ -6611,11 +6611,13 @@ mod tests {
                 vec![prop("padding", "2px")],
                 vec![
                     StateStyle {
+                        slot: None,
                         state: "selected".to_string(),
                         transitions: vec![],
                         props: vec![prop("background", "#264f78"), prop("color", "#ffffff")],
                     },
                     StateStyle {
+                        slot: None,
                         state: "editing".to_string(),
                         transitions: vec![],
                         props: vec![prop("background", "#1f4f3f")],
@@ -6692,6 +6694,7 @@ mod tests {
                 "cell",
                 vec![prop("padding", "2px")],
                 vec![StateStyle {
+                    slot: None,
                     state: "selected".to_string(),
                     transitions: vec![],
                     props: vec![prop("background", "blue")],
@@ -6722,6 +6725,7 @@ mod tests {
                     prop("padding-bottom", "0"),
                 ],
                 vec![StateStyle {
+                    slot: None,
                     state: "selected".to_string(),
                     transitions: vec![],
                     props: vec![prop("border-width", "1")],

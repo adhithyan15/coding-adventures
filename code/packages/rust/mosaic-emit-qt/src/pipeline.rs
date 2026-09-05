@@ -12420,11 +12420,13 @@ mod tests {
                     transitions: vec![],
                     states: vec![
                         StateStyle {
+                            slot: None,
                             state: "selected".to_string(),
                             transitions: vec![],
                             props: vec![sp("background", "#264f78"), sp("color", "#ffffff")],
                         },
                         StateStyle {
+                            slot: None,
                             state: "editing".to_string(),
                             transitions: vec![],
                             props: vec![sp("background", "#1f4f3f")],

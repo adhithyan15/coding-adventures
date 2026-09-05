@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added - model-declared `one-of` states (UI49)
+
+- Added model-neutral `SlotStateAxis` input and model-aware compile entry points.
+- Styles may use values declared by a component's `one-of` slot as states, and
+  the backend-neutral IR/JSON records the owning slot on each such state.
+- Compilation rejects values that collide with built-in states or are declared
+  by multiple slots. Existing model-free entry points and built-in state JSON
+  remain unchanged.
+
 ### Added - `elevation` property, mosstyle's first typed/enum value (#12028 item 1, UI41)
 
 New `elevation: raised | overlay;` property, validated in `validate()`

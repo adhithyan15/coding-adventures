@@ -143,11 +143,17 @@ struct TokenPaletteDocument {
     backends: HashMap<String, HashMap<String, String>>,
 }
 
-/// Style overrides for one interaction state.
+/// Style overrides for one built-in or model-declared state.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct StateStyle {
     /// State name: `hover`, `pressed`, `focused`, `disabled`, `selected`, etc.
     pub state: String,
+    /// The `one-of` slot that owns this state, when it is model-declared.
+    ///
+    /// Built-in interaction and structural states omit this field so their
+    /// serialized IR remains byte-compatible with pre-UI49 output.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub slot: Option<String>,
     /// Properties that override the base in this state.
     pub props: Vec<StyleProp>,
     /// Transitions used when entering this state.
@@ -174,6 +180,19 @@ pub struct CompileOutput {
     pub style_map_json: String,
 }
 
+/// One model slot whose closed-set values may be used as mosstyle states.
+///
+/// This small, model-neutral input keeps `mosstyle-compiler` independent from
+/// `mosmodel-compiler`; package composition converts `one-of` slots into these
+/// axes before compiling a stylesheet.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SlotStateAxis {
+    /// The owning slot name, for example `variant` or `size`.
+    pub slot: String,
+    /// The legal state names declared by that slot.
+    pub values: Vec<String>,
+}
+
 // ===========================================================================
 // Compiler errors
 // ===========================================================================
@@ -194,6 +213,10 @@ pub enum ErrorKind {
     UnknownProperty,
     /// A state name is not in the known states list.
     UnknownState,
+    /// A model-declared state shadows a built-in state.
+    SlotStateBuiltInCollision,
+    /// A model-declared state value is owned by more than one slot.
+    AmbiguousSlotState,
     /// A `$token-ref` has no definition in the token map.
     UnresolvedToken,
     /// A transition names a property that is not declared in the part's base style.
@@ -678,6 +701,7 @@ fn analyze_state(
             kind: ErrorKind::InternalError,
             message: "state_block missing state name".to_string(),
         })?,
+        slot: None,
         props,
         transitions,
     })
@@ -824,6 +848,28 @@ fn extract_style_value(
 /// `part_map_json` is the JSON output of `moslayout_compiler::compile().part_map_json`.
 /// Pass `None` to skip part-existence validation.
 pub fn validate(def: &StyleDef, part_map_json: Option<&str>) -> Result<(), Vec<CompileError>> {
+    validate_impl(def, part_map_json, true)
+}
+
+/// Bind and validate states declared by closed-set model slots.
+///
+/// On success, each model-declared [`StateStyle`] records its owning slot.
+/// Built-in states retain no owner. The mutable input makes that ownership
+/// explicit to callers that analyze and validate in separate steps.
+pub fn validate_with_slot_states(
+    def: &mut StyleDef,
+    part_map_json: Option<&str>,
+    axes: &[SlotStateAxis],
+) -> Result<(), Vec<CompileError>> {
+    bind_slot_states(def, axes)?;
+    validate_impl(def, part_map_json, false)
+}
+
+fn validate_impl(
+    def: &StyleDef,
+    part_map_json: Option<&str>,
+    validate_state_names: bool,
+) -> Result<(), Vec<CompileError>> {
     let mut errors = Vec::new();
 
     let known_parts: HashSet<String> = if let Some(json) = part_map_json {
@@ -858,7 +904,7 @@ pub fn validate(def: &StyleDef, part_map_json: Option<&str>) -> Result<(), Vec<C
 
         // Validate state names.
         for state in &part.states {
-            if !VALID_STATES.contains(&state.state.as_str()) {
+            if validate_state_names && !VALID_STATES.contains(&state.state.as_str()) {
                 errors.push(CompileError {
                     kind: ErrorKind::UnknownState,
                     message: format!(
@@ -881,8 +927,7 @@ pub fn validate(def: &StyleDef, part_map_json: Option<&str>) -> Result<(), Vec<C
             .iter()
             .chain(part.states.iter().flat_map(|state| state.props.iter()));
         for prop in elevation_props {
-            if prop.name == "elevation" && !VALID_ELEVATION_VALUES.contains(&prop.value.as_str())
-            {
+            if prop.name == "elevation" && !VALID_ELEVATION_VALUES.contains(&prop.value.as_str()) {
                 errors.push(CompileError {
                     kind: ErrorKind::InvalidPropertyValue,
                     message: format!(
@@ -911,6 +956,74 @@ pub fn validate(def: &StyleDef, part_map_json: Option<&str>) -> Result<(), Vec<C
                     message: format!(
                         "Transition on '{}' in part '{}' references a property not declared in the part's base style",
                         transition.property, part.name
+                    ),
+                });
+            }
+        }
+    }
+
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(errors)
+    }
+}
+
+fn bind_slot_states(def: &mut StyleDef, axes: &[SlotStateAxis]) -> Result<(), Vec<CompileError>> {
+    let mut errors = Vec::new();
+    let mut owners: HashMap<&str, &str> = HashMap::new();
+
+    for axis in axes {
+        for value in &axis.values {
+            if VALID_STATES.contains(&value.as_str()) {
+                errors.push(CompileError {
+                    kind: ErrorKind::SlotStateBuiltInCollision,
+                    message: format!(
+                        "Slot '{}' declares state '{}' which collides with a built-in state",
+                        axis.slot, value
+                    ),
+                });
+                continue;
+            }
+
+            if let Some(previous_owner) = owners.insert(value, &axis.slot) {
+                errors.push(CompileError {
+                    kind: ErrorKind::AmbiguousSlotState,
+                    message: format!(
+                        "State '{}' is declared by both slot '{}' and slot '{}'; each mosstyle state must have exactly one owning slot",
+                        value, previous_owner, axis.slot
+                    ),
+                });
+            }
+        }
+    }
+
+    if !errors.is_empty() {
+        return Err(errors);
+    }
+
+    let mut declared_states = owners.keys().copied().collect::<Vec<_>>();
+    declared_states.sort_unstable();
+    for part in &mut def.parts {
+        for state in &mut part.states {
+            if VALID_STATES.contains(&state.state.as_str()) {
+                state.slot = None;
+            } else if let Some(owner) = owners.get(state.state.as_str()) {
+                state.slot = Some((*owner).to_string());
+            } else {
+                let model_states = if declared_states.is_empty() {
+                    "none".to_string()
+                } else {
+                    declared_states.join(", ")
+                };
+                errors.push(CompileError {
+                    kind: ErrorKind::UnknownState,
+                    message: format!(
+                        "Unknown state '{}' in part '{}' — built-in states: {}; model-declared states: {}",
+                        state.state,
+                        part.name,
+                        VALID_STATES.join(", "),
+                        model_states
                     ),
                 });
             }
@@ -1026,6 +1139,42 @@ pub fn compile_with_tokens(
 
     let def = analyze_with_tokens(&ast, tokens).map_err(|e| vec![e])?;
     validate(&def, part_map_json)?;
+
+    let lattice = emit_lattice(&def);
+    let style_map_json = emit_style_map_json(&def);
+
+    Ok(CompileOutput {
+        def,
+        lattice,
+        style_map_json,
+    })
+}
+
+/// Compile a `.msl` source file with model-declared closed-set slot states.
+pub fn compile_with_slot_states(
+    source: &str,
+    part_map_json: Option<&str>,
+    axes: &[SlotStateAxis],
+) -> Result<CompileOutput, Vec<CompileError>> {
+    compile_with_tokens_and_slot_states(source, part_map_json, &TokenOverrides::default(), axes)
+}
+
+/// Compile a `.msl` source file with token overrides and model-declared states.
+pub fn compile_with_tokens_and_slot_states(
+    source: &str,
+    part_map_json: Option<&str>,
+    tokens: &TokenOverrides,
+    axes: &[SlotStateAxis],
+) -> Result<CompileOutput, Vec<CompileError>> {
+    let ast = parse_style(source).map_err(|e| {
+        vec![CompileError {
+            kind: ErrorKind::InternalError,
+            message: e,
+        }]
+    })?;
+
+    let mut def = analyze_with_tokens(&ast, tokens).map_err(|e| vec![e])?;
+    validate_with_slot_states(&mut def, part_map_json, axes)?;
 
     let lattice = emit_lattice(&def);
     let style_map_json = emit_style_map_json(&def);
@@ -1828,6 +1977,119 @@ mod tests {
         assert!(result.is_err());
         let errs = result.unwrap_err();
         assert!(errs.iter().any(|e| e.kind == ErrorKind::UnknownState));
+    }
+
+    #[test]
+    fn model_declared_state_records_its_owning_slot() {
+        let src = r#"
+          style Button {
+            part root {
+              background: #ffffff ;
+              state danger { background: #ff0000 ; }
+            }
+          }
+        "#;
+        let result = compile_with_slot_states(
+            src,
+            None,
+            &[SlotStateAxis {
+                slot: "variant".to_string(),
+                values: vec!["primary".to_string(), "danger".to_string()],
+            }],
+        )
+        .expect("one-of state should compile");
+
+        assert_eq!(
+            result.def.parts[0].states[0].slot.as_deref(),
+            Some("variant")
+        );
+        let json: serde_json::Value =
+            serde_json::from_str(&result.style_map_json).expect("valid style JSON");
+        assert_eq!(json["parts"][0]["states"][0]["slot"], "variant");
+    }
+
+    #[test]
+    fn model_aware_compile_still_rejects_undeclared_states() {
+        let src = r#"
+          style Button {
+            part root { state warning { color: #ff0000 ; } }
+          }
+        "#;
+        let errs = compile_with_slot_states(
+            src,
+            None,
+            &[SlotStateAxis {
+                slot: "variant".to_string(),
+                values: vec!["danger".to_string()],
+            }],
+        )
+        .expect_err("undeclared state should fail");
+
+        assert!(errs.iter().any(|error| {
+            error.kind == ErrorKind::UnknownState
+                && error.message.contains("warning")
+                && error.message.contains("danger")
+        }));
+    }
+
+    #[test]
+    fn model_state_must_not_collide_with_a_builtin_state() {
+        let errors = compile_with_slot_states(
+            "style Button { part root { } }",
+            None,
+            &[SlotStateAxis {
+                slot: "variant".to_string(),
+                values: vec!["disabled".to_string()],
+            }],
+        )
+        .expect_err("built-in collision should fail");
+
+        assert!(errors.iter().any(|error| {
+            error.kind == ErrorKind::SlotStateBuiltInCollision
+                && error.message.contains("variant")
+                && error.message.contains("disabled")
+        }));
+    }
+
+    #[test]
+    fn model_state_must_have_exactly_one_owning_slot() {
+        let errors = compile_with_slot_states(
+            "style Button { part root { } }",
+            None,
+            &[
+                SlotStateAxis {
+                    slot: "variant".to_string(),
+                    values: vec!["compact".to_string()],
+                },
+                SlotStateAxis {
+                    slot: "size".to_string(),
+                    values: vec!["compact".to_string()],
+                },
+            ],
+        )
+        .expect_err("ambiguous state should fail");
+
+        assert!(errors.iter().any(|error| {
+            error.kind == ErrorKind::AmbiguousSlotState
+                && error.message.contains("variant")
+                && error.message.contains("size")
+                && error.message.contains("compact")
+        }));
+    }
+
+    #[test]
+    fn built_in_state_json_omits_slot_owner() {
+        let src = r#"
+          style Button {
+            part root { state hover { color: #ffffff ; } }
+          }
+        "#;
+        let legacy = compile(src, None).expect("legacy compile should pass");
+        let model_aware =
+            compile_with_slot_states(src, None, &[]).expect("model-aware compile should pass");
+
+        assert_eq!(legacy.style_map_json, model_aware.style_map_json);
+        assert!(!legacy.style_map_json.contains("\"slot\""));
     }
 
     /// UI41 (#12028 item 1) — `elevation: raised;` and `elevation:
