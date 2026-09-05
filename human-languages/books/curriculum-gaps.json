@@ -27,7 +27,7 @@
     "scriptRampOverBudgetLessons": 31,
     "lessonsOpeningMultipleScripts": 0,
     "scriptClosureViolations": 268,
-    "scriptExposureExemptedGlyphs": 1372,
+    "scriptExposureExemptedGlyphs": 1373,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
@@ -85200,7 +85200,7 @@
         "neverTaughtGlyphs": 11,
         "violations": 36,
         "exposureOnly": 62,
-        "exposureExemptedGlyphs": 138,
+        "exposureExemptedGlyphs": 139,
         "headwordsWithoutRomanization": 1
       },
       {
@@ -86223,13 +86223,6 @@
         "count": 3
       },
       {
-        "lessonId": "HI-C34-padhna",
-        "language": "hindi",
-        "chapter": 34,
-        "glyphs": "ईछौ",
-        "count": 3
-      },
-      {
         "lessonId": "HI-C39-aurat",
         "language": "hindi",
         "chapter": 39,
@@ -86591,6 +86584,13 @@
         "language": "hindi",
         "chapter": 3,
         "glyphs": "ँड",
+        "count": 2
+      },
+      {
+        "lessonId": "HI-C34-padhna",
+        "language": "hindi",
+        "chapter": 34,
+        "glyphs": "छौ",
         "count": 2
       },
       {
@@ -87243,7 +87243,7 @@
       "tracksTeachingNothing": 0,
       "violations": 268,
       "exposureOnly": 377,
-      "exposureExemptedGlyphs": 1372,
+      "exposureExemptedGlyphs": 1373,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
     },
