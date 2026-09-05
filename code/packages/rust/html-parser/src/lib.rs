@@ -8799,7 +8799,8 @@ impl HtmlParser {
             }
         } else if incoming_name == "optgroup" {
             let closed_option = self.close_open_element_if(|name| name == "option");
-            let closed_optgroup = self.close_open_element_if(|name| name == "optgroup");
+            let closed_optgroup = self.current_element_is("optgroup")
+                && self.close_open_element_if(|name| name == "optgroup");
             if (closed_option || closed_optgroup) && self.has_open_element("select") {
                 self.diagnostics.push(
                     ParserDiagnostic::new(
@@ -11091,6 +11092,7 @@ fn populate_select_selectedcontent(select: &mut Element) {
         first: &mut Option<Vec<Node>>,
         selected: &mut Option<Vec<Node>>,
         disabled_by_optgroup: bool,
+        inside_optgroup: bool,
     ) {
         for node in nodes {
             let Node::Element(element) = node else {
@@ -11105,13 +11107,21 @@ fn populate_select_selectedcontent(select: &mut Element) {
                     *selected = Some(element.children.clone());
                 }
             } else if element.name != "button" {
-                let disabled_by_optgroup = disabled_by_optgroup
-                    || (element.name == "optgroup" && element.attribute("disabled").is_some());
+                if element.name == "optgroup" && inside_optgroup {
+                    continue;
+                }
+                let entering_optgroup = element.name == "optgroup";
+                let disabled_by_optgroup = if entering_optgroup {
+                    element.attribute("disabled").is_some()
+                } else {
+                    disabled_by_optgroup
+                };
                 collect_option_children(
                     &element.children,
                     first,
                     selected,
                     disabled_by_optgroup,
+                    inside_optgroup || entering_optgroup,
                 );
             }
         }
@@ -11119,7 +11129,7 @@ fn populate_select_selectedcontent(select: &mut Element) {
 
     let mut first = None;
     let mut selected = None;
-    collect_option_children(&select.children, &mut first, &mut selected, false);
+    collect_option_children(&select.children, &mut first, &mut selected, false, false);
     let option_children = selected.or_else(|| {
         if select_display_size(select) == 1 {
             first
@@ -47008,6 +47018,106 @@ mod tests {
             ),
             "last"
         );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_excludes_options_in_nested_optgroups() {
+        let source = "<!doctype html><!--é-->\r\n<select><button><selectedcontent>old</selectedcontent></button><optgroup id=outer><div><optgroup id=nested><option selected>excluded</option></optgroup></div><option><b>fallback</b></option></optgroup></select>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let selectedcontent =
+            find_first_element_in_nodes(&output.document.children, "selectedcontent").unwrap();
+        assert_eq!(element_text_content(selectedcontent), "fallback");
+        let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+        let wrapper = element(&outer.children[0]);
+        assert_eq!(wrapper.name, "div");
+        assert_eq!(element(&wrapper.children[0]).attribute("id"), Some("nested"));
+        assert!(source.len() > source.chars().count());
+        assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-optgroup-start-tag-in-select"
+        }));
+
+        let fragment = parse_html_fragment_for_context(
+            "<select><selectedcontent>old</selectedcontent><optgroup><div><optgroup><option selected>excluded</option></optgroup></div><option>fallback</option></optgroup></select>",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&fragment, "selectedcontent").unwrap()
+            ),
+            "fallback"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "optgroup".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "optgroup".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "selected".to_string(),
+                    value: String::new(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("excluded".to_string()),
+            Token::EndTag {
+                name: "option".to_string(),
+            },
+            Token::EndTag {
+                name: "optgroup".to_string(),
+            },
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("fallback".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "fallback"
+        );
+        assert!(direct.diagnostics().iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-optgroup-start-tag-in-select"
+        }));
         assert!(direct
             .diagnostics()
             .iter()
