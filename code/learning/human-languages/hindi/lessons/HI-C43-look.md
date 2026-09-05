@@ -8,9 +8,9 @@ spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1270
 chapter: 43
 type: word
-headword: "देखना"
-gloss: "to look, to see"
-romanization: "dekhnā"
+headword: "देखना / देख / देखता / देखती / देखते"
+gloss: "to look or see / look or see — infinitive / stem / masculine / feminine / respectful or plural"
+romanization: "dekhnā / dekh / dekhtā / dekhtī / dekhte"
 concept_tag: HI-VERB-LOOK
 prerequisites: [HI-C41-big, HI-C41-small]
 sounds: []
@@ -31,7 +31,7 @@ variety: standard-colloquial
 reviews_of: []
 ---
 
-# देखना (dekhnā) — to look, to see
+# देखना / देख / देखता / देखती / देखते — looking and seeing
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -41,24 +41,29 @@ reviews_of: []
 ## You'll want to know: देखना
 <!-- hl-knowledge: introduces=[HI-LEX-LOOK]; assesses=[] -->
 
-**देखना** (*dekhnā*) — "to look, to see".
+**देखना** (*dekhnā*) — "to look, to see."
 
-The *-ना* infinitive again. *Dekh-* is the stem you will meet inside every other form of this verb.
+Remove infinitive **-ना** to find the stem **देख-**. Add the present endings you
+already know: **देखता** (*dekhtā*, masculine), **देखती** (*dekhtī*, feminine),
+and **देखते** (*dekhte*, respectful or plural). Later you will use **देखता हूँ**
+with an object; now the verb form will already be yours.
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LOOK] -->
 
-One more. Three follow, and each reuses the ones before.
+One more regular verb. Three follow, and each reuses the ones before.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LOOK, HI-LEX-C41-ADJ-01, HI-LEX-C41-ADJ-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *dekhnā*]
-- [YOU SAY: it once more, slowly]
+- [YOU SAY: **देख / देखता / देखती / देखते** (*dekh / dekhtā / dekhtī / dekhte*)]
+- [YOU SAY (m.): **मैं देखता हूँ** · (f.): **मैं देखती हूँ**]
 - [YOU RECALL: say *baṛā*, then say *choṭā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-LOOK] -->
 
-[PAUSE 3s] What does देखना mean? ("to look, to see".) Say it once more.
+[PAUSE 3s] What does देखना mean? ("to look, to see.") Give its stem, then the
+masculine, feminine, and respectful or plural forms. (**देख; देखता / देखती / देखते**.)

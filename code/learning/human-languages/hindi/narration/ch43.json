@@ -4,22 +4,22 @@
   "chapter": 43,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4086fa60dd515d30",
+  "sourceHash": "fnv1a64:9cb7ff71b31775e8",
   "lessons": [
     {
       "id": "HI-C43-look",
       "sequence": 1270,
-      "title": "देखना (dekhnā) — to look, to see",
-      "headword": "देखना",
-      "romanization": "dekhnā",
-      "gloss": "to look, to see",
+      "title": "देखना / देख / देखता / देखती / देखते (dekhnā / dekh / dekhtā / dekhtī / dekhte) — looking and seeing",
+      "headword": "देखना / देख / देखता / देखती / देखते",
+      "romanization": "dekhnā / dekh / dekhtā / dekhtī / dekhte",
+      "gloss": "to look or see / look or see — infinitive / stem / masculine / feminine / respectful or plural",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b771ca328b97ea2",
+      "sourceHash": "fnv1a64:f5cf88f1b27080b4",
       "notice": null,
       "blocks": [
         {
@@ -46,11 +46,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "देखना (dekhnā) — \"to look, to see\"."
+              "text": "देखना (dekhnā) — \"to look, to see.\""
             },
             {
               "kind": "speech",
-              "text": "The -ना infinitive again. Dekh- is the stem you will meet inside every other form of this verb."
+              "text": "Remove infinitive -ना to find the stem देख-. Add the present endings you already know: देखता (dekhtā, masculine), देखती (dekhtī, feminine), and देखते (dekhte, respectful or plural). Later you will use देखता हूँ with an object; now the verb form will already be yours."
             }
           ]
         },
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more. Three follow, and each reuses the ones before."
+              "text": "One more regular verb. Three follow, and each reuses the ones before."
             }
           ]
         },
@@ -88,11 +88,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it once more, slowly",
+              "instruction": "देख / देखता / देखती / देखते (dekh / dekhtā / dekhtī / dekhte)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it once more, slowly]"
+              "source": "[YOU SAY: **देख / देखता / देखती / देखते** (*dekh / dekhtā / dekhtī / dekhte*)]"
+            },
+            {
+              "kind": "speech",
+              "text": "[YOU SAY (m.): मैं देखता हूँ, (f.): मैं देखती हूँ]."
             },
             {
               "kind": "prompt",
@@ -118,7 +122,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does देखना (dekhnā) mean? (\"to look, to see\".) Say it once more."
+              "text": "What does देखना mean? (\"to look, to see.\") Give its stem, then the masculine, feminine, and respectful or plural forms. (देख; देखता / देखती / देखते.)"
             }
           ]
         }
