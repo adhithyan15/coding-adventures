@@ -132,9 +132,9 @@ step, no artifact. The ordered queue below comes from that spec.
 1. **P0 [#14249](https://github.com/adhithyan15/coding-adventures/issues/14249):**
    restore Flutter's bundled Rust runtime after the current Linux runner image
    exposed a broken 3.44.0 native-asset bundle. The repair stages the runtime
-   through the hook-owned output directory and advances the pinned Flutter
-   toolchain to the locally verified 3.47.0 release, with native assets enabled
-   explicitly on every fresh runner. The validation lanes also finish Flutter's
+   through the hook-owned output directory while keeping the pinned 3.44.0
+   toolchain, with native assets enabled explicitly on every fresh runner. The
+   validation lanes also finish Flutter's
    native-asset installation when the tool leaves the registered library in its
    staging tree instead of the Linux bundle. **In progress.**
    This blocks validated Flutter/Linux release payloads, so it precedes the

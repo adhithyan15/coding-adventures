@@ -116,7 +116,7 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("needs_mosaic_flutter_runtime == 'true'", workflow)
         self.assertIn("timeout-minutes: 25", workflow)
         self.assertIn("uses: subosito/flutter-action@v2", workflow)
-        self.assertIn("flutter-version: '3.47.0'", workflow)
+        self.assertIn("flutter-version: '3.44.0'", workflow)
         self.assertIn("flutter config --enable-native-assets", workflow)
         self.assertIn("sudo apt-get install -y libgtk-3-dev", workflow)
         self.assertIn(
