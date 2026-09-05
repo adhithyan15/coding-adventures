@@ -903,6 +903,29 @@ decoded dependency digests, `dependencies_digest`, `combined_digest`, cache
 hit/miss/recovery classification, corrupt-cache diagnostics, and dependent
 invalidation remain the separate portable dependency-hashing contract.
 
+The Haskell package-local v1 adopter keeps one immutable native projection of
+the complete language registry beside the production collector. Its package-
+local tests decode the checked JSON registry, compare every field with that
+production projection, recompute the domain-separated digest, and exercise the
+same production selector against every package-local `source_collection` case.
+The executable does not locate or decode a repository fixture at runtime. It
+rejects unknown languages before enumeration, prunes exact generated components
+before applying selectors, and resolves all seven language-registry roles with
+their declared root, recursive, package, or scoped precedence.
+
+The Haskell collector retains one canonical package root, includes only stable
+regular descendants, and verifies link, containment, file, and directory state
+around bounded reads. Selected inputs are deduplicated by canonical repository-
+relative path, checked for portable NFC and platform-identity collisions,
+sorted by raw UTF-8 bytes, and fed in 8-KiB chunks to the repository SHA-256
+package using the Hashing v1 unsigned 64-bit big-endian path/content frames.
+Selection retains the shared candidate, selected-input, file-byte, package-byte,
+and declared-match-work ceilings and reports one stable redacted package-hash
+diagnostic on failure. Repository-boundary union, tracked-index proof, and exact
+reverse diff selection remain owned by the separate Haskell repository-boundary
+adoption child. Dependency hashing and cache classification remain owned by the
+separate Haskell dependency-hashing child.
+
 ### 6. Starlark
 
 Final parity requires:
