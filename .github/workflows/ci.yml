@@ -2205,12 +2205,7 @@ jobs:
           cmp "$task_runtime_library" "$bundled_taskapp_runtime"
           taskapp_log="$RUNNER_TEMP/mosaic-flutter-taskapp-launch.log"
           set +e
-          (
-            cd "$(dirname "$installed_taskapp")"
-            env -u MOSAIC_APP_LIBRARY \
-              LD_LIBRARY_PATH="$PWD/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-              xvfb-run -a timeout 8s "$installed_taskapp"
-          ) >"$taskapp_log" 2>&1
+          env -u MOSAIC_APP_LIBRARY xvfb-run -a timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
           taskapp_status=$?
           set -e
           test "$taskapp_status" -eq 124

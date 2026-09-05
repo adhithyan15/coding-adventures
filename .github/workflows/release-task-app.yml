@@ -404,7 +404,14 @@ jobs:
             mkdir -p "$(dirname "$runtime")"
             cp -- "$native_asset" "$runtime"
           fi
+          aot_library="$bundle/lib/libapp.so"
+          if [[ ! -s "$aot_library" ]]; then
+            staged_aot="$generated/build/lib/libapp.so"
+            test -s "$staged_aot"
+            cp -- "$staged_aot" "$aot_library"
+          fi
           cmp "$expected" "$runtime"
+          test -s "$aot_library"
           python code/scripts/taskapp_release.py archive-linux-bundle \
             --version "$RELEASE_VERSION" \
             --commit "$RELEASE_COMMIT" \

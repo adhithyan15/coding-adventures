@@ -17,11 +17,9 @@ toolchain and explicitly enable native assets instead of inheriting
 machine-global Flutter configuration. If Flutter leaves the registered asset in its native-assets
 staging tree instead of installing it, both lanes now finish that documented
 installation step into the application bundle before byte comparison and
-launch validation. The portable Linux launcher also exposes its private library
-directory to the dynamic loader, allowing Flutter's AOT library to resolve the
-bundled native asset, and starts the executable from the extracted bundle root
-so Flutter can resolve its AOT data on current Linux hosts. Together these
-changes restore `libmosaic_app.so` in Linux
+launch validation. The release lane similarly installs Flutter's staged
+`libapp.so` when the current host omits the AOT library from the final bundle.
+Together these changes restore `libmosaic_app.so` in Linux
 release bundles on fresh hosted runners and keep the executable launchable
 without an external runtime path.
 

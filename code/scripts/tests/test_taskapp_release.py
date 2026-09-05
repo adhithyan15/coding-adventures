@@ -161,8 +161,6 @@ def test_archives_verified_linux_bundle_with_launcher_contract(tmp_path: Path) -
     assert metadata["rustRuntime"] == "lib/libmosaic_app.so"
     assert "$XDG_DATA_HOME/task-app/mosaic-state.v1.json" == metadata["statePath"]
     assert "pre-v0.2.0-compose.json" in launcher
-    assert 'export LD_LIBRARY_PATH="$EXECUTABLE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"' in launcher
-    assert 'cd "$BUNDLE_DIR"' in launcher
     assert "Application identifier: task-app" in operations
     assert "mosaic-state.v1.json.corrupt" in operations
     assert launcher_mode & 0o111
@@ -450,6 +448,7 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "archive-linux-bundle" in workflow
     assert "createDistributable" in workflow
     assert "flutter build linux --release" in workflow
+    assert 'staged_aot="$generated/build/lib/libapp.so"' in workflow
     assert "cmake --install" in workflow
     assert "launch-trestle" in workflow
     assert "*.tar.gz" in workflow
