@@ -2482,6 +2482,12 @@ fn parse_element(
                     "BJT TNOM must be finite and positive",
                 ));
             }
+            let flicker_noise_coefficient = *model.params.get("KF").unwrap_or(&0.0);
+            if !flicker_noise_coefficient.is_finite() || flicker_noise_coefficient < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT KF must be finite and non-negative",
+                ));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2512,6 +2518,7 @@ fn parse_element(
             bjt.reverse_beta_rolloff_current = reverse_beta_rolloff_current;
             bjt.nominal_temperature_kelvin = nominal_temperature_kelvin
                 .map(|temperature_celsius| temperature_celsius + 273.15);
+            bjt.flicker_noise_coefficient = flicker_noise_coefficient;
             Ok(Element::Bjt(bjt))
         }
         'J' => {
