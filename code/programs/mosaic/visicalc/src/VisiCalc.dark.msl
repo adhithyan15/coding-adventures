@@ -1,5 +1,5 @@
 style VisiCalc {
-  part workbook { background: #14221e; color: #e3eee4; min-height: 100vh; padding: 24px; box-sizing: border-box; font-family: sans-serif; }
+  part workbook { color-scheme: dark; background: #14221e; color: #e3eee4; min-height: 100vh; padding: 24px; box-sizing: border-box; font-family: sans-serif; }
   part toolbar { padding: 12px 0px 28px; gap: 24px; align-items: center; flex-wrap: wrap; }
   part brand { gap: 4px; }
   part eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #a3b6aa; }
@@ -13,7 +13,7 @@ style VisiCalc {
   part sheet-toolbar { padding: 24px 2px 12px; gap: 16px; align-items: center; flex-wrap: wrap; }
   part sheet-name { font-size: 13px; font-weight: 700; flex: 1; }
   part sheet-hint { font-size: 12px; color: #a3b6aa; }
-  part sheet-frame { overflow: auto; min-width: 0px; border: 1px solid #32463b; border-radius: 8px; background: #1b2c25; }
+  part sheet-frame { max-height: 60vh; min-width: 0px; border: 1px solid #32463b; border-radius: 8px; background: #1b2c25; }
   part sheet { font-family: monospace; font-size: 13px; color: #e3eee4; background: #1b2c25; border-collapse: collapse; width: 100%; }
   part cell {
     border: 1px solid #32463b; padding: 6px 10px; height: 32px;
@@ -22,6 +22,7 @@ style VisiCalc {
     state editing { background: #514d30; color: #e3eee4; outline: 2px solid #9bd3ad; outline-offset: 0px; }
   }
   part header-cell { background: #14221e; color: #a3b6aa; font-weight: 600; text-align: center; border: 1px solid #32463b; height: 32px; min-width: 72px; line-height: 32px; box-sizing: border-box; }
+  part column-headings { position: sticky; top: 0px; z-index: 1; }
   part header-row { height: 32px; }
   part data-row { height: 32px; }
 }

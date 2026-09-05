@@ -22,7 +22,7 @@ layout VisiCalc {
       Text [sheet-name] (content: "Sheet 1")
       Text [sheet-hint] (content: "Enter to apply · Esc to cancel")
     }
-    Column [sheet-frame] {
+    HostScroll [sheet-frame] {
       pkg::mosaic-pkg-grid::Grid (
       viewport-rows: slot: viewport-rows,
       column-headers: slot: column-headers,
