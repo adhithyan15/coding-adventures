@@ -11,12 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 14393,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/14393",
+    "branch": "codex/ocaml-representative-core",
+    "item_id": "ocaml-representative-core",
+    "opened_at": "2026-09-05T22:23:52Z",
+    "opened_revision": "42a1b84a9c0b69f6b32c28a01aab970a458a73fa"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-05T19:53:45Z",
-    "pr_number": 14366,
-    "status": "merged",
-    "notes": "PR #14366 completed all 42 final-head checks acceptably and GitHub reported CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that terminal check and conflict audit, and GitHub merged the PR immediately at 2026-09-05T19:53:45Z as 8b8ce4b3c8edd10923cfeb0f693717741fe665df without a plain manual merge command."
+    "observed_at": "2026-09-05T22:24:11Z",
+    "pr_number": 14393,
+    "status": "pending",
+    "notes": "PR #14393 is the sole active parity PR. GitHub reports the ready-for-review exact opened head mergeable and conflict-free, with both CI detects, CodeQL language detection, human-language detection, and both OCAML03 contract jobs queued or in progress. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable and no merge conflict exists."
   },
   "last_inventory": {
     "revision": "8e52198a5ba63fab43f62037d2367e1bd8fab759",
@@ -2696,10 +2703,13 @@
     {
       "id": "ocaml-representative-core",
       "title": "Port logic-gates, graph, directed-graph, and state-machine to OCaml",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["ocaml-build-substrate-process-free-core", "ocaml-ci-toolchain"],
       "branch": "codex/ocaml-representative-core",
-      "pr_number": null,
+      "pr_number": 14393,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14393",
+      "opened_at": "2026-09-05T22:23:52Z",
+      "opened_revision": "42a1b84a9c0b69f6b32c28a01aab970a458a73fa",
       "selected_at": "2026-09-05T20:03:20Z",
       "selection_revision": "8b8ce4b3c8edd10923cfeb0f693717741fe665df",
       "selection_notes": "Selected after PR #14366 completed all 42 final-head checks acceptably and GitHub merged the reviewed Haskell hashing head through guarded squash auto-merge as 8b8ce4b3c8edd10923cfeb0f693717741fe665df. The exact-main collision-checked schema-3 inventory remains identity-neutral at 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel read-only audits registered missing Elixir and Go native snapshot-stability boundaries, decomposed ct-compare into a neutral contract and five lane leaves, confirmed Swift's existing Git-index repair owner, and froze the exact four-package OCaml API, fixture, dependency, coverage, and metadata plan. The reconciled 724-owner/1,196-edge graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges. Both OCaml prerequisites are merged; this owner immediately unlocks three selectable children and has eighteen unfinished descendants, ten non-selection-blocked, making it the highest practical ready item in the durable language/build-tool frontier. The fresh worktree and branch were created from exact merged main before any implementation, no parity PR is active, and this tranche remains limited to logic-gates, graph, directed-graph, state-machine, OCAML05, the stale OCAML04 status correction, package metadata, tests, documentation, and the minimum guarded generic-CI opam bootstrap without absorbing package-specific hosted execution or native build-tool execution.",
@@ -2710,6 +2720,7 @@
       "implementation_notes": "OCAML05 now defines the fixed representative APIs and generic-CI boundary. Four Dune/opam packages implement logic gates, generic undirected graph, generic directed/labeled graph, and bounded DFA/NFA/PDA/modal state machines with public odoc interfaces, changelogs, licenses, capability manifests, BUILD fronts, strict local dependency pins, and a tracked installed-consumer fixture. The generic workflow adds one guarded checksum-enforcing OCaml setup and serialized invocation path while leaving exact three-platform package execution in its separate owner. Parallel audits also tightened caller-supplied counter invariants, removed an unreachable error constructor, completed labeled-graph delegation, registered the package-execution release gates, and added the neutral graph/diff corpus prerequisite to the native OCaml build tool.",
       "validation_notes": "All 39 Alcotest cases pass across the four packages; clean coverage runs report 97.35% logic-gates, 97.07% graph, 98.72% directed-graph, and 96.64% state-machine production lines. Strict opam lint, ocamlformat, release @install, package licenses, source/install manifests, and the full and leaf-only downstream fixture pass. The four README examples compile and run against the installed packages. The OCaml lock suite passes 50 tests with two expected unprivileged-Windows symlink skips, repository validation and focused Ruff checks pass, and post-rebase review confirms the workflow retains main's 15-shard/npm repairs plus every guarded OCaml setup, checksum, platform, and serialization requirement. The Go build tool test/vet/trimpath build and the schema-3 collision report pass; the refreshed report remains 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, four emerging OCaml packages, zero collisions, and zero unknown buckets. The 725-owner/1,200-edge state graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 209 merged, 515 pending, and one in progress.",
       "final_review_notes": "The exact 83-path diff is whitespace-clean, contains no generated OCaml build or coverage artifacts, and has zero path overlap with all six open pull requests. Source archive inspection finds only tracked package inputs and includes README, changelog, and license for every package. Credential review finds only the exact reviewed GitHub token flow into the commit-pinned setup-ocaml action and its negative mutation test. Post-rebase capability taxonomy and manifest suites pass 13 tests, the lock suite and archive checks pass again, and no implementation, dependency, packaging, capability, credential, or publication blocker remains. Three parallel read-only audits preserve exact post-merge plans for package-specific three-platform execution, a compiler-libs capability analyzer, 16 language-neutral build-tool adapter leaves, and the first 20 Java/Kotlin/Dart/Swift high-consensus decomposition owners without mutating this serial implementation slice.",
+      "publication_notes": "Opened ready-for-review PR #14393 after a normal first push from exact origin/main 8e52198a5ba63fab43f62037d2367e1bd8fab759. Immediately before publication, the worktree was clean, the target remote branch and prior same-branch PR were absent, no parity PR was active, all six open PRs had zero exact changed-path overlap, and package, coverage, install, archive, downstream, lock, capability, Go build-tool, parity, state-DAG, security, and diff gates were acceptable. GitHub reports the exact opened head mergeable with initial CI, CodeQL, human-language, and OCaml toolchain checks queued or in progress; auto-merge remains disabled until all required checks are terminal and acceptable.",
       "rebase_notes": "Rebased without conflict before publication onto exact origin/main 8e52198a5ba63fab43f62037d2367e1bd8fab759. Six intervening SPICE, Mosaic, generic-CI, Hindi, and UI documentation commits plus the later Rust language-VM delimiter-indexing repair add no recognized package identity or state owner. Only generic ci.yml overlaps: the automatic merge preserves main's 15-shard rebalance and five pinned npm repair installs alongside the complete OCaml matrix, setup, checksum bootstrap, Windows retention, and conditional -jobs 1 behavior. The exact-main inventory counts remain unchanged apart from this tranche's four emerging OCaml packages, and the ownership graph remains complete and acyclic at 725 owners and 1,200 edges.",
       "notes": "This dependency chain validates opam metadata, process-free resolver edges, BUILD order, affected-node expansion, and the minimum guarded generic-CI bootstrap without claiming package-specific hosted execution or execution-coupled substrate completion. OCAML04's stale status is corrected to merged PR #13366; the separate package-CI owner retains exact Ubuntu/macOS/Windows execution, numeric coverage, archive, installed-consumer, odoc, and retained-evidence proof."
     },
