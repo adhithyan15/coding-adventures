@@ -9,8 +9,8 @@
 //! `Language::McCarthyLisp` → `Language::Macsyma`, `mccarthy_lisp_vm::run` →
 //! `macsyma_vm::run` — scoped to the five backends `macsyma-iir-vm.md` §6 Wave 4
 //! names (NativeAOT arm64/x86_64, LLVM, WASM, JVM, CLR), plus the universal JIT.
-//! BEAM remains scoped out repo-wide for non-McCarthy languages
-//! (`code/specs/LANG-PLATFORM-MATRIX.md`).
+//! This suite does not yet exercise Macsyma on BEAM. Other frontends have
+//! selected BEAM proofs; this omission is a Macsyma coverage gap (VM-038).
 //!
 //! ## The one genuine risk this suite is built to catch
 //!

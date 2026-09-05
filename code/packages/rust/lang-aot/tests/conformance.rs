@@ -1,12 +1,12 @@
 //! # Cross-backend McCarthy conformance suite — W16 (the capstone).
 //!
 //! One table of McCarthy 1960 LISP programs × **every** LANG VM backend, each
-//! asserting the *identical* result. This is the proof that McCarthy is complete
-//! and **uniform** across the whole platform — the same source, compiled through
-//! eight independent code generators and three value models, computes the same
-//! number.
+//! asserting the *identical* result for the scalar-result F1-F7 corpus. The
+//! table covers nine runner lanes (including both CLR simulator and real CLR);
+//! native AOT is currently macOS-only. Higher-order and representation-specific
+//! proofs live in the dedicated feature suites, not this table.
 //!
-//! ## The eight backends and how each is RUN
+//! ## The nine runner lanes and how each is RUN
 //!
 //! | backend     | value model    | runner (in-process unless noted)              |
 //! |-------------|----------------|-----------------------------------------------|

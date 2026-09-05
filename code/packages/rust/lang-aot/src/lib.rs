@@ -16,15 +16,22 @@
 //!
 //! ## Supported languages today
 //!
-//! | Language | Status | Frontend crate |
-//! |---|---|---|
-//! | Twig            | full | `twig-ir-compiler` |
-//! | Nib             | full | `nib-iir-compiler` |
-//! | Brainfuck       | full | `brainfuck-iir-compiler` |
-//! | Dartmouth BASIC | full (integer subset) | `dartmouth-basic-iir-compiler` |
-//! | Oct             | full (integer subset; 8008 intrinsics rejected) | `oct-iir-compiler` |
-//! | ALGOL 60        | scalar integer/boolean subset | `algol-iir-compiler` |
-//! | Macsyma          | v0: integer arithmetic/assignment/unevaluated symbolic `Apply` | `macsyma-iir-compiler` |
+//! All ten variants below are wired through the shared IIR driver. Coverage is
+//! feature-specific; see `code/specs/LANG-VM-FEATURE-COVERAGE.md` for executable
+//! proofs, backend exclusions and follow-up work.
+//!
+//! | Language | Frontend crate |
+//! |---|---|
+//! | Twig | `twig-ir-compiler` |
+//! | Nib | `nib-iir-compiler` |
+//! | Brainfuck | `brainfuck-iir-compiler` |
+//! | Dartmouth BASIC | `dartmouth-basic-iir-compiler` |
+//! | Oct | `oct-iir-compiler` |
+//! | McCarthy Lisp | `mccarthy-lisp-iir-compiler` |
+//! | ALGOL 60 | `algol-iir-compiler` |
+//! | FLOW-MATIC | `flow-matic-iir-compiler` |
+//! | COBOL-60 | `cobol-iir-compiler` |
+//! | Macsyma | `macsyma-iir-compiler` |
 //!
 //! ## How to add a language
 //!
@@ -37,8 +44,8 @@
 //! 3. Add a file extension to [`detect_language_from_path`].
 //! 4. Add a smoke test.
 //!
-//! No backend changes required — every frontend gets x86-64 Linux,
-//! x86-64 Windows, and ARM64 macOS for free via the shared chain.
+//! Shared backend entry points are available to every frontend. New features
+//! still need lowering support and executed conformance on each target.
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
@@ -63,7 +70,7 @@ pub enum Language {
     /// Brainfuck — minimalist tape language; `brainfuck-iir-compiler` frontend
     /// lowered for AOT by `lower_brainfuck_for_aot`.
     Brainfuck,
-    /// Dartmouth BASIC — integer subset (PRINT/LET/FOR/GOTO/IF) via the
+    /// Dartmouth BASIC — real arithmetic, control flow, arrays, strings and I/O via the
     /// `dartmouth-basic-iir-compiler` Rust frontend over the shared IIR.
     DartmouthBasic,
     /// Oct — integer subset (let/if/while/calls) via the `oct-iir-compiler`
@@ -72,12 +79,13 @@ pub enum Language {
     /// McCarthy Lisp — the 1960 Lisp 1.0, compiled via
     /// `mccarthy-lisp-iir-compiler` over the `lispy-runtime` value model.
     McCarthyLisp,
-    /// ALGOL 60 — scalar integer/boolean subset over the shared IIR.
+    /// ALGOL 60 — scalars, arrays, procedures and control flow over shared IIR;
+    /// full matrix coverage is tracked by the separate ALGOL campaign.
     Algol60,
     /// FLOW-MATIC (B-0) — the control-flow + scalar-field slice via the
     /// `flow-matic-iir-compiler` frontend; `main` returns an i64 exit code.
     FlowMatic,
-    /// COBOL-60 — the `DISPLAY`/`MOVE`/`STOP RUN` slice over PICTURE-typed
+    /// COBOL-60 — arithmetic, control flow and string operations over PICTURE-typed
     /// WORKING-STORAGE via the `cobol-iir-compiler` frontend; `main` returns an
     /// i64 exit code.
     Cobol60,

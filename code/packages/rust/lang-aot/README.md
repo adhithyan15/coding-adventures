@@ -1,5 +1,8 @@
 # lang-aot
 
+See the [feature/backend coverage audit](../../../specs/LANG-VM-FEATURE-COVERAGE.md)
+for all ten frontends, executable proofs, host gates and remaining work.
+
 GC-linked integration tests use the static archive path reported by Cargo, so
 `CARGO_TARGET_DIR` and Cargo-configured artifact directories are respected.
 `cargo test -p lang-aot --test cargo_archive_path` checks artifact selection and
