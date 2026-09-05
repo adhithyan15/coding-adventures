@@ -462,3 +462,9 @@ a detected toolchain cannot silently skip. The unfiltered matrix and its
 single-cell diagnostics remain available. Full ALGOL matrix CI is tracked as
 VM-025 in `LANG-VM-NON-ALGOL-BACKLOG.md`. The Windows Rust-only CI leg retains
 its dedicated native smoke gate; this BUILD command runs on Linux/macOS CI.
+
+
+The VM-047a INSPECT tallying corpus compares ALL, CHARACTERS and LEADING with
+frontend oracle output and the seven standard LANG matrix backends. It observes
+nonzero counters, zero matches, padded field widths and reassigned items.
+These ASCII proofs do not establish replacement or BEFORE/AFTER region parity.

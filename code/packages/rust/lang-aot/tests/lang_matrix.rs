@@ -6023,6 +6023,81 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("[A  ]\n[B  ]\nYES"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // INSPECT all accumulates: observe counters after each operation.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(11) VALUE \"MISSISSIPPI\".\n\
+               000000 01 DL PIC X VALUE \"S\".\n\
+               000000 01 C PIC 9(3) VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL DL.\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"Z\".\n\
+               000000 DISPLAY C.\n\
+               000000 MOVE \"I\" TO DL.\n\
+               000000 INSPECT S TALLYING C FOR ALL DL.\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("009\n009\n013"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT characters counts padding: observe counters after each operation.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB\".\n\
+               000000 01 C PIC 9(3) VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR CHARACTERS.\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR CHARACTERS.\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("011\n017"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT leading stops at first mismatch: observe counters after each operation.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"00X00\".\n\
+               000000 01 DL PIC X VALUE \"0\".\n\
+               000000 01 C PIC 9(3) VALUE 5.\n\
+               000000 01 A PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR LEADING DL.\n\
+               000000 INSPECT S TALLYING A FOR ALL DL.\n\
+               000000 DISPLAY C.\n\
+               000000 DISPLAY A.\n\
+               000000 MOVE \"X0000\" TO S.\n\
+               000000 INSPECT S TALLYING C FOR LEADING DL.\n\
+               000000 DISPLAY C.\n\
+               000000 MOVE \"00000\" TO S.\n\
+               000000 INSPECT S TALLYING C FOR LEADING DL.\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("007\n004\n007\n012"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

@@ -183,3 +183,9 @@ assert!(module.validate().is_empty());
   `cobol-runtime` oracle).
 * `lang-aot/tests/lang_matrix.rs` carries the COBOL rows proven across the backend
   columns.
+
+
+The VM-047a INSPECT tallying corpus compares ALL, CHARACTERS and LEADING with
+frontend oracle output and the seven standard LANG matrix backends. It observes
+nonzero counters, zero matches, padded field widths and reassigned items.
+These ASCII proofs do not establish replacement or BEFORE/AFTER region parity.

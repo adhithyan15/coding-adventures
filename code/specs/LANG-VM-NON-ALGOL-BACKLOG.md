@@ -31,6 +31,13 @@ INSPECT oracle suite and focused Clippy, and update the coverage inventory,
 README and changelog. Any observed lowering defect gets a separate committed
 repair contract before a fix. Replacement and region proofs remain later slices.
 
+VM-047a local execution: rows 424–426 passed all 21 standard-backend cells
+in fresh processes with positive single-cell sentinels and no skips. All 287
+INSPECT JIT/oracle tests passed, including the three identical matrix sources.
+Focused Clippy passed with warnings denied. No lowering repair was needed.
+The corpus now contains 427 rows, including 47 COBOL rows; the non-ALGOL
+capstone declares 195 programs and 1385 cells including 20 Twig BEAM cells.
+
 ## Prioritization policy
 
 Re-rank before selecting every work item, and whenever current work discovers a
