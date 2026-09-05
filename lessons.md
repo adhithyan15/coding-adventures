@@ -6756,3 +6756,5 @@ Two notes on how it was handled:
   as the allowlist.
 
 - **Scope workflow wiring tests to the owning job before matching step names.** CI repeats `Set up Rust` across contract and build jobs. VM-032 initially matched an unrelated contract setup step and falsely reported a missing runtime flag. Inspect the build job specifically, then assert its selection, toolchain, and execution guards together.
+
+- **Shared Cargo test helpers may assume workspace/target even when Cargo honors CARGO_TARGET_DIR.** VM-024 reused a target directory, but lang-aot tests/common built gc-core-capi there and looked only in the new workspace target/release. Validate with the default layout until archive discovery follows Cargo artifact metadata; a missing guessed archive is not a compiler semantic failure (VM-035).
