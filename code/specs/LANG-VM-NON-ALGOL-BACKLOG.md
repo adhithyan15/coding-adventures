@@ -63,6 +63,26 @@ VM-033 (Windows text-output newlines), which now precedes coverage work. After
 that repair, missing Windows runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
 otherwise this exact regression can recur despite a green Windows job.
 
+## VM-046b implementation contract (selected after #14377 merged)
+
+PR #14377 merged as `b071b0493c` with all checks green at `3a68a24c33`.
+VM-046a and discovered VM-053 are complete. Its full local non-ALGOL matrix
+passed 179 programs / 1273 cells with zero skips. Reprioritization finds no
+remaining observed red cell ahead of VM-046b; ALGOL stays separately owned.
+
+Add bounded ASCII STRING delimiter and UNSTRING splitting programs on all
+seven standard columns. STRING must stop each sender at its first delimiter,
+including absent/leading delimiters and an item delimiter, while preserving
+the receiver tail. UNSTRING must fit fields to receiver widths, space-fill
+empty fields, drop excess fields and leave unused receivers unchanged after
+source exhaustion. Use visible markers around receivers to retain padding and
+empty-field evidence. Cover literal and item delimiters with existing oracle
+semantics; pointer and overflow branches remain VM-046c. Execute each new cell
+in a fresh process with a ran-cell sentinel, run frontend oracle checks and
+focused lint, and update source-linked inventory counts. Normal non-ALGOL BUILD
+must include every row. Log and prioritize any actual backend defect before
+claiming these cells proven; commit repair contracts before implementation.
+
 ## VM-046a implementation contract (selected after #14370 merged)
 
 PR #14370 merged as `8504430394` after all current-head checks passed on
@@ -72,8 +92,8 @@ No red cell supersedes the next coverage item. Split VM-046 into small proofs:
 
 | Priority | Slice | Acceptance |
 |---|---|---|
-| selected | VM-046a | STRING DELIMITED BY SIZE: full source widths/spaces, mixed literal/item input, receiver truncation and preservation of a nonblank untouched tail. |
-| next | VM-046b | STRING delimiters and UNSTRING basic splitting: empty fields, receiver fitting and untouched receivers after source exhaustion. |
+| done #14377 | VM-046a | STRING DELIMITED BY SIZE: full source widths/spaces, mixed literal/item input, receiver truncation and preservation of a nonblank untouched tail. |
+| selected | VM-046b | STRING delimiters and UNSTRING basic splitting: empty fields, receiver fitting and untouched receivers after source exhaustion. |
 | then | VM-046c | STRING/UNSTRING pointer updates and overflow branches with distinguishable outputs. |
 
 VM-046a adds canonical ASCII programs declaring all seven standard backends.
