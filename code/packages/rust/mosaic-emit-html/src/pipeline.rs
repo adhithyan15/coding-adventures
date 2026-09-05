@@ -45,6 +45,11 @@
 //!    is *not* an error; it simply produces no attribute on the element.
 //!    A `<!-- emit dropped -->` comment is emitted at the point of the drop
 //!    so the generated HTML is self-documenting.
+//! 4. **`one-of` slot states are snapshot data.**
+//!    [`from_pipeline_with_slot_values`] bakes the supplied closed slot values
+//!    into inline styles. Missing or invalid values keep the base style, and
+//!    multiple axes merge in `.mil` declaration order. Standalone/project
+//!    output uses each axis's deterministic first-member sample.
 //!
 //! ## Primitive coverage
 //!
@@ -327,7 +332,16 @@ pub fn from_pipeline_with_options(
     style: &StyleDef,
     options: &EmitOptions,
 ) -> Result<PipelineEmitResultWithProject, PipelineEmitError> {
-    let component = from_pipeline(interface, layout, style)?;
+    // A standalone HTML project is a deterministic static snapshot. Its
+    // generated fallback props already choose the first legal member of every
+    // `one-of` slot, so bake those same values into slot-owned styles. Keeping
+    // the two samples aligned prevents the shell from saying `danger` while
+    // still painting the base/primary appearance.
+    let component = if options.emit_project {
+        from_pipeline_with_sample_slot_values(interface, layout, style)?
+    } else {
+        from_pipeline(interface, layout, style)?
+    };
 
     let project = if options.emit_project {
         Some(build_html_project_files(interface, &component.output))
@@ -1242,6 +1256,21 @@ pub fn from_pipeline(
     layout: &LayoutDef,
     style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
+    from_pipeline_with_slot_values(interface, layout, style, &HashMap::new())
+}
+
+/// Compile a static HTML snapshot with explicit values for `one-of` slots.
+///
+/// Keys use authored `.mil` slot names. A value activates only the state owned
+/// by that slot; missing and invalid values fall through to the part's base
+/// style. When several slot axes are supplied, their states merge in `.mil`
+/// declaration order, matching UI49 precedence.
+pub fn from_pipeline_with_slot_values(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    slot_values: &HashMap<String, String>,
+) -> Result<PipelineEmitResult, PipelineEmitError> {
     // Reset the per-call HostDialog id counter so two emits of the same
     // input produce byte-identical output.
     reset_dialog_id_counter();
@@ -1257,7 +1286,7 @@ pub fn from_pipeline(
     }
 
     let name = &interface.component;
-    let part_styles = build_part_style_map(style);
+    let part_styles = build_part_style_map(interface, style, slot_values);
 
     // 2. Emit the banner + component-tagged root wrapper. The wrapper
     //    carries `data-mosaic-component="<Name>"` so a hydrator (or a
@@ -1273,15 +1302,31 @@ pub fn from_pipeline(
     out.push_str(&emit_html_tree(&layout.root, 2, &part_styles)?);
     writeln!(out, "</div>").unwrap();
 
-    // The mosmodel `interface` is otherwise unused at this layer — slot
-    // values become `{{slotName}}` template tokens during the tree walk,
-    // and emits are dropped entirely. Silence the unused warning.
-    let _ = interface;
-
     Ok(PipelineEmitResult {
         output: out,
         component_name: name.clone(),
     })
+}
+
+/// Compile the deterministic design-review snapshot used by package/project
+/// output. Every `one-of` slot selects its first legal value, the same sample
+/// already emitted by `build_fallback_props_json` for the standalone shell.
+pub fn from_pipeline_with_sample_slot_values(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+) -> Result<PipelineEmitResult, PipelineEmitError> {
+    let slot_values = interface
+        .slots
+        .iter()
+        .filter_map(|slot| match &slot.r#type {
+            SlotType::OneOf(values) => values
+                .first()
+                .map(|value| (slot.name.clone(), value.clone())),
+            _ => None,
+        })
+        .collect();
+    from_pipeline_with_slot_values(interface, layout, style, &slot_values)
 }
 
 // =====================================================================
@@ -3241,13 +3286,37 @@ fn emit_host_surface_html(
 ///
 /// The HTML backend speaks CSS shorthand (`background: #eee; padding: 8px`)
 /// rather than the React backend's CSS-in-JS form
-/// (`background: "#eee", padding: "8px"`). State blocks (`state hover { ... }`)
-/// are ignored here — they'd need a `<style>`-block detour with
-/// pseudo-class selectors, which is out of scope for this PR.
-fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
+/// (`background: "#eee", padding: "8px"`). Built-in interaction and
+/// structural states remain ignored: a static snapshot cannot hover, press,
+/// focus, or acquire a loop index. UI49 slot-owned states are different — the
+/// caller supplies their closed values at snapshot time, so their properties
+/// are appended after the base in `.mil` slot order.
+fn build_part_style_map(
+    interface: &MosmodelComponent,
+    style: &StyleDef,
+    slot_values: &HashMap<String, String>,
+) -> HashMap<String, String> {
     let mut out = HashMap::with_capacity(style.parts.len());
     for part in &style.parts {
-        let frag = build_inline_css_fragment(&part.base);
+        let mut props = part.base.clone();
+        for slot in &interface.slots {
+            let SlotType::OneOf(legal_values) = &slot.r#type else {
+                continue;
+            };
+            let Some(active_value) = slot_values.get(&slot.name) else {
+                continue;
+            };
+            if !legal_values.contains(active_value) {
+                continue;
+            }
+            if let Some(state) = part.states.iter().find(|state| {
+                state.slot.as_deref() == Some(slot.name.as_str()) && state.state == *active_value
+            }) {
+                props.extend(state.props.iter().cloned());
+            }
+        }
+
+        let frag = build_inline_css_fragment(&props);
         if !frag.is_empty() {
             out.insert(part.name.clone(), frag);
         }
@@ -3613,7 +3682,7 @@ mod tests {
     use mosmodel_compiler::{
         EmitDecl, EmitParam, EmitPayloadType, ListInnerType, SlotDecl, SlotType,
     };
-    use mosstyle_compiler::{PartStyle, StyleDef, StyleProp};
+    use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp};
 
     // ---------------------------------------------------------------
     // Builder helpers — keep tests terse and intention-revealing.
@@ -3876,6 +3945,177 @@ mod tests {
                 .output
                 .contains("style=\"padding: 8px; background: #eee\""),
             "expected inline style from part, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn one_of_slot_state_bakes_supplied_snapshot_value() {
+        let m = component(
+            "Button",
+            vec![SlotDecl {
+                name: "variant".to_string(),
+                r#type: SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                required: false,
+                default: None,
+            }],
+        );
+        let style = StyleDef {
+            component_name: "Button".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#0d6efd".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    state: "danger".to_string(),
+                    slot: Some("variant".to_string()),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#dc3545".to_string(),
+                    }],
+                    transitions: vec![],
+                }],
+            }],
+        };
+        let values = HashMap::from([("variant".to_string(), "danger".to_string())]);
+
+        let result = from_pipeline_with_slot_values(
+            &m,
+            &layout("Button", node_with_part("HostButton", "button")),
+            &style,
+            &values,
+        )
+        .expect("emit ok");
+
+        assert!(
+            result
+                .output
+                .contains("background: #0d6efd; background: #dc3545"),
+            "expected danger state after the base style, got:\n{}",
+            result.output
+        );
+    }
+
+    #[test]
+    fn absent_or_invalid_one_of_snapshot_value_keeps_base_style() {
+        let m = component(
+            "Button",
+            vec![SlotDecl {
+                name: "variant".to_string(),
+                r#type: SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                required: false,
+                default: None,
+            }],
+        );
+        let style = StyleDef {
+            component_name: "Button".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#0d6efd".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    state: "danger".to_string(),
+                    slot: Some("variant".to_string()),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#dc3545".to_string(),
+                    }],
+                    transitions: vec![],
+                }],
+            }],
+        };
+        let l = layout("Button", node_with_part("HostButton", "button"));
+
+        let absent = from_pipeline_with_slot_values(&m, &l, &style, &HashMap::new())
+            .expect("unset snapshot should emit");
+        let invalid = from_pipeline_with_slot_values(
+            &m,
+            &l,
+            &style,
+            &HashMap::from([("variant".to_string(), "missing".to_string())]),
+        )
+        .expect("invalid snapshot should emit the base");
+
+        for output in [absent.output, invalid.output] {
+            assert!(output.contains("background: #0d6efd"), "output:\n{output}");
+            assert!(!output.contains("#dc3545"), "output:\n{output}");
+        }
+    }
+
+    #[test]
+    fn one_of_snapshot_states_follow_model_slot_order() {
+        let m = component(
+            "Card",
+            vec![
+                SlotDecl {
+                    name: "variant".to_string(),
+                    r#type: SlotType::OneOf(vec!["danger".to_string()]),
+                    required: false,
+                    default: None,
+                },
+                SlotDecl {
+                    name: "size".to_string(),
+                    r#type: SlotType::OneOf(vec!["compact".to_string()]),
+                    required: false,
+                    default: None,
+                },
+            ],
+        );
+        let style = StyleDef {
+            component_name: "Card".to_string(),
+            parts: vec![PartStyle {
+                name: "root".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#ffffff".to_string(),
+                }],
+                transitions: vec![],
+                states: vec![
+                    StateStyle {
+                        state: "compact".to_string(),
+                        slot: Some("size".to_string()),
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#222222".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                    StateStyle {
+                        state: "danger".to_string(),
+                        slot: Some("variant".to_string()),
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#dc3545".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                ],
+            }],
+        };
+        let values = HashMap::from([
+            ("size".to_string(), "compact".to_string()),
+            ("variant".to_string(), "danger".to_string()),
+        ]);
+
+        let result = from_pipeline_with_slot_values(
+            &m,
+            &layout("Card", node_with_part("Box", "root")),
+            &style,
+            &values,
+        )
+        .expect("emit ok");
+
+        assert!(
+            result
+                .output
+                .contains("background: #ffffff; background: #dc3545; background: #222222"),
+            "expected variant then size state order, got:\n{}",
             result.output
         );
     }
@@ -6310,6 +6550,53 @@ mod tests {
         assert!(
             r.project.is_some(),
             "emit_project: true must produce a shell"
+        );
+    }
+
+    #[test]
+    fn ui49_project_snapshot_style_matches_first_member_fallback_prop() {
+        let m = component(
+            "Button",
+            vec![SlotDecl {
+                name: "variant".to_string(),
+                r#type: SlotType::OneOf(vec!["danger".to_string(), "primary".to_string()]),
+                required: false,
+                default: None,
+            }],
+        );
+        let l = layout("Button", node_with_part("HostButton", "button"));
+        let s = StyleDef {
+            component_name: "Button".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    state: "danger".to_string(),
+                    slot: Some("variant".to_string()),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#dc3545".to_string(),
+                    }],
+                    transitions: vec![],
+                }],
+            }],
+        };
+
+        let r = from_pipeline_with_options(
+            &m,
+            &l,
+            &s,
+            &EmitOptions { emit_project: true },
+        )
+        .expect("project snapshot should emit");
+        let project = r.project.expect("project shell expected");
+
+        assert!(r.output.contains("background: #dc3545"), "{}", r.output);
+        assert!(
+            project.main_js.contains("\"variant\": \"danger\""),
+            "{}",
+            project.main_js
         );
     }
 

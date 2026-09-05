@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added - static UI49 one-of slot-state snapshots (#14368)
+
+The three-file HTML pipeline can now bake explicitly supplied `one-of` slot
+values into their model-owned mosstyle states. Missing or invalid values retain
+the base style, multiple axes compose in `.mil` declaration order, and built-in
+interaction/structural states remain unselected in static output. Package and
+standalone-project snapshots use the same first-member samples already written
+to generated fallback props.
+
 ### Fixed - preserve HostInput accessible names (#13717)
 
 Static HTML now emits literal and slot-backed `HostInput.a11y-label` values as

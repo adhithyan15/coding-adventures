@@ -15,9 +15,10 @@
 > lane (#13543) has published `task-app-v0.1.0`. The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
-> SwiftUI in #14331, Qt in #14344, and Flutter in #14353. The current dependency
-> is #14359, the XAML runtime lowering within #14036. The remaining backends and toolkit
-> retrofits still precede stories or trustworthy TaskApp composition coverage.
+> SwiftUI in #14331, Qt in #14344, Flutter in #14353, and XAML in #14362. The
+> current dependency is #14368, the static HTML snapshot lowering within
+> #14036. The remaining Paint lowering and toolkit retrofits still precede
+> stories or trustworthy TaskApp composition coverage.
 >
 > The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
 > Phase 5, on components that are already proven in isolation. Until then the
