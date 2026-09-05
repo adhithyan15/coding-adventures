@@ -2629,7 +2629,17 @@ fn emit_paired_children(
         }
         // Orphan Else falls through to the standalone routing in
         // `emit_widget_tree`, which emits a documenting placeholder.
-        let sub = emit_widget_tree(child, indent, part_styles, component, emits, ctx)?;
+        let flex = ctx
+            .direct_row_child
+            .then(|| part_flex_grow(child, part_styles))
+            .flatten();
+        // This children list owns the explicit flex wrapper. Do not also let
+        // HostInput synthesize its default Expanded around the same TextField.
+        let child_ctx = TableCtx {
+            direct_row_child: ctx.direct_row_child && flex.is_none(),
+            ..ctx
+        };
+        let sub = emit_widget_tree(child, indent, part_styles, component, emits, child_ctx)?;
         let sub = sub.trim_end_matches('\n');
         // A direct `Row` child (e.g. the app-shell's `main` column,
         // `flex-grow: 1`) needs to be `Expanded` for its declared
@@ -2640,11 +2650,7 @@ fn emit_paired_children(
         // behaviour instead). `Expanded` is a compile error outside a
         // `Row`/`Column`, hence the `ctx.direct_row_child` gate.
         let expanded;
-        let sub: &str = match ctx
-            .direct_row_child
-            .then(|| part_flex_grow(child, part_styles))
-            .flatten()
-        {
+        let sub: &str = match flex {
             Some(flex) => {
                 expanded = format!("Expanded(flex: {flex}, child: {sub})");
                 &expanded
@@ -7752,6 +7758,24 @@ mod tests {
             "a direct Row input must be flex-constrained:\n{}",
             r.output
         );
+
+        let mut styled_layout = l.clone();
+        styled_layout.root.children[0].part_name = Some("address".into());
+        let style = StyleDef {
+            component_name: "BrowserChrome".into(),
+            parts: vec![PartStyle {
+                name: "address".into(),
+                base: vec![StyleProp {
+                    name: "flex-grow".into(),
+                    value: "2".into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let styled = from_pipeline(&m, &styled_layout, &style).unwrap().output;
+        assert_eq!(styled.matches("Expanded(").count(), 1, "{styled}");
+        assert!(styled.contains("Expanded(flex: 2, child:"), "{styled}");
     }
 
     /// Regression: `HostInput { onChange: emit: onFormulaChange }`

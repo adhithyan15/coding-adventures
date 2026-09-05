@@ -5,6 +5,10 @@ this file.
 
 ## [Unreleased]
 
+- Emit one Expanded wrapper for a direct Row input with explicit flex-grow.
+  Preserve the declared flex weight without nesting the input's default wrapper,
+  which caused Flutter ParentDataWidget assertions in Venture's live shell.
+
 ### Fixed — a `list<list<text>>` slot never read the host
 
 A slot typed as a list of rows fell through the host-binding match to the
