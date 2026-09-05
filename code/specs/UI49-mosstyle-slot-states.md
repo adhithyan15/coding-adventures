@@ -117,9 +117,9 @@ native enums instead of stringly-typed values.
 The `one-of` syntax and compiler IR landed in #14210, and model-aware style
 validation plus state-to-slot ownership landed in #14300. React activation
 landed in #14306, followed by WebComponent runtime activation in #14314.
-Compose runtime activation landed in #14322. SwiftUI runtime activation
-continues in #14330; the remaining lowerings and toolkit retrofits stay
-tracked by #14036.
+Compose runtime activation landed in #14322 and SwiftUI in #14331. Qt runtime
+activation continues in #14336; the remaining lowerings and toolkit retrofits
+stay tracked by #14036.
 
 ### 3.2 `.msl` state names may be a slot's enum values
 
