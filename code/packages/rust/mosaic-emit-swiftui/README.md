@@ -103,6 +103,11 @@ state properties and transitions activate without replacing the control's
 native action. An explicit `state-when-pressed` remains author-controlled and
 does not install automatic press tracking.
 
+UI49 `one-of` slots also activate matching `.msl` state blocks directly from
+the component property. Multiple enum axes follow `.mil` declaration order;
+automatic and explicit structural/interaction states layer afterward so a
+pressed or selected variant still exposes that more-specific state.
+
 ## Primitive lowering
 
 | Mosaic primitive | SwiftUI                                       |

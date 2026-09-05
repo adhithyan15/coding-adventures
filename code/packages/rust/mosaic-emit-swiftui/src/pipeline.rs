@@ -884,27 +884,14 @@ fn build_swiftui_readme(component_name: &str) -> String {
 // =====================================================================
 // Part-style lowering — `.msl` `part` blocks → SwiftUI view modifiers.
 //
-// Covers BASE styles AND state-block lowering (`state hover {...}`,
-// `state selected {...}`).  When a layout node carries one or more
-// `state-when-<name>: ( expr )` props (UI28-1 / Task #35), each state
-// block's overriding properties are folded into the SwiftUI modifier
-// chain as nested ternaries.  Author surface mirrors the React
-// emitter's `state-when-X` mechanism (`mosaic_emit_react::pipeline`
-// lines 895–960).
-//
-// The map shape is identical to the React emitter's
-// `build_part_style_map` (`HashMap<String, …>` keyed by part name OR a
-// composite `{part}:{state}` key) so the two backends can share
-// downstream tooling that walks "which parts have author-declared
-// styles?".  React stores the per-part lowering as a pre-rendered
-// TSX-style string; SwiftUI stores it as the raw `Vec<StyleProp>` so
-// we can re-lower per node with the right indentation, since SwiftUI's
-// modifier chain is indent-sensitive whereas TSX's `style={{ ... }}` is
-// not.
+// Covers base styles and state-block lowering. Slot-owned enum states
+// activate from component properties; automatic input states and explicit
+// `state-when-<name>` node predicates remain the more-specific layers.
+// SwiftUI stores raw `StyleProp` values so each node can lower them with
+// the right indentation and active conditions.
 // =====================================================================
 
-/// Map from `part` name (or composite `{part}:{state}` key) to its
-/// style props.
+/// Part styles plus ordered UI49 slot-state metadata.
 ///
 /// Built once in [`from_pipeline`] and threaded through the view-tree
 /// walker.  The base-state entries are keyed by the part name verbatim
@@ -914,15 +901,39 @@ fn build_swiftui_readme(component_name: &str) -> String {
 /// downstream tooling that walks "which parts have author-declared
 /// styles?" can share the same data structure across backends.
 ///
-/// Empty when the `.msl` declares no parts — every lookup returns
-/// `None` and emission proceeds unchanged.
+/// Empty styles retain empty indexes, so every lookup returns `None` and
+/// emission proceeds unchanged.
 #[derive(Debug)]
 struct PartStyleEntry {
     props: Vec<StyleProp>,
     transitions: Vec<StyleTransition>,
 }
 
-type PartStyleMap = HashMap<String, PartStyleEntry>;
+#[derive(Debug)]
+struct SlotStateStyle {
+    cond_expr: String,
+    state_key: String,
+}
+
+#[derive(Debug)]
+struct PartStyleMap {
+    entries: HashMap<String, PartStyleEntry>,
+    slot_states: HashMap<String, Vec<SlotStateStyle>>,
+}
+
+impl PartStyleMap {
+    fn get(&self, key: &str) -> Option<&PartStyleEntry> {
+        self.entries.get(key)
+    }
+
+    fn insert(&mut self, key: String, value: PartStyleEntry) -> Option<PartStyleEntry> {
+        self.entries.insert(key, value)
+    }
+
+    fn contains_key(&self, key: &str) -> bool {
+        self.entries.contains_key(key)
+    }
+}
 const CONCRETE_MODIFIER_HELPERS_KEY: &str = "_mosaic:concrete-modifier-helpers";
 
 const SLIDER_HELPER_SWIFT: &str = r#"private struct _MosaicSlider: View {
@@ -1164,7 +1175,10 @@ fn extract_table_context(host_table: &LayoutNode) -> TableContext {
 ///
 /// Entries with neither props nor transitions are skipped.
 fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
-    let mut out = PartStyleMap::with_capacity(style.parts.len());
+    let mut out = PartStyleMap {
+        entries: HashMap::with_capacity(style.parts.len()),
+        slot_states: HashMap::new(),
+    };
     for part in &style.parts {
         if !part.base.is_empty() || !part.transitions.is_empty() {
             out.insert(
@@ -1194,6 +1208,39 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
         }
     }
     out
+}
+
+fn populate_slot_state_styles(
+    part_styles: &mut PartStyleMap,
+    style: &StyleDef,
+    slots: &[SlotDecl],
+) {
+    for part in &style.parts {
+        let mut owned = Vec::new();
+        for slot in slots {
+            let slot_ident = to_camel_case_first_lower(&slot.name);
+            for state in part
+                .states
+                .iter()
+                .filter(|state| state.slot.as_deref() == Some(slot.name.as_str()))
+            {
+                let state_key = format!("{}:{}", part.name, state.state);
+                if !part_styles.contains_key(&state_key) {
+                    continue;
+                }
+                owned.push(SlotStateStyle {
+                    cond_expr: format!(
+                        "({slot_ident} == \"{}\")",
+                        escape_swift_string(&state.state)
+                    ),
+                    state_key,
+                });
+            }
+        }
+        if !owned.is_empty() {
+            part_styles.slot_states.insert(part.name.clone(), owned);
+        }
+    }
 }
 
 fn has_explicit_state_when(node: &LayoutNode, state_name: &str) -> bool {
@@ -1365,6 +1412,26 @@ fn collect_state_layers<'a>(
     layers
 }
 
+fn collect_slot_state_layers<'a>(
+    part_name: &str,
+    part_styles: &'a PartStyleMap,
+) -> Vec<StateLayer<'a>> {
+    part_styles
+        .slot_states
+        .get(part_name)
+        .into_iter()
+        .flatten()
+        .filter_map(|state| {
+            let style = part_styles.get(&state.state_key)?;
+            Some(StateLayer {
+                cond_expr: state.cond_expr.clone(),
+                props: style.props.as_slice(),
+                transitions: style.transitions.as_slice(),
+            })
+        })
+        .collect()
+}
+
 fn collect_state_layers_for_emission<'a>(
     node: &LayoutNode,
     part_name: &str,
@@ -1373,7 +1440,7 @@ fn collect_state_layers_for_emission<'a>(
     uses_automatic_focus: bool,
     uses_automatic_press: bool,
 ) -> Vec<StateLayer<'a>> {
-    let mut layers = Vec::new();
+    let mut layers = collect_slot_state_layers(part_name, part_styles);
     if uses_automatic_hover {
         if let Some(hover_style) = part_styles.get(&format!("{part_name}:hover")) {
             layers.push(StateLayer {
@@ -2145,10 +2212,8 @@ fn layer_value(
 /// The `style` argument's `part` blocks are inlined as SwiftUI view-
 /// modifier chains attached to layout nodes whose `part_name` matches.
 /// See [`swiftui_modifier_chain`] for the property→modifier table.
-/// State blocks (`state X { ... }`) are folded into the chain as
-/// nested ternaries when the matching node carries a
-/// `state-when-X: ( expr )` prop — see [`collect_state_layers`] for
-/// the predicate-extraction rules.
+/// Slot-owned enum states and built-in states are folded into the chain as
+/// nested ternaries. See [`collect_state_layers_for_emission`] for precedence.
 ///
 /// # Errors
 ///
@@ -2174,6 +2239,7 @@ pub fn from_pipeline(
     // which is the no-op path — every modifier-chain lookup returns
     // None and emission proceeds identically to a styleless pipeline.
     let mut part_styles = build_part_style_map(style);
+    populate_slot_state_styles(&mut part_styles, style, &interface.slots);
     if layout_uses_automatic_hover(&layout.root, &part_styles)
         || layout_uses_automatic_focus(&layout.root, &part_styles)
         || layout_uses_automatic_press(&layout.root, &part_styles)
@@ -11666,11 +11732,15 @@ mod tests {
             ],
         };
         let map = build_part_style_map(&s);
-        assert_eq!(map.len(), 2);
+        assert_eq!(map.entries.len(), 2);
         assert!(map.contains_key("cell"));
         assert!(map.contains_key("header"));
         // Empty StyleDef → empty map (the `empty_style` helper path).
-        assert!(build_part_style_map(&empty_style("Demo")).is_empty());
+        assert!(
+            build_part_style_map(&empty_style("Demo"))
+                .entries
+                .is_empty()
+        );
     }
 
     // ---------------------------------------------------------------------
@@ -12533,6 +12603,121 @@ mod tests {
                 ".foregroundColor(((( r == selectedRow && c == selectedCol )) ? Color(red: 1, green: 1, blue: 1) : Color(red: 0.8, green: 0.8, blue: 0.8)))"
             ),
             "out = {out}"
+        );
+    }
+
+    #[test]
+    fn ui49_slot_states_follow_model_order_and_reach_host_button() {
+        let m = component(
+            "VariantButton",
+            vec![
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                    true,
+                ),
+                slot(
+                    "size",
+                    SlotType::OneOf(vec!["regular".to_string(), "compact".to_string()]),
+                    true,
+                ),
+                slot("selected", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let button = LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: Some("button".to_string()),
+            props: vec![
+                prop_string("label", "Delete"),
+                prop_expr("state-when-selected", "( selected )"),
+            ],
+            children: vec![],
+        };
+        let l = layout_with(
+            "VariantButton",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: Some("shell".to_string()),
+                props: vec![],
+                children: vec![button.clone()],
+            },
+        );
+        let s = StyleDef {
+            component_name: "VariantButton".to_string(),
+            parts: vec![
+                PartStyle {
+                    name: "shell".to_string(),
+                    base: vec![sp("background", "#222222")],
+                    transitions: vec![],
+                    states: vec![StateStyle {
+                        slot: Some("variant".to_string()),
+                        state: "danger".to_string(),
+                        transitions: vec![],
+                        props: vec![sp("background", "#333333")],
+                    }],
+                },
+                PartStyle {
+                    name: "button".to_string(),
+                    base: vec![sp("background", "#111111")],
+                    transitions: vec![],
+                    // Reverse authored enum-state order deliberately. UI49
+                    // ordering comes from the model slots: variant, then size.
+                    states: vec![
+                        StateStyle {
+                            slot: Some("size".to_string()),
+                            state: "compact".to_string(),
+                            transitions: vec![],
+                            props: vec![sp("background", "#ffaa00")],
+                        },
+                        StateStyle {
+                            slot: Some("variant".to_string()),
+                            state: "danger".to_string(),
+                            transitions: vec![],
+                            props: vec![sp("background", "#dc3545")],
+                        },
+                        StateStyle {
+                            slot: None,
+                            state: "selected".to_string(),
+                            transitions: vec![],
+                            props: vec![sp("background", "#ffffff")],
+                        },
+                    ],
+                },
+            ],
+        };
+
+        let mut map = build_part_style_map(&s);
+        populate_slot_state_styles(&mut map, &s, &m.slots);
+        let layers = collect_state_layers_for_emission(
+            &button,
+            "button",
+            &map,
+            false,
+            false,
+            false,
+        );
+        assert_eq!(layers.len(), 3);
+        assert_eq!(layers[0].cond_expr, "(variant == \"danger\")");
+        assert_eq!(layers[1].cond_expr, "(size == \"compact\")");
+        assert_eq!(layers[2].cond_expr, "( selected )");
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(out.contains("let variant: String"), "variant missing:\n{out}");
+        assert!(out.contains("let size: String"), "size missing:\n{out}");
+        assert!(
+            out.contains(".accessibilityIdentifier(\"button\")"),
+            "specialized HostButton lost its part marker:\n{out}"
+        );
+        assert!(
+            out.contains("(variant == \"danger\")")
+                && out.contains("(size == \"compact\")")
+                && out.contains("(( selected ))"),
+            "slot or structural style condition missing:\n{out}"
+        );
+        assert!(
+            out.contains("Color(red: 0.2, green: 0.2, blue: 0.2)"),
+            "generic container did not receive its slot-owned state:\n{out}"
         );
     }
 
