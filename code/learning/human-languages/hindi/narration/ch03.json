@@ -4,22 +4,22 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9d600227cc52c0d1",
+  "sourceHash": "fnv1a64:eb0de8faf7b739a2",
   "lessons": [
     {
       "id": "HI-C03-kaise",
       "sequence": 270,
-      "title": "कैसे (kaise) — \"how,\" another of the k- questions",
-      "headword": "कैसे",
-      "romanization": "kaise",
-      "gloss": "how (also कैसा/कैसी, agreeing)",
+      "title": "कैसा / कैसी / कैसे (kaisā / kaisī / kaise) — agreeing forms of \"what kind?\" and \"how?\"",
+      "headword": "कैसा / कैसी / कैसे",
+      "romanization": "kaisā / kaisī / kaise",
+      "gloss": "what kind / how — masculine / feminine / respectful or masculine plural",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7f8663cdf9d08845",
+      "sourceHash": "fnv1a64:8d9015036aa86bac",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -115,6 +115,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "the agreeing set — कैसा, कैसी, कैसे (kaisā, kaisī, kaise)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the agreeing set — **कैसा, कैसी, कैसे** (*kaisā, kaisī, kaise*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "the k- question family — kyā, kaun, kab, kahāṁ, kaise",
               "spoken": true,
               "scored": false,
@@ -145,7 +154,7 @@
             },
             {
               "kind": "speech",
-              "text": "What root do all of Hindi's question-words share, and what English family is it cousin to? (The interrogative k-, PIE kʷo-; the English wh- words.)"
+              "text": "What root do all of Hindi's question-words share, and what English family is it cousin to? (The interrogative k-, PIE kʷo-; the English wh- words.) Which form is masculine singular, which is feminine, and which is respectful or masculine plural? (कैसा, कैसी, कैसे.)"
             }
           ]
         }
