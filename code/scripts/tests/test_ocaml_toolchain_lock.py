@@ -54,6 +54,103 @@ class OcamlToolchainRepositoryTests(unittest.TestCase):
         self.assertNotIn("secrets.", workflow)
 
 
+class OcamlGenericCiWorkflowTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.manifest = toolchain.load_manifest(REPO_ROOT)
+        self.workflow = (REPO_ROOT / ".github/workflows/ci.yml").read_text(
+            encoding="utf-8"
+        )
+
+    def mutate(self, old: str, new: str, *, count: int = 1) -> str:
+        self.assertGreaterEqual(self.workflow.count(old), count)
+        return self.workflow.replace(old, new, count)
+
+    def test_checked_in_generic_ci_bootstrap_is_valid(self) -> None:
+        toolchain.validate_generic_ci_workflow_text(self.manifest, self.workflow)
+
+    def test_rejects_mutable_or_weakened_bootstrap_identity(self) -> None:
+        cases = (
+            self.mutate(
+                "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+                "actions/checkout@v7",
+            ),
+            self.mutate("persist-credentials: false", "persist-credentials: true"),
+            self.mutate(
+                "ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0",
+                "ocaml/setup-ocaml@v3",
+            ),
+            self.mutate(
+                "matrix.sharded != true || contains(matrix.languages, 'ocaml')",
+                "matrix.sharded != true",
+            ),
+            self.mutate(
+                "ocaml-compiler: ocaml-base-compiler.5.2.1",
+                "ocaml-compiler: ${{ env.OCAML_VERSION }}",
+            ),
+            self.mutate(
+                "opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff",
+                "opam-repository.git#master",
+            ),
+            self.mutate("opam-pin: false", "opam-pin: true"),
+            self.mutate("dune-cache: false", "dune-cache: true"),
+            self.mutate("-${{ github.run_attempt }}-build-", "-build-"),
+            self.mutate("windows-compiler: mingw", "windows-compiler: msvc"),
+            self.mutate("windows-environment: cygwin", "windows-environment: msys2"),
+            self.mutate("github-token: ${{ github.token }}", "github-token: token"),
+        )
+        for index, workflow in enumerate(cases):
+            with self.subTest(case=index), self.assertRaises(toolchain.ContractError):
+                toolchain.validate_generic_ci_workflow_text(self.manifest, workflow)
+
+    def test_rejects_missing_runtime_repository_or_checksum_evidence(self) -> None:
+        cases = (
+            self.mutate(
+                'test "$(opam --version)" = "2.5.2"',
+                'test "$(opam --version)" = "2.4.0"',
+            ),
+            self.mutate(
+                'test "$(opam exec -- ocamlc -version)" = "5.2.1"',
+                'test -n "$(opam exec -- ocamlc -version)"',
+            ),
+            self.mutate(
+                "validate-repository-report \\",
+                "validate-runtime \\",
+            ),
+            self.mutate("--yes --require-checksums", "--yes"),
+            self.mutate(
+                "printf 'OPAMREQUIRECHECKSUMS=true\\n' >> \"$GITHUB_ENV\"",
+                "printf 'OPAMREQUIRECHECKSUMS=false\\n' >> \"$GITHUB_ENV\"",
+            ),
+            self.mutate(
+                "validate-runtime",
+                "validate-repository",
+                count=1,
+            ),
+        )
+        for index, workflow in enumerate(cases):
+            with self.subTest(case=index), self.assertRaises(toolchain.ContractError):
+                toolchain.validate_generic_ci_workflow_text(self.manifest, workflow)
+
+    def test_rejects_platform_or_serialization_regressions(self) -> None:
+        cases = (
+            self.mutate(
+                '"rust", "wasm", "swift", "c", "cpp", "csharp", "fsharp", "dotnet", "ocaml"',
+                '"rust", "wasm", "swift", "c", "cpp", "csharp", "fsharp", "dotnet"',
+            ),
+            self.mutate('              or flag("NEEDS_OCAML")\n', ""),
+            self.mutate(
+                " || needs.detect.outputs.needs_ocaml == 'true'",
+                "",
+            ),
+            self.mutate("job_flags=(-jobs 1)", "job_flags=(-jobs 2)"),
+            self.mutate('            "${job_flags[@]}" \\', "", count=1),
+            self.mutate('          $BT "${job_flags[@]}" -root .', "          $BT -root ."),
+        )
+        for index, workflow in enumerate(cases):
+            with self.subTest(case=index), self.assertRaises(toolchain.ContractError):
+                toolchain.validate_generic_ci_workflow_text(self.manifest, workflow)
+
+
 class RestrictedWorkflowParserTests(unittest.TestCase):
     def test_parses_supported_scalar_sequence_mapping_and_blocks(self) -> None:
         document = toolchain.parse_restricted_workflow_yaml(
