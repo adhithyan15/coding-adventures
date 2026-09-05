@@ -81,6 +81,23 @@ byte/character or receiver-category semantics. If execution exposes a backend
 defect, record and prioritize a bounded repair before claiming parity. Update
 inventory counts, README, changelog and validation evidence.
 
+### VM-050 discovery and repair contract (blocks VM-045)
+
+Executing VM-045 reproduced `BackendRefused { function: "main" }` on native
+AOT row 402 with computed substring indices. Literal row 401 passed all seven
+backends; the frontend reference-modification oracle suite passed 66 tests.
+Native string lowering only folds constant slices and leaves runtime slices
+for a backend that refuses them, despite the existing bounds-checked
+`__twig_str_slice` runtime helper. Prioritize this observed failure within the
+current VM-045 PR before declaring its new cells proven.
+
+Route well-formed slices that cannot be folded through `call_builtin str_slice`
+and invalidate stale destination string facts. Preserve constant folding and
+its invalid-bound traps. Verify runtime output and invalid-bound failures via
+the canonical rows, plus focused lowering checks for runtime source/bounds and
+reassigned destinations. Use existing runtime/ABI helper plumbing; investigate
+any further backend refusal instead of excluding its cells.
+
 ## VM-044 implementation contract (selected after #14358 merged)
 
 PR #14358 merged as `669d5fcc1e` after all current-head checks passed on
