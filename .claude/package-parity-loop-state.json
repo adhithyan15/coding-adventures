@@ -19,7 +19,7 @@
     "notes": "PR #14316 completed all 43 final-head checks acceptably: 22 successes and 21 expected skips. GitHub reported the final head conflict-free; guarded squash auto-merge was enabled and GitHub merged the PR without a manual merge command."
   },
   "last_inventory": {
-    "revision": "71cf85dfe414e43ee939b65f7f91401373f3158c",
+    "revision": "e1808c31903c1324fa242d48e43b7e9cfce9252d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1413,
@@ -137,6 +137,8 @@
       "pr_number": null,
       "selected_at": "2026-09-05T15:18:02Z",
       "selection_revision": "71cf85dfe414e43ee939b65f7f91401373f3158c",
+      "rebase_revision": "e1808c31903c1324fa242d48e43b7e9cfce9252d",
+      "rebase_notes": "Rebased conflict-free onto exact origin/main e1808c31903c1324fa242d48e43b7e9cfce9252d after four merged language-AOT CI, Hindi curriculum, Mosaic viewport-unit, and SPICE BJT commits changed no package identity or selected path. The refreshed inventory remains collision-clean and identity-neutral at 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, 754 Rust singletons, zero OCaml packages, and zero unknown buckets. All seven live open PRs have zero exact overlap with the seven changed paths.",
       "selection_notes": "Selected after PR #14316 completed 43 acceptable final-head checks and merged through guarded squash auto-merge as 71cf85dfe414e43ee939b65f7f91401373f3158c. The refreshed collision-checked inventory is identity-neutral at 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel audits found no new package identity or eligible unowned gap and ranked this bounded native identity repair ahead of the Haskell hashing and Rust classification alternatives because it fixes five reproducible Python 3.13 Windows failures and is a newly confirmed prerequisite of both the bootstrap execution corpus and Windows AppContainer enforcement on the OCaml critical path. The exact fix queries legacy and extended volume serials from the same retained root handle, accepts only exact equality without truncation or version sniffing, and preserves every existing fixed-volume, reparse, alias, mutation, and retained-handle invariant. No other open PR overlaps the six planned paths. The 694-owner graph remains unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 205 merged, 488 pending, and exactly this owner in progress.",
       "notes": "Discovered while validating the inert CLI parser corpus. Five unchanged execution-schema tests fail identically on the CLI branch and a clean baseline under Windows Python 3.13, while the complete execution, authority, and backend family passes under Python 3.10. Python 3.13 exposes a 64-bit st_dev value, but the existing Windows snapshot code compares it with a 32-bit volume serial and misclassifies ordinary files. Reconcile the identity representation and retain all fixed-volume, reparse, alias, mutation, and retained-handle invariants in a separate execution-boundary change; do not widen the process-free CLI corpus into native filesystem authority."
     },
