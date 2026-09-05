@@ -6,19 +6,24 @@ The original LANG-PLATFORM matrix (`LANG-PLATFORM-MATRIX.md`) proved the
 **plumbing**: six frontends → shared `interpreter_ir::IIRModule` → seven
 backends → a runnable artifact. `lang-aot` now wires ten language variants;
 this roadmap keeps the detailed tracks for the original six and records the
-completed McCarthy campaign, while VM-014 tracks full matrix coverage for the
-newer FLOW-MATIC, COBOL-60, and Macsyma frontends. The 2026-06-13 audit found
+completed McCarthy campaign. FLOW-MATIC now has a unified-matrix baseline
+(VM-020), COBOL-60 has unified-matrix rows, and Macsyma has dedicated seven-engine
+conformance including JIT (VM-021). VM-014 was decomposed; VM-027 now owns the
+feature-by-backend coverage audit across all ten frontends. The 2026-06-13 audit found
 that the original green checkmarks rested on **one executed program per
 language**, and each frontend was a **deliberate subset**:
 
 | Language | What the matrix actually runs end-to-end on the code-gen backends | The subset gap |
 |---|---|---|
-| Twig | Scalars, variadic and boxed dynamic arithmetic, typed and forward-referenced globals, cons/list operations, records, unions/`match`, closures (including capture), and typed E4 string literal/named/local/function-call proofs run on the five code generators; lists, records, unions, and closures also run on VM/JIT | VM/JIT still lack the executed symbol/quote and forward-referenced-global cells; boxed dynamic-global arithmetic and captured/reassigned or otherwise untyped strings remain |
+| Twig | Scalars, variadic and boxed dynamic arithmetic, typed and forward-referenced globals, cons/list operations, records, unions/`match`, closures (including capture), and typed E4 string literal/named/local/function-call proofs run on the five code generators and VM/JIT | Symbol/quote identity, forward globals, and boxed dynamic-global arithmetic also run on VM/JIT (VM-010); captured/reassigned and otherwise unproven dynamic string forms remain in the TW4 coverage audit |
 | Nib | typed calls, arithmetic/control flow, consts/statics, and one-nibble BCD storage run on all 7 standard backends; BCD statics also execute through the complete Intel-4004 RAM map | Full Intel-4004 arithmetic/control-flow parity remains |
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
-| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | scalar and array strings, runtime input and concat, mixed numeric/string `DATA`/`READ`/`RESTORE`, general `^`, deterministic math builtins, portable seeded/repeatable `RND`, `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN`, multi-dimensional real arrays, `GOSUB`/`RETURN`, and BA7 `f64` arithmetic/formatting all run on every backend |
-| Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
+| Dartmouth BASIC | Scalars and arrays (including strings/reals), input/concat, mixed numeric/string `DATA`/`READ`/`RESTORE`, general `^`, deterministic math, seeded/repeatable `RND`, `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN`, and `GOSUB`/`RETURN` have seven-standard-engine rows | These are landed proofs, not remaining BA work; VM-027 audits any uncovered grammar features and backend cells rather than treating the supported subset as the entire language |
+| Oct | Calls, `let`/`if`/loops, short-circuit logic, u8 wrap/complement, and module statics have standard-engine proofs | The ten Intel-8008 intrinsics need explicit portable semantics and simulator proofs (VM-013) |
 | McCarthy Lisp | F1–F7 — scalars, cons/car/cdr, predicates, `COND`, symbols, `LAMBDA`/`LABEL`, capture, and recursion — run uniformly on its dedicated VM, native AOT, JIT, WASM, JVM, CLR, BEAM, and LLVM | no open McCarthy core/backend gap; W16 is the authoritative 19-program × 8-backend conformance proof |
+| FLOW-MATIC | Unified `MOVE` plus `WRITE-ITEM` baseline on the seven standard engines (VM-020) | One baseline is not full feature coverage; VM-027 audits the remaining implemented control-flow and field operations |
+| COBOL-60 | Unified PICTURE/data/arithmetic rows, including scale-12 JVM decimal intermediates (VM-001) | VM-027 maps implemented grammar/features to the actual corpus; this is not a full COBOL implementation claim |
+| Macsyma | Dedicated integer arithmetic/assignment conformance on VM, native AOT, LLVM, WASM, JVM, CLR, and universal JIT (VM-021) | Dedicated v0 numeric proofs do not establish every symbolic operation on every backend; VM-027 owns that inventory |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), direct name- and value-mode formal procedures including declared, nested-capturing, self- and mutually-recursively-forwarded, implemented-standard-function, and implementation-defined standard-output-procedure actuals plus direct call-by-name scalars (including Jensen-style expression thunks and strings), scalar forwarding/remapping recursion, and rank-inferred arrays with forwarding plus direct/mutual array recursion ✅ (AL7, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters with isolated element copies ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays with per-coordinate and declaration-extent validation ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus finite literal-only real `+`/`-`/`*`/`/`, exact checked straight-line integer and real scalar snapshots including path-independent conditional integer subexpressions, capped side-effect-free tracked integer powers with checked arithmetic and integer-valued standard-function exponents, checked tracked-arithmetic and pure `abs`/`sign` plus exact-widening `entier`, exact integral tracked `sqrt` including nesting, checked `+`/`-`/`*` composition, and path-independent pure conditionals, and path-independent pure conditional real-power exponent unrolling, plus bounded tracked integer, tracked-function, and path-independent conditional exponents in real-value metadata, integer-valued standard functions, and path-independent equal conditional assignments, capped signed integral arithmetic real power exponents, conditional/composed static standard-function output including canonical transcendental identities and exact integer-valued results, and initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); runtime real formatting, changed recursive scalar actuals requiring a thunk ABI, and dynamic procedure descriptors remain follow-up work |
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
@@ -83,6 +88,29 @@ exercises the feature on each code-gen backend** (not validated, not byte-encode
 executed, output checked). McCarthy Lisp is the reference (W16: 19 programs
 executed uniformly on 8 applicable backends) and the bar every other language
 must reach.
+
+## Current execution boundary (2026-09-05)
+
+The [`Language` enum](../packages/rust/lang-aot/src/lib.rs) wires ten variants.
+The unified [`PROGRAMS` corpus](../packages/rust/lang-aot/tests/lang_matrix.rs)
+contains eight languages; McCarthy and Macsyma have their own
+[`conformance`](../packages/rust/lang-aot/tests/conformance.rs) and
+[`macsyma_conformance`](../packages/rust/lang-aot/tests/macsyma_conformance.rs)
+suites. Seven standard engines means native AOT, LLVM, WASM, JVM, CLR, VM and
+JIT. Additional BEAM cells are declared per program; they are no longer
+McCarthy-only, but are not a blanket all-language guarantee.
+
+[PR #14317](https://github.com/adhithyan15/coding-adventures/pull/14317)
+protects every non-ALGOL unified row in normal
+[`BUILD`](../packages/rust/lang-aot/BUILD). Its local Windows validation ran
+163 programs and 1,161 backend cells with zero skips; Linux/macOS/Windows PR
+jobs and both CI gates passed. Normal Linux/macOS package builds execute this
+selection; Rust-only Windows PRs execute the dedicated native smoke gate from
+[PR #14295](https://github.com/adhithyan15/coding-adventures/pull/14295).
+Full ALGOL matrix CI remains VM-025. These counts describe one verified corpus,
+not every construct in every language. The
+[completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md) records remaining work and
+supersedes historical milestone wording when determining the next item.
 
 ## Definition of done (per work item)
 
@@ -367,9 +395,9 @@ multiple languages; close an enabler before the features that depend on it.
   `ref<any>` value model and language-agnostic `iir-builtin-lowering` passes now
   carry Twig dynamic arithmetic, list operations, symbols, records, unions,
   closures, and forward-referenced globals through native AOT, LLVM, WASM, JVM,
-  and CLR. The generic VM/JIT path has also landed for lists, records, unions,
-  and closures; only symbols/quote and forward-referenced globals still need
-  VM/JIT parity. Full design and history:
+  and CLR. The generic VM/JIT path also proves lists, records, unions,
+  closures, symbol/quote identity, forward-referenced globals, and boxed-global
+  arithmetic (VM-010); those are no longer open parity items. Full design and history:
   **[`lang-full-e6-dispatch.md`](lang-full-e6-dispatch.md)**.
   - **E6 layer 1 (typed module globals) — spec [`lang-full-e6-globals.md`](lang-full-e6-globals.md).**
     ✅ DONE. A function can read/write a typed scalar or array module global on
@@ -381,8 +409,8 @@ multiple languages; close an enabler before the features that depend on it.
     ✅ COMPLETE. E6d-1 through E6d-8 cover `cons`/`car`/`cdr`, boxed dynamic
     arithmetic, list construction and traversal, symbols, records, unions,
     closures (including WASM), and dynamic globals on all five code generators.
-    The matrix additionally proves list operations, records, unions, and
-    closures on VM/JIT.
+    The matrix additionally proves list operations, records, unions, closures,
+    symbol identity, forward globals, and boxed-global arithmetic on VM/JIT.
 - **E7 — Subroutine / return-stack.** ✅ COMPLETE. `GOSUB`/`RETURN` and procedure
   call/return ([`lang-full-e7-subroutine-return-stack.md`](lang-full-e7-subroutine-return-stack.md)).
   Structured procedure call/return was already done (`call`/`ret` — ALGOL AL3,
@@ -735,8 +763,11 @@ backend immediately) come before the enabler-dependent items.
   a runtime math helper. The backend-neutral slice now recognizes nonnegative
   integer-valued literal exponents `0..=64` and lowers `base ^ n` to repeated `f64`
   `mul`, so no backend learns a new operation. Verified by RUNNING `PRINT 6 ^ 2 + 6`
-  on native/LLVM/WASM/JVM/CLR/VM/JIT → stdout `42`. General variable, nested, negative,
-  fractional, and large exponents still need a cross-backend runtime math helper.
+  on native/LLVM/WASM/JVM/CLR/VM/JIT → stdout `42`. **BA-pow subsequently
+  completed general exponentiation:** variable, nested, negative, fractional
+  and large exponent forms lower to shared `f64_pow`, with seven-standard-engine
+  rows in `lang_matrix.rs`. The literal optimization remains an earlier slice,
+  not the current support limit.
 - ✅ **BA-builtins** — `SQR`, `INT`, `ABS`, `SGN` built-in functions
   (`dartmouth-basic-iir-compiler` 0.32.0). All four reuse existing IIR ops — no new
   backend code needed. `SQR(X)` → `f64_sqrt` (the same hardware-sqrt op ALGOL uses).
@@ -1205,8 +1236,8 @@ backend immediately) come before the enabler-dependent items.
   `(define x 40) (define y 2) (+ x y)` ⇒ exit 42 across native/LLVM/WASM/JVM/CLR/VM/JIT
   (`lang_matrix.rs`). Added a reusable escape analysis (`free_vars::lambda_captured_globals`).
   **Limits:** captured values still stay on the host global table. A top-level
-  forward reference now runs on the code generators through E6 dynamic globals,
-  but VM/JIT parity and boxed global arithmetic remain in TW7.
+  forward reference and boxed-global arithmetic now run through E6 lowering
+  on all seven standard engines (TW7 / VM-010).
 - ✅ **TW3** — list / cons ops. `cons`/`car`/`cdr`, `list`, `length`,
   `null?`, `list-ref`, `append`, `reverse`, and `assoc` lower through the shared
   E6 heap/list passes and have executed cells on native/LLVM/WASM/JVM/CLR/VM/JIT.
@@ -1230,10 +1261,11 @@ backend immediately) come before the enabler-dependent items.
   heap-form dispatch and run on native/LLVM/WASM/JVM/CLR/VM/JIT.
 - ✅ **TW6** — `match` / records / unions. Record field access and both union
   match arms run on native/LLVM/WASM/JVM/CLR/VM/JIT.
-- ◑ **TW7** — remaining dynamic VM/JIT parity. Symbols/quote and
-  forward-referenced globals run on the five code generators but their matrix
-  cells still exclude VM/JIT; boxed dynamic-global arithmetic is also a
-  documented follow-up.
+- ✅ **TW7** — dynamic VM/JIT parity (VM-010). Symbol/quote identity,
+  forward-global roundtrips and boxed-global arithmetic have matrix cells on
+  native/LLVM/WASM/JVM/CLR/VM/JIT, with selected BEAM coverage as declared.
+  `(define (f) (+ g 1)) (define g 41) (f)` → 42 distinguishes arithmetic from a
+  plain global read. Broader dynamic features remain subject to VM-027 auditing.
 
 ### McCarthy Lisp  (reference — complete)
 - ✅ **MC1** — F1–F7 are complete on all eight applicable backends. The W16
@@ -1243,7 +1275,11 @@ backend immediately) come before the enabler-dependent items.
 
 ---
 
-## Suggested global ordering
+## Semantic tracks (execution priority lives in the backlog)
+
+The [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md) prioritizes executed
+failures, CI coverage, and status repair before new semantics. The tracks below
+remain scope, not an instruction to bypass that prioritization.
 
 1. **Oct O4 intrinsic semantics** — define the portable meaning of the Intel
    8008 operations, then prove each intrinsic on the standard backends and the
@@ -1255,5 +1291,5 @@ backend immediately) come before the enabler-dependent items.
    mapping into arithmetic/control-flow fidelity where the executed backlog
    identifies a concrete portable-vs-hardware gap.
 
-This roadmap is the contract; each ☐ becomes a `feat(lang-full): …` PR, checked off here as
-it merges.
+Turn each remaining track into a bounded backlog item with an executed
+acceptance proof, then update this roadmap when its PR merges.

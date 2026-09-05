@@ -1,11 +1,26 @@
 # LANG-VM Platform — Vision, Architecture & Roadmap
 
-**Status:** vision / north-star — for sign-off and iteration.
+**Status:** platform vision; individual capabilities require executable acceptance evidence.
 **Supersedes in scope:** none (this is the umbrella the `LANG*`/`LS*`/`SIR*` specs implement).
 **Relates to:** `LANG-PLATFORM-MATRIX.md`, `LANG-FULL-IMPLEMENTATION.md`,
 `lang-full-e6-dispatch.md`, `LANG00`–`LANG77`, `LS00`–`LS04`, the `SIR*` specs.
 
 ---
+
+## Current implementation boundary (2026-09-05)
+
+The driver currently wires ten language variants. The
+[execution matrix](LANG-PLATFORM-MATRIX.md) distinguishes its eight-language
+unified corpus from dedicated McCarthy and Macsyma suites, seven standard
+engines, and additional per-program BEAM coverage. Non-ALGOL corpus CI is
+landed (VM-024); full ALGOL matrix CI remains separately tracked.
+
+The pipelines and performance goals below describe intended platform scope.
+They do not establish that every frontend has a generated debugger, both IR
+bridges, every transpilation target, complete GC, or the stated performance.
+VM-029 in the [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md) owns the
+capability/acceptance inventory for those goals; VM-027 owns feature/backend
+coverage. Use those inventories and executed tests for completion decisions.
 
 ## 0. The promise
 
