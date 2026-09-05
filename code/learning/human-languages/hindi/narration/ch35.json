@@ -4,22 +4,22 @@
   "chapter": 35,
   "title": "Taking, Asking, Helping — and Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f4eeb98656ef7f73",
+  "sourceHash": "fnv1a64:13fde0919eccc5bf",
   "lessons": [
     {
       "id": "HI-C35-lena",
       "sequence": 900,
-      "title": "लेना (lenā) — \"to take,\" a verb that lost a consonant",
-      "headword": "लेना / लाभ",
-      "romanization": "lenā",
-      "gloss": "to take — worn down from Sanskrit labh-, which also sits, undisguised, in the noun लाभ",
+      "title": "लेना / ले / लेता / लेती / लेते — \"to take\" and its present forms",
+      "headword": "लेना / ले / लेता / लेती / लेते / लाभ",
+      "romanization": "lenā / le / letā / letī / lete / lābh",
+      "gloss": "to take / take / profit or gain — infinitive / stem / masculine / feminine / respectful or plural / noun",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bf1d99e6df839b9",
+      "sourceHash": "fnv1a64:ce6f7378473c34e2",
       "notice": null,
       "blocks": [
         {
@@ -47,6 +47,10 @@
             {
               "kind": "speech",
               "text": "लेना (lenā) = \"to take.\" Two syllables, and one of the most-used verbs in the language. Stem ले-: मैं लेता हूँ (m.) / मैं लेती हूँ (f.); आप लेते हैं."
+            },
+            {
+              "kind": "speech",
+              "text": "The pattern is regular: remove infinitive -ना, then add -ता for the masculine form, -ती for the feminine, or -ते for respectful आप and plural subjects. That gives ले becomes लेता / लेती / लेते."
             },
             {
               "kind": "speech",
@@ -91,6 +95,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "\"you (resp.) take\" — आप लेते हैं (āp lete haiṁ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"you (resp.) take\" — **आप लेते हैं** (*āp lete haiṁ*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "accept a drink — maiṁ pānī letā hūṁ; then a meal — maiṁ roṭī letā hūṁ. Object first, verb last, as always",
               "spoken": true,
               "scored": false,
@@ -130,7 +143,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which Sanskrit verb is lenā, and which consonant did it lose? (लभते labhate; the -bh-.) Which Hindi noun still shows that consonant, and why? (लाभ — borrowed back from Sanskrit, so it never eroded.) Say \"I'll have water.\" (Maiṁ pānī letā / letī hūṁ.)"
+              "text": "Which Sanskrit verb is lenā, and which consonant did it lose? (लभते labhate; the -bh-.) Which Hindi noun still shows that consonant, and why? (लाभ — borrowed back from Sanskrit, so it never eroded.) Give the stem, then the masculine, feminine, and respectful or plural forms. (ले; लेता / लेती / लेते.) Say \"I'll have water.\" (Maiṁ pānī letā / letī hūṁ.)"
             }
           ]
         }
