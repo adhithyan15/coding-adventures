@@ -13035,6 +13035,95 @@ curriculum, Rust, HTML, Qt/Mosaic, and VisiCalc changes are disjoint and add no
 package root, recognized manifest, language lane, identity, or collision, so
 the collision-checked inventory and 713-owner/1,169-edge graph remain unchanged.
 
+PR #14352 completed both final-head Ubuntu builds, both metadata jobs, both CI
+gates, CodeQL detection, and the human-language aggregate gate acceptably.
+GitHub reported the final head clean and mergeable before guarded squash
+auto-merge was enabled, and merged it as
+`120d018dc15cec32ea328e7b5471bf7fb3f2873a` without a plain manual merge
+command. The exact merged-main collision report remains schema 3 with 15
+established lanes, 1,413 implementation identities, 4,629 slots, 1,452
+all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202,
+754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown
+buckets.
+
+Three bounded read-only audits ran concurrently with CI. The established-lane
+audit found no additional unowned package or build-tool denominator gap, but
+corrected stale umbrella metadata: the Dart 14-of-15 frontier is exactly
+binary-search-tree, fenwick-tree, and uuid; the JVM and Swift/Dart umbrellas
+must remain selection-blocked behind exact decomposition; and the measured
+classifier remains exact at 93 coarse-only Java/Kotlin/Dart identities and 50
+Swift identities.
+
+The all-language build-tool audit found two ownership gaps. The neutral corpus
+has only a graph diamond and successful diff cases despite the normative
+isolated, chain, multi-component, cycle, level, closure, failure-propagation,
+and unknown-path-error requirements. The new
+`build-tool-neutral-graph-diff-corpus-completion` owner closes the process-free
+portion. All 16 implementation-manifest adapters remain missing, no terminal
+owner requires native same-corpus CI, F# remains only an exception candidate,
+and C/C++ lack emerging manifest decisions. The selection-blocked
+`build-tool-all-language-adapter-ci-closure` gate now owns that final evidence
+after every implementation and corpus prerequisite. Existing C/C++ and OCaml
+owners now explicitly cover manifest applicability, the full capability
+taxonomy, independent enforcement, and real three-platform representative
+package execution.
+
+After these additions and dependency corrections, the reconciled state has
+715 owners and 1,179 edges: 208 merged and 507 pending. The graph is unique,
+dependency-complete, acyclic, and free of merged-to-unmerged edges. Raw global
+leverage still favors the portable smart-home command-effect lifecycle, but
+the current durable build-tool/OCaml front ranks OCaml representative core
+first and Perl registry repair second. Haskell portable source hashing is the
+best next serial continuity slice because #14352 has just satisfied its final
+performance prerequisite, its toolchain and SHA-256 dependency are already
+validated, and it unlocks three direct plus four transitive unfinished build-
+tool descendants without adding authority.
+
+The Haskell source-hashing owner is therefore the sole in-progress item in a
+fresh clean worktree based on exact `origin/main`
+`994e0555426b2330f33f45210fef6953607a67f6`; the intervening merged Hindi,
+FLOW-MATIC, McCarthy, Flutter, Mosaic, and Rust SPICE changes are disjoint and
+identity-neutral. Selection leaves 208 merged, 506
+pending, and one in-progress owner. The tranche is limited to the complete
+checked source registry, exact scoped projection, collision-safe portable path
+framing, incremental SHA-256 adoption, and its language-neutral fixtures and
+tests. It does not absorb graph/diff corpus expansion, execution authority, or
+another language's build-tool remediation.
+
+Implementation now embeds the complete checked 23-language registry and uses
+one production selector for the four package-local neutral fixtures, including
+portable character classes and the 50,000,000-unit declared-match ceiling. The
+collector counts every entry before pruning, rejects portable identity and
+topology collisions, applies all five BUILD fronts and all seven selector
+roles, sorts normalized repository-relative paths by raw UTF-8 bytes, and
+streams Hashing v1 frames through the optimized local SHA-256 package in 8 KiB
+chunks. The current focused warning-as-error run passes 77 examples, including
+the fixed single- and multi-file digest oracles, 8 KiB boundaries, rename
+sensitivity, OCaml discovery, generated-component pruning, hostile paths, and
+the complete fixture projection.
+
+Publication validation passes all four local Cabal packages: 77 build-tool,
+25 SHA-256, four graph, and three directed-graph examples, including bounded
+allocation measurements of 57,521,408 bytes for the million-byte vector and
+57,557,872 bytes for 8 KiB chunks. The warning-as-error optimized build, Cabal
+check, Haddock, source distribution, literal BUILD front, generator byte-sync,
+canonical Go test/vet/trimpath build, and a real 207-package Haskell dry plan
+also pass. The dry plan evaluates 45 Starlark files and selects exactly the
+changed build tool plus its three local prerequisites. The relevant neutral
+schema/runner/parity suite passes 111 tests and 269 subtests from a clean tree;
+the collision-checked inventory, 716-owner/1,180-edge state graph, diff hygiene,
+and changed-diff credential scan are clean.
+
+The parallel native-boundary review found one additional dependency-shaped
+gap. Pathname link checks, directory-entry snapshots, handle-size checks, and
+pre/post size and modification-time validation do not atomically bind the
+package root, ancestors, and file to retained no-follow identities. The new
+selection-blocked `build-tool-haskell-native-source-snapshot-stability-hardening`
+owner gates Haskell dependency hashing, repository-boundary adoption, and the
+remaining-engine aggregate until POSIX and Windows native identity, link,
+reparse, and replacement-race behavior is proven. The updated state contains
+716 owners and 1,180 edges: 208 merged, 507 pending, and one in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

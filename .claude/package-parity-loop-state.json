@@ -12,21 +12,21 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 14352,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/14352",
-    "branch": "codex/haskell-sha256-performance-hardening",
-    "item_id": "haskell-sha256-streaming-performance-hardening",
-    "opened_at": "2026-09-05T17:49:37Z",
-    "opened_revision": "ac4ff2862a78739dc229a3477630f013145fccca"
+    "number": 14366,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/14366",
+    "branch": "codex/haskell-build-tool-source-hashing",
+    "item_id": "build-tool-haskell-portable-source-hashing-conformance",
+    "opened_at": "2026-09-05T19:24:40Z",
+    "opened_revision": "4c5458e2fe8c78e9dabeca7cb84376239f76518c"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-05T17:49:37Z",
-    "pr_number": 14352,
+    "observed_at": "2026-09-05T19:24:43Z",
+    "pr_number": 14366,
     "status": "pending",
-    "notes": "PR #14352 is the sole active parity PR. GitHub reports the ready-for-review head mergeable with CI and CodeQL detection checks queued or in progress and mergeStateStatus BLOCKED only while checks run. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable and no conflict remains."
+    "notes": "PR #14366 is the sole active parity PR. GitHub reports the ready-for-review exact opened head mergeable and conflict-free, with both CI detects, CodeQL language detection, and human-language detection queued. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable and no merge conflict exists."
   },
   "last_inventory": {
-    "revision": "827332dd63690c870599e193a973f4c0b19dc278",
+    "revision": "eae0cacabf1e3d2c03c449686614bb62113fd832",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1413,
@@ -1109,7 +1109,7 @@
     {
       "id": "haskell-sha256-streaming-performance-hardening",
       "title": "Bound Haskell SHA-256 streaming allocation amplification",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["haskell-sha256-incremental-streaming-api"],
       "branch": "codex/haskell-sha256-performance-hardening",
       "pr_number": 14352,
@@ -1126,16 +1126,44 @@
       "validation_notes": "The red allocation gate reproduced 928,951,488 allocated bytes for the original million-byte one-chunk path. The 16-slot unboxed rolling schedule and bounded bridge/remainder path reduce final optimized allocations to 57,521,408 bytes for one chunk and 57,557,872 bytes for 8 KiB streaming; both remain stable across repeated fresh processes and below the 128 MiB ceiling while verifying the FIPS digest. GHC 9.4.8 and Cabal 3.16.1 pass all 25 functional examples under -Wall -Werror and both allocation scenarios through the generic and Windows BUILD fronts pinned to -O2. Functional-only HPC reports 96% top-level definitions, 90% alternatives, and 99% expressions. Cabal check is clean; sdist includes the source, allocation test, README, and changelog; dependencies are current against the installed index; and public-library Haddock coverage is 100%. HMAC 5, HKDF 4, and PBKDF2 4 downstream suites pass with their transitive SHA-256 tests. The complete Go build-tool tests, vet, trimpath build, 45-file Starlark evaluation, 5,140-package discovery, and exact six-package affected plan pass. Package-parity, capability-taxonomy, Haskell capability, and OCaml lock suites pass 68 tests with two expected Windows symlink skips. The 713-owner/1,169-edge state graph remains unique, complete, acyclic, status-valid, and free of merged-to-unmerged edges; collision, diff, scope, dependency, license, authority, credential, and independent review gates are clean.",
       "review_notes": "Three parallel read-only reviews independently verified rolling-schedule indexing, strict state forcing, direct ByteString bounds, copied bridge/remainder ownership, checked FIPS length handling, unchanged public exports, dependency/license compatibility, lifecycle integrity, and open-PR non-overlap. The allocation review found that an unpinned -O0 caller would fail the budget at 5,413,027,320 bytes; both canonical BUILD fronts now pin Cabal optimization level 2 and pass the real gate. The exact 128 MiB boundary is inclusive by specification: allocations greater than the ceiling fail.",
       "publication_notes": "Opened ready-for-review PR #14352 from clean validated head ac4ff2862a78739dc229a3477630f013145fccca after a normal first push from exact origin/main 827332dd63690c870599e193a973f4c0b19dc278. Immediately before publication, no active parity PR or overlapping Haskell SHA-256 PR existed; the exact diff, allocation, package/downstream, BUILD, coverage, Go build-tool, inventory, graph, dependency, license, authority, credential, and three independent review gates were acceptable. GitHub reports the PR non-draft, mergeable, and blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required final-head check is terminal and acceptable and no conflict exists.",
+      "merged_head_revision": "205a5523d608fdbf80891ba0ca4b92fd4e2c2c62",
+      "merged_at": "2026-09-05T18:16:25Z",
+      "merge_commit": "120d018dc15cec32ea328e7b5471bf7fb3f2873a",
+      "merge_notes": "Both final-head Ubuntu builds, both metadata jobs, both CI gates, CodeQL detection, and the human-language aggregate gate completed successfully; inapplicable matrix jobs skipped acceptably. GitHub reported CLEAN and MERGEABLE before guarded squash auto-merge was enabled, and merged the PR immediately without a plain manual merge command.",
       "notes": "Discovered by the final parallel performance audit of the incremental API. The optimized million-byte vector remains bounded at 606 KB maximum residency and completes in 0.1185 seconds, but allocates 932,085,064 bytes because each 64-byte block is unpacked into lists and the message schedule repeatedly indexes, drops, and appends. The update path can also copy an entire caller chunk when joining a retained remainder, although the planned build-tool consumer will use bounded 8 KiB chunks. Optimize or establish an explicit acceptable allocation budget before the Haskell build-tool source-hashing owner lands; retain the opaque immutable API and all current vectors."
     },
     {
       "id": "build-tool-haskell-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Haskell build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["haskell-sha256-streaming-performance-hardening", "build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair"],
+      "branch": "codex/haskell-build-tool-source-hashing",
+      "pr_number": 14366,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14366",
+      "opened_at": "2026-09-05T19:24:40Z",
+      "opened_revision": "4c5458e2fe8c78e9dabeca7cb84376239f76518c",
+      "selected_at": "2026-09-05T18:18:57Z",
+      "selection_revision": "e550c8813672aca479a918ebfa87fb9731a6442e",
+      "test_revision": "f872a76958fdec3144823d2e3f6759699fdf49ad",
+      "implementation_revision": "3b30702cb4dde094c0bf704fd1e4bced8c1b3a62",
+      "validation_revision": "8913944497e2b864e24791c8837369f6d7f6244a",
+      "rebase_revision": "994e0555426b2330f33f45210fef6953607a67f6",
+      "rebase_notes": "Rebased conflict-free onto exact origin/main 994e0555426b2330f33f45210fef6953607a67f6 after unrelated Hindi curriculum, FLOW-MATIC and McCarthy lang-aot coverage, Flutter one-of slot, Mosaic table-selection, and Rust SPICE commits. The intervening changes touch no Haskell build-tool, parity-state, roadmap, registry, or hashing path and add no package identity or lane change requiring a new owner.",
+      "review_notes": "Three parallel read-only audits tightened the package-local fixture adapter, portable glob grammar and work accounting, filesystem candidate and selected-input bounds, all-candidate path collision handling, registry-language discovery, reproducible generated projection, documentation, and validation plan. The native-boundary audit also identified the remaining pathname TOCTOU and native identity gap, now owned by build-tool-haskell-native-source-snapshot-stability-hardening and wired ahead of Haskell dependency hashing, repository-boundary adoption, and the all-engine aggregate.",
+      "validation_notes": "Publication validation passes 77 Haskell build-tool, 25 SHA-256, four graph, and three directed-graph examples; the allocation budgets measure 57,521,408 bytes for one million bytes and 57,557,872 bytes for 8 KiB chunks. The optimized -Wall -Werror build, Cabal check, Haddock, sdist, literal BUILD front, exact generator byte-sync, canonical Go test/vet/trimpath build, and a real 207-package Haskell dry plan pass. The plan evaluates 45 Starlark files and selects exactly the changed build tool plus graph, directed-graph, and SHA-256. A clean relevant neutral schema/runner/parity run passes 111 tests and 269 subtests; the collision-checked package inventory, 716-owner/1,180-edge unique dependency-complete acyclic merged-closed state graph, diff hygiene, and changed-diff credential scan are clean. BUILD_windows contains the same directly validated cabal test all optimized command. The pathname TOCTOU/native retained-identity limitation remains explicitly unclaimed and separately owned.",
+      "publication_notes": "Opened ready-for-review PR #14366 from clean validated head 4c5458e2fe8c78e9dabeca7cb84376239f76518c after a normal first push from exact origin/main 994e0555426b2330f33f45210fef6953607a67f6. Immediately before publication, the remote branch and prior PR were absent, the collision-checked inventory and state graph were clean, and the conflict-free post-rebase Haskell test rerun passed. GitHub reports the PR non-draft, mergeable, and conflict-free with initial required checks queued; guarded auto-merge remains disabled until every final-head check is terminal and acceptable.",
+      "selection_notes": "Selected in fresh clean worktree C:/Users/adhit/worktrees/ca-parity-haskell-source-hashing-20260905-1816 after PR #14352 completed every final-head gate and merged through guarded squash auto-merge. Before selection, three parallel audits were incorporated: two missing neutral build-tool closure owners were added; stale Dart/JVM/Swift umbrella edges were corrected; OCaml capability, representative-CI, and C/C++ manifest applicability scope was strengthened; and the resulting 715-owner/1,179-edge graph was revalidated as unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 208 merged and 507 pending. The reporter-exact inventory on current origin/main remains schema 3 with 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The current build-tool/OCaml strategic frontier ranks OCaml representative core first and Perl registry repair second by transitive leverage, but this bounded Haskell source-hashing tranche wins serial continuity: #14352 has just satisfied its final SHA-256 performance prerequisite, all four neutral registry/boundary prerequisites are merged, the toolchain and incremental hashing dependency are hot and validated, and the owner unlocks three direct plus four transitive unfinished descendants without changing authority. Seven live open PRs have zero semantic or path overlap; the last pre-selection main advance changes only the unrelated Rust SPICE parser and plan.",
+      "notes": "Discovered by the post-#13544 source-hashing audit. Haskell lacks OCaml source recognition and its hashing collector uses an incomplete global registry whose case aliases can collide. Adopt the complete checked registry with exact scoped projection and portable path framing without mixing discovery-fixture work."
+    },
+    {
+      "id": "build-tool-haskell-native-source-snapshot-stability-hardening",
+      "title": "Harden native Haskell build-tool source snapshots",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-haskell-portable-source-hashing-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#13544 source-hashing audit. Haskell lacks OCaml source recognition and its hashing collector uses an incomplete global registry whose case aliases can collide. Adopt the complete checked registry with exact scoped projection and portable path framing without mixing discovery-fixture work."
+      "notes": "Discovered by the parallel security audit of Haskell portable source hashing. The package-local adopter uses pathname link checks, bounded listDirectory snapshots, handle-size checks, and pre/post size and modification-time validation, but it cannot atomically bind the package root, ancestors, and file to retained no-follow handles; prove regular and single-link identity; reject every Windows junction/reparse traversal; or detect every same-size, same-timestamp replacement. Add retained root/ancestor/file identity, regular-file and single-link enforcement, POSIX symlink/hardlink plus Windows junction/reparse coverage, root/directory/file replacement-race tests, stable root-redacted failures, and any conditional native dependency/license review without widening source-selection semantics."
     },
     {
       "id": "build-tool-csharp-fsharp-portable-source-hashing-conformance",
@@ -1286,7 +1314,7 @@
       "title": "Complete portable source hashing across every remaining build-tool engine",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-portable-source-hashing-conformance", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-language-source-input-registry-adoption", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-portable-source-hashing-conformance", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-language-source-input-registry-adoption", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the complete hashing contract. It has no independent source behavior and advances only after every engine-scoped leaf proves exact component pruning, portable source recognition, normalized path framing, deterministic byte hashing, dependency invalidation, and stable cache recovery or records a reviewed exception."
@@ -1331,7 +1359,7 @@
       "id": "build-tool-haskell-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["build-tool-haskell-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-haskell-native-source-snapshot-stability-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Haskell includes dependency names but uses a non-SHA fallback framing rather than the hashing-v1 named/raw-digest stream. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -1674,6 +1702,15 @@
       "branch": "codex/build-tool-pure-domain-corpus",
       "pr_number": 9167,
       "notes": "Ready-for-review PR #9167. Selected after PR #9157 merged because this pure, process-free corpus expansion unlocks the Go oracle, Java/Kotlin, Dart, every existing front door, and OCaml promotion. The branch validates 30 cases across all 11 process-free domains with closed pure records, semantic oracles, conservative diff behavior, typed cache states, inline-only Starlark loads, sharding verification, normalized BUILD-file validation, and the OCaml-aware toolchain registry."
+    },
+    {
+      "id": "build-tool-neutral-graph-diff-corpus-completion",
+      "title": "Complete the language-neutral build-tool graph and diff corpus",
+      "status": "pending",
+      "depends_on": ["build-tool-pure-domain-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the parallel all-language build-tool audit after PR #14352. The normative neutral contract requires isolated nodes, chains, diamonds, multiple components, cycles, affected and prerequisite closures, deterministic levels, failure propagation, and both unknown-path policies, but build-tool-v1 currently has only graph-diamond plus three successful diff cases and no DIFF_UNKNOWN_PATH error fixture. Add the missing process-free fixtures, schemas, reference-runner assertions, README/changelog correction, and exact case-count validation. Failure-propagation fixtures that require trusted execution remain under build-tool-execution-semantics-corpus rather than expanding this process-free owner."
     },
     {
       "id": "build-tool-cli-parser-corpus",
@@ -2523,6 +2560,24 @@
       "notes": "Deliver one independent engine per PR; explicitly review the shared C#/F# engine exception. The exact-main audit after PR #13490 discovered that PR #13366's new Dune generated-output decoy makes the unchanged Ruby identity-registry fixture emit ocaml/decoy because Ruby discovery does not yet prune the exact case-sensitive _build component. The selected Ruby declaration-engine tranche must apply the bounded discovery/test repair needed to restore its canonical package suite; keep the separately owned Ruby hashing exclusion out of scope."
     },
     {
+      "id": "build-tool-all-language-adapter-ci-closure",
+      "title": "Close the all-language build-tool adapter and CI denominator",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-existing-remediation",
+        "build-tool-jvm-current-contract-conformance",
+        "build-tool-dart-current-contract-conformance",
+        "ocaml-build-tool-current-contract-conformance",
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-execution-semantics-corpus",
+        "c-cpp-graduation"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Terminal classification and integration gate discovered by the parallel all-language build-tool audit after PR #14352. All 16 current implementation-manifest entries still report adapter_status=missing, CI validates only the Python schema/reference path, and no terminal owner requires every applicable native front door to run the same versioned neutral corpus. After every dependency lands, require ready adapters and same-corpus CI for all supported implementations, two-way Go plan interchange where applicable, zero unreviewed failures, and explicit reviewed exceptions. This gate owns the final evidence-backed C#/F# shared-engine decision; F# is currently only an exception candidate, not an approved exception. Keep this owner selection-blocked until its implementation prerequisites and exact supported-lane/exception matrix are complete."
+    },
+    {
       "id": "build-tool-jvm",
       "title": "Add language-native Java and Kotlin build tools",
       "status": "pending",
@@ -2638,7 +2693,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Cover process execution, dynamic loading, unsafe marshaling, and Obj.magic under the repository's explicit capability and reviewed-exception policy."
+      "notes": "Cover the full relevant OCaml stdlib, Unix, Dynlink, Marshal, and Obj surface across the repository taxonomy: filesystem, network, process, environment, FFI/native loading, time, stdin, stdout, unsafe marshaling, and Obj.magic. Require all-source compiler-libs AST subset checking, explicit reviewed exceptions, BUILD integration, and an independent publication gate under the governing capability-security contract."
     },
     {
       "id": "ocaml-build-tool-and-promotion",
@@ -2670,16 +2725,21 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Require real Ubuntu, macOS, and Windows tests without skips, a green representative chain and build tool, active capability enforcement, measured coverage, complete docs, and explicit review of the generated 16-lane backlog."
+      "notes": "Require real Ubuntu, macOS, and Windows tests without skips for the actual representative package directories and native build tool, not only scaffold fixtures; a green representative dependency chain; active capability enforcement; measured coverage; complete docs; and explicit review of the generated 16-lane backlog. The denominator cannot change until the three-target workflow executes the representative packages themselves."
     },
     {
       "id": "dart-current-14-of-15",
-      "title": "Close the 11-package Dart-only 14-of-15 frontier",
+      "title": "Close the remaining 3-package Dart-only 14-of-15 frontier",
       "status": "pending",
-      "depends_on": ["haskell-http-core", "dart-scaffold-capability-schema", "dart-trig-wave"],
+      "depends_on": [
+        "dart-current-14-of-15-binary-search-tree",
+        "dart-current-14-of-15-fenwick-tree",
+        "dart-current-14-of-15-uuid"
+      ],
       "branch": null,
       "pr_number": null,
-      "notes": "Umbrella backlog only; do not select it as one oversized PR. Deliver tracked child items in small dependency-shaped slices: ML, trig/wave, data structures, ciphers, document-ast, and uuid."
+      "selection_blocked": true,
+      "notes": "Umbrella backlog only; do not select it as an implementation PR. The exact post-#14352 inventory leaves precisely binary-search-tree, fenwick-tree, and uuid at 14 of 15 with only Dart missing, and each has its own pending dependency-shaped child owner. Mark this umbrella complete only after all three children merge."
     },
     {
       "id": "dart-trig-wave",
@@ -2839,10 +2899,14 @@
       "id": "java-kotlin-high-consensus",
       "title": "Close paired Java/Kotlin high-consensus families",
       "status": "pending",
-      "depends_on": ["java-kotlin-high-consensus-lz78-deflate-state-machine"],
+      "depends_on": [
+        "java-kotlin-high-consensus-lz78-deflate-state-machine",
+        "high-consensus-unowned-gap-classification-20260905"
+      ],
       "branch": null,
       "pr_number": null,
-      "notes": "Umbrella owner for paired JVM high-consensus closure. The post-#13037 inventory found the zstd lead stale because zstd is already 15/15, and materialized the remaining lz78, deflate, and state-machine frontier as a bounded child before the next selection."
+      "selection_blocked": true,
+      "notes": "Selection-blocked historical umbrella. Its only current child, lz78/deflate/state-machine, is merged, while 53 high-consensus gaps remain in each JVM lane. Further decomposition is owned by high-consensus-unowned-gap-classification-20260905; do not select or mark this umbrella complete until those exact children and exceptions are linked."
     },
     {
       "id": "java-kotlin-high-consensus-lz78-deflate-state-machine",
@@ -2871,10 +2935,11 @@
       "id": "swift-dart-high-consensus",
       "title": "Close Swift/Dart data-structure, storage, parser, WASM, ML, and protocol families",
       "status": "pending",
-      "depends_on": ["dart-current-14-of-15"],
+      "depends_on": ["dart-current-14-of-15", "high-consensus-unowned-gap-classification-20260905"],
       "branch": null,
       "pr_number": null,
-      "notes": "Use generated grammars and dependency-first storage/compiler sequences."
+      "selection_blocked": true,
+      "notes": "Selection-blocked umbrella. Use generated grammars and dependency-first storage/compiler sequences only after the exact Swift and Dart gap classifier has materialized bounded child owners and reviewed exceptions."
     },
     {
       "id": "portable-core-expansion",
@@ -4095,7 +4160,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Keep both emerging until package/scaffold/build-tool maturity and applicability are explicit."
+      "notes": "Keep both emerging until package/scaffold/build-tool maturity and applicability are explicit. Add C and C++ as emerging entries in the build-tool implementation manifest, decide native-build-tool applicability or record a reviewed exception for each, and provide that evidence to build-tool-all-language-adapter-ci-closure before either lane can graduate."
     },
     {
       "id": "chief-process-supervisor-native-authority-review",
@@ -8339,7 +8404,7 @@
       "id": "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Haskell",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-haskell-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-haskell-native-source-snapshot-stability-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Haskell build tool after portable source hashing lands."
@@ -8532,6 +8597,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
+      "selection_blocked": true,
       "notes": "The exact-main audit found 93 Java/Kotlin/Dart high-consensus identities and 50 Swift high-consensus identities without exact package owners. Decompose this classification owner into dependency-shaped children, beginning with barcode-layout-1d and sha512; point2d requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion."
     },
     {
