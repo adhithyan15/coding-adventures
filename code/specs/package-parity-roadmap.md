@@ -12789,9 +12789,10 @@ fixtures/tests, reference-runner implementation, then changelog and final
 roadmap/state evidence.
 
 The implementation then rebased conflict-free onto exact `origin/main`
-`907b55f247cc0777bb0074d5e570e340fdb39b41`. Merged PR #14304 added only
-`rust/mosaic-app-wasm` to the package topology; three later Hindi, Mosaic React,
-and SPICE commits changed no package identity or selected path. The refreshed collision-checked
+`1f2c9bd7a65c060429b7594ee518846c6b05b8ec`. Merged PR #14304 added only
+`rust/mosaic-app-wasm` to the package topology; four later Hindi, Mosaic React,
+SPICE, and HTML parser commits changed no package identity or selected path.
+The refreshed collision-checked
 inventory now has 1,413 implementation identities, 4,629 slots, 1,452 all-
 reported identities, and bands 175/265, 123/934, 172/2,165, and 943/13,202.
 Rust has 754 singletons; OCaml remains emerging at zero packages; collisions
