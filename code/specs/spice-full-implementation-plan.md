@@ -5141,12 +5141,18 @@ the Rust, Python, and TypeScript surfaces together.
      rejects invalid input before element lowering.
 
 35. Rust BJT collector-resistance parser parity.
-   - Status: prioritized next after the BJT emitter-resistance slice.
+   - Status: completed by the Rust BJT collector-resistance slice.
    - The engine and Python/TypeScript facades lower finite non-negative BJT
-     `RC` values into the collector-resistance field; the Rust element lowerer
-     still leaves the engine default in place.
+     `RC` values into the collector-resistance field; Rust now does the same
+     and rejects invalid input before element lowering.
 
-36. Grammar-backed parser and app facade.
+36. Rust BJT base-resistance parser parity.
+   - Status: prioritized next after the BJT collector-resistance slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `RB` values into the base-resistance field; the Rust element lowerer still
+     leaves the engine default in place.
+
+37. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5154,7 +5160,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-37. Deck compatibility follow-up.
+38. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
