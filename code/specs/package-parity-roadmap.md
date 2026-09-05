@@ -12679,6 +12679,65 @@ owner `pr-open`; initial CI and CodeQL detection checks are queued, so guarded
 auto-merge remains disabled until every required check is terminal and
 acceptable.
 
+### Post-PR #14251 refresh and shared .NET source-hashing selection
+
+PR #14251 completed every final-head check acceptably, including the final CI
+gate. GitHub reported no merge conflict and executed guarded squash auto-merge
+without a plain manual merge command as
+`7de0d5a974b66681ace92d794747d9070c8cce43`.
+
+The collision-checked schema-3 inventory at exact current `origin/main`
+`11c3e0c83f3187aba1e667558592d3f5efea4c96` remains unchanged at 15 established
+lanes, 1,411 implementation identities, 4,627 implementation slots, and 1,450
+all-reported identities. Its bands remain 175/265, 123/934, 172/2,165, and
+941/13,174; Rust has 752 singletons, OCaml remains emerging at zero packages,
+and canonical collisions and unknown language buckets remain zero. Intervening
+HTML-parser and Hindi curriculum merges changed existing identities or no
+package roots, so the identity and lane topology did not move.
+
+Parallel read-only inventory, graph, and build-tool audits found no newly
+unowned identity or lane gap. The reconciled graph has 666 unique owners and
+1,037 dependency edges, with zero duplicate IDs, missing dependencies, or
+cycles. Virtually merging the completed CI-gate corpus exposes 214
+dependency-ready pending items, 188 of which are not selection-blocked. The ten
+current-engine CI-gate leaves are now ready, but each advances only the shared
+aggregate and none completes it while JVM, Dart, and OCaml creation work remains.
+
+The bounded shared C#/F# source-hashing repair is the highest-leverage finite
+next slice. Its four prerequisites are merged; one shared .NET implementation
+covers two established front doors, advances the remaining-source-hashing
+aggregate, and immediately unlocks the C#/F# dependency-hashing child, which in
+turn advances the remaining dependency-hashing aggregate. This tranche owns
+exact C#, F#, and delegated .NET registry projection, generated-directory
+pruning, source selection, normalized repository-relative framing, file
+boundaries, and deterministic package digests. Dependency hashing stays in its
+existing serial child. The clean exact-main worktree and branch
+`codex/build-tool-csharp-fsharp-portable-source-hashing-conformance` were created
+only after confirming that no local branch, remote branch, or prior PR existed.
+Reconciliation and selection leave 203 merged, 462 pending, and exactly this
+owner in progress.
+
+Adversarial review of this shared source-hashing slice made the portable
+declared-glob character-class grammar and 50,000,000-unit match-work ceiling
+explicit. Swift is the only already-complete live registry adopter, so this
+owner also aligns its source and diff matching with that neutral contract;
+the remaining engines stay gated by their existing source-hashing owners.
+The same review removed stale public discovery helpers that bypassed secure
+reads, converted discovery to constant native-descriptor use, and made .NET
+changes select the Windows CI leg that exercises that native path.
+
+A parallel reference audit found one pre-existing Swift stability defect that
+does not widen this selected .NET tranche. Swift currently parses complete
+`git ls-files --stage` mode, object-ID, stage, and path evidence, but collapses
+accepted records to paths before comparing its pre-hash and post-hash index
+snapshots. The new pending
+`build-tool-swift-git-index-snapshot-stability-repair` owner preserves and
+compares the complete evidence and now gates the remaining-engine source-hash
+aggregate. The dependency graph therefore contains 667 owners and 1,038 edges:
+203 merged, 463 pending, and exactly the shared C#/F# owner in progress; package
+inventory metrics remain unchanged because this is a behavioral repair rather
+than a new identity or lane.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

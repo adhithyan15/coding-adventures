@@ -110,6 +110,24 @@ class StrictJsonTests(unittest.TestCase):
         self.assertIsNone(runner.portable_glob_error("src/*.*"))
         self.assertIsNotNone(runner.portable_glob_error("src/foo."))
 
+    def test_portable_glob_character_classes_match_neutral_semantics(self) -> None:
+        cases = (
+            ("src/[!a].cs", "src/b.cs", True),
+            ("src/[!a].cs", "src/a.cs", False),
+            ("src/[]].cs", "src/].cs", True),
+            ("src/[-a].cs", "src/-.cs", True),
+            ("src/[a-].cs", "src/-.cs", True),
+            ("src/[a-c].cs", "src/b.cs", True),
+            ("src/[.cs", "src/[.cs", True),
+            ("src/[^].cs", "src/^.cs", True),
+        )
+        for pattern, path, expected in cases:
+            with self.subTest(pattern=pattern, path=path):
+                self.assertEqual(
+                    expected,
+                    runner._portable_glob_matches(pattern, path),
+                )
+
     def test_schema_validation_never_retrieves_external_references(self) -> None:
         for keyword in ("$ref", "$dynamicRef"):
             schema = {
@@ -3083,6 +3101,33 @@ class PureDomainValidationTests(unittest.TestCase):
             before["required_capabilities.json"],
             after["required_capabilities.json"],
         )
+
+    def test_declared_source_glob_work_is_bounded_across_candidates(self) -> None:
+        self.assertIsNotNone(runner.portable_glob_error("src/[a--!].cs"))
+        registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        options = {
+            "language": "csharp",
+            "package_root": "code/packages/csharp/demo",
+            "mode": "declared_sources",
+            "registry_sha256": runner.source_input_registry_digest(registry),
+            "declared_srcs": [
+                f"unmatched/{'a' * 220}{index:03d}*.cs" for index in range(256)
+            ],
+            "candidates": [
+                {
+                    "path": f"src/file{index:03d}.cs",
+                    "kind": "file",
+                    "content_hex": "61",
+                }
+                for index in range(100)
+            ],
+        }
+
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner._expected_source_collection(options, registry)
+        self.assertEqual(raised.exception.code, "SOURCE_HASH_LIMIT_EXCEEDED")
 
     def test_repository_source_collection_closes_shared_and_pruned_boundaries(
         self,
