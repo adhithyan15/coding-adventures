@@ -2586,6 +2586,25 @@ fn parse_element(
             {
                 return Err(NetlistParseError::new("BJT NE must be finite and positive"));
             }
+            let base_collector_leakage_saturation_current = match model.params.get("ISC") {
+                Some(&current) => current,
+                None => {
+                    let ratio = *model.params.get("C4").unwrap_or(&0.0);
+                    if !ratio.is_finite() || ratio < 0.0 {
+                        return Err(NetlistParseError::new(
+                            "BJT C4 must be finite and non-negative",
+                        ));
+                    }
+                    ratio * saturation_current
+                }
+            };
+            if !base_collector_leakage_saturation_current.is_finite()
+                || base_collector_leakage_saturation_current < 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "BJT ISC must be finite and non-negative",
+                ));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2631,6 +2650,8 @@ fn parse_element(
             bjt.base_emitter_leakage_saturation_current = base_emitter_leakage_saturation_current;
             bjt.base_emitter_leakage_emission_coefficient =
                 base_emitter_leakage_emission_coefficient;
+            bjt.base_collector_leakage_saturation_current =
+                base_collector_leakage_saturation_current;
             Ok(Element::Bjt(bjt))
         }
         'J' => {
