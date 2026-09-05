@@ -2627,6 +2627,10 @@ fn parse_element(
             if !reverse_emission_coefficient.is_finite() || reverse_emission_coefficient <= 0.0 {
                 return Err(NetlistParseError::new("BJT NR must be finite and positive"));
             }
+            let forward_emission_coefficient = *model.params.get("NF").unwrap_or(&1.0);
+            if !forward_emission_coefficient.is_finite() || forward_emission_coefficient <= 0.0 {
+                return Err(NetlistParseError::new("BJT NF must be finite and positive"));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2679,6 +2683,7 @@ fn parse_element(
             bjt.forward_beta_temperature_exponent = forward_beta_temperature_exponent;
             bjt.reverse_beta = reverse_beta;
             bjt.reverse_emission_coefficient = reverse_emission_coefficient;
+            bjt.forward_emission_coefficient = forward_emission_coefficient;
             Ok(Element::Bjt(bjt))
         }
         'J' => {

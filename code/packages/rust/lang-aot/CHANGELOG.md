@@ -1,5 +1,18 @@
 # Changelog — `lang-aot`
 
+## Unreleased — Oct loop and returned-call proofs (VM-044)
+
+Add canonical seven-backend programs for loop-carried u8 wrapping returned from
+a function, conditional loop exit, and nested break targets with distinct
+stdout markers. Normal non-ALGOL BUILD automatically includes the new rows.
+
+## Unreleased — FLOW-MATIC control-flow matrix proofs (VM-037)
+
+Add seven-backend canonical programs for taken EQUAL, false LESS/GREATER
+falling to OTHERWISE, and a two-jump chain. Wrong paths terminate with different
+record widths or line counts, so a miscompile fails by output rather than a
+hang. The normal non-ALGOL matrix gate automatically includes all three rows.
+
 ## Unreleased — McCarthy native host coverage (VM-036)
 
 Run the existing McCarthy native capstone on Windows and Linux as well as

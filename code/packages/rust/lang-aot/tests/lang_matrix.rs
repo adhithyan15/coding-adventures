@@ -4979,6 +4979,36 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // VM-044: three loop-carried additions wrap 250 + 30 to 24, then the
+    // function returns that value across a call boundary for visible output.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn count() -> u8 { let n: u8 = 250; let i: u8 = 0; \
+              while i < 3 { n = n + 10; i = i + 1; } return n; } \
+              fn main() { out(1, count()); }",
+        expect: Expect::Stdout("24"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // The conditional break must leave the loop only after its third body.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { let n: u8 = 0; loop { n = n + 1; \
+              if n == 3 { break; } } out(1, n); }",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Inner break resumes the outer body; outer break resumes main. A single
+    // shared break label would skip one of these distinct output markers.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { loop { loop { out(1, 4); break; } \
+              out(1, 2); break; } out(1, 7); }",
+        expect: Expect::Stdout("4\n2\n7"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // FLOW-MATIC — unified-matrix baseline (VM-020). A file-qualified field is
     // initialised to zero, moved through the frontend's scalar-field path, and
     // rendered by WRITE-ITEM through the shared recursive integer printer plus
@@ -4991,6 +5021,43 @@ const PROGRAMS: &[Prog] = &[
         src: "(0) OUTPUT REPORT FILE-C .\n\
                (1) MOVE TOTAL (C) TO TOTAL (C) ; WRITE-ITEM FILE-C ; STOP .",
         expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // VM-037: fields begin at zero. Distinct record widths make a wrong
+    // branch observable without an infinite-loop failure path.
+    Prog {
+        lang: Language::FlowMatic,
+        ext: "fm",
+        src: "(0) MOVE X (A) TO Y (A) ; MOVE Z (C) TO Z (C) .\n\
+              (1) COMPARE X (A) WITH Y (A) ; IF EQUAL GO TO OPERATION 4 ; OTHERWISE GO TO OPERATION 2 .\n\
+              (2) WRITE-ITEM FILE-A ; STOP .\n\
+              (4) WRITE-ITEM FILE-C ; STOP .",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Both strict inequalities are false for equal fields. OTHERWISE must
+    // jump over the one-field wrong path to the two-field result.
+    Prog {
+        lang: Language::FlowMatic,
+        ext: "fm",
+        src: "(0) MOVE X (A) TO Y (A) ; MOVE Z (C) TO Z (C) .\n\
+              (1) COMPARE X (A) WITH Y (A) ; IF LESS GO TO OPERATION 2 ; IF GREATER GO TO OPERATION 2 ; OTHERWISE GO TO OPERATION 4 .\n\
+              (2) WRITE-ITEM FILE-C ; STOP .\n\
+              (4) WRITE-ITEM FILE-A ; STOP .",
+        expect: Expect::Stdout("0 0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Each jump skips a terminating two-field output path. The correct chain
+    // visits two separated one-field writes; neither jump can be ignored.
+    Prog {
+        lang: Language::FlowMatic,
+        ext: "fm",
+        src: "(0) MOVE X (A) TO Y (A) ; MOVE Z (C) TO Z (C) ; JUMP TO OPERATION 2 .\n\
+              (1) WRITE-ITEM FILE-A ; STOP .\n\
+              (2) WRITE-ITEM FILE-C ; JUMP TO OPERATION 4 .\n\
+              (3) WRITE-ITEM FILE-A ; STOP .\n\
+              (4) WRITE-ITEM FILE-C ; STOP .",
+        expect: Expect::Stdout("0\n0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // COBOL-60 — literal `DISPLAY` (PL09 step 4, the `cobol-iir-compiler` minimal

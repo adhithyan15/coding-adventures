@@ -11108,7 +11108,7 @@ fn populate_select_selectedcontent(select: &mut Element) {
                     *selected = Some(element.children.clone());
                 }
             } else if !(is_html_element
-                && matches!(element.name.as_str(), "button" | "datalist" | "template"))
+                && matches!(element.name.as_str(), "datalist" | "template"))
             {
                 if is_html_element && element.name == "optgroup" && inside_optgroup {
                     continue;
@@ -47021,6 +47021,89 @@ mod tests {
                 find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
             ),
             "last"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_includes_options_inside_select_buttons() {
+        let source = "<!doctype html><!--é-->\r\n<select id=select><button id=button><selectedcontent id=target>old</selectedcontent><span><option id=inside selected><b>inside</b></option></span></button><option id=fallback>fallback</option></select>";
+        let document = parse_html(source).unwrap();
+        let selectedcontent = find_element_by_id(&document.children, "target").unwrap();
+        assert_eq!(selectedcontent.children.len(), 1);
+        assert_eq!(element(&selectedcontent.children[0]).name, "b");
+        assert_eq!(element_text_content(selectedcontent), "inside");
+        let button = find_element_by_id(&document.children, "button").unwrap();
+        assert!(find_element_by_id(&button.children, "inside").is_some());
+        assert!(source.len() > source.chars().count());
+
+        for nodes in [
+            parse_html_fragment_for_context(
+                "<select><button><selectedcontent id=target>old</selectedcontent><option selected>inside</option></button><option>fallback</option></select>",
+                "body",
+            )
+            .unwrap(),
+            parse_html(
+                "<!doctype html><svg><foreignObject><select><button><selectedcontent id=target>old</selectedcontent><option selected>inside</option></button><option>fallback</option></select></foreignObject></svg>",
+            )
+            .unwrap()
+            .children,
+        ] {
+            assert_eq!(
+                element_text_content(find_element_by_id(&nodes, "target").unwrap()),
+                "inside"
+            );
+        }
+
+        let datalist = parse_html(
+            "<!doctype html><select><button><selectedcontent id=target>old</selectedcontent><datalist><option selected>excluded</option></datalist></button><option>fallback</option></select>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(find_element_by_id(&datalist.children, "target").unwrap()),
+            "fallback"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "button".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "selected".to_string(),
+                    value: String::new(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("inside".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "inside"
         );
         assert!(direct
             .diagnostics()

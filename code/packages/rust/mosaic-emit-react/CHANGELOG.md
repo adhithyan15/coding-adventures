@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - table selection reveal
+
+- Tables with bound selected-row/selected-col slots reveal the rendered body
+  cell within the nearest scroll frame, accounting for sticky header height.
+  Invalid or absent coordinates do nothing; focus is not moved.
+
 ### Fixed - authored table section styles
 
 - Preserve named part styles on HostTableHead, HostTableBody and HostTableFoot,

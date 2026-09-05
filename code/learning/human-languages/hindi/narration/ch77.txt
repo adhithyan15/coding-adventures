@@ -37,7 +37,7 @@ What does खेल (khel) mean? ("a game".) Say it once more.
 
 
 Lesson 2 of 5.
-खेलना (khelnā) — to play.
+खेलना / खेलता / खेलती / खेलते (khelnā / kheltā / kheltī / khelte) — playing in the present.
 
 Warm-up.
 [pause 2 seconds]
@@ -47,7 +47,7 @@ You'll want to know: खेलना.
 खेलना (khelnā) — "to play".
 The same खेल (khel) you learnt in the last lesson, with -ना on the end. That is the whole of it: Hindi makes a doing word out of a naming word by adding those two letters, and you have now watched it happen once.
 Look at what that gives you. जाना was built the same way, and so were बोलना, लिखना, सुनना. Four you already own and one you have just made — the ending is a tool, not a list to memorise.
-मैं खेलता हूँ is "I play", in the frame you have used since मैं हिंदी बोलता हूँ.
+Remove -ना to recover खेल (khel)-, then add the present endings you know: खेलता (masculine), खेलती (feminine), and खेलते (respectful आप or plural). So मैं खेलता हूँ / मैं खेलती हूँ means "I play," while आप खेलते हैं means "you play."
 
 What you've built.
 A game, and the doing word that comes out of it.
@@ -58,7 +58,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: khel, then khelnā]
 [pause 8 seconds for the answer]
-[your turn — say: maiṁ kheltā hūṁ]
+[your turn — say: मैं खेलता हूँ (maiṁ kheltā hūṁ) if masculine; मैं खेलती हूँ (maiṁ kheltī hūṁ) if feminine]
+[pause 8 seconds for the answer]
+[your turn — say: "you (resp.) play" — आप खेलते हैं (āp khelte haiṁ)]
 [pause 8 seconds for the answer]
 [once you have stopped driving — write: खेल (khel), then add ना to the end of it]
 [your turn — recall: read भारत, then say rel]
@@ -66,7 +68,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does खेलना (khelnā) mean? ("to play".) And खेल? ("a game".)
+What does खेलना mean? ("to play".) And खेल (khel)? ("a game".) Give the masculine, feminine, and respectful or plural present forms. (खेलता / खेलती / खेलते.)
 
 
 Lesson 3 of 5.
@@ -83,7 +85,7 @@ The ि after the stack is the short i matra, and it sits to the left of the who
 If you learn one game word in Hindi, learn this one. मैं क्रिकेट (krikeṭ) खेलता हूँ puts three of this chapter's ideas into a single sentence.
 
 What you've built.
-Three: खेल, खेलना (khelnā), क्रिकेट (krikeṭ). A game, playing it, and one to name.
+Three: खेल (khel), खेलना, क्रिकेट (krikeṭ). A game, playing it, and one to name.
 
 Guided Practice.
 [pause 1 second]
@@ -113,7 +115,7 @@ Write क्रिकेट (krikeṭ) from memory, starting with the ि you pu
 You'll want to know: गाना.
 गाना (gānā) — "a song".
 Sanskrit गान (gāna), "singing", from गै (gai-), "to sing". The root is one of the oldest in the language and it has never stopped working.
-Now notice the shape. गाना (gānā) ends in -ना, exactly like खेलना (khelnā) — and that is not an accident. गाना (gānā) is also the doing word "to sing". One spelling, two jobs: the song, and the singing of it. Which one is meant is settled by the sentence around it and never by the word.
+Now notice the shape. गाना (gānā) ends in -ना, exactly like खेलना — and that is not an accident. गाना (gānā) is also the doing word "to sing". One spelling, two jobs: the song, and the singing of it. Which one is meant is settled by the sentence around it and never by the word.
 Hindi does this often enough that it is worth expecting rather than being surprised by. You will meet another word with the same double life before this run of chapters is out.
 
 What you've built.
@@ -125,7 +127,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — contrast: gānā as the song, and gānā as the singing]
 [pause 8 seconds for the answer]
-[once you have stopped driving — write: गाना (gānā), then खेलना (khelnā) under it, and look at the ending they share]
+[once you have stopped driving — write: गाना (gānā), then खेलना under it, and look at the ending they share]
 [your turn — recall: read भाषा, then say ṭikaṭ]
 [pause 8 seconds for the answer]
 
@@ -148,7 +150,7 @@ Persian آرام (ārām), "quiet, calm, repose". It came in with the Persian ha
 It is also an answer. When somebody asks आप कैसे हैं?, one ordinary reply is that you are at आराम (ārām), and it says more warmly than ठीक does.
 
 What you've built.
-Five: खेल, खेलना (khelnā), क्रिकेट (krikeṭ), गाना (gānā), आराम (ārām). Enough to say what you do when the day lets go of you.
+Five: खेल (khel), खेलना, क्रिकेट (krikeṭ), गाना (gānā), आराम (ārām). Enough to say what you do when the day lets go of you.
 
 Guided Practice.
 [pause 1 second]

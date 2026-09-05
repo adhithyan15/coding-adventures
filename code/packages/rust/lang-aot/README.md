@@ -1,5 +1,14 @@
 # lang-aot
 
+Oct's matrix includes while-loop byte wrapping returned through a function call,
+conditional loop exit, and nested break targets on the seven standard backends.
+
+
+FLOW-MATIC's canonical matrix now includes scalar output, equal/otherwise
+branches and a jump chain on all seven standard backends. Nonzero input and
+EOF-aware record-stream parity remain tracked separately under VM-039.
+
+
 McCarthy's native corpus runs on Linux, macOS and Windows. Execute it with
 `cargo test -p lang-aot --test conformance mccarthy_native_corpus_executes -- --exact --nocapture`.
 Windows CI sets `LANG_REQUIRE_WINDOWS_AOT=1` so an absent linker fails the gate.

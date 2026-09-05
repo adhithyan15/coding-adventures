@@ -15,8 +15,8 @@
 > lane (#13543) has published `task-app-v0.1.0`. The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
-> SwiftUI in #14331, and Qt in #14344. The current dependency is #14348, the
-> Flutter runtime lowering within #14036. The remaining backends and toolkit
+> SwiftUI in #14331, Qt in #14344, and Flutter in #14353. The current dependency
+> is #14359, the XAML runtime lowering within #14036. The remaining backends and toolkit
 > retrofits still precede stories or trustworthy TaskApp composition coverage.
 >
 > The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
@@ -191,6 +191,11 @@ step, no artifact. The ordered queue below comes from that spec.
 - **P2 [#13977](https://github.com/adhithyan15/coding-adventures/issues/13977):**
   signing/notarization/installers, filed when #13522 closed while the README
   still pointed at it.
+- **P2 [#14360](https://github.com/adhithyan15/coding-adventures/issues/14360):**
+  a generated permissive XAML project for a component with zero events reads
+  `MosaicName` from an empty event union that does not declare it. Discovered by
+  the #14359 WinUI build probe; adding one fixture event allowed UI49's exact
+  generated project to compile while this separate shell bug remains queued.
 
 **Tier B — close the three unexercised backends.** Filed as work is picked up;
 see the spec for the completion bar each one has to clear.

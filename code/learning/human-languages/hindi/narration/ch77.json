@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "After the Work Is Done",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:900c090d24037901",
+  "sourceHash": "fnv1a64:49936cc228523971",
   "lessons": [
     {
       "id": "HI-C70-game",
@@ -153,17 +153,17 @@
     {
       "id": "HI-C70-play",
       "sequence": 2940,
-      "title": "खेलना (khelnā) — to play",
-      "headword": "खेलना",
-      "romanization": "khelnā",
-      "gloss": "to play",
+      "title": "खेलना / खेलता / खेलती / खेलते (khelnā / kheltā / kheltī / khelte) — playing in the present",
+      "headword": "खेलना / खेलता / खेलती / खेलते",
+      "romanization": "khelnā / kheltā / kheltī / khelte",
+      "gloss": "to play / plays — infinitive / masculine / feminine / respectful or plural",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:288c34c62aad5cc1",
+      "sourceHash": "fnv1a64:26c0b62a6096bc87",
       "notice": null,
       "blocks": [
         {
@@ -202,7 +202,7 @@
             },
             {
               "kind": "speech",
-              "text": "मैं खेलता हूँ is \"I play\", in the frame you have used since मैं हिंदी बोलता हूँ."
+              "text": "Remove -ना to recover खेल (khel)-, then add the present endings you know: खेलता (masculine), खेलती (feminine), and खेलते (respectful आप or plural). So मैं खेलता हूँ / मैं खेलती हूँ means \"I play,\" while आप खेलते हैं means \"you play.\""
             }
           ]
         },
@@ -249,11 +249,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "maiṁ kheltā hūṁ",
+              "instruction": "मैं खेलता हूँ (maiṁ kheltā hūṁ) if masculine; मैं खेलती हूँ (maiṁ kheltī hūṁ) if feminine",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *maiṁ kheltā hūṁ*]"
+              "source": "[YOU SAY: **मैं खेलता हूँ** (*maiṁ kheltā hūṁ*) if masculine; **मैं खेलती हूँ** (*maiṁ kheltī hūṁ*) if feminine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"you (resp.) play\" — आप खेलते हैं (āp khelte haiṁ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"you (resp.) play\" — **आप खेलते हैं** (*āp khelte haiṁ*)]"
             },
             {
               "kind": "prompt",
@@ -288,7 +297,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does खेलना (khelnā) mean? (\"to play\".) And खेल? (\"a game\".)"
+              "text": "What does खेलना mean? (\"to play\".) And खेल (khel)? (\"a game\".) Give the masculine, feminine, and respectful or plural present forms. (खेलता / खेलती / खेलते.)"
             }
           ]
         }
@@ -357,7 +366,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three: खेल, खेलना (khelnā), क्रिकेट (krikeṭ). A game, playing it, and one to name."
+              "text": "Three: खेल (khel), खेलना, क्रिकेट (krikeṭ). A game, playing it, and one to name."
             }
           ]
         },
@@ -486,7 +495,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now notice the shape. गाना (gānā) ends in -ना, exactly like खेलना (khelnā) — and that is not an accident. गाना (gānā) is also the doing word \"to sing\". One spelling, two jobs: the song, and the singing of it. Which one is meant is settled by the sentence around it and never by the word."
+              "text": "Now notice the shape. गाना (gānā) ends in -ना, exactly like खेलना — and that is not an accident. गाना (gānā) is also the doing word \"to sing\". One spelling, two jobs: the song, and the singing of it. Which one is meant is settled by the sentence around it and never by the word."
             },
             {
               "kind": "speech",
@@ -537,7 +546,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "गाना (gānā), then खेलना (khelnā) under it, and look at the ending they share",
+              "instruction": "गाना (gānā), then खेलना under it, and look at the ending they share",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -636,7 +645,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Five: खेल, खेलना (khelnā), क्रिकेट (krikeṭ), गाना (gānā), आराम (ārām). Enough to say what you do when the day lets go of you."
+              "text": "Five: खेल (khel), खेलना, क्रिकेट (krikeṭ), गाना (gānā), आराम (ārām). Enough to say what you do when the day lets go of you."
             }
           ]
         },

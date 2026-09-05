@@ -5221,12 +5221,18 @@ the Rust, Python, and TypeScript surfaces together.
      same and rejects invalid input before element lowering.
 
 47. Rust BJT forward-emission-coefficient parser parity.
-   - Status: prioritized next after the BJT reverse-emission-coefficient slice.
+   - Status: completed by the Rust BJT forward-emission-coefficient slice.
    - The engine and Python/TypeScript facades lower finite positive BJT `NF`
-     values into the forward-emission-coefficient field; the Rust element
-     lowerer still leaves the engine default in place.
+     values into the forward-emission-coefficient field; Rust now does the
+     same and rejects invalid input before element lowering.
 
-48. Grammar-backed parser and app facade.
+48. Rust BJT base-emitter-junction-potential parser parity.
+   - Status: prioritized next after the BJT forward-emission-coefficient slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `VJE`
+     values, with `PE` as an alias, into the base-emitter-junction-potential
+     field; the Rust element lowerer still leaves the engine default in place.
+
+49. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5234,7 +5240,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-49. Deck compatibility follow-up.
+50. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
