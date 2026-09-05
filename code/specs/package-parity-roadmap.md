@@ -13006,8 +13006,9 @@ and this repair gates five unfinished descendants including repository-scale
 source hashing. OCaml representative-core work is dependency-ready, and the
 Elixir and Perl implementation plans are prepared for later serial selection.
 With the three new owners and six new dependency edges, the reconciled graph
-contains 713 owners and 1,169 edges: 207 merged and 506 pending before the next
-selection.
+contains 713 owners and 1,169 edges. The Haskell performance owner is now the
+sole in-progress item, leaving 207 merged and 505 pending owners. Its fresh
+branch starts from exact merged main and changes no public API or authority.
 
 ## Autonomous Loop Protocol
 

@@ -1102,10 +1102,13 @@
     {
       "id": "haskell-sha256-streaming-performance-hardening",
       "title": "Bound Haskell SHA-256 streaming allocation amplification",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["haskell-sha256-incremental-streaming-api"],
-      "branch": null,
+      "branch": "codex/haskell-sha256-performance-hardening",
       "pr_number": null,
+      "selected_at": "2026-09-05T17:20:29Z",
+      "selection_revision": "29ab3c65ff705d1f78367c0c1468c9ea7e29dff2",
+      "selection_notes": "Selected from fresh exact-main worktree C:/Users/adhit/worktrees/ca-parity-haskell-sha256-performance-20260905-1712 after PR #14339 merged through guarded auto-merge and the collision-checked inventory remained unchanged at 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel Rust, Perl, and Elixir audits added three previously unowned prerequisites/follow-ups and independently validated the resulting graph. This bounded pure-Haskell optimization is the smallest ready dependency-shaped repair, closes a measured 932 MB allocation amplification before repository-scale source hashing, and gates five unfinished descendants without changing public API or adding authority. Selection leaves 713 owners and 1,169 edges at 207 merged, 505 pending, and exactly this owner in progress.",
       "notes": "Discovered by the final parallel performance audit of the incremental API. The optimized million-byte vector remains bounded at 606 KB maximum residency and completes in 0.1185 seconds, but allocates 932,085,064 bytes because each 64-byte block is unpacked into lists and the message schedule repeatedly indexes, drops, and appends. The update path can also copy an entire caller chunk when joining a retained remainder, although the planned build-tool consumer will use bounded 8 KiB chunks. Optimize or establish an explicit acceptable allocation budget before the Haskell build-tool source-hashing owner lands; retain the opaque immutable API and all current vectors."
     },
     {
