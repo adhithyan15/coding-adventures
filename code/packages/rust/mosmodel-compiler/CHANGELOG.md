@@ -1,5 +1,36 @@
 # Changelog — mosmodel-compiler
 
+## [Unreleased]
+
+### Added — `one-of`, a closed-set slot type (UI49, #14036)
+
+```
+slot variant : one-of primary secondary danger ;
+```
+
+A keyword axis used to be declared `slot variant : text` with its legal values
+in a **comment**, so nothing could validate a value, reject a typo, or
+enumerate the set to check that a stylesheet or a story covered it. Six toolkit
+components shipped `variant`/`size` slots whose values were accepted and
+silently discarded.
+
+`SlotType::OneOf(Vec<String>)` carries the values in declaration order. A
+repeated value is rejected rather than deduplicated, because it is almost
+certainly a typo and it would make "does this cover every value?" ambiguous for
+anything consuming the set.
+
+Ordering in the grammar matters and is commented at the rule: `one_of_type`,
+`list_type`, and `scalar_type` all begin with `KEYWORD`, so the longer
+productions must be tried first. `slot_type` getting this wrong is exactly the
+defect that would have broken all 72 `list<>` declarations in the repository
+(#14067).
+
+The host-facing type is a string on every backend today, except TypeScript,
+where a closed set lowers to a **union** (`"primary" | "secondary" | "danger"`)
+— so passing an undeclared variant is a compile error in the generated host
+rather than a value ignored at runtime. Lowering to native enums elsewhere is
+UI49 open question 2.
+
 ## [0.1.2] — 2026-07-14
 
 ### Fixed — recursion-depth guard against native stack overflow (DoS)

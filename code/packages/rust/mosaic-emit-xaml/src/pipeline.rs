@@ -5302,6 +5302,9 @@ fn emit_row_projection_property(projection: &RowProjection) -> String {
 fn slot_type_to_csharp(t: &SlotType) -> Result<String, PipelineEmitError> {
     Ok(match t {
         SlotType::Text => "string".to_string(),
+        // A one-of value is a name from a closed set, carried as a string.
+        // Lowering it to a native enum is UI49 open question 2.
+        SlotType::OneOf(_) => "string".to_string(),
         SlotType::Number => "double".to_string(),
         SlotType::Bool => "bool".to_string(),
         SlotType::Color => "Windows.UI.Color".to_string(),
