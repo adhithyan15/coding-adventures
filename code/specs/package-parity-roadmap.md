@@ -12789,7 +12789,7 @@ fixtures/tests, reference-runner implementation, then changelog and final
 roadmap/state evidence.
 
 The implementation then rebased conflict-free onto exact `origin/main`
-`b4535bf5ab5f2f5b07e2f58ce18bed7065231cc1`. Merged PR #14304 added only
+`b4535bf5ab6e0d8f9c4e90f9836555875d00246a`. Merged PR #14304 added only
 `rust/mosaic-app-wasm` to the package topology; five later Hindi, Mosaic React,
 SPICE, HTML parser, and Windows language-VM CI commits changed no package
 identity or selected path.
