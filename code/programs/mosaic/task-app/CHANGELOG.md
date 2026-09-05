@@ -12,9 +12,10 @@ version is cut and this heading is replaced with it.
 
 The generated Flutter build hook now stages TaskApp's prebuilt Rust runtime
 through its hook-owned output directory before registering the bundled code
-asset. This restores `libmosaic_app.so` in Linux release bundles on current
-hosted runners and keeps the executable launchable without an external runtime
-path.
+asset. The TaskApp CI and release lanes now use Flutter 3.47.0, the version that
+also passed the generated Windows bundle and launch validation. Together these
+changes restore `libmosaic_app.so` in Linux release bundles on current hosted
+runners and keep the executable launchable without an external runtime path.
 
 ### Fixed - Vitest config uses Vite's native ESM loading contract (#13526)
 

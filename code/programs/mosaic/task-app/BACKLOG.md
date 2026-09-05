@@ -131,8 +131,9 @@ step, no artifact. The ordered queue below comes from that spec.
 
 1. **P0 [#14249](https://github.com/adhithyan15/coding-adventures/issues/14249):**
    restore Flutter's bundled Rust runtime after the current Linux runner image
-   exposed that the generated build hook registered its package-source path
-   instead of copying it into the hook-owned output directory. **In progress.**
+   exposed a broken 3.44.0 native-asset bundle. The repair stages the runtime
+   through the hook-owned output directory and advances the pinned Flutter
+   toolchain to the locally verified 3.47.0 release. **In progress.**
    This blocks validated Flutter/Linux release payloads, so it precedes the
    remaining native-host and release-polish work.
 2. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
@@ -157,8 +158,7 @@ step, no artifact. The ordered queue below comes from that spec.
    so touch-sized tap targets would stay unexpressible. Specified generically as
    `code/specs/UI48-host-environment.md`; TaskApp then becomes
    `TaskApp.compact.mll` and nothing else.
-   Next Tier A item to pick up is therefore #13526, while UI48's ENV slices run
-   in parallel as kernel work.
+   UI48's ENV slices continue as separate kernel work.
 4. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract. **Done in
    [#14242](https://github.com/adhithyan15/coding-adventures/pull/14242).**

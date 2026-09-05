@@ -7,8 +7,10 @@
 Generated Flutter build hooks now copy the selected prebuilt Mosaic runtime
 from the package's `runtime/` directory into `input.outputDirectory` before
 registering it as a `DynamicLoadingBundled` code asset. This follows Flutter's
-code-asset contract and restores `libmosaic_app.so` in Linux application bundles
-on current hosted runner images (#14249).
+code-asset contract. TaskApp's CI and release workflows also move from Flutter
+3.44.0 to the locally verified 3.47.0 toolchain, which restores
+`libmosaic_app.so` in Linux application bundles on current hosted runner images
+(#14249).
 
 ### Changed — SwiftUI radio groups are no longer unconditionally degraded
 
