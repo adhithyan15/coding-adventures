@@ -2321,7 +2321,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 let runtime_distribution = if let Some(source) = runtime_library {
                     let file_name = runtime_file_name(source)?;
                     format!(
-                        "The selected target Rust engine is copied to `runtime/{file_name}` and registered by `hook/build.dart` as a bundled Dart code asset. Flutter packages and resolves it for the target platform; no environment variable, hard-coded executable path, or global library install is required. Bundled-runtime projects require Flutter 3.38+ and Dart 3.10+."
+                        "The selected target Rust engine is copied to `runtime/{file_name}` and registered by `hook/build.dart` as a bundled Dart code asset. Flutter packages and resolves it for the target platform; no environment variable, hard-coded executable path, or global library install is required. Bundled-runtime projects require Flutter 3.38+, Dart 3.10+, and `flutter config --enable-native-assets`."
                     )
                 } else {
                     "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the Rust application library path, or rely on the platform's conventional `mosaic_app` library name. Strict installable builds should be regenerated with `--runtime-library <target cdylib>`.".to_string()
@@ -6575,6 +6575,7 @@ layout NativeEvents {
         let readme = fs::read_to_string(out.path().join("flutter/README.md")).unwrap();
         assert!(readme.contains("requires Mosaic's standard Rust application runtime"));
         assert!(readme.contains("never substitutes preview/sample values"));
+        assert!(readme.contains("flutter config --enable-native-assets"));
         assert!(readme.contains("registered by `hook/build.dart` as a bundled Dart code asset"));
         assert!(readme.contains("no environment variable"));
     }

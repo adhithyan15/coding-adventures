@@ -1487,6 +1487,11 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Enable Flutter native assets
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        shell: bash
+        run: flutter config --enable-native-assets
+
       - name: Set up Swift (Windows)
         if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
         shell: pwsh
