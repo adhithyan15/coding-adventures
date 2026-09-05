@@ -1,5 +1,7 @@
 # twig-aot
 
+String folding excludes mutable integer indices, and runtime string indexing calls the existing bounds-checked helper instead of folding a loop to its first byte.
+
 Runtime string slices now call the existing checked helper when source or bounds cannot fold; reassignment invalidates stale literal lengths.
 
 Twig ahead-of-time compiler.  Reads a Twig source file, produces a native

@@ -1,5 +1,9 @@
 # Changelog — iir-to-llvm
 
+## Unreleased — runtime string indexing
+
+String indexing accepts runtime sources and indices through the shared bounds-checked helper while retaining literal folding.
+
 ## Unreleased — runtime substring parity
 
 Computed string slices use the shared checked runtime helper and clear stale literal facts; constant slice folding remains available.

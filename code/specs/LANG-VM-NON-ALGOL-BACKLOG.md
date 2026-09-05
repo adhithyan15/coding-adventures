@@ -101,6 +101,14 @@ for loop-carried indices and runtime sources, execute the new cells, and rerun
 the full non-ALGOL matrix. Do not remove backend declarations or change COBOL
 semantics to hide failures.
 
+VM-046b/054/055 local validation: all five new rows (411–415) execute on
+all seven standard backends with fresh-process ran-cell sentinels: 35 cells,
+zero skips. Frontend STRING/UNSTRING oracle selection passes 121 tests;
+220 native library tests and 128 LLVM integration tests pass. Focused matrix
+and all-target affected-backend Clippy pass. Full non-ALGOL regression is
+running; hosted CI remains the merge gate. The inventory declares 184
+non-ALGOL programs / 1308 cells.
+
 ## VM-046a implementation contract (selected after #14370 merged)
 
 PR #14370 merged as `8504430394` after all current-head checks passed on

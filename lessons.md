@@ -6775,3 +6775,11 @@ successive literal assignments, even without branches. Printing between writes
 must observe the earlier value. Treat multiply written variables as runtime
 handles and propagate their representation; retain a sequential output test,
 not only tests that inspect the final receiver value.
+
+## 2026-09-05 — Loop indices cannot inherit initializer facts
+
+A string-folding pass that sees `j = 0` before a back edge cannot substitute
+that zero into every `str_index(s, j)`. Exclude multiply defined integer
+registers from literal metadata and route unknown indices through the checked
+runtime helper. Run delimiter scans to validate loop-carried byte reads; a
+frontend oracle or literal-index test alone misses this native/LLVM gap.

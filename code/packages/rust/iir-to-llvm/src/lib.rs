@@ -1072,6 +1072,9 @@ pub fn lower_iir_to_llvm(
             // runtime-string repr `print_str` reads the length from at run time.
             out.push_str("declare i64 @__twig_input_str()\n");
         }
+        if used_str_index {
+            out.push_str("declare i64 @__twig_str_index(i64, i64)\n");
+        }
         if used_str_slice {
             out.push_str("declare i64 @__twig_str_slice(i64, i64, i64)\n");
         }
@@ -2495,6 +2498,29 @@ fn lower_str_index(
             });
         }
     };
+    if !state.str_values.contains_key(src)
+        || state.env.get(idx).and_then(|v| v.parse::<i64>().ok()).is_none()
+    {
+        let source = state.env.get(src).cloned().ok_or_else(|| IIRLlvmError::UndefinedVariable {
+            function: state.fn_name.into(), name: src.clone(),
+        })?;
+        let index = state.env.get(idx).cloned().ok_or_else(|| IIRLlvmError::UndefinedVariable {
+            function: state.fn_name.into(), name: idx.clone(),
+        })?;
+        let handle = if source.starts_with('@') {
+            let handle = state.fresh("index_handle");
+            out.push_str(&format!("  {handle} = ptrtoint ptr {source} to i64\n"));
+            handle
+        } else {
+            source
+        };
+        let res = state.fresh("index");
+        out.push_str(&format!(
+            "  {res} = call i64 @__twig_str_index(i64 {handle}, i64 {index})\n",
+        ));
+        state.env.insert(dest, res);
+        return Ok(());
+    }
     let literal = state.str_values.get(src).ok_or_else(|| {
         IIRLlvmError::InvalidOperand {
             function: state.fn_name.into(),
