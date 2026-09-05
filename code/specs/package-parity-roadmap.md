@@ -13219,6 +13219,21 @@ analysis has the highest OCaml dependency leverage at seventeen unfinished
 descendants; package execution remains the separate cross-platform evidence
 frontier.
 
+Before publication, the completed tranche rebased without conflict onto exact
+`origin/main` `ace4a79dce07f4ca1a1663e1a458d364a66ce05d`. The six intervening
+SPICE, Mosaic, generic-CI, Hindi, and UI documentation commits add no package
+identity or state owner. Their only exact overlap is generic `ci.yml`; the
+automatic merge preserves main's 15-shard rebalance and five pinned npm repair
+installs together with the guarded OCaml matrix, checksum bootstrap, Windows
+retention, and conditional serialized execution. The collision-checked report
+remains 15 established lanes, 1,413 implementation identities, 4,629 slots,
+1,452 all-reported identities, the unchanged four completion bands, 754 Rust
+singletons, four emerging OCaml packages, zero collisions, and zero unknown
+buckets. All 39 package tests, strict opam lint, formatting, release installs,
+four above-95% coverage runs, installed consumer examples, the 50-test lock
+suite with two expected Windows symlink skips, repository lock validation, Go
+build-tool test/vet/build, state-DAG, and diff hygiene checks are acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
