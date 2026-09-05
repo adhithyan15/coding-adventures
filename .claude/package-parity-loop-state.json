@@ -2696,10 +2696,13 @@
     {
       "id": "ocaml-representative-core",
       "title": "Port logic-gates, graph, directed-graph, and state-machine to OCaml",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-build-substrate-process-free-core", "ocaml-ci-toolchain"],
-      "branch": null,
+      "branch": "codex/ocaml-representative-core",
       "pr_number": null,
+      "selected_at": "2026-09-05T20:03:20Z",
+      "selection_revision": "8b8ce4b3c8edd10923cfeb0f693717741fe665df",
+      "selection_notes": "Selected after PR #14366 completed all 42 final-head checks acceptably and GitHub merged the reviewed Haskell hashing head through guarded squash auto-merge as 8b8ce4b3c8edd10923cfeb0f693717741fe665df. The exact-main collision-checked schema-3 inventory remains identity-neutral at 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel read-only audits registered missing Elixir and Go native snapshot-stability boundaries, decomposed ct-compare into a neutral contract and five lane leaves, confirmed Swift's existing Git-index repair owner, and froze the exact four-package OCaml API, fixture, dependency, coverage, and metadata plan. The reconciled 724-owner/1,196-edge graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges. Both OCaml prerequisites are merged; this owner immediately unlocks three selectable children and has eighteen unfinished descendants, ten non-selection-blocked, making it the highest practical ready item in the durable language/build-tool frontier. The fresh worktree and branch were created from exact merged main before any implementation, no parity PR is active, and this tranche remains limited to logic-gates, graph, directed-graph, state-machine, OCAML05, the stale OCAML04 status correction, package metadata, tests, and documentation without absorbing native build-tool execution.",
       "notes": "This dependency chain validates opam metadata, process-free resolver edges, BUILD order, and affected-node expansion without claiming execution-coupled substrate completion. Correct OCAML04-process-free-build-substrate.md from its stale in-progress label to merged PR #13366 within this tranche; the documentation drift does not need a separate implementation node."
     },
     {

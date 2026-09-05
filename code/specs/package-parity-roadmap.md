@@ -13140,8 +13140,9 @@ four bands remain 175/265, 123/934, 172/2,165, and 943/13,202; Rust has 754
 singletons, OCaml remains emerging at zero packages, and canonical collisions
 and unknown language buckets remain zero.
 
-Parallel read-only audits found three missing dependency-shaped build-tool
-boundaries. Elixir registry and hashing work cannot prove atomic host-file
+Parallel read-only audits found three dependency-shaped build-tool boundaries,
+including two previously missing owners.
+Elixir registry and hashing work cannot prove atomic host-file
 identity with pure OTP file APIs, so the new selection-blocked
 `build-tool-elixir-native-source-snapshot-stability-hardening` owner gates its
 dependency hashing, repository-boundary adoption, and aggregate closure. Go's
@@ -13174,6 +13175,14 @@ OCAML05 fixing the portable API decisions, package-local Alcotest vectors,
 local graph then directed-graph dependency chain. The already merged OCaml
 process-free substrate and three-platform toolchain satisfy its prerequisites;
 the later native build-tool and all-language denominator gates remain separate.
+
+`ocaml-representative-core` is therefore selected as the sole in-progress item
+on fresh branch `codex/ocaml-representative-core`, created from exact merged
+main `8b8ce4b3c8edd10923cfeb0f693717741fe665df`. Selection leaves 209 merged,
+514 pending, and exactly one in-progress owner. Implementation remains serial;
+parallel work continues only for bounded read-only reference, fixture,
+validation, and backlog audits while this tranche advances toward one
+ready-for-review PR.
 
 ## Autonomous Loop Protocol
 
