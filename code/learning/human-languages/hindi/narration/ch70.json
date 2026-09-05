@@ -4,22 +4,22 @@
   "chapter": 70,
   "title": "Able, and Willing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:52ccf706ca3baa28",
+  "sourceHash": "fnv1a64:902c6f7c9f898bcf",
   "lessons": [
     {
       "id": "HI-C70-sakna",
       "sequence": 2680,
-      "title": "सकना (saknā) — to be able to",
-      "headword": "सकना",
-      "romanization": "saknā",
-      "gloss": "to be able to — the verb that never stands alone, and the one Hindi routes every kind of can and may through",
+      "title": "सकना / सकता (saknā / saktā) — to be able to / can",
+      "headword": "सकना / सकता",
+      "romanization": "saknā / saktā",
+      "gloss": "to be able to / can — infinitive / masculine singular",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b97e5530002158c8",
+      "sourceHash": "fnv1a64:a48f7d89da97108e",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One move does it: strip the -ना off the first verb and put सकना (saknā) behind it."
+              "text": "One move does it: strip the -ना off the first verb and put सकना behind it."
             },
             {
               "kind": "speech",
@@ -77,7 +77,7 @@
             },
             {
               "kind": "speech",
-              "text": "The bare stem carries the meaning and सकना (saknā) carries the grammar, so it is सकना (saknā) that takes the ending and sits last, exactly where the verb belongs. सकना (saknā) can never appear on its own: there is no Hindi sentence that is just maiṁ saktā hūṁ."
+              "text": "The bare stem carries the meaning and सकना carries the grammar, so it is सकना that takes the ending and sits last, exactly where the verb belongs. सकना can never appear on its own: there is no Hindi sentence that is just maiṁ saktā hūṁ."
             },
             {
               "kind": "speech",
@@ -99,25 +99,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "bolnā becomes bol saktā hūṁ, then ānā becomes ā saktā hūṁ",
+              "instruction": "बोलना (bolnā) becomes बोल सकता हूँ (bol saktā hūṁ), then आना (ānā) becomes आ सकता हूँ (ā saktā hūṁ)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *bolnā* → *bol saktā hūṁ*, then *ānā* → *ā saktā hūṁ*]"
+              "source": "[YOU SAY: **बोलना** (*bolnā*) → **बोल सकता हूँ** (*bol saktā hūṁ*), then **आना** (*ānā*) → **आ सकता हूँ** (*ā saktā hūṁ*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "maiṁ kal nahīṁ ā saktā",
+              "instruction": "मैं कल नहीं आ सकता (maiṁ kal nahīṁ ā saktā)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *maiṁ kal nahīṁ ā saktā*]"
+              "source": "[YOU SAY: **मैं कल नहीं आ सकता** (*maiṁ kal nahīṁ ā saktā*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which of the two verbs takes the ending — सकना (saknā), and it goes last",
+              "instruction": "which of the two verbs takes the ending — सकना, and it goes last",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -166,11 +166,11 @@
             },
             {
               "kind": "speech",
-              "text": "What happens to the first verb in front of सकना (saknā)? (It drops to its bare stem.) Can सकना (saknā) be used on its own? (No — it always needs another verb in front of it.)"
+              "text": "What happens to the first verb in front of सकना? (It drops to its bare stem.) Can सकना be used on its own? (No — it always needs another verb in front of it.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: सकना (saknā)."
+              "text": "Sources: Wiktionary: सकना."
             }
           ]
         }
@@ -236,7 +236,7 @@
             },
             {
               "kind": "speech",
-              "text": "सकना (saknā) takes the stem; चाहना (chāhnā) takes the whole dictionary form. Both then sit last and take the ending themselves. Getting the two mixed up is the ordinary beginner's error, and hearing them back to back is the cure."
+              "text": "सकना takes the stem; चाहना (chāhnā) takes the whole dictionary form. Both then sit last and take the ending themselves. Getting the two mixed up is the ordinary beginner's error, and hearing them back to back is the cure."
             },
             {
               "kind": "speech",
@@ -329,7 +329,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the two takes the FULL -ना form in front of it? (चाहना (chāhnā).) Which takes the bare stem? (सकना (saknā).)"
+              "text": "Which of the two takes the FULL -ना form in front of it? (चाहना (chāhnā).) Which takes the bare stem? (सकना.)"
             },
             {
               "kind": "speech",
@@ -402,7 +402,7 @@
             },
             {
               "kind": "speech",
-              "text": "The order is unchanged, because it never changes: the inner verb comes first as a noun, the outer verb last as the verb. सकना (saknā) is the same construction with one shortcut — it wears the -ना away and takes the bare stem — which is why the two lessons before this one belonged together."
+              "text": "The order is unchanged, because it never changes: the inner verb comes first as a noun, the outer verb last as the verb. सकना is the same construction with one shortcut — it wears the -ना away and takes the bare stem — which is why the two lessons before this one belonged together."
             }
           ]
         },
@@ -477,7 +477,7 @@
             },
             {
               "kind": "speech",
-              "text": "What part of speech is बोलना in मैं बोलना चाहता हूँ? (A noun, in the object slot.) What does सकना (saknā) do to that same form? (Wears the -ना away and takes the bare stem.)"
+              "text": "What part of speech is बोलना in मैं बोलना चाहता हूँ? (A noun, in the object slot.) What does सकना do to that same form? (Wears the -ना away and takes the bare stem.)"
             }
           ]
         }
@@ -589,7 +589,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the two can never stand without another verb in front of it? (सकना (saknā).) Which one leaves that verb's -ना in place? (चाहना (chāhnā).) Then stop."
+              "text": "Which of the two can never stand without another verb in front of it? (सकना.) Which one leaves that verb's -ना in place? (चाहना (chāhnā).) Then stop."
             }
           ]
         }
