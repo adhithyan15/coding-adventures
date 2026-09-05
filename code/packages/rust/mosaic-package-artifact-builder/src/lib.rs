@@ -4742,6 +4742,32 @@ version = "1"
     }
 
     #[test]
+    fn react_package_build_activates_one_of_style_state() {
+        let pkg = make_package("mosaic-pkg-button", &["Button"]);
+        write_component_sources(
+            pkg.path(),
+            "Button",
+            "component Button { slot variant : one-of primary danger ; }",
+            "layout Button { HostButton [ button ] ( label: \"Delete\" ) }",
+            "style Button { part button { state danger { background: #dc3545 ; } } }",
+        );
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+            theme: None,
+        })
+        .expect("React package should build");
+
+        let tsx = fs::read_to_string(out.path().join("react/Button.tsx")).unwrap();
+        assert!(tsx.contains("variant === \"danger\""), "generated TSX:\n{tsx}");
+        assert!(tsx.contains("background: \"#dc3545\""));
+        assert!(tsx.contains("  variant,\n  dispatch,"));
+    }
+
+    #[test]
     fn dependency_style_state_preserves_its_dependency_slot_owner() {
         let workspace = TempDir::new().unwrap();
         let child = workspace.path().join("mosaic-pkg-accent");

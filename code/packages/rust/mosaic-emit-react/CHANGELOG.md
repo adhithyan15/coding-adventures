@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - UI49 slot-owned style-state activation
+
+The pipeline emitter now lowers model-owned mosstyle states to conditional
+inline-style spreads driven by their owning `one-of` slot. The shared part
+style entry carries those spreads into generic nodes and specialized host
+primitives alike, orders simultaneous axes by `.mil` slot declaration order,
+and keeps existing built-in-state and UI36 bound-style precedence intact
+(#14305).
+
 ### Fixed - emitted projects are relocatable
 
 `vite.config.ts` now sets `base: "./"`. Vite defaults to `"/"`, so an emitted
