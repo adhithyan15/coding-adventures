@@ -151,7 +151,14 @@ export function reducer(state: AppState, action: AppAction): AppState {
 
     // FormulaBar events
     case "formulaChange":
-      return { ...state, editContent: action.value };
+      // Typing directly in the formula bar starts an edit just as F2 does.
+      // Keep the original edit target while subsequent changes arrive.
+      return {
+        ...state,
+        editRow: state.editRow === -1 ? state.selectedRow : state.editRow,
+        editCol: state.editRow === -1 ? state.selectedCol : state.editCol,
+        editContent: action.value,
+      };
 
     case "commit": {
       if (state.editRow === -1) return state;

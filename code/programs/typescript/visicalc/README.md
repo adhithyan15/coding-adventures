@@ -1,5 +1,16 @@
 # VisiCalc — Mosaic demo
 
+The active migration to Mosaic's standard Rust application runtime is tracked in
+[GitHub issue #14267](https://github.com/adhithyan15/coding-adventures/issues/14267).
+The investigation and implementation sequence are in
+[`visicalc-mosaic-investigation-20260905.md`](../../../specs/visicalc-mosaic-investigation-20260905.md).
+
+Run `npm test` to regenerate Mosaic controls and verify formula-bar commit,
+cancel, clearing, and input keyboard handling against the actual Rust/WASM
+spreadsheet engine. Run `npm run build` for production TypeScript and Vite checks.
+The VisiCalc interactions CI workflow runs both on Linux and Windows; native GUI
+acceptance remains separate work.
+
 A VisiCalc-style spreadsheet built end-to-end on the Mosaic UI compiler
 stack. This is the capstone for the UI work tracked in
 [`code/specs/UI26-visicalc.md`](../../code/specs/UI26-visicalc.md) — every
