@@ -8,9 +8,9 @@ spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 870
 chapter: 34
 type: word
-headword: समझना
-gloss: to understand — literally "to wake up fully," on the same root as Buddha
-romanization: "samajhnā"
+headword: समझना / समझ / समझता / समझती / समझते / समुझना
+gloss: to understand / understanding or sense / masculine, feminine, and respectful-plural present forms / older Hindi form
+romanization: "samajhnā / samajh / samajhtā / samajhtī / samajhte / samujhnā"
 concept_tag: VERB-UNDERSTAND
 prerequisites: [HI-C34-sochna, HI-C09-maaf-kijiye]
 sounds: [aspirated-jha, dental-na]
@@ -65,7 +65,7 @@ understand." Every word of that you already had.
 ## You'll want to know — the root that gave the Buddha his name
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C34-SAMAJHNA-02]; assesses=[HI-CONCEPT-C34-SAMAJHNA-01] -->
 
-The standard derivation takes **समझना** back to Sanskrit **सम्** (*sam-*,
+The standard derivation takes **समझना**, *samajhnā*, back to Sanskrit **सम्** (*sam-*,
 "fully, together") + the root **बुध्** (*budh-*, "**to wake, to become aware**").
 Older Hindi still says **समुझना** (*samujhnā*), and that surviving *-u-* is the
 fingerprint of *budh-* before it wore down.
