@@ -1067,10 +1067,13 @@
     {
       "id": "haskell-sha256-incremental-streaming-api",
       "title": "Add incremental streaming to the Haskell SHA-256 package",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/haskell-sha256-incremental-api",
       "pr_number": null,
+      "selected_at": "2026-09-05T16:05:33Z",
+      "selection_revision": "327029a998efbb7e6ac964654838812692259d3b",
+      "selection_notes": "Selected after PR #14329 completed 42 acceptable final-head checks and merged through guarded squash auto-merge as 327029a998efbb7e6ac964654838812692259d3b. The exact-main collision-checked inventory remains identity-neutral at 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel audits ranked Haskell portable source hashing highest at three direct and four transitive descendants, then found this missing local SHA-256 streaming API as its smallest coherent prerequisite. The package-only tranche preserves one-shot consumers and adds no filesystem, process, network, environment, credential, or native authority. Eight live open PRs have zero exact overlap with the planned package, HF03 spec, state, roadmap, and changelog paths. Reconciliation and selection leave the 709-owner/1,161-edge graph unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 206 merged, 502 pending, and exactly this owner in progress.",
       "notes": "The Haskell build tool cannot adopt the portable source-hashing contract safely while its local SHA-256 package only materializes complete byte lists. Add an opaque initialized context, exact chunk update, non-destructive final digest and lowercase hex operations, strict 64-byte block processing, and a copied sub-block remainder while preserving the existing one-shot wrappers. Prove FIPS vectors, empty and binary bytes, arbitrary fragmentation, SHA-256 padding boundaries, 8 KiB file-chunk boundaries, repeatable finalization, and continued downstream HMAC/HKDF/PBKDF2 compatibility without adding filesystem, process, network, environment, credential, or native authority."
     },
     {
