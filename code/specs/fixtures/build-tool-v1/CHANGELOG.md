@@ -2,6 +2,10 @@
 
 ## 2026-09-05
 
+- Defined exact Windows corpus-root volume matching across legacy DWORD and
+  `FILE_ID_INFO` serial widths. The retained-root validator now supports both
+  Python 3.10 and 3.13 projections without masking `st_dev`, version sniffing,
+  changing policy availability, or weakening link and mutation defenses.
 - Added two process-free cases for exact reverse diff selection through the
   digest-pinned repository source-input boundary and deterministic package
   hashing over the caller-supplied union of package-local and boundary inputs.
