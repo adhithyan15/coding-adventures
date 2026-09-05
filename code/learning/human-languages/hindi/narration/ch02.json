@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:547a3438a6a062b3",
+  "sourceHash": "fnv1a64:77d428046cd2f9c6",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -1077,8 +1077,8 @@
       "id": "HI-W03-matras-naam",
       "sequence": 190,
       "title": "Mātrās — swapping the built-in vowel",
-      "headword": "ा, े",
-      "romanization": "ā, e",
+      "headword": "ा, े / मात्रा",
+      "romanization": "ā, e / mātrā",
       "gloss": "mātrās — vowel signs that replace the inherent a — and writing नाम",
       "script": "devanagari",
       "modality": "pen",
@@ -1086,7 +1086,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:8a65ffe6d992467d",
+      "sourceHash": "fnv1a64:b8cbb508d92206ac",
       "notice": {
         "modality": "pen",
         "needs": [
