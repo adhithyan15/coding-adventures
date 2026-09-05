@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - measured table capacity
+
+- Opt-in HostTable onViewportRows observes its scroll frame and measured rows,
+  subtracts sticky sections, and dispatches changed uniform row capacity.
+- Coalesce observations, retain deduplication across renders, and disconnect and
+  cancel queued callbacks on ref cleanup for React 18 and React 19.
+- Diagnose unavailable observation, missing scroll frames and nonuniform rows.
+
 ### Fixed - authored overrides of primitive defaults
 
 - Merge nonempty style fragments with an object spread so repeated or overridden

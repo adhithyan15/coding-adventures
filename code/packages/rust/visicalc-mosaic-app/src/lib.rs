@@ -286,6 +286,13 @@ impl MosaicApp for VisiCalcMosaicApp {
                 self.cursor.offset = offset;
                 Ok(self.update())
             }
+            "viewportRows" => {
+                let rows = event.payload.get("rows").and_then(Value::as_u64)
+                    .filter(|rows| *rows > 0).ok_or_else(|| invalid("capacity must be a positive integer"))?;
+                self.cursor.size = rows.min(ROWS as u64) as u32;
+                self.cursor.reveal();
+                Ok(self.update())
+            }
             "resizeViewport" => {
                 let size = index(&event, "rows", ROWS + 1)?;
                 if size == 0 {
@@ -547,6 +554,23 @@ mod tests {
         let empty = dispatch(&mut app, "newWorkbook", json!({}));
         assert_eq!(empty.props["cell-address"], "A1");
         assert_eq!(empty.props["viewport-rows"][0][0], "");
+    }
+
+    #[test]
+    fn measured_capacity_clamps_to_workbook_and_preserves_selection() {
+        let mut app = VisiCalcMosaicApp::default();
+        dispatch(&mut app, "navigate", json!({"row":99,"col":25}));
+        let small = dispatch(&mut app, "onViewportRows", json!({"rows":3}));
+        assert_eq!(small.props["viewport-offset"], 97);
+        assert_eq!(small.props["grid-selected-row"], 2);
+        let big = dispatch(&mut app, "onViewportRows", json!({"rows":1000}));
+        assert_eq!(big.props["viewport-rows"].as_array().unwrap().len(), 100);
+        assert_eq!(big.props["cell-address"], "Z100");
+        let before = app.snapshot().unwrap();
+        for rows in [json!(0), json!(-1), json!(1.5), json!("10")] {
+            assert!(app.dispatch(Event::new(1, "viewportRows", json!({"rows":rows}))).is_err());
+            assert_eq!(app.snapshot().unwrap(), before);
+        }
     }
 
     #[test]

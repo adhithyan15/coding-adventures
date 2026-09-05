@@ -96,4 +96,5 @@ component Grid {
   emit onFormulaChange  ( value : text ) ;
   emit onEditCommit     ( value : text ) ;
   emit onEditCancel ;
+  emit onViewportRows ( rows : number ) ;
 }

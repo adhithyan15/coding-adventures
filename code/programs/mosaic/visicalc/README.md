@@ -18,14 +18,21 @@ design and GitHub Releases remain required work.
 The first shared design pass uses warm paper and forest palettes with serif
 workbook branding, a monospace formula field and grid, and separate green
 selection and amber editing states. Toolbar content wraps at narrow widths;
-the sheet frame contains overflow within a HostScroll bounded to 60vh. Authored
+the sheet frame uses the remaining height of a viewport-sized root. Authored
 column-headings styles pin the header in the React consumer. Browser Page Down
 moved the sheet by 364px while the header stayed at the same screen position,
 with 30 rows materialized. The shared React table now reveals the selected cell
 within that frame, including horizontal navigation and sticky-header clearance.
 Browser navigation verified A31 and Z31 at the lower/right edges, then Z2 below
 the header, while keeping 30 rows rendered; formula-editor focus survived edits.
-Responsive row-window sizing, row labels and native reveal remain under #14277.
+The shared React HostTable observer now reports measured uniform row capacity
+through Grid's opt-in onViewportRows event. The Rust adapter clamps this to the
+workbook size and reveals the selection after resizing. Browser resizing at Z100
+produced 2 rows in a 400px-high frame, 17 in a 900px-high frame, and 15 when that
+tall frame narrowed to 375px. Missing ResizeObserver or variable row heights
+produce a diagnostic; hidden/empty tables do not publish invented capacity.
+Physical scrolling across the entire workbook, row labels, native capacity and
+native reveal remain under #14277 and #14372.
 
 Browser review on 2026-09-05 covered both generated themes at desktop width
 and the real Rust app in a 375px-wide preview. The narrow root's scroll width

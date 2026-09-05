@@ -33,6 +33,7 @@ layout VisiCalc {
       edit-col: slot: edit-col,
       edit-content: slot: edit-content,
       onNavigate: emit: onGridNavigate,
+      onViewportRows: emit: onViewportRows,
       onFormulaChange: emit: onFormulaChange,
       onEditCommit: emit: onEditCommit,
       onEditCancel: emit: onEditCancel

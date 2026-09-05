@@ -899,6 +899,13 @@ fn build_default_binding_map(
 }
 
 fn rewrite_bindings(node: &mut LayoutNode, bindings: &HashMap<String, LayoutPropValue>) {
+    // Dependency events are private unless the call site forwards them. Leaving
+    // an omitted emit here leaks its name into the consuming component's scope.
+    // Caller-authored child content is spliced in after this traversal.
+    node.props.retain(|prop| match &prop.value {
+        LayoutPropValue::EmitRef(name) => bindings.contains_key(name),
+        _ => true,
+    });
     for prop in &mut node.props {
         match &prop.value {
             LayoutPropValue::SlotRef(name) => {
@@ -1575,11 +1582,12 @@ version = "1"
         write_component(
             &mini,
             "Greet",
-            r#"component Greet { slot label : text ; emit onClick ; }"#,
+            r#"component Greet { slot label : text ; emit onClick ; emit onFocus ; }"#,
             r#"layout Greet {
   HostButton [ greet-button ] (
     label : slot: label ,
-    onClick : emit: onClick
+    onClick : emit: onClick,
+    onFocus : emit: onFocus
   )
 }"#,
         );
@@ -1598,6 +1606,7 @@ version = "1"
 
         assert!(first_qualified_tag(&layout.root).is_none());
         assert_eq!(layout.root.tag, "HostButton");
+        assert!(!layout.root.props.iter().any(|prop| prop.name == "onFocus"));
         assert_eq!(layout.root.part_name.as_deref(), Some("greet-button"));
         assert!(
             layout.root.props.iter().any(|prop| {

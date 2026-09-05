@@ -6,6 +6,8 @@ the package follows semantic versioning.
 
 ## Unreleased
 
+- Expose opt-in onViewportRows(rows: number) for measured uniform table capacity.
+
 - Forward rendered selection coordinates to HostTable so React can keep the
   active cell visible inside a composed scroll frame.
 

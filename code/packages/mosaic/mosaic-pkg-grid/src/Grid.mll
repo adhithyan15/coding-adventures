@@ -110,7 +110,7 @@
 //     parallel-array `column-headers` + `column-widths`.
 
 layout Grid {
-  HostTable [ sheet ] (selected-row: slot: selected-row, selected-col: slot: selected-col) {
+  HostTable [ sheet ] (selected-row: slot: selected-row, selected-col: slot: selected-col, onViewportRows: emit: onViewportRows) {
     HostTableColGroup {
       For ( each: slot: column-widths , as: w , index: cw ) {
         Col [ col ] ( width: ( w ) )

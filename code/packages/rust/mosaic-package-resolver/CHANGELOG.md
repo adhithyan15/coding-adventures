@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Remove unforwarded dependency event bindings at the composition boundary.
+  Omitted child events no longer leak undeclared names into the parent model.
+
 ### Added
 
 - Registered `HostProgressRing` (#13176, kernel-contract half) in
