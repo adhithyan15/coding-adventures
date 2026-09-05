@@ -13089,6 +13089,28 @@ framing, incremental SHA-256 adoption, and its language-neutral fixtures and
 tests. It does not absorb graph/diff corpus expansion, execution authority, or
 another language's build-tool remediation.
 
+Implementation now embeds the complete checked 23-language registry and uses
+one production selector for the four package-local neutral fixtures, including
+portable character classes and the 50,000,000-unit declared-match ceiling. The
+collector counts every entry before pruning, rejects portable identity and
+topology collisions, applies all five BUILD fronts and all seven selector
+roles, sorts normalized repository-relative paths by raw UTF-8 bytes, and
+streams Hashing v1 frames through the optimized local SHA-256 package in 8 KiB
+chunks. The current focused warning-as-error run passes 77 examples, including
+the fixed single- and multi-file digest oracles, 8 KiB boundaries, rename
+sensitivity, OCaml discovery, generated-component pruning, hostile paths, and
+the complete fixture projection.
+
+The parallel native-boundary review found one additional dependency-shaped
+gap. Pathname link checks, directory-entry snapshots, handle-size checks, and
+pre/post size and modification-time validation do not atomically bind the
+package root, ancestors, and file to retained no-follow identities. The new
+selection-blocked `build-tool-haskell-native-source-snapshot-stability-hardening`
+owner gates Haskell dependency hashing, repository-boundary adoption, and the
+remaining-engine aggregate until POSIX and Windows native identity, link,
+reparse, and replacement-race behavior is proven. The updated state contains
+716 owners and 1,180 edges: 208 merged, 507 pending, and one in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
