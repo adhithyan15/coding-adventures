@@ -11106,7 +11106,7 @@ fn populate_select_selectedcontent(select: &mut Element) {
                 if element.attribute("selected").is_some() {
                     *selected = Some(element.children.clone());
                 }
-            } else if !matches!(element.name.as_str(), "button" | "datalist") {
+            } else if !matches!(element.name.as_str(), "button" | "datalist" | "template") {
                 if element.name == "optgroup" && inside_optgroup {
                     continue;
                 }
@@ -11149,7 +11149,9 @@ fn populate_select_selectedcontent(select: &mut Element) {
                 element.children = option_children.to_vec();
                 continue;
             }
-            if element.namespace.is_none() && matches!(element.name.as_str(), "option" | "select") {
+            if element.namespace.is_none()
+                && matches!(element.name.as_str(), "option" | "select" | "template")
+            {
                 continue;
             }
             populate_enabled_selectedcontent(&mut element.children, option_children);
@@ -47212,6 +47214,113 @@ mod tests {
             ),
             "real"
         );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_excludes_template_contents() {
+        let assert_selection = |nodes: &[Node]| {
+            assert_eq!(
+                element_text_content(find_element_by_id(nodes, "target").unwrap()),
+                "real"
+            );
+            assert_eq!(
+                element_text_content(find_element_by_id(nodes, "inert").unwrap()),
+                "kept"
+            );
+            assert_eq!(
+                element_text_content(find_element_by_id(nodes, "excluded").unwrap()),
+                "excluded"
+            );
+        };
+
+        let source = "<!doctype html><!--é-->\r\n<select><button><selectedcontent id=target>old</selectedcontent></button><template><selectedcontent id=inert>kept</selectedcontent><option id=excluded selected>excluded</option></template><option><b>real</b></option></select>";
+        let document = parse_html(source).unwrap();
+        assert_selection(&document.children);
+        assert!(source.len() > source.chars().count());
+
+        let fragment = parse_html_fragment_for_context(
+            "<select><selectedcontent id=target>old</selectedcontent><template><selectedcontent id=inert>kept</selectedcontent><option id=excluded selected>excluded</option></template><option>real</option></select>",
+            "body",
+        )
+        .unwrap();
+        assert_selection(&fragment);
+
+        let integration = parse_html(
+            "<!doctype html><svg><foreignObject><select><selectedcontent id=target>old</selectedcontent><template><selectedcontent id=inert>kept</selectedcontent><option id=excluded selected>excluded</option></template><option>real</option></select></foreignObject></svg>",
+        )
+        .unwrap();
+        assert_selection(&integration.children);
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "id".to_string(),
+                    value: "target".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "id".to_string(),
+                    value: "inert".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("kept".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![
+                    LexerAttribute {
+                        name: "id".to_string(),
+                        value: "excluded".to_string(),
+                    },
+                    LexerAttribute {
+                        name: "selected".to_string(),
+                        value: String::new(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Text("excluded".to_string()),
+            Token::EndTag {
+                name: "option".to_string(),
+            },
+            Token::EndTag {
+                name: "template".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("real".to_string()),
+            Token::Eof,
+        ]);
+        assert_selection(&direct_document.children);
         assert!(direct
             .diagnostics()
             .iter()
