@@ -8,9 +8,9 @@ spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1000
 chapter: 37
 type: word
-headword: खाना
-gloss: food — masculine, from a Sanskrit verb of eating, and not to be confused with its Persian look-alike meaning "house"
-romanization: "khānā"
+headword: खाना / ख़ाना
+gloss: food / house or compartment — Sanskrit-derived khānā versus Persian-derived khāna
+romanization: "khānā / khāna"
 concept_tag: HI-FOOD-MEAL
 prerequisites: [HI-C37-dudh, HI-W01-na-ma]
 sounds: [aspirated-kha, devanagari-long-aa]
