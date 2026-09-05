@@ -872,6 +872,18 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
                 })
         })
     });
+    // The i32 rewrite exists only for the legacy integer-only simulator.
+    // Mixed real/integer modules already require real Java, so preserve their
+    // declared integer widths too. Small literals do not imply small results:
+    // BASIC RND's 48271 * 48271 overflows i32 before its modulo, even though
+    // neither operand nor modulus needs a wide literal. Retain the decision
+    // module-wide so helper signatures and global accesses stay consistent.
+    let is_real = |ty: &str| matches!(ty, "f32" | "f64");
+    let module_uses_real_values = module.functions.iter().any(|func| {
+        is_real(&func.return_type)
+            || func.params.iter().any(|(_, ty)| is_real(ty))
+            || func.instructions.iter().any(|instr| is_real(&instr.type_hint))
+    });
     // Whole-module, not per-function: a `call` couples a caller's and callee's
     // value models. Narrowing `main` while its callee `lambda_0` keeps a tagged
     // `object` boundary produced a caller that stores the call's `object` result
@@ -909,10 +921,11 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
                 && matches!(i.srcs.first(),
                     Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str()))
         });
-        if uses_wide_builtin || module_prints || module_has_wide_i64_constant {
+        if uses_wide_builtin || module_prints || module_has_wide_i64_constant || module_uses_real_values {
             // Wide i64 value model: this function uses a wide builtin directly
             // or shares a module with one, or the module contains an explicit
-            // i64 constant that cannot be represented by i32. It must keep i64
+            // i64 constant that cannot be represented by i32, or uses mixed
+            // real/integer values outside the integer-only simulator. Keep i64
             // to preserve values and stay call-signature-consistent with its
             // callers/callees.
             continue;
@@ -2874,6 +2887,21 @@ mod tests {
             }),
             "the allocation must narrow to the same int[] descriptor"
         );
+    }
+
+    #[test]
+    fn jvm_concretization_preserves_mixed_real_integer_intermediates() {
+        let mut module = compile_source_to_iir(
+            Language::DartmouthBasic,
+            "10 PRINT RND(1)\n20 END\n",
+            "mixed_numeric_widths",
+        ).expect("BASIC RND must compile");
+        concretize_scalar_any_for_jvm(&mut module);
+        let helper = module.get_function("__basic_rnd").expect("RND helper exists");
+        let product = helper.instructions.iter().find(|instr| {
+            instr.op == "mul" && instr.dest.as_deref() == Some("product")
+        }).expect("the RNG multiplies its state before modulo");
+        assert_eq!(product.type_hint, "i64", "small RNG operands can produce a wide product");
     }
 
     #[test]
