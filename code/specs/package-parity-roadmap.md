@@ -13081,7 +13081,7 @@ tool descendants without adding authority.
 
 The Haskell source-hashing owner is therefore the sole in-progress item in a
 fresh clean worktree based on exact `origin/main`
-`994e055542c64deed7b591438ca796fab972b050`; the intervening merged Hindi,
+`994e0555426b2330f33f45210fef6953607a67f6`; the intervening merged Hindi,
 FLOW-MATIC, McCarthy, Flutter, Mosaic, and Rust SPICE changes are disjoint and
 identity-neutral. Selection leaves 208 merged, 506
 pending, and one in-progress owner. The tranche is limited to the complete
