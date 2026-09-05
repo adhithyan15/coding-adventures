@@ -19285,6 +19285,7 @@ mod tests {
                 base: Vec::new(),
                 transitions: Vec::new(),
                 states: vec![StateStyle {
+                    slot: None,
                     state: "selected".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -19318,6 +19319,7 @@ mod tests {
                 }],
                 transitions: vec![transition("background", "80ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "hover".to_string(),
                     props: vec![StyleProp {
                         name: "background".to_string(),
@@ -19381,6 +19383,7 @@ mod tests {
                 }],
                 transitions: Vec::new(),
                 states: vec![StateStyle {
+                    slot: None,
                     state: "hover".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -19429,6 +19432,7 @@ mod tests {
                 base: Vec::new(),
                 transitions: Vec::new(),
                 states: vec![StateStyle {
+                    slot: None,
                     state: "hover".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -19467,6 +19471,7 @@ mod tests {
                 }],
                 transitions: vec![transition("opacity", "80ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "pressed".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -19513,6 +19518,7 @@ mod tests {
                 base: Vec::new(),
                 transitions: Vec::new(),
                 states: vec![StateStyle {
+                    slot: None,
                     state: "pressed".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -19559,6 +19565,7 @@ mod tests {
                 }],
                 transitions: vec![transition("border-color", "80ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "focused".to_string(),
                     props: vec![StyleProp {
                         name: "border-color".to_string(),
@@ -19642,6 +19649,7 @@ mod tests {
                 }],
                 transitions: Vec::new(),
                 states: vec![StateStyle {
+                    slot: None,
                     state: "focused".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -19695,6 +19703,7 @@ mod tests {
                 base: Vec::new(),
                 transitions: Vec::new(),
                 states: vec![StateStyle {
+                    slot: None,
                     state: "focused".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -19740,6 +19749,7 @@ mod tests {
                 transitions: Vec::new(),
                 states: vec![
                     StateStyle {
+                        slot: None,
                         state: "hover".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -19748,6 +19758,7 @@ mod tests {
                         transitions: Vec::new(),
                     },
                     StateStyle {
+                        slot: None,
                         state: "focused".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -19784,6 +19795,7 @@ mod tests {
                 transitions: Vec::new(),
                 states: vec![
                     StateStyle {
+                        slot: None,
                         state: "hover".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -19792,6 +19804,7 @@ mod tests {
                         transitions: Vec::new(),
                     },
                     StateStyle {
+                        slot: None,
                         state: "focused".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -19800,6 +19813,7 @@ mod tests {
                         transitions: Vec::new(),
                     },
                     StateStyle {
+                        slot: None,
                         state: "pressed".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -19846,6 +19860,7 @@ mod tests {
                 }],
                 transitions: vec![transition("background", "80ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "selected".to_string(),
                     props: vec![StyleProp {
                         name: "background".to_string(),
@@ -19929,6 +19944,7 @@ mod tests {
                 }],
                 transitions: vec![transition("opacity", "150ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "disabled".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -19991,6 +20007,7 @@ mod tests {
                 transitions: Vec::new(),
                 states: vec![
                     StateStyle {
+                        slot: None,
                         state: "selected".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -19999,6 +20016,7 @@ mod tests {
                         transitions: Vec::new(),
                     },
                     StateStyle {
+                        slot: None,
                         state: "disabled".to_string(),
                         props: vec![StyleProp {
                             name: "opacity".to_string(),
@@ -20058,6 +20076,7 @@ mod tests {
                 }],
                 transitions: vec![transition("opacity", "120ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "selected".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),
@@ -20141,6 +20160,7 @@ mod tests {
                 base: Vec::new(),
                 transitions: Vec::new(),
                 states: vec![StateStyle {
+                    slot: None,
                     state: "selected".to_string(),
                     props: vec![StyleProp {
                         name: "opacity".to_string(),

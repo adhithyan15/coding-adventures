@@ -13,6 +13,13 @@ A `.msl` file answers exactly one question: what do the parts of a component
 look like? It maps part names declared in the `.mll` layout file to Lattice
 property declarations, with optional state selectors.
 
+Package composition also supplies closed-set values declared by `one-of`
+model slots. A stylesheet can therefore use `state danger` when its component
+declares `slot variant : one-of primary danger ;`. The style-map JSON records
+`"slot": "variant"` on that state so every backend can later select it from
+the correct runtime value. Built-in states omit the field, and compilation
+rejects built-in collisions or values claimed by more than one slot.
+
 ## Syntax
 
 ```msl

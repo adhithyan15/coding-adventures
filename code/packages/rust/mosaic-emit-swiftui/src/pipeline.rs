@@ -12130,6 +12130,7 @@ mod tests {
                 states: states
                     .into_iter()
                     .map(|(name, props)| StateStyle {
+                        slot: None,
                         state: name.to_string(),
                         transitions: vec![],
                         props,
@@ -12574,6 +12575,7 @@ mod tests {
                 base: vec![sp("background", "#1e1e1e")],
                 transitions: vec![transition("background", "80ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "selected".to_string(),
                     props: vec![sp("background", "#264f78")],
                     transitions: vec![],
@@ -12615,6 +12617,7 @@ mod tests {
                 base: vec![sp("opacity", "1")],
                 transitions: vec![transition("opacity", "150ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "disabled".to_string(),
                     props: vec![sp("opacity", "0.4")],
                     transitions: vec![transition("opacity", "300ms", "linear")],
@@ -12661,6 +12664,7 @@ mod tests {
                 base: vec![sp("opacity", "1")],
                 transitions: vec![],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "disabled".to_string(),
                     props: vec![sp("opacity", "0.4")],
                     transitions: vec![transition("opacity", "300ms", "ease-in")],
@@ -12711,6 +12715,7 @@ mod tests {
                 base: vec![sp("opacity", "1")],
                 transitions: vec![transition("opacity", "150ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "disabled".to_string(),
                     props: vec![sp("opacity", "0.4")],
                     transitions: vec![],
@@ -12745,6 +12750,7 @@ mod tests {
                 base: vec![sp("background", "#ffffff")],
                 transitions: vec![transition("background", "80ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "hover".to_string(),
                     props: vec![sp("background", "#e8f0ff")],
                     transitions: vec![],
@@ -12875,6 +12881,7 @@ mod tests {
                 base: vec![sp("opacity", "1")],
                 transitions: vec![transition("opacity", "80ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "pressed".to_string(),
                     props: vec![sp("opacity", "0.7")],
                     transitions: vec![],
@@ -12981,6 +12988,7 @@ mod tests {
                 base: vec![sp("border-width", "1"), sp("border-color", "#d0d0d0")],
                 transitions: vec![transition("border-color", "80ms", "ease-out")],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "focused".to_string(),
                     props: vec![sp("border-color", "#e0942a")],
                     transitions: vec![],
