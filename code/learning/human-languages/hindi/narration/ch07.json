@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:475f07c8b79a916d",
+  "sourceHash": "fnv1a64:794ad2fffafb3b62",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20c4bd049298d3e3",
+      "sourceHash": "fnv1a64:b93ae4839c8371ab",
       "notice": null,
       "blocks": [
         {
@@ -216,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "answer: आप आ रहे हैं? — नहीं (nahīṃ). (\"Are you coming?\" — \"No.\")"
+              "text": "answer: क्या आप ठीक हैं? — नहीं (nahīṃ). (\"Are you well?\" — \"No.\")"
             },
             {
               "kind": "speech",
