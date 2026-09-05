@@ -36,8 +36,9 @@ $source = @(
     "        ]"
 )
 
-[System.IO.File]::WriteAllLines(
+$contents = ($source -join "`n") + "`n"
+[System.IO.File]::WriteAllText(
     $OutputPath,
-    $source,
+    $contents,
     [System.Text.UTF8Encoding]::new($false)
 )

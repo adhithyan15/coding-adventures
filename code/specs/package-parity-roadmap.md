@@ -13081,8 +13081,9 @@ tool descendants without adding authority.
 
 The Haskell source-hashing owner is therefore the sole in-progress item in a
 fresh clean worktree based on exact `origin/main`
-`eae0cacabf1e3d2c03c449686614bb62113fd832`; the intervening merged Rust SPICE
-change is disjoint and identity-neutral. Selection leaves 208 merged, 506
+`994e055542c64deed7b591438ca796fab972b050`; the intervening merged Hindi,
+FLOW-MATIC, McCarthy, Flutter, Mosaic, and Rust SPICE changes are disjoint and
+identity-neutral. Selection leaves 208 merged, 506
 pending, and one in-progress owner. The tranche is limited to the complete
 checked source registry, exact scoped projection, collision-safe portable path
 framing, incremental SHA-256 adoption, and its language-neutral fixtures and
@@ -13100,6 +13101,18 @@ chunks. The current focused warning-as-error run passes 77 examples, including
 the fixed single- and multi-file digest oracles, 8 KiB boundaries, rename
 sensitivity, OCaml discovery, generated-component pruning, hostile paths, and
 the complete fixture projection.
+
+Publication validation passes all four local Cabal packages: 77 build-tool,
+25 SHA-256, four graph, and three directed-graph examples, including bounded
+allocation measurements of 57,521,408 bytes for the million-byte vector and
+57,557,872 bytes for 8 KiB chunks. The warning-as-error optimized build, Cabal
+check, Haddock, source distribution, literal BUILD front, generator byte-sync,
+canonical Go test/vet/trimpath build, and a real 207-package Haskell dry plan
+also pass. The dry plan evaluates 45 Starlark files and selects exactly the
+changed build tool plus its three local prerequisites. The relevant neutral
+schema/runner/parity suite passes 111 tests and 269 subtests from a clean tree;
+the collision-checked inventory, 716-owner/1,180-edge state graph, diff hygiene,
+and changed-diff credential scan are clean.
 
 The parallel native-boundary review found one additional dependency-shaped
 gap. Pathname link checks, directory-entry snapshots, handle-size checks, and
