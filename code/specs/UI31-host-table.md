@@ -451,3 +451,95 @@ row window in response must settle, not cause a resize/render feedback loop.
    TypeScript 5.7 TaskApp host. Keep existing unrelated tables unchanged.
 6. Report native observer support honestly. React acceptance does not establish
    WinUI, Qt, Flutter, Compose or SwiftUI behavior; each needs its own resize gate.
+
+## 9. Row headers and data-cell coordinates (proposed extension)
+
+Tracking: #14388 under #14277 and the VisiCalc reference-app epic #14267.
+This section is an implementation contract, not a claim of backend support.
+Section 2 describes the currently shipped section-only cell inference; that
+behavior remains the default for tables without authored row headers.
+
+### Semantic intent and compatibility
+
+A body row may have a leading, non-editable header identifying the row. This is
+header metadata, not an extra value in the row's data array. The header must
+lower to the platform's row-header semantics: for React/HTML, a `th` with
+`scope="row"` inside the body row. A visual Box or `td` containing a number does
+not satisfy this requirement. Column labels remain column headers. A blank
+corner above the row headers must not be announced as a data column.
+
+The package must opt in explicitly. Existing Grid consumers that supply only
+viewport-rows, column-headers and column-widths retain their current data shape
+and behavior. Adding a row-header feature must not require every composed
+consumer to supply new bindings or forward new events. Default binding and
+unforwarded-event behavior must be tested through the package resolver.
+
+Do not add a VisiCalc-specific primitive or emitter branch. The implementation
+must establish a reusable authoring mechanism for row-header intent and actual
+cell-wrapper styling, then compose it in Grid. Record the chosen syntax and
+backend support in this section when it ships; native backends must diagnose
+unsupported semantics rather than presenting an ordinary data cell as supported.
+
+### Three coordinate spaces
+
+Keep these separate throughout the adapter, generated event wiring and reveal:
+
+| Coordinate | Meaning | Example at the bottom of a 100-row workbook |
+|---|---|---|
+| Workbook row | Absolute, zero-based domain row | 99 |
+| Rendered row | Index within the current viewport-rows | 2 for a three-row window starting at workbook row 97 |
+| Data column | Zero-based index within the row's data values | 25 for Z, even with a row header |
+
+The row header is excluded from data-column indices. Adding or hiding it must
+not change selected-col, edit-col, click payloads or formula targets. A physical
+DOM-cell index is not a data-column index once header cells are present. Reveal
+must identify the corresponding data cell by semantics or explicit generated
+metadata, not by assuming `row.cells[col]` is always the correct element.
+
+The application adapter supplies absolute row identity independently of rendered
+row position. In VisiCalc, a window at offset 97 displays labels 98, 99 and 100;
+it must not restart at 1 after a resize or scroll. Row identity is presentation
+metadata: it must not be inserted into spreadsheet-core values or serialized as
+an extra workbook column. Column width and heading arrays continue to describe
+data columns; the leading header owns its own width.
+
+### Geometry and selection visibility
+
+Use the actual cell wrapper for header semantics, borders, padding and sticky
+positioning. A styled inner element does not control the browser's default
+`td`/`th` padding; stacking both can create extra gutters and change measured row
+pitch. The implementation must make wrapper geometry authorable and verify its
+interaction with the inner editable Cell instead of relying on browser defaults.
+
+A pinned leading header must stay aligned with body rows during vertical scroll
+and remain visible during horizontal scroll. Column headers remain aligned with
+data columns. The corner must have an intentional stacking order relative to
+both pinned regions. Account for layout direction using the platform's logical
+leading edge; do not hard-code the scrollbar side or assume positive scrollLeft.
+
+Selection reveal must reserve the visible space occupied by sticky row headers,
+just as it reserves sticky column-header height. Revealing column A must not
+place A behind the row header. Revealing Z must not scroll the page or move
+formula-editor focus. Capacity observation continues to measure body-row pitch;
+adding a header must not create resize/dispatch feedback or duplicate row counts.
+
+### Required acceptance
+
+- Compare a Grid with and without headers: identical data coordinates, emitted
+  click/edit payloads and workbook mutations; legacy consumers compile unchanged.
+- Navigate and edit A1, the first row after a shifted window, and Z100 through
+  generated controls backed by the real Rust app. Verify absolute labels after
+  shrinking and expanding the same running application.
+- Inspect semantic row and column headers and their associations. Row labels
+  must not become editable cells or extra stops in the data-cell keyboard path.
+- Measure header/data column alignment, row pitch, sticky-header clearance and
+  rendered-row bounds while scrolling horizontally and vertically. Cover light
+  and dark themes, narrow layout, changed text scale and layout direction.
+- Test reveal against header-bearing DOM rows, including the first and final
+  data columns. Keep the existing no-header behavior covered.
+- Run native interaction and accessibility acceptance for each claimed backend;
+  source generation and React screenshots alone do not establish native support.
+
+Whole-workbook physical scroll transport remains a separate requirement of
+#14277. Numbered labels and bounded rendering must not be described as completed
+virtual scrolling while the scrollbar can only traverse the current slice.
