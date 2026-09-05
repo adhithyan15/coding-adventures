@@ -80,6 +80,10 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
                 "actions/checkout@v7",
             ),
             self.mutate_last("persist-credentials: false", "persist-credentials: true"),
+            self.mutate_last(
+                "          persist-credentials: false",
+                "          persist-credentials: false\n        continue-on-error: true",
+            ),
             self.mutate(
                 "ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0",
                 "ocaml/setup-ocaml@v3",
@@ -114,8 +118,8 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
                 'test "$(opam --version)" = "2.4.0"',
             ),
             self.mutate(
-                'test "$(opam exec -- ocamlc -version)" = "5.2.1"',
-                'test -n "$(opam exec -- ocamlc -version)"',
+                'test "$(opam exec -- ocamlc -version | tr -d \'\\r\')" = "5.2.1"',
+                "test -n \"$(opam exec -- ocamlc -version | tr -d '\\r')\"",
             ),
             self.mutate(
                 "validate-repository-report \\",
@@ -153,9 +157,16 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
                 "",
             ),
             self.mutate("job_flags=(-jobs 1)", "job_flags=(-jobs 2)"),
-            self.mutate('            "${job_flags[@]}" \\', "", count=1),
+            self.mutate(
+                '          $BT \\\n            "${job_flags[@]}" \\',
+                '          echo "${job_flags[@]}"\n          $BT \\',
+            ),
             self.mutate(
                 '          $BT "${job_flags[@]}" -root .', "          $BT -root ."
+            ),
+            self.mutate(
+                '              or flag("NEEDS_OCAML")',
+                '              or False or flag("NEEDS_OCAML")',
             ),
         )
         for index, workflow in enumerate(cases):

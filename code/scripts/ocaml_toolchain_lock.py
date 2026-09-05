@@ -118,7 +118,10 @@ EXPECTED_RUN_SHA256 = {
     "locked.run": "68cdbecd8ce825ae00f1f1516f3ab73bd06198ac9e3f1c238f06518a00353929",
 }
 GENERIC_BOOTSTRAP_RUN_SHA256 = (
-    "c76b9e96f4ed32d8a124373a109b4a473c3a24e508adc9a9da729737d97bd26e"
+    "da5d03fbce1c2766acb87fc9c381292704bf18b7b8b4a5bbf164c2e3922dbe56"
+)
+GENERIC_MATRIX_PLAN_RUN_SHA256 = (
+    "02b36725b5036a9ac57023f94ec372936e0ee7f24dd8c9d5aec8d6f4a2eec8d0"
 )
 EXPECTED_RUN_METADATA = {
     "contract.validate": {"shell": None, "env": None},
@@ -1097,10 +1100,18 @@ def validate_generic_ci_workflow_text(
             raise ContractError(
                 f"generic CI matrix planner omits OCaml fragment {fragment!r}"
             )
+    actual_plan_digest = hashlib.sha256(plan_run.encode("utf-8")).hexdigest()
+    if actual_plan_digest != GENERIC_MATRIX_PLAN_RUN_SHA256:
+        raise ContractError(
+            "generic CI matrix planner must equal reviewed digest "
+            f"{GENERIC_MATRIX_PLAN_RUN_SHA256}, found {actual_plan_digest}"
+        )
 
     build = _extract_workflow_job(workflow_text, "build")
     build_steps = _steps_by_name(build, "build")
     checkout = _workflow_mapping(build_steps.get("Checkout"), "jobs.build.checkout")
+    if set(checkout) != {"name", "uses", "with"}:
+        raise ContractError("generic CI checkout has unreviewed step keys")
     expected_checkout = f"actions/checkout@{manifest['actions']['checkout']}"
     if checkout.get("uses") != expected_checkout:
         raise ContractError(f"generic CI checkout must use {expected_checkout}")
@@ -1164,7 +1175,7 @@ def validate_generic_ci_workflow_text(
     required_bootstrap_fragments = (
         "set -euo pipefail",
         f'test "$(opam --version)" = "{manifest["direct_versions"]["opam"]}"',
-        f'test "$(opam exec -- ocamlc -version)" = "{manifest["direct_versions"]["ocaml"]}"',
+        f'test "$(opam exec -- ocamlc -version | tr -d \'\\r\')" = "{manifest["direct_versions"]["ocaml"]}"',
         "opam repository list --all --short --color=never",
         "opam repository list --all --color=never",
         "validate-repository-report \\",
@@ -1212,12 +1223,22 @@ def validate_generic_ci_workflow_text(
     full = _workflow_mapping(
         build_steps.get("Full build on main merge"), "jobs.build.full"
     )
-    for label, step in (("incremental", incremental), ("full", full)):
-        run = _workflow_string(step.get("run"), f"jobs.build.{label}.run")
+    incremental_run = _workflow_string(
+        incremental.get("run"), "jobs.build.incremental.run"
+    )
+    full_run = _workflow_string(full.get("run"), "jobs.build.full.run")
+    for label, run, invocation in (
+        (
+            "incremental",
+            incremental_run,
+            '$BT \\\n  "${job_flags[@]}" \\\n  -root .',
+        ),
+        ("full", full_run, '$BT "${job_flags[@]}" -root .'),
+    ):
         if (
             'if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then' not in run
             or "job_flags=(-jobs 1)" not in run
-            or run.count('"${job_flags[@]}"') != 1
+            or invocation not in run
         ):
             raise ContractError(
                 f"generic CI {label} build must serialize only an active OCaml switch"

@@ -1684,7 +1684,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(opam --version)" = "2.5.2"
-          test "$(opam exec -- ocamlc -version)" = "5.2.1"
+          test "$(opam exec -- ocamlc -version | tr -d '\r')" = "5.2.1"
           repository_names="$(
             opam repository list --all --short --color=never
           )"
