@@ -4993,6 +4993,43 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // VM-037: fields begin at zero. Distinct record widths make a wrong
+    // branch observable without an infinite-loop failure path.
+    Prog {
+        lang: Language::FlowMatic,
+        ext: "fm",
+        src: "(0) MOVE X (A) TO Y (A) ; MOVE Z (C) TO Z (C) .\n\
+              (1) COMPARE X (A) WITH Y (A) ; IF EQUAL GO TO OPERATION 4 ; OTHERWISE GO TO OPERATION 2 .\n\
+              (2) WRITE-ITEM FILE-A ; STOP .\n\
+              (4) WRITE-ITEM FILE-C ; STOP .",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Both strict inequalities are false for equal fields. OTHERWISE must
+    // jump over the one-field wrong path to the two-field result.
+    Prog {
+        lang: Language::FlowMatic,
+        ext: "fm",
+        src: "(0) MOVE X (A) TO Y (A) ; MOVE Z (C) TO Z (C) .\n\
+              (1) COMPARE X (A) WITH Y (A) ; IF LESS GO TO OPERATION 2 ; IF GREATER GO TO OPERATION 2 ; OTHERWISE GO TO OPERATION 4 .\n\
+              (2) WRITE-ITEM FILE-C ; STOP .\n\
+              (4) WRITE-ITEM FILE-A ; STOP .",
+        expect: Expect::Stdout("0 0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Each jump skips a terminating two-field output path. The correct chain
+    // visits two separated one-field writes; neither jump can be ignored.
+    Prog {
+        lang: Language::FlowMatic,
+        ext: "fm",
+        src: "(0) MOVE X (A) TO Y (A) ; MOVE Z (C) TO Z (C) ; JUMP TO OPERATION 2 .\n\
+              (1) WRITE-ITEM FILE-A ; STOP .\n\
+              (2) WRITE-ITEM FILE-C ; JUMP TO OPERATION 4 .\n\
+              (3) WRITE-ITEM FILE-A ; STOP .\n\
+              (4) WRITE-ITEM FILE-C ; STOP .",
+        expect: Expect::Stdout("0\n0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // COBOL-60 — literal `DISPLAY` (PL09 step 4, the `cobol-iir-compiler` minimal
     // slice). A four-division program whose PROCEDURE DIVISION `DISPLAY`s a string
     // literal lowers to the shared E4 `str_const` + `print_str` op pair (then a
