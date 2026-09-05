@@ -11,12 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 14329,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/14329",
+    "branch": "codex/build-tool-windows-python313-volume-identity",
+    "item_id": "build-tool-windows-python313-execution-snapshot-volume-identity",
+    "opened_at": "2026-09-05T15:39:26Z",
+    "opened_revision": "1e06de7f06205c2afaaf4965d2423a0151513d9e"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-05T15:15:23Z",
-    "pr_number": 14316,
-    "status": "merged",
-    "notes": "PR #14316 completed all 43 final-head checks acceptably: 22 successes and 21 expected skips. GitHub reported the final head conflict-free; guarded squash auto-merge was enabled and GitHub merged the PR without a manual merge command."
+    "observed_at": "2026-09-05T15:39:31Z",
+    "pr_number": 14329,
+    "status": "pending",
+    "notes": "PR #14329 is the sole active parity PR. GitHub reports the ready-for-review head mergeable with initial CI, CodeQL, and human-language detection checks queued. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "e1808c31903c1324fa242d48e43b7e9cfce9252d",
@@ -131,10 +138,13 @@
     {
       "id": "build-tool-windows-python313-execution-snapshot-volume-identity",
       "title": "Reconcile Windows execution-corpus volume identity on Python 3.13",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-execution-case-snapshot"],
       "branch": "codex/build-tool-windows-python313-volume-identity",
-      "pr_number": null,
+      "pr_number": 14329,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14329",
+      "opened_at": "2026-09-05T15:39:26Z",
+      "opened_revision": "1e06de7f06205c2afaaf4965d2423a0151513d9e",
       "selected_at": "2026-09-05T15:18:02Z",
       "selection_revision": "71cf85dfe414e43ee939b65f7f91401373f3158c",
       "rebase_revision": "e1808c31903c1324fa242d48e43b7e9cfce9252d",
@@ -145,6 +155,7 @@
       "validation_notes": "Tests-first execution failed under both Python 3.10 and 3.13 on the deliberately absent exact-width helper. The completed Windows capture retains the mandatory legacy DWORD serial, queries FILE_ID_INFO class 18 from the same retained root handle, accepts only exact legacy-or-extended membership, and falls back to exact legacy equality without masking, truncation, or version sniffing. The focused execution, authority, and backend family passes 74 tests with 13 expected skips under each interpreter; the wider build-tool conformance family independently passes 224 tests with 23 expected skips under each. Python 3.13 branch-aware coverage is 82% across build_tool_conformance_execution.py, and all 78 language-neutral semantic-runner tests pass. Corpus and execution contracts validate under both interpreters at 141 process-free cases, 285 files, zero executable cases, zero ready adapters, and disabled policy. Local SDK and live-handle probes confirm the 24-byte FILE_ID_INFO ABI, Python 3.10 legacy serial 0xc246c3db, Python 3.13 extended serial 0x7ac24704c246c3db, exact rejection of a forged same-low-DWORD serial, and zero leaked handles across 250 snapshots. The complete Go build-tool suite, vet, trimpath build, and real diff dry-run pass; the plan evaluates 45 Starlark files, discovers 5,140 packages, keeps five reviewed orphan exemptions clean, and selects no package because this is a scripts/specs-only change. Package-parity, capability, and OCaml-lock suites add 63 passes with two expected Windows skips. Ruff source lint and formatting, Bandit medium/high, Python 3.10/3.13 compileall, strict JSON, diff hygiene, and collision checks pass; the test file retains exactly the two pre-existing E402 findings from origin/main. Independent correctness and security reviews found no ABI, identity-bypass, handle-lifecycle, dependency, diagnostic, credential, or authority defect. The state remains unique, dependency-complete, acyclic, and free of merged-to-unmerged edges, and all seven live open PRs have zero exact overlap with the seven changed paths.",
       "final_review_revision": "393d7c99d7f21fdfa5f20c6520209a339a12a4f9",
       "final_review_notes": "Independent correctness and security reviews verified the Windows SDK layout and class value, both live Python serial projections, exact low-DWORD-alias rejection, legacy-only fail-closed fallback, retained-root handle closure across success and exception paths, and zero handle growth across 250 captures. A separate bookkeeping audit verified the #14316 merge record, legal lifecycle transitions, dependency edges, collision-clean inventory, complete acyclic 694-owner graph, and zero path overlap across every live PR. No blocker remains.",
+      "publication_notes": "Opened ready-for-review PR #14329 from clean validated head 1e06de7f06205c2afaaf4965d2423a0151513d9e after a normal first push from exact origin/main e1808c31903c1324fa242d48e43b7e9cfce9252d. Immediately before publication, the target branch and prior PR were absent, all seven live open PRs had zero exact overlap with the seven changed paths, and cross-version execution, coverage, semantic-runner, contract, Go, real-plan, package-parity, state-DAG, lint-baseline, security, and diff gates were acceptable. GitHub reports the PR non-draft and mergeable with initial checks queued; auto-merge remains disabled until every required check is terminal and acceptable.",
       "notes": "Discovered while validating the inert CLI parser corpus. Five unchanged execution-schema tests fail identically on the CLI branch and a clean baseline under Windows Python 3.13, while the complete execution, authority, and backend family passes under Python 3.10. Python 3.13 exposes a 64-bit st_dev value, but the existing Windows snapshot code compares it with a 32-bit volume serial and misclassifies ordinary files. Reconcile the identity representation and retain all fixed-volume, reparse, alias, mutation, and retained-handle invariants in a separate execution-boundary change; do not widen the process-free CLI corpus into native filesystem authority."
     },
     {
