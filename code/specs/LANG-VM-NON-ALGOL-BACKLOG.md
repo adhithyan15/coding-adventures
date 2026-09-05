@@ -81,6 +81,12 @@ existing result assertions, reporting missing tools honestly. Normal non-ALGOL
 BUILD must include the new rows automatically. Preserve frontend/runtime
 semantics. Update source-linked inventory counts and backlog validation.
 
+VM-037 local execution: new canonical rows 374, 375 and 376 each passed
+NativeAOT, LLVM, WASM, JVM, CLR, VM and JIT in fresh single-cell processes.
+All 21 executions produced the required ran-cell sentinel; zero tool skips.
+The corpus now has four FLOW-MATIC rows and 166 non-ALGOL programs declaring
+1182 cells. Hosted CI remains the merge gate.
+
 ## VM-036 implementation contract (selected after #14341 merged)
 
 The ten-frontend audit merged as `1fcd588c6b` after all checks passed on
