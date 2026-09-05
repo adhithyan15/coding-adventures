@@ -2520,6 +2520,12 @@ fn parse_element(
                     "BJT VTF must be finite and non-negative",
                 ));
             }
+            let emitter_resistance = *model.params.get("RE").unwrap_or(&0.0);
+            if !emitter_resistance.is_finite() || emitter_resistance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT RE must be finite and non-negative",
+                ));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2556,6 +2562,7 @@ fn parse_element(
             bjt.forward_transit_time_bias_coefficient = forward_transit_time_bias_coefficient;
             bjt.forward_transit_time_current = forward_transit_time_current;
             bjt.forward_transit_time_voltage = forward_transit_time_voltage;
+            bjt.emitter_resistance = emitter_resistance;
             Ok(Element::Bjt(bjt))
         }
         'J' => {
