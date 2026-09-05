@@ -18,7 +18,8 @@ package identity derived from the on-disk directory.
 
 Generated OCaml libraries and programs match the shared OCAML02 golden trees,
 with exact direct opam/Dune metadata, Alcotest, formatting and coverage
-commands, safe local dependency pins, and schema-v1 capability profiles.
+commands, local dependency pins whose checksum exception is scoped to worktree
+ingestion, and schema-v1 capability profiles.
 Transitive opam-repository/switch locking remains a separate CI-toolchain gate.
 
 ## Why It Exists

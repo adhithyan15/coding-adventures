@@ -21,7 +21,7 @@ Install a released package with
 pin the local graph dependency and install the package:
 
 ```bash
-opam pin add --no-action -y coding-adventures-graph ../graph
+opam pin add --no-action --working-dir --no-checksums -y coding-adventures-graph ../graph
 opam install .
 ```
 

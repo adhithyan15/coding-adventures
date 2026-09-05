@@ -20,10 +20,10 @@
     "opened_revision": "42a1b84a9c0b69f6b32c28a01aab970a458a73fa"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-05T22:24:11Z",
+    "observed_at": "2026-09-05T23:31:07Z",
     "pr_number": 14393,
-    "status": "pending",
-    "notes": "PR #14393 is the sole active parity PR. GitHub reports the ready-for-review exact opened head mergeable and conflict-free, with both CI detects, CodeQL language detection, human-language detection, and both OCAML03 contract jobs queued or in progress. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable and no merge conflict exists."
+    "status": "failure-remediation-validated",
+    "notes": "PR #14393 is the sole active parity PR and remains mergeable. Current-head macOS and duplicate push-run Ubuntu builds failed because strict OPAMREQUIRECHECKSUMS rejected repository-local OCaml path pin ingestion. The validated repair scopes --no-checksums plus --working-dir to each no-action local pin while keeping the subsequent dependency install strict, updates both scaffold front doors, and adds an offline regression guard. Local pin ingestion and strict follow-on dependency installs passed; lock validation, Go and TypeScript scaffold suites, TypeScript coverage/build/audit, parity collision, formatting, lint/vet, JSON, and diff checks passed. Guarded auto-merge remains disabled until the repair is pushed and every final-head required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "8e52198a5ba63fab43f62037d2367e1bd8fab759",

@@ -1160,10 +1160,20 @@ describe("generateOcaml", () => {
     );
     const build = fs.readFileSync(path.join(tmpDir, "BUILD"), "utf-8");
     expect(build).toContain(
-      "opam pin add --no-action -y coding-adventures-bitset ../bitset",
+      "opam pin add --no-action --working-dir --no-checksums -y coding-adventures-bitset ../bitset",
     );
     expect(build).toContain(
-      "opam pin add --no-action -y coding-adventures-graph ../graph",
+      "opam pin add --no-action --working-dir --no-checksums -y coding-adventures-graph ../graph",
+    );
+    const buildWindows = fs.readFileSync(
+      path.join(tmpDir, "BUILD_windows"),
+      "utf-8",
+    );
+    expect(buildWindows).toContain(
+      "opam pin add --no-action --working-dir --no-checksums -y coding-adventures-bitset ../bitset",
+    );
+    expect(buildWindows).toContain(
+      "opam pin add --no-action --working-dir --no-checksums -y coding-adventures-graph ../graph",
     );
     expect(build).toContain("opam exec -- dune build @fmt");
     expect(build).toContain("opam exec -- dune runtest --force");

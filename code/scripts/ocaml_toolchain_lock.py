@@ -19,6 +19,10 @@ FIXTURE_ROOT_RELATIVE_PATH = Path("code/specs/fixtures/ocaml-toolchain")
 SCAFFOLD_ROOT_RELATIVE_PATH = Path("code/specs/fixtures/scaffold-generator")
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml.yml")
 GENERIC_WORKFLOW_RELATIVE_PATH = Path(".github/workflows/ci.yml")
+OCAML_BUILD_ROOT_RELATIVE_PATHS = (
+    Path("code/packages/ocaml"),
+    Path("code/programs/ocaml"),
+)
 
 DIRECT_VERSIONS = {
     "ocaml": "5.2.1",
@@ -577,6 +581,43 @@ def _validate_scaffold_build_files(repo_root: Path) -> None:
                 raise ContractError(
                     f"{label} must equal the reviewed format, test, and coverage commands"
                 )
+
+
+def _validate_local_package_pins(repo_root: Path) -> None:
+    for root_index, relative_root in enumerate(OCAML_BUILD_ROOT_RELATIVE_PATHS):
+        build_root = repo_root / relative_root
+        if not build_root.exists():
+            if root_index == 0:
+                raise ContractError(f"OCaml package root is missing: {build_root}")
+            continue
+        if not build_root.is_dir():
+            raise ContractError(f"OCaml build root is not a directory: {build_root}")
+        paths = [
+            *build_root.glob("*/BUILD"),
+            *build_root.glob("*/BUILD_windows"),
+        ]
+        for path in sorted(paths):
+            _require_regular_file(path, "OCaml package BUILD file", boundary=repo_root)
+            try:
+                lines = path.read_text(encoding="utf-8").splitlines()
+            except (OSError, UnicodeError) as exc:
+                raise ContractError(
+                    f"cannot read OCaml package BUILD file {path}: {exc}"
+                ) from exc
+            for line_number, line in enumerate(lines, start=1):
+                command = line.strip()
+                is_local_pin = command.startswith("opam pin add ") and re.search(
+                    r"(?:^|\s)(?:\.\.?[/\\]|file:)", command
+                )
+                command_tokens = command.split()
+                required_flags = {"--working-dir", "--no-checksums"}
+                missing_flags = sorted(required_flags.difference(command_tokens))
+                if is_local_pin and missing_flags:
+                    relative_path = path.relative_to(repo_root)
+                    raise ContractError(
+                        f"{relative_path}:{line_number} local opam pin omits required "
+                        f"flags {missing_flags}"
+                    )
 
 
 def _workflow_mapping(value: object, label: str) -> Mapping[str, object]:
@@ -1290,6 +1331,7 @@ def validate_repository(
         )
 
     _validate_scaffold_build_files(repo_root)
+    _validate_local_package_pins(repo_root)
 
     if check_workflow:
         workflow_path = repo_root / WORKFLOW_RELATIVE_PATH

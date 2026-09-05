@@ -185,10 +185,14 @@ requests that select OCaml must retain all three generic operating-system legs.
 The setup action, compiler, and opam repository revision must equal OCAML03;
 `opam-pin` and Dune caching remain disabled; the configured repository and
 runtime versions are checked immediately; and checksum enforcement is exported
-for subsequent BUILD commands. Because the generic executor does not yet own a
-global opam-switch mutation lock, an OCaml-active invocation must use one build
-worker. The later `ocaml-build-substrate` owner replaces that conservative
-serialization with the reviewed execution-coupled resource contract.
+for subsequent BUILD commands. Local repository dependency pins must use
+opam's `--working-dir` mode and scope `--no-checksums` to the pin ingestion
+command. This keeps their source bound to the reviewed checkout while the
+subsequent dependency install continues to require checksums for registry
+archives. Because the generic executor does not yet own a global opam-switch
+mutation lock, an OCaml-active invocation must use one build worker. The later
+`ocaml-build-substrate` owner replaces that conservative serialization with the
+reviewed execution-coupled resource contract.
 
 The separate `ocaml-representative-package-ci-execution` owner retains durable
 ownership of a package-specific, exact Ubuntu/macOS/Windows chain that records

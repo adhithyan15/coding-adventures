@@ -34,8 +34,8 @@ From this source directory, pin the local dependency chain leaf-first and
 install the package:
 
 ```bash
-opam pin add --no-action -y coding-adventures-graph ../graph
-opam pin add --no-action -y coding-adventures-directed-graph ../directed-graph
+opam pin add --no-action --working-dir --no-checksums -y coding-adventures-graph ../graph
+opam pin add --no-action --working-dir --no-checksums -y coding-adventures-directed-graph ../directed-graph
 opam install .
 ```
 

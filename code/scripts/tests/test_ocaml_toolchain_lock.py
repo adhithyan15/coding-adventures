@@ -42,6 +42,66 @@ class OcamlToolchainRepositoryTests(unittest.TestCase):
 
         self.assertEqual(library.read_bytes(), program.read_bytes())
 
+    def test_local_package_pins_require_scoped_source_flags(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo_root = Path(directory)
+            package_root = repo_root / "code/packages/ocaml/dependent"
+            package_root.mkdir(parents=True)
+            build_file = package_root / "BUILD"
+            build_file.write_text(
+                "opam pin add --no-action -y dependency ../dependency\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(
+                toolchain.ContractError, "local opam pin omits required flags"
+            ):
+                toolchain._validate_local_package_pins(repo_root)
+
+            build_file.write_text(
+                "opam pin add --no-action --working-dir --no-checksums -y "
+                "dependency ../dependency\n",
+                encoding="utf-8",
+            )
+            toolchain._validate_local_package_pins(repo_root)
+
+            build_file.write_text(
+                "opam pin add --no-action --working-dir -y dependency ../dependency\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                toolchain.ContractError, "local opam pin omits required flags"
+            ):
+                toolchain._validate_local_package_pins(repo_root)
+
+            build_file.write_text(
+                "opam pin add --no-action --working-directory -y dependency "
+                "../dependency\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                toolchain.ContractError, "local opam pin omits required flags"
+            ):
+                toolchain._validate_local_package_pins(repo_root)
+
+            build_file.write_text(
+                "opam pin add --no-action -y dependency https://example.invalid/repo.git\n",
+                encoding="utf-8",
+            )
+            toolchain._validate_local_package_pins(repo_root)
+
+            program_root = repo_root / "code/programs/ocaml/dependent"
+            program_root.mkdir(parents=True)
+            build_windows = program_root / "BUILD_windows"
+            build_windows.write_text(
+                "  opam pin add --no-action -y dependency ..\\dependency\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                toolchain.ContractError, "local opam pin omits required flags"
+            ):
+                toolchain._validate_local_package_pins(repo_root)
+
     def test_workflow_uses_closed_matrix_and_pinned_identities(self) -> None:
         manifest = toolchain.load_manifest(REPO_ROOT)
         workflow = (REPO_ROOT / ".github/workflows/build-ocaml.yml").read_text(
@@ -605,6 +665,7 @@ class OcamlToolchainDigestTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp_dir = tempfile.TemporaryDirectory()
         self.root = Path(self.temp_dir.name)
+        (self.root / "code/packages/ocaml").mkdir(parents=True)
         self.fixture_root = self.root / "code/specs/fixtures/ocaml-toolchain"
         self.fixture_root.mkdir(parents=True)
 
