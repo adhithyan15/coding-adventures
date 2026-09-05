@@ -17,10 +17,10 @@
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
 > SwiftUI in #14331, Qt in #14344, Flutter in #14353, and XAML in #14362. The
 > static HTML snapshot lowering landed in #14369, Paint fixture-driven
-> resolution landed in #14378, and Button's first focused toolkit retrofit
-> landed in #14385. The current dependency is #14398: make Alert's variant
-> contract real through the same UI49 path. Toolkit retrofits still precede
-> stories or trustworthy TaskApp composition coverage.
+> resolution landed in #14378, Button's first focused toolkit retrofit landed
+> in #14385, and Alert followed in #14399. The current dependency is #14402:
+> make Badge's variant contract real through the same UI49 path. Toolkit
+> retrofits still precede stories or trustworthy TaskApp composition coverage.
 >
 > The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
 > Phase 5, on components that are already proven in isolation. Until then the

@@ -447,6 +447,103 @@ fn badge_interface_matches_spec() {
     let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
     assert_eq!(slot_names, vec!["label", "variant"]);
     assert!(c.emits.is_empty(), "Badge has no emits");
+
+    let variant = c.slots.iter().find(|slot| slot.name == "variant").unwrap();
+    assert_eq!(
+        variant.r#type,
+        mosmodel_compiler::SlotType::OneOf(
+            [
+                "primary",
+                "secondary",
+                "success",
+                "danger",
+                "warning",
+                "info",
+                "light",
+                "dark",
+            ]
+            .map(str::to_string)
+            .to_vec()
+        )
+    );
+}
+
+#[test]
+fn badge_themes_cover_typed_variant_states() {
+    let mil_out = mosmodel_compiler::compile(&read_source("Badge.mil")).unwrap();
+    let mll_out =
+        moslayout_compiler::compile(&read_source("Badge.mll"), Some(&mil_out.descriptor_json))
+            .unwrap();
+    let axes: Vec<_> = mil_out
+        .component
+        .slots
+        .iter()
+        .filter_map(|slot| match &slot.r#type {
+            mosmodel_compiler::SlotType::OneOf(values) => Some(mosstyle_compiler::SlotStateAxis {
+                slot: slot.name.clone(),
+                values: values.clone(),
+            }),
+            _ => None,
+        })
+        .collect();
+    let expected: Vec<_> = [
+        "primary",
+        "secondary",
+        "success",
+        "danger",
+        "warning",
+        "info",
+        "light",
+        "dark",
+    ]
+    .into_iter()
+    .map(|state| (state, Some("variant")))
+    .collect();
+
+    for theme in THEMES {
+        let filename = format!("Badge.{theme}.msl");
+        let style = mosstyle_compiler::compile_with_slot_states(
+            &read_source(&filename),
+            Some(&mll_out.part_map_json),
+            &axes,
+        )
+        .unwrap_or_else(|e| panic!("{filename} failed to compile:\n{e:#?}"));
+        let badge = style
+            .def
+            .parts
+            .iter()
+            .find(|part| part.name == "badge")
+            .expect("Badge theme must style the badge part");
+        let states: Vec<_> = badge
+            .states
+            .iter()
+            .map(|state| (state.state.as_str(), state.slot.as_deref()))
+            .collect();
+        assert_eq!(
+            states, expected,
+            "{filename} state coverage or ownership drifted"
+        );
+
+        let property = |state_name: &str, property_name: &str| {
+            badge
+                .states
+                .iter()
+                .find(|state| state.state == state_name)
+                .and_then(|state| state.props.iter().find(|prop| prop.name == property_name))
+                .map(|prop| prop.value.as_str())
+                .unwrap_or_else(|| panic!("{filename}: {state_name} lacks {property_name}"))
+        };
+        assert_ne!(
+            property("success", "background"),
+            property("danger", "background"),
+            "{filename}: representative variants must look different"
+        );
+        assert_ne!(
+            property("warning", "color"),
+            property("dark", "color"),
+            "{filename}: representative foregrounds must look different"
+        );
+    }
 }
 
 /// Spinner — display-only loading indicator. No emits.

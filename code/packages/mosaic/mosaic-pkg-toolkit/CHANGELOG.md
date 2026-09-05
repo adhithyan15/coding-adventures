@@ -1,5 +1,16 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — make Badge's variant axis real (#14402)
+
+`Badge.variant` is now the closed UI49 axis `primary | secondary | success |
+danger | warning | info | light | dark`. Both themes define every value as a
+slot-owned state, so badges no longer accept a variant and silently render it
+as `primary`. The base style remains the primary fallback when the optional
+slot is omitted. Focused tests pin the legal values, state ownership, theme
+coverage, and representative foreground/background differences. Toast,
+Spinner, and Input remain tracked by #14036; MosaicBook stories remain blocked
+by #14031.
+
 ## [Unreleased] — make Alert's variant axis real (#14398)
 
 `Alert.variant` is now the closed UI49 axis `primary | secondary | success |
@@ -8,8 +19,8 @@ slot-owned state on the banner and its native close button, so the selected
 foreground remains consistent instead of every variant silently rendering as
 `info`. The base style remains the `info` fallback when the optional slot is
 omitted. Focused tests pin the legal values, state ownership, theme coverage,
-and representative visual differences. Badge, Toast, Spinner, and Input remain
-tracked by #14036; MosaicBook stories remain blocked by #14031.
+and representative visual differences. The remaining component retrofits
+continue under #14036; MosaicBook stories remain blocked by #14031.
 
 ## [Unreleased] — make Button variant and size axes real (#14383)
 
