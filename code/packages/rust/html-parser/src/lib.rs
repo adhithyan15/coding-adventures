@@ -11106,7 +11106,7 @@ fn populate_select_selectedcontent(select: &mut Element) {
                 if element.attribute("selected").is_some() {
                     *selected = Some(element.children.clone());
                 }
-            } else if element.name != "button" {
+            } else if !matches!(element.name.as_str(), "button" | "datalist") {
                 if element.name == "optgroup" && inside_optgroup {
                     continue;
                 }
@@ -47118,6 +47118,100 @@ mod tests {
         assert!(direct.diagnostics().iter().all(|diagnostic| {
             diagnostic.code != "unexpected-optgroup-start-tag-in-select"
         }));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_excludes_options_in_datalists() {
+        let selectedcontent_text = |source: &str| {
+            let document = parse_html(source).unwrap();
+            element_text_content(
+                find_first_element_in_nodes(&document.children, "selectedcontent").unwrap(),
+            )
+        };
+
+        let source = "<!doctype html><!--é-->\r\n<select><button><selectedcontent>old</selectedcontent></button><div><datalist><option selected>excluded</option></datalist></div><option><b>real</b></option></select>";
+        let document = parse_html(source).unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&document.children, "selectedcontent").unwrap()
+            ),
+            "real"
+        );
+        assert!(find_first_element_in_nodes(&document.children, "datalist").is_some());
+        assert!(source.len() > source.chars().count());
+
+        let fragment = parse_html_fragment_for_context(
+            "<select><selectedcontent>old</selectedcontent><div><datalist><option selected>excluded</option></datalist></div><option>real</option></select>",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&fragment, "selectedcontent").unwrap()
+            ),
+            "real"
+        );
+        assert_eq!(
+            selectedcontent_text(
+                "<!doctype html><svg><foreignObject><select><selectedcontent>old</selectedcontent><datalist><option selected>excluded</option></datalist><option>real</option></select></foreignObject></svg>"
+            ),
+            "real"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "datalist".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "selected".to_string(),
+                    value: String::new(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("excluded".to_string()),
+            Token::EndTag {
+                name: "option".to_string(),
+            },
+            Token::EndTag {
+                name: "datalist".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("real".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "real"
+        );
         assert!(direct
             .diagnostics()
             .iter()
