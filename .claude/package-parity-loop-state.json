@@ -2725,7 +2725,7 @@
       "depends_on": ["ocaml-representative-core", "ocaml-ci-toolchain"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the ocaml-representative-core parallel validation audit. The pinned three-platform OCaml workflow currently executes only scaffold fixtures, while canonical generic CI can discover real OCaml packages without provisioning opam. Extend the reviewed pinned toolchain path to execute logic-gates plus the leaf-first graph, directed-graph, and state-machine chain on Ubuntu, macOS, and Windows with real format, test, coverage, install, and no-skip evidence. Keep this execution-coupled owner separate from the process-free representative-core tranche and require it before lane promotion."
+      "notes": "Discovered during the ocaml-representative-core parallel validation audit. The pinned three-platform OCaml workflow currently executes only scaffold fixtures, while canonical generic CI can discover real OCaml packages without provisioning opam. Extend the reviewed pinned toolchain path to execute logic-gates plus the leaf-first graph, directed-graph, and state-machine chain on Ubuntu, macOS, and Windows with real format, test, numeric coverage-floor, install, source-archive, installed downstream-consumer, retained-artifact, and no-skip evidence. Include stale-coverage isolation, consistent Unix/Windows aggregation, explicit direct-BUILD fail-fast semantics, and an exact reviewed odoc pin with warning-clean documentation builds in this same workflow/toolchain owner rather than creating an overlapping release-hardening item. Keep this execution-coupled owner separate from the process-free representative-core tranche and require it before lane promotion."
     },
     {
       "id": "ocaml-build-tool-and-promotion",
@@ -2736,11 +2736,12 @@
         "ocaml-representative-core",
         "ocaml-capability-analyzer",
         "build-tool-pure-domain-corpus",
-        "build-tool-execution-semantics-corpus"
+        "build-tool-execution-semantics-corpus",
+        "build-tool-neutral-graph-diff-corpus-completion"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Implement on directed-graph and require shared conformance plus two-way Go build-plan interchange. This item does not promote the lane."
+      "notes": "Implement on directed-graph only after the shared pure-domain, execution-semantics, and neutral graph/diff corpora are complete, and require two-way Go build-plan interchange. This item does not promote the lane."
     },
     {
       "id": "ocaml-lane-promotion",

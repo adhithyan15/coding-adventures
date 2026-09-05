@@ -13194,15 +13194,30 @@ zero collisions and zero unknown buckets; the selected ownership graph remains
 The representative-core parallel validation audit found one additional
 dependency-shaped integration gap. The pinned three-platform OCaml workflow
 executes the library and program scaffold fixtures but not the real package
-chain, while generic canonical CI can discover OCaml package BUILD files
-without provisioning opam. The new pending
+chain. Generic canonical CI can discover OCaml package BUILD files, and this
+core tranche now supplies only its minimum guarded, checksum-enforcing opam
+bootstrap plus serialized OCaml build-tool invocation; package-specific hosted
+execution remains outside this process-free package owner. The new pending
 `ocaml-representative-package-ci-execution` owner depends on the representative
 core and the already merged CI toolchain, owns real Ubuntu, macOS, and Windows
-format/test/coverage/install execution without skips, and now gates final lane
-promotion. It remains separate from this process-free package tranche. The
-reconciled state therefore contains 725 owners and 1,199 edges: 209 merged,
-515 pending, and one in progress; graph uniqueness, dependency completeness,
-acyclicity, and the no merged-to-unmerged invariant remain intact.
+format/test/numeric-coverage/install/source-archive/installed-downstream
+execution without skips, stale coverage isolation, direct-BUILD fail-fast
+semantics, pinned odoc, warning-clean documentation, and retained evidence. It
+now gates final lane promotion and remains separate from this process-free
+package tranche.
+
+Parallel release and dependency audits found no additional eligible unowned
+OCaml gap: the execution owner above already owns the shared release-hardening
+surface, while capability analysis and process substrate remain independent
+siblings joined only by promotion. The native OCaml build tool now also waits
+for `build-tool-neutral-graph-diff-corpus-completion`, preventing its graph and
+diff behavior from targeting an incomplete neutral corpus. The reconciled state
+therefore contains 725 owners and 1,200 edges: 209 merged, 515 pending, and one
+in progress; graph uniqueness, dependency completeness, acyclicity, and the no
+merged-to-unmerged invariant remain intact. After this core lands, capability
+analysis has the highest OCaml dependency leverage at seventeen unfinished
+descendants; package execution remains the separate cross-platform evidence
+frontier.
 
 ## Autonomous Loop Protocol
 
