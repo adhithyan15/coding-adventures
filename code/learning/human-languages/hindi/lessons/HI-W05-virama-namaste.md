@@ -9,9 +9,9 @@ sequence: 230
 delivery: script
 chapter: 2
 type: writing
-headword: "्"
+headword: "् / विराम / हलंत"
 gloss: "the virama or halant — the mark that stops a consonant's inherent vowel"
-romanization: "(vowel killer)"
+romanization: "virāma / halant"
 prerequisites: [HI-W04-write-mera-naam, HI-W03-preposed-i, HI-W02-ka-ta-mouth-order]
 sounds: [devanagari-virama, devanagari-conjunct]
 roots: [sanskrit-virama, sanskrit-namas]

@@ -9,7 +9,7 @@ sequence: 262
 delivery: script
 chapter: 2
 type: writing
-headword: "।"
+headword: "। / पूर्ण विराम"
 gloss: close one known Hindi sentence with a single visible boundary
 romanization: "pūrṇa virām"
 prerequisites: [HI-W06-name-sentence-frame]

@@ -27,6 +27,8 @@ import { entry as uBA4 } from "./tamil/U-BA4.ts";
 import { entry as uBAF } from "./tamil/U-BAF.ts";
 import { entry as uBAE } from "./tamil/U-BAE.ts";
 import { entry as uB8E } from "./tamil/U-B8E.ts";
+import { entry as uB8F } from "./tamil/U-B8F.ts";
+import { entry as uB93 } from "./tamil/U-B93.ts";
 
 import type { DuctusEntry } from "./registry.ts";
 
@@ -60,4 +62,4 @@ export const mainEntries: DuctusEntry[] = [
 ];
 
 // The historical Tamil tail entry followed the later Indic owner blocks.
-export const tailEntries: DuctusEntry[] = [uB8E];
+export const tailEntries: DuctusEntry[] = [uB8E, uB8F, uB93];
