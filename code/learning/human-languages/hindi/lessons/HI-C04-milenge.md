@@ -8,9 +8,9 @@ sequence: 350
 spine_node: SPINE-TAKE-LEAVE
 chapter: 4
 type: word
-headword: मिलेंगे
-gloss: (we) will meet
-romanization: "milenge"
+headword: मिलेंगे / मिलना / मिल् / मिले / -एंगे / -गे
+gloss: (we or they) will meet / to meet / stem / future base / plural future ending and its final syllable
+romanization: "mileṅge / milnā / mil / mile / -eṅge / -ge"
 concept_tag: HI-VERB-MILNA
 prerequisites: [HI-C03-hun]
 sounds: [matra-e, anusvara]
