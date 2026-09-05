@@ -137,6 +137,9 @@ let test_weighted_algorithms () =
     = [ ("A", "B", 1.); ("C", "D", 1.); ("B", "C", 2.) ]);
   expect_error (add_edge ~weight:(-1.) graph "A" "B");
   expect_error (add_edge ~weight:nan graph "A" "B");
+  add_edge graph "new-left" "new-right" |> get;
+  Alcotest.check Alcotest.bool "edge creates endpoints" true
+    (has_node graph "new-left" && has_node graph "new-right");
   expect_error (shortest_path graph "missing" "A");
   expect_error (shortest_path graph "A" "missing");
   Alcotest.check Alcotest.bool "single node mst" true

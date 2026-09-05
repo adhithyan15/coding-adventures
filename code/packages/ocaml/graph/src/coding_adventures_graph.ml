@@ -161,26 +161,22 @@ module Make (Node : Map.OrderedType) = struct
         canonicalized for an undirected edge, while adjacency is written in
         both directions (twice to the same cell for a self-edge). *)
     if not (valid_weight weight) then Error (Invalid_weight weight)
-    else
-      match require_node graph left with
-      | Error error -> Error error
-      | Ok () -> (
-          match require_node graph right with
-          | Error error -> Error error
-          | Ok () ->
-              add_neighbor graph left right weight;
-              add_neighbor graph right left weight;
-              let edge = canonical_edge left right in
-              let previous =
-                Option.value ~default:String_map.empty
-                  (Edge_map.find_opt edge graph.edge_data)
-              in
-              let merged =
-                merge_bags previous properties
-                |> String_map.add "weight" (Number weight)
-              in
-              graph.edge_data <- Edge_map.add edge merged graph.edge_data;
-              Ok ())
+    else (
+      add_node graph left;
+      add_node graph right;
+      add_neighbor graph left right weight;
+      add_neighbor graph right left weight;
+      let edge = canonical_edge left right in
+      let previous =
+        Option.value ~default:String_map.empty
+          (Edge_map.find_opt edge graph.edge_data)
+      in
+      let merged =
+        merge_bags previous properties
+        |> String_map.add "weight" (Number weight)
+      in
+      graph.edge_data <- Edge_map.add edge merged graph.edge_data;
+      Ok ())
 
   let has_edge graph left right =
     match graph.storage with

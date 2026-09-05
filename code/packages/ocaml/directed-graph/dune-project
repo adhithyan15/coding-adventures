@@ -1,0 +1,7 @@
+(lang dune 3.16)
+(name coding-adventures-directed-graph)
+(generate_opam_files false)
+(package
+ (name coding-adventures-directed-graph)
+ (synopsis "Deterministic generic directed and labeled graph algorithms")
+ (description "Deterministic generic directed and labeled graph algorithms"))
