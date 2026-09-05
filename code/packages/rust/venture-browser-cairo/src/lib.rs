@@ -363,12 +363,14 @@ mod ffi {
         let Some(start_url) = string_arg(start_url) else {
             return std::ptr::null_mut();
         };
-        catch_unwind(|| CairoBrowserHost::new(&start_url, width, height))
-            .ok()
-            .and_then(Result::ok)
-            .map(Box::new)
-            .map(Box::into_raw)
-            .unwrap_or(std::ptr::null_mut())
+        match catch_unwind(|| CairoBrowserHost::new(&start_url, width, height)) {
+            Ok(Ok(host)) => Box::into_raw(Box::new(host)),
+            Ok(Err(error)) => {
+                eprintln!("Venture browser startup failed: {error}");
+                std::ptr::null_mut()
+            }
+            Err(_) => std::ptr::null_mut(),
+        }
     }
 
     #[no_mangle]

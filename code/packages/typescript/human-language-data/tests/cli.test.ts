@@ -17,7 +17,7 @@ describe("runValidate", () => {
 });
 
 describe("runCurriculumGapReport", () => {
-  // 35s, not the 5s default: this builds the WHOLE gap report twice, and since
+  // Each format gets its own 35s budget: each builds the WHOLE gap report, and since
   // HL09 that includes the continuity walk. The cost is real and deliberate — order,
   // reinforcement and forward references are properties of every lesson, so the walk
   // cannot be input-gated the way `ramp` and `levels` are.
@@ -39,18 +39,17 @@ describe("runCurriculumGapReport", () => {
   // to the corpus and that 35s covers roughly 3x today's size. If it runs close
   // before then, something has gone superlinear again: profile it, do not thin the
   // report, and do not just move this number.
-  it("prints JSON or text reports for the real curriculum", { timeout: 35_000 }, () => {
+  it.each(["json", "text"])("prints a %s report for the real curriculum", { timeout: 35_000 }, (format) => {
     const out = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     try {
-      expect(runCurriculumGapReport(["--format", "json"])).toBe(0);
-      const json = out.mock.calls.map((call) => String(call[0])).join("");
-      // Marwadi joins Mandarin and Japanese as a complete registry/book track.
-      expect(JSON.parse(json).summary.registeredTracks).toBe(23);
-      out.mockClear();
-      expect(runCurriculumGapReport(["--format", "text"])).toBe(0);
-      expect(out.mock.calls.map((call) => String(call[0])).join("")).toContain(
-        "Human Languages curriculum gap report",
-      );
+      expect(runCurriculumGapReport(["--format", format])).toBe(0);
+      const printed = out.mock.calls.map((call) => String(call[0])).join("");
+      if (format === "json") {
+        // Marwadi joins Mandarin and Japanese as a complete registry/book track.
+        expect(JSON.parse(printed).summary.registeredTracks).toBe(23);
+      } else {
+        expect(printed).toContain("Human Languages curriculum gap report");
+      }
     } finally {
       out.mockRestore();
     }

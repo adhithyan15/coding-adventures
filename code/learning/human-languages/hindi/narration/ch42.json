@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:bd25579847362d1b",
+  "sourceHash": "fnv1a64:4a1752ffd8f1c9a9",
   "lessons": [
     {
       "id": "HI-C42-come",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28bccde2559daec6",
+      "sourceHash": "fnv1a64:c209e67404ad26ca",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Take off -ना and add the endings you already know: आता (ātā, masculine), आती (ātī, feminine), आते (āte, respectful or plural). Chapter 73 will put आता हूँ after a chained action; now the form will already be yours."
+              "text": "Take off -ना and add the endings you already know: आता (ātā, masculine), आती (ātī, feminine), आते (āte, respectful or plural). The action-chaining lesson will put आता हूँ after a chained action; now the form will already be yours."
             }
           ]
         },

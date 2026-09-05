@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 42,
-  "sourceHash": "fnv1a64:bd25579847362d1b",
+  "sourceHash": "fnv1a64:4a1752ffd8f1c9a9",
   "lessonIds": [
     "HI-C42-come",
     "HI-C42-sit",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "hindi/narration/ch42.txt",
   "json": "hindi/narration/ch42.json",
-  "textHash": "fnv1a64:106a836bde66cf0f",
-  "jsonHash": "fnv1a64:e5327c179d023df6",
+  "textHash": "fnv1a64:5d0961adb8cd5c91",
+  "jsonHash": "fnv1a64:53529be63120285a",
   "findings": []
 }

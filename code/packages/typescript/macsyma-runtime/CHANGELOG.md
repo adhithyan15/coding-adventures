@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Run POSIX dependency lock commands explicitly through Bash on Windows.
+
 ## [0.5.0] — 2026-05-29
 
 - Track M2 — port the MACSYMA `load("name")` runtime package directive

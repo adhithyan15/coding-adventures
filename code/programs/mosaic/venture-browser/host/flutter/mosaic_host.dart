@@ -311,7 +311,7 @@ class MosaicHost {
     if (_bindings.resize(_host, width, height) != 0) _surfaceChanged();
   }
 
-  _RgbaFrame renderFrame() {
+  _RgbaFrame _renderFrame() {
     final width = _memory.allocate<Uint32>(sizeOf<Uint32>());
     final height = _memory.allocate<Uint32>(sizeOf<Uint32>());
     try {
@@ -441,7 +441,7 @@ class _VentureContentSurfaceState extends State<VentureContentSurface> {
 
   Future<void> _refresh() async {
     final generation = ++_renderGeneration;
-    final rendered = widget.host.renderFrame();
+    final rendered = widget.host._renderFrame();
     final nextImage = await rendered.decode();
     if (!mounted || generation != _renderGeneration) {
       nextImage.dispose();

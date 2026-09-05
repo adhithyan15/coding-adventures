@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Run POSIX dependency lock commands explicitly through Bash on Windows.
+
 - Add `trySolveTranscendental` for direct Phase 26-style transcendental
   equations `f(linear) = constant` across trig, exp/log, and hyperbolic heads.
 - Add `trySolveInequality` for Phase 27-style polynomial inequality solving

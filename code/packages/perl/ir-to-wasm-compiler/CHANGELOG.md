@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+- Declare the grammar tools, lexer, and virtual machine used by the test build
+  so every CI shard includes their dependencies and passes BUILD validation.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added

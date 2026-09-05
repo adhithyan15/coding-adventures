@@ -1,5 +1,3 @@
-# Changelog
-
 ## Unreleased — Hindi ability now declares its practised finite form
 
 Chapter 70 already introduces **सकना** as “to be able,” models **सकता**

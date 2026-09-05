@@ -5,6 +5,10 @@ this file.
 
 ## [Unreleased]
 
+- Emit one Expanded wrapper for a direct Row input with explicit flex-grow.
+  Preserve the declared flex weight without nesting the input's default wrapper,
+  which caused Flutter ParentDataWidget assertions in Venture's live shell.
+
 ### Added - UI49 slot-owned style-state activation (#14348)
 
 Flutter now activates mosstyle states owned by `one-of` slots from the

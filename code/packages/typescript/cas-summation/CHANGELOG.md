@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Run POSIX dependency lock commands explicitly through Bash on Windows.
+
 ## 2.28.0 — 2026-05-29
 
 ### Added — Track I2 (Closed-form transcendental infinite sums port)

@@ -1,5 +1,3 @@
-# Changelog
-
 ## Unreleased — Hindi my now declares all three taught forms
 
 Chapter 2 already teaches that Hindi possessives agree with what is owned,

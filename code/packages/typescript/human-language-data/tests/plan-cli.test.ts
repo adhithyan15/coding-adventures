@@ -15,10 +15,16 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function corpus(): string {
+function corpus(inventoriesOnly = false): string {
   const root = mkdtempSync(join(tmpdir(), "hl-plan-"));
   roots.push(root);
-  cpSync(defaultCurriculumRoot(), root, { recursive: true });
+  if (inventoriesOnly) {
+    for (const directory of ["core", "concepts", "data"]) {
+      cpSync(join(defaultCurriculumRoot(), directory), join(root, directory), { recursive: true });
+    }
+  } else {
+    cpSync(defaultCurriculumRoot(), root, { recursive: true });
+  }
   return root;
 }
 
@@ -231,8 +237,12 @@ describe("the plan CLI", () => {
     // previously unmeasurable. A ceiling would fail on exactly the work we most
     // want. So assert the invariant this test actually owns -- duplication
     // changes nothing -- by comparing the two runs. HL-C310.
-    const clean = run(corpus());
-    const root = corpus();
+    // Inventory deduplication needs the real inventory and registry inputs,
+    // but no lesson coverage. Keep all points uncovered in this fixture so
+    // duplicating an inventory must still leave both projection totals intact.
+    // The clean-corpus test above separately exercises real lesson coverage.
+    const root = corpus(true);
+    const clean = run(root);
     cpSync(
       join(root, "core", "exam-inventory-french-a1.json"),
       join(root, "core", "exam-inventory-fr-a1.json"),
