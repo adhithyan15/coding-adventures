@@ -1,0 +1,56 @@
+name: VisiCalc interactions
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/visicalc.yml'
+      - 'code/programs/typescript/visicalc/**'
+      - 'code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js'
+      - 'code/programs/mosaic/visicalc/**'
+      - 'code/packages/mosaic/mosaic-pkg-grid/**'
+      - 'code/packages/rust/**'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/visicalc.yml'
+      - 'code/programs/typescript/visicalc/**'
+      - 'code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js'
+      - 'code/programs/mosaic/visicalc/**'
+      - 'code/packages/mosaic/mosaic-pkg-grid/**'
+      - 'code/packages/rust/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: visicalc-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  formula-edit:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+        working-directory: code/programs/typescript/visicalc
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Linux compiler dependencies
+        if: runner.os == 'Linux'
+        run: bash ../../../scripts/ci/apt-install.sh libcairo2-dev
+      - name: Install web dependencies
+        run: npm install --no-audit --no-fund
+      - name: Regenerate Mosaic controls and test the real WASM engine
+        run: npm test
+      - name: Check the production build
+        run: npm run build

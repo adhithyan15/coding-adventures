@@ -8,7 +8,8 @@ The investigation and implementation sequence are in
 Run `npm test` to regenerate Mosaic controls and verify formula-bar commit,
 cancel, clearing, and input keyboard handling against the actual Rust/WASM
 spreadsheet engine. Run `npm run build` for production TypeScript and Vite checks.
-The repository BUILD runs both; native GUI acceptance remains separate work.
+The VisiCalc interactions CI workflow runs both on Linux and Windows; native GUI
+acceptance remains separate work.
 
 A VisiCalc-style spreadsheet built end-to-end on the Mosaic UI compiler
 stack. This is the capstone for the UI work tracked in

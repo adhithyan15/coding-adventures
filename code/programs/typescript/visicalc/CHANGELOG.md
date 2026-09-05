@@ -6,5 +6,5 @@
   spreadsheet engine and Escape restores the prior source. Text-input arrow keys
   no longer navigate the grid.
 - Added four generated-control regressions using the real Rust/WASM engine and
-  a repository BUILD entry running both tests and the production build.
+  a Linux/Windows CI workflow running both tests and the production build.
 - Started the Mosaic reference-application backlog in GitHub issue #14267.
