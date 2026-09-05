@@ -5264,11 +5264,12 @@ the Rust, Python, and TypeScript surfaces together.
      the same and rejects invalid input before element lowering.
 
 50.3. Rust BJT parser parity inventory refresh.
-   - Status: prioritized next after the BJT forward-bias-depletion-coefficient
-     slice.
+   - Status: completed after the BJT forward-bias-depletion-coefficient slice.
    - Re-audit the engine BJT field contract against Rust lowering and the
      Python/TypeScript facades to identify the next smallest independent parity
-     gap before opening another implementation slice.
+     gap before opening another implementation slice. Every engine BJT field is
+     now assigned by Rust lowering; no additional independent BJT field gap was
+     found.
 
 51. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
