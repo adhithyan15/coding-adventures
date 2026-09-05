@@ -8308,6 +8308,29 @@ impl HtmlParser {
             })
         }) {
             let index = lower_bound + relative_index;
+            let foreign_target_blocked_by_integration_point = element_ref_at_path(
+                &self.document,
+                &self.open_elements[index],
+            )
+            .is_some_and(|element| element.namespace.is_some())
+                && self.current_namespace().is_none()
+                && self.open_elements.iter().skip(index + 1).any(|path| {
+                    element_ref_at_path(&self.document, path).is_some_and(|element| {
+                        element.namespace.is_some() && is_ordinary_scope_boundary(element)
+                    })
+                });
+            if foreign_target_blocked_by_integration_point {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-non-current-end-tag",
+                        format!(
+                            "end tag `</{name}>` was seen before its open element was current"
+                        ),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+                return;
+            }
             if name == "span" && self.has_special_element_above(index) {
                 return;
             }
@@ -36322,6 +36345,103 @@ mod tests {
             fragment.parser_diagnostics,
             vec![generic_foreign_end_tag_mismatch(fragment_source, "x-box")]
         );
+    }
+
+    #[test]
+    fn foreign_ancestor_end_tags_stop_at_html_integration_boundaries() {
+        for source in [
+            "<!doctype html><!--é-->\r\n<math><mtext><p>A</math>B",
+            "<!doctype html><math><mi><span>A</math>B",
+            "<!doctype html><math><annotation-xml encoding=text/html><h1>A</math>B",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let math = body(&output.document)
+                .children
+                .iter()
+                .find_map(|node| match node {
+                    Node::Element(element) if element.name == "math" => Some(element),
+                    _ => None,
+                })
+                .unwrap();
+            let html_child = find_first_element_in_nodes(
+                &math.children,
+                if source.contains("<p>") {
+                    "p"
+                } else if source.contains("<h1>") {
+                    "h1"
+                } else {
+                    "span"
+                },
+            )
+            .unwrap();
+            assert_eq!(
+                html_child.children,
+                vec![Node::text("AB")],
+                "source {source:?}"
+            );
+
+            let diagnostic = output
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-non-current-end-tag")
+                .unwrap();
+            assert_eq!(diagnostic.position, Some(end_tag_position(source, "math")));
+        }
+
+        let direct_close = parse_html("<!doctype html><math><mtext>A</math>B").unwrap();
+        assert_eq!(body(&direct_close).children.last(), Some(&Node::text("B")));
+
+        let integration_close =
+            parse_html("<!doctype html><math><mtext><span>A</mtext>B").unwrap();
+        let math = element(&body(&integration_close).children[0]);
+        assert_eq!(math.children.last(), Some(&Node::text("B")));
+
+        let fragment_source = "<math><mtext><span>A</math>B";
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            fragment_source,
+            "html body",
+        )
+        .unwrap();
+        let span = find_first_element_in_nodes(&fragment.nodes, "span").unwrap();
+        assert_eq!(span.children, vec![Node::text("AB")]);
+        assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-non-current-end-tag"
+                && diagnostic.position == Some(end_tag_position(fragment_source, "math"))
+        }));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "mtext".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "span".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "math".to_string(),
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let span = find_first_element_in_nodes(&body(&unpositioned.document).children, "span")
+            .unwrap();
+        assert_eq!(span.children, vec![Node::text("AB")]);
+        assert!(unpositioned
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
