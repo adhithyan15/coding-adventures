@@ -2122,19 +2122,20 @@ fn e4dyn_single_block_string_keeps_literal_fast_path() {
 // Test 12.3 — a straight-line reassignment stays on the fast path (matches the
 // E4d-2 rule: promotion needs *distinct basic blocks*, not just two writes).
 #[test]
-fn e4dyn_straight_line_reassignment_is_not_promoted() {
-    // `s := "OK"; s := "NO"; print s` — two writes, one block. The last-writer
-    // literal tracking is exactly right, so no runtime handle and no i32.load.
+fn e4dyn_straight_line_reassignment_preserves_intervening_reads() {
+    // A function-wide last-writer literal cannot answer the first print.
+    // Both reads must use the handle installed by the preceding assignment.
     let m = module_one("main", vec![], "void", vec![
         IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("OK".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
         IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("NO".into())], "str"),
         IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
         IIRInstr::new("ret_void", None, vec![], "void"),
     ]);
     let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
     assert!(
-        !wm.code[0].code.contains(&0x28),
-        "a straight-line reassignment must not be promoted to a runtime handle"
+        wm.code[0].code.contains(&0x28),
+        "reads between assignments must use the current string handle"
     );
 }
 

@@ -5659,6 +5659,68 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL STRING SIZE: item padding is copied; a literal separator and old tail stay visible.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(5) VALUE \"HI\".\n\
+               000000 01 B PIC X(2) VALUE \"OK\".\n\
+               000000 01 T PIC X(10) VALUE \"ZZZZZZZZZZ\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A \"-\" B DELIMITED BY SIZE INTO T.\n\
+               000000 DISPLAY T \"|\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("HI   -OKZZ|"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL STRING SIZE: the same sources truncate at a short receiver and exactly fill another.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(3) VALUE \"ABC\".\n\
+               000000 01 B PIC X(2) VALUE \"DE\".\n\
+               000000 01 SHORT PIC X(4) VALUE SPACES.\n\
+               000000 01 EXACT PIC X(5) VALUE SPACES.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A B DELIMITED BY SIZE INTO SHORT.\n\
+               000000 STRING A B DELIMITED BY SIZE INTO EXACT.\n\
+               000000 DISPLAY SHORT \"|\".\n\
+               000000 DISPLAY EXACT \"|\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("ABCD|\nABCDE|"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL STRING SIZE: a changed source is read again; unwritten receiver bytes are never filled.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(2) VALUE \"AB\".\n\
+               000000 01 T PIC X(6) VALUE \"ZZZZZZ\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A DELIMITED BY SIZE INTO T.\n\
+               000000 DISPLAY T \"|\".\n\
+               000000 MOVE \"CD\" TO A.\n\
+               000000 STRING A DELIMITED BY SIZE INTO T.\n\
+               000000 DISPLAY T \"|\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("ABZZZZ|\nCDZZZZ|"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

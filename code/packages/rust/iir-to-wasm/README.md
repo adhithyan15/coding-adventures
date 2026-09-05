@@ -1,5 +1,9 @@
 # iir-to-wasm
 
+String variables written more than once use runtime handles even within one
+basic block, so a later literal cannot replace an earlier read. Single-write
+literals retain their folding path.
+
 Computed substring bounds mark the result and downstream copies as runtime strings, preventing stale receiver literals from replacing live MOVE output.
 
 Lowers an [`IIRModule`](../interpreter-ir/) directly to a

@@ -303,12 +303,20 @@ fn collect_runtime_valued_str_vars(fn_: &IIRFunction) -> HashSet<String> {
         .filter(|(_, ty)| ty == "str")
         .map(|(name, _)| name.as_str())
         .collect();
+    let mut written_strings = HashSet::new();
     for instr in &fn_.instructions {
         let Some(dest) = instr.dest.as_deref() else {
             continue;
         };
         if instr.type_hint != "str" {
             continue;
+        }
+        // The literal table is keyed by variable, not instruction position.
+        // Two writes in the SAME block are already enough to make its final
+        // literal wrong for an earlier read. Use live handles for every write
+        // and propagate that representation to downstream consumers.
+        if !written_strings.insert(dest) {
+            worklist.push(dest);
         }
         // How many leading `srcs` carry the string(s) this op derives its result
         // from — `str_concat` joins two, `str_slice`/`mov` read one (a `str_slice`'s
@@ -5977,6 +5985,22 @@ mod tests {
             exports: vec![],
             imports: vec![],
         }
+    }
+
+    #[test]
+    fn repeated_literal_writes_are_runtime_even_in_one_block() {
+        let f = IIRFunction::new("main", vec![], "void", vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("old".into())], "str"),
+            IIRInstr::new("str_const", Some("suffix".into()), vec![Operand::Str("!".into())], "str"),
+            IIRInstr::new("str_concat", Some("copy".into()), vec![Operand::Var("s".into()),
+                Operand::Var("suffix".into())], "str"),
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("new".into())], "str"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+        let runtime = collect_runtime_valued_str_vars(&f);
+        assert!(runtime.contains("s"));
+        assert!(runtime.contains("copy"), "an earlier consumer needs the live source");
+        assert!(!runtime.contains("suffix"), "one literal definition can still fold");
     }
 
     #[test]
