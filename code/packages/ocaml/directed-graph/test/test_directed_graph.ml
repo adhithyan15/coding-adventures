@@ -103,6 +103,16 @@ let test_dag_algorithms () =
   expect_error (out_degree graph "missing");
   expect_error (in_degree graph "missing")
 
+let test_depth_first_branch_order () =
+  let graph = create () in
+  List.iter
+    (fun (left, right) -> add_edge graph left right |> get)
+    [ ("A", "B"); ("A", "C"); ("A", "D"); ("B", "C"); ("B", "E") ];
+  Alcotest.check strings "branch discovery order" [ "A"; "B"; "C"; "E"; "D" ]
+    (get (dfs graph "A"));
+  Alcotest.check Alcotest.bool "cross edge to black is not a cycle" false
+    (has_cycle graph)
+
 let test_cycles_and_components () =
   let graph = create () in
   List.iter (add_node graph) [ "A"; "B"; "C"; "D"; "E" ];
@@ -130,8 +140,8 @@ let test_labeled_edges () =
   Alcotest.check Alcotest.bool "labeled node" true (Labeled.has_node graph "A");
   Alcotest.check strings "labeled nodes" [ "A"; "B"; "C" ] (Labeled.nodes graph);
   Labeled.add_edge graph "A" "B" "red" |> get;
-  Labeled.add_edge graph "A" "B" "blue" |> get;
-  Labeled.add_edge graph "A" "B" "red" |> get;
+  Labeled.add_edge ~weight:2. graph "A" "B" "blue" |> get;
+  Labeled.add_edge ~weight:9. graph "A" "B" "blue" |> get;
   Labeled.add_edge graph "B" "A" "reverse" |> get;
   Alcotest.check strings "labels ordered" [ "blue"; "red" ]
     (Labeled.edge_labels graph "A" "B");
@@ -141,6 +151,10 @@ let test_labeled_edges () =
     (Labeled.has_edge_with_label graph "A" "C" "red");
   Alcotest.check Alcotest.int "three labeled rows" 3
     (List.length (Labeled.edges_labeled graph));
+  Alcotest.check (Alcotest.float 0.) "duplicate label is idempotent" 2.
+    (match Labeled.edges_labeled graph with
+    | ("A", "B", "blue", weight) :: _ -> weight
+    | _ -> Alcotest.fail "missing labeled edge");
   Labeled.remove_edge_label graph "A" "B" "red" |> get;
   Alcotest.check strings "partial removal" [ "blue" ]
     (Labeled.edge_labels graph "A" "B");
@@ -191,6 +205,8 @@ let () =
           Alcotest.test_case "structure and properties" `Quick
             test_structure_and_properties;
           Alcotest.test_case "dag algorithms" `Quick test_dag_algorithms;
+          Alcotest.test_case "depth-first branch order" `Quick
+            test_depth_first_branch_order;
           Alcotest.test_case "cycles and components" `Quick
             test_cycles_and_components;
           Alcotest.test_case "labeled edges" `Quick test_labeled_edges;

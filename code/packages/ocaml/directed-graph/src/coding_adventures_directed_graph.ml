@@ -282,7 +282,6 @@ module Make (Node : Map.OrderedType) = struct
         let frontier = Stack.create () in
         Stack.push start frontier;
         let visited = ref Node_set.empty in
-        let queued = ref (Node_set.singleton start) in
         let result = ref [] in
         while not (Stack.is_empty frontier) do
           let node = Stack.pop frontier in
@@ -293,9 +292,8 @@ module Make (Node : Map.OrderedType) = struct
             let ordered = if depth_first then List.rev next else next in
             List.iter
               (fun neighbor ->
-                if not (Node_set.mem neighbor !queued) then (
-                  queued := Node_set.add neighbor !queued;
-                  Stack.push neighbor frontier))
+                if not (Node_set.mem neighbor !visited) then
+                  Stack.push neighbor frontier)
               ordered)
         done;
         Ok (List.rev !result)
@@ -355,7 +353,35 @@ module Make (Node : Map.OrderedType) = struct
     if List.length !result = size graph then Ok (List.rev !result)
     else Error Cycle
 
-  let has_cycle graph = Result.is_error (topological_sort graph)
+  let has_cycle graph =
+    (* An explicit enter/leave stack implements the DT01 three-colour DFS
+       without relying on the native call stack.  A GRAY edge is a back edge;
+       an edge to BLACK is a completed cross edge and is not a cycle. *)
+    let colors = ref Node_map.empty in
+    let color node = Option.value ~default:0 (Node_map.find_opt node !colors) in
+    let cycle = ref false in
+    List.iter
+      (fun start ->
+        if (not !cycle) && color start = 0 then (
+          let stack = Stack.create () in
+          Stack.push (start, true) stack;
+          while (not !cycle) && not (Stack.is_empty stack) do
+            let node, entering = Stack.pop stack in
+            if entering then
+              match color node with
+              | 1 -> cycle := true
+              | 2 -> ()
+              | _ ->
+                  colors := Node_map.add node 1 !colors;
+                  Stack.push (node, false) stack;
+                  adjacency_bindings graph.forward node
+                  |> List.map fst |> List.rev
+                  |> List.iter (fun successor ->
+                         Stack.push (successor, true) stack)
+            else colors := Node_map.add node 2 !colors
+          done))
+      (nodes graph);
+    !cycle
 
   let reachable adjacency graph origin =
     match require_node graph origin with
@@ -502,18 +528,20 @@ module Make (Node : Map.OrderedType) = struct
 
     let add_edge ?(weight = 1.) ?(properties = properties []) labeled left right
         label =
-      match add_edge ~weight ~properties labeled.graph left right with
-      | Error error -> Error error
-      | Ok () ->
-          let previous =
-            Option.value ~default:String_set.empty
-              (Edge_map.find_opt (left, right) labeled.labels)
-          in
-          labeled.labels <-
-            Edge_map.add (left, right)
-              (String_set.add label previous)
-              labeled.labels;
-          Ok ()
+      let previous =
+        Option.value ~default:String_set.empty
+          (Edge_map.find_opt (left, right) labeled.labels)
+      in
+      if String_set.mem label previous then Ok ()
+      else
+        match add_edge ~weight ~properties labeled.graph left right with
+        | Error error -> Error error
+        | Ok () ->
+            labeled.labels <-
+              Edge_map.add (left, right)
+                (String_set.add label previous)
+                labeled.labels;
+            Ok ()
 
     let edge_labels labeled left right =
       Option.value ~default:String_set.empty
