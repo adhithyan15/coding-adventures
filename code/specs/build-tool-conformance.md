@@ -1056,6 +1056,7 @@ structured command fields use the shared definitions in the corpus schema.
 
 | Domain | `input.options` | Successful `result` |
 |---|---|---|
+| `ci_gate_selection` | a validated closed registry, nullable affected-package and changed-file snapshots, and `force` | every gate sorted by id with its required verdict and deterministic `run_` output name |
 | `diff_selection` | packages with repository-relative roots and an explicit `package_prefix` or `strict_globs` source mode, dependency edges, forced packages, and an `all` or `error` unknown-path policy | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
 | `source_collection` | an `extension` or `declared_sources` mode, exact extensions, special filenames, portable globs, and bounded inert file/symlink/reparse candidate records | sorted normalized included file paths with lowercase SHA-256 content digests |
 | `hashing_cache` | SHA-256 mode, package, included paths, dependency digests, dependents, and a closed missing, corrupt, or typed prior-cache record | lowercase `package_digest`, `dependencies_digest`, `combined_digest`, cache status, and sorted invalidated packages |
@@ -1067,6 +1068,9 @@ structured command fields use the shared definitions in the corpus schema.
 
 These records intentionally model decisions, not host operations:
 
+- CI gate selection receives a validated registry and inert change snapshots;
+  it never reads the registry, invokes Git, constructs the graph, writes
+  `$GITHUB_OUTPUT`, or schedules a workflow;
 - diff selection receives `changed_paths`; it never invokes Git;
 - source collection receives inert candidate records; it never enumerates or
   opens a checkout and never follows a linked component;
@@ -1944,6 +1948,7 @@ V1 capabilities are:
 
 | Capability | Final parity |
 |---|---:|
+| `ci_gate_selection` | required |
 | `discovery` | required |
 | `resolution` | required |
 | `graph` | required |

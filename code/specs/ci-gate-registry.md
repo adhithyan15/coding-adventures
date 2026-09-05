@@ -111,6 +111,59 @@ Rule 5 uses the **affected closure** — changed packages plus their transitive
 dependents, as computed by `directedgraph.AffectedNodes` — so listing only the
 packages a job directly exercises is sufficient; the graph supplies the rest.
 
+### Portable evaluation boundary
+
+The registry decision is a process-free build-tool domain named
+`ci_gate_selection`. Its input is a validated in-memory registry, a nullable
+affected-package set, a nullable changed-file list, and `force`. Its result is
+one record per gate, sorted by gate id, containing the id, the boolean verdict,
+and the deterministic `run_` output name.
+
+`null` and an empty list are deliberately different. A `null` affected set or
+changed-file list means change detection was unavailable and MUST fail open;
+an empty list means change detection succeeded and found nothing. Implementations
+MUST evaluate every gate and MUST NOT omit false verdicts.
+
+The portable core owns exact package intersection, the repository-relative glob
+grammar implemented by `internal/globmatch`, output-name mapping, and these
+fixed machinery sentinels:
+
+- `.github/workflows/ci.yml`
+- `code/specs/data/ci-gates.json`
+- `code/programs/go/build-tool/internal/cigates/`
+- `code/programs/go/build-tool/internal/globmatch/`
+- `code/programs/go/build-tool/internal/gitdiff/`
+- `code/programs/go/build-tool/main.go`
+
+Registry file I/O, Git diff acquisition, dependency-graph construction,
+`$GITHUB_OUTPUT`, workflow scheduling, and branch-protection policy remain
+outside this pure boundary. The language-neutral fixtures validate a closed
+registry before evaluation; native registry loaders remain responsible for
+rejecting future schema versions, invalid ids or scopes, missing descriptions,
+gates with neither packages nor paths, and ids whose hyphen-to-underscore
+mapping would collide on the same output name.
+
+The exact-main front-door audit at
+`a1008a4d4cd262f44d1c7b0c87aa61003da14e31` found:
+
+| Front door | Native `ci_gate_selection` | Delivery owner |
+|---|---:|---|
+| C# / F# shared engine | no | `build-tool-csharp-fsharp-ci-gate-selection-conformance` |
+| Elixir | no | `build-tool-elixir-ci-gate-selection-conformance` |
+| Go | yes; consumes all neutral cases | this corpus/oracle tranche |
+| Haskell | no | `build-tool-haskell-ci-gate-selection-conformance` |
+| Lua | no | `build-tool-lua-ci-gate-selection-conformance` |
+| Perl | no | `build-tool-perl-ci-gate-selection-conformance` |
+| Python | no | `build-tool-python-ci-gate-selection-conformance` |
+| Ruby | no | `build-tool-ruby-ci-gate-selection-conformance` |
+| Rust | no | `build-tool-rust-ci-gate-selection-conformance` |
+| Swift | no | `build-tool-swift-ci-gate-selection-conformance` |
+| TypeScript | no | `build-tool-typescript-ci-gate-selection-conformance` |
+
+Java/Kotlin, Dart, and OCaml remain owned by their existing build-tool creation
+and promotion items; the final CI gate aggregate depends on those owners as
+well as every explicit current-front-door leaf.
+
 ### Fail open
 
 Every ambiguity resolves to `true`. A malformed registry is a hard error at plan

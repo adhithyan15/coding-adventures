@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 132)
+        self.assertEqual(summary["case_count"], 139)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -147,6 +147,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(
             summary["domains"],
             [
+                "ci_gate_selection",
                 "cli",
                 "diff_selection",
                 "discovery",
@@ -1874,6 +1875,48 @@ class CorpusTests(unittest.TestCase):
             set(runner.DOMAIN_CAPABILITIES) - {"execution"},
         )
 
+    def test_ci_gate_selection_oracle_closes_fail_open_and_negative_cases(self) -> None:
+        expectations = {
+            "ci-gate-selection-force.json": [True, True],
+            "ci-gate-selection-null-affected.json": [True, True],
+            "ci-gate-selection-null-changed-files.json": [True, True],
+            "ci-gate-selection-machinery.json": [True, True],
+            "ci-gate-selection-package-and-path.json": [True, True],
+            "ci-gate-selection-recursive-glob.json": [False, True],
+            "ci-gate-selection-unrelated.json": [False, False],
+        }
+        for filename, required in expectations.items():
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                self.assertEqual(
+                    [gate["required"] for gate in case["expected"]["result"]["gates"]],
+                    required,
+                )
+                self.assertEqual(
+                    runner.assert_result_matches(case, copy.deepcopy(case["expected"])),
+                    case["expected"],
+                )
+
+    def test_ci_gate_selection_rejects_duplicate_ids_and_output_names(self) -> None:
+        schema_args = {
+            "case_schema": runner.load_document(FIXTURE_ROOT / "schema.json"),
+            "result_schema": runner.load_document(FIXTURE_ROOT / "result.schema.json"),
+            "plan_schema": runner.load_document(
+                runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
+            ),
+        }
+        mutations = (
+            ("alpha-job", "CASE_CI_GATE_DUPLICATE"),
+            ("alpha_job", "CASE_CI_GATE_OUTPUT_COLLISION"),
+        )
+        for gate_id, code in mutations:
+            with self.subTest(code=code):
+                case = load_case("ci-gate-selection-unrelated.json")
+                case["input"]["options"]["registry"]["gates"][1]["id"] = gate_id
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.validate_case_document(case, **schema_args)
+                self.assertEqual(raised.exception.code, code)
+
     def test_malformed_capabilities_fail_schema_validation_not_routing(self) -> None:
         case = load_case("discovery-simple.json")
         case["capabilities"] = [{"execution": False}]
@@ -3396,7 +3439,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 132)
+        self.assertEqual(summary["case_count"], 139)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

@@ -12615,6 +12615,57 @@ vendor, or generated-directory authority. Reconciliation and selection leave
 646 unique owners and 1,008 dependency edges: 201 merged, 444 pending, and
 exactly this Swift repository-boundary owner in progress.
 
+### Post-PR #13841 refresh and CI gate conformance selection
+
+PR #13841 completed all final-head checks acceptably and GitHub merged the
+reviewed Swift repository-boundary implementation through guarded squash
+auto-merge as `0db71afde03b13bf3b3f5d1ef2dc18673a75fffc`; the parity loop issued
+no manual merge command.
+
+The collision-checked schema-3 inventory at exact current `origin/main`
+`a1008a4d4cd262f44d1c7b0c87aa61003da14e31` now records 15 established
+lanes, 1,411 implementation identities, 4,627 implementation slots, and 1,450
+all-reported identities. Its bands are 175/265, 123/934, 172/2,165, and
+941/13,174; Rust has 752 singletons, OCaml remains emerging at zero packages,
+and canonical collisions and unknown language buckets remain zero.
+
+Seven new Rust-only identities are classified before selection. The owners for
+`diagram-layout-board`, `layout-generated`, and `layout-replaced` isolate
+deterministic board geometry, generated-content state, and intrinsic replaced-
+element sizing from parsers, DOM, paint, fonts, devices, and host authority.
+`glyph-parser` and `font-subset` own bounded TrueType outline and subsetting
+cores with external byte-oracle checks; `pdf` owns deterministic PDF 1.7 writing
+and depends on the merged raw-RFC1951 contract; `math-layout` owns TEX-1 atom
+lowering, binary demotion, style spacing, and depth limits. The existing FNT00
+font-parser identity is separately assigned a Java/Kotlin/Dart parity owner.
+`layout-replaced` is now an explicit prerequisite of the flexbox, grid, and
+table layout classifiers. No newly discovered package identity or applicable
+portable lane gap remains unowned.
+
+Merged PR #13854 also introduced a Go-only CI gate registry and evaluator after
+the prior inventory revision. Because this is a new build-tool behavior rather
+than a package identity, the inventory matrix alone could not own it. New item
+`build-tool-ci-gate-registry-conformance-corpus-and-engine-audit` closes that
+gap first: a process-free `ci_gate_selection` domain pins validated registry
+data, nullable change snapshots, force and machinery fail-open behavior, exact
+package intersection, portable globstar matching, complete sorted verdicts, and
+deterministic output names. Registry and Git I/O, graph construction,
+`$GITHUB_OUTPUT`, workflow scheduling, and policy authority stay outside the
+fixture boundary. A dependent aggregate owns rollout across all supported build-
+tool lanes and the future OCaml lane. The exact-front-door audit finds the Go
+engine as the sole current implementation. It therefore assigns explicit
+process-free leaves to shared C#/F#, Elixir, Haskell, Lua, Perl, Python, Ruby,
+Rust, Swift, and TypeScript; the aggregate also depends on the existing JVM,
+Dart, and OCaml build-tool owners.
+
+That neutral corpus is the highest-leverage unblocked delivery slice because it
+establishes the oracle required by all twelve current front doors plus future
+Java, Kotlin, Dart, and OCaml engines. The two-lane C#/F# source-hashing repair
+is next-best but does not close the newly unowned cross-engine behavior.
+Reconciliation and selection leave 666 unique owners and 1,037 dependency
+edges: 202 merged, 463 pending, and exactly the CI gate corpus/audit owner in
+progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
