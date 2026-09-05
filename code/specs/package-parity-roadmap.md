@@ -12789,9 +12789,10 @@ fixtures/tests, reference-runner implementation, then changelog and final
 roadmap/state evidence.
 
 The implementation then rebased conflict-free onto exact `origin/main`
-`1f2c9bd7a65c060429b7594ee518846c6b05b8ec`. Merged PR #14304 added only
-`rust/mosaic-app-wasm` to the package topology; four later Hindi, Mosaic React,
-SPICE, and HTML parser commits changed no package identity or selected path.
+`b4535bf5ab5f2f5b07e2f58ce18bed7065231cc1`. Merged PR #14304 added only
+`rust/mosaic-app-wasm` to the package topology; five later Hindi, Mosaic React,
+SPICE, HTML parser, and Windows language-VM CI commits changed no package
+identity or selected path.
 The refreshed collision-checked
 inventory now has 1,413 implementation identities, 4,629 slots, 1,452 all-
 reported identities, and bands 175/265, 123/934, 172/2,165, and 943/13,202.
