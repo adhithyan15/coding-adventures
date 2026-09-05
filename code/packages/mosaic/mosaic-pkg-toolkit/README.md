@@ -12,9 +12,11 @@ for the architecture, component catalog, and phasing plan.
 
 **11 of 13 Tier-1 components shipped:**
 
-- **`Alert`** — colored info banner with `variant`, optional inline
-  dismiss button. Composed from `Box` + `Row` + `Text` + `If` +
-  `HostButton`.
+- **`Alert`** — colored banner with the same closed eight-value `variant`
+  axis as Button and an optional inline dismiss button. UI49 states color
+  both the banner and its native close control in each theme; an omitted
+  variant keeps the `info` base style. Composed from `Box` + `Row` + `Text` +
+  `If` + `HostButton`.
 - **`Badge`** — small pill label. `Box[badge] { Text }`. Slots:
   `label`, `variant`.
 - **`Button`** — styled push button with closed `variant` (`primary`,
@@ -125,10 +127,10 @@ cargo test
 
 Smoke tests assert every exported component's `.mil` / `.mll` /
 `.msl` triple round-trips through the three IR compilers, and that
-the manifest is internally consistent. Button additionally asserts its
-closed axes, complete state ownership in both themes, and representative
-variant/size visual differences. MosaicBook stories for three-file components
-remain blocked by #14031; this package does not claim story coverage yet.
+the manifest is internally consistent. Button and Alert additionally assert
+their closed axes, complete state ownership in both themes, and representative
+visual differences. MosaicBook stories for three-file components remain
+blocked by #14031; this package does not claim story coverage yet.
 
 `native_complete_gate.rs` (issue #12024) goes one step further: for
 each of the five native backends (SwiftUI, Qt, XAML, Flutter,

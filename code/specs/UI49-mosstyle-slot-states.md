@@ -120,7 +120,7 @@ landed in #14306, followed by WebComponent runtime activation in #14314,
 Compose in #14322, SwiftUI in #14331, Qt in #14344, and Flutter in #14353.
 XAML activation landed in #14362, followed by HTML snapshot activation in
 #14369 and Paint fixture activation in #14378. Toolkit retrofits remain under
-#14036; Button is the first focused retrofit in #14383.
+#14036; Button landed first in #14383 and Alert follows in #14398.
 
 ### 3.2 `.msl` state names may be a slot's enum values
 

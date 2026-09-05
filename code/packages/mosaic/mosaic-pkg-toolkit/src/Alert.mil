@@ -9,10 +9,9 @@ component Alert {
   // The alert's message text. Required.
   slot message : text ;
 
-  // Variant keyword. One of: primary, secondary, success, danger,
-  // warning, info, light, dark. Default: info.
-  // Drives the part-level styling via `part alert/<variant>`.
-  slot variant : text ;
+  // Variant keyword. The base style is info when the host omits this
+  // slot; the closed type rejects unknown values.
+  slot variant : one-of primary secondary success danger warning info light dark ;
 
   // When true, an inline close button appears at the trailing edge
   // and clicking it fires onClose. When false (default), no close
