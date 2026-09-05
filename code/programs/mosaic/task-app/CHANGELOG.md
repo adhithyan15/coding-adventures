@@ -15,7 +15,10 @@ through its hook-owned output directory before registering the bundled code
 asset. The TaskApp CI and release lanes now use Flutter 3.47.0, the version that
 also passed the generated Windows bundle and launch validation, and explicitly
 enable native assets instead of inheriting machine-global Flutter
-configuration. Together these changes restore `libmosaic_app.so` in Linux
+configuration. If Flutter leaves the registered asset in its native-assets
+staging tree instead of installing it, both lanes now finish that documented
+installation step into the application bundle before byte comparison and
+launch validation. Together these changes restore `libmosaic_app.so` in Linux
 release bundles on fresh hosted runners and keep the executable launchable
 without an external runtime path.
 

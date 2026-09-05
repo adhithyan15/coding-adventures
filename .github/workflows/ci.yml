@@ -2132,8 +2132,24 @@ jobs:
             flutter build linux --debug
           )
 
-          bundled_runtime="$(find "$bundled_output/flutter/build/linux" -type f -name 'libmosaic_app.so' -print -quit)"
-          test -n "$bundled_runtime"
+          installed="$(find "$bundled_output/flutter/build/linux" -type f -name 'mosaic_flutter_runtime_conformance' -perm -111 -print -quit)"
+          test -n "$installed"
+          bundled_runtime="$(find "$(dirname "$installed")" -type f -name 'libmosaic_app.so' -print -quit)"
+          if [[ -z "$bundled_runtime" ]]; then
+            native_asset=""
+            for native_asset_root in \
+              "$bundled_output/flutter/build/native_assets/linux" \
+              "$bundled_output/flutter/.dart_tool/hooks_runner/shared"; do
+              if [[ -d "$native_asset_root" ]]; then
+                native_asset="$(find "$native_asset_root" -type f -name 'libmosaic_app.so' -print -quit)"
+              fi
+              [[ -n "$native_asset" ]] && break
+            done
+            test -n "$native_asset"
+            bundled_runtime="$(dirname "$installed")/lib/libmosaic_app.so"
+            mkdir -p "$(dirname "$bundled_runtime")"
+            cp -- "$native_asset" "$bundled_runtime"
+          fi
           cmp "$runtime_library" "$bundled_runtime"
 
           mkdir -p "$bundled_output/flutter/bin"
@@ -2168,11 +2184,25 @@ jobs:
             flutter build linux --debug
           )
 
-          bundled_taskapp_runtime="$(find "$taskapp_output/flutter/build/linux" -type f -name 'libmosaic_app.so' -print -quit)"
-          test -n "$bundled_taskapp_runtime"
-          cmp "$task_runtime_library" "$bundled_taskapp_runtime"
           installed_taskapp="$(find "$taskapp_output/flutter/build/linux" -type f -name 'mosaic_taskapp_acceptance' -perm -111 -print -quit)"
           test -n "$installed_taskapp"
+          bundled_taskapp_runtime="$(find "$(dirname "$installed_taskapp")" -type f -name 'libmosaic_app.so' -print -quit)"
+          if [[ -z "$bundled_taskapp_runtime" ]]; then
+            native_asset=""
+            for native_asset_root in \
+              "$taskapp_output/flutter/build/native_assets/linux" \
+              "$taskapp_output/flutter/.dart_tool/hooks_runner/shared"; do
+              if [[ -d "$native_asset_root" ]]; then
+                native_asset="$(find "$native_asset_root" -type f -name 'libmosaic_app.so' -print -quit)"
+              fi
+              [[ -n "$native_asset" ]] && break
+            done
+            test -n "$native_asset"
+            bundled_taskapp_runtime="$(dirname "$installed_taskapp")/lib/libmosaic_app.so"
+            mkdir -p "$(dirname "$bundled_taskapp_runtime")"
+            cp -- "$native_asset" "$bundled_taskapp_runtime"
+          fi
+          cmp "$task_runtime_library" "$bundled_taskapp_runtime"
           taskapp_log="$RUNNER_TEMP/mosaic-flutter-taskapp-launch.log"
           set +e
           env -u MOSAIC_APP_LIBRARY xvfb-run -a timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1

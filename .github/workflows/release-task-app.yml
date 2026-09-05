@@ -389,6 +389,21 @@ jobs:
           bundle="$(dirname "$executable")"
           runtime="$(find "$bundle" -type f -name libmosaic_app.so -print -quit)"
           test -x "$executable"
+          if [[ -z "$runtime" ]]; then
+            native_asset=""
+            for native_asset_root in \
+              "$generated/build/native_assets/linux" \
+              "$generated/.dart_tool/hooks_runner/shared"; do
+              if [[ -d "$native_asset_root" ]]; then
+                native_asset="$(find "$native_asset_root" -type f -name libmosaic_app.so -print -quit)"
+              fi
+              [[ -n "$native_asset" ]] && break
+            done
+            test -n "$native_asset"
+            runtime="$bundle/lib/libmosaic_app.so"
+            mkdir -p "$(dirname "$runtime")"
+            cp -- "$native_asset" "$runtime"
+          fi
           cmp "$expected" "$runtime"
           python code/scripts/taskapp_release.py archive-linux-bundle \
             --version "$RELEASE_VERSION" \
