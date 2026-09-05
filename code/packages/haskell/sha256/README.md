@@ -27,6 +27,13 @@ not decode text or add framing. Messages must be shorter than `2^64` bits
 (`2^61 - 1` whole bytes maximum); an update beyond that FIPS bound fails
 deterministically instead of wrapping the encoded length.
 
+Compression uses a reusable 16-word unboxed rolling schedule for each strict
+input region. When an update completes a retained partial block, it copies only
+the 64-byte bridge and the final remainder shorter than one block; complete
+caller blocks are read directly without retaining their `ByteString` slices.
+The optimized allocation gate hashes one million bytes both as one chunk and in
+8 KiB chunks, verifies the FIPS digest, and caps each run at 128 MiB allocated.
+
 ## Type
 
 library
@@ -34,6 +41,7 @@ library
 ## Dependencies
 
 - `bytestring` for strict byte chunks and digests
+- `array` for the local unboxed compression schedule
 
 No cryptographic framework, process, filesystem, network, environment, or
 native-runtime dependency is used.
