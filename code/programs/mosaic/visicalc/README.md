@@ -18,8 +18,11 @@ design and GitHub Releases remain required work.
 The first shared design pass uses warm paper and forest palettes with serif
 workbook branding, a monospace formula field and grid, and separate green
 selection and amber editing states. Toolbar content wraps at narrow widths;
-the sheet frame contains horizontal overflow. This does not yet synchronize
-scrolling with selection or supply sticky headers and row labels (#14277).
+the sheet frame contains overflow within a HostScroll bounded to 60vh. Authored
+column-headings styles pin the header in the React consumer. Browser Page Down
+moved the sheet by 364px while the header stayed at the same screen position,
+with 30 rows materialized. This does not yet synchronize scrolling with selection,
+resize the row window, or supply row labels (#14277); native acceptance remains.
 
 Browser review on 2026-09-05 covered both generated themes at desktop width
 and the real Rust app in a 375px-wide preview. The narrow root's scroll width

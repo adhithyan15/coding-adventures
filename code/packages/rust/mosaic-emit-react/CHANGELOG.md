@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - authored table section styles
+
+- Preserve named part styles on HostTableHead, HostTableBody and HostTableFoot,
+  including empty sections. This enables composed sticky headers in HostScroll.
+
 ### Added - UI49 slot-owned style-state activation
 
 The pipeline emitter now lowers model-owned mosstyle states to conditional

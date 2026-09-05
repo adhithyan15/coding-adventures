@@ -3821,15 +3821,21 @@ fn emit_host_table_section_jsx(
     let row_pad = " ".repeat(indent + 2);
     let cell_pad = " ".repeat(indent + 4);
 
+    let style_attr = section_node.part_name.as_deref()
+        .and_then(|name| part_styles.get(name))
+        .filter(|style| !style.is_empty())
+        .map(|style| format!(" style={{{{ {style} }}}}"))
+        .unwrap_or_default();
+
     // An empty section still emits its wrapper so the table structure is
     // recognisable — `<thead></thead>` is valid HTML and helps screen
     // readers understand the row that follows is a header even when no
     // rows were authored yet.
     if section_node.children.is_empty() {
-        return Ok(format!("{pad}<{html_tag}></{html_tag}>\n"));
+        return Ok(format!("{pad}<{html_tag}{style_attr}></{html_tag}>\n"));
     }
 
-    let mut out = format!("{pad}<{html_tag}>\n");
+    let mut out = format!("{pad}<{html_tag}{style_attr}>\n");
     let _ = row_pad; // factored into emit_table_row_jsx; left as a sentinel.
     let _ = cell_pad;
     for child in &section_node.children {
@@ -9836,6 +9842,26 @@ mod tests {
             !out.contains("<colgroup"),
             "empty HostTable must not emit <colgroup>"
         );
+    }
+
+    #[test]
+    fn host_table_sections_preserve_authored_styles() {
+        for (tag, html) in [("HostTableHead", "thead"), ("HostTableBody", "tbody"), ("HostTableFoot", "tfoot")] {
+            for populated in [false, true] {
+                let mut section = section_node(tag, if populated { vec![row_node(vec![])] } else { vec![] });
+                section.part_name = Some("section".into());
+                let style = mosstyle_compiler::StyleDef {
+                    component_name: "X".into(),
+                    parts: vec![mosstyle_compiler::PartStyle {
+                        name: "section".into(),
+                        base: vec![mosstyle_compiler::StyleProp { name: "position".into(), value: "sticky".into() }],
+                        transitions: vec![], states: vec![],
+                    }],
+                };
+                let out = from_pipeline(&component("X", vec![], vec![]), &host_table_layout(vec![section]), &style).unwrap().output;
+                assert!(out.contains(&format!("<{html} style={{{{ position: \"sticky\" }}}}>")), "{out}");
+            }
+        }
     }
 
     /// UI29 §2.1 HostTable test 2 — a `HostTableHead` with one `Row` of
