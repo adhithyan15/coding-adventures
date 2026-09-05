@@ -1,13 +1,56 @@
 // Alert.dark.msl — dark-theme styling for Alert.
+//
+// Same closed variant axis as the light theme, with a dark-surface palette.
 
 style Alert {
   part alert {
     padding       : 12 ;
     border-radius : 4 ;
-    background    : "#055160" ;
-    color         : "#cff4fc" ;
+    background    : "#032830" ;
+    color         : "#6edff6" ;
     border-width  : 1 ;
-    border-color  : "#087990" ;
+    border-color  : "#055160" ;
+
+    state primary {
+      background   : "#031633" ;
+      color        : "#6ea8fe" ;
+      border-color : "#084298" ;
+    }
+    state secondary {
+      background   : "#161719" ;
+      color        : "#a7acb1" ;
+      border-color : "#41464b" ;
+    }
+    state success {
+      background   : "#051b11" ;
+      color        : "#75b798" ;
+      border-color : "#0f5132" ;
+    }
+    state danger {
+      background   : "#2c0b0e" ;
+      color        : "#ea868f" ;
+      border-color : "#842029" ;
+    }
+    state warning {
+      background   : "#332701" ;
+      color        : "#ffda6a" ;
+      border-color : "#664d03" ;
+    }
+    state info {
+      background   : "#032830" ;
+      color        : "#6edff6" ;
+      border-color : "#055160" ;
+    }
+    state light {
+      background   : "#343a40" ;
+      color        : "#f8f9fa" ;
+      border-color : "#495057" ;
+    }
+    state dark {
+      background   : "#1a1d20" ;
+      color        : "#dee2e6" ;
+      border-color : "#495057" ;
+    }
   }
   part alert-row {
     padding : 0 ;
@@ -18,6 +61,15 @@ style Alert {
     padding : 4 ;
     background : "transparent" ;
     border-width : 0 ;
-    color : "#cff4fc" ;
+    color : "#6edff6" ;
+
+    state primary { color : "#6ea8fe" ; }
+    state secondary { color : "#a7acb1" ; }
+    state success { color : "#75b798" ; }
+    state danger { color : "#ea868f" ; }
+    state warning { color : "#ffda6a" ; }
+    state info { color : "#6edff6" ; }
+    state light { color : "#f8f9fa" ; }
+    state dark { color : "#dee2e6" ; }
   }
 }

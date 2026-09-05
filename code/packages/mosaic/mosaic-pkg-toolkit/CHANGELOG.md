@@ -1,5 +1,16 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — make Alert's variant axis real (#14398)
+
+`Alert.variant` is now the closed UI49 axis `primary | secondary | success |
+danger | warning | info | light | dark`. Both themes define every value as a
+slot-owned state on the banner and its native close button, so the selected
+foreground remains consistent instead of every variant silently rendering as
+`info`. The base style remains the `info` fallback when the optional slot is
+omitted. Focused tests pin the legal values, state ownership, theme coverage,
+and representative visual differences. Badge, Toast, Spinner, and Input remain
+tracked by #14036; MosaicBook stories remain blocked by #14031.
+
 ## [Unreleased] — make Button variant and size axes real (#14383)
 
 `Button.variant` is now the closed UI49 axis `primary | secondary | success |
@@ -9,9 +20,8 @@ and geometry vary without duplicating the layout tree. The base style remains
 the primary/md fallback when an axis is omitted; invalid values are rejected
 by the model contract instead of being silently accepted. Focused compiler
 tests pin the legal values, state ownership, theme coverage, and representative
-visual differences. This fixes Button only; Alert, Badge, Toast, Spinner, and
-Input remain tracked by #14036, while MosaicBook stories remain blocked by
-#14031.
+visual differences. This fixes Button only; the remaining component retrofits
+continue under #14036, while MosaicBook stories remain blocked by #14031.
 
 ## [Unreleased] — clarify why the radio-group allowlist entries survive #13007
 
