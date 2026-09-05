@@ -8062,10 +8062,13 @@
     {
       "id": "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus",
       "title": "Define repository-boundary reverse-diff and digest conformance",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-pure-domain-corpus", "build-tool-shared-and-generated-boundary-source-input-contract"],
-      "branch": null,
+      "branch": "codex/build-tool-repository-boundary-reverse-diff-digest-conformance",
       "pr_number": null,
+      "selected_at": "2026-09-05T13:31:11Z",
+      "selection_revision": "4b1d12496e0c74d63a1a930d40934b2a22de81a6",
+      "selection_notes": "Selected after PR #14291 completed all 47 checks acceptably and GitHub executed guarded squash auto-merge as 2096c95f20c157074dbb237171262ba451adf0d9. The exact-main collision-checked inventory is 15 established lanes, 1,412 implementation identities, 4,628 slots, 1,451 all-reported identities, bands 175/265, 123/934, 172/2,165, and 942/13,188, 753 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel audits added 23 newly explicit owners before selection, wired 24 missing JVM/Dart/OCaml universal-contract edges, and recorded the nine engine-specific boundary adoption leaves. The 690-owner graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 204 merged, 485 pending, and exactly this owner in progress. Both prerequisites are merged, all seven open PRs have zero exact or semantic overlap across the 11 planned paths, the target remote branch and prior PR are absent, and the fresh worktree is based exactly on origin/main.",
       "notes": "Discovered by the post-#14291 repository-boundary audit. Define process-free language-neutral fixtures for exact reverse selection from tracked shared inputs and deterministic package hashing over the union of package-local and registered boundary paths. Pin and validate the boundary digest without granting Git, filesystem, process, environment, network, credential, or native-link authority. This shared corpus must land before the nine uncovered current engines adopt the behavior."
     },
     {

@@ -12778,6 +12778,14 @@ semantics before nine engine-specific leaves can proceed. A live sweep of all
 seven open PRs found zero exact or semantic overlap across its 11 planned paths;
 the fresh unpublished branch is based exactly on current `origin/main`.
 
+After the reconciliation commit recorded every discovered owner as pending,
+that corpus owner transitioned to `in-progress` on
+`codex/build-tool-repository-boundary-reverse-diff-digest-conformance`. The
+resulting graph has 690 unique owners: 204 merged, 485 pending, and exactly this
+owner in progress. Its next change order is specification and schema, red
+fixtures/tests, reference-runner implementation, then changelog and final
+roadmap/state evidence.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
