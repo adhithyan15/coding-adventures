@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:be2a5eba47140116",
+  "sourceHash": "fnv1a64:547a3438a6a062b3",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -1696,8 +1696,8 @@
       "id": "HI-W05-virama-namaste",
       "sequence": 230,
       "title": "The vowel killer — virama and halant",
-      "headword": "्",
-      "romanization": "(vowel killer)",
+      "headword": "् / विराम / हलंत",
+      "romanization": "virāma / halant",
       "gloss": "the virama or halant — the mark that stops a consonant's inherent vowel",
       "script": "devanagari",
       "modality": "pen",
@@ -1705,7 +1705,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:761b6d60e8880a63",
+      "sourceHash": "fnv1a64:96e37f9721815a0e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1741,7 +1741,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "् ((vowel killer)) is the virama — a small stroke below the consonant that removes the inherent vowel:"
+              "text": "् is the virama — a small stroke below the consonant that removes the inherent vowel:"
             },
             {
               "kind": "speech",
@@ -1814,7 +1814,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does the virama ् ((vowel killer)) do, and what does its name mean? (Kills the inherent vowel; virāma = \"a stopping\" — and a full stop in Hindi is पूर्ण विराम, a \"complete stop\".) What is the mark usually called in everyday Hindi? (The halant.) Next: watch a stopped consonant squeeze into the one that follows."
+              "text": "What does the virama ् do, and what does its name mean? (Kills the inherent vowel; virāma = \"a stopping\" — and a full stop in Hindi is पूर्ण विराम, a \"complete stop\".) What is the mark usually called in everyday Hindi? (The halant.) Next: watch a stopped consonant squeeze into the one that follows."
             }
           ]
         }
@@ -2553,7 +2553,7 @@
       "id": "HI-W06-name-sentence-stop",
       "sequence": 262,
       "title": "One sentence, one stop",
-      "headword": "।",
+      "headword": "। / पूर्ण विराम",
       "romanization": "pūrṇa virām",
       "gloss": "close one known Hindi sentence with a single visible boundary",
       "script": "devanagari",
@@ -2563,7 +2563,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:c67bedba35724894",
+      "sourceHash": "fnv1a64:faee79ca1917fd91",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2599,11 +2599,11 @@
             },
             {
               "kind": "speech",
-              "text": "The mark । (pūrṇa virām) is not part of है (hai). Leave the word intact, then place one vertical stop after it. This lesson changes only the sentence boundary."
+              "text": "The mark । is not part of है (hai). Leave the word intact, then place one vertical stop after it. This lesson changes only the sentence boundary."
             },
             {
               "kind": "speech",
-              "text": "Write the known sentence once and add । (pūrṇa virām). Check the four spaces first, then the one stop."
+              "text": "Write the known sentence once and add ।. Check the four spaces first, then the one stop."
             }
           ]
         },
@@ -2692,7 +2692,7 @@
             },
             {
               "kind": "speech",
-              "text": "Uncover it only after writing. Compare in this order: word order, spaces, spelling, then । (pūrṇa virām). Circle one differing dimension and repair only that one."
+              "text": "Uncover it only after writing. Compare in this order: word order, spaces, spelling, then ।. Circle one differing dimension and repair only that one."
             }
           ]
         },
@@ -2781,7 +2781,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now uncover and compare: मेरा नाम अरुण है। (merā nām Aruṇ hai) Check word order first. If the order is right, check spelling; if spelling is right, check । (pūrṇa virām). Repair only the first differing dimension."
+              "text": "Now uncover and compare: मेरा नाम अरुण है। (merā nām Aruṇ hai) Check word order first. If the order is right, check spelling; if spelling is right, check ।. Repair only the first differing dimension."
             }
           ]
         },
@@ -2850,7 +2850,7 @@
             },
             {
               "kind": "speech",
-              "text": "the greeting नमस्ते (namaste)। (pūrṇa virām)."
+              "text": "the greeting नमस्ते (namaste)।."
             },
             {
               "kind": "speech",
@@ -2975,7 +2975,7 @@
             },
             {
               "kind": "speech",
-              "text": "one । (pūrṇa virām) after each sentence."
+              "text": "one । after each sentence."
             },
             {
               "kind": "speech",
