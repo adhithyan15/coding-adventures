@@ -4,22 +4,22 @@
   "chapter": 34,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4f422a8487beacf8",
+  "sourceHash": "fnv1a64:62bb385b0dc1b170",
   "lessons": [
     {
       "id": "HI-C34-sochna",
       "sequence": 860,
-      "title": "सोचना (sochnā) — \"to think,\" and it used to mean \"to grieve\"",
-      "headword": "सोचना / सोच",
-      "romanization": "sochnā / soch",
-      "gloss": "to think — a verb that began life meaning \"to grieve,\" and still keeps the worry inside the noun सोच",
+      "title": "सोचना — \"to think,\" its present forms, and an older grief",
+      "headword": "सोचना / सोच / सोचता / सोचती / सोचते",
+      "romanization": "sochnā / soch / sochtā / sochtī / sochte",
+      "gloss": "to think / thought or worry / think — infinitive / noun / masculine / feminine / respectful or plural",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59f20933137f66c1",
+      "sourceHash": "fnv1a64:f8cfe30c3aaf67ce",
       "notice": null,
       "blocks": [
         {
@@ -86,25 +86,25 @@
             },
             {
               "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ sochtā hūṁ, (f.): maiṁ sochtī hūṁ]."
+              "text": "[YOU SAY (m.): मैं सोचता हूँ (maiṁ sochtā hūṁ), (f.): मैं सोचती हूँ (maiṁ sochtī hūṁ)]."
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"you (resp.) think\" — āp sochte haiṁ",
+              "instruction": "\"you (resp.) think\" — आप सोचते हैं (āp sochte haiṁ)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"you (resp.) think\" — *āp sochte haiṁ*]"
+              "source": "[YOU SAY: \"you (resp.) think\" — **आप सोचते हैं** (*āp sochte haiṁ*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "nahīṁ on its own, then slide it in front of the verb — maiṁ nahīṁ sochtā / sochtī, \"I don't think so.\" Hindi's negator sits before the verb, never after it",
+              "instruction": "nahīṁ on its own, then slide it in front of the verb — मैं नहीं सोचता / सोचती (maiṁ nahīṁ sochtā / sochtī), \"I don't think so.\" Hindi's negator sits before the verb, never after it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *nahīṁ* on its own, then slide it in front of the verb — *maiṁ nahīṁ sochtā / sochtī*, \"I don't think so.\" Hindi's negator sits **before** the verb, never after it]"
+              "source": "[YOU SAY: *nahīṁ* on its own, then slide it in front of the verb — **मैं नहीं सोचता / सोचती** (*maiṁ nahīṁ sochtā / sochtī*), \"I don't think so.\" Hindi's negator sits **before** the verb, never after it]"
             },
             {
               "kind": "prompt",
