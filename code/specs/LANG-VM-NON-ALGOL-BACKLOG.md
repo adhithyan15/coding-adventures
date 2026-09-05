@@ -8,6 +8,36 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-047a implementation contract (selected after #14394 merged)
+
+Refreshed main is `bf906aae9e`. PR #14394 completed VM-046c with all
+current-head CI checks green; all three STRING/UNSTRING slices are complete.
+No new executed failure outranks the existing coverage queue. Split VM-047:
+
+| Order | Item | Bounded proof |
+|---|---|---|
+| selected | VM-047a | ASCII INSPECT TALLYING ALL, CHARACTERS and LEADING on all seven standard backends. |
+| next | VM-047b | INSPECT replacement, including first-match and non-rechaining behavior. |
+| then | VM-047c | INSPECT BEFORE/AFTER regions and absent-delimiter asymmetry. |
+
+Add three canonical programs: ALL adds to a nonzero counter, a zero-match
+inspection leaves it unchanged, and an item delimiter is observed; CHARACTERS
+counts the full padded field width and accumulates; LEADING distinguishes an
+initial run from later matches, handles no initial match and a fully matching
+field. Use ASCII source and existing frontend/oracle semantics. Add identical
+source/output oracle regressions for these combined observations. Execute each
+new matrix cell in a fresh process with its single-cell sentinel, run the
+INSPECT oracle suite and focused Clippy, and update the coverage inventory,
+README and changelog. Any observed lowering defect gets a separate committed
+repair contract before a fix. Replacement and region proofs remain later slices.
+
+VM-047a local execution: rows 424–426 passed all 21 standard-backend cells
+in fresh processes with positive single-cell sentinels and no skips. All 287
+INSPECT JIT/oracle tests passed, including the three identical matrix sources.
+Focused Clippy passed with warnings denied. No lowering repair was needed.
+The corpus now contains 427 rows, including 47 COBOL rows; the non-ALGOL
+capstone declares 195 programs and 1385 cells including 20 Twig BEAM cells.
+
 ## Prioritization policy
 
 Re-rank before selecting every work item, and whenever current work discovers a
@@ -145,7 +175,7 @@ No red cell supersedes the next coverage item. Split VM-046 into small proofs:
 |---|---|---|
 | done #14377 | VM-046a | STRING DELIMITED BY SIZE: full source widths/spaces, mixed literal/item input, receiver truncation and preservation of a nonblank untouched tail. |
 | done #14387 | VM-046b | STRING delimiters and UNSTRING basic splitting: empty fields, receiver fitting and untouched receivers after source exhaustion. |
-| selected | VM-046c | STRING/UNSTRING pointer updates and overflow branches with distinguishable outputs. |
+| done #14394 | VM-046c | STRING/UNSTRING pointer updates and overflow branches with distinguishable outputs. |
 
 VM-046a adds canonical ASCII programs declaring all seven standard backends.
 Use visible trailing markers so output normalization cannot hide spaces, and
@@ -543,8 +573,8 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | done #14358 | VM-037 | Promote FLOW-MATIC compare/branch/jump behavior beyond the scalar-output baseline. Use terminating, discriminating output programs on all seven standard columns. |
 | done #14363 | VM-044 | Promote Oct while/loop/break and returned function values to observable seven-column programs; prove u8 wrap and actual branch/call effects. |
 | done #14370 | VM-045 | Promote COBOL reference modification to standard columns: constant and dynamic bounds, result text and explicit invalid-bound behavior, compared with its existing oracle. |
-| sliced below | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
-| 6 | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
+| done #14394 | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
+| sliced below | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
 | 7 | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |
 | 8 | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
 | 9 | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
