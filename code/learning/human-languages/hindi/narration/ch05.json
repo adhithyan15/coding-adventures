@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e9b701100178edfd",
+  "sourceHash": "fnv1a64:c5b85d24121992ff",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -305,17 +305,17 @@
     {
       "id": "HI-C05-karna",
       "sequence": 420,
-      "title": "करना (karnā) — \"to do,\" the most useful verb in Hindi",
-      "headword": "करना / काम करना",
-      "romanization": "karnā / kām karnā",
-      "gloss": "to do, to make (and काम करना, \"to work\")",
+      "title": "करना — \"to do,\" \"to work,\" and their present forms",
+      "headword": "करना / काम करना / करता / करती",
+      "romanization": "karnā / kām karnā / kartā / kartī",
+      "gloss": "to do or make / to work / do — infinitives / masculine / feminine",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e14ce2f2c6b9795f",
+      "sourceHash": "fnv1a64:30a535dba5865445",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -405,7 +405,7 @@
             },
             {
               "kind": "speech",
-              "text": "So maiṁ kām kartā hūṁ = \"I work\" (lit. \"I work-do am\"). Learn karnā and you unlock a whole grammar of \"do-verbs.\""
+              "text": "So मैं काम करता हूँ (maiṁ kām kartā hūṁ) = \"I work\" (lit. \"I work-do am\"). Learn karnā and you unlock a whole grammar of \"do-verbs.\""
             }
           ]
         },
@@ -443,11 +443,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I work\" (m./f.) — maiṁ kām kartā hūṁ / kartī hūṁ",
+              "instruction": "\"I work\" (m./f.) — मैं काम करता हूँ / करती हूँ (maiṁ kām kartā hūṁ / kartī hūṁ)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I work\" (m./f.) — *maiṁ kām kartā hūṁ / kartī hūṁ*]"
+              "source": "[YOU SAY: \"I work\" (m./f.) — **मैं काम करता हूँ / करती हूँ** (*maiṁ kām kartā hūṁ / kartī hūṁ*)]"
             },
             {
               "kind": "prompt",
