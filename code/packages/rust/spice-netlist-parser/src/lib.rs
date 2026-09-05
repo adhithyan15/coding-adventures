@@ -2494,6 +2494,12 @@ fn parse_element(
                     "BJT AF must be finite and non-negative",
                 ));
             }
+            let forward_excess_phase_degrees = *model.params.get("PTF").unwrap_or(&0.0);
+            if !forward_excess_phase_degrees.is_finite() || forward_excess_phase_degrees < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT PTF must be finite and non-negative",
+                ));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2526,6 +2532,7 @@ fn parse_element(
                 .map(|temperature_celsius| temperature_celsius + 273.15);
             bjt.flicker_noise_coefficient = flicker_noise_coefficient;
             bjt.flicker_noise_exponent = flicker_noise_exponent;
+            bjt.forward_excess_phase_degrees = forward_excess_phase_degrees;
             Ok(Element::Bjt(bjt))
         }
         'J' => {
