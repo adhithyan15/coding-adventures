@@ -24,6 +24,19 @@ literal fast path. Add direct executable regressions for destination aliasing
 the left, right and both operands. Re-run all 35 replacement cells, the full
 WASM package suite, focused Clippy and the complete non-ALGOL matrix.
 
+VM-056 local repair: the direct left/right/double-alias regression passes after
+reproducing wrong output before the fix. All 35 replacement cells now pass in
+fresh processes with positive sentinels and zero skips. All 236 WASM package
+tests (including doctests), 292 INSPECT oracle tests and focused Clippy pass.
+Full non-ALGOL matrix validation is running before publication.
+
+Discovered follow-up **VM-057**: inspection found that runtime `str_slice`
+also assigns its destination before reading the source during the byte copy.
+An aliased source/destination may be overwritten similarly. Add a discriminating
+runtime-parameter probe before changing this path; rank this suspected shared
+lowering defect ahead of VM-047c when the current PR merges. It is not yet an
+executed failure and is outside the concat repair's validated scope.
+
 ## VM-047b implementation contract (selected after #14400 merged)
 
 Refreshed main is `2755b36eb5`. PR #14400 merged after all current-head checks

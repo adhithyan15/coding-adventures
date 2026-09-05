@@ -10785,3 +10785,102 @@ fn inspect_matrix_leading_stops_at_first_mismatch() {
                000000 STOP RUN.";
     assert_eq!(assert_matches_oracle(src), "007\n004\n007\n012\n");
 }
+
+// Same complete observation as the seven-backend replacement proof.
+#[test]
+fn inspect_matrix_replace_all_items() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"ABABA\".\n\
+               000000 01 A PIC X VALUE \"A\".\n\
+               000000 01 B PIC X VALUE \"X\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL A BY B.\n\
+               000000 DISPLAY S.\n\
+               000000 INSPECT S REPLACING ALL \"Z\" BY \"Q\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"B\" TO A.\n\
+               000000 MOVE \"Y\" TO B.\n\
+               000000 INSPECT S REPLACING ALL A BY B.\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "XBXBX\nXBXBX\nXYXYX\n");
+}
+
+// Same complete observation as the seven-backend replacement proof.
+#[test]
+fn inspect_matrix_replace_leading_gap() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"00X00\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING LEADING \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"00X00\" TO S.\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"X0000\" TO S.\n\
+               000000 INSPECT S REPLACING LEADING \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "**X00\n**X**\nX0000\n");
+}
+
+// Same complete observation as the seven-backend replacement proof.
+#[test]
+fn inspect_matrix_replace_characters_padding() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"AB\".\n\
+               000000 01 R PIC X VALUE \"*\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 INSPECT S REPLACING CHARACTERS BY R.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 MOVE \"Q\" TO R.\n\
+               000000 INSPECT S REPLACING CHARACTERS BY R.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "[AB   ]\n[*****]\n[QQQQQ]\n");
+}
+
+// Same complete observation as the seven-backend replacement proof.
+#[test]
+fn inspect_matrix_replace_no_rechaining() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"abQab\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL \"a\" BY \"b\" ALL \"b\" BY \"z\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "bzQbz\n");
+}
+
+// Same complete observation as the seven-backend replacement proof.
+#[test]
+fn inspect_matrix_replace_first_match() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"aQaaa\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"a\" BY \"y\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "xQxxx\n");
+}
