@@ -116,3 +116,15 @@ environment loaded (`vcvars64.bat`, or the Developer Command Prompt) so `LIB`/
 `INCLUDE` point at the CRT and Windows SDK import libraries — `link.exe`
 resolves purely by name on `PATH` and doesn't auto-detect an unregistered MSVC
 install (no `vswhere` probing in V1).
+
+### Required Windows CI execution (VM-032)
+
+PR CI selects the native Windows smoke suite when the build plan's Windows
+closure contains `rust/twig-aot` or `rust/lang-aot`, including their affected
+dependencies. Edits to the gate or MSVC bootstrap also select it. The runner
+activates the MSVC developer environment and runs
+`cargo test -p twig-aot --test windows_x86_64_smoke -- --nocapture` with
+`LANG_REQUIRE_WINDOWS_AOT=1`; missing linkers fail instead of silently skipping.
+Without that flag, local hosts retain optional-toolchain skips. Of eight tests,
+five link and execute programs, one inspects the PE object, and two explicitly
+return early for the separately tracked precise-GC frame-walk gap (VM-031).
