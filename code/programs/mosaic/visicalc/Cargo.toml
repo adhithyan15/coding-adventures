@@ -1,0 +1,12 @@
+[workspace]
+
+[package]
+name = "visicalc-mosaic-smoke"
+version = "0.1.0"
+edition = "2021"
+description = "Compile checks for the VisiCalc Mosaic application package"
+publish = false
+
+[[test]]
+name = "package_compiles"
+path = "tests/package_compiles.rs"
