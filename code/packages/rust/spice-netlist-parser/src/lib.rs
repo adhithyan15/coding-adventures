@@ -2580,6 +2580,12 @@ fn parse_element(
                     "BJT ISE must be finite and non-negative",
                 ));
             }
+            let base_emitter_leakage_emission_coefficient = *model.params.get("NE").unwrap_or(&1.0);
+            if !base_emitter_leakage_emission_coefficient.is_finite()
+                || base_emitter_leakage_emission_coefficient <= 0.0
+            {
+                return Err(NetlistParseError::new("BJT NE must be finite and positive"));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2623,6 +2629,8 @@ fn parse_element(
             bjt.base_resistance_half_current = base_resistance_half_current;
             bjt.base_collector_capacitance_fraction = base_collector_capacitance_fraction;
             bjt.base_emitter_leakage_saturation_current = base_emitter_leakage_saturation_current;
+            bjt.base_emitter_leakage_emission_coefficient =
+                base_emitter_leakage_emission_coefficient;
             Ok(Element::Bjt(bjt))
         }
         'J' => {
