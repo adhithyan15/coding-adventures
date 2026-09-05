@@ -63,6 +63,23 @@ VM-033 (Windows text-output newlines), which now precedes coverage work. After
 that repair, missing Windows runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
 otherwise this exact regression can recur despite a green Windows job.
 
+## VM-044 implementation contract (selected after #14358 merged)
+
+PR #14358 merged as `669d5fcc1e` after all current-head checks passed on
+`a9f733229e`. VM-037 is complete; no new red cell supersedes the existing
+coverage queue. Select VM-044, leaving ALGOL with its separate owner.
+
+Add canonical Oct programs that expose while-loop iterations and a returned
+function value through stdout, including u8 wrapping across iterations. Add
+loop/conditional-break and nested-break programs whose output distinguishes
+inner from outer targets. Declare all seven standard backends and run every
+new cell in a fresh process with an execution sentinel, reporting absent tools
+honestly. Normal non-ALGOL BUILD must automatically cover the new rows.
+Preserve frontend/runtime semantics; if a new program exposes a real defect,
+log it and prioritize a bounded fix before promoting the affected cell.
+Update inventory counts, changelog and backlog evidence. Byte wrapping and
+calls must be observed at runtime, not merely validator acceptance.
+
 ## VM-037 implementation contract (selected after #14349 merged)
 
 PR #14349 merged as `839e4191e8` after all applicable checks passed on
@@ -345,8 +362,8 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | Order | Item | Bounded work and executable acceptance |
 |---|---|---|
 | done #14349 | VM-036 | Run McCarthy's existing 19-program native capstone on Windows/Linux as well as macOS. Assert a present linker cannot silently skip; wire actual Windows execution into CI and prove all 19 results. |
-| selected | VM-037 | Promote FLOW-MATIC compare/branch/jump behavior beyond the scalar-output baseline. Use terminating, discriminating output programs on all seven standard columns. |
-| 3 | VM-044 | Promote Oct while/loop/break and returned function values to observable seven-column programs; prove u8 wrap and actual branch/call effects. |
+| done #14358 | VM-037 | Promote FLOW-MATIC compare/branch/jump behavior beyond the scalar-output baseline. Use terminating, discriminating output programs on all seven standard columns. |
+| selected | VM-044 | Promote Oct while/loop/break and returned function values to observable seven-column programs; prove u8 wrap and actual branch/call effects. |
 | 4 | VM-045 | Promote COBOL reference modification to standard columns: constant and dynamic bounds, result text and explicit invalid-bound behavior, compared with its existing oracle. |
 | 5 | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
 | 6 | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
