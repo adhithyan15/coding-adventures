@@ -12933,10 +12933,11 @@ HMAC, HKDF, and PBKDF2 consumer. This package-only pure-math prerequisite adds
 no filesystem, process, network, environment, credential, or native authority.
 
 Before publication, the branch rebased conflict-free onto exact `origin/main`
-`98502993811850b6d8a21cc656d46a3a9e2f7c48`. The intervening SPICE Rust ISC
-model-card repair and Hindi coming-forms curriculum tranche change no package
-identity, established lane, selected path, or collision bucket, so all inventory
-counts above remain reporter-exact.
+`5f9c9ae31d4cd4f411013c3b49b2109432b1b0f7`. The intervening SPICE Rust ISC
+and NC model-card repairs, Hindi coming-forms curriculum tranche, SwiftUI
+one-of slot states, and lang-aot Cargo artifact-path repair change no package
+identity, established lane, selected path, or collision bucket, so all
+inventory counts above remain reporter-exact.
 
 The parallel security and performance review found no authority, secret
 retention, correctness, or bounded-residency blocker. It did measure
@@ -12946,8 +12947,22 @@ rotates list schedules for every 64-byte block. That concern is now the explicit
 pending `haskell-sha256-streaming-performance-hardening` owner, and Haskell
 portable source hashing depends on it. This keeps the current API tranche
 coherent while ensuring repository-scale hashing receives a measured allocation
-budget or optimization before adoption. The reconciled graph now contains 710
-owners and 1,162 edges: 206 merged, 503 pending, and exactly one in progress.
+budget or optimization before adoption.
+
+The concurrent backlog pass also corrected a stale OCaml dependency placement:
+the representative process-free package chain now depends on the already merged
+process-free substrate and CI toolchain, while the execution-coupled substrate
+is explicitly required by the later native OCaml build tool. The representative
+chain is therefore dependency-ready without weakening the native execution
+gate. Its tranche will also correct OCAML04's stale in-progress label for merged
+PR #13366. Three non-implementation source-hashing, dependency-hashing, and CI-
+gate aggregates now carry explicit selection blocks so prioritizers cannot
+mistake their prose-only closure records for implementation work.
+
+The reconciled graph now contains 710 owners and 1,163 edges: 206 merged, 503
+pending, and exactly one in progress. If this SHA-256 API PR merges, the measured
+streaming performance-hardening owner is the recommended next serial tranche;
+it has five unfinished descendants and gates Haskell repository-scale hashing.
 
 ## Autonomous Loop Protocol
 

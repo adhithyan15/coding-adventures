@@ -19,7 +19,7 @@
     "notes": "All 42 final-head checks reached terminal acceptable conclusions: 11 passed and 31 were expected skips. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #14329 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "98502993811850b6d8a21cc656d46a3a9e2f7c48",
+    "revision": "5f9c9ae31d4cd4f411013c3b49b2109432b1b0f7",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1413,
@@ -1073,8 +1073,8 @@
       "pr_number": null,
       "selected_at": "2026-09-05T16:05:33Z",
       "selection_revision": "327029a998efbb7e6ac964654838812692259d3b",
-      "rebase_revision": "98502993811850b6d8a21cc656d46a3a9e2f7c48",
-      "rebase_notes": "Rebased conflict-free before publication after exact-main advanced through the SPICE Rust ISC model-card repair a101e6c97a and Hindi coming-forms curriculum tranche 9850299381. Neither commit changes a package identity, established lane, selected path, or collision bucket, so the reporter-exact inventory remains 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets.",
+      "rebase_revision": "5f9c9ae31d4cd4f411013c3b49b2109432b1b0f7",
+      "rebase_notes": "Rebased conflict-free before publication after exact-main advanced through the SPICE Rust ISC model-card repair a101e6c97a, Hindi coming-forms curriculum tranche 9850299381, SwiftUI one-of slot states 2479eccba8, lang-aot Cargo artifact paths cd73f3ad86, and SPICE Rust BJT NC model-card repair 5f9c9ae31d. None changes a package identity, established lane, selected path, or collision bucket, so the reporter-exact inventory remains 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets.",
       "selection_notes": "Selected after PR #14329 completed 42 acceptable final-head checks and merged through guarded squash auto-merge as 327029a998efbb7e6ac964654838812692259d3b. The exact-main collision-checked inventory remains identity-neutral at 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel audits ranked Haskell portable source hashing highest at three direct and four transitive descendants, then found this missing local SHA-256 streaming API as its smallest coherent prerequisite. The package-only tranche preserves one-shot consumers and adds no filesystem, process, network, environment, credential, or native authority. Eight live open PRs have zero exact overlap with the planned package, HF03 spec, state, roadmap, and changelog paths. Reconciliation and selection leave the 709-owner/1,161-edge graph unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 206 merged, 502 pending, and exactly this owner in progress.",
       "notes": "The Haskell build tool cannot adopt the portable source-hashing contract safely while its local SHA-256 package only materializes complete byte lists. Add an opaque initialized context, exact chunk update, non-destructive final digest and lowercase hex operations, strict 64-byte block processing, and a copied sub-block remainder while preserving the existing one-shot wrappers. Prove FIPS vectors, empty and binary bytes, arbitrary fragmentation, SHA-256 padding boundaries, 8 KiB file-chunk boundaries, repeatable finalization, and continued downstream HMAC/HKDF/PBKDF2 compatibility without adding filesystem, process, network, environment, credential, or native authority."
     },
@@ -1235,6 +1235,7 @@
       "id": "build-tool-portable-source-hashing-remaining-engines",
       "title": "Complete portable source hashing across every remaining build-tool engine",
       "status": "pending",
+      "selection_blocked": true,
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-portable-source-hashing-conformance", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-language-source-input-registry-adoption", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
@@ -1325,6 +1326,7 @@
       "id": "build-tool-portable-dependency-hashing-remaining-engines",
       "title": "Complete portable dependency hashing across every build-tool engine",
       "status": "pending",
+      "selection_blocked": true,
       "depends_on": ["build-tool-python-portable-dependency-hashing-conformance", "build-tool-go-portable-dependency-hashing-conformance", "build-tool-elixir-portable-dependency-hashing-conformance", "build-tool-perl-portable-dependency-hashing-conformance", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-csharp-fsharp-portable-dependency-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-ruby-portable-dependency-hashing-conformance", "build-tool-rust-portable-dependency-hashing-conformance", "build-tool-typescript-portable-dependency-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
@@ -2562,10 +2564,10 @@
       "id": "ocaml-representative-core",
       "title": "Port logic-gates, graph, directed-graph, and state-machine to OCaml",
       "status": "pending",
-      "depends_on": ["ocaml-build-substrate", "ocaml-ci-toolchain"],
+      "depends_on": ["ocaml-build-substrate-process-free-core", "ocaml-ci-toolchain"],
       "branch": null,
       "pr_number": null,
-      "notes": "This dependency chain validates opam metadata, resolver edges, BUILD order, and affected-node expansion."
+      "notes": "This dependency chain validates opam metadata, process-free resolver edges, BUILD order, and affected-node expansion without claiming execution-coupled substrate completion. Correct OCAML04-process-free-build-substrate.md from its stale in-progress label to merged PR #13366 within this tranche; the documentation drift does not need a separate implementation node."
     },
     {
       "id": "ocaml-capability-analyzer",
@@ -2584,6 +2586,7 @@
       "title": "Implement the native OCaml build tool",
       "status": "pending",
       "depends_on": [
+        "ocaml-build-substrate",
         "ocaml-representative-core",
         "ocaml-capability-analyzer",
         "build-tool-pure-domain-corpus",
@@ -8494,6 +8497,7 @@
       "id": "build-tool-ci-gate-registry-established-lane-parity",
       "title": "Complete CI gate selection in every supported build-tool lane",
       "status": "pending",
+      "selection_blocked": true,
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-csharp-fsharp-ci-gate-selection-conformance", "build-tool-elixir-ci-gate-selection-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-lua-ci-gate-selection-conformance", "build-tool-perl-ci-gate-selection-conformance", "build-tool-python-ci-gate-selection-conformance", "build-tool-ruby-ci-gate-selection-conformance", "build-tool-rust-ci-gate-selection-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-typescript-ci-gate-selection-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
