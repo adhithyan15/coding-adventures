@@ -11,6 +11,11 @@
 > none of the nine backends (#14003), and specifying that surfaced a missing
 > adaptive container primitive.
 >
+> The native release P0 (#14249) is now closed and the product-scoped SemVer
+> lane (#13543) has published `task-app-v0.1.0`. The next dependency in the
+> component program is #14036: implement UI49 slot-driven variants before
+> stories or TaskApp composition can provide trustworthy coverage.
+>
 > The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
 > Phase 5, on components that are already proven in isolation. Until then the
 > app may be an empty screen, which is the intended trade.
@@ -136,7 +141,7 @@ step, no artifact. The ordered queue below comes from that spec.
    toolchain, with native assets enabled explicitly on every fresh runner. The
    validation lanes now select Flutter's install-generated bundle explicitly,
    rather than whichever same-named executable filesystem traversal returns
-   first. **In progress.**
+   first. **Done in #14252.**
    This blocks validated Flutter/Linux release payloads, so it precedes the
    remaining native-host and release-polish work.
 2. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
