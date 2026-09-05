@@ -63,6 +63,28 @@ VM-033 (Windows text-output newlines), which now precedes coverage work. After
 that repair, missing Windows runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
 otherwise this exact regression can recur despite a green Windows job.
 
+## VM-046a implementation contract (selected after #14370 merged)
+
+PR #14370 merged as `8504430394` after all current-head checks passed on
+`b878adec71`. VM-045 and the discovered VM-050/051/052 repairs are complete.
+The full local non-ALGOL matrix passed 176 programs / 1252 cells, zero skips.
+No red cell supersedes the next coverage item. Split VM-046 into small proofs:
+
+| Priority | Slice | Acceptance |
+|---|---|---|
+| selected | VM-046a | STRING DELIMITED BY SIZE: full source widths/spaces, mixed literal/item input, receiver truncation and preservation of a nonblank untouched tail. |
+| next | VM-046b | STRING delimiters and UNSTRING basic splitting: empty fields, receiver fitting and untouched receivers after source exhaustion. |
+| then | VM-046c | STRING/UNSTRING pointer updates and overflow branches with distinguishable outputs. |
+
+VM-046a adds canonical ASCII programs declaring all seven standard backends.
+Use visible trailing markers so output normalization cannot hide spaces, and
+nonblank initial receiver tails to distinguish STRING from MOVE space-filling.
+Run each new cell in a fresh process with a ran-cell sentinel; validate borrowed
+semantics against the frontend oracle cases. Normal non-ALGOL BUILD includes
+new rows automatically. Preserve frontend/runtime semantics; record and repair
+any newly observed defect before claiming parity. Update inventory counts,
+README, changelog and backlog evidence. ALGOL remains separately owned.
+
 ## VM-045 implementation contract (selected after #14363 merged)
 
 PR #14363 merged as `7291d2684e` after all current-head checks passed on
@@ -427,8 +449,8 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | done #14349 | VM-036 | Run McCarthy's existing 19-program native capstone on Windows/Linux as well as macOS. Assert a present linker cannot silently skip; wire actual Windows execution into CI and prove all 19 results. |
 | done #14358 | VM-037 | Promote FLOW-MATIC compare/branch/jump behavior beyond the scalar-output baseline. Use terminating, discriminating output programs on all seven standard columns. |
 | done #14363 | VM-044 | Promote Oct while/loop/break and returned function values to observable seven-column programs; prove u8 wrap and actual branch/call effects. |
-| selected | VM-045 | Promote COBOL reference modification to standard columns: constant and dynamic bounds, result text and explicit invalid-bound behavior, compared with its existing oracle. |
-| 5 | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
+| done #14370 | VM-045 | Promote COBOL reference modification to standard columns: constant and dynamic bounds, result text and explicit invalid-bound behavior, compared with its existing oracle. |
+| sliced below | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
 | 6 | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
 | 7 | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |
 | 8 | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
