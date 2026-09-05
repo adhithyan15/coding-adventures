@@ -72,7 +72,12 @@
 //! | each block  | 3× body with "(1)"/"(2)"/"(3)" labels            |
 //! | unknown     | Pale yellow placeholder PaintRect                |
 
+use std::collections::HashMap;
+
 use mosaic_analyzer::{MosaicChild, MosaicNode, MosaicProperty, MosaicValue, analyze};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
+use mosmodel_compiler::{MosmodelComponent, SlotType};
+use mosstyle_compiler::{StyleDef, StyleProp};
 use paint_instructions::{PaintBase, PaintInstruction, PaintRect, PaintScene, PaintText};
 
 // ============================================================================
@@ -106,6 +111,14 @@ const FONT_SIZE: f64 = 14.0;
 ///
 /// This prevents nodes from bleeding right up against the PNG border.
 const PADDING_PX: f64 = 8.0;
+
+/// Reserved property prefix used only by the typed pipeline adapter.
+///
+/// The legacy analyzer IR has no authored part field, so the adapter resolves
+/// mosstyle before layout and carries the selected properties through this
+/// private namespace. Mosaic source cannot spell these names because the
+/// analyzer grammar rejects `:` inside property identifiers.
+const PIPELINE_STYLE_PREFIX: &str = "__paint_style:";
 
 // ============================================================================
 // LayoutBox — internal layout result
@@ -194,6 +207,68 @@ fn resolve_text_content(props: &[MosaicProperty]) -> String {
     }).unwrap_or_default()
 }
 
+/// Return the last resolved pipeline style value for `name`.
+///
+/// Slot-owned states are appended after base properties in `.mil` slot order,
+/// so scanning from the end implements the UI49 last-writer-wins precedence.
+fn pipeline_style_value<'a>(props: &'a [MosaicProperty], name: &str) -> Option<&'a str> {
+    let key = format!("{PIPELINE_STYLE_PREFIX}{name}");
+    props.iter().rev().find_map(|prop| {
+        if prop.name == key {
+            match &prop.value {
+                MosaicValue::Literal(value) => Some(value.as_str()),
+                _ => None,
+            }
+        } else {
+            None
+        }
+    })
+}
+
+/// Parse a CSS-like scalar accepted by mosstyle (`8`, `8px`, or `8dp`).
+fn pipeline_style_number(props: &[MosaicProperty], name: &str) -> Option<f64> {
+    let value = pipeline_style_value(props, name)?;
+    let value = value
+        .strip_suffix("px")
+        .or_else(|| value.strip_suffix("dp"))
+        .unwrap_or(value);
+    value.parse().ok()
+}
+
+#[allow(clippy::too_many_arguments)]
+fn styled_rect(
+    node: &MosaicNode,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    default_fill: Option<&str>,
+    default_stroke: Option<&str>,
+    default_stroke_width: Option<f64>,
+    default_corner_radius: Option<f64>,
+    stroke_dash: Option<Vec<f64>>,
+) -> PaintRect {
+    PaintRect {
+        base: PaintBase::default(),
+        x,
+        y,
+        width,
+        height,
+        fill: pipeline_style_value(&node.properties, "background")
+            .map(str::to_owned)
+            .or_else(|| default_fill.map(str::to_owned)),
+        stroke: pipeline_style_value(&node.properties, "border-color")
+            .map(str::to_owned)
+            .or_else(|| default_stroke.map(str::to_owned)),
+        stroke_width: pipeline_style_number(&node.properties, "border-width")
+            .or(default_stroke_width),
+        corner_radius: pipeline_style_number(&node.properties, "border-radius")
+            .or(default_corner_radius),
+        stroke_dash,
+        stroke_dash_offset: None,
+    }
+}
+
 // ============================================================================
 // Core layout engine
 // ============================================================================
@@ -252,8 +327,17 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64, de
         "Column" => {
             let mut instrs = Vec::new();
             // Background rect to show the column boundary.
-            instrs.push(PaintInstruction::Rect(PaintRect::filled(
-                x, y, avail_w, avail_h, "#f8f8f8",
+            instrs.push(PaintInstruction::Rect(styled_rect(
+                node,
+                x,
+                y,
+                avail_w,
+                avail_h,
+                Some("#f8f8f8"),
+                None,
+                None,
+                None,
+                None,
             )));
 
             let children = &node.children;
@@ -280,8 +364,17 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64, de
         // available height. Widths are divided equally among non-Spacer children.
         "Row" => {
             let mut instrs = Vec::new();
-            instrs.push(PaintInstruction::Rect(PaintRect::filled(
-                x, y, avail_w, avail_h, "#f8f8f8",
+            instrs.push(PaintInstruction::Rect(styled_rect(
+                node,
+                x,
+                y,
+                avail_w,
+                avail_h,
+                Some("#f8f8f8"),
+                None,
+                None,
+                None,
+                None,
             )));
 
             let children = &node.children;
@@ -310,8 +403,17 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64, de
         // simply stacks them all at the top-left corner (pure overlay semantics).
         "Box" | "Stack" => {
             let mut instrs = Vec::new();
-            instrs.push(PaintInstruction::Rect(PaintRect::filled(
-                x, y, avail_w, avail_h, "#f8f8f8",
+            instrs.push(PaintInstruction::Rect(styled_rect(
+                node,
+                x,
+                y,
+                avail_w,
+                avail_h,
+                Some("#f8f8f8"),
+                None,
+                None,
+                None,
+                None,
             )));
             for child in &node.children {
                 let lbox = layout_child(child, x, y, avail_w, avail_h, depth + 1);
@@ -327,19 +429,18 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64, de
         // this region is scrollable.
         "Scroll" => {
             let mut instrs = Vec::new();
-            instrs.push(PaintInstruction::Rect(PaintRect {
-                base: PaintBase::default(),
+            instrs.push(PaintInstruction::Rect(styled_rect(
+                node,
                 x,
                 y,
-                width: avail_w,
-                height: avail_h,
-                fill: Some("#f8f8f8".to_string()),
-                stroke: Some("#999999".to_string()),
-                stroke_width: Some(1.0),
-                corner_radius: None,
-                stroke_dash: None,
-                stroke_dash_offset: None,
-            }));
+                avail_w,
+                avail_h,
+                Some("#f8f8f8"),
+                Some("#999999"),
+                Some(1.0),
+                None,
+                None,
+            )));
             for child in &node.children {
                 let lbox = layout_child(child, x, y, avail_w, avail_h, depth + 1);
                 instrs.extend(lbox.instructions);
@@ -362,8 +463,13 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64, de
                 y: baseline_y,
                 text,
                 font_ref: None,
-                font_size: FONT_SIZE,
-                fill: Some("#333333".to_string()),
+                font_size: pipeline_style_number(&node.properties, "font-size")
+                    .unwrap_or(FONT_SIZE),
+                fill: Some(
+                    pipeline_style_value(&node.properties, "color")
+                        .unwrap_or("#333333")
+                        .to_string(),
+                ),
                 text_align: None,
             });
             LayoutBox {
@@ -382,19 +488,18 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64, de
         // the entire available height — this keeps the preview readable.
         "Image" => {
             let h = avail_h.min(100.0);
-            let instr = PaintInstruction::Rect(PaintRect {
-                base: PaintBase::default(),
+            let instr = PaintInstruction::Rect(styled_rect(
+                node,
                 x,
                 y,
-                width: avail_w,
-                height: h,
-                fill: Some("#cccccc".to_string()),
-                stroke: Some("#999999".to_string()),
-                stroke_width: Some(1.0),
-                corner_radius: None,
-                stroke_dash: None,
-                stroke_dash_offset: None,
-            });
+                avail_w,
+                h,
+                Some("#cccccc"),
+                Some("#999999"),
+                Some(1.0),
+                None,
+                None,
+            ));
             LayoutBox { x, y, width: avail_w, height: h, instructions: vec![instr] }
         }
 
@@ -416,8 +521,17 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64, de
         // A Divider is a thin horizontal rule — 1 px tall, full width. Think
         // HTML `<hr>`.
         "Divider" => {
-            let instr = PaintInstruction::Rect(PaintRect::filled(
-                x, y, avail_w, 1.0, "#e0e0e0",
+            let instr = PaintInstruction::Rect(styled_rect(
+                node,
+                x,
+                y,
+                avail_w,
+                1.0,
+                Some("#e0e0e0"),
+                None,
+                None,
+                None,
+                None,
             ));
             LayoutBox { x, y, width: avail_w, height: 1.0, instructions: vec![instr] }
         }
@@ -428,19 +542,18 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64, de
         // target" size for mobile icons (Material Design, HIG). The gray fill
         // and stroke indicate "something graphical goes here."
         "Icon" => {
-            let instr = PaintInstruction::Rect(PaintRect {
-                base: PaintBase::default(),
+            let instr = PaintInstruction::Rect(styled_rect(
+                node,
                 x,
                 y,
-                width: 24.0,
-                height: 24.0,
-                fill: Some("#e8e8e8".to_string()),
-                stroke: Some("#999999".to_string()),
-                stroke_width: Some(1.0),
-                corner_radius: None,
-                stroke_dash: None,
-                stroke_dash_offset: None,
-            });
+                24.0,
+                24.0,
+                Some("#e8e8e8"),
+                Some("#999999"),
+                Some(1.0),
+                None,
+                None,
+            ));
             LayoutBox { x, y, width: 24.0, height: 24.0, instructions: vec![instr] }
         }
 
@@ -499,19 +612,18 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64, de
         // here, but we don't know what."
         _ => {
             let placeholder_h = avail_h.min(60.0);
-            let instr = PaintInstruction::Rect(PaintRect {
-                base: PaintBase::default(),
+            let instr = PaintInstruction::Rect(styled_rect(
+                node,
                 x,
                 y,
-                width: avail_w,
-                height: placeholder_h,
-                fill: Some("#ffffcc".to_string()),
-                stroke: Some("#cccc00".to_string()),
-                stroke_width: Some(1.0),
-                corner_radius: None,
-                stroke_dash: Some(vec![4.0, 4.0]),
-                stroke_dash_offset: None,
-            });
+                avail_w,
+                placeholder_h,
+                Some("#ffffcc"),
+                Some("#cccc00"),
+                Some(1.0),
+                None,
+                Some(vec![4.0, 4.0]),
+            ));
             LayoutBox {
                 x,
                 y,
@@ -665,8 +777,209 @@ fn is_spacer_child(child: &MosaicChild) -> bool {
 }
 
 // ============================================================================
+// Typed three-file pipeline adapter
+// ============================================================================
+
+/// Resolve base and UI49 slot-owned styles for every named layout part.
+///
+/// Built-in interaction/structural states have no `slot` owner and therefore
+/// remain inactive in a static Paint fixture. Model-owned states are applied in
+/// `.mil` declaration order; the layout engine reads duplicate properties from
+/// the end, giving later axes deterministic precedence.
+fn resolve_pipeline_part_styles(
+    interface: &MosmodelComponent,
+    style: &StyleDef,
+    slot_values: &HashMap<String, String>,
+) -> HashMap<String, Vec<StyleProp>> {
+    let mut out = HashMap::with_capacity(style.parts.len());
+    for part in &style.parts {
+        let mut props = part.base.clone();
+        for slot in &interface.slots {
+            let SlotType::OneOf(legal_values) = &slot.r#type else {
+                continue;
+            };
+            let Some(active_value) = slot_values.get(&slot.name) else {
+                continue;
+            };
+            if !legal_values.contains(active_value) {
+                continue;
+            }
+            if let Some(state) = part.states.iter().find(|state| {
+                state.slot.as_deref() == Some(slot.name.as_str())
+                    && state.state == *active_value
+            }) {
+                props.extend(state.props.iter().cloned());
+            }
+        }
+        out.insert(part.name.clone(), props);
+    }
+    out
+}
+
+fn pipeline_prop_value(value: &LayoutPropValue) -> MosaicValue {
+    match value {
+        LayoutPropValue::SlotRef(name) => MosaicValue::SlotRef(name.clone()),
+        LayoutPropValue::EmitRef(name)
+        | LayoutPropValue::Keyword(name)
+        | LayoutPropValue::Expr(name) => MosaicValue::Ident(name.clone()),
+        LayoutPropValue::Number(value) => MosaicValue::Number(*value, None),
+        LayoutPropValue::String(value) => MosaicValue::Literal(value.clone()),
+    }
+}
+
+/// Adapt the three-file layout IR to the established Paint layout walker.
+fn pipeline_node_to_legacy(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, Vec<StyleProp>>,
+) -> MosaicNode {
+    let mut properties = node
+        .props
+        .iter()
+        .map(|prop| MosaicProperty {
+            name: prop.name.clone(),
+            value: pipeline_prop_value(&prop.value),
+        })
+        .collect::<Vec<_>>();
+
+    if let Some(props) = node
+        .part_name
+        .as_ref()
+        .and_then(|name| part_styles.get(name))
+    {
+        properties.extend(props.iter().map(|prop| MosaicProperty {
+            name: format!("{PIPELINE_STYLE_PREFIX}{}", prop.name),
+            value: MosaicValue::Literal(prop.value.clone()),
+        }));
+    }
+
+    MosaicNode {
+        node_type: node.component().to_string(),
+        is_primitive: true,
+        properties,
+        children: node
+            .children
+            .iter()
+            .map(|child| {
+                MosaicChild::Node(pipeline_node_to_legacy(child, part_styles))
+            })
+            .collect(),
+    }
+}
+
+// ============================================================================
 // Public API
 // ============================================================================
+
+/// Render a typed mosmodel/moslayout/mosstyle pipeline with base styles only.
+///
+/// This preserves the legacy [`render_scene`] contract while giving the Paint
+/// backend a three-file entry point. Use
+/// [`render_scene_from_pipeline_with_slot_values`] for fixture-selected UI49
+/// states or [`render_scene_from_pipeline_with_sample_slot_values`] for the
+/// deterministic first-member preview.
+pub fn render_scene_from_pipeline(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    width: f64,
+    height: f64,
+) -> Result<PaintScene, String> {
+    render_scene_from_pipeline_with_slot_values(
+        interface,
+        layout,
+        style,
+        &HashMap::new(),
+        width,
+        height,
+    )
+}
+
+/// Render a typed pipeline with explicit authored fixture slot values.
+///
+/// Values activate only states owned by a matching legal `one-of` slot.
+/// Missing or invalid values leave the base style intact. The value strings
+/// themselves are never emitted as style data; they only select precompiled
+/// mosstyle properties.
+pub fn render_scene_from_pipeline_with_slot_values(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    slot_values: &HashMap<String, String>,
+    width: f64,
+    height: f64,
+) -> Result<PaintScene, String> {
+    if interface.component != layout.component_name {
+        return Err(format!(
+            "component mismatch: mosmodel '{}' != moslayout '{}'",
+            interface.component, layout.component_name
+        ));
+    }
+
+    let part_styles = resolve_pipeline_part_styles(interface, style, slot_values);
+    let root = pipeline_node_to_legacy(&layout.root, &part_styles);
+    let lbox = layout_node(
+        &root,
+        PADDING_PX,
+        PADDING_PX,
+        width - 2.0 * PADDING_PX,
+        height - 2.0 * PADDING_PX,
+        0,
+    );
+    let mut scene = PaintScene::new(width, height);
+    scene.instructions = lbox.instructions;
+    Ok(scene)
+}
+
+/// Render the deterministic visual-review fixture for a typed pipeline.
+///
+/// Every `one-of` slot selects its first legal member, matching the sample
+/// convention used by static package/project emitters.
+pub fn render_scene_from_pipeline_with_sample_slot_values(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    width: f64,
+    height: f64,
+) -> Result<PaintScene, String> {
+    let slot_values = interface
+        .slots
+        .iter()
+        .filter_map(|slot| match &slot.r#type {
+            SlotType::OneOf(values) => values
+                .first()
+                .map(|value| (slot.name.clone(), value.clone())),
+            _ => None,
+        })
+        .collect();
+    render_scene_from_pipeline_with_slot_values(
+        interface,
+        layout,
+        style,
+        &slot_values,
+        width,
+        height,
+    )
+}
+
+/// Render a typed pipeline fixture directly to PNG bytes.
+pub fn render_png_from_pipeline_with_slot_values(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    slot_values: &HashMap<String, String>,
+    width: f64,
+    height: f64,
+) -> Result<Vec<u8>, String> {
+    let scene = render_scene_from_pipeline_with_slot_values(
+        interface,
+        layout,
+        style,
+        slot_values,
+        width,
+        height,
+    )?;
+    barcode_2d::render_scene_png(&scene)
+}
 
 /// Compile a Mosaic source string into a [`PaintScene`] with the given canvas
 /// dimensions.
@@ -779,6 +1092,8 @@ pub fn render_png_with_defaults(source: &str) -> Result<Vec<u8>, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use mosmodel_compiler::SlotDecl;
+    use mosstyle_compiler::{PartStyle, StateStyle};
     use paint_instructions::PaintInstruction;
 
     // ─── helpers ─────────────────────────────────────────────────────────────
@@ -798,6 +1113,114 @@ mod tests {
         scene.instructions.iter().filter_map(|i| {
             if let PaintInstruction::Text(t) = i { Some(t.text.as_str()) } else { None }
         }).collect()
+    }
+
+    fn first_rect(scene: &PaintScene) -> &PaintRect {
+        scene
+            .instructions
+            .iter()
+            .find_map(|instruction| match instruction {
+                PaintInstruction::Rect(rect) => Some(rect),
+                _ => None,
+            })
+            .expect("pipeline scene should contain a rectangle")
+    }
+
+    fn ui49_pipeline() -> (MosmodelComponent, LayoutDef, StyleDef) {
+        let interface = MosmodelComponent {
+            component: "VariantCard".to_string(),
+            slots: vec![
+                SlotDecl {
+                    name: "variant".to_string(),
+                    r#type: SlotType::OneOf(vec![
+                        "primary".to_string(),
+                        "danger".to_string(),
+                    ]),
+                    required: true,
+                    default: None,
+                },
+                SlotDecl {
+                    name: "tone".to_string(),
+                    r#type: SlotType::OneOf(vec!["quiet".to_string(), "loud".to_string()]),
+                    required: true,
+                    default: None,
+                },
+            ],
+            emits: Vec::new(),
+        };
+        let layout = LayoutDef {
+            component_name: "VariantCard".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("root".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let style = StyleDef {
+            component_name: "VariantCard".to_string(),
+            parts: vec![PartStyle {
+                name: "root".to_string(),
+                base: vec![StyleProp {
+                    name: "background".to_string(),
+                    value: "#111111".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: vec![
+                    StateStyle {
+                        state: "primary".to_string(),
+                        slot: Some("variant".to_string()),
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#2255ff".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                    StateStyle {
+                        state: "danger".to_string(),
+                        slot: Some("variant".to_string()),
+                        props: vec![
+                            StyleProp {
+                                name: "background".to_string(),
+                                value: "#cc2222".to_string(),
+                            },
+                            StyleProp {
+                                name: "border-color".to_string(),
+                                value: "#661111".to_string(),
+                            },
+                            StyleProp {
+                                name: "border-width".to_string(),
+                                value: "3px".to_string(),
+                            },
+                            StyleProp {
+                                name: "border-radius".to_string(),
+                                value: "9dp".to_string(),
+                            },
+                        ],
+                        transitions: Vec::new(),
+                    },
+                    StateStyle {
+                        state: "loud".to_string(),
+                        slot: Some("tone".to_string()),
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#ffcc00".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                    StateStyle {
+                        state: "hover".to_string(),
+                        slot: None,
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#00ff00".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                ],
+            }],
+        };
+        (interface, layout, style)
     }
 
     // ─── version ─────────────────────────────────────────────────────────────
@@ -841,6 +1264,131 @@ mod tests {
         let scene = render_scene_with_defaults("component X { Box { } }").unwrap();
         assert_eq!(scene.width, DEFAULT_WIDTH);
         assert_eq!(scene.height, DEFAULT_HEIGHT);
+    }
+
+    // ─── UI49 typed pipeline slot-state fixtures ───────────────────────────
+
+    #[test]
+    fn pipeline_fixture_activates_owned_one_of_state() {
+        let (interface, layout, style) = ui49_pipeline();
+        let slot_values = HashMap::from([("variant".to_string(), "danger".to_string())]);
+        let scene = render_scene_from_pipeline_with_slot_values(
+            &interface,
+            &layout,
+            &style,
+            &slot_values,
+            400.0,
+            300.0,
+        )
+        .unwrap();
+        assert_eq!(first_rect(&scene).fill.as_deref(), Some("#cc2222"));
+    }
+
+    #[test]
+    fn compiled_three_file_pipeline_renders_selected_state() {
+        let model = mosmodel_compiler::compile(
+            "component VariantCard { slot variant: one-of primary danger; }",
+        )
+        .expect("model should compile");
+        let layout = moslayout_compiler::compile(
+            "layout VariantCard { Box [ root ] { } }",
+            Some(&model.descriptor_json),
+        )
+        .expect("layout should compile");
+        let style = mosstyle_compiler::compile_with_slot_states(
+            "style VariantCard { part root { background: #111111; state danger { background: #cc2222; } } }",
+            Some(&layout.part_map_json),
+            &[mosstyle_compiler::SlotStateAxis {
+                slot: "variant".to_string(),
+                values: vec!["primary".to_string(), "danger".to_string()],
+            }],
+        )
+        .expect("style should compile");
+        let slot_values = HashMap::from([("variant".to_string(), "danger".to_string())]);
+        let scene = render_scene_from_pipeline_with_slot_values(
+            &model.component,
+            &layout.def,
+            &style.def,
+            &slot_values,
+            400.0,
+            300.0,
+        )
+        .unwrap();
+        assert_eq!(first_rect(&scene).fill.as_deref(), Some("#cc2222"));
+    }
+
+    #[test]
+    fn pipeline_fixture_projects_styles_onto_host_primitives() {
+        let (interface, mut layout, style) = ui49_pipeline();
+        layout.root.tag = "HostButton".to_string();
+        let slot_values = HashMap::from([("variant".to_string(), "danger".to_string())]);
+        let scene = render_scene_from_pipeline_with_slot_values(
+            &interface,
+            &layout,
+            &style,
+            &slot_values,
+            400.0,
+            300.0,
+        )
+        .unwrap();
+        let rect = first_rect(&scene);
+        assert_eq!(rect.fill.as_deref(), Some("#cc2222"));
+        assert_eq!(rect.stroke.as_deref(), Some("#661111"));
+        assert_eq!(rect.stroke_width, Some(3.0));
+        assert_eq!(rect.corner_radius, Some(9.0));
+    }
+
+    #[test]
+    fn pipeline_fixture_missing_or_invalid_value_preserves_base() {
+        let (interface, layout, style) = ui49_pipeline();
+        let missing = render_scene_from_pipeline(&interface, &layout, &style, 400.0, 300.0)
+            .unwrap();
+        let invalid_values =
+            HashMap::from([("variant".to_string(), "not-a-variant".to_string())]);
+        let invalid = render_scene_from_pipeline_with_slot_values(
+            &interface,
+            &layout,
+            &style,
+            &invalid_values,
+            400.0,
+            300.0,
+        )
+        .unwrap();
+        assert_eq!(first_rect(&missing).fill.as_deref(), Some("#111111"));
+        assert_eq!(first_rect(&invalid).fill.as_deref(), Some("#111111"));
+    }
+
+    #[test]
+    fn pipeline_fixture_merges_axes_in_model_order_and_ignores_hover() {
+        let (interface, layout, style) = ui49_pipeline();
+        let slot_values = HashMap::from([
+            ("tone".to_string(), "loud".to_string()),
+            ("variant".to_string(), "primary".to_string()),
+        ]);
+        let scene = render_scene_from_pipeline_with_slot_values(
+            &interface,
+            &layout,
+            &style,
+            &slot_values,
+            400.0,
+            300.0,
+        )
+        .unwrap();
+        assert_eq!(first_rect(&scene).fill.as_deref(), Some("#ffcc00"));
+    }
+
+    #[test]
+    fn pipeline_sample_fixture_uses_first_legal_members() {
+        let (interface, layout, style) = ui49_pipeline();
+        let scene = render_scene_from_pipeline_with_sample_slot_values(
+            &interface,
+            &layout,
+            &style,
+            400.0,
+            300.0,
+        )
+        .unwrap();
+        assert_eq!(first_rect(&scene).fill.as_deref(), Some("#2255ff"));
     }
 
     // ─── layout: Column ──────────────────────────────────────────────────────

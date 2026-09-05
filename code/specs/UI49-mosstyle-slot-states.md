@@ -118,9 +118,9 @@ The `one-of` syntax and compiler IR landed in #14210, and model-aware style
 validation plus state-to-slot ownership landed in #14300. React activation
 landed in #14306, followed by WebComponent runtime activation in #14314,
 Compose in #14322, SwiftUI in #14331, Qt in #14344, and Flutter in #14353.
-XAML activation landed in #14362. HTML snapshot activation is tracked by
-#14368; the remaining Paint lowering and toolkit retrofits stay tracked by
-#14036.
+XAML activation landed in #14362, followed by HTML snapshot activation in
+#14369. Paint fixture activation is tracked by #14375; toolkit retrofits remain
+under #14036.
 
 ### 3.2 `.msl` state names may be a slot's enum values
 
@@ -240,7 +240,7 @@ value instead of an input event, which `even`/`odd` already demonstrates.
 | `compose` | Style chosen in the composable | |
 | `swiftui` | Modifier chosen from the value | |
 | `xaml` | `VisualStateManager` group, one state per value | Its natural shape — a group is a closed set |
-| `paint` | Resolved at render from the fixture | |
+| `paint` | Resolved at render from explicit fixture values, or from each axis's deterministic first legal member | Static snapshots ignore interaction and structural states |
 
 Where a backend cannot express a case, it emits an explicit **degradation**
 rather than silently dropping the variant — the failure mode #14036 already is.
