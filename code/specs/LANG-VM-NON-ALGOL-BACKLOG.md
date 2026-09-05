@@ -75,7 +75,8 @@ of further coverage or semantic work.
 | — | VM-023 | done ([#13773](https://github.com/adhithyan15/coding-adventures/pull/13773)) | Audit and repair the same stateful-directory build defect across non-ALGOL TypeScript parser and lexer frontends. | Every affected package's normal and Windows build scripts run that package's own tests, with an automated guard against ending in a dependency directory. |
 | — | VM-012 | done ([#13785](https://github.com/adhithyan15/coding-adventures/pull/13785)) | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
 | — | VM-018 | done ([#13802](https://github.com/adhithyan15/coding-adventures/pull/13802)) | Define and implement portable Dartmouth BASIC `RND` semantics. | Merged as `8ceb8efc60`; the matrix includes negative reseeding, positive advancement, zero repeat, and shared `DEF FN` state on seven backends. |
-| 1 | VM-024 | selected | Protect the non-ALGOL language matrix in normal CI. | Every non-ALGOL `PROGRAMS` row executes on each available declared backend; no empty selection or silent failure-to-skip conversion; full ALGOL diagnostics remain available. |
+| 0 | VM-030 | selected; discovered by VM-024 | Repair Windows native-AOT CRT linking. | Twig `42` and arithmetic execute through the Windows smoke suite using the dynamic CRT without duplicate `__vcrt_InitializeCriticalSectionEx`; validate both available Microsoft/LLVM linkers and preserve normal CRT startup. |
+| 1 | VM-024 | queued behind VM-030 | Protect the non-ALGOL language matrix in normal CI. | Every non-ALGOL `PROGRAMS` row executes on each available declared backend; no empty selection or silent failure-to-skip conversion; full ALGOL diagnostics remain available. |
 | 2 | VM-025 | queued; coordinate with ALGOL owner | Reproduce the full matrix's current Linux failures and restore full CI coverage after their repair. | Record exact failing cells and owning PRs; remove the full-matrix exclusion only after the complete target runs green on supported CI hosts. |
 | 3 | VM-026 | queued | Reconcile stale Twig, frontend-count, and completed-work claims in LANG-FULL and LANG-PLATFORM status documents. | Every remaining gap links a current source/test boundary; landed VM-010, VM-017, VM-018, VM-020, and VM-021 work is no longer described as missing. |
 | 4 | VM-027 | queued | Audit feature-by-backend coverage for all ten wired frontends, including dedicated McCarthy and Macsyma suites. | Inventory implemented features, declared/refused backend cells, executable proofs, and CI commands; split every uncovered implemented feature into a bounded parity item. |
@@ -84,6 +85,17 @@ of further coverage or semantic work.
 | 7 | VM-029 | queued | Audit the broader platform vision and native-runtime roadmaps into explicit completion milestones. | Separate landed capabilities from GC, tooling, IR-bridge/transpilation, and measured-performance work; give every retained milestone a testable acceptance criterion and owner. |
 
 ## Discovery log
+
+- **VM-D021 — confirmed 2026-09-05:** executing the proposed non-ALGOL
+  matrix on Windows failed on the very first native Twig `42` cell with
+  duplicate `__vcrt_InitializeCriticalSectionEx`, defined by both
+  `libvcruntime.lib` and `vcruntime.lib`. The static library was added for an
+  earlier custom `/ENTRY:main` path; that custom entry was removed by
+  `bc2cb05594`, but the static library and its old explanation remained.
+  Promote VM-030 ahead of VM-024. Remove the obsolete static CRT selection,
+  preserve the compiler's normal startup, and run actual Windows executables
+  before enabling additional matrix coverage. VM-024's draft patch is held
+  outside the checkout until this prerequisite lands.
 
 - **VM-D001 — confirmed 2026-08-27:** JVM scalar concretization narrowed
   COBOL's explicit `i64` constant `10^12` to `i32`, so nested fixed-point
