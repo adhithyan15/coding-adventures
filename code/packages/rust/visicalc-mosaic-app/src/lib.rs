@@ -185,6 +185,7 @@ impl VisiCalcMosaicApp {
             "grid-edit-row": if edit_row < 0 { -1 } else { edit_row - i64::from(cursor.offset) },
             "viewport-offset": cursor.offset, "viewport-size": cursor.size,
             "viewport-rows": rows, "total-rows": ROWS, "total-cols": COLS,
+            "row-headers": (cursor.offset + 1..=cursor.offset + cursor.size).map(|row| row.to_string()).collect::<Vec<_>>(),
             "column-headers": (1..=COLS).map(column_index_to_letters).collect::<Vec<_>>(),
             "column-widths": vec![80; COLS as usize],
             "edit-row": edit_row, "edit-col": edit_col, "edit-content": edit_content,
@@ -563,6 +564,7 @@ mod tests {
         let small = dispatch(&mut app, "onViewportRows", json!({"rows":3}));
         assert_eq!(small.props["viewport-offset"], 97);
         assert_eq!(small.props["grid-selected-row"], 2);
+        assert_eq!(small.props["row-headers"], json!(["98", "99", "100"]));
         let big = dispatch(&mut app, "onViewportRows", json!({"rows":1000}));
         assert_eq!(big.props["viewport-rows"].as_array().unwrap().len(), 100);
         assert_eq!(big.props["cell-address"], "Z100");

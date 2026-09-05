@@ -31,8 +31,18 @@ workbook size and reveals the selection after resizing. Browser resizing at Z100
 produced 2 rows in a 400px-high frame, 17 in a 900px-high frame, and 15 when that
 tall frame narrowed to 375px. Missing ResizeObserver or variable row heights
 produce a diagnostic; hidden/empty tables do not publish invented capacity.
-Physical scrolling across the entire workbook, row labels, native capacity and
+Physical scrolling across the entire workbook, native capacity and
 native reveal remain under #14277 and #14372.
+
+The opt-in RowHeaderGrid now displays absolute labels from the Rust adapter.
+React emits scoped row/column headers and applies authored geometry directly to
+the cell wrappers. Browser measurements show aligned 80px data columns and
+approximately 32.33px row pitch at the tested display scale. Horizontal keyboard
+navigation to Z retains pinned row labels; returning to A clears their bounds.
+A 375px-wide light-theme preview kept Z100 visible with labels 94 through 100.
+The actual-WASM test edits Z100 without touching Y100. Native row-header support
+is explicitly degraded and remains in #14388, alongside broader accessibility
+and text-scale acceptance. Whole-workbook physical scrolling is still required.
 
 Browser review on 2026-09-05 covered both generated themes at desktop width
 and the real Rust app in a 375px-wide preview. The narrow root's scroll width

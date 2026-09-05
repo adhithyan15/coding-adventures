@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Use RowHeaderGrid with pinned absolute row labels, semantic headings and
+  aligned 80px data columns. Keep selection clear of the leading header.
+
 - Fit the sheet to the remaining app height and forward measured React table
   capacity to the shared Rust adapter while preserving the selected cell.
 

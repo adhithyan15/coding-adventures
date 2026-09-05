@@ -452,12 +452,36 @@ row window in response must settle, not cause a resize/render feedback loop.
 6. Report native observer support honestly. React acceptance does not establish
    WinUI, Qt, Flutter, Compose or SwiftUI behavior; each needs its own resize gate.
 
-## 9. Row headers and data-cell coordinates (proposed extension)
+## 9. Row headers and data-cell coordinates
 
 Tracking: #14388 under #14277 and the VisiCalc reference-app epic #14267.
-This section is an implementation contract, not a claim of backend support.
+The React baseline is implemented; native acceptance remains under #14388.
 Section 2 describes the currently shipped section-only cell inference; that
 behavior remains the default for tables without authored row headers.
+
+### React authoring baseline
+
+Use `table-cell-role: row-header`, `column-header`, `corner` or `data` on
+a Text or structural Box directly inside a table Row, including a per-cell For
+body. Roles are literal keywords. Row and column headers become `th` with the
+corresponding scope; corner becomes an aria-hidden `td`; data becomes `td`.
+The part's authored styles apply to the cell wrapper with default padding zero.
+A structural Box becomes that wrapper and contributes its children directly;
+it may not carry other props whose behavior would be lost by removing the Box.
+Text remains an inner span, with its authored geometry on the wrapper.
+Unannotated nodes retain the original section-inferred wrapper and inner styles.
+
+`mosaic-pkg-grid::RowHeaderGrid` is an opt-in sibling of Grid using the same Cell
+component and event contract. It accepts a `row-headers: list<text>` parallel to
+viewport-rows. The Rust adapter derives these labels from absolute row identity;
+the layout does not calculate or insert domain row numbers into data values.
+Its separate 48px header column does not enter column-widths or column-headers.
+Consumers of the existing Grid need no new slots, events or changed markup.
+
+React reveal counts body `td` data cells and reserves sticky row-header bounds
+on the logical leading side. Other backends report
+`accessibility.authored-table-cell-unimplemented` for annotated cells; strict
+native-complete builds reject that degradation. Native support is not implied.
 
 ### Semantic intent and compatibility
 
