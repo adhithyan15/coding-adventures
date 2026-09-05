@@ -85,6 +85,21 @@ new rows automatically. Preserve frontend/runtime semantics; record and repair
 any newly observed defect before claiming parity. Update inventory counts,
 README, changelog and backlog evidence. ALGOL remains separately owned.
 
+### VM-053 discovery and repair contract (blocks VM-046a)
+
+New row 410 executes repeated STRING with a changed source. Native/LLVM print
+`ABZZZZ|` then `CDZZZZ|`; WASM incorrectly prints the later value twice.
+Rows 408/409 pass all seven backends, and 121 frontend STRING/UNSTRING oracle
+tests pass. Reprioritize this observed stale string-fact defect before coverage.
+
+WASM's function-wide literal table must not substitute a later assignment for
+an earlier read, even when both assignments occur in one basic block. Mark
+multiply written string variables as runtime-valued and propagate that status
+to their consumers; preserve the single-definition literal fast path. Add a
+focused regression proving reassigned literals are runtime values, rerun all
+new cells and the full non-ALGOL matrix, and report actual execution/skips.
+Keep COBOL semantics and the other backends unchanged.
+
 ## VM-045 implementation contract (selected after #14363 merged)
 
 PR #14363 merged as `7291d2684e` after all current-head checks passed on
