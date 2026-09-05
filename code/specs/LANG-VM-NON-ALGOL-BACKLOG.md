@@ -83,6 +83,24 @@ focused lint, and update source-linked inventory counts. Normal non-ALGOL BUILD
 must include every row. Log and prioritize any actual backend defect before
 claiming these cells proven; commit repair contracts before implementation.
 
+### VM-054/055 discovery and repair contracts (block VM-046b)
+
+The 35-cell survey passes all 25 WASM/JVM/CLR/VM/JIT cells, but every native
+and LLVM delimiter cell fails. LLVM refuses nonconstant `str_index` loop
+indices (VM-055). Native produces empty output (VM-054): its string-lowering
+integer facts fold a loop-carried scan index to its initial constant instead
+of reading the current value. The frontend oracle selection passes 121 tests.
+
+Prioritize both failures within this slice. Native string folding must exclude
+multiply defined integer registers and invalidate overwritten integer facts;
+nonfoldable str_index operations must use the existing bounds-checked runtime
+helper, registered for both native ABIs. LLVM must route runtime sources or
+indices to that same helper, retaining literal fast paths and correct scalar
+result facts. Link the production helper in the matrix. Add focused regressions
+for loop-carried indices and runtime sources, execute the new cells, and rerun
+the full non-ALGOL matrix. Do not remove backend declarations or change COBOL
+semantics to hide failures.
+
 ## VM-046a implementation contract (selected after #14370 merged)
 
 PR #14370 merged as `8504430394` after all current-head checks passed on
