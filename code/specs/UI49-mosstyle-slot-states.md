@@ -115,9 +115,9 @@ This is worth doing for its own sake. It also lets emitters lower to real
 native enums instead of stringly-typed values.
 
 The `one-of` syntax and compiler IR landed in #14210, and model-aware style
-validation plus state-to-slot ownership landed in #14300. Backend activation
-starts with the React reference lowering in #14305; the remaining lowerings
-and toolkit retrofits stay tracked by #14036.
+validation plus state-to-slot ownership landed in #14300. React activation
+landed in #14306; WebComponent runtime activation continues in #14312. The
+remaining lowerings and toolkit retrofits stay tracked by #14036.
 
 ### 3.2 `.msl` state names may be a slot's enum values
 

@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - activate UI49 slot-owned style states (#14312)
+
+Generated Custom Elements now apply mosstyle states owned by `one-of` slots
+through attribute-backed runtime CSS conditionals. Multiple enum axes follow
+model slot declaration order, while existing `state-when-*` structural and
+interaction layers retain higher precedence. The shared part-style path covers
+generic nodes and specialized host primitives.
+
 ### Fixed - preserve HostInput accessible names (#13717)
 
 Web Component templates now retain literal, slot-backed, and expression-backed
