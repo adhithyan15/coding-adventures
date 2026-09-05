@@ -12809,6 +12809,20 @@ behavior-adoption leaves. The graph therefore has 694 unique owners: 204
 merged, 489 pending, and exactly the repository-boundary corpus owner in
 progress.
 
+The final exact-base validation proves 141 process-free cases and 285 retained
+files with the unchanged 18-boundary/21-input digest. All 23 schema tests and
+78 semantic runner tests pass; the complete oracle reports 89% branch-aware
+coverage. The related execution-contract suites pass 121 tests with 23 expected
+platform skips. C# passes 80 tests and F# passes 17, with both front doors
+dynamically consuming all four hashing fixtures; the missing reverse-diff and
+Swift fixture consumption remain explicit pending leaves. The complete Go
+suite, vet, trimpath build, and a real affected dry-run pass. That dry-run
+evaluates 45 Starlark files, discovers 5,139 packages, preserves the five-entry
+orphan ledger, and selects exactly the two changed .NET build-tool programs.
+Package parity, capability, OCaml-lock, JSON, state-DAG, lint-baseline,
+security, vulnerability, and diff gates are acceptable without adding host or
+execution authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
