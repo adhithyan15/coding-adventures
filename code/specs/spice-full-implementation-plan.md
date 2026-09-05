@@ -5241,10 +5241,18 @@ the Rust, Python, and TypeScript surfaces together.
      invalid input before element lowering.
 
 50. Rust BJT base-collector-junction-potential parser parity.
-   - Status: prioritized next after the BJT base-emitter-grading-coefficient
+   - Status: completed by the Rust BJT base-collector-junction-potential
      slice.
    - The engine and Python/TypeScript facades lower finite positive BJT `VJC`
      values, with `PC` as an alias, into the base-collector-junction-potential
+     field; Rust now does the same with canonical `VJC` precedence and rejects
+     invalid input before element lowering.
+
+50.1. Rust BJT base-collector-grading-coefficient parser parity.
+   - Status: prioritized next after the BJT base-collector-junction-potential
+     slice.
+   - The engine and Python/TypeScript facades lower finite BJT `MJC` values in
+     `[0, 1)`, with `MC` as an alias, into the base-collector-grading-coefficient
      field; the Rust element lowerer still leaves the engine default in place.
 
 51. Grammar-backed parser and app facade.
