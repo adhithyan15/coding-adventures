@@ -9,9 +9,9 @@ sequence: 190
 delivery: script
 chapter: 2
 type: writing
-headword: "ा, े"
+headword: "ा, े / मात्रा"
 gloss: "mātrās — vowel signs that replace the inherent a — and writing नाम"
-romanization: "ā, e"
+romanization: "ā, e / mātrā"
 prerequisites: [HI-W02-ka-ta-mouth-order, HI-W01-na-ma]
 sounds: [devanagari-matra, devanagari-inherent-vowel]
 roots: [sanskrit-matra, pie-meh1]
