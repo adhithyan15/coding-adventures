@@ -24,7 +24,7 @@
 // two modules wearing one name.
 //
 // ---------------------------------------------------------------------------
-// The two files this exists for, and why they are the last two
+// The first files this exists for, and why expansion stays measurement-driven
 // ---------------------------------------------------------------------------
 //
 // Of the last 200 human-languages commits on `main`:
@@ -33,17 +33,18 @@
 //     code/packages/typescript/human-language-data/CHANGELOG.md  touched by 75
 //     <track>/CHANGELOG.md (per language)                     touched by 4-11
 //
-// The per-language changelogs are already partitioned BY TRACK and have never
-// been a conflict point; they are deliberately left alone. These two are the
-// files every human-languages author touches, whatever they are working on, and
-// they are therefore the two that serialize 5-7 parallel level-authoring agents
-// down to one.
+// Per-language changelogs were initially left alone because partitioning by
+// track kept every one in the 4-11-touch range. That is a measurement, not a
+// permanent exemption: #14245 later found 23 same-track touches to Hindi's
+// changelog, making it the first per-language document to join the shard plans.
+// The corpus-wide files remain the surfaces every human-languages author can
+// touch, whatever they are working on.
 //
 // PR #12690 is the corroborating experiment. It went DIRTY three separate
 // times, and every single time the conflict was ONLY `CHANGELOG.md`: not one of
 // its ~4,000 shard files conflicted, across two concurrent Spanish tranches.
-// The sharding pattern works. These two files are the part that had not had it
-// applied yet.
+// The sharding pattern works. Those files are the part that had not had it
+// applied yet. Hindi's later measurement applies the same rule one level down.
 //
 // ---------------------------------------------------------------------------
 // The hard part: these documents are NEWEST-FIRST
