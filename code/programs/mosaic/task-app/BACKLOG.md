@@ -16,9 +16,11 @@
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
 > SwiftUI in #14331, Qt in #14344, Flutter in #14353, and XAML in #14362. The
-> static HTML snapshot lowering landed in #14369. The current dependency is
-> #14375, Paint fixture-driven slot-state resolution within #14036. Toolkit
-> retrofits still precede stories or trustworthy TaskApp composition coverage.
+> static HTML snapshot lowering landed in #14369, and Paint fixture-driven
+> resolution landed in #14378. The current dependency is #14383, the first
+> focused toolkit retrofit within #14036: make Button's variant/size contract
+> real. Toolkit retrofits still precede stories or trustworthy TaskApp
+> composition coverage.
 >
 > The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
 > Phase 5, on components that are already proven in isolation. Until then the
