@@ -1,0 +1,28 @@
+import { afterEach, expect, it, vi } from "vitest";
+import { mosaic$revealTableCell } from "../../../../packages/rust/mosaic-emit-react/src/table_selection";
+afterEach(() => { document.body.innerHTML = ""; vi.restoreAllMocks(); });
+it.each([false, true])("reveals data columns past sticky row headers (rtl=%s)", rtl => {
+  const frame = document.createElement("div");
+  frame.style.overflowX = "auto";
+  frame.innerHTML = '<table><tbody><tr><th scope="row">100</th><td>A</td><td>Z</td></tr></tbody></table>';
+  document.body.append(frame);
+  const table = frame.querySelector("table")!;
+  table.style.direction = rtl ? "rtl" : "ltr";
+  const [header, first, last] = Array.from(table.rows[0].cells);
+  header.style.position = "sticky";
+  Object.defineProperty(frame, "clientWidth", { value: 200 });
+  Object.defineProperty(frame, "clientHeight", { value: 100 });
+  frame.getBoundingClientRect = () => ({ left: 0, top: 0 } as DOMRect);
+  header.getBoundingClientRect = () => ({ left: rtl ? 160 : 0, right: rtl ? 200 : 40 } as DOMRect);
+  first.getBoundingClientRect = () => ({ top: 0, bottom: 30, left: rtl ? 150 : 20, right: rtl ? 180 : 50 } as DOMRect);
+  last.getBoundingClientRect = () => ({ top: 0, bottom: 30, left: rtl ? -30 : 200, right: rtl ? 0 : 230 } as DOMRect);
+  const headerBounds = vi.spyOn(header, "getBoundingClientRect");
+  mosaic$revealTableCell(table, 0, 0);
+  expect(frame.scrollLeft).toBe(rtl ? 20 : -20);
+  frame.scrollLeft = 0;
+  mosaic$revealTableCell(table, 0, 1);
+  expect(frame.scrollLeft).toBe(rtl ? -30 : 30);
+  headerBounds.mockClear();
+  mosaic$revealTableCell(table, 0, 2);
+  expect(headerBounds).not.toHaveBeenCalled();
+});

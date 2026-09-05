@@ -199,6 +199,7 @@ describe("viewport workbook coordinates", () => {
   it("reveals row 31 and translates a click in the shifted slice before committing", async () => {
     await gridKey("ArrowDown", 30);
     expect(container.textContent).toContain("A31");
+    expect(container.querySelector("tbody th[scope='row']")?.textContent).toBe("2");
     expect(container.querySelectorAll("tbody tr")).toHaveLength(30);
     expect((cell(29, 0).firstElementChild as HTMLElement).style.background).toBe("rgb(48, 79, 60)");
     // The first visible row is workbook row 2, not row 1.

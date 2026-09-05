@@ -10,6 +10,11 @@ lets the emitted WinUI project compile every variant side by side without C#
 merging two generated files into one type and rejecting hundreds of duplicate
 properties and handlers (#14234).
 
+### Added — authored table-cell degradation reporting
+
+- Report unimplemented authored table-cell roles on non-React backends, so
+  strict native-complete builds reject unsupported row-header semantics.
+
 ### Added — HTML package snapshots activate model-declared slot states
 
 HTML package components now bake each `one-of` slot's deterministic first

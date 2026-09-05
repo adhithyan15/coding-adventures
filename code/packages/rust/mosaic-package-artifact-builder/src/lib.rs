@@ -1369,6 +1369,10 @@ fn ignored_native_property(
     native_radio_groups: &HashSet<String>,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
+        (_, "table-cell-role") if backend != Backend::React => Some((
+            "accessibility.authored-table-cell-unimplemented",
+            "authored table-cell roles and wrapper geometry are currently implemented only by React",
+        )),
         ("Text", "a11y-label")
             if backend.is_native()
                 && !matches!(
@@ -6317,6 +6321,16 @@ layout AccessibleText {
                 "unexpected {backend:?} degradation inventory: {:?}",
                 report.degradations
             );
+        }
+    }
+
+    #[test]
+    fn authored_table_cells_report_unimplemented_backends() {
+        let node = LayoutNode { tag: "Text".into(), part_name: None, props: vec![], children: vec![] };
+        let prop = LayoutProp { name: "table-cell-role".into(), value: LayoutPropValue::Keyword("row-header".into()) };
+        for backend in [Backend::React, Backend::Flutter, Backend::Compose, Backend::Qt, Backend::SwiftUI, Backend::Xaml] {
+            let result = ignored_native_property(backend, &node, &prop, &HashSet::new());
+            assert_eq!(result.is_some(), backend != Backend::React);
         }
     }
 

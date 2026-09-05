@@ -1,0 +1,22 @@
+component RowHeaderGrid {
+  slot row-headers : list<text> ;
+  slot viewport-rows  : list<list<text>> ;
+  slot column-headers : list<text> ;
+  slot column-widths  : list<number> ;
+  slot selected-row   : number ;
+  slot selected-col   : number ;
+  slot edit-row       : number ;
+  slot edit-col       : number ;
+  slot edit-content   : text ;
+
+  emit onNavigate       ( row : number , col : number ) ;
+  // onFormulaChange fires every keystroke inside an editing cell;
+  // the host's reducer updates `edit-content` in response, and the
+  // value flows back into the cell on the next render.  Without
+  // this round-trip the cell's HostInput freezes — see Cell.mil
+  // for the controlled-input rationale.
+  emit onFormulaChange  ( value : text ) ;
+  emit onEditCommit     ( value : text ) ;
+  emit onEditCancel ;
+  emit onViewportRows ( rows : number ) ;
+}

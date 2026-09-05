@@ -1,4 +1,5 @@
 component VisiCalc {
+  slot row-headers : list<text> ;
   slot cell-address : text ;
   slot formula : text ;
   slot read-only : bool ;

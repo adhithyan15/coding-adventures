@@ -3988,7 +3988,8 @@ fn emit_table_row_jsx(
             }
         }
 
-        let inner = emit_jsx_tree(
+        let (cell_tag, cell_attrs) = table_cell_wrapper(cell, cell_tag, part_styles)?;
+        let inner = emit_table_cell_content(
             cell,
             indent + 4,
             part_styles,
@@ -3999,17 +4000,53 @@ fn emit_table_row_jsx(
         )?;
         let inner_trimmed = inner.trim_end_matches('\n');
         if inner_trimmed.contains('\n') {
-            out.push_str(&format!("{cell_pad}<{cell_tag}>\n"));
+            out.push_str(&format!("{cell_pad}<{cell_tag}{cell_attrs}>\n"));
             out.push_str(inner_trimmed);
             out.push('\n');
             out.push_str(&format!("{cell_pad}</{cell_tag}>\n"));
         } else {
             let single = inner_trimmed.trim_start();
-            out.push_str(&format!("{cell_pad}<{cell_tag}>{single}</{cell_tag}>\n"));
+            out.push_str(&format!("{cell_pad}<{cell_tag}{cell_attrs}>{single}</{cell_tag}>\n"));
         }
     }
     out.push_str(&format!("{row_pad}</tr>\n"));
     Ok(out)
+}
+
+// UI31 §9: an explicit role moves authored geometry onto the semantic cell.
+// Unannotated cells retain the original section-inferred wrapper and content.
+fn table_cell_wrapper<'a>(node: &LayoutNode, default_tag: &'a str, styles: &HashMap<String, String>) -> Result<(&'a str, String), PipelineEmitError> {
+    if !node.props.iter().any(|prop| prop.name == "table-cell-role") { return Ok((default_tag, String::new())); }
+    let role = find_keyword_prop(node, "table-cell-role").ok_or_else(|| PipelineEmitError::UnsafeSlotName("table-cell-role must be a literal keyword".into()))?;
+    if !matches!(node.tag.as_str(), "Box" | "Text") || (node.tag == "Box" && node.props.iter().any(|prop| prop.name != "table-cell-role")) {
+        return Err(PipelineEmitError::UnsafeSlotName("table-cell-role requires Text or a structural Box without other props".into()));
+    }
+    let (tag, semantics) = match role {
+        "row-header" => ("th", " scope=\"row\""),
+        "column-header" => ("th", " scope=\"col\""),
+        "corner" => ("td", " aria-hidden=\"true\""),
+        "data" => ("td", ""),
+        _ => return Err(PipelineEmitError::UnsafeSlotName("invalid table-cell-role".into())),
+    };
+    let authored = node.part_name.as_ref().and_then(|part| styles.get(part)).cloned().unwrap_or_default();
+    let style = merge_styles("padding: 0", &authored);
+    Ok((tag, format!("{semantics} style={{{{ {style} }}}}")))
+}
+
+#[allow(clippy::too_many_arguments)]
+fn emit_table_cell_content(node: &LayoutNode, indent: usize, styles: &HashMap<String, String>, dialogs: &[*const LayoutNode], checkboxes: &[*const LayoutNode], emits: &[EmitDecl], payload: Option<ForPayloadScope<'_>>) -> Result<String, PipelineEmitError> {
+    if find_keyword_prop(node, "table-cell-role").is_none() {
+        return emit_jsx_tree(node, indent, styles, dialogs, checkboxes, emits, payload);
+    }
+    if node.tag == "Box" {
+        // The Box is the cell itself; keep its children, not a second styled box.
+        let mut out = String::new();
+        for child in &node.children { out.push_str(&emit_jsx_tree(child, indent, styles, dialogs, checkboxes, emits, payload)?); }
+        return Ok(out);
+    }
+    let mut content = node.clone();
+    content.part_name = None;
+    emit_jsx_tree(&content, indent, styles, dialogs, checkboxes, emits, payload)
 }
 
 /// Try to lower `For (each: …, as: c [, index: i]) { <leaf> }` to
@@ -4137,7 +4174,8 @@ fn try_emit_table_for_cell_jsx(
     // a known For-binding in addition to SlotRef).
     let pad = " ".repeat(indent);
     let body_indent = indent + 2;
-    let inner = emit_jsx_tree(
+    let (cell_tag, cell_attrs) = table_cell_wrapper(leaf, cell_tag, part_styles)?;
+    let inner = emit_table_cell_content(
         leaf,
         body_indent + 2,
         part_styles,
@@ -4151,14 +4189,14 @@ fn try_emit_table_for_cell_jsx(
 
     let mut cell_block = String::new();
     if inner_trimmed.contains('\n') {
-        cell_block.push_str(&format!("{cell_pad}<{cell_tag} key={{{key_source}}}>\n"));
+        cell_block.push_str(&format!("{cell_pad}<{cell_tag} key={{{key_source}}}{cell_attrs}>\n"));
         cell_block.push_str(inner_trimmed);
         cell_block.push('\n');
         cell_block.push_str(&format!("{cell_pad}</{cell_tag}>\n"));
     } else {
         let single = inner_trimmed.trim_start();
         cell_block.push_str(&format!(
-            "{cell_pad}<{cell_tag} key={{{key_source}}}>{single}</{cell_tag}>\n"
+            "{cell_pad}<{cell_tag} key={{{key_source}}}{cell_attrs}>{single}</{cell_tag}>\n"
         ));
     }
 
@@ -9925,6 +9963,24 @@ mod tests {
                 assert!(out.contains(&format!("<{html} style={{{{ position: \"sticky\" }}}}>")), "{out}");
             }
         }
+    }
+
+    #[test]
+    fn authored_table_cells_preserve_semantics_and_wrapper_styles() {
+        let mut header = text_slot_node("label");
+        header.part_name = Some("heading".into());
+        header.props.push(keyword_prop("table-cell-role", "row-header"));
+        let styles = HashMap::from([("heading".into(), "position: \"sticky\"".into())]);
+        let (tag, attrs) = table_cell_wrapper(&header, "td", &styles).unwrap();
+        assert_eq!(tag, "th");
+        assert!(attrs.contains("scope=\"row\""));
+        assert!(attrs.contains("position: \"sticky\""));
+        let inner = emit_table_cell_content(&header, 0, &styles, &[], &[], &[], None).unwrap();
+        assert_eq!(inner.trim(), "<span>{label}</span>");
+        header.props.retain(|prop| prop.name != "table-cell-role");
+        assert_eq!(table_cell_wrapper(&header, "td", &styles).unwrap(), ("td", String::new()));
+        header.props.push(keyword_prop("table-cell-role", "button"));
+        assert!(table_cell_wrapper(&header, "td", &styles).is_err());
     }
 
     #[test]
