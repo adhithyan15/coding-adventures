@@ -8,6 +8,19 @@ Entries below ship in the next product release. `task-app-v0.1.0` published on
 2026-08-31; everything added after that tag accumulates here until the next
 version is cut and this heading is replaced with it.
 
+### Fixed - Flutter release bundles include the Rust runtime (#14249)
+
+The generated Flutter build hook now stages TaskApp's prebuilt Rust runtime
+through its hook-owned output directory before registering the bundled code
+asset. The TaskApp CI and release lanes keep the established Flutter 3.44.0
+toolchain and explicitly enable native assets instead of inheriting
+machine-global Flutter configuration. The validation lanes now select Flutter's
+final `bundle/` executable explicitly instead of the same-named
+`intermediates_do_not_run/` binary. Together these changes restore
+`libmosaic_app.so`, `libapp.so`, and ICU data in Linux release bundles on fresh
+hosted runners and keep the executable launchable without an external runtime
+path.
+
 ### Fixed - Vitest config uses Vite's native ESM loading contract (#13526)
 
 The web host's Vitest aliases now resolve from `import.meta.dirname` instead of

@@ -448,6 +448,8 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "archive-linux-bundle" in workflow
     assert "createDistributable" in workflow
     assert "flutter build linux --release" in workflow
+    assert "-path '*/bundle/trestle'" in workflow
+    assert 'test -s "$bundle/lib/libapp.so"' in workflow
     assert "cmake --install" in workflow
     assert "launch-trestle" in workflow
     assert "*.tar.gz" in workflow

@@ -129,7 +129,17 @@ step, no artifact. The ordered queue below comes from that spec.
 
 **Tier A — finish the platforms TaskApp already claims.**
 
-1. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
+1. **P0 [#14249](https://github.com/adhithyan15/coding-adventures/issues/14249):**
+   restore Flutter's bundled Rust runtime after the current Linux runner image
+   exposed a broken 3.44.0 native-asset bundle. The repair stages the runtime
+   through the hook-owned output directory while keeping the pinned 3.44.0
+   toolchain, with native assets enabled explicitly on every fresh runner. The
+   validation lanes now select Flutter's install-generated bundle explicitly,
+   rather than whichever same-named executable filesystem traversal returns
+   first. **In progress.**
+   This blocks validated Flutter/Linux release payloads, so it precedes the
+   remaining native-host and release-polish work.
+2. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
    replace blank startup with loading and failure states. **Done for the web
    host.** Split out while implementing it:
    [#13984](https://github.com/adhithyan15/coding-adventures/issues/13984) —
@@ -137,7 +147,7 @@ step, no artifact. The ordered queue below comes from that spec.
    log evidence, which needs a distinct surface in five backends and its own
    emitted-control coverage. The host-neutral contract both share is
    `code/specs/task-app-startup-states-v1.md`.
-2. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
+3. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
    make the List-first shell usable in compact windows. **Blocked on
    [#14003](https://github.com/adhithyan15/coding-adventures/issues/14003)
    (UI48).** Picking this up revealed it was mis-scoped as a TaskApp change.
@@ -151,12 +161,11 @@ step, no artifact. The ordered queue below comes from that spec.
    so touch-sized tap targets would stay unexpressible. Specified generically as
    `code/specs/UI48-host-environment.md`; TaskApp then becomes
    `TaskApp.compact.mll` and nothing else.
-   Next Tier A item to pick up is therefore #13526, while UI48's ENV slices run
-   in parallel as kernel work.
-3. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
+   UI48's ENV slices continue as separate kernel work.
+4. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract. **Done in
    [#14242](https://github.com/adhithyan15/coding-adventures/pull/14242).**
-4. **P2 [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
+5. **P2 [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
    roll the changelog forward after each published release and gate against a
    published version still marked Unreleased. `0.1.0` is in exactly that state
    today.
@@ -178,9 +187,9 @@ step, no artifact. The ordered queue below comes from that spec.
 **Tier B — close the three unexercised backends.** Filed as work is picked up;
 see the spec for the completion bar each one has to clear.
 
-5. Static HTML snapshot gate (cheapest — no runtime, no interaction claim).
-6. Web Components host — the last *interactive* backend with no TaskApp presence.
-7. Paint visual-regression gate — the only mechanism that would catch a purely
+6. Static HTML snapshot gate (cheapest — no runtime, no interaction claim).
+7. Web Components host — the last *interactive* backend with no TaskApp presence.
+8. Paint visual-regression gate — the only mechanism that would catch a purely
    visual regression.
 
 **Tier C — reach, stated rather than silently missing.** iOS compiles but does
