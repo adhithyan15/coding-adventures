@@ -105,7 +105,8 @@ links existing Mosaic work instead of duplicating it.
 25. **P1 — [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
    make the List-first shell usable in compact windows.
 26. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
-   move the Vitest config to Vite's native ESM loading contract.
+   move the Vitest config to Vite's native ESM loading contract. **Done in
+   [#14242](https://github.com/adhithyan15/coding-adventures/pull/14242).**
 27. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
    roll the TaskApp changelog forward after each published product release and
    gate against already-published versions remaining marked Unreleased.
@@ -153,7 +154,8 @@ step, no artifact. The ordered queue below comes from that spec.
    Next Tier A item to pick up is therefore #13526, while UI48's ENV slices run
    in parallel as kernel work.
 3. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
-   move the Vitest config to Vite's native ESM loading contract.
+   move the Vitest config to Vite's native ESM loading contract. **Done in
+   [#14242](https://github.com/adhithyan15/coding-adventures/pull/14242).**
 4. **P2 [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
    roll the changelog forward after each published release and gate against a
    published version still marked Unreleased. `0.1.0` is in exactly that state
