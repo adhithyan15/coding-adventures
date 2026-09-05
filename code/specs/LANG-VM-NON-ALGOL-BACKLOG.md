@@ -95,6 +95,14 @@ existing seed/repeat/advance transcript on real Java. This is a generic mixed
 numeric-type boundary, not a BASIC-specific RNG special case. Preserve the
 existing integer-only simulator path and run its regression suite.
 
+Local validation on Windows: the LF/CRLF regression fails before the fix and
+passes after it; three focused tests pass with 18 executed backend cells and
+three missing-tool skips. The library and five JVM suites pass 24 tests,
+including the integer-only simulator and real-Java Lisp tests. BASIC T7 tests
+exercise 400 generated programs with 864 cross-engine agreements. The ALGOL
+real-procedure and real-for-variable matrix regressions pass on available
+backends, and all-target Clippy is clean. Full-matrix completion is not claimed.
+
 | Rank | ID | Status | Work item | Completion proof |
 |---:|---|---|---|---|
 | — | VM-001 | done ([#13306](https://github.com/adhithyan15/coding-adventures/pull/13306)) | Preserve COBOL scale-12 decimal intermediates on JVM. | The existing `A / B + C` LANG matrix cell prints `000533` on real Java and the full matrix is green. |

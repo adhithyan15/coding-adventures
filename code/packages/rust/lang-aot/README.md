@@ -4,6 +4,24 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, and Macsyma** to
 native executables through the shared LANG VM chain.
 
+The language matrix compares text output using LF line endings, accepting the
+equivalent CRLF produced by Windows text runtimes. It preserves lone carriage
+returns and other content; Brainfuck retains its exact comparison. Compiler and
+runtime output are unchanged. Normal BUILD protects the comparison boundary and
+three multi-line BASIC cases (real numbers, mixed DATA, and RND):
+
+```sh
+cargo test -p lang-aot --test lang_matrix portable_text_stdout_ -- --nocapture
+```
+
+Missing external tools are reported as skips; available backends must execute
+and match. This focused command does not replace full-matrix validation.
+
+The JVM path preserves integer widths in modules that use floating-point values.
+This matters for BASIC's RND helper: two small i64 operands can multiply to a
+value beyond i32 before modulo reduces it. The integer-only simulator's
+compatibility path is kept for modules within its existing scope.
+
 > **macsyma-iir-vm.md Wave 4 + VM-021 — Macsyma runs on NativeAOT + LLVM + WASM + JVM + CLR + JIT (v0.280.0):**
 > `tests/macsyma_conformance.rs` proves 21 v0 arithmetic/assignment Macsyma
 > programs (`2 + 3$`, `x: 3$\nx + 1$`, exact division, unary `-`/`+`, ...)
