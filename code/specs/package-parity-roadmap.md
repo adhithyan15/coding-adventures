@@ -13191,6 +13191,19 @@ history. A fresh collision report reproduces every inventory count above with
 zero collisions and zero unknown buckets; the selected ownership graph remains
 724 owners and 1,196 edges at 209 merged, 514 pending, and one in progress.
 
+The representative-core parallel validation audit found one additional
+dependency-shaped integration gap. The pinned three-platform OCaml workflow
+executes the library and program scaffold fixtures but not the real package
+chain, while generic canonical CI can discover OCaml package BUILD files
+without provisioning opam. The new pending
+`ocaml-representative-package-ci-execution` owner depends on the representative
+core and the already merged CI toolchain, owns real Ubuntu, macOS, and Windows
+format/test/coverage/install execution without skips, and now gates final lane
+promotion. It remains separate from this process-free package tranche. The
+reconciled state therefore contains 725 owners and 1,199 edges: 209 merged,
+515 pending, and one in progress; graph uniqueness, dependency completeness,
+acyclicity, and the no merged-to-unmerged invariant remain intact.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

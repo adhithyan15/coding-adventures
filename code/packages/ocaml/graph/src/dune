@@ -1,0 +1,6 @@
+(library
+ (name coding_adventures_graph)
+ (public_name coding-adventures-graph)
+ (wrapped false)
+ (instrumentation
+  (backend bisect_ppx)))

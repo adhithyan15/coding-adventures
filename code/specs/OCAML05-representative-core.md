@@ -67,6 +67,10 @@ must be nonzero powers of two; select widths must match. Encoder input must be
 one-hot, while the priority encoder chooses the highest active index and
 returns a valid bit.
 
+The OCaml decoder accepts at most 16 selector bits. A wider selector returns
+`Invalid_width` before computing or allocating the `2^N` output vector; this
+fixed ceiling is identical on 32-bit and 64-bit targets.
+
 `Sequential` exposes explicit immutable `latch_state`, `flip_flop_state`, and
 `counter_state` records plus `Left | Right` shift direction. It implements SR
 and D latches, rising-edge D flip-flops, simultaneous registers, directional
