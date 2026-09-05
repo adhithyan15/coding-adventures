@@ -98,6 +98,21 @@ the canonical rows, plus focused lowering checks for runtime source/bounds and
 reassigned destinations. Use existing runtime/ABI helper plumbing; investigate
 any further backend refusal instead of excluding its cells.
 
+### VM-051/052 discovery and repair contracts (block VM-045)
+
+The complete 49-cell survey after VM-050 passed 46 cells. LLVM rows 402 and
+405 reject computed `str_slice` bounds as nonconstant (VM-051). WASM row 405
+prints `|` and two spaces plus `|` instead of `BC   |` / `BC|` (VM-052).
+All seven native cells pass, including both expected traps. Prioritize these
+observed failures within this PR before declaring the new rows protected.
+
+VM-051: use LLVM's existing length-prefixed runtime string representation and
+shared bounds-checked slice helper for unknown sources/bounds. Preserve its
+literal folding, trap behavior and stale-fact invalidation. VM-052: diagnose
+runtime MOVE's incorrect WASM output and fix the narrow string-lowering fact
+or copy defect responsible, with the failing canonical program as regression
+proof. Do not alter COBOL semantics or remove failing backend declarations.
+
 ## VM-044 implementation contract (selected after #14358 merged)
 
 PR #14358 merged as `669d5fcc1e` after all current-head checks passed on
