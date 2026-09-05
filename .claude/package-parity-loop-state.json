@@ -11,22 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 14366,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/14366",
-    "branch": "codex/haskell-build-tool-source-hashing",
-    "item_id": "build-tool-haskell-portable-source-hashing-conformance",
-    "opened_at": "2026-09-05T19:24:40Z",
-    "opened_revision": "4c5458e2fe8c78e9dabeca7cb84376239f76518c"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-05T19:24:43Z",
+    "observed_at": "2026-09-05T19:53:45Z",
     "pr_number": 14366,
-    "status": "pending",
-    "notes": "PR #14366 is the sole active parity PR. GitHub reports the ready-for-review exact opened head mergeable and conflict-free, with both CI detects, CodeQL language detection, and human-language detection queued. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable and no merge conflict exists."
+    "status": "merged",
+    "notes": "PR #14366 completed all 42 final-head checks acceptably and GitHub reported CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that terminal check and conflict audit, and GitHub merged the PR immediately at 2026-09-05T19:53:45Z as 8b8ce4b3c8edd10923cfeb0f693717741fe665df without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "eae0cacabf1e3d2c03c449686614bb62113fd832",
+    "revision": "8b8ce4b3c8edd10923cfeb0f693717741fe665df",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1413,
@@ -970,6 +963,16 @@
       "notes": "Production Go currently owns 14 source-language entries, 14 metadata-language entries, and a 26-name generated-component registry, but the neutral registry adds reviewed Rust companions and package resources for hybrid lanes. Replace the engine-local maps with an exact complete projection and prove no missing or undeclared-extra selector."
     },
     {
+      "id": "build-tool-go-native-source-snapshot-stability-hardening",
+      "title": "Harden native Go source snapshot stability",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-go-language-source-input-registry-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14366 Go hashing audit. The pure registry tranche cannot prove host-native no-follow, hardlink, symlink, reparse-point, or mutation-race safety. After exact registry adoption, add platform-specific immutable tracked-file snapshot evidence and make repository-boundary adoption and the canonical Go oracle depend on it. Keep this security owner selection-blocked until its Unix and Windows native API design, capability impact, and three-platform CI coverage are reviewed."
+    },
+    {
       "id": "build-tool-python-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Python build tool",
       "status": "pending",
@@ -1063,6 +1066,16 @@
       "notes": "Discovered by the post-#13544 source-hashing audit. Elixir recursively hashes without the exact generated-component registry and lacks portable path framing and OCaml source recognition. Repair those bounded collector semantics, consume the complete checked language source-input registry in production, and prove exact projection equality with no undeclared selector."
     },
     {
+      "id": "build-tool-elixir-native-source-snapshot-stability-hardening",
+      "title": "Harden native Elixir build-tool source snapshots",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-elixir-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the parallel Elixir source-hashing security audit after PR #14366. OTP pathname lstat/open/fstat rechecks cannot atomically retain package ancestors or request POSIX O_NOFOLLOW/openat and Windows reparse-point-safe handles; OTP secure-coding guidance explicitly does not guarantee atomicity across the required operations. Add a bounded cross-platform native helper or NIF with retained root, ancestor, and leaf identities; regular and single-link enforcement; POSIX symlink/hardlink plus Windows junction/reparse coverage; deterministic replacement-race hooks; stable root-redacted failures; and dependency/license review before Elixir dependency hashing, repository-boundary adoption, or the all-engine aggregate claims native snapshot stability."
+    },
+    {
       "id": "build-tool-perl-blib-generated-directory-registry-repair",
       "title": "Resolve Perl blib generated-directory registry authority",
       "status": "pending",
@@ -1135,7 +1148,7 @@
     {
       "id": "build-tool-haskell-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Haskell build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["haskell-sha256-streaming-performance-hardening", "build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair"],
       "branch": "codex/haskell-build-tool-source-hashing",
       "pr_number": 14366,
@@ -1152,6 +1165,10 @@
       "review_notes": "Three parallel read-only audits tightened the package-local fixture adapter, portable glob grammar and work accounting, filesystem candidate and selected-input bounds, all-candidate path collision handling, registry-language discovery, reproducible generated projection, documentation, and validation plan. The native-boundary audit also identified the remaining pathname TOCTOU and native identity gap, now owned by build-tool-haskell-native-source-snapshot-stability-hardening and wired ahead of Haskell dependency hashing, repository-boundary adoption, and the all-engine aggregate.",
       "validation_notes": "Publication validation passes 77 Haskell build-tool, 25 SHA-256, four graph, and three directed-graph examples; the allocation budgets measure 57,521,408 bytes for one million bytes and 57,557,872 bytes for 8 KiB chunks. The optimized -Wall -Werror build, Cabal check, Haddock, sdist, literal BUILD front, exact generator byte-sync, canonical Go test/vet/trimpath build, and a real 207-package Haskell dry plan pass. The plan evaluates 45 Starlark files and selects exactly the changed build tool plus graph, directed-graph, and SHA-256. A clean relevant neutral schema/runner/parity run passes 111 tests and 269 subtests; the collision-checked package inventory, 716-owner/1,180-edge unique dependency-complete acyclic merged-closed state graph, diff hygiene, and changed-diff credential scan are clean. BUILD_windows contains the same directly validated cabal test all optimized command. The pathname TOCTOU/native retained-identity limitation remains explicitly unclaimed and separately owned.",
       "publication_notes": "Opened ready-for-review PR #14366 from clean validated head 4c5458e2fe8c78e9dabeca7cb84376239f76518c after a normal first push from exact origin/main 994e0555426b2330f33f45210fef6953607a67f6. Immediately before publication, the remote branch and prior PR were absent, the collision-checked inventory and state graph were clean, and the conflict-free post-rebase Haskell test rerun passed. GitHub reports the PR non-draft, mergeable, and conflict-free with initial required checks queued; guarded auto-merge remains disabled until every final-head check is terminal and acceptable.",
+      "merged_head_revision": "8ebd6658a4cfed6f7d801b904799f171b1a737e7",
+      "merged_at": "2026-09-05T19:53:45Z",
+      "merge_commit": "8b8ce4b3c8edd10923cfeb0f693717741fe665df",
+      "merge_notes": "All 42 final-head checks were terminal and acceptable: both Ubuntu builds, both metadata jobs, both CI gates, both detects, CodeQL detection, Unicode generated-language checks, and the human-language aggregate succeeded, while inapplicable jobs skipped. GitHub reported CLEAN and MERGEABLE before guarded squash auto-merge was enabled, and merged the PR immediately without a plain manual merge command.",
       "selection_notes": "Selected in fresh clean worktree C:/Users/adhit/worktrees/ca-parity-haskell-source-hashing-20260905-1816 after PR #14352 completed every final-head gate and merged through guarded squash auto-merge. Before selection, three parallel audits were incorporated: two missing neutral build-tool closure owners were added; stale Dart/JVM/Swift umbrella edges were corrected; OCaml capability, representative-CI, and C/C++ manifest applicability scope was strengthened; and the resulting 715-owner/1,179-edge graph was revalidated as unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 208 merged and 507 pending. The reporter-exact inventory on current origin/main remains schema 3 with 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The current build-tool/OCaml strategic frontier ranks OCaml representative core first and Perl registry repair second by transitive leverage, but this bounded Haskell source-hashing tranche wins serial continuity: #14352 has just satisfied its final SHA-256 performance prerequisite, all four neutral registry/boundary prerequisites are merged, the toolchain and incremental hashing dependency are hot and validated, and the owner unlocks three direct plus four transitive unfinished descendants without changing authority. Seven live open PRs have zero semantic or path overlap; the last pre-selection main advance changes only the unrelated Rust SPICE parser and plan.",
       "notes": "Discovered by the post-#13544 source-hashing audit. Haskell lacks OCaml source recognition and its hashing collector uses an incomplete global registry whose case aliases can collide. Adopt the complete checked registry with exact scoped projection and portable path framing without mixing discovery-fixture work."
     },
@@ -1314,7 +1331,7 @@
       "title": "Complete portable source hashing across every remaining build-tool engine",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-portable-source-hashing-conformance", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-language-source-input-registry-adoption", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-native-source-snapshot-stability-hardening", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-native-source-snapshot-stability-hardening", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the complete hashing contract. It has no independent source behavior and advances only after every engine-scoped leaf proves exact component pruning, portable source recognition, normalized path framing, deterministic byte hashing, dependency invalidation, and stable cache recovery or records a reviewed exception."
@@ -1323,7 +1340,7 @@
       "id": "build-tool-go-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Go build tool",
       "status": "pending",
-      "depends_on": ["build-tool-go-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-go-native-source-snapshot-stability-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Go concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -1332,7 +1349,7 @@
       "id": "build-tool-elixir-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-elixir-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-elixir-native-source-snapshot-stability-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Elixir concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -2544,7 +2561,9 @@
         "build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening",
     "build-tool-tracked-artifact-unicode-version-contract",
     "build-tool-extra-ci-toolchain-declaration-corpus",
-    "build-tool-execution-semantics-corpus"
+    "build-tool-execution-semantics-corpus",
+    "build-tool-go-repository-boundary-reverse-diff-digest-adoption",
+    "build-tool-go-portable-dependency-hashing-conformance"
       ],
       "branch": null,
       "pr_number": null,
@@ -5571,13 +5590,68 @@
       "notes": "The afa7975 inventory recorded new Dart, Java, and Kotlin paint-vm-ascii implementations, leaving Swift as the sole missing established slot. Merged external PR #12149 added the Swift implementation and closed the package-directory gap, but it omitted the required explicit empty capability metadata. Keep this owner pending until that truthful library profile is added and validated; do not duplicate the already merged renderer implementation or introduce terminal I/O into the library."
     },
     {
-      "id": "ct-compare-remaining-lane-parity",
-      "title": "Complete constant-time comparison parity in the remaining lanes",
+      "id": "ct-compare-language-neutral-conformance",
+      "title": "Define language-neutral constant-time comparison conformance",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The afa7975 inventory adds Ruby to ct-compare and leaves Dart, Haskell, Lua, Perl, and Swift missing. Define one timing-structure and correctness corpus, preserve length-independent comparison work, keep production authority empty, and decompose the five toolchain ports into reviewable children before selection."
+      "notes": "Discovered by the parallel high-consensus ownership audit after PR #14366. Define CT01 and a closed ct-compare-v1 corpus for byte equality, fixed-size aliases, equal-length byte selection, unsigned 64-bit equality, exact iteration counts, stable validation failures, and data-independent source/control-flow. Treat length as public, encode bytes and u64 values as hex, prohibit content-dependent exits and lookups, require source or optimized-code review where meaningful, and explicitly avoid universal hardware timing claims or noisy wall-clock ratio tests."
+    },
+    {
+      "id": "ct-compare-dart-lane-parity",
+      "title": "Implement constant-time comparison conformance in Dart",
+      "status": "pending",
+      "depends_on": ["ct-compare-language-neutral-conformance", "dart-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every CT01 vector through Uint8List and exact unsigned-64 semantics, preserve empty authority, and document VM/AOT/JavaScript optimizer and hardware assurance limits without treating them as an applicability exception."
+    },
+    {
+      "id": "ct-compare-haskell-lane-parity",
+      "title": "Implement constant-time comparison conformance in Haskell",
+      "status": "pending",
+      "depends_on": ["ct-compare-language-neutral-conformance", "haskell-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every CT01 vector with strict ByteString, strict fixed-count accumulation, and Word64 behavior; inspect optimized Core or assembly for early-exit reintroduction and document compiler/hardware assurance limits while keeping production capabilities empty."
+    },
+    {
+      "id": "ct-compare-lua-lane-parity",
+      "title": "Implement constant-time comparison conformance in Lua",
+      "status": "pending",
+      "depends_on": ["ct-compare-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every CT01 vector with Lua 5.4 byte strings and fixed-count bitwise loops, representing unsigned 64-bit values as exact bytes or fixed halves rather than signed host integers. Preserve empty authority and document managed-runtime assurance limits."
+    },
+    {
+      "id": "ct-compare-perl-lane-parity",
+      "title": "Implement constant-time comparison conformance in Perl",
+      "status": "pending",
+      "depends_on": ["ct-compare-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every CT01 vector with validated octet semantics, fixed-count loops, and exact unsigned-64 byte representation. Avoid Unicode upgrading and short-circuit helpers, preserve empty authority, and document interpreter/hardware assurance limits."
+    },
+    {
+      "id": "ct-compare-swift-lane-parity",
+      "title": "Implement constant-time comparison conformance in Swift",
+      "status": "pending",
+      "depends_on": ["ct-compare-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every CT01 vector with UInt8 and UInt64 operations, wrapping arithmetic, fixed-count loops, and optimized SIL or assembly review. Preserve empty authority and document optimizer/hardware assurance limits."
+    },
+    {
+      "id": "ct-compare-remaining-lane-parity",
+      "title": "Complete constant-time comparison parity in the remaining lanes",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["ct-compare-dart-lane-parity", "ct-compare-haskell-lane-parity", "ct-compare-lua-lane-parity", "ct-compare-perl-lane-parity", "ct-compare-swift-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Selection-blocked completion umbrella only; never select as an implementation PR. Mark merged only after CT01 and the Dart, Haskell, Lua, Perl, and Swift lane children merge. No lane exception is currently approved: managed-runtime, compiler, and hardware timing limits are reviewed assurance boundaries rather than applicability exclusions."
     },
     {
       "id": "sir-runtime-array-symbolic-portable-conformance",
@@ -8386,7 +8460,7 @@
       "id": "build-tool-go-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Go",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-go-language-source-input-registry-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-go-native-source-snapshot-stability-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Go build tool after its exact source-input registry adoption. Keep native Git snapshot acquisition and filesystem safety in their existing owners."
@@ -8395,7 +8469,7 @@
       "id": "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Elixir",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-elixir-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-elixir-native-source-snapshot-stability-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Elixir build tool after portable source hashing lands."

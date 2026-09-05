@@ -13124,6 +13124,57 @@ remaining-engine aggregate until POSIX and Windows native identity, link,
 reparse, and replacement-race behavior is proven. The updated state contains
 716 owners and 1,180 edges: 208 merged, 507 pending, and one in progress.
 
+### Post-PR #14366 reconciliation and parallel backlog findings
+
+PR #14366 completed all 42 final-head checks acceptably. GitHub reported the
+reviewed head `8ebd6658a4cfed6f7d801b904799f171b1a737e7` clean and mergeable before
+guarded squash auto-merge was enabled, and merged it at
+`2026-09-05T19:53:45Z` as
+`8b8ce4b3c8edd10923cfeb0f693717741fe665df` without a plain manual merge
+command.
+
+The collision-checked schema-3 inventory at exact refreshed `origin/main`
+remains identity-neutral: 15 established lanes, 1,413 implementation
+identities, 4,629 implementation slots, and 1,452 all-reported identities. The
+four bands remain 175/265, 123/934, 172/2,165, and 943/13,202; Rust has 754
+singletons, OCaml remains emerging at zero packages, and canonical collisions
+and unknown language buckets remain zero.
+
+Parallel read-only audits found three missing dependency-shaped build-tool
+boundaries. Elixir registry and hashing work cannot prove atomic host-file
+identity with pure OTP file APIs, so the new selection-blocked
+`build-tool-elixir-native-source-snapshot-stability-hardening` owner gates its
+dependency hashing, repository-boundary adoption, and aggregate closure. Go's
+current registry is incomplete and its native collector likewise lacks a
+reviewed no-follow, reparse, hardlink, and replacement-race contract; the new
+selection-blocked `build-tool-go-native-source-snapshot-stability-hardening`
+owner therefore sits between exact Go registry adoption and dependency
+hashing, repository-boundary adoption, the remaining-engine aggregate, and the
+canonical Go oracle. Swift already has complete portable hashing, registry,
+and repository-boundary owners merged; its existing
+`build-tool-swift-git-index-snapshot-stability-repair` remains the correct
+owner for comparing complete mode/OID/stage/path records rather than path sets.
+
+The `ct-compare` audit found no language-neutral conformance contract and five
+missing established-lane implementations. The new
+`ct-compare-language-neutral-conformance` owner freezes data-independent
+control flow and exact equal-length work without wall-clock assertions. Dart,
+Haskell, Lua, Perl, and Swift each have a separate dependent implementation
+owner, and the prior remaining-lane umbrella is now selection-blocked behind
+all five leaves. No reviewed lane exception is currently justified.
+
+The reconciled graph contains 724 owners and 1,196 edges: 209 merged and 515
+pending, with no active parity PR. It is unique, dependency-complete, acyclic,
+and free of merged-to-unmerged edges. The highest strategic ready owner in the
+durable language/build-tool scope is `ocaml-representative-core`, with three
+direct and eighteen total unfinished descendants. Its bounded first tranche is
+exactly `logic-gates`, `graph`, `directed-graph`, and `state-machine`, with
+OCAML05 fixing the portable API decisions, package-local Alcotest vectors,
+95%+ line-coverage targets, capability manifests, Dune/opam metadata, and the
+local graph then directed-graph dependency chain. The already merged OCaml
+process-free substrate and three-platform toolchain satisfy its prerequisites;
+the later native build-tool and all-language denominator gates remain separate.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
