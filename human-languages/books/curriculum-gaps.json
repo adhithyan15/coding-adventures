@@ -27,13 +27,13 @@
     "scriptRampOverBudgetLessons": 31,
     "lessonsOpeningMultipleScripts": 0,
     "scriptClosureViolations": 270,
-    "scriptExposureExemptedGlyphs": 1363,
+    "scriptExposureExemptedGlyphs": 1365,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 672,
-    "forwardReferences": 677,
+    "forwardReferences": 676,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 86,
     "chapterGateCleanTracks": 10,
@@ -83239,14 +83239,6 @@
         "lessonsEarly": 6
       },
       {
-        "lessonId": "HI-C19-age-grammar",
-        "language": "hindi",
-        "position": 96,
-        "word": "बीस",
-        "taughtBy": "HI-C22-gyarah-bees",
-        "lessonsEarly": 6
-      },
-      {
         "lessonId": "LA-C25-cras-te-videbo",
         "language": "latin",
         "position": 45,
@@ -84964,7 +84956,7 @@
         "forwardReviews": 0,
         "atomsTaught": 409,
         "atomsNeverRevisited": 70,
-        "forwardReferences": 11
+        "forwardReferences": 10
       },
       {
         "language": "italian",
@@ -85141,7 +85133,7 @@
         "R3": 5460,
         "R4": 3828
       },
-      "forwardReferences": 677
+      "forwardReferences": 676
     }
   },
   "scriptClosure": {
@@ -85208,7 +85200,7 @@
         "neverTaughtGlyphs": 11,
         "violations": 38,
         "exposureOnly": 59,
-        "exposureExemptedGlyphs": 129,
+        "exposureExemptedGlyphs": 131,
         "headwordsWithoutRomanization": 1
       },
       {
@@ -86231,13 +86223,6 @@
         "count": 3
       },
       {
-        "lessonId": "HI-C22-gyarah-bees",
-        "language": "hindi",
-        "chapter": 22,
-        "glyphs": "उऊौ",
-        "count": 3
-      },
-      {
         "lessonId": "HI-C34-padhna",
         "language": "hindi",
         "chapter": 34,
@@ -87050,6 +87035,13 @@
         "count": 1
       },
       {
+        "lessonId": "HI-C22-gyarah-bees",
+        "language": "hindi",
+        "chapter": 22,
+        "glyphs": "ऊ",
+        "count": 1
+      },
+      {
         "lessonId": "HI-C23-billi-history",
         "language": "hindi",
         "chapter": 23,
@@ -87265,7 +87257,7 @@
       "tracksTeachingNothing": 0,
       "violations": 270,
       "exposureOnly": 374,
-      "exposureExemptedGlyphs": 1363,
+      "exposureExemptedGlyphs": 1365,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
     },
@@ -103399,7 +103391,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 11,
+        "forwardReferences": 10,
         "atomsTaught": 409,
         "atomsNeverRevisited": 70,
         "reinforcementWindowMisses": 980,
@@ -103417,7 +103409,7 @@
           {
             "language": "hindi",
             "kind": "forward-language",
-            "count": 11,
+            "count": 10,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -103460,7 +103452,7 @@
         "next": {
           "language": "hindi",
           "kind": "forward-language",
-          "count": 11,
+          "count": 10,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -104693,7 +104685,7 @@
       {
         "language": "hindi",
         "kind": "forward-language",
-        "count": 11,
+        "count": 10,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },

@@ -11,10 +11,10 @@ ramp: 40 lessons above 3 new atoms (53 unmeasurable, 99% measurable); 61 chapter
 script ramp: 31 lessons above 3 new glyphs; 0 opening more than 1 writing system at once; steepest RU-C01-privet at 14
 cousin layer: 213 lessons show another script (max 26 glyphs) — context, never charged to the budget
 script closure: 270 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
-exposure: 46 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1363 glyphs and makes 374 lessons clean on its own
+exposure: 46 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1365 glyphs and makes 374 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 672 of 7473 atoms never revisited (9%); missed windows R1 1675, R2 3726, R3 5460, R4 3828
-forward references: 677 uses of material a later lesson teaches
+forward references: 676 uses of material a later lesson teaches
 writing stages: 15/23 tracks prove the cumulative pre-A1 ladder; 652 evidence blocks, 0 invalid; 519 missing (track, level, stage) pairs
 super-gentle ramp: 21/23 tracks carry detected or unmeasured debt; 106 named track/debt items
 writing ramp: 0 track(s) never practise writing; 6 start after lesson one
