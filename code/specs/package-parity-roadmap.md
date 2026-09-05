@@ -12717,6 +12717,27 @@ only after confirming that no local branch, remote branch, or prior PR existed.
 Reconciliation and selection leave 203 merged, 462 pending, and exactly this
 owner in progress.
 
+Adversarial review of this shared source-hashing slice made the portable
+declared-glob character-class grammar and 50,000,000-unit match-work ceiling
+explicit. Swift is the only already-complete live registry adopter, so this
+owner also aligns its source and diff matching with that neutral contract;
+the remaining engines stay gated by their existing source-hashing owners.
+The same review removed stale public discovery helpers that bypassed secure
+reads, converted discovery to constant native-descriptor use, and made .NET
+changes select the Windows CI leg that exercises that native path.
+
+A parallel reference audit found one pre-existing Swift stability defect that
+does not widen this selected .NET tranche. Swift currently parses complete
+`git ls-files --stage` mode, object-ID, stage, and path evidence, but collapses
+accepted records to paths before comparing its pre-hash and post-hash index
+snapshots. The new pending
+`build-tool-swift-git-index-snapshot-stability-repair` owner preserves and
+compares the complete evidence and now gates the remaining-engine source-hash
+aggregate. The dependency graph therefore contains 667 owners and 1,038 edges:
+203 merged, 463 pending, and exactly the shared C#/F# owner in progress; package
+inventory metrics remain unchanged because this is a behavioral repair rather
+than a new identity or lane.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -687,6 +687,12 @@ extension mode; declared-source mode instead uses the target's explicit
 portable globs. Generated-component pruning and inert link/reparse boundaries
 run before either mode and cannot be undone by any selector.
 
+Portable character classes retain Python `fnmatchcase` literals, negation by
+leading `!`, ascending `x-y` ranges, literal leading or trailing `-`, literal
+leading `]`, and unmatched `[` as a literal. They reject descending ranges and
+the ambiguous class operators `--`, `&&`, `~~`, and `||`; implementations MUST
+reject such a glob before matching rather than inherit host-regex behavior.
+
 Registry selectors are exact, case-sensitive, NFC strings sorted by raw UTF-8
 bytes. The closed schema rejects unknown fields, unsupported versions,
 unbounded arrays, unsafe suffixes, basenames with separators, unsafe relative
@@ -878,7 +884,13 @@ after the batch read. Package-local and boundary inputs are deduplicated by
 canonical repository-relative path, checked for NFC and portable-identity
 aliases, sorted by raw UTF-8 path bytes, and hashed as exact raw bytes with the
 Hashing v1 length frames. Collection is bounded to 100,000 candidates, 50,000
-selected inputs, 64 MiB per file, and 1 GiB per package; symbolic links,
+selected inputs, 64 MiB per file, and 1 GiB per package. Declared-source
+matching is additionally bounded to 50,000,000 work units per package. Before
+each attempted glob match, implementations add
+`(pattern Unicode-scalar count + 1) * (candidate-path Unicode-scalar count + 1)`
+to one checked unsigned counter, fail with `SOURCE_HASH_LIMIT_EXCEEDED` on
+overflow or when the total exceeds the ceiling, and stop charging later
+patterns for a candidate after its first match. Symbolic links,
 reparse points, non-regular files, containment escapes, directory or file
 mutation, index mutation, and limit overflow fail closed with one stable
 redacted package-hash diagnostic.

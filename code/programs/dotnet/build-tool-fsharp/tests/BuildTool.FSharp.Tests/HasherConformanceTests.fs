@@ -24,7 +24,10 @@ let private repositoryRoot =
                     "pure-domains.schema.json"
                 )
 
-            if File.Exists(marker) then Some directory.FullName else tryFindRoot directory.Parent
+            if File.Exists(marker) then
+                Some directory.FullName
+            else
+                tryFindRoot directory.Parent
 
     [ DirectoryInfo(__SOURCE_DIRECTORY__)
       DirectoryInfo(Directory.GetCurrentDirectory())
@@ -38,7 +41,11 @@ let private fixtureDirectory =
 
 let private tryProperty (name: string) (element: JsonElement) =
     let mutable value = Unchecked.defaultof<JsonElement>
-    if element.TryGetProperty(name, &value) then Some value else None
+
+    if element.TryGetProperty(name, &value) then
+        Some value
+    else
+        None
 
 let private stringsFrom (element: JsonElement) =
     element.EnumerateArray() |> Seq.map _.GetString() |> Seq.toArray
@@ -73,7 +80,12 @@ let ``F sharp facade consumes every neutral source collection case`` () =
         use fixture = JsonDocument.Parse(File.ReadAllText(fixturePath))
         let options = fixture.RootElement.GetProperty("input").GetProperty("options")
         let mode = options.GetProperty("mode").GetString()
-        let digestProperty = if mode = "repository_boundary" then "boundary_sha256" else "registry_sha256"
+
+        let digestProperty =
+            if mode = "repository_boundary" then
+                "boundary_sha256"
+            else
+                "registry_sha256"
 
         let declaredSources =
             tryProperty "declared_srcs" options
@@ -126,7 +138,11 @@ let ``F sharp facade proves exact production registry projections`` () =
     Assert.True(JsonElement.DeepEquals(checkedLanguage.RootElement, productionLanguage.RootElement))
     Assert.True(JsonElement.DeepEquals(checkedBoundary.RootElement, productionBoundary.RootElement))
     Assert.Equal(languageSourceInputRegistryDigest (), canonicalLanguageSourceInputRegistryDigest checkedLanguageJson)
-    Assert.Equal(repositorySourceInputBoundaryDigest (), canonicalRepositorySourceInputBoundaryDigest checkedBoundaryJson)
+
+    Assert.Equal(
+        repositorySourceInputBoundaryDigest (),
+        canonicalRepositorySourceInputBoundaryDigest checkedBoundaryJson
+    )
 
 [<Fact>]
 let ``F sharp facade consumes every hashing v1 package digest`` () =
@@ -139,13 +155,24 @@ let ``F sharp facade consumes every hashing v1 package digest`` () =
     for fixturePath in fixturePaths do
         use fixture = JsonDocument.Parse(File.ReadAllText(fixturePath))
 
+        let includePaths =
+            fixture.RootElement
+                .GetProperty("input")
+                .GetProperty("options")
+                .GetProperty("include_paths")
+                .EnumerateArray()
+            |> Seq.map _.GetString()
+            |> Set.ofSeq
+
         let inputs =
             fixture.RootElement.GetProperty("workspace").GetProperty("files").EnumerateArray()
+            |> Seq.filter (fun file -> includePaths.Contains(file.GetProperty("path").GetString()))
             |> Seq.map (fun file ->
                 let content =
                     tryProperty "content_hex" file
                     |> Option.map (fun value -> Convert.FromHexString(value.GetString()))
-                    |> Option.defaultWith (fun () -> Encoding.UTF8.GetBytes(file.GetProperty("content_utf8").GetString()))
+                    |> Option.defaultWith (fun () ->
+                        Encoding.UTF8.GetBytes(file.GetProperty("content_utf8").GetString()))
 
                 PackageHashInput(file.GetProperty("path").GetString(), content))
             |> Seq.toArray
@@ -167,5 +194,5 @@ let ``F sharp facade preserves path frames and exact raw bytes`` () =
         [| PackageHashInput("code/packages/fsharp/demo/src/data.bin", [| 0uy; 255uy; 10uy |]) |]
 
     let original = hashPackageInputs originalInputs
-    Assert.NotEqual(original, hashPackageInputs renamedInputs)
-    Assert.NotEqual(original, hashPackageInputs normalizedInputs)
+    Assert.NotEqual<string>(original, hashPackageInputs renamedInputs)
+    Assert.NotEqual<string>(original, hashPackageInputs normalizedInputs)

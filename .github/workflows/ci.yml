@@ -396,7 +396,7 @@ jobs:
             return any(language_of.get(name, "") in PLATFORM_SENSITIVE for name in darwin)
 
           def needs_windows():
-            """The Windows leg's *build* step is guarded to Swift/Elixir and its
+            """The Windows leg's *build* step is guarded to Swift/Elixir/.NET and its
             other build steps to venture/XAML/Rust-clippy -- but it also carries
             two suites gated on runner.os alone: the ADJ Windows Job-object
             containment tests and the MSVC bootstrap test. Those have no
@@ -406,6 +406,7 @@ jobs:
               flag("RUN_WINDOWS_OS_SUITES")
               or flag("NEEDS_SWIFT")
               or flag("NEEDS_ELIXIR")
+              or flag("NEEDS_DOTNET")
               or flag("NEEDS_RUST")
               or flag("NEEDS_VENTURE_WINDOWS")
               or flag("NEEDS_MOSAIC_XAML_WINDOWS")
@@ -2714,7 +2715,7 @@ jobs:
       # plus this PR's modest additions) while still turning a real hang into
       # a fast, loud CI failure instead of an hours-long silent stall.
       - name: Build and test affected packages
-        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true')
+        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true')
         timeout-minutes: 150
         shell: bash
         run: |

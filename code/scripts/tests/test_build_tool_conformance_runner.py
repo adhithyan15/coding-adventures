@@ -3084,6 +3084,33 @@ class PureDomainValidationTests(unittest.TestCase):
             after["required_capabilities.json"],
         )
 
+    def test_declared_source_glob_work_is_bounded_across_candidates(self) -> None:
+        self.assertIsNotNone(runner.portable_glob_error("src/[a--!].cs"))
+        registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        options = {
+            "language": "csharp",
+            "package_root": "code/packages/csharp/demo",
+            "mode": "declared_sources",
+            "registry_sha256": runner.source_input_registry_digest(registry),
+            "declared_srcs": [
+                f"unmatched/{'a' * 220}{index:03d}*.cs" for index in range(256)
+            ],
+            "candidates": [
+                {
+                    "path": f"src/file{index:03d}.cs",
+                    "kind": "file",
+                    "content_hex": "61",
+                }
+                for index in range(100)
+            ],
+        }
+
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner._expected_source_collection(options, registry)
+        self.assertEqual(raised.exception.code, "SOURCE_HASH_LIMIT_EXCEEDED")
+
     def test_repository_source_collection_closes_shared_and_pruned_boundaries(
         self,
     ) -> None:
