@@ -4,7 +4,7 @@ function mosaic$revealTableCell(table: HTMLTableElement | null, row: number, col
   if (!table || !Number.isInteger(row) || !Number.isInteger(col) || row < 0 || col < 0) return;
   const cell = table.tBodies[0]?.rows[row]?.cells[col];
   if (!cell) return;
-  for (let frame = table.parentElement; frame && frame !== document.body; frame = frame.parentElement) {
+  for (let frame = table.parentElement; frame && frame !== document.body; frame = frame?.parentElement ?? null) {
     const style = getComputedStyle(frame);
     if (!/(auto|scroll)/.test(`${style.overflowX} ${style.overflowY}`)) continue;
     const bounds = frame.getBoundingClientRect();
@@ -22,4 +22,3 @@ function mosaic$revealTableCell(table: HTMLTableElement | null, row: number, col
     return;
   }
 }
-
