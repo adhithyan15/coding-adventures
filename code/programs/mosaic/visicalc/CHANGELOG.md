@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exercise authored scroll overflow alongside the primitive default after the
+  shared React style-merging fix.
+
 - Bound the sheet in HostScroll and pin the column headings while it scrolls.
   Match native browser control colors to the authored light/dark theme.
 

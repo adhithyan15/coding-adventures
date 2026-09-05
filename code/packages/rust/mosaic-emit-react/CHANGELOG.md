@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - authored overrides of primitive defaults
+
+- Merge nonempty style fragments with an object spread so repeated or overridden
+  default properties retain author precedence without TypeScript TS1117 errors.
+
 ### Added - table selection reveal
 
 - Tables with bound selected-row/selected-col slots reveal the rendered body
