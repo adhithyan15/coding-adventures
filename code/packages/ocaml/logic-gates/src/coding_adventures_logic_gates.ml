@@ -11,6 +11,7 @@ type error =
   | Invalid_power_of_two of { name : string; value : int }
   | Invalid_one_hot
   | Invalid_direction of string
+  | Invalid_counter_state
 
 let valid_bit name value =
   if value = 0 || value = 1 then Ok value
@@ -284,6 +285,11 @@ module Sequential = struct
 
   let current_bits states = List.map (fun state -> state.slave_q) states
 
+  let rec validate_flip_flops = function
+    | [] -> Ok ()
+    | state :: rest ->
+        bind (validate_flip_flop state) (fun _ -> validate_flip_flops rest)
+
   let shift_register ?state ?(width = 8) ?(direction = Left) ~serial_in ~clock
       () =
     (* Lists are LSB-first. A left shift inserts at the head and emits the old
@@ -351,14 +357,30 @@ module Sequential = struct
                        expected = width;
                        actual = List.length current.value;
                      })
-              else if reset_bit = 1 then
-                let value = List.init width (fun _ -> 0) in
-                let flip_flops = List.init width (fun _ -> initial_flip_flop) in
-                Ok (value, { value; flip_flops })
+              else if List.length current.flip_flops <> width then
+                Error
+                  (Invalid_length
+                     {
+                       name = "counter flip-flops";
+                       expected = width;
+                       actual = List.length current.flip_flops;
+                     })
               else
-                let next_value = increment_lsb current.value in
-                bind
-                  (register ~state:current.flip_flops ~width ~data:next_value
-                     ~clock ()) (fun (value, flip_flops) ->
-                    Ok (value, { value; flip_flops }))))
+                bind (validate_bits "counter value" current.value) (fun () ->
+                    bind (validate_flip_flops current.flip_flops) (fun () ->
+                        if current_bits current.flip_flops <> current.value then
+                          Error Invalid_counter_state
+                        else if reset_bit = 1 then
+                          let value = List.init width (fun _ -> 0) in
+                          let flip_flops =
+                            List.init width (fun _ -> initial_flip_flop)
+                          in
+                          Ok (value, { value; flip_flops })
+                        else
+                          let next_value = increment_lsb current.value in
+                          bind
+                            (register ~state:current.flip_flops ~width
+                               ~data:next_value ~clock ())
+                            (fun (value, flip_flops) ->
+                              Ok (value, { value; flip_flops }))))))
 end
