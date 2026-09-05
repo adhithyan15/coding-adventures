@@ -1,84 +1,27 @@
 style VisiCalc {
-  part workbook { background: #14201c; color: #e4eee7; min-height: 100vh; }
-  part toolbar { padding: 24px; gap: 20px; align-items: center; }
-  part title { font-size: 28px; font-weight: 700; }
-  part subtitle { font-size: 14px; color: #a3b7a9; flex: 1; }
-  part new-button { padding: 10px; border-radius: 8px; background: #245c46; color: #ffffff; }
-  part formula-bar { padding: 12px; gap: 12px; background: #20332a; align-items: center; }
-  part address-label { font-family: monospace; min-width: 64px; text-align: center; font-size: 14px; }
-  part formula-symbol { font-family: serif; font-size: 20px; color: #a3b7a9; }
-  part formula-field { flex: 1; padding: 10px; font-family: monospace; font-size: 14px; background: #14201c; color: #e4eee7; }
-
-  part sheet {
-    font-family:     monospace ;
-    font-size:       12px ;
-    color:           #cccccc ;
-    background:      #1e1e1e ;
-    border-collapse: collapse ;
-    width:           100% ;
-  }
-
-  // Body cells. The `border-*` triplet draws the gridlines that
-  // were missing in the first demo cut.
+  part workbook { background: #14221e; color: #e3eee4; min-height: 100vh; padding: 24px; box-sizing: border-box; font-family: sans-serif; }
+  part toolbar { padding: 12px 0px 28px; gap: 24px; align-items: center; flex-wrap: wrap; }
+  part brand { gap: 4px; }
+  part eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #a3b6aa; }
+  part title { font-family: serif; font-size: 38px; font-weight: 400; letter-spacing: 1px; }
+  part subtitle { font-size: 13px; color: #a3b6aa; flex: 1; }
+  part new-button { padding: 12px 18px; border-radius: 8px; border: 1px solid #9bd3ad; background: #9bd3ad; color: #14221e; font-size: 13px; font-weight: 600; cursor: pointer; }
+  part formula-bar { padding: 10px; gap: 12px; background: #1b2c25; border: 1px solid #32463b; border-radius: 10px; align-items: center; }
+  part address-label { font-family: monospace; min-width: 52px; text-align: center; font-size: 14px; font-weight: 700; color: #9bd3ad; }
+  part formula-symbol { font-family: serif; font-size: 22px; color: #a3b6aa; }
+  part formula-field { flex: 1; min-width: 0px; padding: 10px; border: 1px solid #32463b; border-radius: 6px; font-family: monospace; font-size: 14px; background: #14221e; color: #e3eee4; }
+  part sheet-toolbar { padding: 24px 2px 12px; gap: 16px; align-items: center; flex-wrap: wrap; }
+  part sheet-name { font-size: 13px; font-weight: 700; flex: 1; }
+  part sheet-hint { font-size: 12px; color: #a3b6aa; }
+  part sheet-frame { overflow: auto; min-width: 0px; border: 1px solid #32463b; border-radius: 8px; background: #1b2c25; }
+  part sheet { font-family: monospace; font-size: 13px; color: #e3eee4; background: #1b2c25; border-collapse: collapse; width: 100%; }
   part cell {
-    border-width: 1px ;
-    border-style: solid ;
-    border-color: #3f3f46 ;
-    padding:      2px ;
-    height:       22px ;
-    // Right-align cell contents — the spreadsheet convention for
-    // numeric data.  Backends that understand text-align (HTML/React
-    // via CSS, SwiftUI via .frame(alignment:)) push the value to the
-    // trailing edge so columns of numbers line up on their ones digit.
-    text-align:   right ;
-
-    // Active-cell highlight. Task #35 — `mosaic-emit-react` looks up
-    // `cell:selected` in the part-style map and inlines these
-    // properties into the per-cell `style={{...}}` spread when the
-    // Box's `state-when-selected: ( expr )` predicate evaluates true.
-    state selected {
-      background: #264f78 ;
-      color:      #ffffff ;
-      outline:    1px solid #007acc ;
-    }
-
-    // In-progress edit highlight. Same mechanism via
-    // `state-when-editing: ( expr )` and the `cell:editing` map entry.
-    state editing {
-      background: #1f4f3f ;
-      outline:    1px solid #007acc ;
-    }
+    border: 1px solid #32463b; padding: 6px 10px; height: 32px;
+    min-width: 72px; box-sizing: border-box; text-align: right; justify-content: center;
+    state selected { background: #304f3c; color: #e3eee4; outline: 2px solid #9bd3ad; outline-offset: 0px; }
+    state editing { background: #514d30; color: #e3eee4; outline: 2px solid #9bd3ad; outline-offset: 0px; }
   }
-
-  // Column-header cells (the labels A, B, C, ... at the top).
-  part header-cell {
-    background:  #2d2d30 ;
-    color:       #9d9d9d ;
-    font-weight: normal ;
-    text-align:  center ;
-    border-width: 1px ;
-    border-style: solid ;
-    border-color: #3f3f46 ;
-    // Give the header cell an explicit height like the body `cell` has —
-    // without it, backends that size a cell box from its style height (Qt
-    // emits the Rectangle with no height, an anchor-filled Text inside) collapse
-    // the header row to a sliver and the A/B/C… letters clip. Matches header-row.
-    height:      24px ;
-  }
-
-  // The header row itself sets the row height; useful when the
-  // first column eventually gains row numbers.
-  part header-row {
-    height: 24px ;
-  }
-
-  // Body data rows share the cell height and alternate between two
-  // backgrounds for readability. (Stripe state blocks `state even` /
-  // `state odd` would need `state-when-even` / `state-when-odd`
-  // predicates on the Row in Grid.{desktop,touch}.mll — currently
-  // not wired since the visual stripes weren't part of the L10
-  // baseline. Adding them is a small follow-up.)
-  part data-row {
-    height: 22px ;
-  }
+  part header-cell { background: #14221e; color: #a3b6aa; font-weight: 600; text-align: center; border: 1px solid #32463b; height: 32px; min-width: 72px; line-height: 32px; box-sizing: border-box; }
+  part header-row { height: 32px; }
+  part data-row { height: 32px; }
 }

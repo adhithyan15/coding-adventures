@@ -29,8 +29,8 @@ function visibleSelection() {
   const col = [...match[1]].reduce((value, letter) => value * 26 + letter.charCodeAt(0) - 64, 0) - 1;
   const rows = [...container.querySelectorAll("tbody tr")];
   const relativeRow = rows.findIndex((tr) => [...tr.querySelectorAll("td > div")]
-    .some((div) => (div as HTMLElement).style.background === "rgb(38, 79, 120)"
-      || (div as HTMLElement).style.background === "rgb(31, 79, 63)"));
+    .some((div) => (div as HTMLElement).style.background === "rgb(48, 79, 60)"
+      || (div as HTMLElement).style.background === "rgb(81, 77, 48)"));
   expect(relativeRow, "selection must be in the rendered slice").toBeGreaterThanOrEqual(0);
   return { row, col, offset: row - relativeRow };
 }
@@ -200,7 +200,7 @@ describe("viewport workbook coordinates", () => {
     await gridKey("ArrowDown", 30);
     expect(container.textContent).toContain("A31");
     expect(container.querySelectorAll("tbody tr")).toHaveLength(30);
-    expect((cell(29, 0).firstElementChild as HTMLElement).style.background).toBe("rgb(38, 79, 120)");
+    expect((cell(29, 0).firstElementChild as HTMLElement).style.background).toBe("rgb(48, 79, 60)");
     // The first visible row is workbook row 2, not row 1.
     await act(async () => { (cell(0, 0).firstElementChild as HTMLElement).click(); });
     expect(formulaField().value).toBe("8");
@@ -228,7 +228,7 @@ describe("viewport workbook coordinates", () => {
     });
     expect(container.textContent).toContain("A31");
     expect(cell(28, 0).textContent).toBe("42");
-    expect((cell(29, 0).firstElementChild as HTMLElement).style.background).toBe("rgb(38, 79, 120)");
+    expect((cell(29, 0).firstElementChild as HTMLElement).style.background).toBe("rgb(48, 79, 60)");
     expect(container.querySelectorAll("input")).toHaveLength(1);
     await gridKey("ArrowUp");
     expect(formulaField().value).toBe("42");
