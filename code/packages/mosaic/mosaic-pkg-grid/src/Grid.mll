@@ -98,8 +98,9 @@
 // What is NOT in v0.2.0 (deferred to UI28-2)
 // ------------------------------------------
 //
-//   - Sticky header.  Per UI28-1 §2 constraint 5.  Authors compose
-//     `HostScroll { Grid { ... } }` themselves or wait.
+//   - Sticky header is composed by the consumer with HostScroll and the
+//     column-headings part. React preserves this section's authored styles;
+//     other backends still require their own native acceptance.
 //   - Custom cell renderers (image, button, checkbox, sparkline).
 //     v0.3.0 extends Cell's `cell-type` to switch.
 //   - List virtualization INSIDE Grid (renders only visible rows of
@@ -115,7 +116,7 @@ layout Grid {
         Col [ col ] ( width: ( w ) )
       }
     }
-    HostTableHead {
+    HostTableHead [ column-headings ] {
       Row [ header-row ] {
         For ( each: slot: column-headers , as: h , index: ch ) {
           Box [ header-cell ] {

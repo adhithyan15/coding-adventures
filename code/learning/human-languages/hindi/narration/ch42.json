@@ -4,22 +4,22 @@
   "chapter": 42,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2c4d255520c24381",
+  "sourceHash": "fnv1a64:bd25579847362d1b",
   "lessons": [
     {
       "id": "HI-C42-come",
       "sequence": 1230,
-      "title": "आना (ānā) — to come",
-      "headword": "आना",
-      "romanization": "ānā",
-      "gloss": "to come",
+      "title": "आना / आता / आती / आते (ānā / ātā / ātī / āte) — to come and its present forms",
+      "headword": "आना / आता / आती / आते",
+      "romanization": "ānā / ātā / ātī / āte",
+      "gloss": "to come / come — infinitive / masculine / feminine / respectful or plural",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4419eef4e96571ea",
+      "sourceHash": "fnv1a64:28bccde2559daec6",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more everyday action. Three more follow, and each reuses the ones before it."
+              "text": "Take off -ना and add the endings you already know: आता (ātā, masculine), आती (ātī, feminine), आते (āte, respectful or plural). Chapter 73 will put आता हूँ after a chained action; now the form will already be yours."
             }
           ]
         },
@@ -88,6 +88,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "आता / आती / आते (ātā / ātī / āte)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **आता / आती / आते** (*ātā / ātī / āte*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "it again, to someone standing in a doorway",
               "spoken": true,
               "scored": false,
@@ -109,7 +118,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does आना (ānā) mean? (\"to come\".) Say it once more."
+              "text": "What does आना mean? (\"to come\".) Give its masculine, feminine, and respectful or plural forms. (आता / आती / आते.)"
             }
           ]
         }

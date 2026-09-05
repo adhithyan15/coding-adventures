@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ad58059c4c0ba2c2",
+  "sourceHash": "fnv1a64:a95e574f3840801f",
   "lessons": [
     {
       "id": "HI-C04-phir",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9c9ed6103df53846",
+      "sourceHash": "fnv1a64:054b13564fb25862",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "म (ma) + ि becomes मि (mi); ल (la) + े becomes ले (le); the anusvāra ं nasalises; गे (ge). Read मि, ले, ं, गे becomes milenge."
+              "text": "म (ma) + ि becomes मि (mi); adding ल (la) + े completes मिले (mile). The anusvāra ं nasalises; गे (ge). Read the complete मिलेंगे becomes milenge."
             }
           ]
         },
@@ -213,7 +213,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मि (mi) + ले (le) + the anusvāra + गे (ge) becomes मिलेंगे (milenge)."
+              "text": "मि (mi) + ल (la) with े makes मिले (mile); add the anusvāra + गे (ge) becomes मिलेंगे (milenge)."
             }
           ]
         },

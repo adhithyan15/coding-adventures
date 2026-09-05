@@ -1,5 +1,18 @@
 # lang-aot
 
+McCarthy's native corpus runs on Linux, macOS and Windows. Execute it with
+`cargo test -p lang-aot --test conformance mccarthy_native_corpus_executes -- --exact --nocapture`.
+Windows CI sets `LANG_REQUIRE_WINDOWS_AOT=1` so an absent linker fails the gate.
+
+
+See the [feature/backend coverage audit](../../../specs/LANG-VM-FEATURE-COVERAGE.md)
+for all ten frontends, executable proofs, host gates and remaining work.
+
+GC-linked integration tests use the static archive path reported by Cargo, so
+`CARGO_TARGET_DIR` and Cargo-configured artifact directories are respected.
+`cargo test -p lang-aot --test cargo_archive_path` checks artifact selection and
+builds the archive in an isolated temporary target directory containing spaces.
+
 Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, and Macsyma** to
 native executables through the shared LANG VM chain.

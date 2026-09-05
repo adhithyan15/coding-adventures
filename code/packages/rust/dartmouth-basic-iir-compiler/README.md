@@ -101,8 +101,9 @@ dynamically most-recent `GOSUB`; after the `iir-to-wasm` 0.18.0 dispatch-loop
 fix, the two BA1 proof programs run on all 7 backends.  LANG-FULL BA0 fixed the
 comparison operand-width hint that had broken control flow on LLVM/WASM; BA5
 added `DEF FNx(X) = expr` (lowered to a sibling `IIRFunction` + `call`, like
-ALGOL's value procedures); **BA3/BA7** now provide one-dimensional real arrays —
-`DIM A(n)` → `alloc_array` with `array<f64>` elements (0-based and inclusive, so
+ALGOL's value procedures); **BA3/BA7** now provide real arrays, including a two-dimensional matrix proof —
+`DIM A(n)` → `alloc_array` with `array<f64>` elements (multidimensional indices
+are flattened in row-major order; bounds are 0-based and inclusive, so
 `n + 1` elements), `LET A(i) = e` → `array_set`, and `A(i)` in an expression →
 `array_get`, with subscripts explicitly truncated through E8; **BA6/BA7** added
 `READ`/`DATA`/`RESTORE` on top of that array substrate — a pre-pass gathers all

@@ -9,6 +9,15 @@ this file.
   Preserve the declared flex weight without nesting the input's default wrapper,
   which caused Flutter ParentDataWidget assertions in Venture's live shell.
 
+### Added - UI49 slot-owned style-state activation (#14348)
+
+Flutter now activates mosstyle states owned by `one-of` slots from the
+generated widget's corresponding property. Multiple enum axes follow `.mil`
+slot declaration order, then existing `state-when-*` predicates take
+precedence. Conditional background, foreground, border, and padding values
+reach both generic styled containers and native `HostButton` `ButtonStyle`
+output, including state-only styles with no base paint.
+
 ### Fixed — a `list<list<text>>` slot never read the host
 
 A slot typed as a list of rows fell through the host-binding match to the

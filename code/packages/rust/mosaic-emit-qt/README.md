@@ -33,6 +33,12 @@ Part names on native `HostButton` and `HostInput` controls also lower to QML
 interaction tests and host-side native control discovery without duplicating
 the chrome in C++.
 
+Mosstyle states owned by `one-of` slots lower to QML property comparisons such
+as `variant === "danger"`. Simultaneous enum axes follow model slot declaration
+order; explicit `state-when-*` structural and interaction layers apply after
+them. The resulting nested bindings are shared by generic styled containers
+and specialized `HostButton` backgrounds.
+
 ## Output file structure
 
 For a component named `ProfileCard` with slots `display-name: text` and

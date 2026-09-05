@@ -5187,14 +5187,46 @@ the Rust, Python, and TypeScript surfaces together.
      the same and rejects invalid input before element lowering.
 
 42. Rust BJT collector-leakage-current parser parity.
-   - Status: prioritized next after the BJT emitter-leakage-emission-coefficient
-     slice.
+   - Status: completed by the Rust BJT collector-leakage-current slice.
    - The engine and Python/TypeScript facades lower finite non-negative BJT
      `ISC` values into the collector-leakage-current field and use `C4 * IS`
-     when `ISC` is absent; the Rust lowerer still leaves the engine default in
-     place.
+     when `ISC` is absent; Rust now does the same and rejects invalid active
+     inputs before element lowering.
 
-43. Grammar-backed parser and app facade.
+43. Rust BJT collector-leakage-emission-coefficient parser parity.
+   - Status: completed by the Rust BJT collector-leakage-emission-coefficient
+     slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `NC`
+     values into the collector-leakage-emission-coefficient field; Rust now
+     does the same and rejects invalid input before element lowering.
+
+44. Rust BJT forward-beta-temperature-exponent parser parity.
+   - Status: completed by the Rust BJT forward-beta-temperature-exponent
+     slice.
+   - The engine and Python/TypeScript facades lower finite BJT `XTB` values
+     into the forward-beta-temperature-exponent field; Rust now does the same
+     and rejects non-finite input before element lowering.
+
+45. Rust BJT reverse-beta parser parity.
+   - Status: completed by the Rust BJT reverse-beta slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `BR`
+     values, with `BETA_R` as an alias, into the reverse-beta field; Rust now
+     does the same with canonical `BR` precedence and rejects invalid input
+     before element lowering.
+
+46. Rust BJT reverse-emission-coefficient parser parity.
+   - Status: completed by the Rust BJT reverse-emission-coefficient slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `NR`
+     values into the reverse-emission-coefficient field; Rust now does the
+     same and rejects invalid input before element lowering.
+
+47. Rust BJT forward-emission-coefficient parser parity.
+   - Status: prioritized next after the BJT reverse-emission-coefficient slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `NF`
+     values into the forward-emission-coefficient field; the Rust element
+     lowerer still leaves the engine default in place.
+
+48. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5202,7 +5234,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-44. Deck compatibility follow-up.
+49. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

@@ -1856,6 +1856,10 @@ jobs:
           if ($LASTEXITCODE -ne 0) {
             throw "LANG Windows native execution failed with exit code $LASTEXITCODE"
           }
+          cargo test -p lang-aot --test conformance mccarthy_native_corpus_executes -- --exact --nocapture
+          if ($LASTEXITCODE -ne 0) {
+            throw "McCarthy Windows native corpus failed with exit code $LASTEXITCODE"
+          }
 
       - name: Build and test Venture Windows acceptance
         if: runner.os == 'Windows' && needs.detect.outputs.needs_venture_windows == 'true'

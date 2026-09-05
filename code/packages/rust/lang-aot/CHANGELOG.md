@@ -1,5 +1,27 @@
 # Changelog — `lang-aot`
 
+## Unreleased — McCarthy native host coverage (VM-036)
+
+Run the existing McCarthy native capstone on Windows and Linux as well as
+macOS, using each host's executable compiler and linker probe. A focused
+19-program native corpus now runs in the Windows CI execution step; its
+required-linker flag fails rather than reporting success without execution.
+
+## Unreleased — ten-frontend coverage audit (VM-027)
+
+Document declared and executed coverage separately, including dedicated
+McCarthy/Macsyma capstones, frontend oracle tests and host/CI restrictions.
+Correct stale language counts/subsets and the non-McCarthy BEAM exclusion claim;
+record bounded coverage follow-ups without changing runtime behavior.
+
+## Unreleased — Cargo-reported GC archive location (VM-035)
+
+Resolve the GC static archive from Cargo's compiler-artifact messages so custom
+`CARGO_TARGET_DIR` and Cargo-configured layouts work. Reject missing, ambiguous
+or nonexistent archives; never substitute a stale default artifact or DLL
+import library. Normal BUILD runs parser checks and a real isolated Cargo build
+under a temporary directory containing spaces.
+
 ## Unreleased — non-ALGOL matrix CI coverage (VM-024)
 
 Run every non-ALGOL canonical matrix row and its declared backends in normal

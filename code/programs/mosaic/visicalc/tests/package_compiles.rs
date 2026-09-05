@@ -16,5 +16,7 @@ fn root_package_and_both_themes_compile() {
         assert!(source.contains("gridSelectedRow"));
         assert!(source.contains("newWorkbook"));
         assert!(source.contains("minHeight: \"100vh\""));
+        assert!(source.contains("<thead style={{ position: \"sticky\", top: \"0px\", zIndex: 1 }}"));
+        assert!(source.contains("maxHeight: \"60vh\""));
     }
 }

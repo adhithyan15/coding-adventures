@@ -1,12 +1,12 @@
 //! # Cross-backend McCarthy conformance suite — W16 (the capstone).
 //!
 //! One table of McCarthy 1960 LISP programs × **every** LANG VM backend, each
-//! asserting the *identical* result. This is the proof that McCarthy is complete
-//! and **uniform** across the whole platform — the same source, compiled through
-//! eight independent code generators and three value models, computes the same
-//! number.
+//! asserting the *identical* result for the scalar-result F1-F7 corpus. The
+//! table covers nine runner lanes (including both CLR simulator and real CLR);
+//! native AOT runs on Linux, macOS and Windows. Higher-order and representation-specific
+//! proofs live in the dedicated feature suites, not this table.
 //!
-//! ## The eight backends and how each is RUN
+//! ## The nine runner lanes and how each is RUN
 //!
 //! | backend     | value model    | runner (in-process unless noted)              |
 //! |-------------|----------------|-----------------------------------------------|
@@ -18,7 +18,7 @@
 //! | CLR-real    | object/boxing  | real `ilasm` + real `dotnet` (`.il`) — gated  |
 //! | BEAM        | Erlang terms   | a real `erl` — gated                          |
 //! | LLVM        | tagged-word    | `clang` + `dynval_runtime.c` — gated           |
-//! | native AOT  | tagged-word    | `aarch64`/`x86_64` object + system `ld` — gated, macOS |
+//! | native AOT  | tagged-word    | `aarch64`/`x86_64` object + system `ld` — gated, Linux/macOS/Windows |
 //!
 //! External-tool backends return `None` (skip) when the tool is absent, so the
 //! suite still proves uniformity across whatever is installed; the in-process
@@ -41,12 +41,6 @@ use lang_aot::{
     compile_source_to_iir, compile_source_to_jvm_class, compile_source_to_llvm_with_target,
     compile_source_to_wasm, run_mccarthy_on_jit, Language,
 };
-
-// `compile_file_to_macos_executable` is `#[cfg(unix)]` in `lang_aot` itself and only
-// ever called from the `#[cfg(target_os = "macos")]` native-AOT arm below — gate the
-// import to match, so a non-macOS build (which never calls it) still compiles.
-#[cfg(target_os = "macos")]
-use lang_aot::compile_file_to_macos_executable;
 
 use dynval_runtime::LispyValue;
 
@@ -402,31 +396,86 @@ fn run_llvm(src: &str) -> Option<i64> {
     }
 }
 
-// ── Backend 8: native AOT — emit a host object, link with the system linker,
-//    run. macOS only (the in-repo macho linker path); gated on `ld`. ──
+// Native AOT uses the same platform entry points as the LANG matrix. Probe
+// the actual linker family; Git's POSIX link.exe must not count as MSVC.
+fn native_linker_ok() -> bool {
+    let available = if cfg!(target_os = "windows") {
+        ["link.exe", "lld-link.exe", "gcc.exe"].iter().any(|name| {
+            let mut command = std::process::Command::new(name);
+            if *name == "gcc.exe" { command.arg("--version"); }
+            let Ok(output) = command.output() else { return false; };
+            let banner = format!("{}{}", String::from_utf8_lossy(&output.stdout),
+                String::from_utf8_lossy(&output.stderr));
+            match *name {
+                "link.exe" => banner.contains("Microsoft") && banner.contains("Linker"),
+                "lld-link.exe" => banner.contains("LLD") || banner.contains("lld-link"),
+                _ => banner.contains("gcc") || banner.contains("GCC"),
+            }
+        })
+    } else if cfg!(target_os = "linux") {
+        tool_ok(&std::env::var("CC").unwrap_or_else(|_| "cc".into()), "--version")
+    } else if cfg!(target_os = "macos") {
+        std::process::Command::new("ld").arg("-v").output().is_ok()
+    } else { false };
+    assert!(available || !cfg!(target_os = "windows")
+        || std::env::var("LANG_REQUIRE_WINDOWS_AOT").as_deref() != Ok("1"),
+        "LANG_REQUIRE_WINDOWS_AOT=1 requires a real Windows linker; no McCarthy native execution occurred");
+    available
+}
+
+#[cfg(target_os = "linux")]
+fn compile_native(source: &std::path::Path, exe: &std::path::Path) -> Result<(), String> {
+    lang_aot::compile_file_to_linux_executable(source, exe, Language::McCarthyLisp)
+        .map_err(|e| format!("{e:?}"))
+}
 #[cfg(target_os = "macos")]
+fn compile_native(source: &std::path::Path, exe: &std::path::Path) -> Result<(), String> {
+    lang_aot::compile_file_to_macos_executable(source, exe, Language::McCarthyLisp)
+        .map_err(|e| format!("{e:?}"))
+}
+#[cfg(target_os = "windows")]
+fn compile_native(source: &std::path::Path, exe: &std::path::Path) -> Result<(), String> {
+    lang_aot::compile_file_to_windows_executable(source, exe, Language::McCarthyLisp)
+        .map_err(|e| format!("{e:?}"))
+}
+#[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
+fn compile_native(_source: &std::path::Path, _exe: &std::path::Path) -> Result<(), String> {
+    Err("no native executable path for this host".into())
+}
+
 fn run_native(src: &str) -> Option<i64> {
-    if std::process::Command::new("ld").arg("-v").output().is_err() {
-        return None;
-    }
+    if !native_linker_ok() { return None; }
     let dir = tmp_dir("native");
-    let s = dir.path().join("conf.mcl");
-    std::fs::write(&s, src).expect("native: write source");
-    let exe = dir.path().join("conf");
-    if let Err(e) = compile_file_to_macos_executable(&s, &exe, Language::McCarthyLisp) {
-        backend_failed("native-AOT", src, "source → macOS executable", format!("{e:?}"));
+    let source = dir.path().join("conf.mcl");
+    std::fs::write(&source, src).expect("native: write source");
+    let exe = dir.path().join(if cfg!(target_os = "windows") { "conf.exe" } else { "conf" });
+    if let Err(error) = compile_native(&source, &exe) {
+        backend_failed("native-AOT", src, "source → host executable", error);
     }
-    let out = std::process::Command::new(&exe).output().expect("native: run linked executable");
-    match out.status.code() {
-        Some(c) => Some(i64::from(c)),
-        None => {
-            backend_failed("native-AOT", src, "reading the exit code", "process was signalled")
-        }
+    let output = std::process::Command::new(&exe).output().expect("native: run linked executable");
+    match output.status.code() {
+        Some(code) => Some(i64::from(code)),
+        None => backend_failed("native-AOT", src, "reading the exit code", "process was signalled"),
     }
 }
-#[cfg(not(target_os = "macos"))]
-fn run_native(_src: &str) -> Option<i64> {
-    None // the in-repo native-executable link path is macOS-only today
+
+/// A focused CI entry point: every corpus program must actually launch natively.
+/// The Windows job requires its linker, while local missing tools are explicit.
+#[test]
+fn mccarthy_native_corpus_executes() {
+    if !native_linker_ok() {
+        eprintln!("SKIP McCarthy native corpus: host linker unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for (source, expected) in PROGRAMS {
+        let actual = run_native(source).expect("detected native linker must execute every program");
+        assert_eq!(actual, *expected, "native-AOT result for {source:?}");
+        executed += 1;
+    }
+    assert!(executed > 0, "native corpus must not be empty");
+    assert_eq!(executed, PROGRAMS.len());
+    eprintln!("McCarthy native corpus: {executed} programs executed");
 }
 
 // ── Backend 9: CLR on **real CoreCLR** — the CLR-real chapter's capstone wiring.
@@ -486,7 +535,7 @@ fn mccarthy_is_uniform_across_every_backend() {
         ("JVM", tool_ok("java", "-version")),
         ("BEAM", tool_ok("erl", "-version")),
         ("LLVM", tool_ok("clang", "--version")),
-        ("native-AOT", cfg!(target_os = "macos")),
+        ("native-AOT", native_linker_ok()),
         ("CLR-real", tool_ok("dotnet", "--version") && clr_support::find_ilasm().is_some()),
     ];
     for (name, tool_present) in gated {

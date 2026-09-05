@@ -4,6 +4,10 @@ All notable changes to `mosaic-pkg-grid` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.
 
+## Unreleased
+
+- Expose the `column-headings` part on HostTableHead for authored section styles.
+
 ## 0.2.3 — 2026-08-06 — Cell's click now carries its coordinate
 
 ### Fixed

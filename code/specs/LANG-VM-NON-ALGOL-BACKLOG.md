@@ -63,6 +63,87 @@ VM-033 (Windows text-output newlines), which now precedes coverage work. After
 that repair, missing Windows runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
 otherwise this exact regression can recur despite a green Windows job.
 
+## VM-036 implementation contract (selected after #14341 merged)
+
+The ten-frontend audit merged as `1fcd588c6b` after all checks passed on
+`23dc4ec216`. No new runtime failure supersedes the coverage queue. Select
+VM-036: McCarthy's native capstone should execute on Windows and Linux, not
+return None solely because the host is not macOS. ALGOL remains separately owned.
+
+Use each host's existing executable compilation API. Probe the matching linker:
+Windows must distinguish Microsoft/LLVM/MinGW from POSIX link.exe; Linux honors
+CC as the production linker does; macOS probes ld. Once the linker is detected,
+compile/link/launch or result errors must fail loudly. Preserve the existing
+19-program corpus and exact result comparisons (including process failures).
+
+Add a native-only test over all 19 programs for the existing Windows native CI
+step. It must assert nonempty/full execution, emit a count, and fail if
+LANG_REQUIRE_WINDOWS_AOT=1 but no Windows linker is found. Normal Linux/macOS
+BUILD already runs the conformance target. Validate the focused corpus locally
+with the real Microsoft linker and LLVM linker, and prove the required-linker
+negative path fails with an empty PATH in a child invocation. Update coverage
+docs and retain all existing standard/managed conformance lanes.
+
+VM-036 local validation: all 19 native programs executed with Microsoft
+link.exe, then all 19 with an LLVM-only linker PATH. With an empty PATH and
+LANG_REQUIRE_WINDOWS_AOT=1, the same test failed at the required-linker assertion
+(exit 101, zero executed programs). All-target lang-aot Clippy with warnings
+denied and six Windows CI selector tests passed. Linux/macOS execution and the
+new hosted Windows command remain required PR CI evidence before merge.
+
+## VM-027 implementation contract (selected after #14333 merged)
+
+PR #14333 merged as `cd73f3ad86` after Linux, macOS, Windows and the CI gates
+passed on `422ad4c847`. No new runtime defect was exposed by VM-035. With
+VM-025 still separately owned, reprioritization selects the ten-frontend
+feature/backend inventory before new Oct or Nib machine semantics.
+
+Produce a source-linked inventory for every wired Language variant. Distinguish
+frontend implementation, declared executable corpus coverage, clean refusals,
+missing tests and absent-tool skips; a wired backend is not full feature parity.
+Include dedicated McCarthy and Macsyma suites, platform restrictions and exact
+normal BUILD commands. Compare frontend lowerers/oracle tests to the matrix
+rather than inferring completeness from README headings or row counts. Preserve
+ALGOL ownership and record its full-matrix gate separately.
+
+Correct stale driver and conformance scope comments. Log each uncovered feature
+family as a bounded follow-up with an executable acceptance criterion, grouping
+only features sharing a lowering/runtime boundary. Prioritize observed failures
+and missing CI protection before expanding semantic scope. Validate inventory
+links and corpus counts against source; execute representative dedicated-suite
+proofs for the coverage outside the unified corpus, reporting actual skips.
+
+## VM-035 implementation contract (selected after #14325 merged)
+
+Local validation: the new isolated-target regression failed against the old
+helper with a nonexistent default archive, then passed after Cargo artifact
+discovery was implemented (three parent/parser tests; the ignored child is
+explicitly executed by its parent). The original Twig heap cell `2:Llvm`
+compiled and ran with its single-cell sentinel in both a fresh target directory
+containing spaces and the default directory. All-target lang-aot Clippy passed
+with warnings denied. Current-head hosted CI remains the merge gate.
+
+PR #14325 merged as `bf9043d695` after all applicable checks passed on
+`618579d847`. Reprioritization selects the reproduced archive lookup defect
+VM-035 before the larger VM-027 feature audit; VM-025 remains separately owned.
+
+The shared `lang-aot/tests/common` GC archive helper must obtain the staticlib
+path from the successful nested Cargo build's JSON compiler-artifact messages.
+Match the `gc_core_capi` staticlib target and its `.a`/MSVC `.lib` archive,
+excluding rlibs, dynamic libraries and import libraries. Reject malformed,
+missing or ambiguous archive messages and nonexistent output paths; never fall
+back to a guessed workspace/target filename. Preserve actionable compiler
+failure diagnostics and honor Cargo's target-directory/configuration choices.
+
+Use the existing Cargo build as the authority, with a test-only JSON dependency.
+Add a normal BUILD regression that launches a child test process with a fresh
+`CARGO_TARGET_DIR` containing spaces. It must build and find the actual archive
+under that directory, without mutating the parent test process environment.
+Verify JSON selection for Unix and MSVC names and unrelated/no/ambiguous
+artifacts. Confirm the original heap LLVM matrix cell runs in a fresh process
+with a nondefault target directory. Preserve default-layout use, other test
+runners, production runtime semantics and separately owned ALGOL behavior.
+
 ## VM-026 implementation contract (selected after #14317 merged)
 
 PR #14317 merged as `6fcc258b32` after every applicable current-head check
@@ -218,13 +299,45 @@ backends, and all-target Clippy is clean. Full-matrix completion is not claimed.
 | — | VM-032 | done ([#14295](https://github.com/adhithyan15/coding-adventures/pull/14295)) | Protect LANG native Windows execution in PR CI. | An affected `twig-aot`/LANG dependency change selects an actual Windows executable smoke run, with its toolchain present; assert real execution rather than a green Clippy-only job. Preserve platform-plan gating and keep the known GC early returns explicit. |
 | — | VM-024 | done ([#14317](https://github.com/adhithyan15/coding-adventures/pull/14317)) | Protect the non-ALGOL language matrix in normal CI. | Every non-ALGOL `PROGRAMS` row executes on each available declared backend; no empty selection or silent failure-to-skip conversion; full ALGOL diagnostics remain available. |
 | 2 | VM-025 | queued; coordinate with ALGOL owner | Reproduce the full matrix's current Linux failures and restore full CI coverage after their repair. | Record exact failing cells and owning PRs; remove the full-matrix exclusion only after the complete target runs green on supported CI hosts. |
-| 3 | VM-026 | selected | Reconcile stale Twig, frontend-count, and completed-work claims in LANG-FULL and LANG-PLATFORM status documents. | Every remaining gap links a current source/test boundary; landed VM-010, VM-017, VM-018, VM-020, and VM-021 work is no longer described as missing. |
-| 3b | VM-035 | queued | Honor Cargo target-directory overrides in shared AOT test archive discovery. | With a nondefault `CARGO_TARGET_DIR`, locate the archive Cargo actually built and execute a heap LLVM cell; never return a nonexistent guessed path. |
-| 4 | VM-027 | queued | Audit feature-by-backend coverage for all ten wired frontends, including dedicated McCarthy and Macsyma suites. | Inventory implemented features, declared/refused backend cells, executable proofs, and CI commands; split every uncovered implemented feature into a bounded parity item. |
+| — | VM-026 | done ([#14325](https://github.com/adhithyan15/coding-adventures/pull/14325)) | Reconcile stale Twig, frontend-count, and completed-work claims in LANG-FULL and LANG-PLATFORM status documents. | Every remaining gap links a current source/test boundary; landed VM-010, VM-017, VM-018, VM-020, and VM-021 work is no longer described as missing. |
+| — | VM-035 | done ([#14333](https://github.com/adhithyan15/coding-adventures/pull/14333)) | Honor Cargo target-directory overrides in shared AOT test archive discovery. | With a nondefault `CARGO_TARGET_DIR`, locate the archive Cargo actually built and execute a heap LLVM cell; never return a nonexistent guessed path. |
+| — | VM-027 | done ([#14341](https://github.com/adhithyan15/coding-adventures/pull/14341)) | Audit feature-by-backend coverage for all ten wired frontends, including dedicated McCarthy and Macsyma suites. | Inventory implemented features, declared/refused backend cells, executable proofs, and CI commands; split every uncovered implemented feature into a bounded parity item. |
 | 5 | VM-013 | design required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `out`, `adc`, `sbb`, rotations, carry, parity). | Document machine state and I/O contracts, then split into PR-sized operations with both portable and real 8008-simulator proofs; resolve only essential language-design questions with the user. |
 | 6 | VM-028 | queued | Audit Nib's remaining Intel-4004 arithmetic and control-flow parity beyond BCD storage. | Compare implemented operations against the 4004 backend and simulator; file bounded missing-operation or refusal tests and close them with executed proofs. |
 | 7 | VM-029 | queued | Audit the broader platform vision and native-runtime roadmaps into explicit completion milestones. | Separate landed capabilities from GC, tooling, IR-bridge/transpilation, and measured-performance work; give every retained milestone a testable acceptance criterion and owner. |
 | 7a | VM-031 | queued under VM-029 | Reconcile and complete native precise-GC frame-walk proofs. | Windows smoke has two explicit early-return differentials for the Rust/Twig frame boundary; inventory supported-host GC gaps, track each refusal, and execute live-byte reclamation proofs before calling native GC complete. |
+
+## VM-027 audit discoveries and next priorities
+
+The [feature/backend inventory](LANG-VM-FEATURE-COVERAGE.md) compares ten
+frontends with the eight-language unified corpus and dedicated suites. Local
+McCarthy (19 x 7) and Macsyma (21 x 7) capstones passed. No executed red cell
+was discovered. Missing existing-feature proofs therefore take priority over
+new machine semantics. After this audit merges, select VM-036 first: existing
+native code should be exercised on Windows/Linux before expanding coverage.
+VM-025 remains separately owned. The following queue precedes VM-013/028/029;
+items requiring new runtime lowering follow the coverage-only promotions.
+
+| Order | Item | Bounded work and executable acceptance |
+|---|---|---|
+| 1 | VM-036 | Run McCarthy's existing 19-program native capstone on Windows/Linux as well as macOS. Assert a present linker cannot silently skip; wire actual Windows execution into CI and prove all 19 results. |
+| 2 | VM-037 | Promote FLOW-MATIC compare/branch/jump behavior beyond the scalar-output baseline. Use terminating, discriminating output programs on all seven standard columns. |
+| 3 | VM-044 | Promote Oct while/loop/break and returned function values to observable seven-column programs; prove u8 wrap and actual branch/call effects. |
+| 4 | VM-045 | Promote COBOL reference modification to standard columns: constant and dynamic bounds, result text and explicit invalid-bound behavior, compared with its existing oracle. |
+| 5 | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
+| 6 | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
+| 7 | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |
+| 8 | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
+| 9 | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
+| 10 | VM-040 | Inventory remaining BEAM cells separately for Twig strings, Twig records/closures, Nib scalars, BASIC f64/I/O, Oct u8/I/O, FLOW-MATIC and COBOL. Each family first gets a discriminating probe; split actual lowering defects before implementation. Brainfuck remains the explicit excluded tape design. |
+| 11 | VM-042 | Pin Brainfuck's intentional BEAM exclusion with a driver-level error assertion for mutable tape operations; distinguish supported frontend compilation from backend refusal. |
+| 12 | VM-041 | Isolate Twig captured/reassigned runtime-string lowering from existing source-local string metadata; add one captured-string value proof before wider dynamic-string expansion. |
+| 13 | VM-048 | Define a representation-neutral observation for Macsyma's implemented inert symbolic Apply, then promote one oracle-derived symbolic result per backend; do not compare raw pointer/tag identities. |
+
+BASIC two-dimensional numeric arrays were verified in the matrix and lowerer,
+so their stale README description is corrected here rather than creating a new
+implementation item. The known DEF FN-global and print-zone semantics remain
+future frontend design scope, not missing proofs for already-implemented code.
 
 ## Discovery log
 
