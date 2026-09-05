@@ -26,8 +26,8 @@
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 31,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 270,
-    "scriptExposureExemptedGlyphs": 1365,
+    "scriptClosureViolations": 269,
+    "scriptExposureExemptedGlyphs": 1367,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
@@ -85198,9 +85198,9 @@
         "taughtGlyphs": 46,
         "shownGlyphs": 57,
         "neverTaughtGlyphs": 11,
-        "violations": 38,
-        "exposureOnly": 59,
-        "exposureExemptedGlyphs": 131,
+        "violations": 37,
+        "exposureOnly": 60,
+        "exposureExemptedGlyphs": 133,
         "headwordsWithoutRomanization": 1
       },
       {
@@ -86601,13 +86601,6 @@
         "count": 2
       },
       {
-        "lessonId": "HI-C39-baccha",
-        "language": "hindi",
-        "chapter": 39,
-        "glyphs": "छड",
-        "count": 2
-      },
-      {
         "lessonId": "HI-C41-adjective-system",
         "language": "hindi",
         "chapter": 41,
@@ -87255,9 +87248,9 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 270,
-      "exposureOnly": 374,
-      "exposureExemptedGlyphs": 1365,
+      "violations": 269,
+      "exposureOnly": 375,
+      "exposureExemptedGlyphs": 1367,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
     },
@@ -103384,7 +103377,7 @@
         "atomChapterSpikes": 2,
         "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 38,
+        "scriptClosureViolations": 37,
         "neverTaughtGlyphs": 11,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
