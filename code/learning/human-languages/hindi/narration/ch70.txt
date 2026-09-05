@@ -41,7 +41,7 @@ Sources: Wiktionary: सकना.
 
 
 Lesson 2 of 4.
-चाहना / चाहता (chāhnā / chāhtā) — to want / want.
+चाहना / चाह / चाहता (chāhnā / chāh / chāhtā) — to want, longing, and "want".
 
 Warm-up.
 [pause 2 seconds]
@@ -55,7 +55,7 @@ Put it beside the sentence from last lesson and one letter is different, and it 
 मैं हिंदी बोलना चाहता हूँ — full infinitive बोलना.
 सकना takes the stem; चाहना takes the whole dictionary form. Both then sit last and take the ending themselves. Getting the two mixed up is the ordinary beginner's error, and hearing them back to back is the cure.
 मैं आना चाहता हूँ — I want to come. Say it against मैं आ सकता हूँ and listen for the -ना.
-Inside चाहना sits the noun चाह, "longing," and its cousin चाहिए is how Hindi wants a THING rather than an action. They look alike and take opposite kinds of object; this lesson teaches only the verb.
+Inside चाहना sits the noun चाह (chāh), "longing" or "desire." Add -ना and the noun becomes the dictionary verb: चाह becomes चाहना. Its cousin चाहिए is how Hindi wants a THING rather than an action; this lesson leaves that separate construction for later.
 
 Guided Practice.
 [pause 1 second]
@@ -65,6 +65,8 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: मैं आना चाहता हूँ (maiṁ ānā chāhtā hūṁ) against मैं आ सकता हूँ (maiṁ ā saktā hūṁ)]
 [pause 8 seconds for the answer]
+[your turn — say: चाह (chāh), "longing"; then चाहना (chāhnā), "to want"]
+[pause 8 seconds for the answer]
 [your turn — recall: read लेकिन]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 30 seconds]
@@ -72,7 +74,7 @@ Say that you can speak Hindi and then that you want to speak Hindi, and name the
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two takes the FULL -ना form in front of it? (चाहना.) Which takes the bare stem? (सकना.)
+Which of the two takes the FULL -ना form in front of it? (चाहना.) Which takes the bare stem? (सकना.) What noun meaning "longing" sits inside चाहना? (चाह.)
 Sources: Wiktionary: चाहना.
 
 

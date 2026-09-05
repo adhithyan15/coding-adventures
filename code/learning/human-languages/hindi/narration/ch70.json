@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Able, and Willing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d752f4af78279f67",
+  "sourceHash": "fnv1a64:9fc37e48af7ad942",
   "lessons": [
     {
       "id": "HI-C70-sakna",
@@ -179,17 +179,17 @@
     {
       "id": "HI-C70-chahna",
       "sequence": 2690,
-      "title": "चाहना / चाहता (chāhnā / chāhtā) — to want / want",
-      "headword": "चाहना / चाहता",
-      "romanization": "chāhnā / chāhtā",
-      "gloss": "to want / want — infinitive / masculine singular",
+      "title": "चाहना / चाह / चाहता (chāhnā / chāh / chāhtā) — to want, longing, and \"want\"",
+      "headword": "चाहना / चाह / चाहता",
+      "romanization": "chāhnā / chāh / chāhtā",
+      "gloss": "to want / longing / want — infinitive / noun / masculine singular",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a366096908861ce",
+      "sourceHash": "fnv1a64:0555b41505932bdd",
       "notice": null,
       "blocks": [
         {
@@ -244,7 +244,7 @@
             },
             {
               "kind": "speech",
-              "text": "Inside चाहना sits the noun चाह, \"longing,\" and its cousin चाहिए is how Hindi wants a THING rather than an action. They look alike and take opposite kinds of object; this lesson teaches only the verb."
+              "text": "Inside चाहना sits the noun चाह (chāh), \"longing\" or \"desire.\" Add -ना and the noun becomes the dictionary verb: चाह becomes चाहना. Its cousin चाहिए is how Hindi wants a THING rather than an action; this lesson leaves that separate construction for later."
             }
           ]
         },
@@ -285,6 +285,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: **मैं आना चाहता हूँ** (*maiṁ ānā chāhtā hūṁ*) against **मैं आ सकता हूँ** (*maiṁ ā saktā hūṁ*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "चाह (chāh), \"longing\"; then चाहना (chāhnā), \"to want\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **चाह** (*chāh*), \"longing\"; then **चाहना** (*chāhnā*), \"to want\"]"
             },
             {
               "kind": "prompt",
@@ -329,7 +338,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the two takes the FULL -ना form in front of it? (चाहना.) Which takes the bare stem? (सकना.)"
+              "text": "Which of the two takes the FULL -ना form in front of it? (चाहना.) Which takes the bare stem? (सकना.) What noun meaning \"longing\" sits inside चाहना? (चाह.)"
             },
             {
               "kind": "speech",

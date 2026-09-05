@@ -8,9 +8,9 @@ spine_node: SPINE-SAY-WHAT-I-WANT
 sequence: 2690
 chapter: 70
 type: word
-headword: चाहना / चाहता
-romanization: "chāhnā / chāhtā"
-gloss: to want / want — infinitive / masculine singular
+headword: चाहना / चाह / चाहता
+romanization: "chāhnā / chāh / chāhtā"
+gloss: to want / longing / want — infinitive / noun / masculine singular
 concept_tag: VERB-WANT
 prerequisites: [HI-C70-sakna, HI-C68-lekin]
 sounds: [matra-aa, hindi-ha]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-C70-sakna, HI-C05-bolna, HI-C42-come]
 ---
 
-# चाहना / चाहता (*chāhnā / chāhtā*) — to want / want
+# चाहना / चाह / चाहता — to want, longing, and "want"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01] -->
@@ -61,9 +61,10 @@ beginner's error, and hearing them back to back is the cure.
 **मैं आना चाहता हूँ** — *I want to come*. Say it against **मैं आ सकता हूँ** and
 listen for the **-ना**.
 
-Inside **चाहना** sits the noun **चाह**, "longing," and its cousin **चाहिए** is
-how Hindi wants a THING rather than an action. They look alike and take opposite
-kinds of object; this lesson teaches only the verb.
+Inside **चाहना** sits the noun **चाह** (*chāh*), "longing" or "desire." Add
+**-ना** and the noun becomes the dictionary verb: **चाह → चाहना**. Its cousin
+**चाहिए** is how Hindi wants a THING rather than an action; this lesson leaves
+that separate construction for later.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-CHAHNA-01, HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-JOIN-LEKIN-01] -->
@@ -74,6 +75,7 @@ kinds of object; this lesson teaches only the verb.
 - [YOU SAY: **मैं हिंदी बोलना चाहता हूँ** (*maiṁ hindī bolnā chāhtā hūṁ*)]
 - [YOU SAY: the pair back to back — **बोल सकता हूँ** (*bol saktā hūṁ*) / **बोलना चाहता हूँ** (*bolnā chāhtā hūṁ*)]
 - [YOU SAY: **मैं आना चाहता हूँ** (*maiṁ ānā chāhtā hūṁ*) against **मैं आ सकता हूँ** (*maiṁ ā saktā hūṁ*)]
+- [YOU SAY: **चाह** (*chāh*), "longing"; then **चाहना** (*chāhnā*), "to want"]
 - [YOU RECALL: read **लेकिन**]
 
 ## Wrap-up Recall
@@ -81,5 +83,6 @@ kinds of object; this lesson teaches only the verb.
 
 [PAUSE 3s] Which of the two takes the FULL **-ना** form in front of it?
 (**चाहना**.) Which takes the bare stem? (**सकना**.)
+What noun meaning "longing" sits inside **चाहना**? (**चाह**.)
 
 Sources: [Wiktionary: चाहना](https://en.wiktionary.org/wiki/%E0%A4%9A%E0%A4%BE%E0%A4%B9%E0%A4%A8%E0%A4%BE).
