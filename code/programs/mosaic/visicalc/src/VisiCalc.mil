@@ -17,4 +17,5 @@ component VisiCalc {
   emit onEditCommit ;
   emit onEditCancel ;
   emit onNewWorkbook ;
+  emit onViewportRows ( rows : number ) ;
 }

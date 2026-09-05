@@ -613,6 +613,10 @@ pub fn from_pipeline(
         out.push_str(include_str!("table_selection.ts"));
         writeln!(out).unwrap();
     }
+    if layout_has_table_capacity(&layout.root, &interface.emits) {
+        out.push_str(include_str!("table_capacity.ts"));
+        writeln!(out).unwrap();
+    }
 
     // 3. Event union (UI24 §3.1).
     out.push_str(&emit_event_union(name, &interface.emits)?);
@@ -3683,7 +3687,7 @@ fn emit_host_table_jsx(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    let selection_ref = if let (Some(row), Some(col)) = (
+    let mut selection_ref = if let (Some(row), Some(col)) = (
         find_slot_ref_prop(node, "selected-row"),
         find_slot_ref_prop(node, "selected-col"),
     ) {
@@ -3695,6 +3699,20 @@ fn emit_host_table_jsx(
     } else {
         String::new()
     };
+
+    if let Some(name) = find_emit_ref_prop(node, "onViewportRows") {
+        if let Some(declaration) = emits.iter().find(|emit| emit.name == name) {
+            if declaration.params.len() != 1 || declaration.params[0].name != "rows" || declaration.params[0].r#type != EmitPayloadType::Number {
+                return Err(PipelineEmitError::UnsafeSlotName("onViewportRows requires one numeric rows parameter".into()));
+            }
+            let event = to_camel_case_first_lower(&strip_on_prefix(name));
+            validate_emit_name(&event)?;
+            let reveal = if let (Some(row), Some(col)) = (find_slot_ref_prop(node, "selected-row"), find_slot_ref_prop(node, "selected-col")) {
+                format!(", table => mosaic$revealTableCell(table, {}, {})", to_camel_case_first_lower(row), to_camel_case_first_lower(col))
+            } else { String::new() };
+            selection_ref = format!(" ref={{mosaic$tableCapacityRef(rows => dispatch({{ type: \"{event}\", rows }} ){reveal})}}");
+        }
+    }
 
     // Style attr (same part-name lookup as the rest of the tree).
     let part_style_str = node
@@ -4475,6 +4493,12 @@ fn layout_has_table_selection(node: &LayoutNode) -> bool {
         && find_slot_ref_prop(node, "selected-row").is_some()
         && find_slot_ref_prop(node, "selected-col").is_some())
         || node.children.iter().any(layout_has_table_selection)
+}
+
+fn layout_has_table_capacity(node: &LayoutNode, emits: &[EmitDecl]) -> bool {
+    (node.tag == "HostTable" && find_emit_ref_prop(node, "onViewportRows")
+        .is_some_and(|name| emits.iter().any(|emit| emit.name == name)))
+        || node.children.iter().any(|child| layout_has_table_capacity(child, emits))
 }
 
 fn find_section_child<'a>(node: &'a LayoutNode, section_tag: &str) -> Option<&'a LayoutNode> {
@@ -9901,6 +9925,23 @@ mod tests {
                 assert!(out.contains(&format!("<{html} style={{{{ position: \"sticky\" }}}}>")), "{out}");
             }
         }
+    }
+
+    #[test]
+    fn host_table_capacity_is_opt_in_and_validates_payload() {
+        let mut layout = host_table_layout(vec![]);
+        layout.root.props = vec![emit_ref_prop("onViewportRows", "onCapacity")];
+        let model = component("X", vec![], vec![emit("onCapacity", vec![param("rows", EmitPayloadType::Number)])]);
+        let out = from_pipeline(&model, &layout, &empty_style("X")).unwrap().output;
+        assert!(out.contains("mosaic$tableCapacityRef(rows => dispatch({ type: \"capacity\", rows }"));
+        assert_eq!(out.matches("function mosaic$tableCapacityRef").count(), 1);
+
+        // A composed Grid whose consumer does not forward this emit stays inert.
+        let unbound = from_pipeline(&component("X", vec![], vec![]), &layout, &empty_style("X")).unwrap().output;
+        assert!(!unbound.contains("ResizeObserver"));
+        assert!(!unbound.contains("mosaic$tableCapacityRef"));
+        let wrong = component("X", vec![], vec![emit("onCapacity", vec![param("rows", EmitPayloadType::Text)])]);
+        assert!(from_pipeline(&wrong, &layout, &empty_style("X")).is_err());
     }
 
     #[test]

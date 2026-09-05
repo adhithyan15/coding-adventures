@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Fit the sheet to the remaining app height and forward measured React table
+  capacity to the shared Rust adapter while preserving the selected cell.
+
 - Exercise authored scroll overflow alongside the primitive default after the
   shared React style-merging fix.
 
