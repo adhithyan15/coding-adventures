@@ -2514,6 +2514,12 @@ fn parse_element(
                     "BJT ITF must be finite and non-negative",
                 ));
             }
+            let forward_transit_time_voltage = *model.params.get("VTF").unwrap_or(&0.0);
+            if !forward_transit_time_voltage.is_finite() || forward_transit_time_voltage < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT VTF must be finite and non-negative",
+                ));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2549,6 +2555,7 @@ fn parse_element(
             bjt.forward_excess_phase_degrees = forward_excess_phase_degrees;
             bjt.forward_transit_time_bias_coefficient = forward_transit_time_bias_coefficient;
             bjt.forward_transit_time_current = forward_transit_time_current;
+            bjt.forward_transit_time_voltage = forward_transit_time_voltage;
             Ok(Element::Bjt(bjt))
         }
         'J' => {
