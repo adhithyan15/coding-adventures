@@ -12,3 +12,4 @@ crate-type = ["cdylib", "rlib"]
 mosaic-app-capi = { path = "../mosaic-app-capi" }
 mosaic-app-runtime = { path = "../mosaic-app-runtime" }
 serde_json = "1"
+mosaic-app-wasm = { path = "../mosaic-app-wasm" }

@@ -148,3 +148,5 @@ mod tests {
         assert_eq!(runtime.current_revision(), Some(1));
     }
 }
+
+mosaic_app_wasm::export_mosaic_wasm!(ConformanceApp, ConformanceApp::default());

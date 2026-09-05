@@ -592,3 +592,5 @@ mod tests {
         }
     }
 }
+
+mosaic_app_wasm::export_mosaic_wasm!(VisiCalcMosaicApp, VisiCalcMosaicApp::default());
