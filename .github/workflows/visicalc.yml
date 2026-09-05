@@ -8,7 +8,10 @@ on:
       - 'code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js'
       - 'code/programs/mosaic/visicalc/**'
       - 'code/packages/mosaic/mosaic-pkg-grid/**'
-      - 'code/packages/rust/**'
+      - 'code/packages/rust/mosaic-*/**'
+      - 'code/packages/rust/mosmodel-compiler/**'
+      - 'code/packages/rust/moslayout-compiler/**'
+      - 'code/packages/rust/mosstyle-compiler/**'
   push:
     branches: [main]
     paths:
@@ -17,7 +20,10 @@ on:
       - 'code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js'
       - 'code/programs/mosaic/visicalc/**'
       - 'code/packages/mosaic/mosaic-pkg-grid/**'
-      - 'code/packages/rust/**'
+      - 'code/packages/rust/mosaic-*/**'
+      - 'code/packages/rust/mosmodel-compiler/**'
+      - 'code/packages/rust/moslayout-compiler/**'
+      - 'code/packages/rust/mosstyle-compiler/**'
   workflow_dispatch:
 
 permissions:
