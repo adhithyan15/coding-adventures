@@ -383,3 +383,71 @@ required for the kernel-primitive contract.
       "Grid built-in removed" too aggressive?
 - [ ] Are the open questions (§6) all genuinely deferrable, or do
       any of them block v1?
+
+## 8. Measured viewport capacity (proposed; #14372)
+
+VisiCalc's scrolling acceptance (#14277) exposes a distinction from UI48:
+`size-class` selects an application layout, while a table's **row capacity**
+is a measurement of one control. Do not add pixel dimensions to UI48 or teach
+individual hosts VisiCalc's row height. This amendment is a contract for the
+next implementation; it is not a claim that the observer ships today.
+
+### Authoring and ownership
+
+A table may opt in with `onViewportRows: emit: onViewportRows`, where the emit
+has the single parameter `rows: number`. Without that binding, generation and
+behavior remain unchanged. A userland Grid must forward the event explicitly;
+unwired consumers must not acquire an undeclared dispatch event.
+
+The generated host measures geometry. The application owns the logical row
+window, workbook bounds and selection. `rows` is a positive integral capacity,
+not an absolute workbook row, a scroll offset, or a request to move selection.
+An adapter clamps measured capacity to its own data bounds before applying its
+existing resize operation. VisiCalc can retain the strict validation on its
+public `resizeViewport` event by using a separate capacity-event translation.
+
+### Measurement contract
+
+- Measure the nearest bounded scroll frame's **client height**, which excludes
+  borders and the horizontal scrollbar. The frame must have a definite height;
+  a maximum height alone allows rendered content to change its own constraint.
+- Subtract any pinned table header/footer occlusion. Derive body-row pitch from
+  actual rendered geometry, including inter-row spacing. Do not assume the
+  authored content-box height is the full pitch.
+- For uniform rows, report `max(1, floor(availableHeight / rowPitch))`. This is
+  the number of fully visible body rows; overscan is a separate app policy.
+- An empty body, hidden frame, or zero-size row supplies no valid measurement:
+  emit nothing and retry when measurable geometry appears. A consumer must
+  initially supply at least one measurable row rather than wait for an event
+  before supplying any rows. Do not turn an unmeasurable state into capacity 1.
+- Variable-height rows require a separate contract; this first observer must
+  detect unsupported geometry and avoid reporting a misleading uniform-row
+  capacity. It must expose the limitation through the host's diagnostic path.
+
+### Lifecycle and event stability
+
+Observe changes to the frame and representative row/header/footer geometry,
+not only window resize. Font/text-scale changes and changes to surrounding
+chrome can alter capacity without a window resize.
+
+Deliver outside the React commit callback, coalesce measurement, and emit only
+when a valid capacity changes. Keep the last reported capacity across renders;
+rebinding a callback must not re-emit the same initial value. Disconnect all
+observers and cancel queued deliveries when the table unmounts or its frame
+changes. A stale callback must not dispatch into a disposed app. Changing the
+row window in response must settle, not cause a resize/render feedback loop.
+
+### Acceptance required before enabling VisiCalc
+
+1. Resize one running application through small, tall and small frame heights;
+   verify capacity changes and settles without repeated unchanged events.
+2. Repeat with changed row pitch/text scale, a horizontal scrollbar, and a
+   pinned header. Measure the active cell's bounds after shrinking while the
+   selection is at the start, middle and end of the workbook.
+3. Check rendered-row bounds and logical selection, including an empty workbook
+   that still renders editable rows. Test hidden-to-visible and unmount/remount.
+4. Prove cleanup prevents post-disposal dispatch and observer accumulation.
+5. Compile and exercise generated React 18/19 consumers, including the pinned
+   TypeScript 5.7 TaskApp host. Keep existing unrelated tables unchanged.
+6. Report native observer support honestly. React acceptance does not establish
+   WinUI, Qt, Flutter, Compose or SwiftUI behavior; each needs its own resize gate.
