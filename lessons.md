@@ -6752,3 +6752,7 @@ Two notes on how it was handled:
   `--yes` as well as `-y`, checked in both directions — a test that only knew
   `-y` would fail a correct future edit, which is the same false-positive trap
   as the allowlist.
+
+## Main CI repair: diagnose every shard before changing capacity
+
+The September 3 full build combined npm 10.9.8 Arborist edgesOut crashes, missing Perl test prerequisites, stale generated Swift grammar, a private Flutter return type, repeated corpus generation, and oversized formula parsing. Reproduce installer failures with the runner's exact npm version; silent npm output can hide the root cause. Keep full-corpus test setup shared when assertions inspect an immutable checkout. Check formula input budgets before both dependency discovery and evaluation. Measure prerequisite-closed shard costs before changing the matrix.

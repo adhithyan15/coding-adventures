@@ -179,7 +179,7 @@ jobs:
           shard_flags=()
           if [ "${{ steps.detect-main.outputs.is_main }}" = "true" ]; then
             force_flag=(-force)
-            shard_flags=(-shard-count 10 -emit-shard-matrix)
+            shard_flags=(-shard-count 15 -emit-shard-matrix)
           fi
           ./build-tool \
             -root . \
@@ -1280,6 +1280,13 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: '22'
+
+      # npm 10.9.8 crashes in Arborist on this repository's local file:
+      # dependencies ("Cannot read properties of null (reading 'edgesOut')").
+      # Keep the independently validated installer fixed across all build OSes.
+      - name: Set up npm
+        if: needs.detect.outputs.needs_typescript == 'true'
+        run: npm install --global npm@11.13.0
 
       # ── C/C++ compilers (pure-ISO multi-compiler lane) ──────────
       #
