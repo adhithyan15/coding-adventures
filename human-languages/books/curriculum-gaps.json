@@ -85873,6 +85873,13 @@
         "count": 5
       },
       {
+        "lessonId": "HI-C05-karna",
+        "language": "hindi",
+        "chapter": 5,
+        "glyphs": "ँइब़ृ",
+        "count": 5
+      },
+      {
         "lessonId": "RU-C01-pozhaluysta",
         "language": "russian",
         "chapter": 1,
@@ -86059,13 +86066,6 @@
         "language": "hindi",
         "chapter": 2,
         "glyphs": "आईलह",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C05-karna",
-        "language": "hindi",
-        "chapter": 5,
-        "glyphs": "इब़ृ",
         "count": 4
       },
       {
@@ -126152,7 +126152,7 @@
     "terms": 54,
     "termsUsed": 53,
     "lessonsUsingTerms": 5384,
-    "usesBeforeIntroduction": 17744,
+    "usesBeforeIntroduction": 17745,
     "technicalUsesBeforeIntroduction": 4341,
     "technicalLessons": 2403,
     "worstTerms": [
