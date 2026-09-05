@@ -346,6 +346,7 @@ jobs:
           NEEDS_SWIFT: ${{ steps.toolchains.outputs.needs_swift }}
           NEEDS_ELIXIR: ${{ steps.toolchains.outputs.needs_elixir }}
           NEEDS_RUST: ${{ steps.toolchains.outputs.needs_rust }}
+          NEEDS_OCAML: ${{ steps.toolchains.outputs.needs_ocaml }}
           NEEDS_LANG_WINDOWS: ${{ steps.lang-windows.outputs.required }}
           NEEDS_VENTURE_WINDOWS: ${{ steps.venture-windows.outputs.required }}
           NEEDS_MOSAIC_XAML_WINDOWS: ${{ steps.mosaic-xaml-windows.outputs.required }}
@@ -368,7 +369,7 @@ jobs:
           # macOS: native compilation, platform cfgs, and platform-gated clippy
           # lints. lessons.md records that Apple-gated dead code is only caught
           # on one of the two legs, so a Rust/Swift/C/.NET change keeps macOS.
-          PLATFORM_SENSITIVE = {"rust", "wasm", "swift", "c", "cpp", "csharp", "fsharp", "dotnet"}
+          PLATFORM_SENSITIVE = {"rust", "wasm", "swift", "c", "cpp", "csharp", "fsharp", "dotnet", "ocaml"}
 
           def platform_state(plan, goos):
             override = (plan.get("platform_overrides") or {}).get(goos)
@@ -417,6 +418,7 @@ jobs:
               flag("RUN_WINDOWS_OS_SUITES")
               or flag("NEEDS_SWIFT")
               or flag("NEEDS_ELIXIR")
+              or flag("NEEDS_OCAML")
               or flag("NEEDS_DOTNET")
               or flag("NEEDS_RUST")
               or flag("NEEDS_LANG_WINDOWS")
@@ -1151,9 +1153,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       # ── Language toolchains (conditional) ───────────────────────
       #
@@ -1659,6 +1662,62 @@ jobs:
         with:
           ghc-version: '9.4'
           cabal-version: '3.10'
+
+      - name: Set up reviewed OCaml compiler and repository
+        id: setup-ocaml
+        if: needs.detect.outputs.needs_ocaml == 'true' && (matrix.sharded != true || contains(matrix.languages, 'ocaml'))
+        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
+        with:
+          ocaml-compiler: ocaml-base-compiler.5.2.1
+          opam-repositories: |
+            default: git+https://github.com/ocaml/opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff
+          opam-pin: false
+          dune-cache: false
+          cache-prefix: ocaml03-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}-build-${{ matrix.label }}
+          windows-compiler: mingw
+          windows-environment: cygwin
+          github-token: ${{ github.token }}
+
+      - name: Require reviewed OCaml bootstrap
+        if: steps.setup-ocaml.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(opam --version)" = "2.5.2"
+          test "$(opam exec -- ocamlc -version)" = "5.2.1"
+          repository_names="$(
+            opam repository list --all --short --color=never
+          )"
+          test "$repository_names" = "default"
+          repository_listing="$(
+            opam repository list --all --color=never
+          )"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            python_cmd=python
+          else
+            python_cmd=python3
+          fi
+          "$python_cmd" "$GITHUB_WORKSPACE/code/scripts/ocaml_toolchain_lock.py" \
+            validate-repository-report \
+            --names "$repository_names" \
+            --listing "$repository_listing"
+          for package in dune alcotest bisect_ppx ocamlformat; do
+            if opam list --installed --short --columns=name "$package" \
+                | grep -Fxq "$package"; then
+              printf 'fresh switch unexpectedly contains %s\n' "$package" >&2
+              exit 1
+            fi
+          done
+          export OPAMREQUIRECHECKSUMS=true
+          opam install \
+            dune.3.17.2 \
+            alcotest.1.9.0 \
+            bisect_ppx.2.8.3 \
+            ocamlformat.0.27.0 \
+            --yes --require-checksums
+          "$python_cmd" "$GITHUB_WORKSPACE/code/scripts/ocaml_toolchain_lock.py" \
+            validate-runtime
+          printf 'OPAMREQUIRECHECKSUMS=true\n' >> "$GITHUB_ENV"
 
       - name: Set up .NET
         if: needs.detect.outputs.needs_dotnet == 'true' || ((needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true') && runner.os == 'Windows')
@@ -2765,17 +2824,22 @@ jobs:
       # plus this PR's modest additions) while still turning a real hang into
       # a fast, loud CI failure instead of an hours-long silent stall.
       - name: Build and test affected packages
-        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true')
+        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true')
         timeout-minutes: 150
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
+          job_flags=()
+          if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then
+            job_flags=(-jobs 1)
+          fi
           PLAN_FLAG=""
           if [ -f build-plan.json ]; then
             PLAN_FLAG="-plan-file build-plan.json"
             echo "Using pre-computed build plan"
           fi
           $BT \
+            "${job_flags[@]}" \
             -root . \
             $PLAN_FLAG \
             -validate-build-files \
@@ -2792,7 +2856,11 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
-          $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all
+          job_flags=()
+          if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then
+            job_flags=(-jobs 1)
+          fi
+          $BT "${job_flags[@]}" -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all
 
   # ── Job 14: CI gate ────────────────────────────────────────────
   #

@@ -5,6 +5,7 @@ on:
     branches: ['**']
     paths:
       - '.github/workflows/build-ocaml.yml'
+      - '.github/workflows/ci.yml'
       - 'code/scripts/ocaml_toolchain_lock.py'
       - 'code/scripts/tests/test_ocaml_toolchain_lock.py'
       - 'code/specs/OCAML0*.md'
@@ -16,6 +17,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/build-ocaml.yml'
+      - '.github/workflows/ci.yml'
       - 'code/scripts/ocaml_toolchain_lock.py'
       - 'code/scripts/tests/test_ocaml_toolchain_lock.py'
       - 'code/specs/OCAML0*.md'

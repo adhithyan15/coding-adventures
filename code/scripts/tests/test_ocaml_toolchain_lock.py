@@ -65,16 +65,21 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
         self.assertGreaterEqual(self.workflow.count(old), count)
         return self.workflow.replace(old, new, count)
 
+    def mutate_last(self, old: str, new: str) -> str:
+        position = self.workflow.rfind(old)
+        self.assertGreaterEqual(position, 0)
+        return self.workflow[:position] + new + self.workflow[position + len(old) :]
+
     def test_checked_in_generic_ci_bootstrap_is_valid(self) -> None:
         toolchain.validate_generic_ci_workflow_text(self.manifest, self.workflow)
 
     def test_rejects_mutable_or_weakened_bootstrap_identity(self) -> None:
         cases = (
-            self.mutate(
+            self.mutate_last(
                 "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
                 "actions/checkout@v7",
             ),
-            self.mutate("persist-credentials: false", "persist-credentials: true"),
+            self.mutate_last("persist-credentials: false", "persist-credentials: true"),
             self.mutate(
                 "ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0",
                 "ocaml/setup-ocaml@v3",
@@ -126,6 +131,11 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
                 "validate-repository",
                 count=1,
             ),
+            self.mutate(
+                "          printf 'OPAMREQUIRECHECKSUMS=true\\n' >> \"$GITHUB_ENV\"",
+                "          printf 'OPAMREQUIRECHECKSUMS=true\\n' >> \"$GITHUB_ENV\"\n"
+                "          echo unreviewed",
+            ),
         )
         for index, workflow in enumerate(cases):
             with self.subTest(case=index), self.assertRaises(toolchain.ContractError):
@@ -144,7 +154,9 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
             ),
             self.mutate("job_flags=(-jobs 1)", "job_flags=(-jobs 2)"),
             self.mutate('            "${job_flags[@]}" \\', "", count=1),
-            self.mutate('          $BT "${job_flags[@]}" -root .', "          $BT -root ."),
+            self.mutate(
+                '          $BT "${job_flags[@]}" -root .', "          $BT -root ."
+            ),
         )
         for index, workflow in enumerate(cases):
             with self.subTest(case=index), self.assertRaises(toolchain.ContractError):
