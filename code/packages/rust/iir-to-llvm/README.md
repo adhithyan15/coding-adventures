@@ -1,5 +1,7 @@
 # iir-to-llvm
 
+String indexing accepts runtime sources and indices through the shared bounds-checked helper while retaining literal folding.
+
 Computed string slices use the shared checked runtime helper and clear stale literal facts; constant slice folding remains available.
 
 IIR → textual LLVM IR backend.  Emits a `.ll` source string for an LLVM

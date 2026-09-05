@@ -1,5 +1,9 @@
 # lang-aot
 
+COBOL delimiter rows cover STRING first-delimiter behavior and UNSTRING field
+fitting, empty fields and exhausted-source receiver preservation. Bracketed
+outputs keep all padding visible across the seven standard backends.
+
 COBOL STRING SIZE rows prove full-width source copying, receiver truncation and
 untouched tail preservation, including a second write after changing a source.
 Visible markers retain spaces in the seven-backend output comparisons.

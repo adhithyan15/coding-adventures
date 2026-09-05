@@ -2615,6 +2615,20 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
     // read at run time from the buffer header, not folded to a (possibly wrong)
     // branch's constant.
     let runtime_str_vars = collect_runtime_str_vars_for_aot(func);
+    // Mutable loop indices cannot be replaced by their initial value when a
+    // string operation is folded. Count parameters as definitions as well.
+    let mut defined = std::collections::HashSet::new();
+    let mut mutable_vars = std::collections::HashSet::new();
+    for (name, _) in &func.params {
+        defined.insert(name.clone());
+    }
+    for instr in &func.instructions {
+        if let Some(dest) = &instr.dest {
+            if !defined.insert(dest.clone()) {
+                mutable_vars.insert(dest.clone());
+            }
+        }
+    }
     let mut lowered = Vec::with_capacity(func.instructions.len());
     let mut strings: HashMap<String, (String, String, String)> = HashMap::new();
     let mut ints: HashMap<String, i64> = HashMap::new();
@@ -2646,7 +2660,9 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             if let (Some(dest), Some(Operand::Int(value))) =
                 (instr.dest.as_ref(), instr.srcs.first())
             {
-                ints.insert(dest.clone(), *value);
+                if !mutable_vars.contains(dest.as_str()) {
+                    ints.insert(dest.clone(), *value);
+                }
             }
             lowered.push(instr);
             continue;
@@ -2663,7 +2679,9 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 // `iir-to-llvm` learned this as `forget_literal_string`.
                 match ints.get(src).copied() {
                     Some(value) => {
-                        ints.insert(dest.clone(), value);
+                        if !mutable_vars.contains(dest.as_str()) {
+                            ints.insert(dest.clone(), value);
+                        }
                     }
                     None => {
                         ints.remove(dest);
@@ -2686,6 +2704,7 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             if let Some(dest) = instr.dest.as_ref() {
                 let left = int_metadata_value(instr.srcs.first(), &ints);
                 let right = int_metadata_value(instr.srcs.get(1), &ints);
+                ints.remove(dest);
                 let value = match (instr.op.as_str(), left, right) {
                     ("add", Some(left), Some(right)) => left.checked_add(right),
                     ("sub", Some(left), Some(right)) => left.checked_sub(right),
@@ -2694,7 +2713,9 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                     _ => None,
                 };
                 if let Some(value) = value {
-                    ints.insert(dest.clone(), value);
+                    if !mutable_vars.contains(dest.as_str()) {
+                        ints.insert(dest.clone(), value);
+                    }
                 }
             }
             lowered.push(instr);
@@ -2885,7 +2906,9 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             };
             if let Some((_, _, literal)) = strings.get(src).cloned() {
                 // Compile-time fold: length is statically known.
-                ints.insert(dest.clone(), literal.len() as i64);
+                if !mutable_vars.contains(dest.as_str()) {
+                    ints.insert(dest.clone(), literal.len() as i64);
+                }
                 lowered.push(IIRInstr::new(
                     "const",
                     Some(dest),
@@ -2914,6 +2937,13 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 lowered.push(instr);
                 continue;
             };
+            if !strings.contains_key(src) || !ints.contains_key(idx) {
+                lowered.push(IIRInstr::new(
+                    "call_builtin", Some(dest), vec![Operand::Var("str_index".into()),
+                        Operand::Var(src.clone()), Operand::Var(idx.clone())], "i64",
+                ));
+                continue;
+            }
             let Some((_, _, literal)) = strings.get(src).cloned() else {
                 lowered.push(instr);
                 continue;
@@ -2999,7 +3029,9 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                     Ordering::Equal => 0,
                     Ordering::Greater => 1,
                 };
-                ints.insert(dest.clone(), value);
+                if !mutable_vars.contains(dest.as_str()) {
+                    ints.insert(dest.clone(), value);
+                }
                 lowered.push(IIRInstr::new(
                     "const",
                     Some(dest),
@@ -4878,6 +4910,27 @@ mod tests {
             "runtime str_cmp should lower to call_builtin str_cmp: {:?}",
             f.instructions
         );
+    }
+
+    #[test]
+    fn loop_carried_string_index_is_not_folded_to_initial_byte() {
+        let mut f = IIRFunction::new("scan", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("a,b".into())], "str"),
+            IIRInstr::new("const", Some("j".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("label", None, vec![Operand::Var("top".into())], "void"),
+            IIRInstr::new("str_index", Some("c".into()), vec![Operand::Var("s".into()),
+                Operand::Var("j".into())], "i64"),
+            IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("add", Some("j".into()), vec![Operand::Var("j".into()),
+                Operand::Var("one".into())], "i64"),
+            IIRInstr::new("jmp", None, vec![Operand::Var("top".into())], "void"),
+        ]);
+        lower_string_literals_for_aot(&mut f);
+        assert!(f.instructions.iter().any(|i| i.op == "call_builtin"
+            && i.dest.as_deref() == Some("c")
+            && i.srcs.first() == Some(&Operand::Var("str_index".into()))));
+        assert!(!f.instructions.iter().any(|i| i.op == "const"
+            && i.dest.as_deref() == Some("c")), "the loop must read each current byte");
     }
 
     #[test]

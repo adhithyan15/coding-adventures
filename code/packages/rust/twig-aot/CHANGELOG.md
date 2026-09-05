@@ -1,5 +1,9 @@
 # Changelog — `twig-aot`
 
+## Unreleased — runtime string indexing
+
+String folding excludes mutable integer indices, and runtime string indexing calls the existing bounds-checked helper instead of folding a loop to its first byte.
+
 ## Unreleased — runtime substring parity
 
 Runtime string slices now call the existing checked helper when source or bounds cannot fold; reassignment invalidates stale literal lengths.

@@ -3384,3 +3384,16 @@ fn runtime_slice_reassignment_discards_literal_length() {
     assert!(ll.contains("load i64"), "length must read the runtime header: {ll}");
     assert!(!ll.contains("ret i64 5"), "stale literal length must not survive");
 }
+
+#[test]
+fn runtime_string_index_calls_checked_helper() {
+    let f = IIRFunction::new("read", vec![("source".into(), "str".into()),
+        ("index".into(), "i64".into())], "i64", vec![
+        IIRInstr::new("str_index", Some("c".into()), vec![Operand::Var("source".into()),
+            Operand::Var("index".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+    ]);
+    let ll = lower_iir_to_llvm(&module_with(f), &IIRLlvmConfig::default()).unwrap();
+    assert!(ll.contains("declare i64 @__twig_str_index(i64, i64)"));
+    assert!(ll.contains("call i64 @__twig_str_index(i64 %source, i64 %index)"));
+}

@@ -1,5 +1,9 @@
 # Changelog — `aarch64-backend`
 
+## Unreleased — runtime string indexing
+
+Register the two-argument str_index checked runtime builtin in the generic ABI table.
+
 ## Unreleased — runtime substring parity
 
 Register the three-argument str_slice runtime builtin for generic ABI marshalling.

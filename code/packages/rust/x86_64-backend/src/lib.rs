@@ -398,6 +398,8 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "str_concat", n_args: 2, returns: true },
     // Length-prefixed substring handle; the shared helper checks [start, end).
     BuiltinSig { name: "str_slice", n_args: 3, returns: true },
+    // Checked byte read from a length-prefixed string and a live integer index.
+    BuiltinSig { name: "str_index", n_args: 2, returns: true },
     // TWIG-GC (native-aot-substrate PR-1) — GC-managed allocation and safepoint.
     BuiltinSig { name: "gc_alloc",     n_args: 1, returns: true  },
     BuiltinSig { name: "gc_safepoint", n_args: 0, returns: false },

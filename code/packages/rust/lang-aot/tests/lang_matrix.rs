@@ -5721,6 +5721,114 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("ABZZZZ|\nCDZZZZ|"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL delimiters: STRING cuts each sender, keeps absent delimiters whole, and preserves the tail.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(5) VALUE \"ab,cd\".\n\
+               000000 01 B PIC X(2) VALUE \"ef\".\n\
+               000000 01 C PIC X(3) VALUE \",xy\".\n\
+               000000 01 T PIC X(8) VALUE \"ZZZZZZZZ\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A B C DELIMITED BY \",\" INTO T.\n\
+               000000 DISPLAY \"[\" T \"]\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[abefZZZZ]"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL delimiters: an item delimiter stops at its first match, even when another follows.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 DL PIC X VALUE \";\".\n\
+               000000 01 A PIC X(5) VALUE \"a;b;c\".\n\
+               000000 01 T PIC X(4) VALUE \"ZZZZ\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A DELIMITED BY DL INTO T.\n\
+               000000 DISPLAY \"[\" T \"]\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[aZZZ]"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL delimiters: UNSTRING truncates/pads fields; the last receiver does not take the remainder.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(11) VALUE \"ABCDE,Z,Q,R\".\n\
+               000000 01 R1 PIC X(2) VALUE \"..\".\n\
+               000000 01 R2 PIC X(3) VALUE \"...\".\n\
+               000000 01 R3 PIC X VALUE \".\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.\n\
+               000000 DISPLAY \"[\" R1 \"]\".\n\
+               000000 DISPLAY \"[\" R2 \"]\".\n\
+               000000 DISPLAY \"[\" R3 \"]\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[AB]\n[Z  ]\n[Q]"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL delimiters: leading and consecutive delimiters produce space-filled empty receivers.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \",A,,B\".\n\
+               000000 01 R1 PIC X(2) VALUE \"..\".\n\
+               000000 01 R2 PIC X(2) VALUE \"..\".\n\
+               000000 01 R3 PIC X(2) VALUE \"..\".\n\
+               000000 01 R4 PIC X(2) VALUE \"..\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3 R4.\n\
+               000000 DISPLAY \"[\" R1 \"]\".\n\
+               000000 DISPLAY \"[\" R2 \"]\".\n\
+               000000 DISPLAY \"[\" R3 \"]\".\n\
+               000000 DISPLAY \"[\" R4 \"]\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[  ]\n[A ]\n[  ]\n[B ]"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL delimiters: an item delimiter splits fields; exhausted source leaves later receivers alone.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(3) VALUE \"A;B\".\n\
+               000000 01 DL PIC X VALUE \";\".\n\
+               000000 01 R1 PIC X(2) VALUE \"..\".\n\
+               000000 01 R2 PIC X(2) VALUE \"..\".\n\
+               000000 01 R3 PIC X(2) VALUE \"ZZ\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 UNSTRING S DELIMITED BY DL INTO R1 R2 R3.\n\
+               000000 DISPLAY \"[\" R1 \"]\".\n\
+               000000 DISPLAY \"[\" R2 \"]\".\n\
+               000000 DISPLAY \"[\" R3 \"]\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[A ]\n[B ]\n[ZZ]"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -6058,7 +6166,8 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
         || ll.contains("@__twig_alloc_ref_array_bytes")
         || ll.contains("@__twig_gc_live_bytes")
         // Runtime slices must execute the production bounds-checked helper.
-        || ll.contains("@__twig_str_slice");
+        || ll.contains("@__twig_str_slice")
+        || ll.contains("@__twig_str_index");
     if uses_gc_runtime {
         let rt = |name: &str| {
             std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
