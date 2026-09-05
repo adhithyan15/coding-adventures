@@ -49,7 +49,7 @@ capstone, not a tenth universal backend.
 | [ALGOL lowerer](../packages/rust/algol-iir-compiler/src/lib.rs) | Scalar integer/boolean/real/string operations, arrays, procedures, by-name specializations, switches and nonlocal control flow have a substantial evolving corpus. [Frontend JIT](../packages/rust/algol-iir-compiler/tests/jit_e2e.rs) and [AOT smoke](../packages/rust/algol-iir-compiler/tests/aot_smoke.rs) are separate proofs. | Full LANG matrix remains excluded for the recorded native-array failure. VM-025 and the separate ALGOL owner control fixes and detailed feature expansion; 232 declarations do not mean 232 green Linux programs. |
 | [FLOW-MATIC lowerer](../packages/rust/flow-matic-iir-compiler/src/lib.rs) | MOVE, COMPARE/IF/OTHERWISE, GO TO/JUMP, STOP, READ-ITEM/EOF and WRITE-ITEM. The unified row proves only scalar move/output. [JIT stream tests](../packages/rust/flow-matic-iir-compiler/tests/jit_e2e.rs) run read/process/write to EOF through custom `input_more`/`input_i64` builtins. | VM-037 adds discriminating control-flow matrix rows. VM-039 provides portable EOF-aware input before promoting record streams to code-generation columns. TRANSFER and tape control are clean frontend rejections, not secretly implemented file I/O. |
 | [COBOL lowerer](../packages/rust/cobol-iir-compiler/src/lib.rs) | PICTURE/scaled arithmetic, DISPLAY/MOVE, condition names, IF/EVALUATE, PERFORM/GOTO, COMPUTE/power, size errors and signed/alphanumeric operations occur in the 21-row matrix. The [JIT/oracle suite](../packages/rust/cobol-iir-compiler/tests/jit_e2e.rs) additionally exercises reference modification, STRING, UNSTRING and INSPECT families. | These later string families lack unified executable rows; validator acceptance is insufficient. VM-045/046/047 separate reference modification, STRING/UNSTRING and INSPECT backend proofs. Existing byte/character and category restrictions must remain explicit. |
-| [McCarthy lowerer](../packages/rust/mccarthy-lisp-iir-compiler/src/lib.rs) | Quote/cons/CAR/CDR/ATOM/EQ/COND, direct and higher-order lambdas, captured variables, LABEL recursion and closure values. [Capstone](../packages/rust/lang-aot/tests/conformance.rs) tests 19 integer-result programs; [frontend run tests](../packages/rust/mccarthy-lisp-iir-compiler/tests/run_e2e.rs), [JIT](../packages/rust/lang-aot/tests/jit_mccarthy.rs) and dedicated per-backend lambda suites cover further shapes. | Capstone native-AOT is macOS-only even when Windows/Linux linkers exist (VM-036). The capstone is not a proof for every closure shape; preserve dedicated closure suites in normal BUILD. |
+| [McCarthy lowerer](../packages/rust/mccarthy-lisp-iir-compiler/src/lib.rs) | Quote/cons/CAR/CDR/ATOM/EQ/COND, direct and higher-order lambdas, captured variables, LABEL recursion and closure values. [Capstone](../packages/rust/lang-aot/tests/conformance.rs) tests 19 integer-result programs; [frontend run tests](../packages/rust/mccarthy-lisp-iir-compiler/tests/run_e2e.rs), [JIT](../packages/rust/lang-aot/tests/jit_mccarthy.rs) and dedicated per-backend lambda suites cover further shapes. | VM-036 enables the native capstone on Linux/macOS/Windows, with a required native-only Windows CI run. The capstone is not a proof for every closure shape; preserve dedicated closure suites in normal BUILD. |
 | [Macsyma lowerer](../packages/rust/macsyma-iir-compiler/src/lower.rs) | v0 integers, unary/binary arithmetic, exact literal division, assignments, symbols and unevaluated symbolic Apply. [Oracle suite](../packages/rust/macsyma-iir-compiler/tests/oracle.rs) compares symbolic results with the evaluator. [Capstone](../packages/rust/lang-aot/tests/macsyma_conformance.rs) proves 21 integer-result programs on VM/JIT/WASM/CLR/JVM/LLVM/native when present. | No BEAM runner here (VM-038); symbolic result representation has VM oracle coverage, not portable capstone agreement (VM-048). Function definitions/calls, control flow, floats, lists, comparisons and power are explicit frontend rejections, outside implemented v0 parity. |
 
 ## CI and host boundaries
@@ -70,8 +70,8 @@ COBOL's JIT/oracle suite. Such frontend executions do not establish LLVM or
 native execution of the same source. The [CI workflow](../../.github/workflows/ci.yml)
 uses affected-package planning; Windows additionally has a selected native
 executable smoke gate. A green Windows job does not imply every LANG test
-executes there. VM-036 must make its new native proof part of an actual Windows
-execution command as well as removing the test's host guard.
+executes there. VM-036 adds the native-only McCarthy corpus to that actual Windows execution
+command, including the required-linker assertion.
 
 Reproduce the dedicated capstones with:
 
@@ -80,16 +80,21 @@ cargo test -p lang-aot --test conformance --test macsyma_conformance -- --nocapt
 ```
 
 McCarthy always runs VM/JIT/WASM/CLR simulator. Java, clang, Erlang and real
-CLR require their respective installed tools; native is currently macOS-only.
+CLR require their respective installed tools; native uses the host Linux/macOS/Windows compiler and linker.
 Macsyma always runs VM/JIT/WASM/CLR simulator, gates JVM/LLVM/native on tools,
 and has no real-CLR or BEAM runner. VM-049 adds a real-CLR arithmetic proof;
 simulator success alone does not claim .NET execution.
 
 ## Executed audit validation
 
-On this Windows host, the dedicated command above passed: McCarthy reported
+At the audit base, the dedicated command above passed on Windows: McCarthy reported
 19 programs across VM/JIT/WASM/CLR/JVM/LLVM/BEAM (133 agreements); native-AOT
 was excluded by its macOS guard and CLR-real was unavailable. Macsyma reported
 21 programs across VM/JIT/WASM/CLR/JVM/LLVM/native-AOT (147 agreements), plus
 its process-result decoder test. These are actual local executions, not inferred
 from declaration counts. Hosted CI remains the merge gate.
+
+VM-036 locally executes the 19-program native corpus with both Microsoft and
+LLVM Windows linkers. The required-linker negative invocation fails with zero
+programs run when PATH is empty. Linux/macOS and hosted Windows execution are
+still checked by PR CI before merge.
