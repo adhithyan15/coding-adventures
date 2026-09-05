@@ -1,0 +1,658 @@
+{
+  "schema": "visicalc/presentation-contract",
+  "schemaVersion": 1,
+  "seed": "budget-v1.json",
+  "coordinates": "zero-based absolute workbook rows and columns; Grid hosts translate slice-relative events",
+  "engineProjection": "Each cell maps to [raw source, computed display]. Unlisted cells are not asserted by this projection.",
+  "steps": [
+    {
+      "id": "initial",
+      "expected": {
+        "engine": {
+          "A1": [
+            "15",
+            "15"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "38"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "169"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 0,
+          "selectedCol": 0,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "15",
+          "editing": false
+        }
+      }
+    },
+    {
+      "id": "select-formula-source",
+      "event": {
+        "type": "navigate",
+        "payload": {
+          "row": 0,
+          "col": 4
+        }
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "15",
+            "15"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "38"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "169"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 0,
+          "selectedCol": 4,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "=SUM(A1:D1)",
+          "editing": false
+        }
+      }
+    },
+    {
+      "id": "buffer-formula",
+      "event": {
+        "type": "formulaChange",
+        "payload": {
+          "value": "999"
+        }
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "15",
+            "15"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "38"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "169"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 0,
+          "selectedCol": 4,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "999",
+          "editing": true
+        }
+      }
+    },
+    {
+      "id": "cancel-formula",
+      "event": {
+        "type": "cancel",
+        "payload": {}
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "15",
+            "15"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "38"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "169"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 0,
+          "selectedCol": 4,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "=SUM(A1:D1)",
+          "editing": false
+        }
+      }
+    },
+    {
+      "id": "select-input",
+      "event": {
+        "type": "navigate",
+        "payload": {
+          "row": 0,
+          "col": 0
+        }
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "15",
+            "15"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "38"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "169"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 0,
+          "selectedCol": 0,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "15",
+          "editing": false
+        }
+      }
+    },
+    {
+      "id": "buffer-twenty",
+      "event": {
+        "type": "formulaChange",
+        "payload": {
+          "value": "20"
+        }
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "15",
+            "15"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "38"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "169"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 0,
+          "selectedCol": 0,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "20",
+          "editing": true
+        }
+      }
+    },
+    {
+      "id": "commit-and-recalculate",
+      "event": {
+        "type": "commit",
+        "payload": {}
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "20",
+            "20"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "43"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "174"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 0,
+          "selectedCol": 0,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "20",
+          "editing": false
+        }
+      }
+    },
+    {
+      "id": "start-inline",
+      "event": {
+        "type": "editStart",
+        "payload": {
+          "row": 0,
+          "col": 0
+        }
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "20",
+            "20"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "43"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "174"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 0,
+          "selectedCol": 0,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "20",
+          "editing": true
+        }
+      }
+    },
+    {
+      "id": "buffer-inline",
+      "event": {
+        "type": "formulaChange",
+        "payload": {
+          "value": "99"
+        }
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "20",
+            "20"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "43"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "174"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 0,
+          "selectedCol": 0,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "99",
+          "editing": true
+        }
+      }
+    },
+    {
+      "id": "cancel-inline",
+      "event": {
+        "type": "editCancel",
+        "payload": {}
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "20",
+            "20"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "43"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "174"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 0,
+          "selectedCol": 0,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "20",
+          "editing": false
+        }
+      }
+    },
+    {
+      "id": "navigate-to-slice-edge",
+      "event": {
+        "type": "navigate",
+        "payload": {
+          "row": 29,
+          "col": 0
+        }
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "20",
+            "20"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "43"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "174"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 29,
+          "selectedCol": 0,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "",
+          "editing": false
+        }
+      }
+    },
+    {
+      "id": "edit-slice-edge",
+      "event": {
+        "type": "editStart",
+        "payload": {
+          "row": 29,
+          "col": 0
+        }
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "20",
+            "20"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "43"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "174"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 29,
+          "selectedCol": 0,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "",
+          "editing": true
+        }
+      }
+    },
+    {
+      "id": "buffer-slice-edge",
+      "event": {
+        "type": "formulaChange",
+        "payload": {
+          "value": "42"
+        }
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "20",
+            "20"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "43"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "174"
+          ],
+          "A30": [
+            "",
+            ""
+          ]
+        },
+        "slots": {
+          "selectedRow": 29,
+          "selectedCol": 0,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "42",
+          "editing": true
+        }
+      }
+    },
+    {
+      "id": "commit-across-slice-edge",
+      "event": {
+        "type": "editCommit",
+        "payload": {}
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "20",
+            "20"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "43"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "174"
+          ],
+          "A30": [
+            "42",
+            "42"
+          ]
+        },
+        "slots": {
+          "selectedRow": 30,
+          "selectedCol": 0,
+          "viewportOffset": 1,
+          "viewportSize": 30,
+          "formula": "",
+          "editing": false
+        }
+      }
+    },
+    {
+      "id": "click-first-shifted-row",
+      "event": {
+        "type": "navigate",
+        "payload": {
+          "row": 1,
+          "col": 0
+        }
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "20",
+            "20"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "43"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "174"
+          ],
+          "A30": [
+            "42",
+            "42"
+          ]
+        },
+        "slots": {
+          "selectedRow": 1,
+          "selectedCol": 0,
+          "viewportOffset": 1,
+          "viewportSize": 30,
+          "formula": "8",
+          "editing": false
+        }
+      }
+    },
+    {
+      "id": "return-to-first-row",
+      "event": {
+        "type": "navigate",
+        "payload": {
+          "row": 0,
+          "col": 0
+        }
+      },
+      "expected": {
+        "engine": {
+          "A1": [
+            "20",
+            "20"
+          ],
+          "A2": [
+            "8",
+            "8"
+          ],
+          "E1": [
+            "=SUM(A1:D1)",
+            "43"
+          ],
+          "E5": [
+            "=SUM(E1:E4)",
+            "174"
+          ],
+          "A30": [
+            "42",
+            "42"
+          ]
+        },
+        "slots": {
+          "selectedRow": 0,
+          "selectedCol": 0,
+          "viewportOffset": 0,
+          "viewportSize": 30,
+          "formula": "20",
+          "editing": false
+        }
+      }
+    }
+  ]
+}
