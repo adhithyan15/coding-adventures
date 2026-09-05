@@ -1,5 +1,9 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — runtime substring parity
+
+Computed substring bounds mark the result and downstream copies as runtime strings, preventing stale receiver literals from replacing live MOVE output.
+
 ## [0.48.6] — 2026-09-01 (W33 fourth slice — `FieldType` rename fallout)
 
 No functional change — `wasm-types` 0.1.17 renamed `FieldType.val_type:

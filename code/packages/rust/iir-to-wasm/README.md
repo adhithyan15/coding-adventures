@@ -1,5 +1,7 @@
 # iir-to-wasm
 
+Computed substring bounds mark the result and downstream copies as runtime strings, preventing stale receiver literals from replacing live MOVE output.
+
 Lowers an [`IIRModule`](../interpreter-ir/) directly to a
 [`WasmModule`](../wasm-types/) **without going through the deprecated
 `compiler-ir` layer**.

@@ -63,6 +63,64 @@ VM-033 (Windows text-output newlines), which now precedes coverage work. After
 that repair, missing Windows runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
 otherwise this exact regression can recur despite a green Windows job.
 
+## VM-045 implementation contract (selected after #14363 merged)
+
+PR #14363 merged as `7291d2684e` after all current-head checks passed on
+`afe88dca63`. VM-044 is complete. Reprioritization selects the next existing
+coverage gap, VM-045; ALGOL remains separately owned.
+
+Add canonical COBOL ASCII reference-modification programs for literal and
+computed start/length, omitted length, IF/EVALUATE comparisons and MOVE into
+wider/narrower alphanumeric receivers. Include trailing markers to preserve
+padding evidence. Add runtime-invalid start and end cases expecting traps,
+matching the existing JIT/oracle bounds contract. Declare all seven standard
+backends, execute each new cell in a fresh process with a ran-cell sentinel,
+and validate the borrowed semantics against the frontend oracle suite. Normal
+non-ALGOL BUILD must include these rows automatically. Do not broaden existing
+byte/character or receiver-category semantics. If execution exposes a backend
+defect, record and prioritize a bounded repair before claiming parity. Update
+inventory counts, README, changelog and validation evidence.
+
+### VM-050 discovery and repair contract (blocks VM-045)
+
+Executing VM-045 reproduced `BackendRefused { function: "main" }` on native
+AOT row 402 with computed substring indices. Literal row 401 passed all seven
+backends; the frontend reference-modification oracle suite passed 66 tests.
+Native string lowering only folds constant slices and leaves runtime slices
+for a backend that refuses them, despite the existing bounds-checked
+`__twig_str_slice` runtime helper. Prioritize this observed failure within the
+current VM-045 PR before declaring its new cells proven.
+
+Route well-formed slices that cannot be folded through `call_builtin str_slice`
+and invalidate stale destination string facts. Preserve constant folding and
+its invalid-bound traps. Verify runtime output and invalid-bound failures via
+the canonical rows, plus focused lowering checks for runtime source/bounds and
+reassigned destinations. Use existing runtime/ABI helper plumbing; investigate
+any further backend refusal instead of excluding its cells.
+
+### VM-051/052 discovery and repair contracts (block VM-045)
+
+The complete 49-cell survey after VM-050 passed 46 cells. LLVM rows 402 and
+405 reject computed `str_slice` bounds as nonconstant (VM-051). WASM row 405
+prints `|` and two spaces plus `|` instead of `BC   |` / `BC|` (VM-052).
+All seven native cells pass, including both expected traps. Prioritize these
+observed failures within this PR before declaring the new rows protected.
+
+VM-051: use LLVM's existing length-prefixed runtime string representation and
+shared bounds-checked slice helper for unknown sources/bounds. Preserve its
+literal folding, trap behavior and stale-fact invalidation. VM-052: diagnose
+runtime MOVE's incorrect WASM output and fix the narrow string-lowering fact
+or copy defect responsible, with the failing canonical program as regression
+proof. Do not alter COBOL semantics or remove failing backend declarations.
+
+VM-045/050/051/052 local validation: all seven new rows (401–407) pass all
+seven standard backends in fresh processes with ran-cell sentinels: 49
+executions, zero skips. The frontend oracle suite passes 66 tests; affected
+backend libraries pass 281 tests, and LLVM integration passes 127 tests.
+Native and LLVM now route computed slices through the production checked
+runtime helper. WASM propagates runtime representation from computed bounds
+through downstream string copies. Hosted CI remains the merge gate.
+
 ## VM-044 implementation contract (selected after #14358 merged)
 
 PR #14358 merged as `669d5fcc1e` after all current-head checks passed on
@@ -368,8 +426,8 @@ items requiring new runtime lowering follow the coverage-only promotions.
 |---|---|---|
 | done #14349 | VM-036 | Run McCarthy's existing 19-program native capstone on Windows/Linux as well as macOS. Assert a present linker cannot silently skip; wire actual Windows execution into CI and prove all 19 results. |
 | done #14358 | VM-037 | Promote FLOW-MATIC compare/branch/jump behavior beyond the scalar-output baseline. Use terminating, discriminating output programs on all seven standard columns. |
-| selected | VM-044 | Promote Oct while/loop/break and returned function values to observable seven-column programs; prove u8 wrap and actual branch/call effects. |
-| 4 | VM-045 | Promote COBOL reference modification to standard columns: constant and dynamic bounds, result text and explicit invalid-bound behavior, compared with its existing oracle. |
+| done #14363 | VM-044 | Promote Oct while/loop/break and returned function values to observable seven-column programs; prove u8 wrap and actual branch/call effects. |
+| selected | VM-045 | Promote COBOL reference modification to standard columns: constant and dynamic bounds, result text and explicit invalid-bound behavior, compared with its existing oracle. |
 | 5 | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
 | 6 | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
 | 7 | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |

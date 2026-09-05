@@ -1,5 +1,9 @@
 # Changelog — `x86_64-backend`
 
+## Unreleased — runtime substring parity
+
+Register the three-argument str_slice runtime builtin for generic ABI marshalling.
+
 ## 0.39.0 - 2026-08-10 — generational write barrier from `field_store` + `array_set` (AOT00-T8 follow-up)
 
 Closes the last of the three AOT00-T8 backend write-barrier follow-ups (LLVM done via

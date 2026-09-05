@@ -798,6 +798,7 @@ pub fn lower_iir_to_llvm(
     // the declare is simply unused (a declare with no call site is legal LLVM and
     // creates no undefined-symbol reference at link time).
     let mut used_str_concat = false;
+    let mut used_str_slice = false;
     // E4-dyn runtime string equality over non-literal operands lowers to a call to
     // `@__twig_str_eq`. Set whenever any `str_eq` op appears; an unused declare is
     // legal LLVM (same rationale as `used_str_concat`).
@@ -857,6 +858,9 @@ pub fn lower_iir_to_llvm(
             }
             if i.op == "str_index" {
                 used_str_index = true;
+            }
+            if i.op == "str_slice" {
+                used_str_slice = true;
             }
             if i.op == "str_concat" {
                 used_str_concat = true;
@@ -940,7 +944,7 @@ pub fn lower_iir_to_llvm(
         out.push_str("declare double @pow(double, double)\n");
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
-        || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_str_cmp || used_gc_alloc
+        || used_input_i64 || used_input_str || used_str_concat || used_str_slice || used_str_eq || used_str_cmp || used_gc_alloc
         || used_gc_alloc_pair || used_gc_live_bytes || used_write_barrier || used_gc_set_auto_minor
         || used_gc_collect_minor_precise || used_gc_kind_of {
         out.push('\n');
@@ -1036,7 +1040,7 @@ pub fn lower_iir_to_llvm(
             // `SUPPORTED_BUILTINS`'s own doc for why `freed`/live-bytes aren't enough).
             out.push_str("declare i64 @__twig_gc_kind_of(i64)\n");
         }
-        if used_arrays || used_conversions || used_str_index {
+        if used_arrays || used_conversions || used_str_index || used_str_slice {
             // The trap target — out-of-bounds for arrays (LANG-FULL E5) and
             // `str_index`, and out-of-range for `real_to_int_*` (LANG-FULL E8).
             // `llvm.trap` is an intrinsic — declaring it is harmless and keeps
@@ -1067,6 +1071,9 @@ pub fn lower_iir_to_llvm(
             // line and returns an i64 handle to a `[i64 len][bytes]` heap block — the
             // runtime-string repr `print_str` reads the length from at run time.
             out.push_str("declare i64 @__twig_input_str()\n");
+        }
+        if used_str_slice {
+            out.push_str("declare i64 @__twig_str_slice(i64, i64, i64)\n");
         }
         if used_str_concat {
             // `@__twig_str_concat` (E4-dyn) is provided by `twig_runtime.c`: reads both
@@ -2387,6 +2394,35 @@ fn lower_str_slice(
             });
         }
     };
+    // Keep the literal fast path, but computed bounds and runtime sources
+    // use the same checked length-prefixed helper as native AOT. Read every
+    // operand before invalidating dest so in-place slicing remains well-defined.
+    if !state.str_values.contains_key(src)
+        || state.env.get(start).and_then(|v| v.parse::<i64>().ok()).is_none()
+        || state.env.get(end).and_then(|v| v.parse::<i64>().ok()).is_none()
+    {
+        let mut args = Vec::new();
+        for name in [src, start, end] {
+            args.push(state.env.get(name).cloned().ok_or_else(|| {
+                IIRLlvmError::UndefinedVariable {
+                    function: state.fn_name.into(), name: name.clone(),
+                }
+            })?);
+        }
+        if args[0].starts_with('@') {
+            let handle = state.fresh("slice_handle");
+            out.push_str(&format!("  {handle} = ptrtoint ptr {} to i64\n", args[0]));
+            args[0] = handle;
+        }
+        let res = state.fresh("slice");
+        out.push_str(&format!(
+            "  {res} = call i64 @__twig_str_slice(i64 {}, i64 {}, i64 {})\n",
+            args[0], args[1], args[2],
+        ));
+        state.forget_literal_string(&dest);
+        state.env.insert(dest, res);
+        return Ok(());
+    }
     let literal = state.str_values.get(src).ok_or_else(|| {
         IIRLlvmError::InvalidOperand {
             function: state.fn_name.into(),

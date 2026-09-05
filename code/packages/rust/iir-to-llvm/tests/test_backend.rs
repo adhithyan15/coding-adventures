@@ -3364,3 +3364,23 @@ fn a_narrower_stored_value_does_not_change_a_globals_storage_type() {
         "the u8 wrap is a mask on the value, not a narrower slot; got:\n{ll}"
     );
 }
+
+#[test]
+fn runtime_slice_reassignment_discards_literal_length() {
+        let f = IIRFunction::new(
+            "slice", vec![("source".into(), "str".into()), ("start".into(), "i64".into()),
+                          ("end".into(), "i64".into())], "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("stale".into())], "str"),
+                IIRInstr::new("str_slice", Some("s".into()), vec![Operand::Var("source".into()),
+                    Operand::Var("start".into()), Operand::Var("end".into())], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+    let ll = lower_iir_to_llvm(&module_with(f), &IIRLlvmConfig::default()).unwrap();
+    assert!(ll.contains("declare i64 @__twig_str_slice(i64, i64, i64)"));
+    assert!(ll.contains("call i64 @__twig_str_slice(i64 %source, i64 %start, i64 %end)"));
+    assert!(ll.contains("load i64"), "length must read the runtime header: {ll}");
+    assert!(!ll.contains("ret i64 5"), "stale literal length must not survive");
+}

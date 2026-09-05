@@ -1,5 +1,7 @@
 # twig-aot
 
+Runtime string slices now call the existing checked helper when source or bounds cannot fold; reassignment invalidates stale literal lengths.
+
 Twig ahead-of-time compiler.  Reads a Twig source file, produces a native
 ARM64 Mach-O executable on macOS that you can run directly.
 

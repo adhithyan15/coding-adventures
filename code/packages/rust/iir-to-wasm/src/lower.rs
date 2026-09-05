@@ -281,6 +281,19 @@ type ModuleRuntimeStrBlocks = HashMap<String, FunctionRuntimeStrBlocks>;
 /// draining a worklist visits every variable at most once, so the pass stays
 /// linear in the number of instructions even for a large or adversarial module.
 fn collect_runtime_valued_str_vars(fn_: &IIRFunction) -> HashSet<String> {
+    // A slice of literal text still produces a runtime handle when its bounds
+    // are computed. Only a uniquely written integer constant is safe here;
+    // reassigned indices cannot supply a function-wide literal fact.
+    let mut index_writes: HashMap<&str, Option<i64>> = HashMap::new();
+    for instr in &fn_.instructions {
+        if let Some(dest) = instr.dest.as_deref() {
+            let constant = match (instr.op.as_str(), instr.srcs.first()) {
+                ("const", Some(Operand::Int(value))) => Some(*value),
+                _ => None,
+            };
+            index_writes.entry(dest).and_modify(|value| *value = None).or_insert(constant);
+        }
+    }
     // operand variable → destinations that inherit its runtime-ness.
     let mut edges: HashMap<&str, Vec<&str>> = HashMap::new();
     // Seeds: `str` parameters, plus every `str` destination no fold can reach.
@@ -307,7 +320,16 @@ fn collect_runtime_valued_str_vars(fn_: &IIRFunction) -> HashSet<String> {
             // exactly the granularity the by-dest literal table works at.)
             "str_const" => continue,
             "str_concat" => 2,
-            "str_slice" | "mov" => 1,
+            "str_slice" => {
+                if instr.srcs.iter().skip(1).any(|operand| {
+                    !matches!(operand, Operand::Var(name)
+                        if index_writes.get(name.as_str()).is_some_and(Option::is_some))
+                }) {
+                    worklist.push(dest);
+                }
+                1
+            }
+            "mov" => 1,
             // Every other `str`-typed producer yields a live handle: a `call`
             // result, `call_builtin "input_str"`, a `global_load`, an `array_get`.
             // None of them has a compile-time value.

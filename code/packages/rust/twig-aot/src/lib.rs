@@ -2830,48 +2830,47 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 lowered.push(instr);
                 continue;
             };
-            let Some((_, _, literal)) = strings.get(src).cloned() else {
-                lowered.push(instr);
-                continue;
-            };
-            let (Some(start), Some(end)) = (ints.get(start).copied(), ints.get(end).copied())
-            else {
-                lowered.push(instr);
-                continue;
-            };
-            if start < 0 || end < start || end as usize > literal.len() {
-                lowered.push(IIRInstr::new("type_assert", None, vec![], "void"));
-                let (bv, lv, lt) = push_aot_string_literal(&mut lowered, &mut next, String::new());
-                lowered.push(IIRInstr::new("mov", Some(dest.clone()), vec![Operand::Var(bv)], "i64"));
-                if runtime_str_vars.contains(&dest) {
-                    // Branch-selected: a compile-time length here would point
-                    // at a const emitted in the OTHER arm — uninitialised on
-                    // the taken path. See the str_concat fold path above.
-                    strings.remove(&dest);
+            // Capture source facts before invalidating the destination: an in-place
+            // slice may read the same register it replaces. Unknown bounds/source
+            // must use the existing length-prefixed, bounds-checked runtime helper.
+            let known = strings.get(src).cloned().zip(
+                ints.get(start).copied().zip(ints.get(end).copied()),
+            );
+            strings.remove(&dest);
+            if let Some(((_, _, literal), (start, end))) = known {
+                let folded = if start < 0 || end < start || end as usize > literal.len() {
+                    lowered.push(IIRInstr::new("type_assert", None, vec![], "void"));
+                    Some(String::new())
                 } else {
-                    strings.insert(dest.clone(), (dest, lv, lt));
+                    String::from_utf8(literal.as_bytes()[start as usize..end as usize].to_vec())
+                        .ok()
+                        .filter(|s| is_printable_ascii_str(s))
+                };
+                if let Some(literal) = folded {
+                    let (buf_var, len_var, lit) =
+                        push_aot_string_literal(&mut lowered, &mut next, literal);
+                    lowered.push(IIRInstr::new(
+                        "mov", Some(dest.clone()), vec![Operand::Var(buf_var)], "i64",
+                    ));
+                    // A branch-selected destination cannot inherit one arm's
+                    // literal length: other paths carry a different buffer.
+                    if !runtime_str_vars.contains(&dest) {
+                        strings.insert(dest.clone(), (dest, len_var, lit));
+                    }
+                    continue;
                 }
-                continue;
             }
-            let slice = literal.as_bytes()[start as usize..end as usize].to_vec();
-            let Ok(literal) = String::from_utf8(slice) else {
-                lowered.push(instr);
-                continue;
-            };
-            if !is_printable_ascii_str(&literal) {
-                lowered.push(instr);
-                continue;
-            }
-            let (buf_var, len_var, lit) = push_aot_string_literal(&mut lowered, &mut next, literal);
-            lowered.push(IIRInstr::new("mov", Some(dest.clone()), vec![Operand::Var(buf_var)], "i64"));
-                if runtime_str_vars.contains(&dest) {
-                    // Branch-selected: a compile-time length here would point
-                    // at a const emitted in the OTHER arm — uninitialised on
-                    // the taken path. See the str_concat fold path above.
-                    strings.remove(&dest);
-                } else {
-                strings.insert(dest.clone(), (dest, len_var, lit));
-                }
+            lowered.push(IIRInstr::new(
+                "call_builtin",
+                Some(dest),
+                vec![
+                    Operand::Var("str_slice".into()),
+                    Operand::Var(src.clone()),
+                    Operand::Var(start.clone()),
+                    Operand::Var(end.clone()),
+                ],
+                &instr.type_hint,
+            ));
             continue;
         }
 
@@ -4879,6 +4878,27 @@ mod tests {
             "runtime str_cmp should lower to call_builtin str_cmp: {:?}",
             f.instructions
         );
+    }
+
+    #[test]
+    fn runtime_slice_reassignment_discards_literal_length() {
+        let mut f = IIRFunction::new(
+            "slice", vec![("source".into(), "str".into()), ("start".into(), "i64".into()),
+                          ("end".into(), "i64".into())], "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("stale".into())], "str"),
+                IIRInstr::new("str_slice", Some("s".into()), vec![Operand::Var("source".into()),
+                    Operand::Var("start".into()), Operand::Var("end".into())], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        lower_string_literals_for_aot(&mut f);
+        assert!(f.instructions.iter().any(|i| i.op == "call_builtin"
+            && i.dest.as_deref() == Some("s")
+            && i.srcs.first() == Some(&Operand::Var("str_slice".into()))));
+        assert!(f.instructions.iter().any(|i| i.op == "field_load"
+            && i.dest.as_deref() == Some("n")), "length must read the runtime header");
     }
 
     #[test]

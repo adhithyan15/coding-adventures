@@ -1,5 +1,7 @@
 # x86_64-backend
 
+Register the three-argument str_slice runtime builtin for generic ABI marshalling.
+
 x86-64 (AMD64) native-code backend for `jit-core` and `aot-core`.  Lowers
 CIR to x86-64 machine code via `x86_64-encoder`.  Implements
 [LANG43](../../../specs/LANG43-x86_64-backend.md).

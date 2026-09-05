@@ -1,5 +1,9 @@
 # Changelog — `twig-aot`
 
+## Unreleased — runtime substring parity
+
+Runtime string slices now call the existing checked helper when source or bounds cannot fold; reassignment invalidates stale literal lengths.
+
 ## Unreleased — required Windows runtime CI (VM-032)
 
 Select a dedicated Windows executable smoke step from the Windows build-plan
