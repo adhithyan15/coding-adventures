@@ -12,11 +12,16 @@ APIs, deterministic algorithms, checked metadata, capability declarations,
 and measured tests without promoting OCaml into the established-language
 denominator.
 
-The tranche does not execute or extend the native OCaml build tool, add OCaml
-to the canonical CI executor, or claim denominator promotion. OCAML01 through
-OCAML04 remain authoritative for lane classification, package shape,
-toolchain identity, discovery, resolution, hashing, and process-free BUILD
-validation.
+The tranche does not execute or extend the native OCaml build tool or claim
+denominator promotion. It does add the minimum guarded generic-CI bootstrap
+needed for the canonical build job to execute the newly discoverable package
+BUILD files: the reviewed OCAML03 setup identity, fail-closed runtime and opam
+repository checks, checksum enforcement, and single-worker execution while an
+OCaml package is selected. This does not complete the execution-coupled build
+substrate or the separate exact Ubuntu, macOS, and Windows representative-chain
+workflow. OCAML01 through OCAML04 remain authoritative for lane classification,
+package shape, toolchain identity, discovery, resolution, hashing, and
+process-free BUILD validation.
 
 ## Exact toolchain and package shape
 
@@ -170,6 +175,23 @@ opam metadata checks, source distributions, capability-schema validation,
 process-free canonical discovery/resolution/hash/BUILD checks, affected and
 prerequisite planning, the collision-checked parity report, dependency and
 license review, diff hygiene, and credential/artifact scans.
+
+Generic CI must provision OCaml only when the detected incremental plan needs
+the lane, or when a forced main-build shard explicitly contains OCaml. Pull
+requests that select OCaml must retain all three generic operating-system legs.
+The setup action, compiler, and opam repository revision must equal OCAML03;
+`opam-pin` and Dune caching remain disabled; the configured repository and
+runtime versions are checked immediately; and checksum enforcement is exported
+for subsequent BUILD commands. Because the generic executor does not yet own a
+global opam-switch mutation lock, an OCaml-active invocation must use one build
+worker. The later `ocaml-build-substrate` owner replaces that conservative
+serialization with the reviewed execution-coupled resource contract.
+
+The separate `ocaml-representative-package-ci-execution` owner retains durable
+ownership of a package-specific, exact Ubuntu/macOS/Windows chain that records
+format, test, coverage, install, source-archive, and downstream-consumer
+evidence. The bootstrap in this tranche is only what makes the already
+mandatory generic build truthful and green.
 
 The four package roots remain emerging inventory evidence. They do not change
 the 15-language parity denominator until the separate OCaml promotion owner is

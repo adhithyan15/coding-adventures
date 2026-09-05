@@ -92,6 +92,12 @@ The generic CI job does not install or execute OCaml in this tranche. The
 separate commit-pinned `build-ocaml.yml` workflow remains the OCAML03 execution
 authority until execution integration is reviewed.
 
+Historical boundary note (2026-09-05): OCAML05 subsequently added the minimum
+guarded OCAML03 bootstrap and single-worker invocation required for generic CI
+to execute real representative package BUILD files. That later change does not
+retroactively expand OCAML04's process-free scope; exact three-platform package
+execution and shared-switch resource locking remain separately owned.
+
 ## Required conformance
 
 Tests must cover package/program identities and fixture exclusion; opam and
