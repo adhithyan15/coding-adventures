@@ -1281,8 +1281,8 @@ jobs:
         with:
           node-version: '22'
 
-      # npm 10.9.8 crashes in Arborist on this repository's local file:
-      # dependencies ("Cannot read properties of null (reading 'edgesOut')").
+      # npm 10.9.8 crashes in Arborist while resolving Vitest peer dependencies
+      # ("Cannot read properties of null (reading 'edgesOut')").
       # Keep the independently validated installer fixed across all build OSes.
       - name: Set up npm
         if: needs.detect.outputs.needs_typescript == 'true'
