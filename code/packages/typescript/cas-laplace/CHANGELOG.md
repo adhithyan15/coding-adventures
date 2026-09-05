@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Run POSIX dependency lock commands explicitly through Bash on Windows.
+
 ## 0.2.0 — 2026-05-16
 
 **Extended ILT engine: complex conjugate poles, repeated poles, improper

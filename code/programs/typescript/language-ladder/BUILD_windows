@@ -1,0 +1,11 @@
+npm ci --silent --prefix ../../../packages/typescript/pixel-container
+npm ci --silent --prefix ../../../packages/typescript/paint-instructions
+npm ci --silent --prefix ../../../packages/typescript/paint-vm
+npm ci --silent --prefix ../../../packages/typescript/paint-vm-svg
+npm ci --silent --prefix ../../../packages/typescript/human-language-data
+npm install --silent --prefix ../../../packages/typescript/script-ductus
+npm install
+npm run typecheck
+npm run build
+npm run check:bundle
+npx vitest run
