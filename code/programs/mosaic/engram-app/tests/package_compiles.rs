@@ -457,6 +457,24 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
         );
     }
 
+    let xaml_default = read_artifact(tmp.path(), "xaml/EngramApp.xaml");
+    let xaml_touch = read_artifact(tmp.path(), "xaml/EngramApp.touch.xaml");
+    let xaml_default_code = read_artifact(tmp.path(), "xaml/EngramApp.xaml.cs");
+    let xaml_touch_code = read_artifact(tmp.path(), "xaml/EngramApp.touch.xaml.cs");
+    let xaml_touch_events = read_artifact(tmp.path(), "xaml/EngramApp.touch.Event.cs");
+    assert_contains(&xaml_default, "x:Class=\"Mosaic.Generated.EngramApp\"");
+    assert_contains(&xaml_touch, "x:Class=\"Mosaic.Generated.EngramAppTouch\"");
+    assert_contains(&xaml_default_code, "partial class EngramApp : UserControl");
+    assert_contains(
+        &xaml_touch_code,
+        "partial class EngramAppTouch : UserControl",
+    );
+    assert_contains(
+        &xaml_touch_code,
+        "EventHandler<EngramAppTouchEvent>? Dispatch",
+    );
+    assert_contains(&xaml_touch_events, "record EngramAppTouchEvent");
+
     let html = read_artifact(tmp.path(), "html/EngramApp.html");
     assert_contains(&html, "data-on-click=\"onImportAnki\"");
     assert_contains(&html, "data-on-click=\"onPruneUnusedMedia\"");

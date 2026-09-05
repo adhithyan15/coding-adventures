@@ -3525,9 +3525,24 @@ fn compile_one_component(
             // (registry=None) and never emits the project shell
             // (EmitOptions::default()).
             let opts = mosaic_emit_xaml::pipeline::EmitOptions::default();
+
+            // A XAML layout and its code-behind are two halves of one C#
+            // type. Filenames alone do not distinguish that type: emitting
+            // `Grid.xaml(.cs)` and `Grid.touch.xaml(.cs)` with the same
+            // `Mosaic.Generated.Grid` identity makes the C# compiler merge
+            // both partial classes, where every property and handler then
+            // collides. Give each named layout variant its own generated type
+            // while preserving the historical name for the default layout.
+            let mut xaml_component = mosmodel_out.component.clone();
+            let mut xaml_layout = layout_out.def.clone();
+            if let Some(variant) = variant {
+                let emitted_name = format!("{component}{}", xaml_variant_type_suffix(variant));
+                xaml_component.component = emitted_name.clone();
+                xaml_layout.component_name = emitted_name;
+            }
             let result = mosaic_emit_xaml::pipeline::from_pipeline(
-                &mosmodel_out.component,
-                &layout_out.def,
+                &xaml_component,
+                &xaml_layout,
                 &style_def,
                 None,
                 &opts,
@@ -3536,33 +3551,18 @@ fn compile_one_component(
 
             // Write the secondaries alongside the primary `.xaml`.
             //
-            // `.xaml.cs` is the code-behind partial for THIS layout, so it
-            // carries the variant infix: `Grid.touch.xaml` needs its own
-            // `Grid.touch.xaml.cs`.
-            //
-            // `.Event.cs` does NOT. The discriminated event union is emitted
-            // from the component's `.mil` interface -- `emit_events(name,
-            // emits, ..)` never sees the layout -- so every variant of a
-            // component produces the same type, with the same name, in the
-            // same namespace. Writing one per variant emitted two definitions
-            // of `GridEvent` into `Mosaic.Generated`, and C# refuses:
-            //
-            //     error CS0101: The namespace 'Mosaic.Generated' already
-            //       contains a definition for 'EngramAppEvent'
-            //     error CS8863: Only a single partial type declaration may
-            //       have a parameter list
-            //
-            // The emitted csproj compiles `**/*.cs`, so both files were seen.
-            // That made the XAML backend unable to build ANY package with a
-            // layout variant -- `engram-app` among them -- which went
-            // unnoticed because the build step only runs on Windows. The other
-            // backends do not have this shape: SwiftUI compiles one component
-            // source per component, not one per variant.
+            // Both the code-behind and event union are variant-scoped because
+            // the code-behind's Dispatch signature names its generated event
+            // type. The filename infix keeps the distinct sources side by side
+            // and the generated type suffix keeps the CLR identities distinct.
             let code_behind_path = match variant {
                 Some(v) => out_dir.join(format!("{component}.{v}.xaml.cs")),
                 None => out_dir.join(format!("{component}.xaml.cs")),
             };
-            let events_path = out_dir.join(format!("{component}.Event.cs"));
+            let events_path = match variant {
+                Some(v) => out_dir.join(format!("{component}.{v}.Event.cs")),
+                None => out_dir.join(format!("{component}.Event.cs")),
+            };
             write_file(&code_behind_path, result.code_behind.as_bytes())?;
             write_file(&events_path, result.events.as_bytes())?;
             backend_artifacts.push(code_behind_path);
@@ -3613,6 +3613,27 @@ fn compile_one_component(
         artifacts.push(lattice_path);
     }
     Ok(artifacts)
+}
+
+/// Turn a validated UI30 layout-variant name into a C# type suffix.
+///
+/// Variant names are restricted by `discover_variants` to ASCII letters,
+/// digits, `_`, and `-`. Separators start a new PascalCase word; the component
+/// prefix guarantees the resulting full identifier never starts with a digit.
+fn xaml_variant_type_suffix(variant: &str) -> String {
+    let mut suffix = String::with_capacity(variant.len());
+    let mut uppercase_next = true;
+    for ch in variant.chars() {
+        if ch == '-' || ch == '_' {
+            uppercase_next = true;
+        } else if uppercase_next {
+            suffix.push(ch.to_ascii_uppercase());
+            uppercase_next = false;
+        } else {
+            suffix.push(ch);
+        }
+    }
+    suffix
 }
 
 /// UI30 multi-layout — discover the layout variants present for one
@@ -4762,7 +4783,10 @@ version = "1"
         .expect("React package should build");
 
         let tsx = fs::read_to_string(out.path().join("react/Button.tsx")).unwrap();
-        assert!(tsx.contains("variant === \"danger\""), "generated TSX:\n{tsx}");
+        assert!(
+            tsx.contains("variant === \"danger\""),
+            "generated TSX:\n{tsx}"
+        );
         assert!(tsx.contains("background: \"#dc3545\""));
         assert!(tsx.contains("  variant,\n  dispatch,"));
     }
@@ -4788,10 +4812,7 @@ version = "1"
         .expect("WebComponent package should build");
 
         let js = fs::read_to_string(out.path().join("webcomponent/Button.js")).unwrap();
-        assert!(
-            js.contains("variant === \"danger\""),
-            "generated JS:\n{js}"
-        );
+        assert!(js.contains("variant === \"danger\""), "generated JS:\n{js}");
         assert!(js.contains("background: #dc3545"));
         assert!(js.contains("const variant = this.getAttribute(\"variant\")"));
     }
@@ -4933,7 +4954,10 @@ version = "1"
         .expect("XAML package should build");
 
         let xaml = fs::read_to_string(out.path().join("xaml/Button.xaml")).unwrap();
-        assert!(xaml.contains("ConverterParameter=danger"), "generated XAML:\n{xaml}");
+        assert!(
+            xaml.contains("ConverterParameter=danger"),
+            "generated XAML:\n{xaml}"
+        );
         assert!(xaml.contains("ButtonElement.Background"));
         assert!(xaml.contains("StringEqualsConverter"));
         assert!(out.path().join("xaml/StringEqualsConverter.cs").is_file());
@@ -10129,30 +10153,17 @@ version = "1"
         assert!(readme.contains("standard binding loads the Rust application library"));
     }
 
-    /// A layout variant must not produce a second copy of the event union.
+    /// A layout variant must get its own XAML partial-class identity.
     ///
-    /// `emit_events` is a function of the component's `.mil` interface -- it
-    /// never sees the layout -- so every variant emits the same type, with the
-    /// same name, into the same namespace. Writing one file per variant put two
-    /// definitions of `GridEvent` into `Mosaic.Generated`, and the emitted
-    /// csproj compiles `**/*.cs`, so the C# compiler saw both:
-    ///
-    /// ```text
-    /// error CS0101: The namespace 'Mosaic.Generated' already contains a
-    ///   definition for 'GridEvent'
-    /// ```
-    ///
-    /// That made the XAML backend unable to build ANY package with a layout
-    /// variant, and it went unnoticed because the compile step only runs on
-    /// Windows while the emission runs anywhere.
+    /// The emitted csproj compiles every `.xaml.cs` file. A filename infix is
+    /// therefore insufficient: if both files declare `partial class Grid`, C#
+    /// merges them and every generated property and handler collides. The
+    /// variant also gets a matching event-union identity because Dispatch in
+    /// that code-behind names the event type.
     #[test]
-    fn a_xaml_layout_variant_does_not_duplicate_the_event_union() {
+    fn a_xaml_layout_variant_has_distinct_generated_types() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
-        fs::write(
-            pkg.path().join("src/Grid.touch.mll"),
-            minimal_mll("Grid"),
-        )
-        .unwrap();
+        fs::write(pkg.path().join("src/Grid.touch.mll"), minimal_mll("Grid")).unwrap();
 
         let out = TempDir::new().unwrap();
         let result = build_package(&BuildOptions {
@@ -10165,32 +10176,51 @@ version = "1"
         .expect("XAML package build with a layout variant");
 
         let dir = out.path().join("xaml");
-        let events: Vec<_> = fs::read_dir(&dir)
+        let mut events: Vec<_> = fs::read_dir(&dir)
             .expect("xaml output dir")
             .filter_map(|entry| entry.ok())
             .map(|entry| entry.file_name().to_string_lossy().into_owned())
             .filter(|name| name.ends_with(".Event.cs"))
             .collect();
+        events.sort();
         assert_eq!(
             events,
-            vec!["Grid.Event.cs".to_string()],
-            "exactly one event union per component, whatever the variant count"
+            vec![
+                "Grid.Event.cs".to_string(),
+                "Grid.touch.Event.cs".to_string()
+            ],
+            "each generated component type needs its matching event union"
         );
 
-        // The code-behind IS per variant -- it is a partial class for that
-        // layout's XAML -- so the infix belongs there and only there.
-        assert!(dir.join("Grid.xaml.cs").is_file());
-        assert!(dir.join("Grid.touch.xaml.cs").is_file());
-        assert!(dir.join("Grid.touch.xaml").is_file());
+        let default_xaml = fs::read_to_string(dir.join("Grid.xaml")).unwrap();
+        let touch_xaml = fs::read_to_string(dir.join("Grid.touch.xaml")).unwrap();
+        let default_code = fs::read_to_string(dir.join("Grid.xaml.cs")).unwrap();
+        let touch_code = fs::read_to_string(dir.join("Grid.touch.xaml.cs")).unwrap();
+        let default_events = fs::read_to_string(dir.join("Grid.Event.cs")).unwrap();
+        let touch_events = fs::read_to_string(dir.join("Grid.touch.Event.cs")).unwrap();
 
-        // And the shared file is reported once, not once per variant: a
-        // manifest listing it twice would be a different kind of wrong.
-        let listed = result
-            .artifacts
-            .iter()
-            .filter(|path| path.file_name().is_some_and(|n| n == "Grid.Event.cs"))
-            .count();
-        assert_eq!(listed, 1, "the event union should be reported once");
+        assert!(default_xaml.contains("x:Class=\"Mosaic.Generated.Grid\""));
+        assert!(touch_xaml.contains("x:Class=\"Mosaic.Generated.GridTouch\""));
+        assert!(default_code.contains("partial class Grid : UserControl"));
+        assert!(touch_code.contains("partial class GridTouch : UserControl"));
+        assert!(default_code.contains("EventHandler<GridEvent>"));
+        assert!(touch_code.contains("EventHandler<GridTouchEvent>"));
+        assert!(default_events.contains("record GridEvent"));
+        assert!(touch_events.contains("record GridTouchEvent"));
+
+        for expected in [
+            "Grid.xaml",
+            "Grid.xaml.cs",
+            "Grid.Event.cs",
+            "Grid.touch.xaml",
+            "Grid.touch.xaml.cs",
+            "Grid.touch.Event.cs",
+        ] {
+            assert!(
+                result.artifacts.iter().any(|path| path.ends_with(expected)),
+                "missing {expected} from the build manifest"
+            );
+        }
     }
 
     #[test]
