@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:77d428046cd2f9c6",
+  "sourceHash": "fnv1a64:ff6ef2b6dc4b2a15",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -142,17 +142,17 @@
     {
       "id": "HI-C02-meraa",
       "sequence": 120,
-      "title": "मेरा (merā) — \"my\"",
-      "headword": "मेरा",
-      "romanization": "merā",
-      "gloss": "my",
+      "title": "मेरा / मेरी / मेरे (merā / merī / mere) — \"my\" agrees with what is owned",
+      "headword": "मेरा / मेरी / मेरे",
+      "romanization": "merā / merī / mere",
+      "gloss": "my — masculine / feminine / plural",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d16ce53104e5ca63",
+      "sourceHash": "fnv1a64:ab3d56e6aba6bd86",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hindi possessives change to match what's owned: merā (masculine), merī (feminine), mere (plural). nām is masculine becomes merā nām. (You'll meet merī at your first feminine noun.)"
+              "text": "Hindi possessives change to match what's owned: मेरा (merā, masculine), मेरी (merī, feminine), मेरे (mere, plural). nām is masculine becomes merā nām. (You'll meet merī at your first feminine noun.)"
             }
           ]
         },
@@ -257,11 +257,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three forms — merā (m.) / merī (f.) / mere (pl.)",
+              "instruction": "the three forms — मेरा (merā, m.) / मेरी (merī, f.) / मेरे (mere, pl.)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three forms — merā (m.) / merī (f.) / mere (pl.)]"
+              "source": "[YOU SAY: the three forms — मेरा (*merā*, m.) / मेरी (*merī*, f.) / मेरे (*mere*, pl.)]"
             }
           ]
         },
@@ -1647,7 +1647,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "मेरा (merā) — four pieces, one bar",
+              "instruction": "मेरा — four pieces, one bar",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

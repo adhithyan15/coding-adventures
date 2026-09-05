@@ -8,9 +8,9 @@ sequence: 120
 spine_node: SPINE-EXCHANGE-NAMES
 chapter: 2
 type: word
-headword: मेरा
-gloss: my
-romanization: "merā"
+headword: मेरा / मेरी / मेरे
+gloss: my — masculine / feminine / plural
+romanization: "merā / merī / mere"
 concept_tag: PRONOUN-MY
 prerequisites: [HI-C02-naam]
 sounds: [matra-e, matra-aa]
@@ -31,7 +31,7 @@ variety: standard-hindi
 reviews_of: [HI-C02-naam]
 ---
 
-# मेरा (merā) — "my"
+# मेरा / मेरी / मेरे — "my" agrees with what is owned
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-NAAM-01] -->
@@ -55,9 +55,9 @@ first-person root **ma-** — the *same* *ma-/me-* behind English **me**, **my**
 ## Grammar Lens: "my" agrees with the noun
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERAA-01] -->
 
-Hindi possessives change to match what's owned: **merā** (masculine), **merī**
-(feminine), **mere** (plural). *nām* is masculine → **merā nām**. (You'll meet
-*merī* at your first feminine noun.)
+Hindi possessives change to match what's owned: **मेरा** (*merā*, masculine),
+**मेरी** (*merī*, feminine), **मेरे** (*mere*, plural). *nām* is masculine →
+**merā nām**. (You'll meet *merī* at your first feminine noun.)
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERAA-01] -->
@@ -72,7 +72,7 @@ then र (*ra*) + ा (long ā) → रा (rā). Read
 [PAUSE 1s]
 - [YOU SAY: "merā"]
 - [YOU SAY: the cousins — *merā* / English *my*, *mine*]
-- [YOU SAY: the three forms — merā (m.) / merī (f.) / mere (pl.)]
+- [YOU SAY: the three forms — मेरा (*merā*, m.) / मेरी (*merī*, f.) / मेरे (*mere*, pl.)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERAA-01] -->
