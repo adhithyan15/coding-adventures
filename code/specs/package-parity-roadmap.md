@@ -12823,6 +12823,79 @@ Package parity, capability, OCaml-lock, JSON, state-DAG, lint-baseline,
 security, vulnerability, and diff gates are acceptable without adding host or
 execution authority.
 
+### Post-PR #14316 inventory and Windows volume-identity selection
+
+PR #14316 completed all 43 final-head checks with 22 successes and 21 expected
+skips. GitHub reported no merge conflict and executed guarded squash auto-merge
+as `71cf85dfe414e43ee939b65f7f91401373f3158c`.
+
+The collision-checked schema-3 inventory at that exact `origin/main` remains
+identity-neutral: 15 established lanes, 1,413 implementation identities, 4,629
+implementation slots, and 1,452 all-reported identities. The four bands remain
+175/265, 123/934, 172/2,165, and 943/13,202; Rust has 754 singletons,
+OCaml remains emerging at zero packages, and canonical collisions and unknown
+language buckets remain zero. A tree-to-tree audit from the previous inventory
+base found no added or removed lane/package identity pair and no newly eligible
+unowned gap.
+
+Parallel read-only backlog audits prepared several valid successors. Haskell
+portable source hashing is ready and immediately unlocks its dependency-hashing
+and repository-boundary children. The July Rust singleton classifier has broad
+graph leverage but first needs its historical cohort frozen exactly. Java,
+Kotlin, and Dart font-parser parity is a coherent three-lane breadth tranche,
+but it has no declared dependent. The shared .NET and Swift boundary-fixture
+consumers are small ready leaves after #14316. Elixir source hashing has a
+complete implementation plan but retains a native no-follow filesystem design
+risk. OCaml's remaining implementation chain is fully owned and begins behind
+the cross-platform execution contract and Go oracle.
+
+The dependency audit found a more immediate correctness prerequisite on that
+OCaml path. `build-tool-windows-appcontainer-sandbox` and
+`build-tool-bootstrap-execution-fixture` both require the pending
+`build-tool-windows-python313-execution-snapshot-volume-identity` repair. On
+this host the unchanged execution family passes 72 tests with 13 expected
+skips under Python 3.10, but Python 3.13 reports one failure and four errors
+because `fstat().st_dev` uses the 64-bit `FILE_ID_INFO.VolumeSerialNumber`
+while the retained-root validator compares only the legacy 32-bit
+`dwVolumeSerialNumber`.
+
+The Windows volume-identity repair is therefore selected next from exact main.
+It will query both serial forms from the same retained root handle, accept only
+exact membership, retain legacy-only fallback when extended information is
+unavailable, and reject any different 64-bit value that merely shares the low
+DWORD. It will not version-sniff, mask `st_dev`, change policy availability, or
+grant process authority. The new dependency edges make the execution bootstrap
+and AppContainer owners wait for this invariant. No other open PR overlaps the
+six planned paths. The resulting 694-owner graph has 205 merged, 488 pending,
+and exactly this owner in progress on
+`codex/build-tool-windows-python313-volume-identity`.
+
+Before final validation, the branch rebased conflict-free onto exact
+`origin/main` `e1808c31903c1324fa242d48e43b7e9cfce9252d`. The intervening
+language-AOT CI, Hindi curriculum, Mosaic viewport-unit, and SPICE BJT commits
+changed no package identity or selected path. The inventory counts remain
+unchanged and collision-free, and all seven live open PRs have zero exact
+overlap with the seven changed paths.
+
+The implementation keeps the legacy `GetFileInformationByHandle` result and
+also queries `GetFileInformationByHandleEx(FileIdInfo)` from the same retained
+root. A pure exact-width helper admits those two native values and no low-DWORD
+alias. Tests first failed on the missing helper, then the complete execution,
+authority, and backend family passed 74 tests with 13 expected platform skips
+under both Python 3.10 and 3.13. The wider conformance family independently
+passes 224 tests with 23 expected skips under each interpreter; the execution
+module reaches 82% branch-aware coverage.
+
+Both process-free contract validators, all 78 semantic-runner tests, the full
+Go build-tool suite, vet, trimpath build, real 5,140-package no-change plan,
+package-parity, capability, OCaml-lock, formatting, lint-baseline, compile,
+Bandit, state-DAG, collision, diff, and secret gates are acceptable. Live SDK
+and handle probes confirm the exact 24-byte ABI, both interpreter projections,
+same-low-DWORD rejection, and no handle growth across 250 captures. Independent
+correctness, security, and bookkeeping reviews found no blocker and no added
+process, filesystem, network, environment, credential, dependency, or policy
+authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

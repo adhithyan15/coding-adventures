@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Windows execution-corpus volume identity
+
+- Reconciled Python 3.10 and 3.13 Windows `st_dev` projections by retaining the
+  exact legacy and extended volume serials from the same open corpus-root
+  handle. The snapshot still rejects truncation, aliases, reparse traversal,
+  mutation, and every serial not supplied by that retained root.
+- Added cross-version regressions for exact legacy fallback, full-width serial
+  matching, and rejection of a different 64-bit serial sharing the same low
+  DWORD. Execution policy remains disabled and gains no process authority.
+
 ### Repository-boundary diff and hashing conformance
 
 - Defined process-free language-neutral behavior for exact reverse diff
