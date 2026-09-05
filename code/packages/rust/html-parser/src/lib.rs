@@ -11090,25 +11090,36 @@ fn populate_select_selectedcontent(select: &mut Element) {
         nodes: &[Node],
         first: &mut Option<Vec<Node>>,
         selected: &mut Option<Vec<Node>>,
+        disabled_by_optgroup: bool,
     ) {
         for node in nodes {
             let Node::Element(element) = node else {
                 continue;
             };
             if element.name == "option" {
-                first.get_or_insert_with(|| element.children.clone());
+                let disabled = element.attribute("disabled").is_some() || disabled_by_optgroup;
+                if !disabled {
+                    first.get_or_insert_with(|| element.children.clone());
+                }
                 if element.attribute("selected").is_some() {
                     *selected = Some(element.children.clone());
                 }
             } else if element.name != "button" {
-                collect_option_children(&element.children, first, selected);
+                let disabled_by_optgroup = disabled_by_optgroup
+                    || (element.name == "optgroup" && element.attribute("disabled").is_some());
+                collect_option_children(
+                    &element.children,
+                    first,
+                    selected,
+                    disabled_by_optgroup,
+                );
             }
         }
     }
 
     let mut first = None;
     let mut selected = None;
-    collect_option_children(&select.children, &mut first, &mut selected);
+    collect_option_children(&select.children, &mut first, &mut selected, false);
     let option_children = selected.or_else(|| {
         if select_display_size(select) == 1 {
             first
@@ -46996,6 +47007,102 @@ mod tests {
                 find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
             ),
             "last"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_skips_disabled_fallback_options() {
+        let selectedcontent_text = |source: &str| {
+            let document = parse_html(source).unwrap();
+            element_text_content(
+                find_first_element_in_nodes(&document.children, "selectedcontent").unwrap(),
+            )
+        };
+
+        let source = "<!doctype html><select><button><selectedcontent>old é\r\n</selectedcontent></button><option disabled>disabled</option><option><b>enabled</b></option></select>";
+        assert_eq!(selectedcontent_text(source), "enabled");
+        assert!(source.len() > source.chars().count());
+        assert_eq!(
+            selectedcontent_text(
+                "<!doctype html><select><button><selectedcontent>old</selectedcontent></button><optgroup disabled><option>disabled</option></optgroup><option>enabled</option></select>"
+            ),
+            "enabled"
+        );
+        assert_eq!(
+            selectedcontent_text(
+                "<!doctype html><select><button><selectedcontent>old</selectedcontent></button><option disabled selected>explicit</option><option>fallback</option></select>"
+            ),
+            "explicit"
+        );
+
+        let fragment = parse_html_fragment_for_context(
+            "<select><button><selectedcontent>old</selectedcontent></button><option disabled>disabled</option><option>enabled</option></select>",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&fragment, "selectedcontent").unwrap()
+            ),
+            "enabled"
+        );
+
+        let integration = parse_html(
+            "<!doctype html><svg><foreignObject><select><button><selectedcontent>old</selectedcontent></button><optgroup disabled><option>disabled</option></optgroup><option>enabled</option></select></foreignObject></svg>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&integration.children, "selectedcontent").unwrap()
+            ),
+            "enabled"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "disabled".to_string(),
+                    value: String::new(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("disabled".to_string()),
+            Token::EndTag {
+                name: "option".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("enabled".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "enabled"
         );
         assert!(direct
             .diagnostics()

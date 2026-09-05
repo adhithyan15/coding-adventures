@@ -39,7 +39,7 @@ Every track shares the same shape:
 ```text
 <language>/
   README.md                  what this track is, how to use it, current progress
-  CHANGELOG.md                per-chapter content additions
+  CHANGELOG.md                per-chapter content additions (rendered from CHANGELOG.d in sharded tracks)
   curriculum.d/              ordered shared-spine path + extensions, sharded by entry
   chapters.d/                authored chapter can-dos and payoffs, one file per chapter
   roadmap.md                  themed-chapter skeleton

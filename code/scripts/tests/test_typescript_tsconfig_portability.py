@@ -444,7 +444,8 @@ console.log(prose, nested);
         # -1: parser trace diagnostics now use a browser-safe console fallback
         # and access process only through globalThis, so the package no longer
         # requires ambient Node types in its compiler inputs.
-        self.assertEqual(summary.node_api_projects, 68)
+        # +1: VisiCalc's interaction tests read the real WASM engine bundle.
+        self.assertEqual(summary.node_api_projects, 69)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -456,7 +457,8 @@ console.log(prose, nested);
         # +1: forme-cli owns its runtime and test Node provider directly.
         # +1: forme-dev-server owns its runtime and test Node provider.
         # -1: see node_api_projects -- parser no longer needs a Node provider.
-        self.assertEqual(summary.node_provider_projects, 68)
+        # +1: VisiCalc owns the Node types used by its interaction tests.
+        self.assertEqual(summary.node_provider_projects, 69)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -480,7 +482,8 @@ console.log(prose, nested);
         # generic BUILD front before coverage.
         # +3: hkdf, ed25519, and x25519 lock the TypeScript prerequisites
         # shared by the D18 conformance lanes.
-        self.assertEqual(summary.locked_compilers, 469)
+        # +1: VisiCalc now commits its compiler and test dependency lockfile.
+        self.assertEqual(summary.locked_compilers, 470)
 
 
 if __name__ == "__main__":

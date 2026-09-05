@@ -124,7 +124,7 @@ enum Backend {
 enum Expect {
     /// The process exit code (an expression language's returned value, `& 0xFF`).
     Exit(i32),
-    /// A trimmed stdout string (an I/O language's printed output).
+    /// Trimmed text with canonical LF newlines. Brainfuck retains exact bytes.
     Stdout(&'static str),
     /// The program must fail closed at runtime (for example, a bounds trap).
     Trap,
@@ -7374,6 +7374,98 @@ fn run(backend: Backend, p: &Prog) -> Option<RunResult> {
     }
 }
 
+#[test]
+fn portable_text_stdout_accepts_lf_and_crlf() {
+    let program = Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 3.14\n20 PRINT .25\n30 PRINT -2.5\n",
+        expect: Expect::Stdout("3.14\n.25\n-2.5"),
+        backends: &[Llvm],
+    };
+    for stdout in ["3.14\n.25\n-2.5", "3.14\r\n.25\r\n-2.5"] {
+        assert_cell(Llvm, &program, RunResult::Completed {
+            code: Some(0), stdout: stdout.to_string(),
+        });
+    }
+}
+
+#[test]
+fn portable_text_stdout_preserves_content_and_brainfuck_bytes() {
+    let program = Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "text comparison boundary",
+        expect: Expect::Stdout(" A\t\n\nB\rC Ω "),
+        backends: &[Llvm],
+    };
+    assert_cell(Llvm, &program, RunResult::Completed {
+        code: Some(0), stdout: " A\t\r\n\r\nB\rC Ω ".to_string(),
+    });
+    // Only CRLF is a host newline. Dropping whitespace, a blank line, a lone
+    // carriage return, or changing a character must still fail conformance.
+    for stdout in ["A\t\n\nB\rC Ω ", " A\n\nB\rC Ω ", " A\t\nB\rC Ω ",
+                   " A\t\n\nBC Ω ", " A\t\n\nB\rC O "] {
+        assert!(std::panic::catch_unwind(|| assert_cell(Llvm, &program,
+            RunResult::Completed { code: Some(0), stdout: stdout.to_string() }
+        )).is_err(), "changed text must not compare equal: {stdout:?}");
+    }
+    let bytes = Prog {
+        lang: Language::Brainfuck,
+        ext: "bf",
+        src: "byte comparison boundary",
+        expect: Expect::Stdout("A\nB"),
+        backends: &[Llvm],
+    };
+    assert!(std::panic::catch_unwind(|| assert_cell(Llvm, &bytes,
+        RunResult::Completed { code: Some(0), stdout: "A\r\nB".to_string() }
+    )).is_err(), "Brainfuck's explicit bytes must not be text-normalized");
+}
+
+#[test]
+fn portable_text_stdout_basic_multiline_runs_on_available_backends() {
+    let mut ran = 0usize;
+    let mut skipped = 0usize;
+    for expected in ["3.14\n.25\n-2.5", "42\nOK\n20\nO", "22\n85032\n85032\n601352"] {
+        let program = PROGRAMS.iter().find(|program| {
+            program.lang == Language::DartmouthBasic
+                && matches!(&program.expect, Expect::Stdout(value) if *value == expected)
+        }).expect("the BASIC real, mixed DATA, and RND regressions must remain in the corpus");
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            assert!(program.backends.contains(&backend), "BASIC proof lost its {backend:?} cell");
+            let available = if backend == NativeAot {
+                native_linker_ok()
+            } else {
+                toolchain_available(backend)
+            };
+            match run(backend, program) {
+                Some(result) => {
+                    assert_cell(backend, program, result);
+                    ran += 1;
+                }
+                None => {
+                    assert!(!available, "available {backend:?} silently skipped {expected:?}");
+                    skipped += 1;
+                }
+            }
+        }
+    }
+    assert!(ran >= 9, "VM, JIT, and WASM must execute each of the three programs");
+    eprintln!("portable text stdout: {ran} cells exercised, {skipped} missing-tool skips");
+}
+
+/// Text runtimes may print a host newline as either LF or CRLF. Compare the
+/// same logical lines while retaining every other character. In particular,
+/// do not use `lines()` or remove all CRs: either would hide real output bugs.
+/// Brainfuck emits bytes, so its existing comparison must remain exact.
+fn comparison_stdout(lang: Language, stdout: &str) -> std::borrow::Cow<'_, str> {
+    if lang != Language::Brainfuck && stdout.contains("\r\n") {
+        std::borrow::Cow::Owned(stdout.replace("\r\n", "\n"))
+    } else {
+        std::borrow::Cow::Borrowed(stdout)
+    }
+}
+
 /// Assert a single matrix cell agrees with the program's known result.
 fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
     // Every message names the *source*, not just the language and index. A bare
@@ -7389,7 +7481,7 @@ fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
             p.src
         ),
         (Expect::Stdout(s), RunResult::Completed { stdout, .. }) => assert_eq!(
-            stdout, *s,
+            comparison_stdout(p.lang, &stdout), *s,
             "{backend:?} {:?}: expected stdout {s:?}, got {stdout:?}\nsource: {:?}",
             p.lang,
             p.src
@@ -12341,9 +12433,11 @@ fn gen_basic_expr(state: &mut u64, depth: usize) -> String {
 }
 
 /// The trimmed stdout of an engine's result (None if absent/trapped).
-fn stdout_of(r: Option<RunResult>) -> Option<String> {
+fn stdout_of(lang: Language, r: Option<RunResult>) -> Option<String> {
     match r {
-        Some(RunResult::Completed { stdout, .. }) => Some(stdout.trim().to_string()),
+        Some(RunResult::Completed { stdout, .. }) => {
+            Some(comparison_stdout(lang, stdout.trim()).into_owned())
+        }
         _ => None,
     }
 }
@@ -12367,16 +12461,16 @@ fn t7_differential_random_basic_print_agree() {
             backends: &[],
         };
 
-        let Some(want) = stdout_of(run_vm(&p)) else {
+        let Some(want) = stdout_of(p.lang, run_vm(&p)) else {
             panic!("VM (reference oracle) failed to run generated program: {src:?}");
         };
 
         let mut engines: Vec<(&str, Option<String>)> =
-            vec![("wasm", stdout_of(run_wasm(&p))), ("jit", stdout_of(run_jit(&p)))];
+            vec![("wasm", stdout_of(p.lang, run_wasm(&p))), ("jit", stdout_of(p.lang, run_jit(&p)))];
         if i.is_multiple_of(TOOLCHAIN_EVERY) {
-            engines.push(("native", stdout_of(run_native(&p))));
-            engines.push(("llvm", stdout_of(run_llvm(&p))));
-            engines.push(("clr", stdout_of(run_clr(&p))));
+            engines.push(("native", stdout_of(p.lang, run_native(&p))));
+            engines.push(("llvm", stdout_of(p.lang, run_llvm(&p))));
+            engines.push(("clr", stdout_of(p.lang, run_clr(&p))));
         }
         for (engine, got) in engines {
             if let Some(got) = got {
@@ -12432,16 +12526,16 @@ fn t7_differential_random_basic_conditionals_agree() {
             backends: &[],
         };
 
-        let Some(want) = stdout_of(run_vm(&p)) else {
+        let Some(want) = stdout_of(p.lang, run_vm(&p)) else {
             panic!("VM (reference oracle) failed to run generated program: {src:?}");
         };
 
         let mut engines: Vec<(&str, Option<String>)> =
-            vec![("wasm", stdout_of(run_wasm(&p))), ("jit", stdout_of(run_jit(&p)))];
+            vec![("wasm", stdout_of(p.lang, run_wasm(&p))), ("jit", stdout_of(p.lang, run_jit(&p)))];
         if i.is_multiple_of(TOOLCHAIN_EVERY) {
-            engines.push(("native", stdout_of(run_native(&p))));
-            engines.push(("llvm", stdout_of(run_llvm(&p))));
-            engines.push(("clr", stdout_of(run_clr(&p))));
+            engines.push(("native", stdout_of(p.lang, run_native(&p))));
+            engines.push(("llvm", stdout_of(p.lang, run_llvm(&p))));
+            engines.push(("clr", stdout_of(p.lang, run_clr(&p))));
         }
         for (engine, got) in engines {
             if let Some(got) = got {
@@ -12513,15 +12607,15 @@ fn t7_differential_random_basic_loops_agree() {
             expect: Expect::Stdout(""),
             backends: &[],
         };
-        let Some(want) = stdout_of(run_vm(&p)) else {
+        let Some(want) = stdout_of(p.lang, run_vm(&p)) else {
             panic!("VM (reference oracle) failed to run generated program: {src:?}");
         };
         let mut engines: Vec<(&str, Option<String>)> =
-            vec![("wasm", stdout_of(run_wasm(&p))), ("jit", stdout_of(run_jit(&p)))];
+            vec![("wasm", stdout_of(p.lang, run_wasm(&p))), ("jit", stdout_of(p.lang, run_jit(&p)))];
         if i.is_multiple_of(TOOLCHAIN_EVERY) {
-            engines.push(("native", stdout_of(run_native(&p))));
-            engines.push(("llvm", stdout_of(run_llvm(&p))));
-            engines.push(("clr", stdout_of(run_clr(&p))));
+            engines.push(("native", stdout_of(p.lang, run_native(&p))));
+            engines.push(("llvm", stdout_of(p.lang, run_llvm(&p))));
+            engines.push(("clr", stdout_of(p.lang, run_clr(&p))));
         }
         for (engine, got) in engines {
             if let Some(got) = got {

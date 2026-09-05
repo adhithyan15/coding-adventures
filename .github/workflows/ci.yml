@@ -1506,6 +1506,11 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Enable Flutter native assets
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        shell: bash
+        run: flutter config --enable-native-assets
+
       - name: Set up Swift (Windows)
         if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
         shell: pwsh
@@ -2146,7 +2151,9 @@ jobs:
             flutter build linux --debug
           )
 
-          bundled_runtime="$(find "$bundled_output/flutter/build/linux" -type f -name 'libmosaic_app.so' -print -quit)"
+          installed="$(find "$bundled_output/flutter/build/linux" -type f -path '*/bundle/mosaic_flutter_runtime_conformance' -perm -111 -print -quit)"
+          test -n "$installed"
+          bundled_runtime="$(find "$(dirname "$installed")" -type f -name 'libmosaic_app.so' -print -quit)"
           test -n "$bundled_runtime"
           cmp "$runtime_library" "$bundled_runtime"
 
@@ -2182,11 +2189,11 @@ jobs:
             flutter build linux --debug
           )
 
-          bundled_taskapp_runtime="$(find "$taskapp_output/flutter/build/linux" -type f -name 'libmosaic_app.so' -print -quit)"
+          installed_taskapp="$(find "$taskapp_output/flutter/build/linux" -type f -path '*/bundle/mosaic_taskapp_acceptance' -perm -111 -print -quit)"
+          test -n "$installed_taskapp"
+          bundled_taskapp_runtime="$(find "$(dirname "$installed_taskapp")" -type f -name 'libmosaic_app.so' -print -quit)"
           test -n "$bundled_taskapp_runtime"
           cmp "$task_runtime_library" "$bundled_taskapp_runtime"
-          installed_taskapp="$(find "$taskapp_output/flutter/build/linux" -type f -name 'mosaic_taskapp_acceptance' -perm -111 -print -quit)"
-          test -n "$installed_taskapp"
           taskapp_log="$RUNNER_TEMP/mosaic-flutter-taskapp-launch.log"
           set +e
           env -u MOSAIC_APP_LIBRARY xvfb-run -a timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1

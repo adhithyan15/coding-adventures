@@ -8,9 +8,9 @@ spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1070
 chapter: 39
 type: word
-headword: बच्चा
-gloss: child — masculine, with a feminine बच्ची, and a Persian word that landed on top of an inherited Sanskrit cousin
-romanization: "bacca"
+headword: बच्चा / बच्ची / बछड़ा
+gloss: boy child / girl child / calf — Persian siblings beside an inherited Sanskrit cousin
+romanization: "bacchā / bacchī / bachṛā"
 concept_tag: HI-PERSON-CHILD
 prerequisites: [HI-C39-dost, HI-C12-pitaa-maataa, HI-C19-age-grammar]
 sounds: [geminate-cca, devanagari-long-aa]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-C39-dost, HI-C36-kursi, HI-C12-pitaa-maataa, HI-C19-umr, HI-C19-age-grammar]
 ---
 
-# बच्चा (bacchā) — the child, who is a "yearling"
+# बच्चा / बच्ची / बछड़ा — children and the inherited "yearling"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C12-PITAA-MAATAA-01, HI-CONCEPT-C39-DOST-01] -->

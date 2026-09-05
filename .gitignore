@@ -83,9 +83,10 @@ build_output.txt
 /.tmp/
 
 # Human-languages Markdown aggregates are local rendered views. Their `.d/`
-# directories are the committed source of truth; tracking these two files
+# directories are the committed source of truth; tracking these files
 # recreates the merge hot spots that sharding exists to remove.
 /code/learning/human-languages/BACKLOG.md
+/code/learning/human-languages/hindi/CHANGELOG.md
 /code/packages/typescript/human-language-data/CHANGELOG.md
 /code/programs/typescript/language-ladder/CHANGELOG.md
 

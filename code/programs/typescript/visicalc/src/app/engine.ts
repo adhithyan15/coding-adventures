@@ -34,14 +34,7 @@ declare global {
 // The classic cross-footing budget — the identical seed every other VisiCalc demo
 // uses (E column = row sums, row 5 = column sums, E5 = grand total 169), so the
 // React/Electron grid shows the SAME engine-computed values.
-const SEED: Record<string, string> = {
-  A1: "15", B1: "3", C1: "12", D1: "8", E1: "=SUM(A1:D1)",
-  A2: "8", B2: "14", C2: "7", D2: "22", E2: "=SUM(A2:D2)",
-  A3: "12", B3: "9", C3: "18", D3: "6", E3: "=SUM(A3:D3)",
-  A4: "4", B4: "11", C4: "3", D4: "17", E4: "=SUM(A4:D4)",
-  A5: "=SUM(A1:A4)", B5: "=SUM(B1:B4)", C5: "=SUM(C1:C4)",
-  D5: "=SUM(D1:D4)", E5: "=SUM(E1:E4)",
-};
+import SEED from "../../../../mosaic/visicalc/fixtures/budget-v1.json";
 
 /** A thin, React-friendly view of the engine workbook. */
 export interface Engine {

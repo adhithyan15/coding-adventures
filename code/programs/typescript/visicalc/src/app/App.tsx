@@ -23,7 +23,7 @@ import {
 } from "react";
 import { Grid } from "../components/Grid";
 import { FormulaBar } from "../components/FormulaBar";
-import { initialState, reducer, type AppAction } from "./state";
+import { initialState, reducer, type AppAction, type GridEvent } from "./state";
 import { cellLabel } from "./util";
 import { loadEngine, type Engine } from "./engine";
 
@@ -114,11 +114,26 @@ export function App() {
     [state.editRow, state.editCol, state.editContent],
   );
 
+  // The generated Grid emits row indices within viewportRows. Keyboard events
+  // and engine operations use absolute workbook coordinates.
+  const gridDispatch = useCallback(
+    (event: GridEvent) => engineDispatch(event.type === "navigate"
+      ? { ...event, row: event.row + state.viewportOffset }
+      : event),
+    [engineDispatch, state.viewportOffset],
+  );
+
   // Keyboard handling (UI26 §8). We attach a single keydown listener
   // on window because navigation is a host concern, not a Grid concern.
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      // While editing, let the FormulaBar's <input> handle keystrokes.
+      // Generated inputs own text navigation and Enter/Escape. In particular,
+      // a formula-bar key must not also start/navigate a grid edit while idle.
+      if (
+        e.defaultPrevented ||
+        (e.target instanceof HTMLElement &&
+          (e.target.closest("input, textarea, select") || e.target.isContentEditable))
+      ) return;
       if (state.editRow !== -1) return;
 
       const r = state.selectedRow;
@@ -194,12 +209,12 @@ export function App() {
         totalHeight={600}
         selectedRow={state.selectedRow - state.viewportOffset}
         selectedCol={state.selectedCol}
-        editRow={state.editRow - state.viewportOffset}
+        editRow={state.editRow === -1 ? -1 : state.editRow - state.viewportOffset}
         editCol={state.editCol}
         // UI28-1 / U29-D1 — the live edit buffer Grid threads into the
         // inline <input value=...> when the user is editing a cell.
         editContent={state.editContent}
-        dispatch={engineDispatch}
+        dispatch={gridDispatch}
       />
     </div>
   );

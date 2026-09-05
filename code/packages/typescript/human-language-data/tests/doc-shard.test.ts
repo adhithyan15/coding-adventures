@@ -50,6 +50,15 @@ import { LEGACY_DOC_SHARD_SHA256 } from "../src/doc-shard-legacy.js";
 const PLAN: DocShardPlan = { path: "x/DOC.md", headingLevel: 2, newestFirst: true };
 const OLDEST_FIRST: DocShardPlan = { ...PLAN, newestFirst: false };
 const DUCTUS_CHANGELOG = "code/packages/typescript/script-ductus/CHANGELOG.md";
+const HINDI_CHANGELOG = "code/learning/human-languages/hindi/CHANGELOG.md";
+const HINDI_PLAN: DocShardPlan = {
+  path: HINDI_CHANGELOG,
+  headingLevel: 2,
+  newestFirst: true,
+};
+const HINDI_FORWARD_FRAGMENT =
+  "00250-UNRELEASED-HINDI-CHANGELOG-AUTHORING-IS-SHARDED-6788c56d.md";
+const HINDI_MIGRATION_MAX_RANK = 240;
 const DUCTUS_PLAN: DocShardPlan = {
   path: DUCTUS_CHANGELOG,
   headingLevel: 3,
@@ -58,6 +67,46 @@ const DUCTUS_PLAN: DocShardPlan = {
 const DUCTUS_FORWARD_FRAGMENT =
   "01625-CHANGED-SHARD-NATIVE-SCRIPT-INVENTORIES-9fa3a043.md";
 const DUCTUS_MIGRATION_MAX_RANK = 1_630;
+
+describe("Hindi changelog ownership", () => {
+  it("registers the changelog as a fixed newest-first level-2 shard plan", () => {
+    expect(DOC_SHARD_PLANS.find((plan) => plan.path === HINDI_CHANGELOG)).toEqual(
+      HINDI_PLAN,
+    );
+  });
+
+  it("keeps the generated monolith absent from a clean checkout", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), HINDI_CHANGELOG);
+    let cause: unknown;
+    try {
+      lstatSync(monolith);
+    } catch (error) {
+      cause = error;
+    }
+    expect(isAbsentErrno((cause as NodeJS.ErrnoException | undefined)?.code)).toBe(true);
+  });
+
+  it("preserves the pre-migration Hindi history byte-for-byte", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), HINDI_CHANGELOG);
+    const shards = readDocShards(monolith, HINDI_PLAN);
+    expect(shards).not.toBeNull();
+
+    const historical = new Map(
+      [...shards!].filter(
+        ([name]) =>
+          name !== HINDI_FORWARD_FRAGMENT &&
+          (name === DOC_META_SHARD || Number(name.slice(0, 5)) <= HINDI_MIGRATION_MAX_RANK),
+      ),
+    );
+    const rendered = joinDocShards(historical, HINDI_PLAN);
+
+    expect(Buffer.byteLength(rendered)).toBe(85_282);
+    expect(splitDocument(rendered, 2).sections).toHaveLength(24);
+    expect(createHash("sha256").update(rendered).digest("hex")).toBe(
+      "ffb767831fd61e6e6d5ca7f79f61a06516b128e1169a08b8a7e95989b91b6590",
+    );
+  });
+});
 
 describe("HL26 Script Ductus changelog ownership", () => {
   it("registers the changelog as a fixed newest-first level-3 shard plan", () => {
@@ -684,7 +733,11 @@ describe("the real documents", () => {
       );
 
       expect(fromShards).toEqual(fromMonolith);
-      expect(fromShards.length).toBeGreaterThan(100); // every document is well past the "10 < 2" threshold
+      if (plan.path === HINDI_CHANGELOG) {
+        expect(fromShards.length).toBeGreaterThan(HINDI_MIGRATION_MAX_RANK / 10);
+      } else {
+        expect(fromShards.length).toBeGreaterThan(100);
+      }
     });
 
     it(`${plan.path}: every file in the shard directory is a *.md shard`, () => {
