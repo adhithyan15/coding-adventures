@@ -1,5 +1,10 @@
 # lang-aot
 
+McCarthy's native corpus runs on Linux, macOS and Windows. Execute it with
+`cargo test -p lang-aot --test conformance mccarthy_native_corpus_executes -- --exact --nocapture`.
+Windows CI sets `LANG_REQUIRE_WINDOWS_AOT=1` so an absent linker fails the gate.
+
+
 See the [feature/backend coverage audit](../../../specs/LANG-VM-FEATURE-COVERAGE.md)
 for all ten frontends, executable proofs, host gates and remaining work.
 

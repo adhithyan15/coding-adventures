@@ -26,13 +26,10 @@
 //! over two already-concrete operands purely to produce a boxed, exit-unboxed
 //! result — had never been run end-to-end on any backend before this suite.
 //!
-//! ## Native-AOT is cross-platform here (unlike the McCarthy W16 capstone)
+//! ## Native-AOT host execution
 //!
-//! `conformance.rs`'s own `run_native` is `#[cfg(target_os = "macos")]`-only.
-//! This suite instead mirrors `lang_matrix.rs`'s `compile_native` — Linux/macOS/
-//! Windows all route through the matching `lang_aot::compile_file_to_*_executable`
-//! — so native-AOT actually runs (and is asserted, not just attempted) on
-//! whichever of the three this suite executes on, including this Windows box.
+//! Linux/macOS/Windows route through the matching executable compiler. McCarthy's
+//! conformance suite now uses the same host coverage (VM-036).
 
 use lang_aot::{
     compile_source_to_cil_artifact, compile_source_to_iir, compile_source_to_jvm_class,

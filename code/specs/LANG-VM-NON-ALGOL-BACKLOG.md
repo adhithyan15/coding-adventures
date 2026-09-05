@@ -84,6 +84,13 @@ with the real Microsoft linker and LLVM linker, and prove the required-linker
 negative path fails with an empty PATH in a child invocation. Update coverage
 docs and retain all existing standard/managed conformance lanes.
 
+VM-036 local validation: all 19 native programs executed with Microsoft
+link.exe, then all 19 with an LLVM-only linker PATH. With an empty PATH and
+LANG_REQUIRE_WINDOWS_AOT=1, the same test failed at the required-linker assertion
+(exit 101, zero executed programs). All-target lang-aot Clippy with warnings
+denied and six Windows CI selector tests passed. Linux/macOS execution and the
+new hosted Windows command remain required PR CI evidence before merge.
+
 ## VM-027 implementation contract (selected after #14333 merged)
 
 PR #14333 merged as `cd73f3ad86` after Linux, macOS, Windows and the CI gates
