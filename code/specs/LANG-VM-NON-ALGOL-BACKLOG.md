@@ -63,6 +63,27 @@ VM-033 (Windows text-output newlines), which now precedes coverage work. After
 that repair, missing Windows runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
 otherwise this exact regression can recur despite a green Windows job.
 
+## VM-036 implementation contract (selected after #14341 merged)
+
+The ten-frontend audit merged as `1fcd588c6b` after all checks passed on
+`23dc4ec216`. No new runtime failure supersedes the coverage queue. Select
+VM-036: McCarthy's native capstone should execute on Windows and Linux, not
+return None solely because the host is not macOS. ALGOL remains separately owned.
+
+Use each host's existing executable compilation API. Probe the matching linker:
+Windows must distinguish Microsoft/LLVM/MinGW from POSIX link.exe; Linux honors
+CC as the production linker does; macOS probes ld. Once the linker is detected,
+compile/link/launch or result errors must fail loudly. Preserve the existing
+19-program corpus and exact result comparisons (including process failures).
+
+Add a native-only test over all 19 programs for the existing Windows native CI
+step. It must assert nonempty/full execution, emit a count, and fail if
+LANG_REQUIRE_WINDOWS_AOT=1 but no Windows linker is found. Normal Linux/macOS
+BUILD already runs the conformance target. Validate the focused corpus locally
+with the real Microsoft linker and LLVM linker, and prove the required-linker
+negative path fails with an empty PATH in a child invocation. Update coverage
+docs and retain all existing standard/managed conformance lanes.
+
 ## VM-027 implementation contract (selected after #14333 merged)
 
 PR #14333 merged as `cd73f3ad86` after Linux, macOS, Windows and the CI gates
@@ -273,7 +294,7 @@ backends, and all-target Clippy is clean. Full-matrix completion is not claimed.
 | 2 | VM-025 | queued; coordinate with ALGOL owner | Reproduce the full matrix's current Linux failures and restore full CI coverage after their repair. | Record exact failing cells and owning PRs; remove the full-matrix exclusion only after the complete target runs green on supported CI hosts. |
 | — | VM-026 | done ([#14325](https://github.com/adhithyan15/coding-adventures/pull/14325)) | Reconcile stale Twig, frontend-count, and completed-work claims in LANG-FULL and LANG-PLATFORM status documents. | Every remaining gap links a current source/test boundary; landed VM-010, VM-017, VM-018, VM-020, and VM-021 work is no longer described as missing. |
 | — | VM-035 | done ([#14333](https://github.com/adhithyan15/coding-adventures/pull/14333)) | Honor Cargo target-directory overrides in shared AOT test archive discovery. | With a nondefault `CARGO_TARGET_DIR`, locate the archive Cargo actually built and execute a heap LLVM cell; never return a nonexistent guessed path. |
-| 4 | VM-027 | selected | Audit feature-by-backend coverage for all ten wired frontends, including dedicated McCarthy and Macsyma suites. | Inventory implemented features, declared/refused backend cells, executable proofs, and CI commands; split every uncovered implemented feature into a bounded parity item. |
+| — | VM-027 | done ([#14341](https://github.com/adhithyan15/coding-adventures/pull/14341)) | Audit feature-by-backend coverage for all ten wired frontends, including dedicated McCarthy and Macsyma suites. | Inventory implemented features, declared/refused backend cells, executable proofs, and CI commands; split every uncovered implemented feature into a bounded parity item. |
 | 5 | VM-013 | design required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `out`, `adc`, `sbb`, rotations, carry, parity). | Document machine state and I/O contracts, then split into PR-sized operations with both portable and real 8008-simulator proofs; resolve only essential language-design questions with the user. |
 | 6 | VM-028 | queued | Audit Nib's remaining Intel-4004 arithmetic and control-flow parity beyond BCD storage. | Compare implemented operations against the 4004 backend and simulator; file bounded missing-operation or refusal tests and close them with executed proofs. |
 | 7 | VM-029 | queued | Audit the broader platform vision and native-runtime roadmaps into explicit completion milestones. | Separate landed capabilities from GC, tooling, IR-bridge/transpilation, and measured-performance work; give every retained milestone a testable acceptance criterion and owner. |
