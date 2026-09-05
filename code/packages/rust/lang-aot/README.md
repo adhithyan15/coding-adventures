@@ -1,5 +1,9 @@
 # lang-aot
 
+COBOL STRING/UNSTRING pointer rows compare receiver text, pointer writeback and
+overflow/success markers together, including exact fit, partial transfer,
+invalid starts and a trailing delimiter. They declare all seven standard backends.
+
 COBOL delimiter rows cover STRING first-delimiter behavior and UNSTRING field
 fitting, empty fields and exhausted-source receiver preservation. Bracketed
 outputs keep all padding visible across the seven standard backends.

@@ -82,6 +82,12 @@ includes the rows automatically. Log and prioritize any new defect before
 claiming parity, with repair specs committed before implementation. Update
 inventory counts, README, changelog and validation evidence.
 
+VM-046c local execution: all eight rows (416–423) pass all seven standard
+backends in fresh processes with ran-cell sentinels: 56 executions, zero skips.
+All 121 frontend STRING/UNSTRING oracle tests and focused matrix Clippy pass.
+No runtime repair was needed. The inventory now declares 192 non-ALGOL
+programs / 1364 cells; hosted normal BUILD remains the merge gate.
+
 ## VM-046b implementation contract (selected after #14377 merged)
 
 PR #14377 merged as `b071b0493c` with all checks green at `3a68a24c33`.
