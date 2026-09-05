@@ -307,6 +307,23 @@ def _is_reparse(value: os.stat_result) -> bool:
     )
 
 
+def _windows_volume_serial_candidates(
+    legacy_volume_serial: int,
+    extended_volume_serial: int | None,
+) -> frozenset[int]:
+    """Keep the exact native serial widths exposed by one retained handle.
+
+    Windows exposes a legacy DWORD volume serial and, on newer filesystems, a
+    64-bit ``FILE_ID_INFO`` serial. CPython may project either value through
+    ``st_dev``. Retaining both exact values avoids interpreter-version logic
+    without weakening the identity check through low-DWORD masking.
+    """
+
+    if extended_volume_serial is None:
+        return frozenset((legacy_volume_serial,))
+    return frozenset((legacy_volume_serial, extended_volume_serial))
+
+
 def _read_raw_regular_bound(
     path: Path,
     *,
@@ -672,6 +689,15 @@ def _capture_windows_execution_entries(
             ("file_index_low", wintypes.DWORD),
         ]
 
+    class FileId128(ctypes.Structure):
+        _fields_ = [("identifier", ctypes.c_ubyte * 16)]
+
+    class FileIdInfo(ctypes.Structure):
+        _fields_ = [
+            ("volume_serial_number", ctypes.c_ulonglong),
+            ("file_id", FileId128),
+        ]
+
     kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
     create_file = kernel32.CreateFileW
     create_file.argtypes = (
@@ -805,14 +831,26 @@ def _capture_windows_execution_entries(
             info.file_attributes,
         )
 
-    def volume_serial(handle: int) -> int:
+    def volume_serials(handle: int) -> frozenset[int]:
         info = ByHandleFileInformation()
         if not get_handle_info(handle, ctypes.byref(info)):
             raise bootstrap.ConformanceError(
                 "EXECUTION_CORPUS_DIRECTORY_INVALID",
                 "execution corpus root volume identity is unavailable",
             )
-        return int(info.volume_serial_number)
+        extended_info = FileIdInfo()
+        extended_serial = None
+        if get_info(
+            handle,
+            18,
+            ctypes.byref(extended_info),
+            ctypes.sizeof(extended_info),
+        ):
+            extended_serial = int(extended_info.volume_serial_number)
+        return _windows_volume_serial_candidates(
+            int(info.volume_serial_number),
+            extended_serial,
+        )
 
     def enumerate_directory(handle: int) -> tuple[tuple[Any, ...], ...]:
         records: list[tuple[Any, ...]] = []
@@ -871,7 +909,7 @@ def _capture_windows_execution_entries(
             handles.append(open_directory(path, final=index == len(chain_paths) - 1))
         root_handle = handles[-1]
         before = basic_identity(root_handle)
-        root_volume_serial = volume_serial(root_handle)
+        root_volume_serials = volume_serials(root_handle)
         first_records = enumerate_directory(root_handle)
         record_by_name = {str(record[0]): record for record in first_records}
         names = _validated_execution_case_names(record_by_name)
@@ -896,7 +934,7 @@ def _capture_windows_execution_entries(
             )
             identity = (status.st_dev, status.st_ino)
             if (
-                status.st_dev != root_volume_serial
+                status.st_dev not in root_volume_serials
                 or status.st_ino != int(record[1])
                 or identity in identities
             ):
