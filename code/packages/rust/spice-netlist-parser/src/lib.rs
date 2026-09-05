@@ -2500,6 +2500,14 @@ fn parse_element(
                     "BJT PTF must be finite and non-negative",
                 ));
             }
+            let forward_transit_time_bias_coefficient = *model.params.get("XTF").unwrap_or(&0.0);
+            if !forward_transit_time_bias_coefficient.is_finite()
+                || forward_transit_time_bias_coefficient < 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "BJT XTF must be finite and non-negative",
+                ));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2533,6 +2541,7 @@ fn parse_element(
             bjt.flicker_noise_coefficient = flicker_noise_coefficient;
             bjt.flicker_noise_exponent = flicker_noise_exponent;
             bjt.forward_excess_phase_degrees = forward_excess_phase_degrees;
+            bjt.forward_transit_time_bias_coefficient = forward_transit_time_bias_coefficient;
             Ok(Element::Bjt(bjt))
         }
         'J' => {
