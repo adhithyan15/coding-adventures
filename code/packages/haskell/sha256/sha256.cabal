@@ -21,4 +21,5 @@ test-suite spec
     build-depends:    base >=4.14
                     , sha256
                     , hspec == 2.*
+                    , bytestring >=0.10 && <0.13
     default-language: Haskell2010
