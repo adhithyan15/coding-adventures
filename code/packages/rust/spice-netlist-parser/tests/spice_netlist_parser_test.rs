@@ -1369,7 +1369,7 @@ Rload out 0 1k
 fn parses_bjt_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05 VAF=75 VA=120 VAR=60 VB=90 IKF=3m IK=5m IKR=4m TNOM=27 T_NOM=35)
+.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05 VAF=75 VA=120 VAR=60 VB=90 IKF=3m IK=5m IKR=4m TNOM=27 T_NOM=35 KF=2p)
 Vcc vcc 0 DC 5
 Vbase base 0 DC 0.7
 Q1 vcc base out fast
@@ -1412,6 +1412,7 @@ Rload out 0 1k
     assert_close(bjt.forward_beta_rolloff_current, 3.0e-3);
     assert_close(bjt.reverse_beta_rolloff_current, 4.0e-3);
     assert_close(bjt.nominal_temperature_kelvin.unwrap(), 300.15);
+    assert_close(bjt.flicker_noise_coefficient, 2.0e-12);
 
     let result = dc_op(&parsed.circuit).unwrap();
     let out = result.voltage("out").unwrap();
@@ -1561,6 +1562,28 @@ fn rejects_invalid_bjt_nominal_temperature() {
         assert!(error
             .to_string()
             .contains("BJT TNOM must be finite and positive"));
+    }
+}
+
+#[test]
+fn parses_bjt_flicker_noise_coefficient() {
+    let parsed = parse_netlist(".model shaped NPN(KF=2p)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.flicker_noise_coefficient, 2.0e-12);
+}
+
+#[test]
+fn rejects_invalid_bjt_flicker_noise_coefficient() {
+    for value in ["-1p", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(KF={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT KF must be finite and non-negative"));
     }
 }
 
