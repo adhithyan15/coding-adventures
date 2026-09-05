@@ -5829,6 +5829,200 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("[A ]\n[B ]\n[ZZ]"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL pointer/overflow: in-range STRING preserves both sides and advances by bytes placed.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(2) VALUE \"XY\".\n\
+               000000 01 T PIC X(6) VALUE \"......\".\n\
+               000000 01 P PIC 9(2) VALUE 3.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A DELIMITED BY SIZE INTO T WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" T \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[..XY..]\n05\nNON"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: an exact fit reaches width plus one without overflow.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(3) VALUE \"XYZ\".\n\
+               000000 01 T PIC X(5) VALUE \".....\".\n\
+               000000 01 P PIC 9(2) VALUE 3.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A DELIMITED BY SIZE INTO T WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" T \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[..XYZ]\n06\nNON"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: a partial STRING transfer updates its pointer before ON OVERFLOW.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(5) VALUE \"abcde\".\n\
+               000000 01 T PIC X(6) VALUE \"......\".\n\
+               000000 01 P PIC 9(2) VALUE 4.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A DELIMITED BY SIZE INTO T WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" T \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[...abc]\n07\nYES"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: zero STRING pointer transfers nothing and remains unchanged.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(3) VALUE \"abc\".\n\
+               000000 01 T PIC X(6) VALUE \"......\".\n\
+               000000 01 P PIC 9(2) VALUE 0.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A DELIMITED BY SIZE INTO T WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" T \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[......]\n00\nYES"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: UNSTRING starts at a middle field and reports remaining input.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"a,b,c\".\n\
+               000000 01 R1 PIC X(3) VALUE \"...\".\n\
+               000000 01 P PIC 9(2) VALUE 3.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" R1 \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[b  ]\n05\nYES"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: UNSTRING exhaustion advances past the end and runs the success clause.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(3) VALUE \"a,b\".\n\
+               000000 01 R1 PIC X(3) VALUE \"...\".\n\
+               000000 01 R2 PIC X(3) VALUE \"...\".\n\
+               000000 01 P PIC 9(2) VALUE 1.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 UNSTRING S DELIMITED BY \",\" INTO R1 R2 WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" R1 \"]\".\n\
+               000000 DISPLAY \"[\" R2 \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[a  ]\n[b  ]\n04\nNON"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: a past-end UNSTRING pointer leaves receiver and pointer unchanged.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"a,b,c\".\n\
+               000000 01 R1 PIC X(3) VALUE \"ZZZ\".\n\
+               000000 01 P PIC 9(2) VALUE 6.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" R1 \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[ZZZ]\n06\nYES"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: a trailing delimiter leaves an empty field and therefore overflows.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(4) VALUE \"A,B,\".\n\
+               000000 01 R1 PIC X(3) VALUE \"...\".\n\
+               000000 01 R2 PIC X(3) VALUE \"...\".\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 UNSTRING S DELIMITED BY \",\" INTO R1 R2\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" R1 \"]\".\n\
+               000000 DISPLAY \"[\" R2 \"]\".\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[A  ]\n[B  ]\nYES"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

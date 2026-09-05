@@ -63,6 +63,31 @@ VM-033 (Windows text-output newlines), which now precedes coverage work. After
 that repair, missing Windows runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
 otherwise this exact regression can recur despite a green Windows job.
 
+## VM-046c implementation contract (selected after #14387 merged)
+
+PR #14387 merged as `8e52198a5b` after all checks passed at `3a0e0e870e`.
+VM-046b and discovered VM-054/055 are complete. Full local non-ALGOL regression
+passed 184 programs / 1308 cells with zero skips. Reprioritization selects the
+remaining pointer/overflow slice; ALGOL stays separately owned.
+
+Add canonical STRING and UNSTRING programs declaring all seven standard
+backends. Observe receiver content, pointer writeback and distinct ON OVERFLOW /
+NOT ON OVERFLOW markers together. Cover in-range offsets, exact fit, partial
+transfer, invalid starting pointers, exhausted input and trailing-delimiter
+boundary behavior using the existing frontend oracle contracts. Preserve
+untouched receiver bytes with nonblank initializers and bracket output so
+padding remains visible. Execute all new cells in fresh processes with ran-cell
+sentinels; run frontend oracle tests and focused lint. Normal non-ALGOL BUILD
+includes the rows automatically. Log and prioritize any new defect before
+claiming parity, with repair specs committed before implementation. Update
+inventory counts, README, changelog and validation evidence.
+
+VM-046c local execution: all eight rows (416–423) pass all seven standard
+backends in fresh processes with ran-cell sentinels: 56 executions, zero skips.
+All 121 frontend STRING/UNSTRING oracle tests and focused matrix Clippy pass.
+No runtime repair was needed. The inventory now declares 192 non-ALGOL
+programs / 1364 cells; hosted normal BUILD remains the merge gate.
+
 ## VM-046b implementation contract (selected after #14377 merged)
 
 PR #14377 merged as `b071b0493c` with all checks green at `3a68a24c33`.
@@ -119,8 +144,8 @@ No red cell supersedes the next coverage item. Split VM-046 into small proofs:
 | Priority | Slice | Acceptance |
 |---|---|---|
 | done #14377 | VM-046a | STRING DELIMITED BY SIZE: full source widths/spaces, mixed literal/item input, receiver truncation and preservation of a nonblank untouched tail. |
-| selected | VM-046b | STRING delimiters and UNSTRING basic splitting: empty fields, receiver fitting and untouched receivers after source exhaustion. |
-| then | VM-046c | STRING/UNSTRING pointer updates and overflow branches with distinguishable outputs. |
+| done #14387 | VM-046b | STRING delimiters and UNSTRING basic splitting: empty fields, receiver fitting and untouched receivers after source exhaustion. |
+| selected | VM-046c | STRING/UNSTRING pointer updates and overflow branches with distinguishable outputs. |
 
 VM-046a adds canonical ASCII programs declaring all seven standard backends.
 Use visible trailing markers so output normalization cannot hide spaces, and
