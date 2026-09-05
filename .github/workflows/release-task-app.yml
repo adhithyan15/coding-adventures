@@ -385,33 +385,13 @@ jobs:
             flutter analyze
             flutter build linux --release
           )
-          executable="$(find "$generated/build/linux" -type f -name trestle -perm -111 -print -quit)"
+          executable="$(find "$generated/build/linux" -type f -path '*/bundle/trestle' -perm -111 -print -quit)"
           bundle="$(dirname "$executable")"
           runtime="$(find "$bundle" -type f -name libmosaic_app.so -print -quit)"
           test -x "$executable"
-          if [[ -z "$runtime" ]]; then
-            native_asset=""
-            for native_asset_root in \
-              "$generated/build/native_assets/linux" \
-              "$generated/.dart_tool/hooks_runner/shared"; do
-              if [[ -d "$native_asset_root" ]]; then
-                native_asset="$(find "$native_asset_root" -type f -name libmosaic_app.so -print -quit)"
-              fi
-              [[ -n "$native_asset" ]] && break
-            done
-            test -n "$native_asset"
-            runtime="$bundle/lib/libmosaic_app.so"
-            mkdir -p "$(dirname "$runtime")"
-            cp -- "$native_asset" "$runtime"
-          fi
-          aot_library="$bundle/lib/libapp.so"
-          if [[ ! -s "$aot_library" ]]; then
-            staged_aot="$generated/build/lib/libapp.so"
-            test -s "$staged_aot"
-            cp -- "$staged_aot" "$aot_library"
-          fi
+          test -n "$runtime"
           cmp "$expected" "$runtime"
-          test -s "$aot_library"
+          test -s "$bundle/lib/libapp.so"
           python code/scripts/taskapp_release.py archive-linux-bundle \
             --version "$RELEASE_VERSION" \
             --commit "$RELEASE_COMMIT" \

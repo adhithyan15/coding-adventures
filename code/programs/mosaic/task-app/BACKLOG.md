@@ -134,11 +134,9 @@ step, no artifact. The ordered queue below comes from that spec.
    exposed a broken 3.44.0 native-asset bundle. The repair stages the runtime
    through the hook-owned output directory while keeping the pinned 3.44.0
    toolchain, with native assets enabled explicitly on every fresh runner. The
-   validation lanes also finish Flutter's
-   native-asset installation when the tool leaves the registered library in its
-   staging tree instead of the Linux bundle. The release lane likewise installs
-   Flutter's staged AOT library when the current host omits it from the final
-   bundle. **In progress.**
+   validation lanes now select Flutter's install-generated bundle explicitly,
+   rather than whichever same-named executable filesystem traversal returns
+   first. **In progress.**
    This blocks validated Flutter/Linux release payloads, so it precedes the
    remaining native-host and release-polish work.
 2. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**

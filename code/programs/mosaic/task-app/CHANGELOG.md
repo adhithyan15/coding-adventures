@@ -14,14 +14,12 @@ The generated Flutter build hook now stages TaskApp's prebuilt Rust runtime
 through its hook-owned output directory before registering the bundled code
 asset. The TaskApp CI and release lanes keep the established Flutter 3.44.0
 toolchain and explicitly enable native assets instead of inheriting
-machine-global Flutter configuration. If Flutter leaves the registered asset in its native-assets
-staging tree instead of installing it, both lanes now finish that documented
-installation step into the application bundle before byte comparison and
-launch validation. The release lane similarly installs Flutter's staged
-`libapp.so` when the current host omits the AOT library from the final bundle.
-Together these changes restore `libmosaic_app.so` in Linux
-release bundles on fresh hosted runners and keep the executable launchable
-without an external runtime path.
+machine-global Flutter configuration. The validation lanes now select Flutter's
+final `bundle/` executable explicitly instead of the same-named
+`intermediates_do_not_run/` binary. Together these changes restore
+`libmosaic_app.so`, `libapp.so`, and ICU data in Linux release bundles on fresh
+hosted runners and keep the executable launchable without an external runtime
+path.
 
 ### Fixed - Vitest config uses Vite's native ESM loading contract (#13526)
 
