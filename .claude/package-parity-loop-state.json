@@ -19,7 +19,7 @@
     "notes": "All 42 final-head checks reached terminal acceptable conclusions: 11 passed and 31 were expected skips. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #14329 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "327029a998efbb7e6ac964654838812692259d3b",
+    "revision": "98502993811850b6d8a21cc656d46a3a9e2f7c48",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1413,
@@ -1073,14 +1073,25 @@
       "pr_number": null,
       "selected_at": "2026-09-05T16:05:33Z",
       "selection_revision": "327029a998efbb7e6ac964654838812692259d3b",
+      "rebase_revision": "98502993811850b6d8a21cc656d46a3a9e2f7c48",
+      "rebase_notes": "Rebased conflict-free before publication after exact-main advanced through the SPICE Rust ISC model-card repair a101e6c97a and Hindi coming-forms curriculum tranche 9850299381. Neither commit changes a package identity, established lane, selected path, or collision bucket, so the reporter-exact inventory remains 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets.",
       "selection_notes": "Selected after PR #14329 completed 42 acceptable final-head checks and merged through guarded squash auto-merge as 327029a998efbb7e6ac964654838812692259d3b. The exact-main collision-checked inventory remains identity-neutral at 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel audits ranked Haskell portable source hashing highest at three direct and four transitive descendants, then found this missing local SHA-256 streaming API as its smallest coherent prerequisite. The package-only tranche preserves one-shot consumers and adds no filesystem, process, network, environment, credential, or native authority. Eight live open PRs have zero exact overlap with the planned package, HF03 spec, state, roadmap, and changelog paths. Reconciliation and selection leave the 709-owner/1,161-edge graph unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 206 merged, 502 pending, and exactly this owner in progress.",
       "notes": "The Haskell build tool cannot adopt the portable source-hashing contract safely while its local SHA-256 package only materializes complete byte lists. Add an opaque initialized context, exact chunk update, non-destructive final digest and lowercase hex operations, strict 64-byte block processing, and a copied sub-block remainder while preserving the existing one-shot wrappers. Prove FIPS vectors, empty and binary bytes, arbitrary fragmentation, SHA-256 padding boundaries, 8 KiB file-chunk boundaries, repeatable finalization, and continued downstream HMAC/HKDF/PBKDF2 compatibility without adding filesystem, process, network, environment, credential, or native authority."
+    },
+    {
+      "id": "haskell-sha256-streaming-performance-hardening",
+      "title": "Bound Haskell SHA-256 streaming allocation amplification",
+      "status": "pending",
+      "depends_on": ["haskell-sha256-incremental-streaming-api"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the final parallel performance audit of the incremental API. The optimized million-byte vector remains bounded at 606 KB maximum residency and completes in 0.1185 seconds, but allocates 932,085,064 bytes because each 64-byte block is unpacked into lists and the message schedule repeatedly indexes, drops, and appends. The update path can also copy an entire caller chunk when joining a retained remainder, although the planned build-tool consumer will use bounded 8 KiB chunks. Optimize or establish an explicit acceptable allocation budget before the Haskell build-tool source-hashing owner lands; retain the opaque immutable API and all current vectors."
     },
     {
       "id": "build-tool-haskell-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["haskell-sha256-incremental-streaming-api", "build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair"],
+      "depends_on": ["haskell-sha256-streaming-performance-hardening", "build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Haskell lacks OCaml source recognition and its hashing collector uses an incomplete global registry whose case aliases can collide. Adopt the complete checked registry with exact scoped projection and portable path framing without mixing discovery-fixture work."

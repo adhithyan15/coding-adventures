@@ -2522,8 +2522,9 @@ follow-up consolidates the duplicated Shelly/WLED DNS, TCP, request encoding,
 bounded response, chunked decoding, and error projection behind a native LAN-
 HTTP executor while keeping `smart-home-local-http` a pure request planner.
 
-The later, separately owned `smart-home-nanoleaf-local-integration` identity is another mixed
-split rather than a blind port. Credential syntax and credential-free origin
+The later, separately owned `smart-home-nanoleaf-local-integration` identity
+is another mixed split rather than a blind port. Credential syntax and
+credential-free origin
 configuration, bounded snapshot and state validation, stable identifiers,
 capability and state normalization, RGB/HSV and mirek conversion, command
 planning, verification, and hostile inputs are deterministic portable-core
@@ -12930,6 +12931,23 @@ exact chunk updates, repeatable finalization, lowercase hex output, and
 boundary-vector coverage while preserving the existing one-shot API and every
 HMAC, HKDF, and PBKDF2 consumer. This package-only pure-math prerequisite adds
 no filesystem, process, network, environment, credential, or native authority.
+
+Before publication, the branch rebased conflict-free onto exact `origin/main`
+`98502993811850b6d8a21cc656d46a3a9e2f7c48`. The intervening SPICE Rust ISC
+model-card repair and Hindi coming-forms curriculum tranche change no package
+identity, established lane, selected path, or collision bucket, so all inventory
+counts above remain reporter-exact.
+
+The parallel security and performance review found no authority, secret
+retention, correctness, or bounded-residency blocker. It did measure
+932,085,064 bytes allocated for the optimized million-byte vector despite only
+606 KB maximum residency, because the existing compression core constructs and
+rotates list schedules for every 64-byte block. That concern is now the explicit
+pending `haskell-sha256-streaming-performance-hardening` owner, and Haskell
+portable source hashing depends on it. This keeps the current API tranche
+coherent while ensuring repository-scale hashing receives a measured allocation
+budget or optimization before adoption. The reconciled graph now contains 710
+owners and 1,162 edges: 206 merged, 503 pending, and exactly one in progress.
 
 ## Autonomous Loop Protocol
 

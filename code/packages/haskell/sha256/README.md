@@ -23,7 +23,9 @@ Updates compress complete 64-byte blocks immediately and retain only a copied
 remainder shorter than one block. Empty updates do nothing. Finalization is
 repeatable and non-destructive, and copied contexts can be extended
 independently. The bytes are hashed exactly in update order; the package does
-not decode text or add framing.
+not decode text or add framing. Messages must be shorter than `2^64` bits
+(`2^61 - 1` whole bytes maximum); an update beyond that FIPS bound fails
+deterministically instead of wrapping the encoded length.
 
 ## Type
 

@@ -16,16 +16,20 @@ extra-doc-files: README.md
 
 library
     exposed-modules:  Sha256
+    other-modules:    Sha256.Internal
     build-depends:    base >=4.14 && <5
                     , bytestring >=0.10 && <0.13
     hs-source-dirs:   src
+                      internal
     default-language: Haskell2010
 
 test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     other-modules:    Sha256Spec
+                      Sha256.Internal
     hs-source-dirs:   test
+                      internal
     build-depends:    base >=4.14 && <5
                     , sha256
                     , hspec == 2.*

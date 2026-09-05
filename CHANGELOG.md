@@ -16,6 +16,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   file-chunk boundaries, repeatable finalization, immutable branching, a real
   Windows BUILD test front door, and the missing Haskell HF03 package-matrix
   entry.
+- Enforced the `< 2^64`-bit FIPS message domain with checked counter arithmetic
+  and made the Windows front skip cleanly when Cabal is genuinely absent while
+  still propagating real test failures.
 
 ### Windows execution-corpus volume identity
 

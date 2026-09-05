@@ -7,7 +7,8 @@ import Data.Char (ord)
 import Data.List (foldl')
 import Data.Word (Word8)
 import Sha256
-import Test.Hspec
+import Sha256.Internal (checkedAdvanceBytes, maxSha256MessageBytes)
+import Test.Hspec hiding (context)
 
 spec :: Spec
 spec = describe "Sha256" $ do
@@ -90,6 +91,17 @@ spec = describe "Sha256" $ do
             BS.length digestBytes `shouldBe` 32
             length rendered `shouldBe` 64
             rendered `shouldSatisfy` all (\character -> character `elem` ['0' .. '9'] ++ ['a' .. 'f'])
+
+    describe "message length domain" $ do
+        it "accepts the largest whole-byte FIPS message length" $ do
+            checkedAdvanceBytes (maxSha256MessageBytes - 1) 1
+                `shouldBe` Just maxSha256MessageBytes
+
+        it "rejects a byte count whose bit length would reach 2^64" $ do
+            checkedAdvanceBytes maxSha256MessageBytes 1 `shouldBe` Nothing
+
+        it "rejects an already out-of-domain byte count" $ do
+            checkedAdvanceBytes maxBound 0 `shouldBe` Nothing
 
 ascii :: String -> [Word8]
 ascii = map (fromIntegral . ord)

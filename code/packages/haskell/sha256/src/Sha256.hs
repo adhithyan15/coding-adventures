@@ -23,6 +23,7 @@ import Data.ByteString (ByteString)
 import Data.List (foldl')
 import Data.Word (Word8, Word32, Word64)
 import Numeric (showHex)
+import Sha256.Internal (checkedAdvanceBytes)
 
 -- | Human-readable package description.
 description :: String
@@ -94,7 +95,9 @@ sha256Init = Sha256Context initialState 0 BS.empty
 -- | Feed one exact byte chunk into a context.
 --
 -- Empty updates are identity. Complete blocks are compressed immediately and
--- only a copied suffix shorter than 64 bytes is retained.
+-- only a copied suffix shorter than 64 bytes is retained. Messages must remain
+-- shorter than @2^64@ bits; an update that exceeds that FIPS 180-4 domain fails
+-- with a deterministic error instead of wrapping the encoded length.
 sha256Update :: Sha256Context -> ByteString -> Sha256Context
 sha256Update context chunk
     | BS.null chunk = context
@@ -107,7 +110,10 @@ sha256Update (Sha256Context state totalBytes buffered) chunk =
     completeLength = BS.length combined - (BS.length combined `mod` 64)
     (completeBytes, remainder) = BS.splitAt completeLength combined
     nextState = compressBlocks state completeBytes
-    nextTotalBytes = totalBytes + fromIntegral (BS.length chunk)
+    nextTotalBytes =
+        case checkedAdvanceBytes totalBytes (fromIntegral (BS.length chunk)) of
+            Just byteCount -> byteCount
+            Nothing -> error "sha256Update: message length must be less than 2^64 bits"
     ownedRemainder = BS.copy remainder
 
 -- | Return the 32-byte digest without consuming the context.

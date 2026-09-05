@@ -1,2 +1,1 @@
-where cabal >nul 2>&1
-if errorlevel 1 (echo cabal not found -- skipping) else (cabal test all)
+powershell -NoProfile -Command "if (Get-Command cabal -ErrorAction SilentlyContinue) { & cabal test all; exit $LASTEXITCODE } else { Write-Output 'cabal not found -- skipping'; exit 0 }"
