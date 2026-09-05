@@ -3500,7 +3500,7 @@ fn compile_one_component(
         )
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
-        Backend::Html => mosaic_emit_html::pipeline::from_pipeline(
+        Backend::Html => mosaic_emit_html::pipeline::from_pipeline_with_sample_slot_values(
             &mosmodel_out.component,
             &layout_out.def,
             &style_def,
@@ -4937,6 +4937,33 @@ version = "1"
         assert!(xaml.contains("ButtonElement.Background"));
         assert!(xaml.contains("StringEqualsConverter"));
         assert!(out.path().join("xaml/StringEqualsConverter.cs").is_file());
+    }
+
+    #[test]
+    fn html_package_build_bakes_one_of_style_state() {
+        let pkg = make_package("mosaic-pkg-button", &["Button"]);
+        write_component_sources(
+            pkg.path(),
+            "Button",
+            "component Button { slot variant : one-of danger primary ; }",
+            "layout Button { HostButton [ button ] ( label: \"Delete\" ) }",
+            "style Button { part button { background: #0d6efd ; state danger { background: #dc3545 ; } } }",
+        );
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: false,
+            theme: None,
+        })
+        .expect("HTML package should build");
+
+        let html = fs::read_to_string(out.path().join("html/Button.html")).unwrap();
+        assert!(
+            html.contains("background: #0d6efd; background: #dc3545"),
+            "generated HTML:\n{html}"
+        );
     }
 
     #[test]
