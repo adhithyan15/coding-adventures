@@ -29,7 +29,7 @@ pub fn token_grammar() -> TokenGrammar {
             },
             TokenDefinition {
                 name: r#"DIMENSION"#.to_string(),
-                pattern: r#"[0-9]+(\.[0-9]+)?(px|rem|em|pt|ms|s|deg|%)"#.to_string(),
+                pattern: r#"[0-9]+(\.[0-9]+)?(px|rem|em|pt|vh|vw|vmin|vmax|ms|s|deg|%)"#.to_string(),
                 is_regex: true,
                 line_number: 30,
                 alias: None,
