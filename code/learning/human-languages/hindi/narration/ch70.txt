@@ -41,7 +41,7 @@ Sources: Wiktionary: सकना.
 
 
 Lesson 2 of 4.
-चाहना (chāhnā) — to want.
+चाहना / चाहता (chāhnā / chāhtā) — to want / want.
 
 Warm-up.
 [pause 2 seconds]
@@ -53,17 +53,17 @@ You'll want to know: चाहना.
 Put it beside the sentence from last lesson and one letter is different, and it is the important one:
 मैं हिंदी बोल सकता हूँ — bare stem बोल.
 मैं हिंदी बोलना चाहता हूँ — full infinitive बोलना.
-सकना takes the stem; चाहना (chāhnā) takes the whole dictionary form. Both then sit last and take the ending themselves. Getting the two mixed up is the ordinary beginner's error, and hearing them back to back is the cure.
+सकना takes the stem; चाहना takes the whole dictionary form. Both then sit last and take the ending themselves. Getting the two mixed up is the ordinary beginner's error, and hearing them back to back is the cure.
 मैं आना चाहता हूँ — I want to come. Say it against मैं आ सकता हूँ and listen for the -ना.
-Inside चाहना (chāhnā) sits the noun चाह, "longing," and its cousin चाहिए is how Hindi wants a THING rather than an action. They look alike and take opposite kinds of object; this lesson teaches only the verb.
+Inside चाहना sits the noun चाह, "longing," and its cousin चाहिए is how Hindi wants a THING rather than an action. They look alike and take opposite kinds of object; this lesson teaches only the verb.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: maiṁ hindī bolnā chāhtā hūṁ]
+[your turn — say: मैं हिंदी बोलना चाहता हूँ (maiṁ hindī bolnā chāhtā hūṁ)]
 [pause 8 seconds for the answer]
-[your turn — say: the pair back to back — bol saktā hūṁ / bolnā chāhtā hūṁ]
+[your turn — say: the pair back to back — बोल सकता हूँ (bol saktā hūṁ) / बोलना चाहता हूँ (bolnā chāhtā hūṁ)]
 [pause 8 seconds for the answer]
-[your turn — say: maiṁ ānā chāhtā hūṁ against maiṁ ā saktā hūṁ]
+[your turn — say: मैं आना चाहता हूँ (maiṁ ānā chāhtā hūṁ) against मैं आ सकता हूँ (maiṁ ā saktā hūṁ)]
 [pause 8 seconds for the answer]
 [your turn — recall: read लेकिन]
 [pause 8 seconds for the answer]
@@ -72,8 +72,8 @@ Say that you can speak Hindi and then that you want to speak Hindi, and name the
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two takes the FULL -ना form in front of it? (चाहना (chāhnā).) Which takes the bare stem? (सकना.)
-Sources: Wiktionary: चाहना (chāhnā).
+Which of the two takes the FULL -ना form in front of it? (चाहना.) Which takes the bare stem? (सकना.)
+Sources: Wiktionary: चाहना.
 
 
 Lesson 3 of 4.
@@ -128,4 +128,4 @@ Say three things: that you can come, that you want to come, and that you cannot 
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two can never stand without another verb in front of it? (सकना.) Which one leaves that verb's -ना in place? (चाहना (chāhnā).) Then stop.
+Which of the two can never stand without another verb in front of it? (सकना.) Which one leaves that verb's -ना in place? (चाहना.) Then stop.
