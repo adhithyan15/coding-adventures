@@ -6764,3 +6764,5 @@ The first PR run exposed two repair omissions: the four independent conformance 
 The next run identified EINTR from a native socket read inside Flutter. Retry Interrupted at the underlying Read boundary so both buffered header reads and direct body reads survive runtime signals; do not retry timeouts or resets. Audit every consumer of a broken BUILD idiom in the same repair: fixing only the first CAS package exposed identical Windows failures farther down the dependency graph.
 
 After native navigation worked, Venture exposed nested Expanded widgets around a styled HostInput. When a parent emitter owns an explicit flex wrapper, suppress the child's implicit wrapper; generated code can type-check while still violating Flutter's ParentDataWidget runtime contract.
+
+Hindi changelog fragments must begin with their level-2 entry heading. The document title belongs only in CHANGELOG.d/_meta.md; copying it into a numbered shard breaks the independent section-order test even when the heading digest and byte round trip pass.
