@@ -488,6 +488,12 @@ pub fn from_pipeline(
             source: emit_focus_state_to_bool_converter_source(&options.namespace),
         });
     }
+    if ctx.needs_string_equals_converter {
+        if_helpers.push(EmittedFile {
+            filename: "StringEqualsConverter.cs".to_string(),
+            source: emit_string_equals_converter_source(&options.namespace),
+        });
+    }
 
     // Fix B1: when --emit-project is on, populate the full project
     // shell (csproj + App + MainWindow + manifest + build.ps1 + README).
@@ -675,6 +681,9 @@ struct EmitContext<'a> {
     /// Slot name (kebab-case) â†’ C# type. For looking up the element
     /// type of a `For (each: slot: foo)` from `foo`'s declared type.
     slot_types: std::collections::HashMap<String, String>,
+    /// Slot declaration order from `.mil`. UI49 uses this to give later
+    /// simultaneously active enum axes higher precedence.
+    slot_order: Vec<String>,
     emit_payloads: std::collections::HashMap<String, Vec<(String, String)>>,
     /// `For` bindings currently in scope, innermost last. When a name
     /// resolves at expression-lowering time we walk from the back of
@@ -696,6 +705,9 @@ struct EmitContext<'a> {
     /// `state focused`. The emitter writes a `FocusStateToBoolConverter`
     /// resource and ships its C# helper alongside the component triple.
     needs_focus_state_converter: bool,
+    /// Tracks whether a UI49 state is owned by a `one-of` slot. Such states
+    /// compare the slot's string value with the state's closed-set name.
+    needs_string_equals_converter: bool,
     /// One `RowVm` per `For` block in the component. Becomes
     /// `XamlEmitResult::for_view_models`.
     row_vms: Vec<RowVm>,
@@ -743,6 +755,9 @@ struct EmitContext<'a> {
     /// Monotonic suffix used to keep generated VisualState names unique in
     /// the generated XAML.
     visual_state_counter: u32,
+    /// Monotonic suffix for non-Host elements that need a VisualState setter
+    /// target. Authored part names can be reused, so they are not safe here.
+    state_target_counter: u32,
     /// Canonical HostTable lowering currently being emitted. XAML needs a
     /// little context across the nested header/row/cell `For` templates so it
     /// can wrap the generated content in controls whose automation peers
@@ -781,12 +796,14 @@ impl<'a> EmitContext<'a> {
         Self {
             component_name: name,
             slot_types,
+            slot_order: slots.iter().map(|slot| slot.name.clone()).collect(),
             emit_payloads,
             for_scope: Vec::new(),
             for_alias_counts: std::collections::HashMap::new(),
             helpers: Vec::new(),
             needs_bool_to_vis: false,
             needs_focus_state_converter: false,
+            needs_string_equals_converter: false,
             row_vms: Vec::new(),
             row_projections: Vec::new(),
             host_handlers: Vec::new(),
@@ -798,6 +815,7 @@ impl<'a> EmitContext<'a> {
             visual_state_groups: Vec::new(),
             template_visual_state_groups: Vec::new(),
             visual_state_counter: 0,
+            state_target_counter: 0,
             native_table: None,
             needs_native_table_support: false,
             native_table_counter: 0,
@@ -907,6 +925,11 @@ impl<'a> EmitContext<'a> {
         self.visual_state_counter
     }
 
+    fn next_state_target_name(&mut self) -> String {
+        self.state_target_counter += 1;
+        format!("MosaicStateTarget{}", self.state_target_counter)
+    }
+
     fn add_visual_state_group(&mut self, group: XamlVisualStateGroup) {
         if let Some(template_groups) = self.template_visual_state_groups.last_mut() {
             template_groups.push(group);
@@ -922,6 +945,7 @@ impl<'a> EmitContext<'a> {
 
 #[derive(Debug, Clone)]
 struct PartStateStyle {
+    slot: Option<String>,
     props: Vec<StyleProp>,
     transitions: Vec<StyleTransition>,
 }
@@ -1196,6 +1220,8 @@ struct PendingXamlVisualState {
 struct XamlVisualStateGroup {
     normal_name: String,
     target_name: String,
+    target_type: String,
+    target_brush_color: bool,
     property: String,
     base_transition: Option<StyleTransition>,
     states: Vec<XamlVisualState>,
@@ -1217,6 +1243,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
                 (
                     state.state.clone(),
                     PartStateStyle {
+                        slot: state.slot.clone(),
                         props: state.props.clone(),
                         transitions: state.transitions.clone(),
                     },
@@ -1297,9 +1324,10 @@ fn register_host_visual_states(
         return;
     };
 
-    // XAML gives the first active trigger precedence. React and SwiftUI give
-    // the last declared `state-when-*` layer precedence, so reverse declaration
-    // order before materialising the VisualStates.
+    // XAML gives the first active trigger precedence. Explicit structural and
+    // interaction predicates outrank UI49 slot states, so collect them first.
+    // Within each source, reverse declaration/model order so the first active
+    // trigger preserves Mosaic's "later layer wins" contract.
     let mut state_layers = Vec::new();
     for prop in node.props.iter().rev() {
         let Some(state_name) = prop.name.strip_prefix("state-when-") else {
@@ -1344,6 +1372,34 @@ fn register_host_visual_states(
         }
     }
 
+    let mut slot_states = part
+        .states
+        .iter()
+        .filter_map(|(state_name, state_style)| {
+            state_style
+                .slot
+                .as_deref()
+                .map(|slot_name| (state_name.as_str(), slot_name, state_style))
+        })
+        .collect::<Vec<_>>();
+    slot_states.sort_by_key(|(state_name, slot_name, _)| {
+        (
+            ctx.slot_order
+                .iter()
+                .position(|candidate| candidate == *slot_name)
+                .unwrap_or(usize::MAX),
+            *state_name,
+        )
+    });
+    for (state_name, slot_name, state_style) in slot_states.into_iter().rev() {
+        ctx.needs_string_equals_converter = true;
+        let path = ctx.slot_xbind_path(slot_name);
+        let trigger_value = format!(
+            "{{x:Bind {path}, Mode=OneWay, Converter={{StaticResource StringEqualsConverter}}, ConverterParameter={state_name}}}"
+        );
+        state_layers.push((state_name, trigger_value, state_style));
+    }
+
     let mut by_property: std::collections::BTreeMap<String, Vec<PendingXamlVisualState>> =
         std::collections::BTreeMap::new();
     for (_state_name, trigger_value, state_style) in state_layers {
@@ -1385,6 +1441,10 @@ fn register_host_visual_states(
         ctx.add_visual_state_group(XamlVisualStateGroup {
             normal_name,
             target_name: target_name.to_string(),
+            target_type: xaml_tag.to_string(),
+            target_brush_color: parse_style_fragment(&part.base_fragment)
+                .iter()
+                .any(|(setter, _)| setter == &property),
             property: property.clone(),
             base_transition: transition_for_xaml_property(&part.transitions, &property).cloned(),
             states,
@@ -1491,6 +1551,9 @@ fn transition_for_xaml_property<'a>(
 /// Mosaic Host primitives. Properties outside this set are skipped instead of
 /// generating a Setter that XamlCompiler rejects for one control type.
 fn host_control_supports_state_property(xaml_tag: &str, property: &str) -> bool {
+    if xaml_tag == "Border" {
+        return is_container_style_attr(property);
+    }
     matches!(
         property,
         "Background"
@@ -1513,6 +1576,24 @@ fn host_control_supports_state_property(xaml_tag: &str, property: &str) -> bool 
             | "HorizontalAlignment"
             | "VerticalAlignment"
     ) || (property == "TextAlignment" && matches!(xaml_tag, "TextBox" | "NumberBox"))
+}
+
+fn has_runtime_container_states(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    let Some(part) = node
+        .part_name
+        .as_deref()
+        .and_then(|part_name| part_styles.get(part_name))
+    else {
+        return false;
+    };
+    part.states.iter().any(|(state_name, state)| {
+        (state.slot.is_some() || has_explicit_state_when(node, state_name))
+            && state.props.iter().any(|prop| {
+                css_property_to_xaml_setter(&prop.name)
+                    .as_deref()
+                    .is_some_and(is_container_style_attr)
+            })
+    })
 }
 
 fn xaml_transition_duration(duration: &str) -> Option<String> {
@@ -1617,7 +1698,12 @@ fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> S
             .unwrap();
             writeln!(out, "{pad4}</VisualState.StateTriggers>").unwrap();
             writeln!(out, "{pad4}<VisualState.Setters>").unwrap();
-            let target = xaml_visual_state_target(&group.target_name, &group.property);
+            let target = xaml_visual_state_target(
+                &group.target_name,
+                &group.target_type,
+                &group.property,
+                group.target_brush_color,
+            );
             writeln!(
                 out,
                 "{pad4}    <Setter Target=\"{}\" Value=\"{}\"/>",
@@ -1637,9 +1723,19 @@ fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> S
 /// Brush-valued control properties must target the brush's Color dependency
 /// property for WinUI to generate an interpolating color animation. Replacing
 /// the whole Brush object would make the state change correctly but discretely.
-fn xaml_visual_state_target(target_name: &str, property: &str) -> String {
-    if matches!(property, "Background" | "Foreground" | "BorderBrush") {
-        format!("{target_name}.(Control.{property}).(SolidColorBrush.Color)")
+fn xaml_visual_state_target(
+    target_name: &str,
+    target_type: &str,
+    property: &str,
+    target_brush_color: bool,
+) -> String {
+    if target_brush_color && matches!(property, "Background" | "Foreground" | "BorderBrush") {
+        let owner = if target_type == "Border" {
+            "Border"
+        } else {
+            "Control"
+        };
+        format!("{target_name}.({owner}.{property}).(SolidColorBrush.Color)")
     } else {
         format!("{target_name}.{property}")
     }
@@ -2698,7 +2794,8 @@ fn emit_xaml(
 
     // After walking, declare any generated converter resources exactly once.
     // We splice them in after the open root tag.
-    if ctx.needs_bool_to_vis || ctx.needs_focus_state_converter {
+    if ctx.needs_bool_to_vis || ctx.needs_focus_state_converter || ctx.needs_string_equals_converter
+    {
         let resources_tag = match shape {
             RootShape::UserControl => "UserControl.Resources",
             RootShape::ContentDialog => "ContentDialog.Resources",
@@ -2708,6 +2805,7 @@ fn emit_xaml(
             resources_tag,
             ctx.needs_bool_to_vis,
             ctx.needs_focus_state_converter,
+            ctx.needs_string_equals_converter,
         );
         let split_at = find_root_open_close(&out)
             .map(|p| p + 2)
@@ -3371,7 +3469,16 @@ fn emit_flex_grid(
     let inner_pad = " ".repeat(indent + 4);
     let (container_attrs, grid_attrs, text_setters) =
         partition_flex_grid_style(node.part_name.as_deref(), part_styles, axis);
-    let wrapped = !container_attrs.is_empty() || !text_setters.is_empty();
+    let has_runtime_states = has_runtime_container_states(node, part_styles);
+    let state_target = has_runtime_states.then(|| ctx.next_state_target_name());
+    if let Some(target_name) = state_target.as_deref() {
+        register_host_visual_states(node, "Border", target_name, part_styles, ctx);
+    }
+    let state_name_attr = state_target
+        .as_deref()
+        .map(|name| format!(" x:Name=\"{name}\""))
+        .unwrap_or_default();
+    let wrapped = !container_attrs.is_empty() || !text_setters.is_empty() || has_runtime_states;
     // UI41, #12028 item 1: an `elevation` prop means this element wants
     // a native ThemeShadow — see `part_elevation_tier`. `Row`/`Column`
     // real usage (TaskApp's `composer`/`label-composer`/`task-card`/
@@ -3394,7 +3501,8 @@ fn emit_flex_grid(
     } else {
         let (shadow_attr, shadow_child) =
             theme_shadow_attr_and_child(elevation, "Border", indent + 4);
-        let mut wrapped_out = format!("{pad}<Border{container_attrs}{shadow_attr}>\n");
+        let mut wrapped_out =
+            format!("{pad}<Border{state_name_attr}{container_attrs}{shadow_attr}>\n");
         wrapped_out.push_str(&shadow_child);
         emit_text_style_resources(&mut wrapped_out, "Border", indent + 4, &text_setters);
         writeln!(wrapped_out, "{inner_pad}<Grid{grid_attrs}>").unwrap();
@@ -3549,6 +3657,15 @@ fn emit_container(
     // + Badge demo (#4548).
     let (container_attrs, text_setters) =
         partition_box_style(node.part_name.as_deref(), part_styles);
+    let has_runtime_states = has_runtime_container_states(node, part_styles);
+    let state_target = has_runtime_states.then(|| ctx.next_state_target_name());
+    if let Some(target_name) = state_target.as_deref() {
+        register_host_visual_states(node, "Border", target_name, part_styles, ctx);
+    }
+    let state_name_attr = state_target
+        .as_deref()
+        .map(|name| format!(" x:Name=\"{name}\""))
+        .unwrap_or_default();
     // UI41, #12028 item 1: an `elevation` prop means this element wants
     // a native ThemeShadow — see `part_elevation_tier`.
     let elevation = node
@@ -3557,10 +3674,12 @@ fn emit_container(
         .and_then(|p| part_styles.get(p))
         .and_then(|entry| entry.elevation);
 
-    if element != "Border" && (!container_attrs.is_empty() || !text_setters.is_empty()) {
+    if element != "Border"
+        && (!container_attrs.is_empty() || !text_setters.is_empty() || has_runtime_states)
+    {
         let (shadow_attr, shadow_child) =
             theme_shadow_attr_and_child(elevation, "Border", indent + 4);
-        let mut out = format!("{pad}<Border{container_attrs}{shadow_attr}>\n");
+        let mut out = format!("{pad}<Border{state_name_attr}{container_attrs}{shadow_attr}>\n");
         out.push_str(&shadow_child);
         emit_text_style_resources(&mut out, "Border", indent + 4, &text_setters);
         writeln!(out, "{inner_pad}<{element}>").unwrap();
@@ -3576,7 +3695,7 @@ fn emit_container(
     }
 
     let (shadow_attr, shadow_child) = theme_shadow_attr_and_child(elevation, element, indent + 4);
-    let mut out = format!("{pad}<{element}{container_attrs}{shadow_attr}>\n");
+    let mut out = format!("{pad}<{element}{state_name_attr}{container_attrs}{shadow_attr}>\n");
     out.push_str(&shadow_child);
 
     emit_text_style_resources(&mut out, element, indent + 4, &text_setters);
@@ -6102,6 +6221,7 @@ fn emit_converter_resource_block(
     resources_tag: &str,
     needs_bool_to_vis: bool,
     needs_focus_state: bool,
+    needs_string_equals: bool,
 ) -> String {
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
@@ -6118,6 +6238,13 @@ fn emit_converter_resource_block(
         writeln!(
             out,
             "{pad2}<local:FocusStateToBoolConverter x:Key=\"FocusStateToBoolConverter\"/>"
+        )
+        .unwrap();
+    }
+    if needs_string_equals {
+        writeln!(
+            out,
+            "{pad2}<local:StringEqualsConverter x:Key=\"StringEqualsConverter\"/>"
         )
         .unwrap();
     }
@@ -6192,6 +6319,33 @@ fn emit_focus_state_to_bool_converter_source(namespace: &str) -> String {
              {{\n        \
                  if (value is FocusState state) return state != FocusState.Unfocused;\n        \
                  return DependencyProperty.UnsetValue;\n    \
+             }}\n\n    \
+             public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 throw new NotImplementedException();\n    \
+             }}\n\
+         }}\n"
+    )
+}
+
+/// C# source for UI49's closed-set slot-state comparison. The state name is
+/// supplied as `ConverterParameter`; ordinal comparison matches the model and
+/// style compilers' case-sensitive identifier contract.
+fn emit_string_equals_converter_source(namespace: &str) -> String {
+    format!(
+        "// Auto-generated by mosaic-emit-xaml. Do not edit.\n\
+         //\n\
+         // UI49 one-of slot value → mosstyle state activation.\n\
+         using System;\n\
+         using Microsoft.UI.Xaml.Data;\n\
+         \n\
+         namespace {namespace};\n\
+         \n\
+         public sealed class StringEqualsConverter : IValueConverter\n\
+         {{\n    \
+             public object Convert(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 return string.Equals(value as string, parameter as string, StringComparison.Ordinal);\n    \
              }}\n\n    \
              public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
              {{\n        \
@@ -19303,6 +19457,99 @@ mod tests {
             r.xaml
         );
         assert!(!r.xaml.contains("x:Bind True"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn ui49_slot_states_follow_model_order_and_reach_buttons_and_containers() {
+        let slots = vec![
+            slot(
+                "variant",
+                SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                false,
+            ),
+            slot(
+                "size",
+                SlotType::OneOf(vec!["sm".to_string(), "lg".to_string()]),
+                false,
+            ),
+        ];
+        let c = component("VariantCard", slots.clone(), vec![]);
+        let button = styled_host_button(vec![LayoutProp {
+            name: "state-when-selected".to_string(),
+            value: LayoutPropValue::Keyword("true".to_string()),
+        }]);
+        let root = LayoutNode {
+            tag: "Column".to_string(),
+            part_name: Some("panel".to_string()),
+            props: Vec::new(),
+            children: vec![button],
+        };
+        let l = layout_with_root("VariantCard", root);
+        let state = |slot: Option<&str>, name: &str, property: &str, value: &str| StateStyle {
+            slot: slot.map(str::to_string),
+            state: name.to_string(),
+            props: vec![StyleProp {
+                name: property.to_string(),
+                value: value.to_string(),
+            }],
+            transitions: Vec::new(),
+        };
+        let s = StyleDef {
+            component_name: "VariantCard".to_string(),
+            parts: vec![
+                PartStyle {
+                    name: "panel".to_string(),
+                    base: Vec::new(),
+                    transitions: Vec::new(),
+                    // Deliberately opposite the model order. The model owns
+                    // precedence, not stylesheet declaration order.
+                    states: vec![
+                        state(Some("size"), "lg", "background", "#222222"),
+                        state(Some("variant"), "danger", "background", "#111111"),
+                    ],
+                },
+                PartStyle {
+                    name: "button".to_string(),
+                    base: Vec::new(),
+                    transitions: Vec::new(),
+                    states: vec![
+                        state(Some("size"), "lg", "background", "#222222"),
+                        state(Some("variant"), "danger", "background", "#dc3545"),
+                        state(None, "selected", "background", "#000000"),
+                    ],
+                },
+            ],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(r
+            .xaml
+            .contains("<local:StringEqualsConverter x:Key=\"StringEqualsConverter\"/>"));
+        assert!(r.xaml.contains("x:Name=\"MosaicStateTarget1\""));
+        assert!(r.xaml.contains("MosaicStateTarget1.Background"));
+        assert!(r.xaml.contains("ConverterParameter=lg"));
+        assert!(r.xaml.contains("ConverterParameter=danger"));
+        assert!(r
+            .if_helpers
+            .iter()
+            .any(|file| file.filename == "StringEqualsConverter.cs"
+                && file.source.contains("StringComparison.Ordinal")));
+
+        let mut ctx = EmitContext::new("VariantCard", &slots, &[]);
+        let styles = build_part_style_map(&s);
+        register_host_visual_states(&l.root.children[0], "Button", "Button", &styles, &mut ctx);
+        let background = ctx
+            .visual_state_groups
+            .iter()
+            .find(|group| group.property == "Background")
+            .expect("button background state group");
+        assert_eq!(background.states[0].trigger_value, "True");
+        assert!(background.states[1]
+            .trigger_value
+            .contains("ConverterParameter=lg"));
+        assert!(background.states[2]
+            .trigger_value
+            .contains("ConverterParameter=danger"));
     }
 
     #[test]

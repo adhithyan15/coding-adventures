@@ -4913,6 +4913,33 @@ version = "1"
     }
 
     #[test]
+    fn xaml_package_build_activates_one_of_style_state() {
+        let pkg = make_package("mosaic-pkg-button", &["Button"]);
+        write_component_sources(
+            pkg.path(),
+            "Button",
+            "component Button { slot variant : one-of primary danger ; }",
+            "layout Button { HostButton [ button ] ( label: \"Delete\" ) }",
+            "style Button { part button { state danger { background: #dc3545 ; } } }",
+        );
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Xaml,
+            emit_project: false,
+            theme: None,
+        })
+        .expect("XAML package should build");
+
+        let xaml = fs::read_to_string(out.path().join("xaml/Button.xaml")).unwrap();
+        assert!(xaml.contains("ConverterParameter=danger"), "generated XAML:\n{xaml}");
+        assert!(xaml.contains("ButtonElement.Background"));
+        assert!(xaml.contains("StringEqualsConverter"));
+        assert!(out.path().join("xaml/StringEqualsConverter.cs").is_file());
+    }
+
+    #[test]
     fn dependency_style_state_preserves_its_dependency_slot_owner() {
         let workspace = TempDir::new().unwrap();
         let child = workspace.path().join("mosaic-pkg-accent");
