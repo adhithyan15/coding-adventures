@@ -1028,4 +1028,3 @@ lazy graph construction, JIT compilation of hot formulas).
 ### TypeScript Excel/CAS formula input budget
 
 The default TypeScript Excel/CAS adapter accepts at most 8,192 UTF-16 code units per formula, including the leading equals sign. It checks this budget before parsing in both dependency discovery and evaluation. Longer input registers no dependency edges and evaluates to #VALUE!. This bounds the work done before rejecting pathological formulas; custom adapters retain their own input policy.
-
