@@ -1,3 +1,4 @@
+-- | Pure one-shot and bounded incremental SHA-256 hashing.
 module Sha256
     ( description
     , Sha256Context
@@ -23,6 +24,7 @@ import Data.List (foldl')
 import Data.Word (Word8, Word32, Word64)
 import Numeric (showHex)
 
+-- | Human-readable package description.
 description :: String
 description = "SHA-256 cryptographic hash function (FIPS 180-4) implemented from scratch"
 

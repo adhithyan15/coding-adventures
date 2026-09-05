@@ -2,14 +2,21 @@ cabal-version: 3.0
 name:          sha256
 version:       0.2.0
 synopsis:      SHA-256 cryptographic hash function (FIPS 180-4) implemented from scratch
+description:
+    A pure SHA-256 implementation with compatible list-based one-shot helpers.
+    It also provides an opaque immutable context for bounded incremental hashing
+    over strict ByteString chunks, repeatable finalization, and safe branching.
+category:      Cryptography
 license:       MIT
 author:        Adhithya Rajasekaran
 maintainer:    Adhithya Rajasekaran
 build-type:    Simple
+extra-doc-files: README.md
+               CHANGELOG.md
 
 library
     exposed-modules:  Sha256
-    build-depends:    base >=4.14
+    build-depends:    base >=4.14 && <5
                     , bytestring >=0.10 && <0.13
     hs-source-dirs:   src
     default-language: Haskell2010
@@ -19,7 +26,7 @@ test-suite spec
     main-is:          Spec.hs
     other-modules:    Sha256Spec
     hs-source-dirs:   test
-    build-depends:    base >=4.14
+    build-depends:    base >=4.14 && <5
                     , sha256
                     , hspec == 2.*
                     , bytestring >=0.10 && <0.13
