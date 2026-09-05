@@ -13035,6 +13035,50 @@ curriculum, Rust, HTML, Qt/Mosaic, and VisiCalc changes are disjoint and add no
 package root, recognized manifest, language lane, identity, or collision, so
 the collision-checked inventory and 713-owner/1,169-edge graph remain unchanged.
 
+PR #14352 completed both final-head Ubuntu builds, both metadata jobs, both CI
+gates, CodeQL detection, and the human-language aggregate gate acceptably.
+GitHub reported the final head clean and mergeable before guarded squash
+auto-merge was enabled, and merged it as
+`120d018dc15cec32ea328e7b5471bf7fb3f2873a` without a plain manual merge
+command. The exact merged-main collision report remains schema 3 with 15
+established lanes, 1,413 implementation identities, 4,629 slots, 1,452
+all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202,
+754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown
+buckets.
+
+Three bounded read-only audits ran concurrently with CI. The established-lane
+audit found no additional unowned package or build-tool denominator gap, but
+corrected stale umbrella metadata: the Dart 14-of-15 frontier is exactly
+binary-search-tree, fenwick-tree, and uuid; the JVM and Swift/Dart umbrellas
+must remain selection-blocked behind exact decomposition; and the measured
+classifier remains exact at 93 coarse-only Java/Kotlin/Dart identities and 50
+Swift identities.
+
+The all-language build-tool audit found two ownership gaps. The neutral corpus
+has only a graph diamond and successful diff cases despite the normative
+isolated, chain, multi-component, cycle, level, closure, failure-propagation,
+and unknown-path-error requirements. The new
+`build-tool-neutral-graph-diff-corpus-completion` owner closes the process-free
+portion. All 16 implementation-manifest adapters remain missing, no terminal
+owner requires native same-corpus CI, F# remains only an exception candidate,
+and C/C++ lack emerging manifest decisions. The selection-blocked
+`build-tool-all-language-adapter-ci-closure` gate now owns that final evidence
+after every implementation and corpus prerequisite. Existing C/C++ and OCaml
+owners now explicitly cover manifest applicability, the full capability
+taxonomy, independent enforcement, and real three-platform representative
+package execution.
+
+After these additions and dependency corrections, the reconciled state has
+715 owners and 1,179 edges: 208 merged and 507 pending. The graph is unique,
+dependency-complete, acyclic, and free of merged-to-unmerged edges. Raw global
+leverage still favors the portable smart-home command-effect lifecycle, but
+the current durable build-tool/OCaml front ranks OCaml representative core
+first and Perl registry repair second. Haskell portable source hashing is the
+best next serial continuity slice because #14352 has just satisfied its final
+performance prerequisite, its toolchain and SHA-256 dependency are already
+validated, and it unlocks three direct plus four transitive unfinished build-
+tool descendants without adding authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -11,22 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 14352,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/14352",
-    "branch": "codex/haskell-sha256-performance-hardening",
-    "item_id": "haskell-sha256-streaming-performance-hardening",
-    "opened_at": "2026-09-05T17:49:37Z",
-    "opened_revision": "ac4ff2862a78739dc229a3477630f013145fccca"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-05T17:49:37Z",
+    "observed_at": "2026-09-05T18:16:25Z",
     "pr_number": 14352,
-    "status": "pending",
-    "notes": "PR #14352 is the sole active parity PR. GitHub reports the ready-for-review head mergeable with CI and CodeQL detection checks queued or in progress and mergeStateStatus BLOCKED only while checks run. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable and no conflict remains."
+    "status": "merged",
+    "notes": "PR #14352 completed every required final-head check acceptably and GitHub reported CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that terminal check and conflict audit, and GitHub merged the PR immediately at 2026-09-05T18:16:25Z as 120d018dc15cec32ea328e7b5471bf7fb3f2873a without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "827332dd63690c870599e193a973f4c0b19dc278",
+    "revision": "120d018dc15cec32ea328e7b5471bf7fb3f2873a",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1413,
@@ -1109,7 +1102,7 @@
     {
       "id": "haskell-sha256-streaming-performance-hardening",
       "title": "Bound Haskell SHA-256 streaming allocation amplification",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["haskell-sha256-incremental-streaming-api"],
       "branch": "codex/haskell-sha256-performance-hardening",
       "pr_number": 14352,
@@ -1126,6 +1119,10 @@
       "validation_notes": "The red allocation gate reproduced 928,951,488 allocated bytes for the original million-byte one-chunk path. The 16-slot unboxed rolling schedule and bounded bridge/remainder path reduce final optimized allocations to 57,521,408 bytes for one chunk and 57,557,872 bytes for 8 KiB streaming; both remain stable across repeated fresh processes and below the 128 MiB ceiling while verifying the FIPS digest. GHC 9.4.8 and Cabal 3.16.1 pass all 25 functional examples under -Wall -Werror and both allocation scenarios through the generic and Windows BUILD fronts pinned to -O2. Functional-only HPC reports 96% top-level definitions, 90% alternatives, and 99% expressions. Cabal check is clean; sdist includes the source, allocation test, README, and changelog; dependencies are current against the installed index; and public-library Haddock coverage is 100%. HMAC 5, HKDF 4, and PBKDF2 4 downstream suites pass with their transitive SHA-256 tests. The complete Go build-tool tests, vet, trimpath build, 45-file Starlark evaluation, 5,140-package discovery, and exact six-package affected plan pass. Package-parity, capability-taxonomy, Haskell capability, and OCaml lock suites pass 68 tests with two expected Windows symlink skips. The 713-owner/1,169-edge state graph remains unique, complete, acyclic, status-valid, and free of merged-to-unmerged edges; collision, diff, scope, dependency, license, authority, credential, and independent review gates are clean.",
       "review_notes": "Three parallel read-only reviews independently verified rolling-schedule indexing, strict state forcing, direct ByteString bounds, copied bridge/remainder ownership, checked FIPS length handling, unchanged public exports, dependency/license compatibility, lifecycle integrity, and open-PR non-overlap. The allocation review found that an unpinned -O0 caller would fail the budget at 5,413,027,320 bytes; both canonical BUILD fronts now pin Cabal optimization level 2 and pass the real gate. The exact 128 MiB boundary is inclusive by specification: allocations greater than the ceiling fail.",
       "publication_notes": "Opened ready-for-review PR #14352 from clean validated head ac4ff2862a78739dc229a3477630f013145fccca after a normal first push from exact origin/main 827332dd63690c870599e193a973f4c0b19dc278. Immediately before publication, no active parity PR or overlapping Haskell SHA-256 PR existed; the exact diff, allocation, package/downstream, BUILD, coverage, Go build-tool, inventory, graph, dependency, license, authority, credential, and three independent review gates were acceptable. GitHub reports the PR non-draft, mergeable, and blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required final-head check is terminal and acceptable and no conflict exists.",
+      "merged_head_revision": "205a5523d608fdbf80891ba0ca4b92fd4e2c2c62",
+      "merged_at": "2026-09-05T18:16:25Z",
+      "merge_commit": "120d018dc15cec32ea328e7b5471bf7fb3f2873a",
+      "merge_notes": "Both final-head Ubuntu builds, both metadata jobs, both CI gates, CodeQL detection, and the human-language aggregate gate completed successfully; inapplicable matrix jobs skipped acceptably. GitHub reported CLEAN and MERGEABLE before guarded squash auto-merge was enabled, and merged the PR immediately without a plain manual merge command.",
       "notes": "Discovered by the final parallel performance audit of the incremental API. The optimized million-byte vector remains bounded at 606 KB maximum residency and completes in 0.1185 seconds, but allocates 932,085,064 bytes because each 64-byte block is unpacked into lists and the message schedule repeatedly indexes, drops, and appends. The update path can also copy an entire caller chunk when joining a retained remainder, although the planned build-tool consumer will use bounded 8 KiB chunks. Optimize or establish an explicit acceptable allocation budget before the Haskell build-tool source-hashing owner lands; retain the opaque immutable API and all current vectors."
     },
     {
@@ -1674,6 +1671,15 @@
       "branch": "codex/build-tool-pure-domain-corpus",
       "pr_number": 9167,
       "notes": "Ready-for-review PR #9167. Selected after PR #9157 merged because this pure, process-free corpus expansion unlocks the Go oracle, Java/Kotlin, Dart, every existing front door, and OCaml promotion. The branch validates 30 cases across all 11 process-free domains with closed pure records, semantic oracles, conservative diff behavior, typed cache states, inline-only Starlark loads, sharding verification, normalized BUILD-file validation, and the OCaml-aware toolchain registry."
+    },
+    {
+      "id": "build-tool-neutral-graph-diff-corpus-completion",
+      "title": "Complete the language-neutral build-tool graph and diff corpus",
+      "status": "pending",
+      "depends_on": ["build-tool-pure-domain-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the parallel all-language build-tool audit after PR #14352. The normative neutral contract requires isolated nodes, chains, diamonds, multiple components, cycles, affected and prerequisite closures, deterministic levels, failure propagation, and both unknown-path policies, but build-tool-v1 currently has only graph-diamond plus three successful diff cases and no DIFF_UNKNOWN_PATH error fixture. Add the missing process-free fixtures, schemas, reference-runner assertions, README/changelog correction, and exact case-count validation. Failure-propagation fixtures that require trusted execution remain under build-tool-execution-semantics-corpus rather than expanding this process-free owner."
     },
     {
       "id": "build-tool-cli-parser-corpus",
@@ -2523,6 +2529,24 @@
       "notes": "Deliver one independent engine per PR; explicitly review the shared C#/F# engine exception. The exact-main audit after PR #13490 discovered that PR #13366's new Dune generated-output decoy makes the unchanged Ruby identity-registry fixture emit ocaml/decoy because Ruby discovery does not yet prune the exact case-sensitive _build component. The selected Ruby declaration-engine tranche must apply the bounded discovery/test repair needed to restore its canonical package suite; keep the separately owned Ruby hashing exclusion out of scope."
     },
     {
+      "id": "build-tool-all-language-adapter-ci-closure",
+      "title": "Close the all-language build-tool adapter and CI denominator",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-existing-remediation",
+        "build-tool-jvm-current-contract-conformance",
+        "build-tool-dart-current-contract-conformance",
+        "ocaml-build-tool-current-contract-conformance",
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-execution-semantics-corpus",
+        "c-cpp-graduation"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Terminal classification and integration gate discovered by the parallel all-language build-tool audit after PR #14352. All 16 current implementation-manifest entries still report adapter_status=missing, CI validates only the Python schema/reference path, and no terminal owner requires every applicable native front door to run the same versioned neutral corpus. After every dependency lands, require ready adapters and same-corpus CI for all supported implementations, two-way Go plan interchange where applicable, zero unreviewed failures, and explicit reviewed exceptions. This gate owns the final evidence-backed C#/F# shared-engine decision; F# is currently only an exception candidate, not an approved exception. Keep this owner selection-blocked until its implementation prerequisites and exact supported-lane/exception matrix are complete."
+    },
+    {
       "id": "build-tool-jvm",
       "title": "Add language-native Java and Kotlin build tools",
       "status": "pending",
@@ -2638,7 +2662,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Cover process execution, dynamic loading, unsafe marshaling, and Obj.magic under the repository's explicit capability and reviewed-exception policy."
+      "notes": "Cover the full relevant OCaml stdlib, Unix, Dynlink, Marshal, and Obj surface across the repository taxonomy: filesystem, network, process, environment, FFI/native loading, time, stdin, stdout, unsafe marshaling, and Obj.magic. Require all-source compiler-libs AST subset checking, explicit reviewed exceptions, BUILD integration, and an independent publication gate under the governing capability-security contract."
     },
     {
       "id": "ocaml-build-tool-and-promotion",
@@ -2670,16 +2694,21 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Require real Ubuntu, macOS, and Windows tests without skips, a green representative chain and build tool, active capability enforcement, measured coverage, complete docs, and explicit review of the generated 16-lane backlog."
+      "notes": "Require real Ubuntu, macOS, and Windows tests without skips for the actual representative package directories and native build tool, not only scaffold fixtures; a green representative dependency chain; active capability enforcement; measured coverage; complete docs; and explicit review of the generated 16-lane backlog. The denominator cannot change until the three-target workflow executes the representative packages themselves."
     },
     {
       "id": "dart-current-14-of-15",
-      "title": "Close the 11-package Dart-only 14-of-15 frontier",
+      "title": "Close the remaining 3-package Dart-only 14-of-15 frontier",
       "status": "pending",
-      "depends_on": ["haskell-http-core", "dart-scaffold-capability-schema", "dart-trig-wave"],
+      "depends_on": [
+        "dart-current-14-of-15-binary-search-tree",
+        "dart-current-14-of-15-fenwick-tree",
+        "dart-current-14-of-15-uuid"
+      ],
       "branch": null,
       "pr_number": null,
-      "notes": "Umbrella backlog only; do not select it as one oversized PR. Deliver tracked child items in small dependency-shaped slices: ML, trig/wave, data structures, ciphers, document-ast, and uuid."
+      "selection_blocked": true,
+      "notes": "Umbrella backlog only; do not select it as an implementation PR. The exact post-#14352 inventory leaves precisely binary-search-tree, fenwick-tree, and uuid at 14 of 15 with only Dart missing, and each has its own pending dependency-shaped child owner. Mark this umbrella complete only after all three children merge."
     },
     {
       "id": "dart-trig-wave",
@@ -2839,10 +2868,14 @@
       "id": "java-kotlin-high-consensus",
       "title": "Close paired Java/Kotlin high-consensus families",
       "status": "pending",
-      "depends_on": ["java-kotlin-high-consensus-lz78-deflate-state-machine"],
+      "depends_on": [
+        "java-kotlin-high-consensus-lz78-deflate-state-machine",
+        "high-consensus-unowned-gap-classification-20260905"
+      ],
       "branch": null,
       "pr_number": null,
-      "notes": "Umbrella owner for paired JVM high-consensus closure. The post-#13037 inventory found the zstd lead stale because zstd is already 15/15, and materialized the remaining lz78, deflate, and state-machine frontier as a bounded child before the next selection."
+      "selection_blocked": true,
+      "notes": "Selection-blocked historical umbrella. Its only current child, lz78/deflate/state-machine, is merged, while 53 high-consensus gaps remain in each JVM lane. Further decomposition is owned by high-consensus-unowned-gap-classification-20260905; do not select or mark this umbrella complete until those exact children and exceptions are linked."
     },
     {
       "id": "java-kotlin-high-consensus-lz78-deflate-state-machine",
@@ -2871,10 +2904,11 @@
       "id": "swift-dart-high-consensus",
       "title": "Close Swift/Dart data-structure, storage, parser, WASM, ML, and protocol families",
       "status": "pending",
-      "depends_on": ["dart-current-14-of-15"],
+      "depends_on": ["dart-current-14-of-15", "high-consensus-unowned-gap-classification-20260905"],
       "branch": null,
       "pr_number": null,
-      "notes": "Use generated grammars and dependency-first storage/compiler sequences."
+      "selection_blocked": true,
+      "notes": "Selection-blocked umbrella. Use generated grammars and dependency-first storage/compiler sequences only after the exact Swift and Dart gap classifier has materialized bounded child owners and reviewed exceptions."
     },
     {
       "id": "portable-core-expansion",
@@ -4095,7 +4129,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Keep both emerging until package/scaffold/build-tool maturity and applicability are explicit."
+      "notes": "Keep both emerging until package/scaffold/build-tool maturity and applicability are explicit. Add C and C++ as emerging entries in the build-tool implementation manifest, decide native-build-tool applicability or record a reviewed exception for each, and provide that evidence to build-tool-all-language-adapter-ci-closure before either lane can graduate."
     },
     {
       "id": "chief-process-supervisor-native-authority-review",
@@ -8532,6 +8566,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
+      "selection_blocked": true,
       "notes": "The exact-main audit found 93 Java/Kotlin/Dart high-consensus identities and 50 Swift high-consensus identities without exact package owners. Decompose this classification owner into dependency-shaped children, beginning with barcode-layout-1d and sha512; point2d requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion."
     },
     {
