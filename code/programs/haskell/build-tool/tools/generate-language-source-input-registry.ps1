@@ -34,7 +34,6 @@ $source = @(
     "        ["
 ) + (($rendered -join ",`n") -split "`n") + @(
     "        ]"
-    ""
 )
 
 [System.IO.File]::WriteAllLines(
