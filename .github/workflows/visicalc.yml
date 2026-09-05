@@ -60,6 +60,8 @@ jobs:
         run: bash ../../../scripts/ci/apt-install.sh libcairo2-dev
       - name: Install web dependencies
         run: npm ci --no-audit --no-fund
+      - name: Check the root Mosaic package
+        run: cargo test --manifest-path ../../mosaic/visicalc/Cargo.toml
       - name: Test the standard Rust application and native ABI
         run: cargo test --manifest-path ../../../packages/rust/Cargo.toml -p visicalc-mosaic-app
       - name: Build and exercise the standard WASM lifecycle bridge

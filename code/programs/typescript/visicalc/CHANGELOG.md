@@ -18,3 +18,8 @@
 - Started the Mosaic reference-application backlog in GitHub issue #14267.
 - Commit the dependency lockfile and use `npm ci` in CI so Node type metadata
   and the resolved dependencies agree on clean runners.
+
+## Root Mosaic application
+
+- Replace the React reducer and legacy engine bundle with the Rust MosaicApp lifecycle.
+- Generate both root themes and replay existing interaction coverage through real WASM.

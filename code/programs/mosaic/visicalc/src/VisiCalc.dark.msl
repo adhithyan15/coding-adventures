@@ -1,0 +1,84 @@
+style VisiCalc {
+  part workbook { background: #14201c; color: #e4eee7; min-height: 100%; }
+  part toolbar { padding: 24px; gap: 20px; align-items: center; }
+  part title { font-size: 28px; font-weight: 700; }
+  part subtitle { font-size: 14px; color: #a3b7a9; flex: 1; }
+  part new-button { padding: 10px; border-radius: 8px; background: #245c46; color: #ffffff; }
+  part formula-bar { padding: 12px; gap: 12px; background: #20332a; align-items: center; }
+  part address-label { font-family: monospace; min-width: 64px; text-align: center; font-size: 14px; }
+  part formula-symbol { font-family: serif; font-size: 20px; color: #a3b7a9; }
+  part formula-field { flex: 1; padding: 10px; font-family: monospace; font-size: 14px; background: #14201c; color: #e4eee7; }
+
+  part sheet {
+    font-family:     monospace ;
+    font-size:       12px ;
+    color:           #cccccc ;
+    background:      #1e1e1e ;
+    border-collapse: collapse ;
+    width:           100% ;
+  }
+
+  // Body cells. The `border-*` triplet draws the gridlines that
+  // were missing in the first demo cut.
+  part cell {
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: #3f3f46 ;
+    padding:      2px ;
+    height:       22px ;
+    // Right-align cell contents — the spreadsheet convention for
+    // numeric data.  Backends that understand text-align (HTML/React
+    // via CSS, SwiftUI via .frame(alignment:)) push the value to the
+    // trailing edge so columns of numbers line up on their ones digit.
+    text-align:   right ;
+
+    // Active-cell highlight. Task #35 — `mosaic-emit-react` looks up
+    // `cell:selected` in the part-style map and inlines these
+    // properties into the per-cell `style={{...}}` spread when the
+    // Box's `state-when-selected: ( expr )` predicate evaluates true.
+    state selected {
+      background: #264f78 ;
+      color:      #ffffff ;
+      outline:    1px solid #007acc ;
+    }
+
+    // In-progress edit highlight. Same mechanism via
+    // `state-when-editing: ( expr )` and the `cell:editing` map entry.
+    state editing {
+      background: #1f4f3f ;
+      outline:    1px solid #007acc ;
+    }
+  }
+
+  // Column-header cells (the labels A, B, C, ... at the top).
+  part header-cell {
+    background:  #2d2d30 ;
+    color:       #9d9d9d ;
+    font-weight: normal ;
+    text-align:  center ;
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: #3f3f46 ;
+    // Give the header cell an explicit height like the body `cell` has —
+    // without it, backends that size a cell box from its style height (Qt
+    // emits the Rectangle with no height, an anchor-filled Text inside) collapse
+    // the header row to a sliver and the A/B/C… letters clip. Matches header-row.
+    height:      24px ;
+  }
+
+  // The header row itself sets the row height; useful when the
+  // first column eventually gains row numbers.
+  part header-row {
+    height: 24px ;
+  }
+
+  // Body data rows share the cell height and alternate between two
+  // backgrounds for readability. (Stripe state blocks `state even` /
+  // `state odd` would need `state-when-even` / `state-when-odd`
+  // predicates on the Row in Grid.{desktop,touch}.mll — currently
+  // not wired since the visual stripes weren't part of the L10
+  // baseline. Adding them is a small follow-up.)
+  part data-row {
+    height: 22px ;
+  }
+}

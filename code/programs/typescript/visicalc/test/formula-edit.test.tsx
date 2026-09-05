@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { loadMosaicModule, type MosaicHost, type MosaicModule } from "../../../../packages/rust/mosaic-app-wasm/js/mosaic-host.mjs";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { App } from "../src/app/App";
-import { initialState, reducer } from "../src/app/state";
+
 import contract from "../../../mosaic/visicalc/fixtures/presentation-contract-v1.json";
 
 // Exercise generated controls and the actual bundled Rust WASM engine. A mocked
@@ -12,28 +12,18 @@ import contract from "../../../mosaic/visicalc/fixtures/presentation-contract-v1
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 let container: HTMLDivElement;
 let root: Root;
-type Workbook = ReturnType<Awaited<NonNullable<Window["__spreadsheetEngineReady"]>>["createSpreadsheet"]>;
-let workbook: Workbook;
-
+let host: MosaicHost;
+let module: MosaicModule;
 beforeEach(async () => {
-  const bundle = readFileSync(
-    resolve("../visicalc-html/vendor/spreadsheet-engine-wasm.js"),
-    "utf8",
-  );
-  new Function(bundle)();
-  const runtime = (await window.__spreadsheetEngineReady)!;
-  const createWorkbook = runtime.createSpreadsheet.bind(runtime);
-  // Capture the real instance without replacing any engine operation. This
-  // lets the shared contract distinguish uncommitted text from stored source.
-  runtime.createSpreadsheet = () => (workbook = createWorkbook());
+  module = await loadMosaicModule(readFileSync("public/visicalc_mosaic_app.wasm"));
+  host = module.create({ colorScheme: "dark" });
   container = document.createElement("div");
   document.body.append(container);
   root = createRoot(container);
-  await act(async () => { root.render(<App />); });
+  await act(async () => { root.render(<App load={async () => host} />); });
 });
-
 function visibleSelection() {
-  const address = container.firstElementChild!.firstElementChild!.textContent!;
+  const address = container.firstElementChild!.children[1].firstElementChild!.textContent!;
   const match = /^([A-Z]+)(\d+)$/.exec(address)!;
   const row = Number(match[2]) - 1;
   const col = [...match[1]].reduce((value, letter) => value * 26 + letter.charCodeAt(0) - 64, 0) - 1;
@@ -103,8 +93,7 @@ it("replays the shared presentation contract through generated controls", async 
     expect(container.querySelectorAll("tbody tr").length, step.id).toBe(slots.viewportSize);
     // Check every displayed cell against the real engine's requested slice.
     // During editing the generated input replaces that one display string.
-    const displayed = workbook.getDisplayWindow(slots.viewportOffset + 1, 1,
-      slots.viewportOffset + slots.viewportSize, 26).cells;
+    const displayed = host.update.props["viewport-rows"] as string[][];
     for (let row = 0; row < displayed.length; row++) {
       for (let col = 0; col < displayed[row].length; col++) {
         if (!cell(row, col).querySelector("input")) {
@@ -112,24 +101,27 @@ it("replays the shared presentation contract through generated controls", async 
         }
       }
     }
-    for (const [address, [raw, display]] of Object.entries(engine)) {
-      expect(workbook.getRaw(address), `${step.id}: ${address} source`).toBe(raw);
-      const match = /^([A-Z])(\d+)$/.exec(address)!;
-      const row = Number(match[2]);
-      const col = match[1].charCodeAt(0) - 64;
-      expect(workbook.getDisplayWindow(row, col, row, col).cells[0][0],
-        `${step.id}: ${address} value`).toBe(display);
-    }
+    // Probe a restored copy so uncommitted edits cannot masquerade as source.
+    const probe = module.create({ restoredSnapshot: host.snapshot() });
+    try {
+      for (const [address, [raw, display]] of Object.entries(engine)) {
+        const match = /^([A-Z])(\d+)$/.exec(address)!;
+        const row = Number(match[2]) - 1, col = match[1].charCodeAt(0) - 65;
+        const update = probe.dispatch("navigate", { row, col });
+        expect(update.props.formula, `${step.id}: ${address} source`).toBe(raw);
+        const offset = Number(update.props["viewport-offset"]);
+        expect((update.props["viewport-rows"] as string[][])[row - offset][col], `${step.id}: ${address} value`).toBe(display);
+      }
+    } finally { probe.dispose(); }
   }
 });
-
 afterEach(async () => {
   await act(async () => { root?.unmount(); });
   container?.remove();
 });
 
 function formulaField() {
-  return container.querySelector<HTMLInputElement>('input[placeholder="Enter formula"]')!;
+  return container.querySelector<HTMLInputElement>('input[placeholder="Enter a value or formula"]')!;
 }
 
 function cell(row: number, col: number) {
@@ -242,17 +234,15 @@ describe("viewport workbook coordinates", () => {
     expect(formulaField().value).toBe("42");
   });
 
-  it("clamps selection and scroll offsets to the workbook's valid window", () => {
-    const end = reducer(initialState, { type: "navigate", row: 1000, col: 1000 });
-    expect([end.selectedRow, end.selectedCol, end.viewportOffset]).toEqual([99, 25, 70]);
-    const start = reducer(end, { type: "navigate", row: -5, col: -3 });
-    expect([start.selectedRow, start.selectedCol, start.viewportOffset]).toEqual([0, 0, 0]);
-    for (const [offset, expected] of [[-1, 0], [1000, 70], [4.8, 4], [NaN, 0]]) {
-      expect(reducer(initialState, { type: "scroll", offset }).viewportOffset).toBe(expected);
+  it("rejects invalid navigation and viewport requests without changing the workbook", () => {
+    const snapshot = host.snapshot();
+    for (const payload of [{row:1000,col:0}, {row:-1,col:0}, {row:0,col:26}]) {
+      expect(() => host.dispatch("navigate", payload)).toThrow();
     }
-    const selected = reducer(initialState, {
-      type: "select", startRow: 65, startCol: 2, endRow: 65, endCol: 2,
-    });
-    expect([selected.selectedRow, selected.viewportOffset]).toEqual([65, 36]);
+    for (const offset of [-1, 1000, 4.8]) {
+      expect(() => host.dispatch("scroll", { offset })).toThrow();
+    }
+    expect(host.snapshot()).toEqual(snapshot);
+    expect(host.dispatch("navigate", {row:99,col:25}).props["viewport-offset"]).toBe(70);
   });
 });
