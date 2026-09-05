@@ -2651,6 +2651,18 @@ fn parse_element(
                     "BJT VJC must be finite and positive",
                 ));
             }
+            let base_collector_grading_coefficient = *model
+                .params
+                .get("MJC")
+                .or_else(|| model.params.get("MC"))
+                .unwrap_or(&0.33);
+            if !base_collector_grading_coefficient.is_finite()
+                || !(0.0..1.0).contains(&base_collector_grading_coefficient)
+            {
+                return Err(NetlistParseError::new(
+                    "BJT MJC must be finite and in [0, 1)",
+                ));
+            }
             let base_emitter_grading_coefficient = *model
                 .params
                 .get("MJE")
@@ -2716,6 +2728,7 @@ fn parse_element(
             bjt.forward_emission_coefficient = forward_emission_coefficient;
             bjt.base_emitter_junction_potential = base_emitter_junction_potential;
             bjt.base_collector_junction_potential = base_collector_junction_potential;
+            bjt.base_collector_grading_coefficient = base_collector_grading_coefficient;
             bjt.base_emitter_grading_coefficient = base_emitter_grading_coefficient;
             Ok(Element::Bjt(bjt))
         }
