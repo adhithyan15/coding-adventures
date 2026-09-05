@@ -1,5 +1,3 @@
-# Changelog
-
 ## Unreleased — Hindi speaking now declares its taught stem
 
 Chapter 5 already teaches learners to remove **-ना** from **बोलना** and recall
