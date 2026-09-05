@@ -5078,16 +5078,16 @@ fn css_property_to_camel(name: &str) -> String {
     to_camel_case_first_lower(name)
 }
 
-/// Concatenate two inline-style fragments, comma-separated, dropping empty
-/// inputs. The first argument is the primitive's built-in style; the second
-/// is the author-declared part style. The author wins on collisions because
-/// React style objects use last-property-wins semantics.
+/// Merge inline-style fragments with author precedence. A spread preserves
+/// last-property-wins semantics without duplicate literal keys (TS1117).
+/// Do not split serialized values: CSS strings and state expressions can
+/// contain commas, quotes and nested object literals.
 fn merge_styles(builtin: &str, author: &str) -> String {
     match (builtin.is_empty(), author.is_empty()) {
         (true, true) => String::new(),
         (false, true) => builtin.to_string(),
         (true, false) => author.to_string(),
-        (false, false) => format!("{builtin}, {author}"),
+        (false, false) => format!("...{{ {builtin} }}, ...{{ {author} }}"),
     }
 }
 
@@ -6300,12 +6300,26 @@ mod tests {
         let result = from_pipeline(&m, &l, &s).unwrap();
         // Built-in style appears first; author style appears after.
         let expected =
-            "style={{ display: \"flex\", flexDirection: \"row\", background: \"#222\" }}";
+            "style={{ ...{ display: \"flex\", flexDirection: \"row\" }, ...{ background: \"#222\" } }}";
         assert!(
             result.output.contains(expected),
             "expected merged style, got:\n{}",
             result.output
         );
+    }
+
+    #[test]
+    fn authored_overflow_uses_a_type_safe_override() {
+        for overflow in ["auto", "hidden"] {
+            let model = component("X", vec![], vec![]);
+            let layout = LayoutDef {
+                component_name: "X".into(),
+                root: LayoutNode { tag: "HostScroll".into(), part_name: Some("frame".into()), props: vec![], children: vec![] },
+            };
+            let style = style_with_part("X", "frame", &[("overflow", overflow)]);
+            let out = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert!(out.contains(&format!("...{{ overflow: \"auto\" }}, ...{{ overflow: \"{overflow}\" }}")), "{out}");
+        }
     }
 
     #[test]
