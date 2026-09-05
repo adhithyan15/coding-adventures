@@ -118,7 +118,13 @@ export function App() {
   // on window because navigation is a host concern, not a Grid concern.
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      // While editing, let the FormulaBar's <input> handle keystrokes.
+      // Generated inputs own text navigation and Enter/Escape. In particular,
+      // a formula-bar key must not also start/navigate a grid edit while idle.
+      if (
+        e.defaultPrevented ||
+        (e.target instanceof HTMLElement &&
+          (e.target.closest("input, textarea, select") || e.target.isContentEditable))
+      ) return;
       if (state.editRow !== -1) return;
 
       const r = state.selectedRow;
