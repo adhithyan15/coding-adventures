@@ -85,6 +85,16 @@ mixed DATA, and RND rows on every available declared backend, requiring every
 available runner to return a result. Add those focused tests to normal BUILD;
 the complete non-ALGOL corpus remains VM-024 and full ALGOL coverage VM-025.
 
+The new RND regression exposed VM-034 before publication. The focused repair
+must include this prerequisite rather than excluding that backend or program:
+the JVM's simulator-compatibility pass must preserve integer widths in modules
+that use floating-point values. Such modules cannot run on the legacy 32-bit
+integer-only simulator anyway. Keep this decision module-wide so helper calls
+and globals agree; prove that RND's `i64` product remains wide and execute the
+existing seed/repeat/advance transcript on real Java. This is a generic mixed
+numeric-type boundary, not a BASIC-specific RNG special case. Preserve the
+existing integer-only simulator path and run its regression suite.
+
 | Rank | ID | Status | Work item | Completion proof |
 |---:|---|---|---|---|
 | — | VM-001 | done ([#13306](https://github.com/adhithyan15/coding-adventures/pull/13306)) | Preserve COBOL scale-12 decimal intermediates on JVM. | The existing `A / B + C` LANG matrix cell prints `000533` on real Java and the full matrix is green. |
@@ -107,6 +117,7 @@ the complete non-ALGOL corpus remains VM-024 and full ALGOL coverage VM-025.
 | — | VM-018 | done ([#13802](https://github.com/adhithyan15/coding-adventures/pull/13802)) | Define and implement portable Dartmouth BASIC `RND` semantics. | Merged as `8ceb8efc60`; the matrix includes negative reseeding, positive advancement, zero repeat, and shared `DEF FN` state on seven backends. |
 | — | VM-030 | done ([#14265](https://github.com/adhithyan15/coding-adventures/pull/14265)); discovered by VM-024 | Repair Windows native-AOT CRT linking. | Merged `0e18482307`; both Windows linkers execute the smoke suite, 62 unit tests and Clippy pass, and Linux/macOS/Windows CI and both CI gates finished green. |
 | 0a | VM-033 | selected; reproduced after VM-030 | Define portable text-output comparison in the LANG matrix. | Windows LLVM BASIC cell `352:Llvm` prints correct values with CRLF but the LF expectation fails; normalize only the accepted host text-newline difference, preserve meaningful output bytes, and run discriminating multi-line cases on available backends. |
+| 0a prerequisite | VM-034 | selected with VM-033 | Preserve JVM integer arithmetic in mixed floating-point modules. | RND cell `360:Jvm` must produce `22`, `85032`, `85032`, `601352`; its `48271 * 48271` intermediate stays i64, while the existing integer-only simulator tests remain green. |
 | 0b | VM-032 | queued | Protect LANG native Windows execution in PR CI. | An affected `twig-aot`/LANG dependency change selects an actual Windows executable smoke run, with its toolchain present; assert real execution rather than a green Clippy-only job. Preserve platform-plan gating and keep the known GC early returns explicit. |
 | 1 | VM-024 | queued behind VM-030 | Protect the non-ALGOL language matrix in normal CI. | Every non-ALGOL `PROGRAMS` row executes on each available declared backend; no empty selection or silent failure-to-skip conversion; full ALGOL diagnostics remain available. |
 | 2 | VM-025 | queued; coordinate with ALGOL owner | Reproduce the full matrix's current Linux failures and restore full CI coverage after their repair. | Record exact failing cells and owning PRs; remove the full-matrix exclusion only after the complete target runs green on supported CI hosts. |
@@ -118,6 +129,16 @@ the complete non-ALGOL corpus remains VM-024 and full ALGOL coverage VM-025.
 | 7a | VM-031 | queued under VM-029 | Reconcile and complete native precise-GC frame-walk proofs. | Windows smoke has two explicit early-return differentials for the Rust/Twig frame boundary; inventory supported-host GC gaps, track each refusal, and execute live-byte reclamation proofs before calling native GC complete. |
 
 ## Discovery log
+
+- **VM-D024 — confirmed 2026-09-05:** VM-033's real multi-line/RND proof
+  exposed JVM output `22`, `-914968`, `-914968`, `-398672`. A fresh process
+  using the pre-VM-033 matrix binary reproduces `360:Jvm`, so normalization
+  did not cause it. `concretize_scalar_any_for_jvm` narrows RND's explicit
+  `i64` product to `i32` because every literal fits in i32 and BASIC's newer
+  floating-point PRINT is not the old `print_i64` builtin. The second RNG
+  product overflows before modulo. Promote VM-034 as VM-033's prerequisite;
+  keep mixed floating-point modules out of the integer-only simulator rewrite
+  and retain all three selected multi-line regressions.
 
 - **VM-D023 — confirmed 2026-09-05:** with VM-030 applied, the proposed
   non-ALGOL matrix ran for 308 seconds before failing on LLVM Dartmouth BASIC
