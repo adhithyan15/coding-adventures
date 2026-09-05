@@ -80,7 +80,10 @@ fixed ceiling is identical on 32-bit and 64-bit targets.
 `counter_state` records plus `Left | Right` shift direction. It implements SR
 and D latches, rising-edge D flip-flops, simultaneous registers, directional
 shift registers, and wrapping counters. Counter state includes both its value
-and complete flip-flop state; no hidden global state is permitted.
+and complete flip-flop state; no hidden global state is permitted. A supplied
+counter snapshot must contain the requested number of valid bits and valid
+flip-flops, and its value must equal the slave outputs of those flip-flops.
+Invalid or inconsistent snapshots fail before reset, increment, or mutation.
 
 The required vectors include all primitive truth tables, NAND equivalence,
 invalid 2 and -1, 2/3/4-input reductions, every MUX index, LSB-first decoder
