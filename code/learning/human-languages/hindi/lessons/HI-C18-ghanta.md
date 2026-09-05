@@ -8,9 +8,9 @@ spine_node: SPINE-TIME-OF-DAY
 sequence: 650
 chapter: 18
 type: word
-headword: घंटा / बजना
-gloss: hour or bell, and बजना — to strike or toll, the verb Hindi uses to tell time
-romanization: "ghaṇṭā"
+headword: घंटा / बजना / बज रहा है / बज रहे हैं
+gloss: hour or bell / to strike or toll / singular time frame / plural time frame
+romanization: "ghaṇṭā / bajnā / baj rahā hai / baj rahe haiṁ"
 concept_tag: HI-TIME-HOUR
 prerequisites: [HI-C17-dopahar-aadhi-raat]
 sounds: [devanagari-anusvara, devanagari-conjunct-none]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-C17-dopahar-aadhi-raat]
 ---
 
-# घंटा — "hour," literally "bell"
+# घंटा / बजना — the bell and the hours that strike
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
