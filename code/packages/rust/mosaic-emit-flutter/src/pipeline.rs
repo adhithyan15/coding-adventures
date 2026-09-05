@@ -48,13 +48,11 @@
 //!
 //! ## What is NOT in this first cut
 //!
-//! - **Per-part style inlining.** The `.msl` IR is accepted but
-//!   currently only the root part's `padding` / `color` /
-//!   `border-radius` properties propagate to the outermost
-//!   `Container`. Author-declared deep styling (e.g. `state hover`
-//!   blocks, per-child overrides) is deferred. The shape is
-//!   forward-compatible — the part-style map is computed; the
-//!   widget mapping is just incomplete.
+//! - **Complete per-part style parity.** Common container paint and sizing
+//!   properties, explicit `state-when-*` predicates, and UI49 `one-of`
+//!   slot-owned states lower today. Less common CSS-shaped properties still
+//!   remain intentionally best-effort rather than pretending Flutter has a
+//!   one-to-one CSS surface.
 //! - **Theme integration.** Generated widgets ignore
 //!   `Theme.of(context)`. Hosts that want themed colours should
 //!   wrap the generated widget in a `Theme(...)` override. A
@@ -1312,7 +1310,7 @@ pub fn from_pipeline(
     // 3. Pre-compute the per-part style map. Same shape as the React
     //    emitter's `build_part_style_map`: kebab part-name → joined
     //    `key: value;` string the widget builder can consume.
-    let part_styles = build_part_style_map(style);
+    let part_styles = build_part_style_map(style, &interface.slots)?;
 
     // 4. The widget class itself.
     out.push_str(&emit_widget_class(
@@ -2404,6 +2402,11 @@ fn emit_container(
         .and_then(|p| part_styles.get(p).map(String::as_str))
         .unwrap_or("");
     let props = parse_style_props(style_props);
+    let state_layers = node
+        .part_name
+        .as_deref()
+        .map(|part| collect_cell_state_layers(node, part, part_styles))
+        .unwrap_or_default();
     let width = props.get("width").and_then(|v| fixed_pixel_length(v));
     let height = props.get("height").and_then(|v| fixed_pixel_length(v));
     let elevation = elevation_tier(&props);
@@ -2430,7 +2433,10 @@ fn emit_container(
         // its `state-when-selected` / `state-when-editing` predicates into
         // conditional background + text colour. See `emit_styled_box`.
         if let Some(part) = node.part_name.as_deref() {
-            if part_has_decoration(style_props) || node_has_state_when(node) {
+            if part_has_decoration(style_props)
+                || node_has_state_when(node)
+                || part_has_slot_state(part, part_styles)
+            {
                 return emit_styled_box(
                     node,
                     part,
@@ -2542,12 +2548,53 @@ fn emit_container(
     // part's own `width`/`height` via this wrapper gives the subtree a
     // real, bounded size again, matching what `Box`'s decoration path
     // already does for the same properties.
-    if width.is_some() || height.is_some() || elevation.is_some() {
+    let base_background = props
+        .get("background")
+        .or_else(|| props.get("background-color"))
+        .and_then(|value| css_color_to_dart(value));
+    let base_foreground = props
+        .get("color")
+        .and_then(|value| css_color_to_dart(value));
+    let base_border_color = props
+        .get("border-color")
+        .and_then(|value| css_color_to_dart(value));
+    let base_border_width = props
+        .get("border-width")
+        .map(|value| parse_pixel_value(value));
+    let base_padding = props.get("padding").map(|value| parse_pixel_value(value));
+    let has_background =
+        base_background.is_some() || state_layers.iter().any(|layer| layer.background.is_some());
+    let has_foreground =
+        base_foreground.is_some() || state_layers.iter().any(|layer| layer.text_color.is_some());
+    let has_border = base_border_width.is_some()
+        || state_layers
+            .iter()
+            .any(|layer| layer.border_width.is_some());
+    let has_padding =
+        base_padding.is_some() || state_layers.iter().any(|layer| layer.padding.is_some());
+
+    if width.is_some()
+        || height.is_some()
+        || elevation.is_some()
+        || has_background
+        || has_foreground
+        || has_border
+        || has_padding
+    {
         // `SizedBox` when there's only sizing to carry (no `decoration:`
         // to attach) — `flutter analyze`'s `sized_box_for_whitespace`
         // lint prefers it over a `Container` that does nothing but size
         // its child, and it's the more idiomatic Flutter shape anyway.
-        let wrapper = if elevation.is_none() { "SizedBox" } else { "Container" };
+        let wrapper = if elevation.is_none()
+            && !has_background
+            && !has_foreground
+            && !has_border
+            && !has_padding
+        {
+            "SizedBox"
+        } else {
+            "Container"
+        };
         let mut wrapper_args: Vec<String> = Vec::new();
         if let Some(w) = &width {
             wrapper_args.push(format!("width: {w}"));
@@ -2555,10 +2602,45 @@ fn emit_container(
         if let Some(h) = &height {
             wrapper_args.push(format!("height: {h}"));
         }
-        if let Some(tier) = elevation {
+        if has_padding {
+            let padding = state_color_expr(
+                &state_layers,
+                |layer| layer.padding.as_ref(),
+                base_padding.as_deref().unwrap_or("0"),
+            );
+            wrapper_args.push(format!("padding: EdgeInsets.all({padding})"));
+        }
+        if has_background || has_border || elevation.is_some() {
+            let mut decoration: Vec<String> = Vec::new();
+            if has_background {
+                let background = state_color_expr(
+                    &state_layers,
+                    |layer| layer.background.as_ref(),
+                    base_background.as_deref().unwrap_or("Colors.transparent"),
+                );
+                decoration.push(format!("color: {background}"));
+            }
+            if has_border {
+                let border_color = state_color_expr(
+                    &state_layers,
+                    |layer| layer.border_color.as_ref(),
+                    base_border_color.as_deref().unwrap_or("Colors.transparent"),
+                );
+                let border_width = state_color_expr(
+                    &state_layers,
+                    |layer| layer.border_width.as_ref(),
+                    base_border_width.as_deref().unwrap_or("0"),
+                );
+                decoration.push(format!(
+                    "border: Border.all(color: {border_color}, width: {border_width})"
+                ));
+            }
+            if let Some(tier) = elevation {
+                decoration.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
+            }
             wrapper_args.push(format!(
-                "decoration: BoxDecoration(boxShadow: [{}])",
-                tier.box_shadow_dart()
+                "decoration: BoxDecoration({})",
+                decoration.join(", ")
             ));
         }
         let args_str: String = wrapper_args
@@ -2566,8 +2648,20 @@ fn emit_container(
             .map(|a| format!("{inner_pad}{a},\n"))
             .collect();
         let body_trimmed = body.trim_start().trim_end_matches('\n');
+        let child = if has_foreground {
+            let foreground = state_color_expr(
+                &state_layers,
+                |layer| layer.text_color.as_ref(),
+                base_foreground.as_deref().unwrap_or("null"),
+            );
+            format!(
+                "DefaultTextStyle.merge(style: TextStyle(color: {foreground}), child: {body_trimmed})"
+            )
+        } else {
+            body_trimmed.to_string()
+        };
         return Ok(format!(
-            "{pad}{wrapper}(\n{args_str}{inner_pad}child: {body_trimmed}\n{pad})\n"
+            "{pad}{wrapper}(\n{args_str}{inner_pad}child: {child}\n{pad})\n"
         ));
     }
     Ok(body)
@@ -3294,19 +3388,56 @@ struct StateLayer {
     cond: String,
     background: Option<String>,
     text_color: Option<String>,
+    border_color: Option<String>,
+    border_width: Option<String>,
+    padding: Option<String>,
 }
 
-/// Collect `state-when-<X>: ( expr )` props on a node, pairing each with
-/// the resolved `{part}:{X}` style block's background + text colour.
-/// Declaration order is preserved; the cell-styling fold treats the
-/// FIRST matching layer as highest precedence (selected beats editing),
-/// matching the `.msl` author order and the other backends.
+fn state_layer(cond: String, style_props: &str) -> StateLayer {
+    let m = parse_style_props(style_props);
+    StateLayer {
+        cond,
+        background: m
+            .get("background")
+            .or_else(|| m.get("background-color"))
+            .and_then(|v| css_color_to_dart(v)),
+        text_color: m.get("color").and_then(|v| css_color_to_dart(v)),
+        border_color: m.get("border-color").and_then(|v| css_color_to_dart(v)),
+        border_width: m.get("border-width").map(|v| parse_pixel_value(v)),
+        padding: m.get("padding").map(|v| parse_pixel_value(v)),
+    }
+}
+
+fn slot_state_meta_key(part: &str, index: usize) -> String {
+    format!("{SLOT_STATE_META_PREFIX}{part}\0{index}")
+}
+
+fn part_has_slot_state(part: &str, part_styles: &HashMap<String, String>) -> bool {
+    part_styles.contains_key(&slot_state_meta_key(part, 0))
+}
+
+/// Collect UI49 slot-owned states in model declaration order, followed by
+/// explicit `state-when-*` props in layout order. Folding from first to last
+/// makes later enum axes win over earlier ones and keeps interaction or
+/// structural predicates more specific than slot-driven styling.
 fn collect_cell_state_layers(
     node: &LayoutNode,
     part: &str,
     part_styles: &HashMap<String, String>,
 ) -> Vec<StateLayer> {
     let mut layers = Vec::new();
+
+    let mut index = 0usize;
+    while let Some(meta) = part_styles.get(&slot_state_meta_key(part, index)) {
+        let Some((state_key, cond)) = meta.split_once('\0') else {
+            break;
+        };
+        if let Some(state_style) = part_styles.get(state_key) {
+            layers.push(state_layer(cond.to_string(), state_style));
+        }
+        index += 1;
+    }
+
     for prop in &node.props {
         let Some(state_name) = prop.name.strip_prefix("state-when-") else {
             continue;
@@ -3321,35 +3452,22 @@ fn collect_cell_state_layers(
             // EmitRef / Number / String can't be boolean predicates.
             _ => continue,
         };
-        let m = parse_style_props(state_style);
-        let background = m
-            .get("background")
-            .or_else(|| m.get("background-color"))
-            .and_then(|v| css_color_to_dart(v));
-        let text_color = m.get("color").and_then(|v| css_color_to_dart(v));
-        layers.push(StateLayer {
-            cond,
-            background,
-            text_color,
-        });
+        layers.push(state_layer(cond, state_style));
     }
     layers
 }
 
 /// Build a nested-ternary Dart expression for a colour that flips with
 /// state. `layers` are tried in order; each contributes
-/// `(cond) ? <color> :` when it carries the requested colour. `base` is
-/// the final fallback (`null` for "no fill"). Returns just `base` when
-/// no layer supplies the colour, so the cheapest expression is emitted.
+/// `(cond) ? <value> :` when it carries the requested value. `base` is
+/// the final fallback. The LAST layer is outermost and highest-precedence.
 fn state_color_expr(
     layers: &[StateLayer],
     pick: impl Fn(&StateLayer) -> Option<&String>,
     base: &str,
 ) -> String {
     let mut acc = base.to_string();
-    // Fold from the LAST layer to the FIRST so the first layer ends up
-    // the outermost (highest-precedence) condition.
-    for layer in layers.iter().rev() {
+    for layer in layers {
         if let Some(color) = pick(layer) {
             acc = format!(
                 "_mosaicTruthy(( {} )) ? {} : {}",
@@ -3429,11 +3547,23 @@ fn emit_styled_box(
     if let Some(ta) = base.get("text-align") {
         args.push(format!("alignment: {}", text_align_to_alignment(ta)));
     }
-    if let Some(p) = base.get("padding") {
-        args.push(format!(
-            "padding: const EdgeInsets.symmetric(horizontal: {})",
-            parse_pixel_value(p)
-        ));
+    let base_padding = base.get("padding").map(|v| parse_pixel_value(v));
+    if base_padding.is_some() || layers.iter().any(|layer| layer.padding.is_some()) {
+        if layers.iter().all(|layer| layer.padding.is_none()) {
+            args.push(format!(
+                "padding: const EdgeInsets.symmetric(horizontal: {})",
+                base_padding.as_deref().unwrap_or("0")
+            ));
+        } else {
+            let padding = state_color_expr(
+                &layers,
+                |layer| layer.padding.as_ref(),
+                base_padding.as_deref().unwrap_or("0"),
+            );
+            args.push(format!(
+                "padding: EdgeInsets.symmetric(horizontal: {padding})"
+            ));
+        }
     }
 
     // --- BoxDecoration: background (state-conditional) + border -------
@@ -3447,13 +3577,21 @@ fn emit_styled_box(
         base_bg.as_deref().unwrap_or("null"),
     );
     let mut deco_parts: Vec<String> = vec![format!("color: {bg_expr}")];
-    if let (Some(bc), Some(bw)) = (
-        base.get("border-color").and_then(|v| css_color_to_dart(v)),
-        base.get("border-width"),
-    ) {
+    let base_border_color = base.get("border-color").and_then(|v| css_color_to_dart(v));
+    let base_border_width = base.get("border-width").map(|v| parse_pixel_value(v));
+    if base_border_width.is_some() || layers.iter().any(|layer| layer.border_width.is_some()) {
+        let border_color = state_color_expr(
+            &layers,
+            |layer| layer.border_color.as_ref(),
+            base_border_color.as_deref().unwrap_or("Colors.transparent"),
+        );
+        let border_width = state_color_expr(
+            &layers,
+            |layer| layer.border_width.as_ref(),
+            base_border_width.as_deref().unwrap_or("0"),
+        );
         deco_parts.push(format!(
-            "border: Border.all(color: {bc}, width: {})",
-            parse_pixel_value(bw)
+            "border: Border.all(color: {border_color}, width: {border_width})"
         ));
     }
     // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
@@ -3956,21 +4094,30 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
     let Some(part) = node.part_name.as_deref() else {
         return String::new();
     };
-    let Some(style_props) = part_styles.get(part) else {
-        return String::new();
-    };
-
+    let style_props = part_styles.get(part).map(String::as_str).unwrap_or("");
     let props = parse_style_props(style_props);
+    let layers = collect_cell_state_layers(node, part, part_styles);
     let mut style_parts: Vec<String> = Vec::new();
 
-    if let Some(color) = props
+    let base_background = props
         .get("background")
         .or_else(|| props.get("background-color"))
-        .and_then(|v| css_color_to_dart(v))
-    {
+        .and_then(|v| css_color_to_dart(v));
+    if base_background.is_some() || layers.iter().any(|layer| layer.background.is_some()) {
+        let color = state_color_expr(
+            &layers,
+            |layer| layer.background.as_ref(),
+            base_background.as_deref().unwrap_or("Colors.transparent"),
+        );
         style_parts.push(format!("backgroundColor: WidgetStatePropertyAll({color})"));
     }
-    if let Some(color) = props.get("color").and_then(|v| css_color_to_dart(v)) {
+    let base_foreground = props.get("color").and_then(|v| css_color_to_dart(v));
+    if base_foreground.is_some() || layers.iter().any(|layer| layer.text_color.is_some()) {
+        let color = state_color_expr(
+            &layers,
+            |layer| layer.text_color.as_ref(),
+            base_foreground.as_deref().unwrap_or("null"),
+        );
         style_parts.push(format!("foregroundColor: WidgetStatePropertyAll({color})"));
     }
     // UI41, #12028 item 1 — Material's `ElevatedButton` already has a
@@ -3985,14 +4132,45 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
             tier.button_elevation()
         ));
     }
-    if let Some(padding) = props.get("padding").map(|v| parse_pixel_value(v)) {
-        style_parts.push(format!(
-            "padding: WidgetStatePropertyAll(const EdgeInsets.all({padding}))"
-        ));
+    let base_padding = props.get("padding").map(|v| parse_pixel_value(v));
+    if base_padding.is_some() || layers.iter().any(|layer| layer.padding.is_some()) {
+        if layers.iter().all(|layer| layer.padding.is_none()) {
+            style_parts.push(format!(
+                "padding: WidgetStatePropertyAll(const EdgeInsets.all({}))",
+                base_padding.as_deref().unwrap_or("0")
+            ));
+        } else {
+            let padding = state_color_expr(
+                &layers,
+                |layer| layer.padding.as_ref(),
+                base_padding.as_deref().unwrap_or("0"),
+            );
+            style_parts.push(format!(
+                "padding: WidgetStatePropertyAll(EdgeInsets.all({padding}))"
+            ));
+        }
     }
 
-    let border_color = props.get("border-color").and_then(|v| css_color_to_dart(v));
-    let border_width = props.get("border-width").map(|v| parse_pixel_value(v));
+    let base_border_color = props.get("border-color").and_then(|v| css_color_to_dart(v));
+    let border_color = (base_border_color.is_some()
+        || layers.iter().any(|layer| layer.border_color.is_some()))
+    .then(|| {
+        state_color_expr(
+            &layers,
+            |layer| layer.border_color.as_ref(),
+            base_border_color.as_deref().unwrap_or("Colors.transparent"),
+        )
+    });
+    let base_border_width = props.get("border-width").map(|v| parse_pixel_value(v));
+    let border_width = (base_border_width.is_some()
+        || layers.iter().any(|layer| layer.border_width.is_some()))
+    .then(|| {
+        state_color_expr(
+            &layers,
+            |layer| layer.border_width.as_ref(),
+            base_border_width.as_deref().unwrap_or("0"),
+        )
+    });
     let border_radius = props.get("border-radius").map(|v| parse_pixel_value(v));
     let mut shape_args: Vec<String> = Vec::new();
     if let Some(radius) = border_radius {
@@ -5691,7 +5869,16 @@ fn emit_host_number_input(
 /// Build the per-part style map. Mirrors `mosaic-emit-react`'s
 /// `build_part_style_map` — kebab part-name → joined `"key: value;
 /// key: value"` string the widget builder can parse.
-fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
+const SLOT_STATE_META_PREFIX: &str = "\0mosaic-slot-state\0";
+
+/// Build the per-part style map plus ordered UI49 slot-state metadata.
+/// Metadata uses NUL-delimited private keys, which cannot collide with a
+/// source-level mosstyle part name. Each value stores the composite state key
+/// followed by the Dart condition that activates it.
+fn build_part_style_map(
+    style: &StyleDef,
+    slots: &[SlotDecl],
+) -> Result<HashMap<String, String>, PipelineEmitError> {
     let mut map: HashMap<String, String> = HashMap::new();
     for part in &style.parts {
         map.insert(part.name.clone(), format_props(&part.base));
@@ -5708,8 +5895,29 @@ fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
                 map.insert(format!("{}:{}", part.name, state.state), fragment);
             }
         }
+
+        let mut owned_index = 0usize;
+        for slot in slots {
+            let slot_ident = to_camel_case_first_lower(&slot.name);
+            validate_slot_or_field_name(&slot_ident)?;
+            for state in part
+                .states
+                .iter()
+                .filter(|state| state.slot.as_deref() == Some(slot.name.as_str()))
+            {
+                let state_key = format!("{}:{}", part.name, state.state);
+                if !map.contains_key(&state_key) {
+                    continue;
+                }
+                let meta_key = format!("{SLOT_STATE_META_PREFIX}{}\0{owned_index}", part.name);
+                let condition =
+                    format!("({slot_ident} == \"{}\")", escape_dart_string(&state.state));
+                map.insert(meta_key, format!("{state_key}\0{condition}"));
+                owned_index += 1;
+            }
+        }
     }
-    map
+    Ok(map)
 }
 
 /// Render a slice of style props as a joined `"key: value; key: value"`
@@ -7004,6 +7212,139 @@ mod tests {
         assert!(
             out.contains("side: BorderSide(color: const Color(0xFF7F1D1D), width: 2)"),
             "missing border side style:\n{out}"
+        );
+    }
+
+    #[test]
+    fn ui49_slot_states_follow_model_order_and_reach_containers_and_buttons() {
+        let m = component(
+            "VariantCard",
+            vec![
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".into(), "danger".into()]),
+                    true,
+                ),
+                slot(
+                    "size",
+                    SlotType::OneOf(vec!["regular".into(), "compact".into()]),
+                    true,
+                ),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "VariantCard",
+            LayoutNode {
+                tag: "Column".into(),
+                part_name: Some("panel".into()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "HostButton".into(),
+                    part_name: Some("button".into()),
+                    props: vec![
+                        LayoutProp {
+                            name: "label".into(),
+                            value: LayoutPropValue::String("Run".into()),
+                        },
+                        state_when("selected", "( selected )"),
+                    ],
+                    children: vec![],
+                }],
+            },
+        );
+        let style = StyleDef {
+            component_name: "VariantCard".into(),
+            parts: vec![
+                PartStyle {
+                    name: "panel".into(),
+                    base: vec![StyleProp {
+                        name: "background".into(),
+                        value: "#222222".into(),
+                    }],
+                    transitions: vec![],
+                    states: vec![mosstyle_compiler::StateStyle {
+                        slot: Some("variant".into()),
+                        state: "danger".into(),
+                        transitions: vec![],
+                        props: vec![StyleProp {
+                            name: "background".into(),
+                            value: "#333333".into(),
+                        }],
+                    }],
+                },
+                PartStyle {
+                    name: "button".into(),
+                    base: vec![
+                        StyleProp {
+                            name: "background".into(),
+                            value: "#111111".into(),
+                        },
+                        StyleProp {
+                            name: "padding".into(),
+                            value: "8px".into(),
+                        },
+                    ],
+                    transitions: vec![],
+                    // Deliberately not model order: the emitted cascade must
+                    // still follow variant, then size, then explicit state.
+                    states: vec![
+                        mosstyle_compiler::StateStyle {
+                            slot: Some("size".into()),
+                            state: "compact".into(),
+                            transitions: vec![],
+                            props: vec![
+                                StyleProp {
+                                    name: "background".into(),
+                                    value: "#ffaa00".into(),
+                                },
+                                StyleProp {
+                                    name: "padding".into(),
+                                    value: "4px".into(),
+                                },
+                            ],
+                        },
+                        mosstyle_compiler::StateStyle {
+                            slot: Some("variant".into()),
+                            state: "danger".into(),
+                            transitions: vec![],
+                            props: vec![StyleProp {
+                                name: "background".into(),
+                                value: "#dc3545".into(),
+                            }],
+                        },
+                        mosstyle_compiler::StateStyle {
+                            slot: None,
+                            state: "selected".into(),
+                            transitions: vec![],
+                            props: vec![StyleProp {
+                                name: "background".into(),
+                                value: "#ffffff".into(),
+                            }],
+                        },
+                    ],
+                },
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &style).expect("emit ok").output;
+        assert!(
+            out.contains("_mosaicTruthy(( (variant == \"danger\") )) ? const Color(0xFF333333) : const Color(0xFF222222)"),
+            "generic Column did not receive its slot-owned state:\n{out}"
+        );
+        let explicit = out
+            .find("_mosaicTruthy(( ( selected ) )) ? const Color(0xFFFFFFFF)")
+            .expect("explicit state must be the outermost button paint condition");
+        let size = out[explicit..]
+            .find("_mosaicTruthy(( (size == \"compact\") )) ? const Color(0xFFFFAA00)")
+            .expect("size state must follow explicit state");
+        let variant = out[explicit + size..]
+            .find("_mosaicTruthy(( (variant == \"danger\") )) ? const Color(0xFFDC3545)")
+            .expect("variant state must be the inner enum axis");
+        assert!(variant > 0, "variant condition must follow size:\n{out}");
+        assert!(
+            out.contains("EdgeInsets.all(_mosaicTruthy(( (size == \"compact\") )) ? 4 : 8)"),
+            "size state did not reach button padding:\n{out}"
         );
     }
 
