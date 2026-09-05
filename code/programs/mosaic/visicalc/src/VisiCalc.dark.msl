@@ -1,5 +1,5 @@
 style VisiCalc {
-  part workbook { background: #14201c; color: #e4eee7; min-height: 100%; }
+  part workbook { background: #14201c; color: #e4eee7; min-height: 100vh; }
   part toolbar { padding: 24px; gap: 20px; align-items: center; }
   part title { font-size: 28px; font-weight: 700; }
   part subtitle { font-size: 14px; color: #a3b7a9; flex: 1; }

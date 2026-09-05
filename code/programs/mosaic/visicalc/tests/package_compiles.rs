@@ -15,5 +15,6 @@ fn root_package_and_both_themes_compile() {
         assert!(source.contains("gridNavigate"));
         assert!(source.contains("gridSelectedRow"));
         assert!(source.contains("newWorkbook"));
+        assert!(source.contains("minHeight: \"100vh\""));
     }
 }
