@@ -5,6 +5,13 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — state-dependent dimensions keep their Compose units
+
+Numeric state expressions are now parenthesized before applying `.dp` or
+`.sp`. This keeps every branch typed as `Dp` or `TextUnit` instead of letting
+Kotlin infer `Comparable<*>` / `Any`, which prevented toolkit Button packages
+with UI49 size states from compiling (#14383).
+
 ### Added — UI49 slot-owned style states
 
 `one-of` slot values now activate their matching `.msl` state blocks in
