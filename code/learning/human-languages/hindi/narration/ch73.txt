@@ -3,7 +3,7 @@ Hindi, chapter 73: Two Actions, One Clause.
 
 
 Lesson 1 of 2.
--कर (-kar) — having done it.
+-कर / देखकर / करके (-kar / dekhkar / karke) — chaining actions in sequence.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
@@ -13,7 +13,7 @@ Say the जब … तब frame. Two clauses, two verbs, a word at each end. Tha
 
 Grammar Lens: put -कर on the stem and the clause disappears.
 मैं किताब देखकर आता हूँ. — maiṁ kitāb dekhkar ātā hūṁ. — I look at the book and come. (Literally: having looked, I come.)
-The move is the same shape as सकना: take the -ना off the first verb and put -कर (-kar) on the bare stem.
+The move is the same shape as सकना: take the -ना off the first verb and put -कर on the bare stem.
 देखना becomes देखकर — having looked.
 करना becomes करके — having done (this one is irregular, and it is the commonest of all).
 What you get is not a second clause. It is one clause with a chained action inside it, and only the LAST verb takes a person ending. That is why Hindi reaches for it constantly: a speaker can string three actions together and conjugate once.
@@ -22,9 +22,9 @@ The ending is the verb करना frozen solid. Having looked is literally loo
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: dekhnā becomes dekhkar, then karnā becomes karke]
+[your turn — say: देखना (dekhnā) becomes देखकर (dekhkar), then करना (karnā) becomes करके (karke)]
 [pause 8 seconds for the answer]
-[your turn — say: maiṁ kitāb dekhkar ātā hūṁ]
+[your turn — say: मैं किताब देखकर आता हूँ (maiṁ kitāb dekhkar ātā hūṁ)]
 [pause 8 seconds for the answer]
 [your turn — say: which of the two verbs carries the person ending — the last one]
 [pause 8 seconds for the answer]
@@ -33,7 +33,7 @@ Chain two actions: look at the book, then come.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does -कर (-kar) attach to? (The bare stem, after the -ना comes off.) How many verbs in a -कर (-kar) sentence take a person ending? (One — the last.)
+What does -कर attach to? (The bare stem, after the -ना comes off.) How many verbs in a -कर sentence take a person ending? (One — the last.)
 Sources: Wiktionary: कर.
 
 
@@ -42,7 +42,7 @@ One clause or two — two clauses or one, and how to choose.
 
 Warm-up.
 [pause 5 seconds]
-You now have three ways to put two actions in one sentence: aur between two clauses, the जब … तब frame, and -कर (-kar) inside a single clause. Only one of them conjugates just once.
+You now have three ways to put two actions in one sentence: aur between two clauses, the जब … तब frame, and -कर inside a single clause. Only one of them conjugates just once.
 
 Guided Practice.
 [pause 1 second]
@@ -50,11 +50,11 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: maiṁ kitāb dekhkar ātā hūṁ — one ending]
 [pause 8 seconds for the answer]
-[your turn — say: which of the two a Hindi speaker says more often — the -कर (-kar) one]
+[your turn — say: which of the two a Hindi speaker says more often — the -कर one]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 30 seconds]
 Say the same two actions twice: joined with aur, then chained with -kar.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many person endings does a -कर (-kar) sentence carry? (One.) And an aur sentence with two verbs? (Two.) Then stop.
+How many person endings does a -कर sentence carry? (One.) And an aur sentence with two verbs? (Two.) Then stop.
