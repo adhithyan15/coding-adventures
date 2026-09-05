@@ -8,9 +8,9 @@ spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1230
 chapter: 42
 type: word
-headword: "आना"
-gloss: "to come"
-romanization: "ānā"
+headword: "आना / आता / आती / आते"
+gloss: "to come / come — infinitive / masculine / feminine / respectful or plural"
+romanization: "ānā / ātā / ātī / āte"
 concept_tag: HI-VERB-COME
 prerequisites: []
 sounds: []
@@ -31,7 +31,7 @@ variety: standard-colloquial
 reviews_of: []
 ---
 
-# आना (ānā) — to come
+# आना / आता / आती / आते — to come and its present forms
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -46,19 +46,24 @@ reviews_of: []
 Every Hindi infinitive ends in **-ना** (*-nā*), so this is 'to come' in the form a dictionary lists.
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-COME] -->
 
-One more everyday action. Three more follow, and each reuses the ones before it.
+Take off **-ना** and add the endings you already know: **आता** (*ātā*,
+masculine), **आती** (*ātī*, feminine), **आते** (*āte*, respectful or plural).
+Chapter 73 will put **आता हूँ** after a chained action; now the form will already
+be yours.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-COME] -->
 
 [PAUSE 1s]
 - [YOU SAY: *ānā*]
+- [YOU SAY: **आता / आती / आते** (*ātā / ātī / āte*)]
 - [YOU SAY: it again, to someone standing in a doorway]
 
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-COME] -->
 
-[PAUSE 3s] What does आना mean? ("to come".) Say it once more.
+[PAUSE 3s] What does **आना** mean? ("to come".) Give its masculine, feminine,
+and respectful or plural forms. (**आता / आती / आते**.)
