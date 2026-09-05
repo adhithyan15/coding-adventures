@@ -27,7 +27,7 @@
     "scriptRampOverBudgetLessons": 31,
     "lessonsOpeningMultipleScripts": 0,
     "scriptClosureViolations": 269,
-    "scriptExposureExemptedGlyphs": 1367,
+    "scriptExposureExemptedGlyphs": 1368,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
@@ -85199,8 +85199,8 @@
         "shownGlyphs": 57,
         "neverTaughtGlyphs": 11,
         "violations": 37,
-        "exposureOnly": 60,
-        "exposureExemptedGlyphs": 133,
+        "exposureOnly": 61,
+        "exposureExemptedGlyphs": 134,
         "headwordsWithoutRomanization": 1
       },
       {
@@ -87249,8 +87249,8 @@
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
       "violations": 269,
-      "exposureOnly": 375,
-      "exposureExemptedGlyphs": 1367,
+      "exposureOnly": 376,
+      "exposureExemptedGlyphs": 1368,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
     },
