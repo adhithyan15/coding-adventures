@@ -2611,6 +2611,10 @@ fn parse_element(
             {
                 return Err(NetlistParseError::new("BJT NC must be finite and positive"));
             }
+            let forward_beta_temperature_exponent = *model.params.get("XTB").unwrap_or(&0.0);
+            if !forward_beta_temperature_exponent.is_finite() {
+                return Err(NetlistParseError::new("BJT XTB must be finite"));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2660,6 +2664,7 @@ fn parse_element(
                 base_collector_leakage_saturation_current;
             bjt.base_collector_leakage_emission_coefficient =
                 base_collector_leakage_emission_coefficient;
+            bjt.forward_beta_temperature_exponent = forward_beta_temperature_exponent;
             Ok(Element::Bjt(bjt))
         }
         'J' => {
