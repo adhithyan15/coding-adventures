@@ -1143,6 +1143,7 @@ members = [
   "markdown-docx",
   "task-core",
   "task-mosaic-app",
+  "visicalc-mosaic-app",
   "task-wasm",
   "chief-of-staff-daemon-credential",
   "chief-of-staff-daemon-secret-file",

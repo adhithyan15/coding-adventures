@@ -8,6 +8,11 @@ UI38 Rust `MosaicApp` adapter and generated application hosts is tracked in
 [investigation](../../../specs/visicalc-mosaic-investigation-20260905.md) records
 current architecture and validation limits.
 
+The [Rust MosaicApp adapter](../../../packages/rust/visicalc-mosaic-app) now
+passes the shared presentation contract and exports the standard native ABI.
+This React host still uses its existing reducer and engine binding; switching
+it to the adapter is tracked in #14272.
+
 ## Build and run
 
 Requires Node.js, npm, Rust/Cargo and Bash. Linux compiler builds also require
