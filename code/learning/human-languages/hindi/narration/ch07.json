@@ -4,22 +4,22 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:513de09e728a0591",
+  "sourceHash": "fnv1a64:475f07c8b79a916d",
   "lessons": [
     {
       "id": "HI-C07-haan",
       "sequence": 490,
-      "title": "हाँ (hāṃ) — yes",
-      "headword": "हाँ",
+      "title": "हाँ / जी हाँ / जी (hāṃ / jī hāṃ / jī) — yes / polite yes",
+      "headword": "हाँ / जी हाँ / जी",
       "romanization": "hāṃ",
-      "gloss": "yes (hāṃ)",
+      "gloss": "yes / polite yes (hāṃ / jī hāṃ / jī)",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0469ae861197bfaf",
+      "sourceHash": "fnv1a64:93ee7a8380b3a04c",
       "notice": null,
       "blocks": [
         {

@@ -8,8 +8,8 @@ spine_node: SPINE-RESPOND-BASIC
 sequence: 490
 chapter: 7
 type: word
-headword: हाँ
-gloss: yes (hāṃ)
+headword: हाँ / जी हाँ / जी
+gloss: yes / polite yes (hāṃ / jī hāṃ / jī)
 romanization: "hāṃ"
 concept_tag: RESPONSE-YES
 prerequisites: [HI-C01-namaste]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-C01-namaste]
 ---
 
-# हाँ (hāṃ) — yes
+# हाँ / जी हाँ / जी (hāṃ / jī hāṃ / jī) — yes / polite yes
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
