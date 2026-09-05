@@ -8,6 +8,13 @@ Entries below ship in the next product release. `task-app-v0.1.0` published on
 2026-08-31; everything added after that tag accumulates here until the next
 version is cut and this heading is replaced with it.
 
+### Fixed - Vitest config uses Vite's native ESM loading contract (#13526)
+
+The web host's Vitest aliases now resolve from `import.meta.dirname` instead of
+the CommonJS-only `__dirname` global. This keeps the existing single-React and
+test-stub aliases while allowing Vite's native config loader to evaluate the
+configuration without its unsupported-feature warning.
+
 ### Fixed - startup no longer fails to a blank page (#13695)
 
 Trestle waited for the WASM fetch, the compile, the storage open, and the
