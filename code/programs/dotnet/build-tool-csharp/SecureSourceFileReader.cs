@@ -855,6 +855,10 @@ internal static class SecureSourceFileReader
 
         if (descriptor < 0)
         {
+            if (Marshal.GetLastPInvokeError() == PosixSymbolicLinkLoop)
+            {
+                throw new SourceHashException("SOURCE_HASH_LINK_REJECTED");
+            }
             throw new SourceHashException("SOURCE_HASH_FILE_UNAVAILABLE");
         }
         try
@@ -1084,6 +1088,7 @@ internal static class SecureSourceFileReader
 
     private const int PosixReadOnly = 0;
     private const int PosixInterrupted = 4;
+    private static int PosixSymbolicLinkLoop => OperatingSystem.IsMacOS() ? 62 : 40;
     private const uint PosixFileTypeMask = 0xF000;
     private const uint PosixRegularType = 0x8000;
     private const uint PosixDirectoryType = 0x4000;
