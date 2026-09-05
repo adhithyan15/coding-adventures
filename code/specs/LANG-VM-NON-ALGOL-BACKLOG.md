@@ -8,6 +8,22 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-056 repair contract (discovered during VM-047b)
+
+All five replacement programs fail on WASM (one bounds trap, four corrupted
+outputs), while the other 30 cells and 292 oracle tests pass. INSPECT emits
+`str_concat result = result, character`. The WASM runtime concat writes its
+new allocation handle into the destination before reading source lengths and
+bytes. When that destination aliases an operand, subsequent reads use the new,
+uninitialized block rather than the original string.
+
+Prioritize VM-056 before publishing VM-047b. Keep both operand locals intact
+until the new header and bytes are written; defer destination assignment until
+all reads and bump accounting finish. Preserve memory capacity checks and the
+literal fast path. Add direct executable regressions for destination aliasing
+the left, right and both operands. Re-run all 35 replacement cells, the full
+WASM package suite, focused Clippy and the complete non-ALGOL matrix.
+
 ## VM-047b implementation contract (selected after #14400 merged)
 
 Refreshed main is `2755b36eb5`. PR #14400 merged after all current-head checks
