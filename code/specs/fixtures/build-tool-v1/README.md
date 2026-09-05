@@ -39,8 +39,11 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 132-case bootstrap corpus covers every process-free v1 domain:
+The 139-case bootstrap corpus covers every process-free v1 domain:
 
+- validated CI gate selection with exact package intersection, path and
+  globstar matching, explicit false verdicts, deterministic output names, and
+  force, unavailable-snapshot, and machinery-change fail-open behavior;
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, Kotlin, and OCaml package/program
   identities, a Dart program identity, plus Cabal `dist-newstyle`, Dune
@@ -130,7 +133,7 @@ The 132-case bootstrap corpus covers every process-free v1 domain:
 
 The outer envelope and build-plan payload use `schema.json`,
 `result.schema.json`, and `code/specs/schemas/build-plan-v1.schema.json`.
-The eight added decision domains additionally validate a closed
+The nine added decision domains additionally validate a closed
 `{domain,outcome,input,result}` projection against
 `pure-domains.schema.json`; generic JSON is never a fallback.
 

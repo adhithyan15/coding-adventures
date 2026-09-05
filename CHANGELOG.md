@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Language-neutral CI gate selection
+
+- Added a closed process-free build-tool fixture domain for deterministic CI
+  gate verdicts, including exact package and path matching, portable globstar
+  behavior, null-versus-empty snapshots, fail-open machinery sentinels, and
+  stable Actions output names.
+- Made the production Go evaluator consume all seven shared cases while
+  keeping Git discovery, registry I/O, graph construction, workflow output,
+  and scheduling outside the fixture authority boundary.
+
 ### Source-verified Devanagari ऋ stroke order
 
 - Read the four buildup panels of the Commons file `data/scripts/devanagari.json`

@@ -31,6 +31,9 @@
   },
   "oneOf": [
     {
+      "$ref": "#/$defs/ci_gate_selection_record"
+    },
+    {
       "$ref": "#/$defs/diff_selection_record"
     },
     {
@@ -58,6 +61,7 @@
   "$defs": {
     "pure_domain": {
       "enum": [
+        "ci_gate_selection",
         "diff_selection",
         "source_collection",
         "hashing_cache",
@@ -114,6 +118,208 @@
       "uniqueItems": true,
       "items": {
         "$ref": "#/$defs/package_name"
+      }
+    },
+    "nullable_package_names": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/package_names"
+        }
+      ]
+    },
+    "nullable_safe_paths": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "maxItems": 8192,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/safe_path"
+          }
+        }
+      ]
+    },
+    "ci_gate_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+$",
+      "maxLength": 80
+    },
+    "ci_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "scope",
+        "description",
+        "packages",
+        "paths"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ci_gate_id"
+        },
+        "scope": {
+          "enum": [
+            "job",
+            "step"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "packages": {
+          "$ref": "#/$defs/package_names"
+        },
+        "paths": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/portable_glob"
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "packages": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "paths": {
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "ci_gate_selection_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "ci_gate_selection"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "registry",
+            "affected_packages",
+            "changed_files",
+            "force"
+          ],
+          "properties": {
+            "registry": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "schema_version",
+                "gates"
+              ],
+              "properties": {
+                "schema_version": {
+                  "const": 1
+                },
+                "gates": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 128,
+                  "items": {
+                    "$ref": "#/$defs/ci_gate"
+                  }
+                }
+              }
+            },
+            "affected_packages": {
+              "$ref": "#/$defs/nullable_package_names"
+            },
+            "changed_files": {
+              "$ref": "#/$defs/nullable_safe_paths"
+            },
+            "force": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "ci_gate_verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "required",
+        "output_name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/ci_gate_id"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "output_name": {
+          "type": "string",
+          "pattern": "^run_[a-z0-9_]+$",
+          "maxLength": 84
+        }
+      }
+    },
+    "ci_gate_selection_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gates"
+      ],
+      "properties": {
+        "gates": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": {
+            "$ref": "#/$defs/ci_gate_verdict"
+          }
+        }
+      }
+    },
+    "ci_gate_selection_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "outcome",
+        "input",
+        "result"
+      ],
+      "properties": {
+        "domain": {
+          "const": "ci_gate_selection"
+        },
+        "outcome": {
+          "const": "ok"
+        },
+        "input": {
+          "$ref": "#/$defs/ci_gate_selection_input"
+        },
+        "result": {
+          "$ref": "#/$defs/ci_gate_selection_result"
+        }
       }
     },
     "empty_result": {

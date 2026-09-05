@@ -12,35 +12,35 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13841,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13841",
-    "branch": "codex/build-tool-swift-repository-source-input-boundary-adoption",
-    "item_id": "build-tool-swift-repository-source-input-boundary-adoption",
-    "opened_at": "2026-09-01T07:29:26Z",
-    "opened_revision": "c8bd221a180be5104e45937f93084eabf9186121"
+    "number": 14251,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/14251",
+    "branch": "codex/build-tool-ci-gate-registry-language-neutral-conformance",
+    "item_id": "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit",
+    "opened_at": "2026-09-05T07:57:14Z",
+    "opened_revision": "39a2ceacb56f0391bb42c3601ddd3693fb9a8faf"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-01T08:21:55Z",
-    "pr_number": 13841,
+    "observed_at": "2026-09-05T08:30:00Z",
+    "pr_number": 14251,
     "status": "pending",
-    "notes": "Actual macOS build job 99786495787 logs show the only failure is the new bounded Git-output reader calling FileHandle.read(upToCount:), which requires macOS 10.15.4 while the Swift package retains an older deployment contract. The smallest same-branch repair switches only that bounded chunk read to the longstanding readData(ofLength:) API; exact byte ceilings, overflow termination, NUL parsing, and Git evidence semantics remain unchanged. Focused HasherTests pass 28/28, the release build succeeds, the unavailable API is absent, and diff/state checks pass; guarded auto-merge remains disabled pending fresh CI after the repair push."
+    "notes": "PR #14251 remains conflict-free. The D18 TypeScript dependency repair now locks the complete affected chain: hkdf, ed25519, and x25519. The next CI wave reached the repo-wide TypeScript portability contract and correctly reported that the locked-compiler census increased from 466 to 469; the same branch updates that exact repository invariant. Clean npm ci and zero-vulnerability lockfile audits passed for all three packages, the exact eleven-package D18F TypeScript install sequence and all 10 fixture tests passed, and the focused portability suite passes; replacement CI must finish before guarded auto-merge can be enabled."
   },
   "last_inventory": {
-    "revision": "480fef07809cccf4f25173f115907426b88afc37",
+    "revision": "8fe279a38603d7a53147624d65d6ecf288585199",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1404,
-    "implementation_package_slots": 4620,
-    "all_reported_identities": 1443,
+    "implementation_identities": 1411,
+    "implementation_package_slots": 4627,
+    "all_reported_identities": 1450,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 172,
     "two_to_four_missing_slots": 2165,
-    "singleton_packages": 934,
-    "singleton_missing_slots": 13076,
-    "rust_singletons": 745,
+    "singleton_packages": 941,
+    "singleton_missing_slots": 13174,
+    "rust_singletons": 752,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -992,7 +992,7 @@
     {
       "id": "build-tool-swift-repository-source-input-boundary-adoption",
       "title": "Adopt exact repository source-input boundaries in the Swift build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-swift-language-source-input-registry-adoption"],
       "branch": "codex/build-tool-swift-repository-source-input-boundary-adoption",
       "pr_number": 13841,
@@ -1005,6 +1005,10 @@
       "opened_revision": "c8bd221a180be5104e45937f93084eabf9186121",
       "opened_at": "2026-09-01T07:29:26Z",
       "ci_repair_notes": "Hosted macOS job 99786495787 failed only because FileHandle.read(upToCount:) is unavailable below macOS 10.15.4. Replacing that single bounded read with readData(ofLength:) preserves the existing 64 KiB chunk ceiling, one-byte overflow probe, process termination, strict NUL parsing, and exact Git stage/mode authority while restoring the package's pre-10.15 deployment compatibility.",
+      "merged_head_revision": "fe12988d2b8057fa366b20f8bdbd6242c20aa876",
+      "merge_revision": "0db71afde03b13bf3b3f5d1ef2dc18673a75fffc",
+      "merged_at": "2026-09-01T10:53:26Z",
+      "merge_notes": "All final-head checks reached terminal acceptable conclusions and GitHub reported the branch mergeable without conflict. Guarded squash auto-merge had been enabled, and GitHub merged PR #13841 without a manual merge command.",
       "publication_notes": "Opened ready-for-review PR #13841 from clean validated head c8bd221a180be5104e45937f93084eabf9186121 after a normal first push from exact rebased origin/main 480fef07809cccf4f25173f115907426b88afc37. Immediately before publication, no parity PR or same-branch PR was active; local Swift, coverage, release, generator, manifest, real 167-package build-file front, neutral corpus, conformance, parity, state-DAG, security, and diff gates were acceptable. GitHub reports the PR mergeable with checks queued; guarded auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered by the independent Swift registry-adoption conformance and security audits. Package-local equality cannot represent the merged repository-relative boundary contract. Add the exact 18-rule and 21-registration production projection, tracked regular-file evidence, secure no-follow hashing for applicable inputs outside package roots and generated-pruning exceptions, and a shared reverse index so boundary-only diffs select exactly their registered consumers and graph closure. Consume every neutral repository-boundary fixture, prove full production equality with no missing or extra authorization, cover the nine exact Swift consumers of code/packages/rust/Cargo.toml plus near-root rejection, and preserve finite bytes, redacted errors, and existing handle-race defenses without ambient ancestor, credential, signing, secret, vendor, or generated-directory widening."
     },
@@ -7769,7 +7773,7 @@
       "id": "layout-flexbox-two-lane-classification",
       "title": "Classify layout-flexbox portability across Rust and TypeScript",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["layout-replaced-portable-core-classification"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean d5f6d1c950 inventory after merged PR #13744 added code/packages/rust/layout-flexbox beside the existing TypeScript implementation. The new directory adds one established-lane slot without adding an identity, moves layout-flexbox from the singleton band into the two-to-four-lane band, and leaves thirteen established lanes without classified coverage. Compare both pure UI03 implementations against their shared layout-ir contract; pin direction, reversal, wrap, gap, order, grow/shrink/basis, justify/align, automatic minimum size, malformed-extension, numeric, overflow, and resource-limit behavior in language-neutral fixtures; then decompose applicable-lane rollout or record narrow reviewed exceptions. Keep fonts, shaping, DOM, windows, rendering devices, and host measurement outside the portable layout core."
@@ -7778,7 +7782,7 @@
       "id": "layout-grid-two-lane-classification",
       "title": "Classify layout-grid portability across Rust and TypeScript",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["layout-replaced-portable-core-classification"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 98a9bd0353 inventory after merged PR #13761 added code/packages/rust/layout-grid beside the existing TypeScript implementation. The new directory adds one established-lane slot without adding an identity, moves layout-grid from the singleton band into the two-to-four-lane band, and leaves thirteen established lanes without classified coverage. Compare both pure UI08 implementations against their shared layout-ir and layout-block contracts; pin explicit and implicit tracks, minmax and fractional sizing, auto placement, dense flow, spanning, gaps, alignment, intrinsic constraints, malformed extensions, numeric behavior, overflow, and resource limits in language-neutral fixtures; then decompose applicable-lane rollout or record narrow reviewed exceptions. Keep DOM, windows, rendering devices, fonts, shaping, and host measurement outside the portable layout core."
@@ -7796,7 +7800,7 @@
       "id": "layout-table-portable-core-classification",
       "title": "Classify the portable layout-table core across applicable lanes",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["layout-replaced-portable-core-classification"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 59b5a5ae20 inventory after merged PR #13786 added the Rust-only layout-table identity and UI42 contract. Separate the host-neutral table formatting core from HTML, CSS, paint, and rendering hosts; pin tolerant table metadata decoding, diagnostics, anonymous row and cell normalization, header/body/footer ordering, row and column spans, slot occupancy, automatic and fixed track sizing, definite and intrinsic widths, separate and collapsed border geometry, caption placement, cell vertical alignment, malformed inputs, numeric behavior, overflow, and resource limits in language-neutral fixtures. Then decompose applicable-lane rollout or record narrow reviewed exceptions. Keep HTML and CSS parsing, DOM and window authority, border painting and conflict colors/styles, text measurement hosts, writing modes, fragmentation, incremental invalidation, toolkit rendering, and device capture outside the portable core."
@@ -7836,6 +7840,198 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 80efccb4d0 inventory after merged Venture inline-fragment work added the Rust-only layout-inline-box identity and UI44 contract. Separate host-neutral fragmented inline edge policy from HTML, CSS, paint, and rendering hosts; pin logical margins, padding, border widths, box-decoration-break slice/clone continuation, first/middle/last fragment edges, content-to-border geometry expansion, descendant shifts, border-paint suppression metadata, hit-testing semantics, malformed inputs, finite numeric behavior, overflow, and resource limits in language-neutral fixtures. Then decompose applicable-lane rollout or record narrow reviewed exceptions. Keep HTML and CSS parsing, DOM and window authority, actual border painting, fonts and text measurement, writing modes beyond the reviewed logical-edge contract, native toolkits, and device capture outside the portable core."
+    },
+    {
+      "id": "mermaid-kanban-board-language-neutral-conformance",
+      "title": "Fixture the portable Mermaid Kanban board layout pipeline",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked a1008a4d4c inventory after the Rust-only diagram-layout-board identity appeared. Own typed columns and cards, stable ids and labels, deterministic fixed geometry, max-card height, palette and style projection, finite numeric behavior, and resource ceilings. Keep Mermaid parsing, unsupported metadata, text measurement, fonts, paint, Metal, PNG, native toolkits, devices, filesystem, network, process, and clock authority outside the portable core."
+    },
+    {
+      "id": "layout-generated-portable-core-classification",
+      "title": "Classify the portable generated-content layout core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked a1008a4d4c inventory after the Rust-only layout-generated identity appeared. Own counters, generated content, list markers, metadata, diagnostics, deterministic bounds, and resource ceilings. Keep HTML/CSS parsing and cascade, DOM, host layout, paint, fonts, devices, and effects outside the portable core."
+    },
+    {
+      "id": "layout-replaced-portable-core-classification",
+      "title": "Classify the portable replaced-element sizing core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked a1008a4d4c inventory after the Rust-only layout-replaced identity appeared. Own intrinsic metadata and sizing, min/max constraints, fallback sizing, object-fit geometry, finite errors, and resource limits. Keep decoding, fetching, reflow hosts, URL custody, HTML/CSS, DOM, paint, and device authority outside the portable core. Flexbox, grid, and table classification depend on this shared sizing boundary."
+    },
+    {
+      "id": "font-parser-java-kotlin-dart-lane-parity",
+      "title": "Complete FNT00 font-parser parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The refreshed inventory shows font-parser in twelve of fifteen established lanes with no prior owner for Java, Kotlin, and Dart. Implement the existing FNT00 bounded portable contract and shared fixture oracle in those three lanes without adding filesystem, shaping, rasterization, or native-font authority."
+    },
+    {
+      "id": "glyph-parser-language-neutral-conformance",
+      "title": "Fixture and port the FNT02 TrueType glyph-parser core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked a1008a4d4c inventory after the Rust-only glyph-parser identity appeared. Own FNT00 input to flattened outlines, short and long loca, simple and composite glyphs, half-up rounding, stable component/depth budgets, and fontTools oracle comparison. Keep CFF, shaping, rasterization, filesystem, process, and network authority outside the portable core."
+    },
+    {
+      "id": "font-subset-language-neutral-conformance",
+      "title": "Fixture and port the pure TrueType font-subset core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked a1008a4d4c inventory after the Rust-only font-subset identity appeared. Own retained glyph ids, mandatory glyph zero, composite closure, empty dropped glyf records, long loca output, deterministic checksums, oracle comparison, and resource bounds. Keep CFF/WOFF containers, PDF, filesystem, and native font hosts outside the portable core."
+    },
+    {
+      "id": "pdf-writer-language-neutral-conformance",
+      "title": "Fixture and port the deterministic PDF writer core",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked a1008a4d4c inventory after the Rust-only pdf identity appeared. Own deterministic PDF 1.7 objects, pages, content streams, Base-14 and embedded Type0 Identity-H text, bounded compression, stable byte output, and qpdf/pdftoppm/pdftotext oracle checks. Keep reading, incremental updates, encryption, image decoding, font parsing, filesystem, process, and native rendering authority outside the portable core."
+    },
+    {
+      "id": "math-layout-language-neutral-conformance",
+      "title": "Fixture and port the TEX-1 math-list layout core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked a1008a4d4c inventory after the Rust-only math-layout identity appeared. Own MathExpr to ordered MathList lowering, all eight atom classes and current expression variants, structured nuclei/scripts/limits, left-to-right binary demotion, four-style spacing including the 256-cell TeX oracle, exact depth-256 behavior, stable errors, and numeric/resource bounds. Keep source parsing, font files and OpenType MATH metrics, box geometry, shaping, painting, device output, and TeX subprocess authority outside the portable core."
+    },
+    {
+      "id": "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit",
+      "title": "Define the language-neutral CI gate selection corpus and audit build-tool engines",
+      "status": "pr-open",
+      "depends_on": ["build-tool-pure-domain-corpus"],
+      "branch": "codex/build-tool-ci-gate-registry-language-neutral-conformance",
+      "pr_number": 14251,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14251",
+      "opened_at": "2026-09-05T07:57:14Z",
+      "opened_revision": "39a2ceacb56f0391bb42c3601ddd3693fb9a8faf",
+      "selection_revision": "8fe279a38603d7a53147624d65d6ecf288585199",
+      "selection_notes": "Selected after external merge of PR #13841 and a collision-checked exact-main refresh. PR #13854 introduced an unowned Go-only build-tool contract whose neutral oracle is required before twelve current front doors and future Java, Kotlin, Dart, and OCaml engines can claim parity. This bounded process-free tranche owns strict validated registry input, null-versus-empty snapshots, force and machinery fail-open behavior, exact package intersection, portable path globs, complete sorted verdicts, deterministic output names, and a production Go fixture consumer. It excludes registry and Git I/O, graph construction, workflow output, scheduling, branch protection, and host authority.",
+      "reconciliation_revision": "8fe279a38603d7a53147624d65d6ecf288585199",
+      "reconciliation_notes": "Before publication, origin/main advanced through four disjoint MOS model, human-language, TypeScript local-dependency, and SPICE parser commits. The implementation rebased cleanly, and the collision-checked schema-3 inventory retained all counts, zero collisions, zero unknown buckets, and the same seven newly owned Rust identities. Five live open PRs have no exact overlap with the 25 changed paths; PR #14244's separate CI repair touches the workflow but not this pure registry evaluator, corpus, or state surface.",
+      "implementation_revision": "71f986de6284089037618d8f011cfe118505aa7d",
+      "validation_revision": "71f986de6284089037618d8f011cfe118505aa7d",
+      "validation_notes": "Specification-first changes define the closed process-free ci_gate_selection boundary, and test-first execution failed on the deliberately absent domain case before implementation. The shared corpus now validates 139 cases and 283 retained files across 16 implementations, 15 established lanes, and 12 front doors; 23 schema tests and 74 semantic runner tests pass, with the complete runner at 90% branch-aware coverage. The Go oracle dynamically consumes all seven new cases, adds fail-closed Actions output-name collision rejection, passes every package test plus vet and trimpath build, and reaches 92.6% statement coverage in internal/cigates. A real forced Go dry-run evaluates 45 Starlark BUILD files, discovers 306 Go packages, and keeps the five-entry orphan ledger clean. Ten parity-report tests pass; the refreshed schema-3 inventory has 1,411 identities, 4,627 slots, 1,450 all-reported identities, 752 Rust singletons, zero collisions, and zero unknown buckets. The 666-owner/1,037-edge state is JSON-valid, unique, dependency-complete, and acyclic at 202 merged, 463 pending, and exactly this item in progress. Focused Ruff correctness rules, Bandit, compileall, strict schemas, and diff hygiene pass; no dependency, filesystem, Git, process, environment, network, credential, or workflow authority was added.",
+      "final_review_notes": "The exact-diff review confirms every false and true verdict remains explicit and sorted, null snapshots are distinct from successful empty snapshots, the Python oracle matches Go globstar and machinery sentinel behavior, and registry output-name collisions now fail before emission. The 12-front-door audit finds only Go implemented, assigns ten collision-safe current-engine leaves, and binds JVM, Dart, and OCaml creation owners into the remaining aggregate. Five live open PRs have zero exact changed-path overlap, and the rebased worktree is clean apart from the intended validation/state follow-up.",
+      "publication_notes": "Opened ready-for-review PR #14251 after a normal first push from exact rebased origin/main 8fe279a38603d7a53147624d65d6ecf288585199. Immediately before publication, the worktree was clean, no parity PR or prior same-branch PR existed, five live PRs had zero exact path overlap, and corpus, schema, semantic runner, Go package/coverage/vet/build, real build-file dry-run, package-parity, state-DAG, lint, security, and diff gates were acceptable. GitHub reports the PR mergeable with initial CI and CodeQL checks queued; auto-merge remains disabled until every required check is terminal and acceptable.",
+      "notes": "Add the ci_gate_selection domain to the shared v1 corpus, consume it in the Go oracle, audit all current build-tool front doors, and decompose the remaining engine rollout without granting host or workflow authority."
+    },
+    {
+      "id": "build-tool-csharp-fsharp-ci-gate-selection-conformance",
+      "title": "Implement CI gate selection in the shared C# and F# build-tool lanes",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main engine audit found no CI gate registry or evaluator in either .NET front door. Add one bounded C# pure engine consumed independently by both language-native front doors, preserve the reviewed shared-engine boundary, and execute every neutral ci_gate_selection case in both lane suites."
+    },
+    {
+      "id": "build-tool-elixir-ci-gate-selection-conformance",
+      "title": "Implement CI gate selection in the Elixir build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main engine audit found no Elixir CI gate evaluator. Add a process-free native implementation and consume every neutral ci_gate_selection case without filesystem, Git, process, environment, network, credential, or workflow authority."
+    },
+    {
+      "id": "build-tool-haskell-ci-gate-selection-conformance",
+      "title": "Implement CI gate selection in the Haskell build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main engine audit found no Haskell CI gate evaluator. Add a total bounded native implementation and dynamic fixture consumer for every neutral ci_gate_selection case while retaining the process-free authority boundary."
+    },
+    {
+      "id": "build-tool-lua-ci-gate-selection-conformance",
+      "title": "Implement CI gate selection in the Lua build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main engine audit found no Lua CI gate evaluator. Add a bounded pure module and Busted consumption of every neutral case without gaining host or workflow authority."
+    },
+    {
+      "id": "build-tool-perl-ci-gate-selection-conformance",
+      "title": "Implement CI gate selection in the Perl build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main engine audit found no Perl CI gate evaluator. Add a bounded pure module and complete Test2 fixture consumption with exact null-versus-empty and portable glob semantics and no host authority."
+    },
+    {
+      "id": "build-tool-python-ci-gate-selection-conformance",
+      "title": "Implement CI gate selection in the Python build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main engine audit found no Python CI gate evaluator. Add a typed process-free module and pytest consumption of every neutral case without reading the repository, invoking Git, or writing workflow outputs."
+    },
+    {
+      "id": "build-tool-ruby-ci-gate-selection-conformance",
+      "title": "Implement CI gate selection in the Ruby build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main engine audit found no Ruby CI gate evaluator. Add a frozen bounded pure registry projection and Minitest consumption of every neutral case without host or workflow authority."
+    },
+    {
+      "id": "build-tool-rust-ci-gate-selection-conformance",
+      "title": "Implement CI gate selection in the Rust build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main engine audit found no Rust CI gate evaluator. Add a bounded dependency-minimal pure implementation and native consumption of every neutral case with no filesystem, Git, process, environment, network, credential, or workflow authority."
+    },
+    {
+      "id": "build-tool-swift-ci-gate-selection-conformance",
+      "title": "Implement CI gate selection in the Swift build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main engine audit found no Swift CI gate evaluator. Add a Foundation-free bounded pure implementation and Swift Testing consumption of every neutral case without host or workflow authority."
+    },
+    {
+      "id": "build-tool-typescript-ci-gate-selection-conformance",
+      "title": "Implement CI gate selection in the TypeScript build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main engine audit found no TypeScript CI gate evaluator. Add a bounded process-free module and Vitest consumption of every neutral case without Node filesystem, process, environment, network, credential, or workflow authority."
+    },
+    {
+      "id": "build-tool-ci-gate-registry-established-lane-parity",
+      "title": "Complete CI gate selection in every supported build-tool lane",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-csharp-fsharp-ci-gate-selection-conformance", "build-tool-elixir-ci-gate-selection-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-lua-ci-gate-selection-conformance", "build-tool-perl-ci-gate-selection-conformance", "build-tool-python-ci-gate-selection-conformance", "build-tool-ruby-ci-gate-selection-conformance", "build-tool-rust-ci-gate-selection-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-typescript-ci-gate-selection-conformance", "build-tool-jvm", "build-tool-dart", "ocaml-build-tool-and-promotion"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Selection-blocked aggregate for the engine audit to decompose into collision-safe native or reviewed shared-engine leaves. Final closure requires every established build-tool lane plus the OCaml promotion path to consume the same language-neutral ci_gate_selection fixtures or record a narrow reviewed exception."
     }
   ]
 }

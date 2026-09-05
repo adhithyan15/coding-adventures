@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-05
+
+- Added seven process-free `ci_gate_selection` cases covering exact affected-
+  package and non-package path matches, recursive globstar behavior, explicit
+  negative verdicts, deterministic output names, force mode, unavailable
+  affected/file snapshots, and fixed gating-machinery sentinels. The validated
+  registry and change snapshots remain inert data and grant no Git, graph,
+  filesystem, workflow-output, scheduling, or policy authority.
+
 ## 2026-08-31
 
 - Registered the three exact Rust Engram WASM BUILD inputs for that package
