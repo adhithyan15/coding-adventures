@@ -8,6 +8,23 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-047b implementation contract (selected after #14400 merged)
+
+Refreshed main is `2755b36eb5`. PR #14400 merged after all current-head checks
+passed. No new runtime defect was discovered in tallying; replacement is the
+next bounded proof in the existing priority queue.
+
+Add five ASCII canonical replacement programs on the seven standard backends:
+ALL using data-name operands and absent matches; LEADING stops at the first
+mismatch while ALL reaches later matches; CHARACTERS replaces padded spaces;
+a multi-item clause never feeds produced bytes into later items; overlapping
+searches use the first written item. Observe repeated source writes and use
+bracket markers where spaces matter. Add identical complete-source oracle
+comparisons. Run each new cell in a fresh process with a positive sentinel,
+all INSPECT oracle tests, focused Clippy, inventory counts and link checks.
+Keep region boundaries in VM-047c. Any executed failure takes priority and
+requires a committed repair contract before production changes.
+
 ## VM-047a implementation contract (selected after #14394 merged)
 
 Refreshed main is `bf906aae9e`. PR #14394 completed VM-046c with all
@@ -16,8 +33,8 @@ No new executed failure outranks the existing coverage queue. Split VM-047:
 
 | Order | Item | Bounded proof |
 |---|---|---|
-| selected | VM-047a | ASCII INSPECT TALLYING ALL, CHARACTERS and LEADING on all seven standard backends. |
-| next | VM-047b | INSPECT replacement, including first-match and non-rechaining behavior. |
+| done #14400 | VM-047a | ASCII INSPECT TALLYING ALL, CHARACTERS and LEADING on all seven standard backends. |
+| selected | VM-047b | INSPECT replacement, including first-match and non-rechaining behavior. |
 | then | VM-047c | INSPECT BEFORE/AFTER regions and absent-delimiter asymmetry. |
 
 Add three canonical programs: ALL adds to a nonzero counter, a zero-match
