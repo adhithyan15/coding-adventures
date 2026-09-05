@@ -199,7 +199,19 @@ let test_sequential_state_errors () =
   expect_error (shift_register ~state:[] ~width:1 ~serial_in:0 ~clock:0 ());
   expect_error (counter ~width:0 ~clock:0 ());
   let invalid_counter = { value = []; flip_flops = [ invalid_flip_flop ] } in
-  expect_error (counter ~state:invalid_counter ~width:1 ~clock:0 ())
+  expect_error (counter ~state:invalid_counter ~width:1 ~clock:0 ());
+  let valid_zero =
+    { master_q = 0; master_q_bar = 1; slave_q = 0; slave_q_bar = 1 }
+  in
+  let invalid_value = { value = [ 2 ]; flip_flops = [ valid_zero ] } in
+  expect_error (counter ~state:invalid_value ~width:1 ~clock:0 ());
+  let inconsistent =
+    {
+      value = [ 1 ];
+      flip_flops = [ valid_zero ];
+    }
+  in
+  expect_error (counter ~state:inconsistent ~width:1 ~clock:0 ())
 
 let () =
   Alcotest.run "coding-adventures-logic-gates"
