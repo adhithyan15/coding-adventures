@@ -50,7 +50,7 @@ Every Hindi infinitive ends in **-ना** (*-nā*), so this is 'to come' in the
 
 Take off **-ना** and add the endings you already know: **आता** (*ātā*,
 masculine), **आती** (*ātī*, feminine), **आते** (*āte*, respectful or plural).
-Chapter 73 will put **आता हूँ** after a chained action; now the form will already
+The action-chaining lesson will put **आता हूँ** after a chained action; now the form will already
 be yours.
 
 ## Guided Practice
