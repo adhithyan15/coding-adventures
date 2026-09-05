@@ -92,6 +92,14 @@ its scalar test binary with no linker on PATH and prove a nonzero result.
 Validate workflow wiring and the existing planner/metadata contracts. Actual
 hosted Windows runtime execution on the PR is the final acceptance evidence.
 
+Local validation: all eight smoke tests report success with the required flag;
+five launch programs, one checks the PE object, and two explicitly return for
+VM-031. Removing every linker from PATH makes the scalar test fail with exit
+101 in required mode, while optional local mode retains its documented skip.
+Six selector/wiring tests, 15 CI-registry tests, and five MSVC-bootstrap tests
+pass. The recorded #14265 plan selects this gate, Ruff and YAML parsing pass,
+and all-target `twig-aot` Clippy is clean. Hosted CI remains the merge gate.
+
 ## Ranked backlog
 
 ### VM-033 implementation contract (selected after #14265 merged)
