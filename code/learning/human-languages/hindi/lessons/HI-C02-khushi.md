@@ -8,9 +8,9 @@ sequence: 180
 spine_node: SPINE-EXCHANGE-NAMES
 chapter: 2
 type: phrase
-headword: ख़ुशी
-gloss: happiness / pleased to meet you
-romanization: "khushī"
+headword: आपसे मिलकर ख़ुशी हुई / ख़ुशी
+gloss: pleased to meet you / happiness
+romanization: "āpse milkar khushī huī / khushī"
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [HI-C02-mera-naam-hai]
 sounds: [nukta-kh, matra-u, matra-i]
