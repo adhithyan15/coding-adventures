@@ -32,11 +32,11 @@ export default defineConfig({
     // "Invalid hook call". Force a single react / react-dom.
     dedupe: ["react", "react-dom"],
     alias: {
-      react: path.resolve(__dirname, "node_modules/react"),
-      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
-      "./TaskApp.light": path.resolve(__dirname, "__tests__/stubs/TaskApp.tsx"),
-      "./TaskApp.dark": path.resolve(__dirname, "__tests__/stubs/TaskApp.tsx"),
-      "./task-engine.mjs": path.resolve(__dirname, "__tests__/stubs/task-engine.mjs"),
+      react: path.resolve(import.meta.dirname, "node_modules/react"),
+      "react-dom": path.resolve(import.meta.dirname, "node_modules/react-dom"),
+      "./TaskApp.light": path.resolve(import.meta.dirname, "__tests__/stubs/TaskApp.tsx"),
+      "./TaskApp.dark": path.resolve(import.meta.dirname, "__tests__/stubs/TaskApp.tsx"),
+      "./task-engine.mjs": path.resolve(import.meta.dirname, "__tests__/stubs/task-engine.mjs"),
     },
   },
 });
