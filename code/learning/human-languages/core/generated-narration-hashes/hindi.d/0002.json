@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:77d428046cd2f9c6",
+  "sourceHash": "fnv1a64:ff6ef2b6dc4b2a15",
   "lessonIds": [
     "HI-C02-naam",
     "HI-C02-meraa",
@@ -32,7 +32,7 @@
   "drivablePrefix": 0,
   "text": "hindi/narration/ch02.txt",
   "json": "hindi/narration/ch02.json",
-  "textHash": "fnv1a64:4d86f12dcce6a463",
-  "jsonHash": "fnv1a64:25c231a877d6de46",
+  "textHash": "fnv1a64:30900f207f528e86",
+  "jsonHash": "fnv1a64:8df584be3d2c5a58",
   "findings": []
 }
