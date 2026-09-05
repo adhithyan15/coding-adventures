@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Report native session startup errors to stderr before returning a null handle
+  to Qt, Flutter, or Compose, so failing navigation can be diagnosed.
+
 ## 0.9.1
 
 - Coordinate the package with Venture's first immutable pre-1.0 release.

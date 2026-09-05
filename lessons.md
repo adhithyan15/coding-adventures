@@ -6756,3 +6756,5 @@ Two notes on how it was handled:
 ## Main CI repair: diagnose every shard before changing capacity
 
 The September 3 full build combined npm 10.9.8 Arborist edgesOut crashes, missing Perl test prerequisites, stale generated Swift grammar, a private Flutter return type, repeated corpus generation, and oversized formula parsing. Reproduce installer failures with the runner's exact npm version; silent npm output can hide the root cause. Keep full-corpus test setup shared when assertions inspect an immutable checkout. Check formula input budgets before both dependency discovery and evaluation. Measure prerequisite-closed shard costs before changing the matrix.
+
+The first PR run exposed two repair omissions: the four independent conformance jobs also needed the npm pin, and a new human-language changelog shard lacked its mandatory heading digest. Validate actual document shards after adding one. Windows BUILD commands need an explicit Bash boundary for shell syntax. Preserve native startup errors at the FFI boundary; returning only null conceals the cause of a remote runtime failure.
