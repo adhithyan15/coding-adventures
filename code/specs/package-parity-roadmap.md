@@ -13010,6 +13010,31 @@ contains 713 owners and 1,169 edges. The Haskell performance owner is now the
 sole in-progress item, leaving 207 merged and 505 pending owners. Its fresh
 branch starts from exact merged main and changes no public API or authority.
 
+The implementation replaces per-block boxed list expansion with one reusable
+16-word unboxed rolling schedule per strict input region and reads complete
+caller blocks directly by offset. Only a complete 64-byte bridge and the final
+sub-block remainder may be copied. A red-first standalone RTS-statistics gate
+reproduced 928,951,488 allocated bytes on the prior implementation; the final
+path uses 57,521,408 bytes for a one-chunk million-byte vector and 57,557,872
+bytes for 8 KiB streaming, with both canonical BUILD fronts pinning Cabal
+optimization level 2 and enforcing the 128 MiB ceiling.
+
+All 25 functional examples, both allocation scenarios, 96%/90%/99% functional
+HPC coverage, HMAC/HKDF/PBKDF2 downstream suites, Cabal package/distribution/
+documentation checks, both literal BUILD fronts, and the complete Go build-tool
+test, vet, build, discovery, and six-package affected-plan path are acceptable.
+The package-parity, capability, Haskell capability, and OCaml lock suites pass
+68 tests with two expected Windows symlink skips. Three parallel reviews found
+no correctness, retention, API, dependency, license, authority, credential, or
+publication-overlap blocker; their one optimization-profile finding was fixed
+before publication.
+
+Before final validation, the branch rebased conflict-free onto exact
+`origin/main` `827332dd63690c870599e193a973f4c0b19dc278`. The intervening
+curriculum, Rust, HTML, Qt/Mosaic, and VisiCalc changes are disjoint and add no
+package root, recognized manifest, language lane, identity, or collision, so
+the collision-checked inventory and 713-owner/1,169-edge graph remain unchanged.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
