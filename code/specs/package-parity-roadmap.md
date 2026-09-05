@@ -12673,6 +12673,12 @@ implementation rebased cleanly onto
 the exact counts above, and five live open PRs have no exact path overlap with
 this tranche.
 
+Ready-for-review PR #14251 publishes the validated two-commit implementation.
+The lifecycle is now 202 merged, 463 pending, and exactly this CI gate corpus
+owner `pr-open`; initial CI and CodeQL detection checks are queued, so guarded
+auto-merge remains disabled until every required check is terminal and
+acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

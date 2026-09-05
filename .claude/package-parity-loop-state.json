@@ -11,12 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 14251,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/14251",
+    "branch": "codex/build-tool-ci-gate-registry-language-neutral-conformance",
+    "item_id": "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit",
+    "opened_at": "2026-09-05T07:57:14Z",
+    "opened_revision": "39a2ceacb56f0391bb42c3601ddd3693fb9a8faf"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-05T07:33:17Z",
-    "pr_number": 13841,
-    "status": "merged",
-    "notes": "PR #13841 merged externally through its enabled squash auto-merge after every final-head check reached an acceptable terminal conclusion and GitHub reported no conflict. No manual merge command was issued."
+    "observed_at": "2026-09-05T07:57:17Z",
+    "pr_number": 14251,
+    "status": "pending",
+    "notes": "Ready-for-review PR #14251 is open and GitHub reports MERGEABLE with no merge conflict. Initial CI and CodeQL detection checks are queued, so guarded auto-merge remains disabled and this heartbeat stops after monitoring the pending state."
   },
   "last_inventory": {
     "revision": "8fe279a38603d7a53147624d65d6ecf288585199",
@@ -7909,10 +7916,13 @@
     {
       "id": "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit",
       "title": "Define the language-neutral CI gate selection corpus and audit build-tool engines",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-ci-gate-registry-language-neutral-conformance",
-      "pr_number": null,
+      "pr_number": 14251,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14251",
+      "opened_at": "2026-09-05T07:57:14Z",
+      "opened_revision": "39a2ceacb56f0391bb42c3601ddd3693fb9a8faf",
       "selection_revision": "8fe279a38603d7a53147624d65d6ecf288585199",
       "selection_notes": "Selected after external merge of PR #13841 and a collision-checked exact-main refresh. PR #13854 introduced an unowned Go-only build-tool contract whose neutral oracle is required before twelve current front doors and future Java, Kotlin, Dart, and OCaml engines can claim parity. This bounded process-free tranche owns strict validated registry input, null-versus-empty snapshots, force and machinery fail-open behavior, exact package intersection, portable path globs, complete sorted verdicts, deterministic output names, and a production Go fixture consumer. It excludes registry and Git I/O, graph construction, workflow output, scheduling, branch protection, and host authority.",
       "reconciliation_revision": "8fe279a38603d7a53147624d65d6ecf288585199",
@@ -7921,6 +7931,7 @@
       "validation_revision": "71f986de6284089037618d8f011cfe118505aa7d",
       "validation_notes": "Specification-first changes define the closed process-free ci_gate_selection boundary, and test-first execution failed on the deliberately absent domain case before implementation. The shared corpus now validates 139 cases and 283 retained files across 16 implementations, 15 established lanes, and 12 front doors; 23 schema tests and 74 semantic runner tests pass, with the complete runner at 90% branch-aware coverage. The Go oracle dynamically consumes all seven new cases, adds fail-closed Actions output-name collision rejection, passes every package test plus vet and trimpath build, and reaches 92.6% statement coverage in internal/cigates. A real forced Go dry-run evaluates 45 Starlark BUILD files, discovers 306 Go packages, and keeps the five-entry orphan ledger clean. Ten parity-report tests pass; the refreshed schema-3 inventory has 1,411 identities, 4,627 slots, 1,450 all-reported identities, 752 Rust singletons, zero collisions, and zero unknown buckets. The 666-owner/1,037-edge state is JSON-valid, unique, dependency-complete, and acyclic at 202 merged, 463 pending, and exactly this item in progress. Focused Ruff correctness rules, Bandit, compileall, strict schemas, and diff hygiene pass; no dependency, filesystem, Git, process, environment, network, credential, or workflow authority was added.",
       "final_review_notes": "The exact-diff review confirms every false and true verdict remains explicit and sorted, null snapshots are distinct from successful empty snapshots, the Python oracle matches Go globstar and machinery sentinel behavior, and registry output-name collisions now fail before emission. The 12-front-door audit finds only Go implemented, assigns ten collision-safe current-engine leaves, and binds JVM, Dart, and OCaml creation owners into the remaining aggregate. Five live open PRs have zero exact changed-path overlap, and the rebased worktree is clean apart from the intended validation/state follow-up.",
+      "publication_notes": "Opened ready-for-review PR #14251 after a normal first push from exact rebased origin/main 8fe279a38603d7a53147624d65d6ecf288585199. Immediately before publication, the worktree was clean, no parity PR or prior same-branch PR existed, five live PRs had zero exact path overlap, and corpus, schema, semantic runner, Go package/coverage/vet/build, real build-file dry-run, package-parity, state-DAG, lint, security, and diff gates were acceptable. GitHub reports the PR mergeable with initial CI and CodeQL checks queued; auto-merge remains disabled until every required check is terminal and acceptable.",
       "notes": "Add the ci_gate_selection domain to the shared v1 corpus, consume it in the Go oracle, audit all current build-tool front doors, and decompose the remaining engine rollout without granting host or workflow authority."
     },
     {
