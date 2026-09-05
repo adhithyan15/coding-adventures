@@ -185,6 +185,68 @@ let test_labeled_edges () =
   let strict = Labeled.create () in
   expect_error (Labeled.add_edge strict "A" "A" "loop")
 
+let test_labeled_delegation () =
+  let graph = Labeled.create () in
+  List.iter
+    (fun (left, right, label, weight) ->
+      Labeled.add_edge ~weight graph left right label |> get)
+    [
+      ("A", "B", "ab", 2.);
+      ("A", "C", "ac", 3.);
+      ("B", "D", "bd", 1.);
+      ("C", "D", "cd", 1.);
+    ];
+  Alcotest.(check int) "delegated size" 4 (Labeled.size graph);
+  Alcotest.(check int) "structural edges" 4 (List.length (Labeled.edges graph));
+  Alcotest.(check (float 0.)) "delegated weight" 2.
+    (get (Labeled.edge_weight graph "A" "B"));
+  Labeled.set_graph_property graph "kind" (String "dag");
+  Labeled.set_node_property graph "A" "root" (Bool true) |> get;
+  Labeled.set_edge_property graph "A" "B" "weight" (Number 4.) |> get;
+  Alcotest.check Alcotest.bool "delegated properties" true
+    (property_find_opt "kind" (Labeled.graph_properties graph)
+       = Some (String "dag")
+    && property_find_opt "root" (get (Labeled.node_properties graph "A"))
+       = Some (Bool true)
+    && property_find_opt "weight"
+         (get (Labeled.edge_properties graph "A" "B"))
+       = Some (Number 4.));
+  Alcotest.check Alcotest.bool "labeled weights synchronized" true
+    (Labeled.edges_labeled graph
+    |> List.filter (fun (left, right, _, _) -> left = "A" && right = "B")
+    |> List.for_all (fun (_, _, _, weight) -> weight = 4.));
+  Labeled.remove_edge_property graph "A" "B" "weight" |> get;
+  Labeled.remove_node_property graph "A" "root" |> get;
+  Labeled.remove_graph_property graph "kind";
+  Alcotest.(check (float 0.)) "weight reset through delegate" 1.
+    (get (Labeled.edge_weight graph "A" "B"));
+  Alcotest.check strings "delegated neighbors" [ "B"; "C" ]
+    (get (Labeled.neighbors graph "A"));
+  Alcotest.check Alcotest.bool "weighted neighbors" true
+    (get (Labeled.neighbors_weighted graph "A") = [ ("B", 1.); ("C", 3.) ]);
+  Alcotest.(check int) "out degree" 2 (get (Labeled.out_degree graph "A"));
+  Alcotest.(check int) "in degree" 2 (get (Labeled.in_degree graph "D"));
+  Alcotest.check strings "delegated bfs" [ "A"; "B"; "C"; "D" ]
+    (get (Labeled.bfs graph "A"));
+  Alcotest.check strings "delegated dfs" [ "A"; "B"; "D"; "C" ]
+    (get (Labeled.dfs graph "A"));
+  Alcotest.check strings "delegated topo" [ "A"; "B"; "C"; "D" ]
+    (get (Labeled.topological_sort graph));
+  Alcotest.(check bool) "delegated cycle" false (Labeled.has_cycle graph);
+  Alcotest.check strings "delegated closure" [ "B"; "C"; "D" ]
+    (get (Labeled.transitive_closure graph "A"));
+  Alcotest.check strings "delegated dependents" [ "A"; "B"; "C" ]
+    (get (Labeled.transitive_dependents graph "D"));
+  Alcotest.check strings "delegated affected" [ "A"; "B"; "C"; "D" ]
+    (Labeled.affected_nodes graph [ "D" ]);
+  Alcotest.check (Alcotest.list strings) "delegated components"
+    [ [ "A" ]; [ "B" ]; [ "C" ]; [ "D" ] ]
+    (Labeled.strongly_connected_components graph);
+  expect_error (Labeled.node_properties graph "missing");
+  expect_error (Labeled.edge_properties graph "A" "missing");
+  expect_error (Labeled.neighbors graph "missing");
+  expect_error (Labeled.bfs graph "missing")
+
 let test_large_iterative_traversal () =
   let module Int_graph = Coding_adventures_directed_graph.Make (Int) in
   let graph = Int_graph.create () in
@@ -210,6 +272,8 @@ let () =
           Alcotest.test_case "cycles and components" `Quick
             test_cycles_and_components;
           Alcotest.test_case "labeled edges" `Quick test_labeled_edges;
+          Alcotest.test_case "labeled delegation" `Quick
+            test_labeled_delegation;
           Alcotest.test_case "large iterative traversal" `Quick
             test_large_iterative_traversal;
         ] );

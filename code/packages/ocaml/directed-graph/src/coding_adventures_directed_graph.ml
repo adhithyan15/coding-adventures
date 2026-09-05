@@ -524,7 +524,32 @@ module Make (Node : Map.OrderedType) = struct
 
     let has_node labeled = has_node labeled.graph
     let nodes labeled = nodes labeled.graph
+    let size labeled = size labeled.graph
     let has_edge labeled = has_edge labeled.graph
+    let edges labeled = edges labeled.graph
+    let edge_weight labeled = edge_weight labeled.graph
+    let graph_properties labeled = graph_properties labeled.graph
+    let set_graph_property labeled = set_graph_property labeled.graph
+    let remove_graph_property labeled = remove_graph_property labeled.graph
+    let node_properties labeled = node_properties labeled.graph
+    let set_node_property labeled = set_node_property labeled.graph
+    let remove_node_property labeled = remove_node_property labeled.graph
+    let edge_properties labeled = edge_properties labeled.graph
+    let set_edge_property labeled = set_edge_property labeled.graph
+    let remove_edge_property labeled = remove_edge_property labeled.graph
+    let neighbors labeled = neighbors labeled.graph
+    let neighbors_weighted labeled = neighbors_weighted labeled.graph
+    let out_degree labeled = out_degree labeled.graph
+    let in_degree labeled = in_degree labeled.graph
+    let bfs labeled = bfs labeled.graph
+    let dfs labeled = dfs labeled.graph
+    let has_cycle labeled = has_cycle labeled.graph
+    let transitive_closure labeled = transitive_closure labeled.graph
+    let transitive_dependents labeled = transitive_dependents labeled.graph
+    let affected_nodes labeled = affected_nodes labeled.graph
+
+    let strongly_connected_components labeled =
+      strongly_connected_components labeled.graph
 
     let add_edge ?(weight = 1.) ?(properties = properties []) labeled left right
         label =
@@ -588,7 +613,7 @@ module Make (Node : Map.OrderedType) = struct
       Edge_map.bindings labeled.labels
       |> List.concat_map (fun ((left, right), labels) ->
              let weight =
-               match edge_weight labeled.graph left right with
+               match edge_weight labeled left right with
                | Ok value -> value
                | Error _ -> assert false
              in

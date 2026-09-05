@@ -82,6 +82,7 @@ module Make (Node : Map.OrderedType) : sig
     val remove_node : labeled -> node -> (unit, error) result
     val has_node : labeled -> node -> bool
     val nodes : labeled -> node list
+    val size : labeled -> int
 
     val add_edge :
       ?weight:float ->
@@ -98,12 +99,45 @@ module Make (Node : Map.OrderedType) : sig
       labeled -> node -> node -> string -> (unit, error) result
 
     val has_edge : labeled -> node -> node -> bool
+    val edges : labeled -> weighted_edge list
+    val edge_weight : labeled -> node -> node -> (float, error) result
     val has_edge_with_label : labeled -> node -> node -> string -> bool
     val edge_labels : labeled -> node -> node -> string list
     val edges_labeled : labeled -> (node * node * string * float) list
+    val graph_properties : labeled -> property_bag
+    val set_graph_property : labeled -> string -> property_value -> unit
+    val remove_graph_property : labeled -> string -> unit
+    val node_properties : labeled -> node -> (property_bag, error) result
+
+    val set_node_property :
+      labeled -> node -> string -> property_value -> (unit, error) result
+
+    val remove_node_property :
+      labeled -> node -> string -> (unit, error) result
+
+    val edge_properties :
+      labeled -> node -> node -> (property_bag, error) result
+
+    val set_edge_property :
+      labeled -> node -> node -> string -> property_value -> (unit, error) result
+
+    val remove_edge_property :
+      labeled -> node -> node -> string -> (unit, error) result
+
     val successors : labeled -> node -> (node list, error) result
     val predecessors : labeled -> node -> (node list, error) result
+    val neighbors : labeled -> node -> (node list, error) result
+    val neighbors_weighted : labeled -> node -> ((node * float) list, error) result
+    val out_degree : labeled -> node -> (int, error) result
+    val in_degree : labeled -> node -> (int, error) result
+    val bfs : labeled -> node -> (node list, error) result
+    val dfs : labeled -> node -> (node list, error) result
     val topological_sort : labeled -> (node list, error) result
+    val has_cycle : labeled -> bool
+    val transitive_closure : labeled -> node -> (node list, error) result
+    val transitive_dependents : labeled -> node -> (node list, error) result
     val independent_groups : labeled -> (node list list, error) result
+    val affected_nodes : labeled -> node list -> node list
+    val strongly_connected_components : labeled -> node list list
   end
 end
