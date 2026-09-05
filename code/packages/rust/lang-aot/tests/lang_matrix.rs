@@ -7677,6 +7677,49 @@ fn every_backend_name_round_trips_through_the_single_cell_env_var() {
     }
 }
 
+/// CI coverage for the independently owned non-ALGOL campaign. Select from the
+/// canonical corpus so newly added BASIC/Twig/etc. rows are protected without
+/// maintaining a second list of examples. The complete matrix below remains the
+/// full-platform audit, including ALGOL and its diagnostic single-cell protocol.
+#[test]
+fn non_algol_matrix_every_proven_cell_agrees() {
+    let mut programs = 0usize;
+    let mut ran = 0usize;
+    let mut skipped = 0usize;
+    for (index, program) in PROGRAMS.iter().enumerate() {
+        if program.lang == Language::Algol60 {
+            continue;
+        }
+        programs += 1;
+        assert!(!program.backends.is_empty(), "non-ALGOL program #{index} has no backend");
+        for &backend in program.backends {
+            // Cache the gate before running. A runner returning None after its
+            // toolchain was detected is a failure, including on partially
+            // equipped hosts. In-process engines are always available.
+            let available = match backend {
+                NativeAot => native_linker_ok(),
+                _ => toolchain_available(backend),
+            };
+            match run(backend, program) {
+                Some(result) => {
+                    assert_cell(backend, program, result);
+                    ran += 1;
+                }
+                None => {
+                    assert!(
+                        !available,
+                        "non-ALGOL cell #{index} {backend:?} {:?} silently skipped",
+                        program.lang
+                    );
+                    skipped += 1;
+                }
+            }
+        }
+    }
+    assert!(programs > 0 && ran > 0, "non-ALGOL matrix must execute a nonempty corpus");
+    eprintln!("non-ALGOL matrix: {programs} programs, {ran} cells exercised, {skipped} skipped");
+}
+
 /// The capstone: every `(program, backend)` cell the campaign has **proven** runs
 /// and agrees with the known result. A cell whose toolchain is absent skips
 /// gracefully; a cell whose toolchain is present but disagrees fails loudly.
