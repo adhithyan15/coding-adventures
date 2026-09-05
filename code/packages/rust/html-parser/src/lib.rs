@@ -11175,13 +11175,12 @@ fn select_display_size(select: &Element) -> usize {
     let mut saw_digit = false;
     let mut parsed = 0usize;
     for character in characters {
-        let Some(digit) = character.to_digit(10) else {
+        if !character.is_ascii_digit() {
             break;
-        };
+        }
+        let digit = character as usize - '0' as usize;
         saw_digit = true;
-        parsed = parsed
-            .saturating_mul(10)
-            .saturating_add(digit as usize);
+        parsed = parsed.saturating_mul(10).saturating_add(digit);
     }
     if saw_digit && parsed > 0 {
         parsed
@@ -47616,6 +47615,85 @@ mod tests {
                 find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
             ),
             "new"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_display_size_uses_ascii_digits() {
+        let selectedcontent_text = |size: &str| {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<select size=\"{size}\"><button><selectedcontent>old</selectedcontent></button><option><b>fallback</b></option></select>"
+            );
+            let document = parse_html(&source).unwrap();
+            element_text_content(
+                find_first_element_in_nodes(&document.children, "selectedcontent").unwrap(),
+            )
+        };
+
+        for invalid_unicode_size in ["٢", "۲", "２", "\u{1d7d0}"] {
+            assert_eq!(selectedcontent_text(invalid_unicode_size), "fallback");
+        }
+        assert_eq!(selectedcontent_text("\u{a0}2"), "fallback");
+        assert_eq!(selectedcontent_text("1٢"), "fallback");
+        assert_eq!(selectedcontent_text("2"), "old");
+        assert_eq!(selectedcontent_text("\t+2tail"), "old");
+
+        for nodes in [
+            parse_html_fragment_for_context(
+                "<select size=٢><selectedcontent>old</selectedcontent><option>fallback</option></select>",
+                "body",
+            )
+            .unwrap(),
+            parse_html(
+                "<!doctype html><svg><foreignObject><select size=٢><selectedcontent>old</selectedcontent><option>fallback</option></select></foreignObject></svg>",
+            )
+            .unwrap()
+            .children,
+        ] {
+            assert_eq!(
+                element_text_content(
+                    find_first_element_in_nodes(&nodes, "selectedcontent").unwrap()
+                ),
+                "fallback"
+            );
+        }
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "size".to_string(),
+                    value: "٢".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("fallback".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "fallback"
         );
         assert!(direct
             .diagnostics()
