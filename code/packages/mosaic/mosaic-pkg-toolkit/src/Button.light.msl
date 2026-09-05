@@ -1,17 +1,9 @@
 // Button.light.msl — default light-theme styling for Button.
 //
-// The base `part button` defines the shape (padding, border-radius,
-// font weight) that applies regardless of variant. Variant- and size-
-// specific styling is intentionally NOT in this file for v0.1 — the
-// spec §4.1 leaves the variant sub-part syntax as an open question.
-// Once the syntax lands (sub-parts via `part X/Y { ... }` or
-// equivalent), this file grows to define `part button/primary`,
-// `part button/danger`, etc.
-//
-// Today (v0.1 PR-1): the variant slot is accepted by the .mil and
-// stays unused at the styling layer — every variant renders with the
-// base style. That's intentional: it lets us land the API surface
-// without blocking on the mosstyle sub-part design.
+// The base is the documented primary/md fallback for an omitted slot.
+// UI49 states are owned by Button.mil's closed `variant` and `size`
+// axes; both active states compose because colors and geometry do not
+// overlap.
 
 style Button {
   part button {
@@ -22,5 +14,63 @@ style Button {
     color         : "#ffffff" ;
     border-width  : 1 ;
     border-color  : "#0d6efd" ;
+    font-size     : 14 ;
+
+    state primary {
+      background   : "#0d6efd" ;
+      color        : "#ffffff" ;
+      border-color : "#0d6efd" ;
+    }
+    state secondary {
+      background   : "#6c757d" ;
+      color        : "#ffffff" ;
+      border-color : "#6c757d" ;
+    }
+    state success {
+      background   : "#198754" ;
+      color        : "#ffffff" ;
+      border-color : "#198754" ;
+    }
+    state danger {
+      background   : "#dc3545" ;
+      color        : "#ffffff" ;
+      border-color : "#dc3545" ;
+    }
+    state warning {
+      background   : "#ffc107" ;
+      color        : "#212529" ;
+      border-color : "#ffc107" ;
+    }
+    state info {
+      background   : "#0dcaf0" ;
+      color        : "#212529" ;
+      border-color : "#0dcaf0" ;
+    }
+    state light {
+      background   : "#f8f9fa" ;
+      color        : "#212529" ;
+      border-color : "#dee2e6" ;
+    }
+    state dark {
+      background   : "#212529" ;
+      color        : "#ffffff" ;
+      border-color : "#212529" ;
+    }
+
+    state sm {
+      padding       : 6 ;
+      border-radius : 3 ;
+      font-size     : 13 ;
+    }
+    state md {
+      padding       : 8 ;
+      border-radius : 4 ;
+      font-size     : 14 ;
+    }
+    state lg {
+      padding       : 12 ;
+      border-radius : 6 ;
+      font-size     : 18 ;
+    }
   }
 }

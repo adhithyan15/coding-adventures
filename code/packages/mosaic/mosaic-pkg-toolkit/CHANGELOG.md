@@ -1,5 +1,18 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — make Button variant and size axes real (#14383)
+
+`Button.variant` is now the closed UI49 axis `primary | secondary | success |
+danger | warning | info | light | dark`, and `Button.size` is `sm | md | lg`.
+Both light and dark themes define every value as a slot-owned state, so colors
+and geometry vary without duplicating the layout tree. The base style remains
+the primary/md fallback when an axis is omitted; invalid values are rejected
+by the model contract instead of being silently accepted. Focused compiler
+tests pin the legal values, state ownership, theme coverage, and representative
+visual differences. This fixes Button only; Alert, Badge, Toast, Spinner, and
+Input remain tracked by #14036, while MosaicBook stories remain blocked by
+#14031.
+
 ## [Unreleased] — clarify why the radio-group allowlist entries survive #13007
 
 `mosaic-emit-compose`/`-flutter`/`-qt` now apply real native mutual-

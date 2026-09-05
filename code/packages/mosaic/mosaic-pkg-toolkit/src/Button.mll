@@ -13,9 +13,10 @@
 //   } Else If ... { ... }
 //
 // That would produce per-variant XAML/JSX trees, which any backend
-// would then de-duplicate via styling anyway. Driving variants
-// through part_name + .msl is the conventional mosstyle pattern
-// (see mosaic-pkg-grid's parts) and is what mosstyle is designed for.
+// would then de-duplicate via styling anyway. UI49 makes each value
+// of a closed `one-of` slot a state owned by that slot. Driving
+// variants and sizes through those states keeps this one tree and
+// gives every backend the same typed axes.
 
 layout Button {
   HostButton [ button ] (

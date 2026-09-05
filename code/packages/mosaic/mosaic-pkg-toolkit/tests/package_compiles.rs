@@ -152,14 +152,32 @@ fn compile_component(name: &str) {
         "{name}.mll must declare layout for {name:?}"
     );
 
-    // Both .msl files, validated against the .mll's part map.
+    let slot_state_axes: Vec<_> = mil_out
+        .component
+        .slots
+        .iter()
+        .filter_map(|slot| match &slot.r#type {
+            mosmodel_compiler::SlotType::OneOf(values) => {
+                Some(mosstyle_compiler::SlotStateAxis {
+                    slot: slot.name.clone(),
+                    values: values.clone(),
+                })
+            }
+            _ => None,
+        })
+        .collect();
+
+    // Both .msl files, validated against the .mll's part map and the
+    // component's typed state axes.
     for theme in THEMES {
         let msl_filename = format!("{name}.{theme}.msl");
         let msl_src = read_source(&msl_filename);
-        mosstyle_compiler::compile(&msl_src, Some(&mll_out.part_map_json))
-            .unwrap_or_else(|e| {
-                panic!("{msl_filename} failed to compile:\n{:#?}", e)
-            });
+        mosstyle_compiler::compile_with_slot_states(
+            &msl_src,
+            Some(&mll_out.part_map_json),
+            &slot_state_axes,
+        )
+        .unwrap_or_else(|e| panic!("{msl_filename} failed to compile:\n{:#?}", e));
     }
 }
 
@@ -186,6 +204,118 @@ fn button_interface_matches_spec() {
 
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onClick"]);
+
+    let variant = c.slots.iter().find(|slot| slot.name == "variant").unwrap();
+    assert_eq!(
+        variant.r#type,
+        mosmodel_compiler::SlotType::OneOf(
+            [
+                "primary",
+                "secondary",
+                "success",
+                "danger",
+                "warning",
+                "info",
+                "light",
+                "dark",
+            ]
+            .map(str::to_string)
+            .to_vec()
+        )
+    );
+
+    let size = c.slots.iter().find(|slot| slot.name == "size").unwrap();
+    assert_eq!(
+        size.r#type,
+        mosmodel_compiler::SlotType::OneOf(
+            ["sm", "md", "lg"].map(str::to_string).to_vec()
+        )
+    );
+}
+
+#[test]
+fn button_themes_cover_typed_variant_and_size_states() {
+    let mil_out = mosmodel_compiler::compile(&read_source("Button.mil")).unwrap();
+    let mll_out = moslayout_compiler::compile(
+        &read_source("Button.mll"),
+        Some(&mil_out.descriptor_json),
+    )
+    .unwrap();
+    let axes: Vec<_> = mil_out
+        .component
+        .slots
+        .iter()
+        .filter_map(|slot| match &slot.r#type {
+            mosmodel_compiler::SlotType::OneOf(values) => {
+                Some(mosstyle_compiler::SlotStateAxis {
+                    slot: slot.name.clone(),
+                    values: values.clone(),
+                })
+            }
+            _ => None,
+        })
+        .collect();
+
+    for theme in THEMES {
+        let filename = format!("Button.{theme}.msl");
+        let style = mosstyle_compiler::compile_with_slot_states(
+            &read_source(&filename),
+            Some(&mll_out.part_map_json),
+            &axes,
+        )
+        .unwrap_or_else(|e| panic!("{filename} failed to compile:\n{e:#?}"));
+        let button = style
+            .def
+            .parts
+            .iter()
+            .find(|part| part.name == "button")
+            .expect("Button theme must style the button part");
+
+        let states: Vec<_> = button
+            .states
+            .iter()
+            .map(|state| (state.state.as_str(), state.slot.as_deref()))
+            .collect();
+        let expected: Vec<_> = [
+            "primary",
+            "secondary",
+            "success",
+            "danger",
+            "warning",
+            "info",
+            "light",
+            "dark",
+        ]
+        .into_iter()
+        .map(|state| (state, Some("variant")))
+        .chain(
+            ["sm", "md", "lg"]
+                .into_iter()
+                .map(|state| (state, Some("size"))),
+        )
+        .collect();
+        assert_eq!(states, expected, "{filename} state coverage or ownership drifted");
+
+        let property = |state_name: &str, property_name: &str| {
+            button
+                .states
+                .iter()
+                .find(|state| state.state == state_name)
+                .and_then(|state| state.props.iter().find(|prop| prop.name == property_name))
+                .map(|prop| prop.value.as_str())
+                .unwrap_or_else(|| panic!("{filename}: {state_name} lacks {property_name}"))
+        };
+        assert_ne!(
+            property("primary", "background"),
+            property("danger", "background"),
+            "{filename}: representative variants must look different"
+        );
+        assert_ne!(
+            property("sm", "padding"),
+            property("lg", "padding"),
+            "{filename}: representative sizes must look different"
+        );
+    }
 }
 
 /// Alert must have the documented slot/emit surface.

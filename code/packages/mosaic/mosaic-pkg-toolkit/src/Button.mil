@@ -10,13 +10,12 @@ component Button {
   // Visible label text. Required.
   slot label : text ;
 
-  // Variant keyword. One of: primary, secondary, success, danger,
-  // warning, info, light, dark. Default: primary.
-  // Hosts that pass an unknown variant get the primary styling.
-  slot variant : text ;
+  // Variant keyword. The base style is primary when the host omits
+  // this slot; the closed type rejects unknown values.
+  slot variant : one-of primary secondary success danger warning info light dark ;
 
-  // Size keyword. One of: sm, md, lg. Default: md.
-  slot size : text ;
+  // Size keyword. The base style is md when the host omits this slot.
+  slot size : one-of sm md lg ;
 
   // Disabled state. When true, the button paints disabled and stops
   // firing onClick.
