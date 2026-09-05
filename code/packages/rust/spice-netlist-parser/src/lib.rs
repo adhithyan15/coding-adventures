@@ -2663,6 +2663,14 @@ fn parse_element(
                     "BJT MJC must be finite and in [0, 1)",
                 ));
             }
+            let forward_bias_depletion_coefficient = *model.params.get("FC").unwrap_or(&0.5);
+            if !forward_bias_depletion_coefficient.is_finite()
+                || !(0.0..1.0).contains(&forward_bias_depletion_coefficient)
+            {
+                return Err(NetlistParseError::new(
+                    "BJT FC must be finite and in [0, 1)",
+                ));
+            }
             let base_emitter_grading_coefficient = *model
                 .params
                 .get("MJE")
@@ -2729,6 +2737,7 @@ fn parse_element(
             bjt.base_emitter_junction_potential = base_emitter_junction_potential;
             bjt.base_collector_junction_potential = base_collector_junction_potential;
             bjt.base_collector_grading_coefficient = base_collector_grading_coefficient;
+            bjt.forward_bias_depletion_coefficient = forward_bias_depletion_coefficient;
             bjt.base_emitter_grading_coefficient = base_emitter_grading_coefficient;
             Ok(Element::Bjt(bjt))
         }
