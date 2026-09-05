@@ -1,5 +1,5 @@
 {
-  "case_count": 414,
+  "case_count": 415,
   "cases": [
     {
       "axis": "interactive-formatting",
@@ -2484,13 +2484,19 @@
       "id": "processing-instructions-dat-121",
       "reason": "textarea RCDATA handoff and form-associated text control recovery",
       "source": "processing-instructions.dat:121"
+    },
+    {
+      "axis": "interactive-formatting",
+      "id": "adoption02-dat-4",
+      "reason": "anchor and nobr adoption-agency or repeated-interactive recovery",
+      "source": "adoption02.dat:4"
     }
   ],
   "counts_by_axis": {
     "button-boundary": 96,
     "form-control": 35,
     "fragment-context": 7,
-    "interactive-formatting": 124,
+    "interactive-formatting": 125,
     "select-option": 123,
     "stray-interactive-end-tags": 4,
     "textarea-rawtext": 25

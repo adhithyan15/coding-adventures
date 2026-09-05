@@ -5098,12 +5098,38 @@ the Rust, Python, and TypeScript surfaces together.
      Rust now does the same and rejects invalid input before element lowering.
 
 28. Rust BJT flicker-noise-coefficient parser parity.
-   - Status: prioritized next after the BJT nominal-temperature slice.
+   - Status: completed by the Rust BJT flicker-noise-coefficient slice.
    - The engine and Python/TypeScript facades lower finite non-negative BJT
-     `KF` values into the flicker-noise-coefficient field; the Rust element
+     `KF` values into the flicker-noise-coefficient field; Rust now does the
+     same and rejects invalid input before element lowering.
+
+29. Rust BJT flicker-noise-exponent parser parity.
+   - Status: completed by the Rust BJT flicker-noise-exponent slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `AF` values into the flicker-noise-exponent field; Rust now does the
+     same and rejects invalid input before element lowering.
+
+30. Rust BJT forward-excess-phase parser parity.
+   - Status: completed by the Rust BJT forward-excess-phase slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `PTF` values into the forward-excess-phase field; Rust now does the
+     same and rejects invalid input before element lowering.
+
+31. Rust BJT forward-transit-time-bias-coefficient parser parity.
+   - Status: completed by the Rust BJT forward-transit-time-bias-coefficient
+     slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `XTF` values into the forward-transit-time-bias-coefficient field; Rust
+     now does the same and rejects invalid input before element lowering.
+
+32. Rust BJT forward-transit-time-current parser parity.
+   - Status: prioritized next after the BJT forward-transit-time-bias-
+     coefficient slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `ITF` values into the forward-transit-time-current field; the Rust
      lowerer still leaves the engine default in place.
 
-29. Grammar-backed parser and app facade.
+33. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5111,7 +5137,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-30. Deck compatibility follow-up.
+34. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

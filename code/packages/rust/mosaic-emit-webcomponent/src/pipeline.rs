@@ -600,6 +600,9 @@ function serializeSlotValue(value, type) {
 fn slot_type_name(slot_type: &SlotType) -> &'static str {
     match slot_type {
         SlotType::Text => "text",
+        // A one-of value is a name from a closed set, carried as a string.
+        // Lowering it to a native enum is UI49 open question 2.
+        SlotType::OneOf(_) => "text",
         SlotType::Number => "number",
         SlotType::Bool => "bool",
         SlotType::Image => "image",
@@ -632,6 +635,12 @@ fn sample_js_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> Strin
         SlotType::Color => "\"#808080\"".to_string(),
         SlotType::Node | SlotType::Component(_) => "null".to_string(),
         SlotType::List(_) => "[]".to_string(),
+        // A one-of slot has a closed set, so its sample is a real member of
+        // that set rather than a generic placeholder.
+        SlotType::OneOf(values) => values
+            .first()
+            .map(|v| format!("\"{}\"", escape_js_string(v)))
+            .unwrap_or_else(|| "\"\"".to_string()),
     }
 }
 

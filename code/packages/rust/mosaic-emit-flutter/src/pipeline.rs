@@ -990,7 +990,7 @@ fn runtime_required_host_value_for_slot(slot: &SlotDecl) -> String {
     }
     if !slot.required {
         return match &slot.r#type {
-            SlotType::Text | SlotType::Image | SlotType::Color => {
+            SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
                 format!("mosaicOptionalString(_hostProps, \"{slot_name}\")")
             }
             SlotType::Number => {
@@ -1027,7 +1027,7 @@ fn runtime_required_host_value_for_slot(slot: &SlotDecl) -> String {
         };
     }
     match &slot.r#type {
-        SlotType::Text | SlotType::Image | SlotType::Color => {
+        SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
             format!("mosaicRequiredString(_hostProps, \"{slot_name}\")")
         }
         SlotType::Number => format!("mosaicRequiredDouble(_hostProps, \"{slot_name}\")"),
@@ -1084,7 +1084,7 @@ fn host_value_for_slot(slot: &SlotDecl) -> String {
     let slot_name = escape_dart_string(&slot.name);
     let fallback = sample_value_for_slot(slot);
     match &slot.r#type {
-        SlotType::Text | SlotType::Image | SlotType::Color => {
+        SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
             format!("mosaicString(_hostProps, \"{slot_name}\", {fallback})")
         }
         SlotType::Number => format!("mosaicDouble(_hostProps, \"{slot_name}\", {fallback})"),
@@ -1150,6 +1150,12 @@ fn sample_value_for_slot(slot: &SlotDecl) -> String {
 fn sample_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> String {
     match slot_type {
         SlotType::Text => format!("\"Sample {}\"", kebab_to_pascal_case_for_label(slot_name)),
+        // A one-of slot has a closed set, so its sample is a real member of
+        // that set rather than a generic placeholder.
+        SlotType::OneOf(values) => values
+            .first()
+            .map(|v| format!("\"{v}\""))
+            .unwrap_or_else(|| "\"\"".to_string()),
         SlotType::Number => "0.0".to_string(),
         SlotType::Bool => "false".to_string(),
         SlotType::Image => "\"sample-image\"".to_string(),
@@ -5731,7 +5737,7 @@ fn format_props(props: &[StyleProp]) -> String {
 /// list<T>→List<dart-type-of-T>, etc.
 fn slot_type_to_dart(t: &SlotType) -> String {
     match t {
-        SlotType::Text | SlotType::Image | SlotType::Color => "String".to_string(),
+        SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => "String".to_string(),
         SlotType::Number => "double".to_string(),
         SlotType::Bool => "bool".to_string(),
         SlotType::Node => "Widget".to_string(),

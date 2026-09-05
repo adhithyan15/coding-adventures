@@ -2482,6 +2482,32 @@ fn parse_element(
                     "BJT TNOM must be finite and positive",
                 ));
             }
+            let flicker_noise_coefficient = *model.params.get("KF").unwrap_or(&0.0);
+            if !flicker_noise_coefficient.is_finite() || flicker_noise_coefficient < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT KF must be finite and non-negative",
+                ));
+            }
+            let flicker_noise_exponent = *model.params.get("AF").unwrap_or(&1.0);
+            if !flicker_noise_exponent.is_finite() || flicker_noise_exponent < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT AF must be finite and non-negative",
+                ));
+            }
+            let forward_excess_phase_degrees = *model.params.get("PTF").unwrap_or(&0.0);
+            if !forward_excess_phase_degrees.is_finite() || forward_excess_phase_degrees < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT PTF must be finite and non-negative",
+                ));
+            }
+            let forward_transit_time_bias_coefficient = *model.params.get("XTF").unwrap_or(&0.0);
+            if !forward_transit_time_bias_coefficient.is_finite()
+                || forward_transit_time_bias_coefficient < 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "BJT XTF must be finite and non-negative",
+                ));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2512,6 +2538,10 @@ fn parse_element(
             bjt.reverse_beta_rolloff_current = reverse_beta_rolloff_current;
             bjt.nominal_temperature_kelvin = nominal_temperature_kelvin
                 .map(|temperature_celsius| temperature_celsius + 273.15);
+            bjt.flicker_noise_coefficient = flicker_noise_coefficient;
+            bjt.flicker_noise_exponent = flicker_noise_exponent;
+            bjt.forward_excess_phase_degrees = forward_excess_phase_degrees;
+            bjt.forward_transit_time_bias_coefficient = forward_transit_time_bias_coefficient;
             Ok(Element::Bjt(bjt))
         }
         'J' => {

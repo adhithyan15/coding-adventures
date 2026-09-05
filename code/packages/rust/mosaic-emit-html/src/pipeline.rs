@@ -442,6 +442,11 @@ fn sample_json_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> ser
         SlotType::Color => serde_json::Value::String("#808080".to_string()),
         SlotType::Node | SlotType::Component(_) => serde_json::Value::Null,
         SlotType::List(_) => serde_json::Value::Array(Vec::new()),
+        // A one-of slot has a closed set, so its sample is a real member of
+        // that set rather than a generic placeholder.
+        SlotType::OneOf(values) => serde_json::Value::String(
+            values.first().cloned().unwrap_or_default(),
+        ),
     }
 }
 

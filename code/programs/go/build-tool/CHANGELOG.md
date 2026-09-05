@@ -6,6 +6,12 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- The pure CI gate evaluator now consumes all seven shared language-neutral
+  `ci_gate_selection` fixtures, pinning package/path matches, globstar behavior,
+  complete false verdicts, output names, and every fail-open escape for future
+  build-tool implementations. Registry loading now rejects gate ids that would
+  collide after hyphens are mapped to underscores for Actions outputs.
+
 - **The planner now decides which GitHub Actions jobs a change needs.** A new
   `-ci-gates` flag reads a declarative registry
   (`code/specs/data/ci-gates.json`, default) that names each gated CI job and

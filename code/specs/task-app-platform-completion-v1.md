@@ -89,7 +89,8 @@ rather than letting them read as silent gaps.
 3. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526)
    — Vitest on Vite's native ESM loading.** Test-infrastructure debt in the web
    host; blocks nothing, but it is the last known non-product wart in the lane
-   that gates every web change.
+   that gates every web change. **Done in
+   [#14242](https://github.com/adhithyan15/coding-adventures/pull/14242).**
 4. **P2 [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625)
    — changelog roll-forward gate.** `CHANGELOG.md` still marks `0.1.0`
    `Unreleased` even though `task-app-v0.1.0` published on 2026-08-31. The gate

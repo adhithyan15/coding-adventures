@@ -53,6 +53,16 @@ RESERVED_ADAPTER_FLAGS = ("--conformance", "--workspace-root", "--output")
 CLI_MAX_ARGUMENTS = 64
 CLI_MAX_ARGUMENT_CHARACTERS = 256
 CLI_MAX_ARGUMENT_BYTES = 4096
+CI_GATE_MACHINERY_EXACT = (
+    ".github/workflows/ci.yml",
+    "code/specs/data/ci-gates.json",
+)
+CI_GATE_MACHINERY_PREFIXES = (
+    "code/programs/go/build-tool/internal/cigates/",
+    "code/programs/go/build-tool/internal/globmatch/",
+    "code/programs/go/build-tool/internal/gitdiff/",
+    "code/programs/go/build-tool/main.go",
+)
 CLI_LANGUAGES = (
     "all",
     "c",
@@ -81,6 +91,7 @@ CLI_LANGUAGES = (
 )
 EXECUTION_CAPABILITIES = {"execution", "trusted_execution"}
 PURE_DOMAINS = {
+    "ci_gate_selection",
     "cli",
     "diff_selection",
     "hashing_cache",
@@ -115,6 +126,7 @@ ESTABLISHED_LANGUAGES = (
     "typescript",
 )
 DOMAIN_CAPABILITIES = {
+    "ci_gate_selection": {"ci_gate_selection"},
     "discovery": {"discovery"},
     "resolution": {"resolution"},
     "graph": {"graph"},
@@ -2391,7 +2403,31 @@ def _validate_pure_case_semantics(
         )
 
     options = case["input"]["options"]
-    if domain == "diff_selection":
+    if domain == "ci_gate_selection":
+        gate_ids: set[str] = set()
+        output_names: set[str] = set()
+        for gate in options["registry"]["gates"]:
+            gate_id = gate["id"]
+            output_name = "run_" + gate_id.replace("-", "_")
+            if gate_id in gate_ids:
+                raise ConformanceError(
+                    "CASE_CI_GATE_DUPLICATE",
+                    f"duplicate CI gate id: {gate_id}",
+                )
+            if output_name in output_names:
+                raise ConformanceError(
+                    "CASE_CI_GATE_OUTPUT_COLLISION",
+                    f"CI gate output name collision: {output_name}",
+                )
+            gate_ids.add(gate_id)
+            output_names.add(output_name)
+            for pattern in gate["paths"]:
+                if error := portable_glob_error(pattern):
+                    raise ConformanceError(
+                        "CASE_CI_GATE_GLOB_UNSAFE",
+                        f"unsafe CI gate glob {pattern!r}: {error}",
+                    )
+    elif domain == "diff_selection":
         packages = options["packages"]
         by_name = _package_index(packages)
         roots = [package["rel_path"] for package in packages]
@@ -2710,6 +2746,48 @@ def _portable_glob_matches(pattern: str, path: str) -> bool:
         )
 
     return matches(0, 0)
+
+
+def _ci_gate_touches_machinery(changed_files: list[str]) -> bool:
+    for path in changed_files:
+        if path in CI_GATE_MACHINERY_EXACT:
+            return True
+        if any(
+            path == prefix or path.startswith(prefix)
+            for prefix in CI_GATE_MACHINERY_PREFIXES
+        ):
+            return True
+    return False
+
+
+def _expected_ci_gate_selection(options: dict[str, Any]) -> list[dict[str, Any]]:
+    affected_packages = options["affected_packages"]
+    changed_files = options["changed_files"]
+    run_everything = (
+        options["force"]
+        or affected_packages is None
+        or changed_files is None
+        or _ci_gate_touches_machinery(changed_files or [])
+    )
+    affected = set(affected_packages or [])
+    changed = changed_files or []
+    verdicts = []
+    for gate in sorted(options["registry"]["gates"], key=lambda item: item["id"]):
+        required = run_everything or bool(affected.intersection(gate["packages"]))
+        if not required:
+            required = any(
+                _portable_glob_matches(pattern, path)
+                for pattern in gate["paths"]
+                for path in changed
+            )
+        verdicts.append(
+            {
+                "id": gate["id"],
+                "required": required,
+                "output_name": "run_" + gate["id"].replace("-", "_"),
+            }
+        )
+    return verdicts
 
 
 def _expected_diff_selection(
@@ -3615,7 +3693,13 @@ def _validate_pure_result_semantics(
     outcome = result["outcome"]
     diagnostic_codes = [item["code"] for item in result["diagnostics"]]
 
-    if domain == "diff_selection":
+    if domain == "ci_gate_selection":
+        if outcome != "ok" or payload["gates"] != _expected_ci_gate_selection(options):
+            raise ConformanceError(
+                f"{prefix}_CI_GATE_SELECTION_MISMATCH",
+                "CI gate verdicts do not match the fail-open package/path oracle",
+            )
+    elif domain == "diff_selection":
         expected_sets = _expected_diff_selection(
             options,
             case["input"]["changed_paths"],
@@ -3914,7 +3998,9 @@ def canonicalize_result(result: dict[str, Any]) -> dict[str, Any]:
         )
     )
 
-    if domain == "discovery" and "packages" in payload:
+    if domain == "ci_gate_selection" and "gates" in payload:
+        payload["gates"].sort(key=lambda gate: gate["id"])
+    elif domain == "discovery" and "packages" in payload:
         payload["packages"].sort(key=lambda package: package["name"])
     elif domain == "resolution" and "edges" in payload:
         payload["edges"].sort(key=lambda edge: (edge[0], edge[1]))

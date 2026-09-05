@@ -180,10 +180,19 @@ func Load(path string) (*Registry, error) {
 		return nil, fmt.Errorf("%s: registry declares no gates", path)
 	}
 
+	outputOwners := make(map[string]string, len(reg.Gates))
 	for id, gate := range reg.Gates {
 		if err := validateGateID(id); err != nil {
 			return nil, fmt.Errorf("%s: %w", path, err)
 		}
+		outputName := OutputName(id)
+		if owner, exists := outputOwners[outputName]; exists {
+			return nil, fmt.Errorf(
+				"%s: gates %q and %q produce the same output name %q",
+				path, owner, id, outputName,
+			)
+		}
+		outputOwners[outputName] = id
 		switch gate.EffectiveScope() {
 		case ScopeJob, ScopeStep:
 		default:

@@ -2,6 +2,14 @@
 
 All notable changes to `mosaic-dev` will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Handle `one-of` slots in preview dummy props, using the first declared
+  member so generated hosts receive a value from the closed set. Restores
+  compilation against the new `SlotType::OneOf` variant.
+
 ## [0.1.0] — 2026-05-20
 
 ### Added

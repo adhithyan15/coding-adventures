@@ -1,5 +1,5 @@
 {
-  "case_count": 656,
+  "case_count": 657,
   "cases": [
     {
       "axis": "interactive-formatting-boundary",
@@ -3936,13 +3936,19 @@
       "id": "scripted-foster01-dat-1",
       "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
       "source": "scripted_foster01.dat:1"
+    },
+    {
+      "axis": "interactive-formatting-boundary",
+      "id": "adoption02-dat-4",
+      "reason": "anchor and nobr formatting boundaries through adoption-agency recovery",
+      "source": "adoption02.dat:4"
     }
   ],
   "counts_by_axis": {
     "adoption-agency-formatting": 115,
     "formatting-reconstruction": 34,
     "heading-boundary": 28,
-    "interactive-formatting-boundary": 151,
+    "interactive-formatting-boundary": 152,
     "list-definition-boundary": 57,
     "paragraph-boundary": 228,
     "ruby-implied-end-tags": 43

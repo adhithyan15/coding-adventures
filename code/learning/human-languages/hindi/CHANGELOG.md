@@ -1,5 +1,30 @@
 # Changelog
 
+## Unreleased — the dotted ख़ाना is now declared beside खाना
+
+Chapter 37 already contrasts Sanskrit-derived **खाना** (“food; to eat”) with
+Persian-derived **ख़ाना** (“house, compartment”), teaches the nuqta distinction,
+practises both forms and assesses their meanings in wrap-up recall. The lesson
+headword now declares **खाना / ख़ाना**, making the explicitly taught Persian
+form visible to reports and generated study artifacts.
+
+## Unreleased — the Hindi teens are now declared individually
+
+Chapter 22 already introduces all ten number words from **ग्यारह** (11) through
+**बीस** (20), explains that they must be learned individually, practises the
+range, and assesses the lesson's number concept. Its headword previously used
+the typographic range **ग्यारह — बीस**, which downstream token reports could
+not expand. The headword now lists all ten taught forms explicitly, making
+**उन्नीस** and the other interior numbers visible to generated study tools.
+
+## Unreleased — polite yes is now declared as taught
+
+Chapter 7 already defines **जी हाँ** as polite “yes,” explains that **जी** can
+also answer respectfully on its own, asks learners to produce the polite form,
+and assesses it in wrap-up recall. The lesson headword now declares all three
+forms — **हाँ / जी हाँ / जी** — so reports and generated study artifacts can
+see the vocabulary the lesson already teaches.
+
 ## Unreleased — the chapter boundary now reaches back far enough to enter R2
 
 Third track through the HL-C313 fix, after Telugu and Sanskrit. A

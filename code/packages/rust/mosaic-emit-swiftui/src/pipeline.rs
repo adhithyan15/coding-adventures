@@ -467,7 +467,7 @@ fn host_value_for_slot(
     let key = escape_swift_string(&slot.name);
     let fallback = sample_value_for_slot(slot);
     match &slot.r#type {
-        SlotType::Text | SlotType::Image | SlotType::Color => {
+        SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
             format!("MosaicHostValue.string({props_expr}, \"{key}\", fallback: {fallback})")
         }
         SlotType::Number => {
@@ -531,7 +531,7 @@ fn runtime_required_host_value_for_slot(
 
     if !slot.required {
         return match &slot.r#type {
-            SlotType::Text | SlotType::Image | SlotType::Color => {
+            SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
                 format!("MosaicHostValue.optionalString({props_expr}, \"{key}\")")
             }
             SlotType::Number => {
@@ -559,7 +559,7 @@ fn runtime_required_host_value_for_slot(
     }
 
     match &slot.r#type {
-        SlotType::Text | SlotType::Image | SlotType::Color => {
+        SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
             format!("MosaicHostValue.requiredString({props_expr}, \"{key}\")")
         }
         SlotType::Number => {
@@ -832,6 +832,12 @@ fn sample_value_for_slot(slot: &SlotDecl) -> String {
 fn sample_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> String {
     match slot_type {
         SlotType::Text => format!("\"Sample {}\"", kebab_to_pascal_case_for_label(slot_name)),
+        // A one-of slot has a closed set, so its sample is a real member of
+        // that set rather than a generic placeholder.
+        SlotType::OneOf(values) => values
+            .first()
+            .map(|v| format!("\"{v}\""))
+            .unwrap_or_else(|| "\"\"".to_string()),
         SlotType::Number => "0".to_string(),
         SlotType::Bool => "false".to_string(),
         SlotType::Image => "\"sample-image\"".to_string(),
@@ -6893,6 +6899,9 @@ fn strip_balanced_outer_parentheses(mut text: &str) -> &str {
 fn slot_type_to_swift(t: &SlotType) -> String {
     match t {
         SlotType::Text => "String".to_string(),
+        // A one-of value is a name from a closed set, carried as a string.
+        // Lowering it to a native enum is UI49 open question 2.
+        SlotType::OneOf(_) => "String".to_string(),
         SlotType::Number => "Double".to_string(),
         SlotType::Bool => "Bool".to_string(),
         SlotType::Image => "String".to_string(),
