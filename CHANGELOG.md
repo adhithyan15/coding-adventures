@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Haskell SHA-256 incremental streaming
+
+- Added a strict immutable streaming context to the Haskell SHA-256 package so
+  future build-tool source hashing can process bounded byte chunks without
+  retaining complete files. Existing list-based SHA-256, HMAC, HKDF, and
+  PBKDF2 consumers remain compatible.
+- Added independent FIPS and binary vectors across SHA-256 padding and 8 KiB
+  file-chunk boundaries, repeatable finalization, immutable branching, a real
+  Windows BUILD test front door, and the missing Haskell HF03 package-matrix
+  entry.
+
 ### Windows execution-corpus volume identity
 
 - Reconciled Python 3.10 and 3.13 Windows `st_dev` projections by retaining the

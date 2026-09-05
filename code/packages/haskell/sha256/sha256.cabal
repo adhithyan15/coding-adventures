@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          sha256
-version:       0.1.0
+version:       0.2.0
 synopsis:      SHA-256 cryptographic hash function (FIPS 180-4) implemented from scratch
 license:       MIT
 author:        Adhithya Rajasekaran
