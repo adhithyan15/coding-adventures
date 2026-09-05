@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Fixed — Flutter runtimes are staged through the build-hook output
+
+Generated Flutter build hooks now copy the selected prebuilt Mosaic runtime
+from the package's `runtime/` directory into `input.outputDirectory` before
+registering it as a `DynamicLoadingBundled` code asset. This follows Flutter's
+code-asset contract and restores `libmosaic_app.so` in Linux application bundles
+on current hosted runner images (#14249).
+
 ### Changed — SwiftUI radio groups are no longer unconditionally degraded
 
 `property.radio-group-ignored` now consults
