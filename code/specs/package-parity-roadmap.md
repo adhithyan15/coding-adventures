@@ -13184,6 +13184,13 @@ parallel work continues only for bounded read-only reference, fixture,
 validation, and backlog audits while this tranche advances toward one
 ready-for-review PR.
 
+Before specification implementation, the branch rebased cleanly onto exact
+`origin/main` `06e95a156bd9d4f90654d7ef0facc8b419a22e39`. The intervening #14364
+Mosaic style-default merge changes only existing Mosaic packages and shared
+history. A fresh collision report reproduces every inventory count above with
+zero collisions and zero unknown buckets; the selected ownership graph remains
+724 owners and 1,196 edges at 209 merged, 514 pending, and one in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
