@@ -11,12 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 14316,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/14316",
+    "branch": "codex/build-tool-repository-boundary-reverse-diff-digest-conformance",
+    "item_id": "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus",
+    "opened_at": "2026-09-05T14:38:18Z",
+    "opened_revision": "34ecf93ecfae0193b3a7038ad4a8cd17efd39a2d"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-05T13:22:23Z",
-    "pr_number": 14291,
-    "status": "merged",
-    "notes": "All 47 final-head checks reached terminal acceptable conclusions: 40 passed and seven were expected skips. GitHub reported final head 485fdc41529456257e2d54764cad11cf70931654 conflict-free, guarded squash auto-merge was enabled, and GitHub merged PR #14291 as 2096c95f20c157074dbb237171262ba451adf0d9 without a plain manual merge command."
+    "observed_at": "2026-09-05T14:38:22Z",
+    "pr_number": 14316,
+    "status": "pending",
+    "notes": "PR #14316 is the sole active parity PR. GitHub reports it mergeable with initial CI, CodeQL, and human-language detection checks queued. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "b4535bf5ab5f2f5b07e2f58ce18bed7065231cc1",
@@ -8062,10 +8069,13 @@
     {
       "id": "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus",
       "title": "Define repository-boundary reverse-diff and digest conformance",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-pure-domain-corpus", "build-tool-shared-and-generated-boundary-source-input-contract"],
       "branch": "codex/build-tool-repository-boundary-reverse-diff-digest-conformance",
-      "pr_number": null,
+      "pr_number": 14316,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14316",
+      "opened_at": "2026-09-05T14:38:18Z",
+      "opened_revision": "34ecf93ecfae0193b3a7038ad4a8cd17efd39a2d",
       "selected_at": "2026-09-05T13:31:11Z",
       "selection_revision": "4b1d12496e0c74d63a1a930d40934b2a22de81a6",
       "selection_notes": "Selected after PR #14291 completed all 47 checks acceptably and GitHub executed guarded squash auto-merge as 2096c95f20c157074dbb237171262ba451adf0d9. The exact-main collision-checked inventory is 15 established lanes, 1,412 implementation identities, 4,628 slots, 1,451 all-reported identities, bands 175/265, 123/934, 172/2,165, and 942/13,188, 753 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel audits added 23 newly explicit owners before selection, wired 24 missing JVM/Dart/OCaml universal-contract edges, and recorded the nine engine-specific boundary adoption leaves. The 690-owner graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 204 merged, 485 pending, and exactly this owner in progress. Both prerequisites are merged, all seven open PRs have zero exact or semantic overlap across the 11 planned paths, the target remote branch and prior PR are absent, and the fresh worktree is based exactly on origin/main.",
@@ -8073,6 +8083,7 @@
       "implementation_revision": "4ab5c74cc38a59c10760a512c50e651a1544a99f",
       "validation_revision": "fba36027e4fcf8ffc9e2ef0292995d3eb74c5ee4",
       "validation_notes": "Specification-first changes define exact digest-pinned boundary reverse selection before dependent and prerequisite closure and raw-UTF8 sorting over the caller-supplied local-plus-boundary hash union. Test-first execution failed on the absent boundary-aware oracle before implementation. The final exact-base corpus validates 141 cases and 285 files with the unchanged 18-boundary/21-input digest; 23 schema tests and all 78 semantic runner tests pass after the final rebase, and branch-aware coverage reports 89% across the complete existing oracle. The related execution contract validates with 121 tests and 23 expected platform skips. C# executes all four hashing fixtures in its 80-test suite, and F# independently executes them through its facade in its 17-test suite; both literal BUILD front doors and NuGet vulnerability checks pass. The complete Go suite, vet, and trimpath build pass, while a fresh real diff dry-run evaluates 45 Starlark files, discovers 5,139 packages, keeps the five reviewed orphan exemptions clean, and selects exactly the C# and F# build-tool programs. Package-parity, capability-taxonomy, and OCaml-lock suites add 63 passes with two expected Windows skips. The exact-main inventory remains collision-clean at 1,413 identities, 4,629 slots, 1,452 all-reported identities, 754 Rust singletons, zero OCaml packages, and zero unknown buckets. The 694-owner state is JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unmerged edges. PyCompile, Bandit medium/high, strict JSON, diff hygiene, and credential/authority review pass; Ruff reproduces exactly the three pre-existing source findings from origin/main and reports no test finding. No dependency, filesystem, Git, process, environment, network, credential, native-link, or execution authority was added.",
+      "publication_notes": "Opened ready-for-review PR #14316 after a normal first push from exact origin/main b4535bf5ab5f2f5b07e2f58ce18bed7065231cc1. Immediately before publication, the worktree was clean, no other parity PR or prior same-branch PR existed, all seven live PRs had zero exact path overlap, and corpus, schema, semantic runner, execution contract, .NET package, Go package/vet/build, real diff dry-run, package-parity, state-DAG, lint-baseline, vulnerability, security, and diff gates were acceptable. GitHub reports the PR mergeable with initial checks queued; auto-merge remains disabled until every required check is terminal and acceptable.",
       "notes": "Discovered by the post-#14291 repository-boundary audit. Define process-free language-neutral fixtures for exact reverse selection from tracked shared inputs and deterministic package hashing over the union of package-local and registered boundary paths. Pin and validate the boundary digest without granting Git, filesystem, process, environment, network, credential, or native-link authority. This shared corpus must land before the nine uncovered current engines adopt the behavior."
     },
     {
