@@ -2,6 +2,10 @@
 
 ## 2026-09-05
 
+- Keep keyboard selection and inline commits inside the rendered row slice;
+  translate generated Grid clicks back to absolute workbook rows and clamp
+  selection/scroll bounds. Add three regression cases with the real engine.
+  Physical scrolling and responsive viewport sizing remain tracked in #14277.
 - Direct formula-bar changes now start an edit session, so Enter writes to the
   spreadsheet engine and Escape restores the prior source. Text-input arrow keys
   no longer navigate the grid.
