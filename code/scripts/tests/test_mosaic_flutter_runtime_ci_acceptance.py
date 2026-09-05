@@ -118,7 +118,8 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("uses: subosito/flutter-action@v2", workflow)
         self.assertIn("flutter-version: '3.44.0'", workflow)
         self.assertIn("flutter config --enable-native-assets", workflow)
-        self.assertIn('LD_LIBRARY_PATH="$(dirname "$installed_taskapp")/lib', workflow)
+        self.assertIn('cd "$(dirname "$installed_taskapp")"', workflow)
+        self.assertIn('LD_LIBRARY_PATH="$PWD/lib', workflow)
         self.assertIn("sudo apt-get install -y libgtk-3-dev", workflow)
         self.assertIn(
             "--backend flutter --output \"$taskapp_output\" --emit-project",

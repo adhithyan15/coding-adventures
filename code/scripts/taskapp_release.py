@@ -300,6 +300,7 @@ if [ -f "$STATE_FILE" ] && [ ! -e "$BACKUP_FILE" ]; then
 fi
 
 export LD_LIBRARY_PATH="$EXECUTABLE_DIR${{LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}}"
+cd "$BUNDLE_DIR"
 exec "$EXECUTABLE" "$@"
 """
 

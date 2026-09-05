@@ -19,7 +19,9 @@ staging tree instead of installing it, both lanes now finish that documented
 installation step into the application bundle before byte comparison and
 launch validation. The portable Linux launcher also exposes its private library
 directory to the dynamic loader, allowing Flutter's AOT library to resolve the
-bundled native asset. Together these changes restore `libmosaic_app.so` in Linux
+bundled native asset, and starts the executable from the extracted bundle root
+so Flutter can resolve its AOT data on current Linux hosts. Together these
+changes restore `libmosaic_app.so` in Linux
 release bundles on fresh hosted runners and keep the executable launchable
 without an external runtime path.
 

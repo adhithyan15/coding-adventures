@@ -137,7 +137,8 @@ step, no artifact. The ordered queue below comes from that spec.
    validation lanes also finish Flutter's
    native-asset installation when the tool leaves the registered library in its
    staging tree instead of the Linux bundle, and the portable launcher exposes
-   its private library directory to the dynamic loader. **In progress.**
+   its private library directory to the dynamic loader and starts the executable
+   from the extracted bundle root. **In progress.**
    This blocks validated Flutter/Linux release payloads, so it precedes the
    remaining native-host and release-polish work.
 2. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
