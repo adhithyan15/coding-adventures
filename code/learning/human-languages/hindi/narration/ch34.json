@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:62bb385b0dc1b170",
+  "sourceHash": "fnv1a64:a7af6226767f6c95",
   "lessons": [
     {
       "id": "HI-C34-sochna",
@@ -302,16 +302,16 @@
       "id": "HI-C34-padhna",
       "sequence": 880,
       "title": "पढ़ना (paṛhnā) — \"to read,\" and just as often \"to study\"",
-      "headword": "पढ़ना",
-      "romanization": "paṛhnā",
-      "gloss": "to read — and equally \"to study\", because the Sanskrit verb underneath it meant \"to recite aloud\"",
+      "headword": "पढ़ना / पढ़ / पढ़ता / पढ़ती / पढ़ते / पढ़ाई / पढ़ाना",
+      "romanization": "paṛhnā / paṛh / paṛhtā / paṛhtī / paṛhte / paṛhāī / paṛhānā",
+      "gloss": "to read or study / stem / masculine, feminine, and respectful-plural present forms / studies / to teach",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1baac8ca514bbf2c",
+      "sourceHash": "fnv1a64:9806c0e79c6535e6",
       "notice": {
         "modality": "sight",
         "needs": [
