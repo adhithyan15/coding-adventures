@@ -1,5 +1,5 @@
 {
-  "case_count": 461,
+  "case_count": 462,
   "cases": [
     {
       "axis": "foster-parenting",
@@ -2766,12 +2766,18 @@
       "id": "template-dat-46",
       "reason": "thead, tbody, tfoot, and tr insertion-mode boundary recovery",
       "source": "template.dat:46"
+    },
+    {
+      "axis": "foster-parenting",
+      "id": "adoption02-dat-4",
+      "reason": "non-table content, formatting, and form recovery around tables",
+      "source": "adoption02.dat:4"
     }
   ],
   "counts_by_axis": {
     "caption-colgroup": 69,
     "cell-boundary": 103,
-    "foster-parenting": 59,
+    "foster-parenting": 60,
     "row-group-boundary": 58,
     "select-in-table": 51,
     "table-fragment-context": 91,

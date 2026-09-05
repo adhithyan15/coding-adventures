@@ -4403,6 +4403,7 @@ pub struct HtmlParser {
     document: Document,
     open_elements: Vec<Vec<usize>>,
     pending_formatting_reconstruction: Vec<(String, Vec<Attribute>)>,
+    anchors_below_closed_formatting_markers: Vec<Vec<usize>>,
     stack_displaced_formatting_paths: Vec<Vec<usize>>,
     prunable_empty_reconstructed_formatting_paths: Vec<Vec<usize>>,
     diagnostics: Vec<ParserDiagnostic>,
@@ -4434,6 +4435,7 @@ impl Default for HtmlParser {
             document: Document::new(),
             open_elements: Vec::new(),
             pending_formatting_reconstruction: Vec::new(),
+            anchors_below_closed_formatting_markers: Vec::new(),
             stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
@@ -4495,6 +4497,7 @@ impl HtmlParser {
             document,
             open_elements: vec![vec![0], vec![0, 1]],
             pending_formatting_reconstruction: Vec::new(),
+            anchors_below_closed_formatting_markers: Vec::new(),
             stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
@@ -4528,6 +4531,7 @@ impl HtmlParser {
             document,
             open_elements,
             pending_formatting_reconstruction: Vec::new(),
+            anchors_below_closed_formatting_markers: Vec::new(),
             stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
@@ -8173,8 +8177,12 @@ impl HtmlParser {
             "table" => {
                 self.report_non_current_caption_recovery("end tag `</table>`");
                 self.close_open_table_context_element_if(|name| name == "caption");
+                let anchor_below_marker = self.open_anchor_below_active_formatting_marker();
                 self.close_element(name);
-                if self
+                if let Some(path) = anchor_below_marker {
+                    self.remove_pending_formatting_reconstruction("a");
+                    self.anchors_below_closed_formatting_markers.push(path);
+                } else if self
                     .pending_formatting_reconstruction
                     .iter()
                     .any(|(name, _)| name == "a")
@@ -8836,7 +8844,8 @@ impl HtmlParser {
     fn apply_interactive_implied_contexts(&mut self, incoming_name: &str) -> bool {
         match incoming_name {
             "a" => {
-                if self.has_active_html_anchor() {
+                let has_active_anchor = self.has_active_html_anchor();
+                if has_active_anchor {
                     self.diagnostics.push(
                         ParserDiagnostic::new(
                             "nested-anchor-start-tag",
@@ -8854,8 +8863,9 @@ impl HtmlParser {
                     .current_element_is("p")
                     .then(|| self.open_formatting_element_before_current("a"))
                     .flatten();
-                let closed_existing_anchor = self.close_open_formatting_element_silently("a")
-                    || self.adopt_open_formatting_element_silently("a");
+                let closed_existing_anchor = has_active_anchor
+                    && (self.close_open_formatting_element_silently("a")
+                        || self.adopt_open_formatting_element_silently("a"));
                 if closed_existing_anchor && consumes_pending_anchor {
                     self.remove_pending_formatting_reconstruction("a");
                 }
@@ -8918,9 +8928,25 @@ impl HtmlParser {
             .iter()
             .any(|(name, _)| name == "a")
             || self.open_elements.iter().any(|path| {
+                if self
+                    .anchors_below_closed_formatting_markers
+                    .iter()
+                    .any(|inactive| inactive == path)
+                {
+                    return false;
+                }
                 element_ref_at_path(&self.document, path)
                     .is_some_and(|element| element.namespace.is_none() && element.name == "a")
             })
+    }
+
+    fn open_anchor_below_active_formatting_marker(&self) -> Option<Vec<usize>> {
+        let (index, path) = self.open_elements.iter().enumerate().rfind(|(_, path)| {
+            element_ref_at_path(&self.document, path)
+                .is_some_and(|element| element.namespace.is_none() && element.name == "a")
+        })?;
+        self.has_active_formatting_marker_above(index)
+            .then(|| path.clone())
     }
 
     fn apply_select_implied_contexts(&mut self, incoming_name: &str) -> bool {
@@ -39542,6 +39568,78 @@ mod tests {
         assert_eq!(inner_anchor.children, vec![Node::text("bb")]);
 
         assert_eq!(outer_anchor.children[2], Node::text("aa"));
+    }
+
+    #[test]
+    fn keeps_outer_anchor_current_after_table_closes_across_fostered_marker() {
+        for source in [
+            "<!doctype html><a><table><marquee></table><a>",
+            "<!doctype html><a><table><marquee><!--e\u{301}-->\r\n</table><a>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let outer_anchor = element(&body(&output.document).children[0]);
+            assert_eq!(outer_anchor.name, "a", "source {source:?}");
+            assert_eq!(
+                outer_anchor
+                    .children
+                    .iter()
+                    .filter_map(|child| match child {
+                        Node::Element(element) => Some(element.name.as_str()),
+                        _ => None,
+                    })
+                    .collect::<Vec<_>>(),
+                vec!["marquee", "table", "a"],
+                "source {source:?}"
+            );
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "nested-anchor-start-tag"));
+        }
+
+        let fragment =
+            parse_html_fragment_for_context("<a><table><marquee></table><a>", "body").unwrap();
+        let fragment_anchor = element(&fragment[0]);
+        assert_eq!(element(fragment_anchor.children.last().unwrap()).name, "a");
+
+        let ordinary = parse_html("<!doctype html><a><table></table><a>").unwrap();
+        assert_eq!(body(&ordinary).children.len(), 2);
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "marquee".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "table".to_string(),
+            },
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            direct.process_token(token);
+        }
+        let direct_anchor = element(&body(&direct.document).children[0]);
+        assert_eq!(element(direct_anchor.children.last().unwrap()).name, "a");
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
