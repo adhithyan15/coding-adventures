@@ -2,6 +2,10 @@
 
 ## 2026-09-05
 
+- Share the budget seed and versioned presentation fixture under the Mosaic
+  sources. Replay 16 edit/navigation steps through generated controls and the
+  real Rust/WASM engine; check stored source, computed values and visible slots
+  after each step. Production builds now type-check the interaction tests too.
 - Keep keyboard selection and inline commits inside the rendered row slice;
   translate generated Grid clicks back to absolute workbook rows and clamp
   selection/scroll bounds. Add three regression cases with the real engine.

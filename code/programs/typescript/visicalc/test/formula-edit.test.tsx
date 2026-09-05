@@ -5,12 +5,15 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { App } from "../src/app/App";
 import { initialState, reducer } from "../src/app/state";
+import contract from "../../../mosaic/visicalc/fixtures/presentation-contract-v1.json";
 
 // Exercise generated controls and the actual bundled Rust WASM engine. A mocked
 // setCell would miss lost commits and dependent-formula recomputation.
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 let container: HTMLDivElement;
 let root: Root;
+type Workbook = ReturnType<Awaited<NonNullable<Window["__spreadsheetEngineReady"]>>["createSpreadsheet"]>;
+let workbook: Workbook;
 
 beforeEach(async () => {
   const bundle = readFileSync(
@@ -18,11 +21,106 @@ beforeEach(async () => {
     "utf8",
   );
   new Function(bundle)();
-  await window.__spreadsheetEngineReady;
+  const runtime = (await window.__spreadsheetEngineReady)!;
+  const createWorkbook = runtime.createSpreadsheet.bind(runtime);
+  // Capture the real instance without replacing any engine operation. This
+  // lets the shared contract distinguish uncommitted text from stored source.
+  runtime.createSpreadsheet = () => (workbook = createWorkbook());
   container = document.createElement("div");
   document.body.append(container);
   root = createRoot(container);
   await act(async () => { root.render(<App />); });
+});
+
+function visibleSelection() {
+  const address = container.firstElementChild!.firstElementChild!.textContent!;
+  const match = /^([A-Z]+)(\d+)$/.exec(address)!;
+  const row = Number(match[2]) - 1;
+  const col = [...match[1]].reduce((value, letter) => value * 26 + letter.charCodeAt(0) - 64, 0) - 1;
+  const rows = [...container.querySelectorAll("tbody tr")];
+  const relativeRow = rows.findIndex((tr) => [...tr.querySelectorAll("td > div")]
+    .some((div) => (div as HTMLElement).style.background === "rgb(38, 79, 120)"
+      || (div as HTMLElement).style.background === "rgb(31, 79, 63)"));
+  expect(relativeRow, "selection must be in the rendered slice").toBeGreaterThanOrEqual(0);
+  return { row, col, offset: row - relativeRow };
+}
+
+it("replays the shared presentation contract through generated controls", async () => {
+  expect(contract.schemaVersion).toBe(1);
+  let editSurface: "formula" | "grid" = "formula";
+  for (const step of contract.steps) {
+    if (step.event) {
+      const { type, payload } = step.event;
+      switch (type) {
+        case "navigate": {
+          const target = payload as { row: number; col: number };
+          const current = visibleSelection();
+          if (target.row >= current.offset && target.row < current.offset + 30) {
+            await act(async () => {
+              (cell(target.row - current.offset, target.col).firstElementChild as HTMLElement).click();
+            });
+          } else {
+            await gridKey(target.row < current.row ? "ArrowUp" : "ArrowDown", Math.abs(target.row - current.row));
+            await gridKey(target.col < current.col ? "ArrowLeft" : "ArrowRight", Math.abs(target.col - current.col));
+          }
+          break;
+        }
+        case "editStart": {
+          const target = payload as { row: number; col: number };
+          const current = visibleSelection();
+          expect({ row: current.row, col: current.col }, step.id).toEqual(target);
+          await gridKey("F2");
+          editSurface = "grid";
+          break;
+        }
+        case "formulaChange":
+          await change((payload as { value: string }).value, editSurface === "grid"
+            ? container.querySelector<HTMLInputElement>("tbody input")! : formulaField());
+          break;
+        case "commit": await press("Enter"); break;
+        case "cancel": await press("Escape"); break;
+        case "editCommit":
+        case "editCancel": {
+          const input = container.querySelector<HTMLInputElement>("tbody input")!;
+          expect(input, step.id).not.toBeNull();
+          await act(async () => {
+            input.dispatchEvent(new KeyboardEvent("keydown", {
+              key: type === "editCommit" ? "Enter" : "Escape", bubbles: true,
+            }));
+          });
+          editSurface = "formula";
+          break;
+        }
+        default: throw new Error(`Unimplemented fixture event: ${type}`);
+      }
+    }
+    const { slots, engine } = step.expected;
+    expect(visibleSelection(), step.id).toEqual({
+      row: slots.selectedRow, col: slots.selectedCol, offset: slots.viewportOffset,
+    });
+    expect(formulaField().value, step.id).toBe(slots.formula);
+    expect(!!container.querySelector("tbody input"), step.id).toBe(slots.editing);
+    expect(container.querySelectorAll("tbody tr").length, step.id).toBe(slots.viewportSize);
+    // Check every displayed cell against the real engine's requested slice.
+    // During editing the generated input replaces that one display string.
+    const displayed = workbook.getDisplayWindow(slots.viewportOffset + 1, 1,
+      slots.viewportOffset + slots.viewportSize, 26).cells;
+    for (let row = 0; row < displayed.length; row++) {
+      for (let col = 0; col < displayed[row].length; col++) {
+        if (!cell(row, col).querySelector("input")) {
+          expect(cell(row, col).textContent, `${step.id}: visible ${row},${col}`).toBe(displayed[row][col]);
+        }
+      }
+    }
+    for (const [address, [raw, display]] of Object.entries(engine)) {
+      expect(workbook.getRaw(address), `${step.id}: ${address} source`).toBe(raw);
+      const match = /^([A-Z])(\d+)$/.exec(address)!;
+      const row = Number(match[2]);
+      const col = match[1].charCodeAt(0) - 64;
+      expect(workbook.getDisplayWindow(row, col, row, col).cells[0][0],
+        `${step.id}: ${address} value`).toBe(display);
+    }
+  }
 });
 
 afterEach(async () => {
@@ -38,8 +136,7 @@ function cell(row: number, col: number) {
   return container.querySelectorAll("tbody tr")[row].querySelectorAll("td")[col];
 }
 
-async function change(value: string) {
-  const input = formulaField();
+async function change(value: string, input = formulaField()) {
   await act(async () => {
     input.focus();
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(input, value);
