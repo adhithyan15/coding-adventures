@@ -4884,6 +4884,35 @@ version = "1"
     }
 
     #[test]
+    fn flutter_package_build_activates_one_of_style_state() {
+        let pkg = make_package("mosaic-pkg-button", &["Button"]);
+        write_component_sources(
+            pkg.path(),
+            "Button",
+            "component Button { slot variant : one-of primary danger ; }",
+            "layout Button { HostButton [ button ] ( label: \"Delete\" ) }",
+            "style Button { part button { state danger { background: #dc3545 ; } } }",
+        );
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Flutter,
+            emit_project: false,
+            theme: None,
+        })
+        .expect("Flutter package should build");
+
+        let dart = fs::read_to_string(out.path().join("flutter/Button.dart")).unwrap();
+        assert!(
+            dart.contains("variant == \"danger\""),
+            "generated Dart:\n{dart}"
+        );
+        assert!(dart.contains("const Color(0xFFDC3545)"));
+        assert!(dart.contains("final String variant;"));
+    }
+
+    #[test]
     fn dependency_style_state_preserves_its_dependency_slot_owner() {
         let workspace = TempDir::new().unwrap();
         let child = workspace.path().join("mosaic-pkg-accent");
