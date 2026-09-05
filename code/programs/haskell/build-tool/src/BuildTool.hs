@@ -18,6 +18,7 @@ module BuildTool
     , discoverPackages
     , findRepoRoot
     , hashPackage
+    , hashSourceSnapshot
     , inferLanguage
     , parseArgs
     , renderMetadataEncodingError
@@ -28,13 +29,13 @@ module BuildTool
     , validateTrackedArtifactSnapshot
     ) where
 
-import Control.Exception (Exception, IOException, catch, evaluate, throwIO, try)
+import Control.Exception (Exception, IOException, catch, evaluate, throwIO)
 import Control.Monad (filterM, foldM, forM, when)
 import Data.Aeson (Value(..), eitherDecodeStrict')
+import Data.Bits (shiftR)
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString as BS
-import qualified Data.ByteString.Char8 as BS8
 import Data.Char (isAlpha, isAlphaNum, isAsciiLower, isAsciiUpper, isSpace, ord, toLower)
 import Data.List (intercalate, isInfixOf, isPrefixOf, nub, sort, sortOn)
 import qualified Data.Map.Strict as Map
@@ -44,8 +45,9 @@ import qualified Data.Set as Set
 import Data.Set (Set)
 import qualified Data.Text as Text
 import qualified Data.Text.Encoding as TextEncoding
-import Data.Time.Clock (diffUTCTime, getCurrentTime)
+import Data.Time.Clock (UTCTime, diffUTCTime, getCurrentTime)
 import Data.Time.Format (defaultTimeLocale, formatTime)
+import Data.Word (Word64)
 import qualified DirectedGraph as DG
 import GHC.Conc (getNumCapabilities)
 import Numeric (showHex)
@@ -54,8 +56,11 @@ import System.Directory
     , createDirectoryIfMissing
     , doesDirectoryExist
     , doesFileExist
+    , getFileSize
+    , getModificationTime
     , getCurrentDirectory
     , listDirectory
+    , pathIsSymbolicLink
     )
 import System.Exit (ExitCode(..))
 import System.FilePath
@@ -72,17 +77,19 @@ import System.FilePath
     , takeExtension
     , takeFileName
     )
-import System.IO (hClose, hPutStrLn, hSetBinaryMode, stderr)
+import System.IO (Handle, IOMode(ReadMode), hFileSize, hPutStrLn, stderr, withBinaryFile)
 import qualified System.Info as SystemInfo
 import System.Process
-    ( CreateProcess(..)
-    , StdStream(CreatePipe)
-    , createProcess
+    ( CreateProcess(cwd)
     , proc
     , readCreateProcessWithExitCode
-    , waitForProcess
     )
 import Text.Read (readMaybe)
+import LanguageSourceInputRegistry
+    ( generatedDirectoryComponents
+    , selectLanguageSourceInput
+    )
+import Sha256 (Sha256Context, sha256FinalizeHex, sha256Init, sha256Update)
 import qualified TrackedArtifactUnicode17 as TrackedUnicode
 
 versionString :: String
@@ -120,6 +127,15 @@ instance Show MetadataEncodingError where
     show = renderMetadataEncodingError
 
 instance Exception MetadataEncodingError
+
+newtype PackageHashError = PackageHashError String
+    deriving (Eq)
+
+instance Show PackageHashError where
+    show (PackageHashError packageIdentity) =
+        "HASH_PACKAGE_FAILED: package=" ++ jsonAsciiString packageIdentity
+
+instance Exception PackageHashError
 
 data TrackedArtifactEntry = TrackedArtifactEntry
     { trackedEntryOrdinal :: Int
@@ -814,11 +830,18 @@ runWithArgs rawArgs =
         Right ParsedVersion -> do
             putStrLn versionString
             pure 0
-        Right (ParsedRun cfg) -> runBuild cfg `catch` handleMetadataEncodingError
+        Right (ParsedRun cfg) ->
+            (runBuild cfg `catch` handleMetadataEncodingError)
+                `catch` handlePackageHashError
 
 handleMetadataEncodingError :: MetadataEncodingError -> IO Int
 handleMetadataEncodingError metadataError = do
     hPutStrLn stderr (renderMetadataEncodingError metadataError)
+    pure 2
+
+handlePackageHashError :: PackageHashError -> IO Int
+handlePackageHashError packageHashError = do
+    hPutStrLn stderr (show packageHashError)
     pure 2
 
 runBuild :: Config -> IO Int
@@ -1002,7 +1025,9 @@ inferLanguage path =
 
 supportedLanguages :: [String]
 supportedLanguages =
-    [ "python"
+    [ "c"
+    , "cpp"
+    , "python"
     , "ruby"
     , "go"
     , "rust"
@@ -1020,6 +1045,9 @@ supportedLanguages =
     , "csharp"
     , "fsharp"
     , "dotnet"
+    , "mosaic"
+    , "ocaml"
+    , "twig"
     ]
 
 inferPackageName :: FilePath -> String
@@ -2514,98 +2542,225 @@ hashPackages :: [Package] -> IO (Map String String)
 hashPackages packages =
     fmap Map.fromList $
         forM packages $ \pkg -> do
-            digest <- hashPackage pkg
+            digest <- hashPackage pkg `catch` handleHashFailure pkg
             pure (packageName pkg, digest)
+  where
+    handleHashFailure :: Package -> IOException -> IO String
+    handleHashFailure pkg _ = throwIO (PackageHashError (packageName pkg))
 
 hashPackage :: Package -> IO String
 hashPackage pkg = do
-    files <- packageRelevantFiles pkg
-    filePayloads <-
-        forM files $ \path -> do
-            contents <- BS.readFile path
-            let relative = normalizeRelativePath (makeRelative (packagePath pkg) path)
-            let relativeBytes = TextEncoding.encodeUtf8 (Text.pack relative)
-            pure (BS.concat [relativeBytes, BS8.pack "\n", contents, BS8.pack "\n"])
-    hashBytes (BS.concat filePayloads)
+    (files, directories) <- packageRelevantFiles pkg
+    (context, _) <- foldM hashSourceFile (sha256Init, 0) files
+    mapM_ validateDirectorySnapshot directories
+    pure (sha256FinalizeHex context)
+
+hashSourceSnapshot :: [(String, BS.ByteString)] -> String
+hashSourceSnapshot inputs =
+    sha256FinalizeHex
+        ( foldl
+            (\context (identity, contents) ->
+                sha256Update
+                    (appendSourceFramePrefix context identity (fromIntegral (BS.length contents)))
+                    contents)
+            sha256Init
+            (sortOn (TextEncoding.encodeUtf8 . Text.pack . fst) inputs)
+        )
+
+maximumSourceCandidates :: Int
+maximumSourceCandidates = 100000
+
+maximumSelectedSourceInputs :: Int
+maximumSelectedSourceInputs = 50000
+
+maximumSourceFileBytes :: Integer
+maximumSourceFileBytes = 64 * 1024 * 1024
+
+maximumPackageSourceBytes :: Integer
+maximumPackageSourceBytes = 1024 * 1024 * 1024
+
+sourceReadChunkBytes :: Int
+sourceReadChunkBytes = 8192
 
 normalizeRelativePath :: FilePath -> FilePath
 normalizeRelativePath = map (\character -> if isPathSeparator character then '/' else character)
 
-packageRelevantFiles :: Package -> IO [FilePath]
+data DirectorySnapshot = DirectorySnapshot FilePath UTCTime [FilePath]
+
+packageRelevantFiles :: Package -> IO ([(String, FilePath)], [DirectorySnapshot])
 packageRelevantFiles pkg = do
-    allFiles <- collectFilesRecursively (packagePath pkg)
-    pure
-        ( sort
-            [ path
-            | path <- allFiles
-            , shouldHashFile pkg path
-            ]
-        )
+    packageRoot <- repositoryPackagePath pkg
+    rootLinked <- pathIsSymbolicLink (packagePath pkg)
+    when rootLinked (sourceHashFailure "SOURCE_HASH_LINK_REJECTED")
+    (allFiles, allCandidates, directories, _) <- collectFilesRecursively (packagePath pkg) 0
+    candidateIdentities <- forM allCandidates $ \path -> do
+        let relative = normalizeRelativePath (makeRelative (packagePath pkg) path)
+        normalized <- validateSourceRelativePath relative
+        pure (packageRoot ++ "/" ++ normalized, path)
+    _ <- validateSourceIdentities candidateIdentities
+    (selectedReversed, _) <- foldM (selectFile packageRoot) ([], 0) allFiles
+    checked <- validateSourceIdentities (reverse selectedReversed)
+    pure (sortOn (TextEncoding.encodeUtf8 . Text.pack . fst) checked, directories)
+  where
+    selectFile packageRoot (selected, selectedCount) path = do
+        let relative = normalizeRelativePath (makeRelative (packagePath pkg) path)
+        normalized <- validateSourceRelativePath relative
+        include <-
+            either sourceHashFailure pure
+                (selectLanguageSourceInput (packageLanguage pkg) packageRoot normalized)
+        if include
+            then do
+                let nextCount = selectedCount + 1
+                when (nextCount > maximumSelectedSourceInputs) (sourceHashFailure "SOURCE_HASH_LIMIT_EXCEEDED")
+                pure ((packageRoot ++ "/" ++ normalized, path) : selected, nextCount)
+            else pure (selected, selectedCount)
 
-collectFilesRecursively :: FilePath -> IO [FilePath]
-collectFilesRecursively root = do
-    entries <- listDirectory root
-    fmap concat $
-        forM entries $ \entry -> do
+collectFilesRecursively :: FilePath -> Int -> IO ([FilePath], [FilePath], [DirectorySnapshot], Int)
+collectFilesRecursively root initialCount = do
+    modified <- getModificationTime root
+    entries <- sort <$> listDirectory root
+    (files, candidates, snapshots, finalCount) <- foldM visit ([], [], [], initialCount) entries
+    pure (reverse files, reverse candidates, DirectorySnapshot root modified entries : snapshots, finalCount)
+  where
+    visit (files, candidates, snapshots, count) entry = do
             let path = root </> entry
-            isDirectory <- doesDirectoryExist path
-            if isDirectory
-                then do
-                    skip <- shouldSkipDirectory path
-                    if skip
-                        then pure []
-                        else collectFilesRecursively path
-                else pure [path]
+            let nextCount = count + 1
+            when (nextCount > maximumSourceCandidates) (sourceHashFailure "SOURCE_HASH_LIMIT_EXCEEDED")
+            linked <- pathIsSymbolicLink path
+            if linked
+                then pure (files, path : candidates, snapshots, nextCount)
+                else do
+                    isDirectory <- doesDirectoryExist path
+                    if isDirectory
+                        then
+                            if entry `elem` generatedDirectoryComponents
+                                then pure (files, path : candidates, snapshots, nextCount)
+                                else do
+                                    (nestedFiles, nestedCandidates, nestedSnapshots, nestedCount) <-
+                                        collectFilesRecursively path nextCount
+                                    pure
+                                        ( reverse nestedFiles ++ files
+                                        , reverse nestedCandidates ++ path : candidates
+                                        , nestedSnapshots ++ snapshots
+                                        , nestedCount
+                                        )
+                        else pure (path : files, path : candidates, snapshots, nextCount)
 
-shouldHashFile :: Package -> FilePath -> Bool
-shouldHashFile pkg path =
-    let extension = map toLower (takeExtension path)
-        name = map toLower (takeFileName path)
-        buildName = map toLower (takeFileName (packageBuildFile pkg))
-        manifestNames =
-            [ "pyproject.toml"
-            , "package.json"
-            , "package-lock.json"
-            , "tsconfig.json"
-            , "cargo.toml"
-            , "cargo.lock"
-            , "go.mod"
-            , "go.sum"
-            , "mix.exs"
-            , "mix.lock"
-            , "pubspec.yaml"
-            , "package.swift"
-            , "makefile.pl"
-            , "cpanfile"
-            , "gemfile"
-            , "project.clj"
-            , "deps.edn"
-            , "settings.gradle.kts"
-            , "build.gradle"
-            , "build.gradle.kts"
-            ]
-        sourceExtensions =
-            case packageLanguage pkg of
-                "python" -> [".py"]
-                "ruby" -> [".rb"]
-                "go" -> [".go"]
-                "rust" -> [".rs"]
-                "dart" -> [".dart"]
-                "typescript" -> [".ts", ".tsx", ".js", ".jsx"]
-                "elixir" -> [".ex", ".exs"]
-                "lua" -> [".lua"]
-                "perl" -> [".pl", ".pm", ".t"]
-                "swift" -> [".swift"]
-                "haskell" -> [".hs", ".cabal"]
-                "java" -> [".java"]
-                "kotlin" -> [".kt", ".kts"]
-                "csharp" -> [".cs", ".csproj", ".sln"]
-                "fsharp" -> [".fs", ".fsproj", ".sln"]
-                "dotnet" -> [".cs", ".fs", ".csproj", ".fsproj", ".sln"]
-                "starlark" -> [".star"]
-                "wasm" -> [".rs", ".wat"]
-                _ -> []
-     in name == buildName || name `elem` manifestNames || extension `elem` sourceExtensions
+validateDirectorySnapshot :: DirectorySnapshot -> IO ()
+validateDirectorySnapshot (DirectorySnapshot path expectedModified expectedEntries) = do
+    linked <- pathIsSymbolicLink path
+    when linked (sourceHashFailure "SOURCE_HASH_LINK_REJECTED")
+    actualModified <- getModificationTime path
+    actualEntries <- sort <$> listDirectory path
+    when
+        (actualModified /= expectedModified || actualEntries /= expectedEntries)
+        (sourceHashFailure "SOURCE_HASH_FILE_UNSTABLE")
+
+repositoryPackagePath :: Package -> IO String
+repositoryPackagePath pkg =
+    case wordsBy (== '/') (packageName pkg) of
+        [language, name]
+            | language == packageLanguage pkg && not (null name) ->
+                validateIdentity ("code/packages/" ++ language ++ "/" ++ name)
+        [language, "programs", name]
+            | language == packageLanguage pkg && not (null name) ->
+                validateIdentity ("code/programs/" ++ language ++ "/" ++ name)
+        _ -> sourceHashFailure "SOURCE_HASH_PATH_INVALID"
+  where
+    validateIdentity identity = do
+        normalized <- validateSourceRelativePath identity
+        if normalized == identity
+            then pure identity
+            else sourceHashFailure "SOURCE_HASH_PATH_INVALID"
+
+validateSourceRelativePath :: String -> IO String
+validateSourceRelativePath relative =
+    case normalizeTrackedArtifactPath relative of
+        Right normalized
+            | normalized == relative
+                && relative /= "."
+                && TrackedUnicode.nfc relative == relative
+                && not (any invalidUnicodeScalar relative) -> pure normalized
+        _ -> sourceHashFailure "SOURCE_HASH_PATH_INVALID"
+  where
+    invalidUnicodeScalar character =
+        let value = ord character
+         in value >= 0xD800 && value <= 0xDFFF
+
+validateSourceIdentities :: [(String, FilePath)] -> IO [(String, FilePath)]
+validateSourceIdentities items = do
+    (_, accepted) <- foldM register (Map.empty, []) items
+    pure (reverse accepted)
+  where
+    register (identities, accepted) item@(identity, _) =
+        let portableIdentity = TrackedUnicode.casefold (TrackedUnicode.nfc identity)
+         in case Map.lookup portableIdentity identities of
+                Just existing
+                    | existing /= identity -> sourceHashFailure "SOURCE_HASH_PATH_COLLISION"
+                _ -> pure (Map.insert portableIdentity identity identities, item : accepted)
+
+hashSourceFile :: (Sha256Context, Integer) -> (String, FilePath) -> IO (Sha256Context, Integer)
+hashSourceFile (context, packageBytes) (identity, path) = do
+    linked <- pathIsSymbolicLink path
+    when linked (sourceHashFailure "SOURCE_HASH_LINK_REJECTED")
+    beforeSize <- getFileSize path
+    when (beforeSize < 0) (sourceHashFailure "SOURCE_HASH_FILE_UNSTABLE")
+    beforeModified <- getModificationTime path
+    when (beforeSize > maximumSourceFileBytes) (sourceHashFailure "SOURCE_HASH_LIMIT_EXCEEDED")
+    let nextPackageBytes = packageBytes + beforeSize
+    when (nextPackageBytes > maximumPackageSourceBytes) (sourceHashFailure "SOURCE_HASH_LIMIT_EXCEEDED")
+    let framedContext = appendSourceFramePrefix context identity (fromIntegral beforeSize)
+    (hashedContext, bytesRead) <-
+        withBinaryFile path ReadMode $ \handle -> do
+            openedSize <- hFileSize handle
+            when (openedSize /= beforeSize) (sourceHashFailure "SOURCE_HASH_FILE_UNSTABLE")
+            hashSourceChunks handle framedContext beforeSize 0
+    afterSize <- getFileSize path
+    afterModified <- getModificationTime path
+    when
+        (bytesRead /= beforeSize || afterSize /= beforeSize || afterModified /= beforeModified)
+        (sourceHashFailure "SOURCE_HASH_FILE_UNSTABLE")
+    pure (hashedContext, nextPackageBytes)
+
+hashSourceChunks :: Handle -> Sha256Context -> Integer -> Integer -> IO (Sha256Context, Integer)
+hashSourceChunks handle context remaining bytesRead =
+    if remaining == 0
+        then do
+            extra <- BS.hGet handle 1
+            when (not (BS.null extra)) (sourceHashFailure "SOURCE_HASH_FILE_UNSTABLE")
+            pure (context, bytesRead)
+        else do
+            chunk <- BS.hGet handle (fromIntegral (min (fromIntegral sourceReadChunkBytes) remaining))
+            when (BS.null chunk) (sourceHashFailure "SOURCE_HASH_FILE_UNSTABLE")
+            let nextContext = sha256Update context chunk
+                chunkLength = fromIntegral (BS.length chunk)
+            nextContext `seq` hashSourceChunks handle nextContext (remaining - chunkLength) (bytesRead + chunkLength)
+
+word64Bytes :: Word64 -> BS.ByteString
+word64Bytes value =
+    BS.pack
+        [ fromIntegral (value `shiftR` 56)
+        , fromIntegral (value `shiftR` 48)
+        , fromIntegral (value `shiftR` 40)
+        , fromIntegral (value `shiftR` 32)
+        , fromIntegral (value `shiftR` 24)
+        , fromIntegral (value `shiftR` 16)
+        , fromIntegral (value `shiftR` 8)
+        , fromIntegral value
+        ]
+
+appendSourceFramePrefix :: Sha256Context -> String -> Word64 -> Sha256Context
+appendSourceFramePrefix context identity contentLength =
+    sha256Update
+        (sha256Update
+            (sha256Update context (word64Bytes (fromIntegral (BS.length identityBytes))))
+            identityBytes)
+        (word64Bytes contentLength)
+  where
+    identityBytes = TextEncoding.encodeUtf8 (Text.pack identity)
+
+sourceHashFailure :: String -> IO a
+sourceHashFailure = throwIO . userError
 
 hashDependencyClosure :: DG.DirectedGraph -> Map String String -> String -> String
 hashDependencyClosure graph packageHashes pkgName =
@@ -2614,46 +2769,6 @@ hashDependencyClosure graph packageHashes pkgName =
             [ dep ++ ":" ++ Map.findWithDefault "" dep packageHashes ++ "\n"
             | dep <- DG.transitivePredecessors pkgName graph
             ]
-
-hashBytes :: BS.ByteString -> IO String
-hashBytes payload = do
-    result <- try (hashBytesWithGit payload) :: IO (Either IOException (ExitCode, String))
-    pure $
-        case result of
-            Right (ExitSuccess, digest) -> digest
-            _ -> fallbackHashBytes payload
-
-hashBytesWithGit :: BS.ByteString -> IO (ExitCode, String)
-hashBytesWithGit payload = do
-    (maybeInput, maybeOutput, maybeError, processHandle) <-
-        createProcess
-            (proc "git" ["hash-object", "--stdin"])
-                { std_in = CreatePipe
-                , std_out = CreatePipe
-                , std_err = CreatePipe
-                }
-    case (maybeInput, maybeOutput, maybeError) of
-        (Just inputHandle, Just outputHandle, Just errorHandle) -> do
-            hSetBinaryMode inputHandle True
-            hSetBinaryMode outputHandle True
-            hSetBinaryMode errorHandle True
-            BS.hPut inputHandle payload
-            hClose inputHandle
-            output <- BS.hGetContents outputHandle
-            errorOutput <- BS.hGetContents errorHandle
-            exitCode <- waitForProcess processHandle
-            _ <- evaluate (BS.length output + BS.length errorOutput)
-            hClose outputHandle
-            hClose errorHandle
-            pure (exitCode, trim (BS8.unpack output))
-        _ -> fail "git hash-object did not create binary pipes"
-
-fallbackHashBytes :: BS.ByteString -> String
-fallbackHashBytes =
-    show
-        . BS.foldl'
-            (\acc byte -> (acc * 16777619 + fromIntegral byte) `mod` 2147483647)
-            (2166136261 :: Int)
 
 fallbackHash :: String -> String
 fallbackHash =
