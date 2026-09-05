@@ -3,7 +3,7 @@ Hindi, chapter 70: Able, and Willing.
 
 
 Lesson 1 of 4.
-सकना (saknā) — to be able to.
+सकना / सकता (saknā / saktā) — to be able to / can.
 
 Warm-up.
 [pause 2 seconds]
@@ -15,19 +15,19 @@ You'll want to know: सकना.
 Hindi has no separate words for can, could, may and be able to. All four run through this one verb, which is why it is worth more than its size.
 
 Grammar Lens: सकना never stands alone.
-One move does it: strip the -ना off the first verb and put सकना (saknā) behind it.
+One move does it: strip the -ना off the first verb and put सकना behind it.
 बोलना becomes बोल सकता हूँ — I can speak.
 आना becomes आ सकता हूँ — I can come.
-The bare stem carries the meaning and सकना (saknā) carries the grammar, so it is सकना (saknā) that takes the ending and sits last, exactly where the verb belongs. सकना (saknā) can never appear on its own: there is no Hindi sentence that is just maiṁ saktā hūṁ.
+The bare stem carries the meaning and सकना carries the grammar, so it is सकना that takes the ending and sits last, exactly where the verb belongs. सकना can never appear on its own: there is no Hindi sentence that is just maiṁ saktā hūṁ.
 Negate it and you have the most useful excuse in the language: मैं कल नहीं आ सकता. — I can't come tomorrow.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: bolnā becomes bol saktā hūṁ, then ānā becomes ā saktā hūṁ]
+[your turn — say: बोलना (bolnā) becomes बोल सकता हूँ (bol saktā hūṁ), then आना (ānā) becomes आ सकता हूँ (ā saktā hūṁ)]
 [pause 8 seconds for the answer]
-[your turn — say: maiṁ kal nahīṁ ā saktā]
+[your turn — say: मैं कल नहीं आ सकता (maiṁ kal nahīṁ ā saktā)]
 [pause 8 seconds for the answer]
-[your turn — say: which of the two verbs takes the ending — सकना (saknā), and it goes last]
+[your turn — say: which of the two verbs takes the ending — सकना, and it goes last]
 [pause 8 seconds for the answer]
 [your turn — recall: say aur, then read … या …]
 [pause 8 seconds for the answer]
@@ -36,8 +36,8 @@ Say that you can speak Hindi, then that you cannot come tomorrow.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What happens to the first verb in front of सकना (saknā)? (It drops to its bare stem.) Can सकना (saknā) be used on its own? (No — it always needs another verb in front of it.)
-Sources: Wiktionary: सकना (saknā).
+What happens to the first verb in front of सकना? (It drops to its bare stem.) Can सकना be used on its own? (No — it always needs another verb in front of it.)
+Sources: Wiktionary: सकना.
 
 
 Lesson 2 of 4.
@@ -53,7 +53,7 @@ You'll want to know: चाहना.
 Put it beside the sentence from last lesson and one letter is different, and it is the important one:
 मैं हिंदी बोल सकता हूँ — bare stem बोल.
 मैं हिंदी बोलना चाहता हूँ — full infinitive बोलना.
-सकना (saknā) takes the stem; चाहना (chāhnā) takes the whole dictionary form. Both then sit last and take the ending themselves. Getting the two mixed up is the ordinary beginner's error, and hearing them back to back is the cure.
+सकना takes the stem; चाहना (chāhnā) takes the whole dictionary form. Both then sit last and take the ending themselves. Getting the two mixed up is the ordinary beginner's error, and hearing them back to back is the cure.
 मैं आना चाहता हूँ — I want to come. Say it against मैं आ सकता हूँ and listen for the -ना.
 Inside चाहना (chāhnā) sits the noun चाह, "longing," and its cousin चाहिए is how Hindi wants a THING rather than an action. They look alike and take opposite kinds of object; this lesson teaches only the verb.
 
@@ -72,7 +72,7 @@ Say that you can speak Hindi and then that you want to speak Hindi, and name the
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two takes the FULL -ना form in front of it? (चाहना (chāhnā).) Which takes the bare stem? (सकना (saknā).)
+Which of the two takes the FULL -ना form in front of it? (चाहना (chāhnā).) Which takes the bare stem? (सकना.)
 Sources: Wiktionary: चाहना (chāhnā).
 
 
@@ -90,7 +90,7 @@ In मैं हिंदी बोलना चाहता हूँ, the word
 मैं किताब देखता हूँ. — I look at the book. — an ordinary noun object.
 मैं बोलना चाहता हूँ. — I want to speak. — a VERB in the same slot.
 That is a bigger gift than it looks. You have sixty-nine chapters of verbs, and every single one of their -ना forms is now also a thing you can like, want, or talk about.
-The order is unchanged, because it never changes: the inner verb comes first as a noun, the outer verb last as the verb. सकना (saknā) is the same construction with one shortcut — it wears the -ना away and takes the bare stem — which is why the two lessons before this one belonged together.
+The order is unchanged, because it never changes: the inner verb comes first as a noun, the outer verb last as the verb. सकना is the same construction with one shortcut — it wears the -ना away and takes the bare stem — which is why the two lessons before this one belonged together.
 
 Guided Practice.
 [pause 1 second]
@@ -105,7 +105,7 @@ Put a noun and then a verb in the same object slot: say that you look at the boo
 
 Wrap-up Recall.
 [pause 3 seconds]
-What part of speech is बोलना in मैं बोलना चाहता हूँ? (A noun, in the object slot.) What does सकना (saknā) do to that same form? (Wears the -ना away and takes the bare stem.)
+What part of speech is बोलना in मैं बोलना चाहता हूँ? (A noun, in the object slot.) What does सकना do to that same form? (Wears the -ना away and takes the bare stem.)
 
 
 Lesson 4 of 4.
@@ -128,4 +128,4 @@ Say three things: that you can come, that you want to come, and that you cannot 
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two can never stand without another verb in front of it? (सकना (saknā).) Which one leaves that verb's -ना in place? (चाहना (chāhnā).) Then stop.
+Which of the two can never stand without another verb in front of it? (सकना.) Which one leaves that verb's -ना in place? (चाहना (chāhnā).) Then stop.
