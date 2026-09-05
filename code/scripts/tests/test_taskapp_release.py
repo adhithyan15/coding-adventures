@@ -161,6 +161,7 @@ def test_archives_verified_linux_bundle_with_launcher_contract(tmp_path: Path) -
     assert metadata["rustRuntime"] == "lib/libmosaic_app.so"
     assert "$XDG_DATA_HOME/task-app/mosaic-state.v1.json" == metadata["statePath"]
     assert "pre-v0.2.0-compose.json" in launcher
+    assert 'export LD_LIBRARY_PATH="$EXECUTABLE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"' in launcher
     assert "Application identifier: task-app" in operations
     assert "mosaic-state.v1.json.corrupt" in operations
     assert launcher_mode & 0o111

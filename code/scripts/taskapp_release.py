@@ -285,6 +285,8 @@ def _linux_launcher(version: str, backend: str, executable: str) -> str:
 set -eu
 
 BUNDLE_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+EXECUTABLE="$BUNDLE_DIR/{executable}"
+EXECUTABLE_DIR=$(CDPATH= cd -- "$(dirname -- "$EXECUTABLE")" && pwd)
 STATE_ROOT=${{XDG_DATA_HOME:-${{HOME:?HOME is required}}/.local/share}}
 STATE_FILE="$STATE_ROOT/{state_path}"
 BACKUP_DIR="$STATE_ROOT/task-app/backups"
@@ -297,7 +299,8 @@ if [ -f "$STATE_FILE" ] && [ ! -e "$BACKUP_FILE" ]; then
   mv -- "$TEMP_BACKUP" "$BACKUP_FILE"
 fi
 
-exec "$BUNDLE_DIR/{executable}" "$@"
+export LD_LIBRARY_PATH="$EXECUTABLE_DIR${{LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}}"
+exec "$EXECUTABLE" "$@"
 """
 
 
