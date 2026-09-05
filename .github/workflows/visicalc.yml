@@ -55,7 +55,7 @@ jobs:
         if: runner.os == 'Linux'
         run: bash ../../../scripts/ci/apt-install.sh libcairo2-dev
       - name: Install web dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
       - name: Regenerate Mosaic controls and test the real WASM engine
         run: npm test
       - name: Check the production build

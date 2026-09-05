@@ -1,6 +1,5 @@
 # Node / npm
 node_modules/
-package-lock.json
 
 # Vite / TS build artifacts
 dist/
