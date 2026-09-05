@@ -12,35 +12,35 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 14291,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/14291",
-    "branch": "codex/build-tool-csharp-fsharp-portable-source-hashing-conformance",
-    "item_id": "build-tool-csharp-fsharp-portable-source-hashing-conformance",
-    "opened_at": "2026-09-05T11:41:15Z",
-    "opened_revision": "04126f7745a5c045b9b71d32a63661fb40cdd97c"
+    "number": 14316,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/14316",
+    "branch": "codex/build-tool-repository-boundary-reverse-diff-digest-conformance",
+    "item_id": "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus",
+    "opened_at": "2026-09-05T14:38:18Z",
+    "opened_revision": "34ecf93ecfae0193b3a7038ad4a8cd17efd39a2d"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-05T12:15:00Z",
-    "pr_number": 14291,
+    "observed_at": "2026-09-05T14:38:22Z",
+    "pr_number": 14316,
     "status": "pending",
-    "notes": "PR #14291 is the sole active parity PR. The macOS build exposed that openat(O_NOFOLLOW) reports ELOOP as errno 62 while the secure reader classified every open failure as unavailable; the same branch now maps the platform-specific ELOOP value to the required SOURCE_HASH_LINK_REJECTED diagnostic. The complete 80-test C# and 17-test F# Release suites plus both C# formatting gates pass locally. Replacement CI must finish before guarded auto-merge is enabled."
+    "notes": "PR #14316 is the sole active parity PR. GitHub reports it mergeable with initial CI, CodeQL, and human-language detection checks queued. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "11c3e0c83f3187aba1e667558592d3f5efea4c96",
+    "revision": "b4535bf5ab6e0d8f9c4e90f9836555875d00246a",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1411,
-    "implementation_package_slots": 4627,
-    "all_reported_identities": 1450,
+    "implementation_identities": 1413,
+    "implementation_package_slots": 4629,
+    "all_reported_identities": 1452,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 172,
     "two_to_four_missing_slots": 2165,
-    "singleton_packages": 941,
-    "singleton_missing_slots": 13174,
-    "rust_singletons": 752,
+    "singleton_packages": 943,
+    "singleton_missing_slots": 13202,
+    "rust_singletons": 754,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -253,7 +253,10 @@
         "build-tool-ruby-extra-ci-toolchain-declaration-conformance",
         "build-tool-rust-extra-ci-toolchain-declaration-conformance",
         "build-tool-swift-extra-ci-toolchain-declaration-conformance",
-        "build-tool-typescript-extra-ci-toolchain-declaration-conformance"
+        "build-tool-typescript-extra-ci-toolchain-declaration-conformance",
+        "build-tool-jvm-current-contract-conformance",
+        "build-tool-dart-current-contract-conformance",
+        "ocaml-build-tool-current-contract-conformance"
       ],
       "branch": null,
       "pr_number": null,
@@ -509,7 +512,10 @@
         "build-tool-python-dune-build-discovery-conformance",
         "build-tool-elixir-dune-build-discovery-fixture-adoption",
         "build-tool-lua-dune-build-discovery-fixture-adoption",
-        "build-tool-perl-dune-build-discovery-fixture-adoption"
+        "build-tool-perl-dune-build-discovery-fixture-adoption",
+        "build-tool-jvm-current-contract-conformance",
+        "build-tool-dart-current-contract-conformance",
+        "ocaml-build-tool-current-contract-conformance"
       ],
       "branch": null,
       "pr_number": null,
@@ -1060,7 +1066,7 @@
     {
       "id": "build-tool-csharp-fsharp-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the shared C# and F# build tools",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair"],
       "branch": "codex/build-tool-csharp-fsharp-portable-source-hashing-conformance",
       "pr_number": 14291,
@@ -1071,7 +1077,12 @@
       "selection_notes": "Selected after PR #14251 completed every final-head check acceptably and GitHub executed guarded squash auto-merge as 7de0d5a974b66681ace92d794747d9070c8cce43. A fresh collision-checked exact-main inventory remains unchanged at 15 established lanes, 1,411 implementation identities, 4,627 slots, 1,450 all-reported identities, bands 175/265, 123/934, 172/2,165, and 941/13,174, 752 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. Parallel audits found no identity or lane-topology change, confirmed every newly surfaced portable gap already has an explicit owner, and ranked 214 dependency-ready pending items. This bounded shared-engine repair covers both C# and F# front doors, immediately advances the source-hashing aggregate and unlocks the C#/F# dependency-hashing child, which in turn advances the dependency-hashing aggregate. Its four prerequisites are merged; dependency hashing remains a separate serial child. The target local branch, remote branch, prior PR, and fresh worktree path were verified absent before creating this exact-main branch. Reconciliation and selection leave the complete 666-owner/1,037-edge graph unique, dependency-complete, and acyclic at 203 merged, 462 pending, and exactly this owner in progress.",
       "implementation_revision": "c14a168ee8f61c93a2a7b113d26341ae6b9e059c",
       "validation_revision": "23611987856bdbd3cb15cd890d049364fb1c370d",
+      "final_revision": "485fdc41529456257e2d54764cad11cf70931654",
       "rebase_revision": "23f75844400a2fe0b89b889635569a2c36915e0d",
+      "merged_head_revision": "485fdc41529456257e2d54764cad11cf70931654",
+      "merged_at": "2026-09-05T13:22:23Z",
+      "merge_commit": "2096c95f20c157074dbb237171262ba451adf0d9",
+      "merge_notes": "All 47 final-head checks reached terminal acceptable conclusions: 40 passed and seven were expected skips. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #14291 without a plain manual merge command.",
       "validation_notes": "The rebased final implementation passes 80 C# Release tests with 91.69% line, 54.61% branch, and 80% method coverage; 17 F# Release tests with 100% coverage in the F# module; and 85 Swift tests with one expected Windows symlink-capability skip. The language-neutral Python suite passes 99 tests and 269 subtests, the Go build-tool suite and vet pass, the exact-diff dry run selects four of 5,137 packages, and the C#, F#, and Swift native dry runs cover 201, 200, and 167 packages respectively. Release builds and publishes, literal BUILD fronts, formatting, generated-registry equality, workflow YAML and Windows planner routing, reporter, authority, collision, state-DAG, diff, and credential checks pass. NuGet reports no vulnerable packages in either .NET front, Bandit passes, and an independent security audit found no remaining correctness or security blocker. The final checked registry SHA-256 is AEC9E2F867DD57B1F47E364E394EDE4C8B459CB813F25971B7A6DF2A84F34681.",
       "notes": "Discovered by the post-#13544 source-hashing audit. The shared .NET collector reuses discovery skips but omits normalized path framing, exact per-language scope, and several hybrid inputs. Repair the shared engine once for both front doors and prove complete checked-registry equality for C#, F#, and delegated .NET lanes. Adversarial review made the shared declared-glob grammar and match-work budget explicit; this owner also aligns Swift because it is the only already-complete live registry adopter, while other engines remain gated by their existing source-hashing owners. The same review removed two unused public discovery helpers that bypassed secure reads and made .NET changes select the Windows CI leg that exercises the native reader."
     },
@@ -1191,7 +1202,7 @@
       "id": "build-tool-portable-source-hashing-remaining-engines",
       "title": "Complete portable source hashing across every remaining build-tool engine",
       "status": "pending",
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-portable-source-hashing-conformance", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-language-source-input-registry-adoption", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-portable-source-hashing-conformance", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-language-source-input-registry-adoption", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the complete hashing contract. It has no independent source behavior and advances only after every engine-scoped leaf proves exact component pruning, portable source recognition, normalized path framing, deterministic byte hashing, dependency invalidation, and stable cache recovery or records a reviewed exception."
@@ -1281,7 +1292,7 @@
       "id": "build-tool-portable-dependency-hashing-remaining-engines",
       "title": "Complete portable dependency hashing across every build-tool engine",
       "status": "pending",
-      "depends_on": ["build-tool-python-portable-dependency-hashing-conformance", "build-tool-go-portable-dependency-hashing-conformance", "build-tool-elixir-portable-dependency-hashing-conformance", "build-tool-perl-portable-dependency-hashing-conformance", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-csharp-fsharp-portable-dependency-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-ruby-portable-dependency-hashing-conformance", "build-tool-rust-portable-dependency-hashing-conformance", "build-tool-typescript-portable-dependency-hashing-conformance", "build-tool-lua-hashing-cache-conformance"],
+      "depends_on": ["build-tool-python-portable-dependency-hashing-conformance", "build-tool-go-portable-dependency-hashing-conformance", "build-tool-elixir-portable-dependency-hashing-conformance", "build-tool-perl-portable-dependency-hashing-conformance", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-csharp-fsharp-portable-dependency-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-ruby-portable-dependency-hashing-conformance", "build-tool-rust-portable-dependency-hashing-conformance", "build-tool-typescript-portable-dependency-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for hashing-v1 dependency and combined digests. It has no independent source behavior and advances only after every native build-tool engine frames sorted package identities with decoded 32-byte dependency digests, combines raw package and dependency digests, consumes the language-neutral oracle, or records a reviewed exception."
@@ -1595,7 +1606,7 @@
       "id": "build-tool-cli-parser-remaining-engines",
       "title": "Consume the closed CLI parser contract in every supported build tool",
       "status": "pending",
-      "depends_on": ["build-tool-go-oracle"],
+      "depends_on": ["build-tool-go-oracle", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the exact post-#12584 implementation audit. The neutral corpus and Python reference runner cover bounded argv parsing, typed defaults, stable diagnostics, strict portable paths and Git refs, and parse-before-dispatch precedence, but no native build-tool engine consumes the new CLI cases. After the canonical Go oracle lands, decompose the extant C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript engines into independent children and route later Dart, JVM, and OCaml engines through the same inert parser contract. Do not infer implementation coverage from schema or reference-runner coverage."
@@ -1626,7 +1637,7 @@
       "id": "build-tool-starlark-metering-remaining-engines",
       "title": "Make every supported build-tool engine consume the Starlark metering contract",
       "status": "pending",
-      "depends_on": ["build-tool-go-oracle", "build-tool-rust-starlark-evaluator-safety-conformance"],
+      "depends_on": ["build-tool-go-oracle", "build-tool-rust-starlark-evaluator-safety-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the exact post-#12562 implementation audit. The neutral corpus and Python reference runner now cover fuel, recursion, aggregate allocation, range and scalar bounds, module count, load depth and cycles, and combined print/trace output, but no native build-tool engine consumes those cases yet. Rust's explicit evaluator-safety child was registered early because its declared-source metadata owner would otherwise activate a traversal-prone, incompletely metered evaluator; that child advances but does not complete this aggregate. After the canonical Go oracle lands, decompose the remaining C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Swift, and TypeScript engines into independent children and route later Dart and JVM engines through the same process-free evaluator contract. Do not infer final Starlark conformance from schema or reference-runner coverage."
@@ -1651,7 +1662,7 @@
       "id": "build-tool-validation-oracle-remaining-engines",
       "title": "Make every supported build-tool engine consume the validation-oracle contract",
       "status": "pending",
-      "depends_on": ["build-tool-go-oracle"],
+      "depends_on": ["build-tool-go-oracle", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the exact post-#12577 implementation audit. The neutral corpus and independent Python reference runner now cover all nine validation checks, but no native build-tool engine consumes the new case IDs. After the canonical Go oracle lands, decompose the extant C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript engines into independently reviewable children and route future Dart and JVM engines through the same process-free validation contract. Do not infer engine parity from schema, fixture, or reference-runner coverage."
@@ -2381,7 +2392,7 @@
       "id": "build-tool-plan-atomic-overwrite-remaining-writers",
       "title": "Consume atomic repeated plan replacement in the remaining build-tool writers",
       "status": "pending",
-      "depends_on": ["build-tool-python-plan-atomic-overwrite-windows"],
+      "depends_on": ["build-tool-python-plan-atomic-overwrite-windows", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered while closing the Python WinError 183 owner. The language-neutral plan/replace-existing fixture applies to every plan_v1_write implementation: Go and several other writers still use rename or direct truncating writes and do not yet consume the repeated-destination case. Audit all present front doors, decompose by shared engine or toolchain, and require replace-if-present publication, preservation of the old destination on failure, and temporary cleanup without widening the Python-only tranche."
@@ -2554,6 +2565,9 @@
       "status": "pending",
       "depends_on": [
         "ocaml-build-tool-and-promotion",
+        "ocaml-build-tool-current-contract-conformance",
+        "ocaml-classical-cipher-denominator-consumers",
+        "ocaml-lzss-zip-raw-rfc1951-denominator-consumer",
         "ocaml-capability-analyzer",
         "ocaml-representative-core",
         "ocaml-ci-toolchain"
@@ -3080,7 +3094,7 @@
       "id": "matter-portable-core-extraction-and-conformance",
       "title": "Extract and fixture the portable Matter adapter core",
       "status": "pending",
-      "depends_on": ["rust-singletons-20260730-classification"],
+      "depends_on": ["rust-singletons-20260730-classification", "smart-home-core-language-neutral-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the b6d3c60b1 post-merge inventory. Define language-neutral fixtures for Matter endpoint projection, report normalization, command planning, fabric-scoped entity identity, atomic report batches, atomic node installation, duplicate-endpoint rejection, and secret-free host locator validation. Fold or extract that deterministic zero-capability logic through matter-core before expanding lanes; full adapter ports remain blocked on classification of the Rust-only smart-home-core and smart-home-runtime dependencies. Add an explicit empty required_capabilities.json to the current adapter core."
@@ -4543,7 +4557,7 @@
       "id": "mosaic-app-conformance-native-fixture-review",
       "title": "Review the Mosaic real-engine native ABI fixture",
       "status": "pending",
-      "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review"],
+      "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review", "mosaic-app-wasm-rust-and-javascript-host-review"],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
@@ -6467,7 +6481,10 @@
         "build-tool-ruby-orphan-crate-validation-conformance",
         "build-tool-rust-orphan-crate-validation-conformance",
         "build-tool-swift-orphan-crate-validation-conformance",
-        "build-tool-typescript-orphan-crate-validation-conformance"
+        "build-tool-typescript-orphan-crate-validation-conformance",
+        "build-tool-jvm-current-contract-conformance",
+        "build-tool-dart-current-contract-conformance",
+        "ocaml-build-tool-current-contract-conformance"
       ],
       "branch": null,
       "pr_number": null,
@@ -6906,7 +6923,10 @@
         "build-tool-ruby-tracked-artifact-validation-conformance",
         "build-tool-rust-tracked-artifact-validation-conformance",
         "build-tool-swift-tracked-artifact-validation-conformance",
-        "build-tool-typescript-tracked-artifact-validation-conformance"
+        "build-tool-typescript-tracked-artifact-validation-conformance",
+        "build-tool-jvm-current-contract-conformance",
+        "build-tool-dart-current-contract-conformance",
+        "ocaml-build-tool-current-contract-conformance"
       ],
       "branch": null,
       "pr_number": null,
@@ -8047,10 +8067,265 @@
       "notes": "The exact-main engine audit found no TypeScript CI gate evaluator. Add a bounded process-free module and Vitest consumption of every neutral case without Node filesystem, process, environment, network, credential, or workflow authority."
     },
     {
+      "id": "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus",
+      "title": "Define repository-boundary reverse-diff and digest conformance",
+      "status": "pr-open",
+      "depends_on": ["build-tool-pure-domain-corpus", "build-tool-shared-and-generated-boundary-source-input-contract"],
+      "branch": "codex/build-tool-repository-boundary-reverse-diff-digest-conformance",
+      "pr_number": 14316,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14316",
+      "opened_at": "2026-09-05T14:38:18Z",
+      "opened_revision": "34ecf93ecfae0193b3a7038ad4a8cd17efd39a2d",
+      "selected_at": "2026-09-05T13:31:11Z",
+      "selection_revision": "4b1d12496e0c74d63a1a930d40934b2a22de81a6",
+      "selection_notes": "Selected after PR #14291 completed all 47 checks acceptably and GitHub executed guarded squash auto-merge as 2096c95f20c157074dbb237171262ba451adf0d9. The exact-main collision-checked inventory is 15 established lanes, 1,412 implementation identities, 4,628 slots, 1,451 all-reported identities, bands 175/265, 123/934, 172/2,165, and 942/13,188, 753 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel audits added 23 newly explicit owners before selection, wired 24 missing JVM/Dart/OCaml universal-contract edges, and recorded the nine engine-specific boundary adoption leaves. The 690-owner graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 204 merged, 485 pending, and exactly this owner in progress. Both prerequisites are merged, all seven open PRs have zero exact or semantic overlap across the 11 planned paths, the target remote branch and prior PR are absent, and the fresh worktree is based exactly on origin/main.",
+      "rebase_notes": "Rebased conflict-free onto exact origin/main b4535bf5ab6e0d8f9c4e90f9836555875d00246a after merged PR #14304 added rust/mosaic-app-wasm and five later Hindi, Mosaic React, SPICE, HTML parser, and Windows language-VM CI commits changed no package topology or selected path. The refreshed collision-checked inventory is 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The new Mosaic WASM identity is split between an eligible transport contract and a selection-blocked Rust/JavaScript host review, so no newly eligible identity is left unowned. A consumer audit also registered shared .NET and Swift fixture-consumption leaves beside the nine behavior-adoption leaves. The 694-owner graph remains unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 204 merged, 489 pending, and exactly this owner in progress.",
+      "implementation_revision": "4ab5c74cc38a59c10760a512c50e651a1544a99f",
+      "validation_revision": "fba36027e4fcf8ffc9e2ef0292995d3eb74c5ee4",
+      "validation_notes": "Specification-first changes define exact digest-pinned boundary reverse selection before dependent and prerequisite closure and raw-UTF8 sorting over the caller-supplied local-plus-boundary hash union. Test-first execution failed on the absent boundary-aware oracle before implementation. The final exact-base corpus validates 141 cases and 285 files with the unchanged 18-boundary/21-input digest; 23 schema tests and all 78 semantic runner tests pass after the final rebase, and branch-aware coverage reports 89% across the complete existing oracle. The related execution contract validates with 121 tests and 23 expected platform skips. C# executes all four hashing fixtures in its 80-test suite, and F# independently executes them through its facade in its 17-test suite; both literal BUILD front doors and NuGet vulnerability checks pass. The complete Go suite, vet, and trimpath build pass, while a fresh real diff dry-run evaluates 45 Starlark files, discovers 5,139 packages, keeps the five reviewed orphan exemptions clean, and selects exactly the C# and F# build-tool programs. Package-parity, capability-taxonomy, and OCaml-lock suites add 63 passes with two expected Windows skips. The exact-main inventory remains collision-clean at 1,413 identities, 4,629 slots, 1,452 all-reported identities, 754 Rust singletons, zero OCaml packages, and zero unknown buckets. The 694-owner state is JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unmerged edges. PyCompile, Bandit medium/high, strict JSON, diff hygiene, and credential/authority review pass; Ruff reproduces exactly the three pre-existing source findings from origin/main and reports no test finding. No dependency, filesystem, Git, process, environment, network, credential, native-link, or execution authority was added.",
+      "publication_notes": "Opened ready-for-review PR #14316 after a normal first push from exact origin/main b4535bf5ab6e0d8f9c4e90f9836555875d00246a. Immediately before publication, the worktree was clean, no other parity PR or prior same-branch PR existed, all seven live PRs had zero exact path overlap, and corpus, schema, semantic runner, execution contract, .NET package, Go package/vet/build, real diff dry-run, package-parity, state-DAG, lint-baseline, vulnerability, security, and diff gates were acceptable. GitHub reports the PR mergeable with initial checks queued; auto-merge remains disabled until every required check is terminal and acceptable.",
+      "notes": "Discovered by the post-#14291 repository-boundary audit. Define process-free language-neutral fixtures for exact reverse selection from tracked shared inputs and deterministic package hashing over the union of package-local and registered boundary paths. Pin and validate the boundary digest without granting Git, filesystem, process, environment, network, credential, or native-link authority. This shared corpus must land before the nine uncovered current engines adopt the behavior."
+    },
+    {
+      "id": "build-tool-go-repository-boundary-reverse-diff-digest-adoption",
+      "title": "Adopt repository-boundary reverse diff and digest behavior in Go",
+      "status": "pending",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-go-language-source-input-registry-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Go build tool after its exact source-input registry adoption. Keep native Git snapshot acquisition and filesystem safety in their existing owners."
+    },
+    {
+      "id": "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption",
+      "title": "Adopt repository-boundary reverse diff and digest behavior in Elixir",
+      "status": "pending",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-elixir-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Elixir build tool after portable source hashing lands."
+    },
+    {
+      "id": "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption",
+      "title": "Adopt repository-boundary reverse diff and digest behavior in Haskell",
+      "status": "pending",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-haskell-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Haskell build tool after portable source hashing lands."
+    },
+    {
+      "id": "build-tool-lua-repository-boundary-reverse-diff-digest-adoption",
+      "title": "Adopt repository-boundary reverse diff and digest behavior in Lua",
+      "status": "pending",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-lua-hashing-cache-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Lua build tool after its hashing and cache implementation lands."
+    },
+    {
+      "id": "build-tool-perl-repository-boundary-reverse-diff-digest-adoption",
+      "title": "Adopt repository-boundary reverse diff and digest behavior in Perl",
+      "status": "pending",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-perl-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Perl build tool after portable source hashing lands."
+    },
+    {
+      "id": "build-tool-python-repository-boundary-reverse-diff-digest-adoption",
+      "title": "Adopt repository-boundary reverse diff and digest behavior in Python",
+      "status": "pending",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-python-language-source-input-registry-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Python build tool after its exact source-input registry adoption."
+    },
+    {
+      "id": "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption",
+      "title": "Adopt repository-boundary reverse diff and digest behavior in Ruby",
+      "status": "pending",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ruby-language-source-input-registry-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Ruby build tool after its exact source-input registry adoption."
+    },
+    {
+      "id": "build-tool-rust-repository-boundary-reverse-diff-digest-adoption",
+      "title": "Adopt repository-boundary reverse diff and digest behavior in Rust",
+      "status": "pending",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-rust-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Rust build tool after portable source hashing lands."
+    },
+    {
+      "id": "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption",
+      "title": "Adopt repository-boundary reverse diff and digest behavior in TypeScript",
+      "status": "pending",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-typescript-language-source-input-registry-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the TypeScript build tool after its exact source-input registry adoption."
+    },
+    {
+      "id": "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption",
+      "title": "Consume repository-boundary reverse-diff fixtures through both .NET front doors",
+      "status": "pending",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-csharp-fsharp-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The shared C# engine and independent F# facade now execute every neutral local-plus-boundary package-digest case, but neither front door loads the new reverse-diff fixture. Add complete dynamic consumption through both native test suites without changing the already reviewed native Git or filesystem authority boundary."
+    },
+    {
+      "id": "build-tool-swift-repository-boundary-diff-digest-fixture-adoption",
+      "title": "Consume repository-boundary diff and digest fixtures in Swift",
+      "status": "pending",
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-repository-source-input-boundary-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Swift already implements equivalent exact boundary selection and hashing behavior but does not load either new neutral case. Add dynamic fixture consumption so behavior-equivalent bespoke tests cannot drift from the shared contract."
+    },
+    {
+      "id": "build-tool-jvm-current-contract-conformance",
+      "title": "Bring Java and Kotlin build tools to the current neutral contract",
+      "status": "pending",
+      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Promotion gate for both JVM front doors. Require the current language registry, repository-boundary reverse-diff and digest corpus, CI-gate corpus, and every other established process-free build-tool contract before either lane counts as complete."
+    },
+    {
+      "id": "build-tool-dart-current-contract-conformance",
+      "title": "Bring the Dart build tool to the current neutral contract",
+      "status": "pending",
+      "depends_on": ["build-tool-dart", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Promotion gate for the Dart build-tool front door. Require all current process-free contracts and language-neutral fixtures before the lane is counted complete."
+    },
+    {
+      "id": "ocaml-build-tool-current-contract-conformance",
+      "title": "Bring the OCaml build tool to the current neutral contract",
+      "status": "pending",
+      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The existing OCaml native-build-tool owner predates later shared contracts. Before promotion, require native consumption of every current process-free corpus, including source registry, repository-boundary reverse diff and digest, CI-gate selection, and the remaining universal contract families."
+    },
+    {
+      "id": "ocaml-classical-cipher-denominator-consumers",
+      "title": "Add OCaml consumers for the classical-cipher denominator",
+      "status": "pending",
+      "depends_on": ["ocaml-build-tool-current-contract-conformance", "atbash-language-neutral-fixture-established-lane-consumers", "vigenere-language-neutral-fixture-established-lane-consumers", "scytale-language-neutral-fixture-established-lane-consumers"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Before OCaml enters the all-language denominator, add representative Atbash, Vigenere, and Scytale packages that consume the established neutral fixtures and update the literal lane roster only when the promotion gate is satisfied."
+    },
+    {
+      "id": "ocaml-lzss-zip-raw-rfc1951-denominator-consumer",
+      "title": "Add the OCaml ZIP-owned raw RFC 1951 denominator consumer",
+      "status": "pending",
+      "depends_on": ["ocaml-build-tool-current-contract-conformance", "zip-raw-rfc1951-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Before OCaml promotion, add an OCaml LZSS/ZIP raw-RFC-1951 representative that consumes the established neutral corpus and preserves the ZIP ownership boundary."
+    },
+    {
+      "id": "visicalc-mosaic-app-native-abi-review",
+      "title": "Review the VisiCalc Mosaic application adapter applicability exception",
+      "status": "pending",
+      "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review", "mosaic-app-wasm-rust-and-javascript-host-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after PR #14291 when rust/visicalc-mosaic-app added the 753rd Rust singleton. Separate portable Mosaic application behavior from the generated/native ABI shell, inherit the shared runtime and wrapper evidence, and record an explicit reviewed applicability decision before closing the identity."
+    },
+    {
+      "id": "mosaic-app-wasm-transport-portable-conformance",
+      "title": "Fixture the portable Mosaic WebAssembly transport contract",
+      "status": "pending",
+      "depends_on": ["mosaic-app-runtime-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14304 added the 754th Rust singleton, rust/mosaic-app-wasm. Define process-free fixtures for the scalar pointer and length protocol, bounded request and response envelopes, allocation ownership, exact UTF-8 JSON operations, independent handles, snapshot and restore sequencing, retry behavior, teardown, and stable failures. Keep deterministic Mosaic state-machine behavior in mosaic-app-runtime-portable-conformance and native wasm32 compilation, linear-memory access, JavaScript loading, traps, and target toolchains in the dependent host review."
+    },
+    {
+      "id": "mosaic-app-wasm-rust-and-javascript-host-review",
+      "title": "Review the Mosaic WebAssembly Rust and JavaScript host boundary",
+      "status": "pending",
+      "depends_on": ["mosaic-app-wasm-transport-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Review native wasm32 compilation, exported allocation and call symbols, JavaScript module loading and memory-view refresh, trap poisoning and reload, checked-in module and test evidence, and target and toolchain applicability. Reuse the portable transport and runtime contracts; do not manufacture fifteen implementations of the Rust and JavaScript host shell. This target-host applicability review is excluded from autonomous parity selection."
+    },
+    {
+      "id": "rust-singletons-20260905-classification",
+      "title": "Classify the September 5 Rust singleton inventory",
+      "status": "pending",
+      "depends_on": ["singleton-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "A strict exact-owner audit at 4b1d1249 found 207 of 753 Rust singleton identities owned and 546 without exact ownership. The later rust/mosaic-app-wasm identity has its own explicit target-wrapper applicability owner, so the unowned count remains 546 across 754 Rust singletons. Conservative manifest evidence partitions the original unowned set into 170 portable-core claims, 58 native-host signals, 89 generated/applicability signals, and 229 unresolved identities. Decompose them into explicit portable, native, wrapper, or reviewed-exception owners without crediting incidental build-tool references."
+    },
+    {
+      "id": "constraint-core-language-neutral-conformance",
+      "title": "Fixture and port the Constraint-VM predicate core",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260905-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Highest-confidence dependency-ready Rust singleton frontier: zero dependencies, explicit empty capability profile, pure predicate data and normalization, seven direct and 108 transitive Rust dependents. Define a neutral behavior contract before lane expansion."
+    },
+    {
+      "id": "smart-home-core-language-neutral-conformance",
+      "title": "Fixture and port the protocol-neutral smart-home model",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260905-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "High-leverage Rust singleton frontier with 88 direct and 93 transitive dependents. Establish an explicit empty capability profile and fixture its protocol-neutral records and model before dependent Matter extraction claims closure."
+    },
+    {
+      "id": "matrix-ir-language-neutral-conformance",
+      "title": "Fixture and port the pure tensor algebra IR",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260905-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "High-confidence zero-dependency Rust singleton frontier with an explicit empty capability profile and 17 direct plus 56 transitive dependents. Define the neutral data, validation, and wire contract without execution authority."
+    },
+    {
+      "id": "high-consensus-unowned-gap-classification-20260905",
+      "title": "Classify newly measured unowned high-consensus package gaps",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main audit found 93 Java/Kotlin/Dart high-consensus identities and 50 Swift high-consensus identities without exact package owners. Decompose this classification owner into dependency-shaped children, beginning with barcode-layout-1d and sha512; point2d requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion."
+    },
+    {
+      "id": "five-to-nine-unowned-gap-classification-20260905",
+      "title": "Classify the unowned five-to-nine-language package band",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main audit found 117 of 123 identities in the five-to-nine-language band without exact owners. Prioritize dependency foundations led by transistors and cache, then create bounded family or package owners before any implementation selection."
+    },
+    {
+      "id": "two-to-four-unowned-gap-classification-20260905",
+      "title": "Classify the unowned two-to-four-language package band",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The exact-main audit found 157 of 172 identities in the two-to-four-language band without exact owners. Prioritize foundational symbolic-ir, simulator-protocol, and hdl-ir families and decompose them into explicit dependency-shaped work."
+    },
+    {
       "id": "build-tool-ci-gate-registry-established-lane-parity",
       "title": "Complete CI gate selection in every supported build-tool lane",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-csharp-fsharp-ci-gate-selection-conformance", "build-tool-elixir-ci-gate-selection-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-lua-ci-gate-selection-conformance", "build-tool-perl-ci-gate-selection-conformance", "build-tool-python-ci-gate-selection-conformance", "build-tool-ruby-ci-gate-selection-conformance", "build-tool-rust-ci-gate-selection-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-typescript-ci-gate-selection-conformance", "build-tool-jvm", "build-tool-dart", "ocaml-build-tool-and-promotion"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-csharp-fsharp-ci-gate-selection-conformance", "build-tool-elixir-ci-gate-selection-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-lua-ci-gate-selection-conformance", "build-tool-perl-ci-gate-selection-conformance", "build-tool-python-ci-gate-selection-conformance", "build-tool-ruby-ci-gate-selection-conformance", "build-tool-rust-ci-gate-selection-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-typescript-ci-gate-selection-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the engine audit to decompose into collision-safe native or reviewed shared-engine leaves. Final closure requires every established build-tool lane plus the OCaml promotion path to consume the same language-neutral ci_gate_selection fixtures or record a narrow reviewed exception."

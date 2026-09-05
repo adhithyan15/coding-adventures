@@ -150,7 +150,7 @@ let ``F sharp facade consumes every hashing v1 package digest`` () =
         Directory.GetFiles(Path.Combine(fixtureDirectory, "cases"), "hashing-cache-*.json")
         |> Array.sortWith (fun left right -> StringComparer.Ordinal.Compare(left, right))
 
-    Assert.Equal(3, fixturePaths.Length)
+    Assert.Equal(4, fixturePaths.Length)
 
     for fixturePath in fixturePaths do
         use fixture = JsonDocument.Parse(File.ReadAllText(fixturePath))

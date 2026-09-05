@@ -12738,6 +12738,91 @@ aggregate. The dependency graph therefore contains 667 owners and 1,038 edges:
 inventory metrics remain unchanged because this is a behavioral repair rather
 than a new identity or lane.
 
+### Post-PR #14291 inventory and parallel backlog reconciliation
+
+PR #14291 completed all 47 final-head checks with 40 successes and seven
+expected skips. GitHub reported no merge conflict and executed guarded squash
+auto-merge as `2096c95f20c157074dbb237171262ba451adf0d9`.
+
+The collision-checked schema-3 inventory at exact `origin/main`
+`4b1d12496e0c74d63a1a930d40934b2a22de81a6` now contains 15 established
+lanes, 1,412 implementation identities, 4,628 implementation slots, and 1,451
+all-reported identities. The four bands are 175/265, 123/934, 172/2,165, and
+942/13,188; Rust has 753 singletons, OCaml remains emerging at zero packages,
+and canonical collisions and unknown language buckets remain zero. The only
+identity addition is `rust/visicalc-mosaic-app`, now owned by an explicit
+native/generated-wrapper applicability review.
+
+Parallel read-only audits exposed work that the earlier broad umbrellas did not
+own precisely. A repository-boundary reverse-diff and digest corpus now gates
+nine current-engine behavior-adoption leaves plus shared .NET and Swift
+fixture-consumption leaves, covering all 12 current front doors. JVM, Dart, and
+OCaml each have a current-contract promotion owner wired into source hashing,
+dependency hashing, CI gate,
+extra toolchain, Dune discovery, CLI, Starlark, validation, atomic plan writing,
+orphan validation, and tracked-artifact closure. OCaml promotion additionally
+requires representative classical-cipher and ZIP-owned raw-RFC-1951 consumers.
+
+Strict singleton ownership found exact owners for 207 of 753 Rust-only
+identities and 546 without exact ownership: 170 have portable-core evidence, 58
+have native-host evidence, 89 have generated/applicability evidence, and 229
+remain unresolved. The first high-confidence dependency frontier is
+`constraint-core`, `smart-home-core`, then `matrix-ir`. Separate classification
+owners record 93 unowned Java/Kotlin/Dart and 50 unowned Swift high-consensus
+identities, 117 unowned identities in the five-to-nine-language band, and 157
+in the two-to-four-language band. These are discovery owners that must decompose
+into bounded children before implementation; they are not parity exemptions.
+
+The next dependency-shaped implementation candidate is
+`build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus`.
+Its prerequisites are merged, it is process-free, and it defines shared
+semantics before the behavior and fixture-consumption leaves can proceed. A live sweep of all
+seven open PRs found zero exact or semantic overlap across its 11 planned paths;
+the fresh unpublished branch is based exactly on current `origin/main`.
+
+After the reconciliation commit recorded every discovered owner as pending,
+that corpus owner transitioned to `in-progress` on
+`codex/build-tool-repository-boundary-reverse-diff-digest-conformance`. The
+resulting graph has 690 unique owners: 204 merged, 485 pending, and exactly this
+owner in progress. Its next change order is specification and schema, red
+fixtures/tests, reference-runner implementation, then changelog and final
+roadmap/state evidence.
+
+The implementation then rebased conflict-free onto exact `origin/main`
+`b4535bf5ab6e0d8f9c4e90f9836555875d00246a`. Merged PR #14304 added only
+`rust/mosaic-app-wasm` to the package topology; five later Hindi, Mosaic React,
+SPICE, HTML parser, and Windows language-VM CI commits changed no package
+identity or selected path.
+The refreshed collision-checked
+inventory now has 1,413 implementation identities, 4,629 slots, 1,452 all-
+reported identities, and bands 175/265, 123/934, 172/2,165, and 943/13,202.
+Rust has 754 singletons; OCaml remains emerging at zero packages; collisions
+and unknown buckets remain zero. The new identity is split between the eligible
+`mosaic-app-wasm-transport-portable-conformance` and selection-blocked
+`mosaic-app-wasm-rust-and-javascript-host-review`. The former owns the neutral
+pointer/length envelope, allocation ownership, lifecycle sequencing, and stable
+failures; the latter owns wasm32 compilation, JavaScript loading and memory
+views, traps, and target toolchains. Existing Mosaic conformance and VisiCalc
+adapter reviews depend on that host boundary. The consumer audit also
+registered shared .NET and Swift fixture-consumption leaves beside the nine
+behavior-adoption leaves. The graph therefore has 694 unique owners: 204
+merged, 489 pending, and exactly the repository-boundary corpus owner in
+progress.
+
+The final exact-base validation proves 141 process-free cases and 285 retained
+files with the unchanged 18-boundary/21-input digest. All 23 schema tests and
+78 semantic runner tests pass; the complete oracle reports 89% branch-aware
+coverage. The related execution-contract suites pass 121 tests with 23 expected
+platform skips. C# passes 80 tests and F# passes 17, with both front doors
+dynamically consuming all four hashing fixtures; the missing reverse-diff and
+Swift fixture consumption remain explicit pending leaves. The complete Go
+suite, vet, trimpath build, and a real affected dry-run pass. That dry-run
+evaluates 45 Starlark files, discovers 5,139 packages, preserves the five-entry
+orphan ledger, and selects exactly the two changed .NET build-tool programs.
+Package parity, capability, OCaml-lock, JSON, state-DAG, lint-baseline,
+security, vulnerability, and diff gates are acceptable without adding host or
+execution authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
@@ -12747,7 +12832,9 @@ Only one parity PR should be active at a time.
    local verification, and push to the same PR.
 3. If the branch conflicts with `main`, update it carefully and verify the full
    PR diff contains only intended work.
-4. If checks are pending, keep monitoring.
+4. If checks are pending, keep monitoring the active PR while parallel agents
+   perform bounded read-only inventory, ownership, dependency, fixture, and
+   validation audits. Do not open or mutate a second implementation PR.
 5. If the PR is merged, regenerate the report from the new `origin/main`, update
    priorities with any newly discovered work, and select the highest-impact
    unblocked item.
