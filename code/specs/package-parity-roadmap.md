@@ -12755,8 +12755,10 @@ native/generated-wrapper applicability review.
 
 Parallel read-only audits exposed work that the earlier broad umbrellas did not
 own precisely. A repository-boundary reverse-diff and digest corpus now gates
-nine current-engine adoption leaves. JVM, Dart, and OCaml each have a current-
-contract promotion owner wired into source hashing, dependency hashing, CI gate,
+nine current-engine behavior-adoption leaves plus shared .NET and Swift
+fixture-consumption leaves, covering all 12 current front doors. JVM, Dart, and
+OCaml each have a current-contract promotion owner wired into source hashing,
+dependency hashing, CI gate,
 extra toolchain, Dune discovery, CLI, Starlark, validation, atomic plan writing,
 orphan validation, and tracked-artifact closure. OCaml promotion additionally
 requires representative classical-cipher and ZIP-owned raw-RFC-1951 consumers.
@@ -12774,7 +12776,7 @@ into bounded children before implementation; they are not parity exemptions.
 The next dependency-shaped implementation candidate is
 `build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus`.
 Its prerequisites are merged, it is process-free, and it defines shared
-semantics before nine engine-specific leaves can proceed. A live sweep of all
+semantics before the behavior and fixture-consumption leaves can proceed. A live sweep of all
 seven open PRs found zero exact or semantic overlap across its 11 planned paths;
 the fresh unpublished branch is based exactly on current `origin/main`.
 
@@ -12786,6 +12788,24 @@ owner in progress. Its next change order is specification and schema, red
 fixtures/tests, reference-runner implementation, then changelog and final
 roadmap/state evidence.
 
+The implementation then rebased conflict-free onto exact `origin/main`
+`143f7539797bd0c72b7cb06dd9529a76f85e453e`. Merged PR #14304 added only
+`rust/mosaic-app-wasm` to the package topology. The refreshed collision-checked
+inventory now has 1,413 implementation identities, 4,629 slots, 1,452 all-
+reported identities, and bands 175/265, 123/934, 172/2,165, and 943/13,202.
+Rust has 754 singletons; OCaml remains emerging at zero packages; collisions
+and unknown buckets remain zero. The new identity is split between the eligible
+`mosaic-app-wasm-transport-portable-conformance` and selection-blocked
+`mosaic-app-wasm-rust-and-javascript-host-review`. The former owns the neutral
+pointer/length envelope, allocation ownership, lifecycle sequencing, and stable
+failures; the latter owns wasm32 compilation, JavaScript loading and memory
+views, traps, and target toolchains. Existing Mosaic conformance and VisiCalc
+adapter reviews depend on that host boundary. The consumer audit also
+registered shared .NET and Swift fixture-consumption leaves beside the nine
+behavior-adoption leaves. The graph therefore has 694 unique owners: 204
+merged, 489 pending, and exactly the repository-boundary corpus owner in
+progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
@@ -12795,7 +12815,9 @@ Only one parity PR should be active at a time.
    local verification, and push to the same PR.
 3. If the branch conflicts with `main`, update it carefully and verify the full
    PR diff contains only intended work.
-4. If checks are pending, keep monitoring.
+4. If checks are pending, keep monitoring the active PR while parallel agents
+   perform bounded read-only inventory, ownership, dependency, fixture, and
+   validation audits. Do not open or mutate a second implementation PR.
 5. If the PR is merged, regenerate the report from the new `origin/main`, update
    priorities with any newly discovered work, and select the highest-impact
    unblocked item.

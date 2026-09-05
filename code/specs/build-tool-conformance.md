@@ -745,11 +745,13 @@ to the selected language, requires a package-name component, and applies the
 candidate ceiling during incremental immediate-child enumeration before
 bounded sorting.
 
-That package-local projection does not by itself complete Swift's native
-source-input adoption. A separate dependent Swift owner integrates the
-repository-relative boundary registry, tracked-regular-file evidence, and its
-reverse diff index. Until that owner lands, the Swift engine makes no claim to
-hash shared or generated-pruning-exception inputs outside a package root.
+Swift and the shared C#/F# engine complete this package-local projection with
+the repository-relative boundary registry, tracked-regular-file evidence, and
+an exact reverse diff index. Their native readers remain responsible for
+proving stable tracked bytes; the process-free oracle below receives only the
+validated boundary and caller-supplied bytes. Other engines must not claim
+shared or generated-pruning-exception inputs until their dependent adoption
+owners implement the same boundary.
 
 For the exact Rust `code/packages/rust/engram-wasm` package root, one
 `package_exact_inputs` rule includes the BUILD-executed `js/smoke.mjs`, its
