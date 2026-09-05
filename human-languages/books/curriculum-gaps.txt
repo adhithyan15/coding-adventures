@@ -19,7 +19,7 @@ writing stages: 15/23 tracks prove the cumulative pre-A1 ladder; 652 evidence bl
 super-gentle ramp: 21/23 tracks carry detected or unmeasured debt; 106 named track/debt items
 writing ramp: 0 track(s) never practise writing; 6 start after lesson one
 gentleness measurement: 53 lesson(s) remain atom-measurement blind
-VOCABULARY vs HL09 §3.1 targets: spanish 776/1200 at-or-below A2 (825 total), telugu 221/300 at-or-below pre-A1 (274 total), tamil 201/300 at-or-below pre-A1 (268 total), sanskrit 184/300 at-or-below pre-A1 (256 total), hindi 188/300 at-or-below pre-A1 (252 total); 23 of 23 tracks short of the level they are working on
+VOCABULARY vs HL09 §3.1 targets: spanish 776/1200 at-or-below A2 (825 total), telugu 221/300 at-or-below pre-A1 (274 total), tamil 201/300 at-or-below pre-A1 (268 total), sanskrit 184/300 at-or-below pre-A1 (256 total), hindi 188/300 at-or-below pre-A1 (253 total); 23 of 23 tracks short of the level they are working on
 levels with STRUCTURAL COVERAGE COMPLETE (HL09 §3.1 — coverage complete, performance UNVERIFIED): 1 track at A1 (spanish); 23 track(s) touch a level whose coverage is not complete
   ^ these five criteria measure the CORPUS — headwords, verbs, spine nodes, reinforcement windows, writing stages. None measures a learner. No track has had a single exam item scored against it, so no line above claims a reader can pass anything.
 0 of 1330 book chapters without an HL05 capability; 86 payoffs below the 0.5 representativeness floor; 10 tracks already clean
