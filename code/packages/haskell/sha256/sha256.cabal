@@ -35,3 +35,13 @@ test-suite spec
                     , hspec == 2.*
                     , bytestring >=0.10 && <0.13
     default-language: Haskell2010
+
+test-suite allocation-budget
+    type:             exitcode-stdio-1.0
+    main-is:          AllocationBudget.hs
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , sha256
+                    , bytestring >=0.10 && <0.13
+    ghc-options:      -O2 -Wall -Werror -rtsopts -with-rtsopts=-T
+    default-language: Haskell2010
