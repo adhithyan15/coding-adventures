@@ -3,6 +3,14 @@
 Twig ahead-of-time compiler.  Reads a Twig source file, produces a native
 ARM64 Mach-O executable on macOS that you can run directly.
 
+On Windows x86-64, executable linking uses the dynamic MSVC CRT with normal
+startup. Do not mix in `libvcruntime.lib` or `libucrt.lib`: their static
+definitions conflict with the dynamic libraries. Run
+`cargo test -p twig-aot --test windows_x86_64_smoke -- --nocapture` on Windows
+to exercise compilation, linking, and actual executable results. That suite
+still explicitly skips two precise-GC frame-walk differentials; a green test
+summary does not prove those unfinished paths.
+
 ## Usage
 
 ```bash

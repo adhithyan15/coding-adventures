@@ -1,5 +1,16 @@
 # Changelog — `twig-aot`
 
+## Unreleased — Windows dynamic CRT link repair (VM-030)
+
+Remove `libvcruntime.lib` from the Windows executable link. Normal CRT startup
+was restored earlier by removing `/ENTRY:main`, but its obsolete static-runtime
+dependency remained beside `vcruntime.lib`. LLVM's Windows linker rejected even
+Twig `42` with duplicate `__vcrt_InitializeCriticalSectionEx` definitions.
+The link now uses the dynamic CRT libraries consistently and retains normal
+startup. Validation uses the Windows executable smoke suite, including scalar
+results, arithmetic, output, heap byte I/O, and stackmap registration. The two
+existing precise-GC frame-walk skips remain separate open work.
+
 
 
 

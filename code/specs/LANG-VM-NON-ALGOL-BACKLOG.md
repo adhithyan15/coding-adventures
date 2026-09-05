@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-08-31
+Status date: 2026-09-05
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -21,6 +21,47 @@ new gap. Apply this order:
 
 Each item must add or strengthen an executed cross-backend proof. One item uses
 one fresh worktree and one PR; remove the worktree after merge.
+
+## Completion loop and acceptance criteria
+
+The loop keeps one active implementation PR. Before selecting another item,
+fetch `origin/main`, inspect the previous PR's actual merge state, record new
+discoveries, and rerank this backlog. Fix CI failures and merge conflicts on the
+active PR. Publish ready-for-review PRs, never drafts, so draft-specific check
+filters cannot suppress validation. Enable auto-merge only after its current-head checks finish green and
+no conflicts or blocking reviews remain; do not bypass checks. After merge,
+record completion and repeat from a clean feature worktree.
+
+Completion means the scoped language features have executable conformance on
+every applicable backend, those proofs run in normal CI, historical-machine
+semantics are explicit and tested, and the status documents agree with the
+code. A green example is not full language completion. The separate ALGOL
+campaign retains ownership of ALGOL semantics. The platform vision's broader
+tooling, transpilation, GC, and performance aspirations need their own audited
+acceptance inventory (VM-029), rather than an implicit claim of completion.
+
+### 2026-09-05 prioritization
+
+The initial audit selected a directly observed CI gap: `lang-aot/BUILD` runs only the BASIC random differential
+tests from `lang_matrix`, so the new non-ALGOL conformance rows are not protected.
+The full matrix remains excluded for separately owned ALGOL Linux native-AOT
+array failures. VM-024 will run every non-ALGOL `PROGRAMS` row and its declared
+backends through the existing strict runner, preserving the full matrix and its
+diagnostic single-cell interface. Missing tools remain explicit skips; compiler,
+linker, runtime, and result failures remain failures. Report executed and skipped
+cells and reject an empty selection. Validate on the local host and all PR CI
+hosts before enabling auto-merge. Promote any discovered runtime failure ahead
+of further coverage or semantic work.
+
+Executing that selection exposed VM-030 on the very first Windows native cell.
+PR #14265 repairs it; 62 library tests and all-target Clippy pass. Both LLVM
+`lld-link` and Microsoft `link.exe` run the Windows smoke suite successfully
+(eight reported tests, six exercised tests and two explicit GC early returns).
+The original failing LANG cell `0:NativeAot` passes with the single-cell sentinel.
+Current-head CI remains the merge gate. The subsequent matrix run reproduced
+VM-033 (Windows text-output newlines), which now precedes coverage work. After
+that repair, missing Windows runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
+otherwise this exact regression can recur despite a green Windows job.
 
 ## Ranked backlog
 
@@ -43,10 +84,49 @@ one fresh worktree and one PR; remove the worktree after merge.
 | — | VM-022 | done ([#13762](https://github.com/adhithyan15/coding-adventures/pull/13762)) | Repair the TypeScript Dartmouth BASIC parser `BUILD` so it runs that package's tests instead of ending in the generic parser package. | `BUILD` executes the Dartmouth parser suite itself and includes a mixed numeric/string `DATA` regression. |
 | — | VM-023 | done ([#13773](https://github.com/adhithyan15/coding-adventures/pull/13773)) | Audit and repair the same stateful-directory build defect across non-ALGOL TypeScript parser and lexer frontends. | Every affected package's normal and Windows build scripts run that package's own tests, with an automated guard against ending in a dependency directory. |
 | — | VM-012 | done ([#13785](https://github.com/adhithyan15/coding-adventures/pull/13785)) | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
-| 1 | VM-018 | in review ([#13802](https://github.com/adhithyan15/coding-adventures/pull/13802)) | Define and implement portable Dartmouth BASIC `RND` semantics. | The accepted seed/repeatability contract is documented and executed consistently across all standard backends. |
-| 2 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
+| — | VM-018 | done ([#13802](https://github.com/adhithyan15/coding-adventures/pull/13802)) | Define and implement portable Dartmouth BASIC `RND` semantics. | Merged as `8ceb8efc60`; the matrix includes negative reseeding, positive advancement, zero repeat, and shared `DEF FN` state on seven backends. |
+| 0 | VM-030 | in review ([#14265](https://github.com/adhithyan15/coding-adventures/pull/14265)); discovered by VM-024 | Repair Windows native-AOT CRT linking. | Twig `42` and arithmetic execute through the Windows smoke suite using the dynamic CRT without duplicate `__vcrt_InitializeCriticalSectionEx`; validate both available Microsoft/LLVM linkers and preserve normal CRT startup. |
+| 0a | VM-033 | queued; reproduced after VM-030 | Define portable text-output comparison in the LANG matrix. | Windows LLVM BASIC cell `352:Llvm` prints correct values with CRLF but the LF expectation fails; normalize only the accepted host text-newline difference, preserve meaningful output bytes, and run discriminating multi-line cases on available backends. |
+| 0b | VM-032 | queued | Protect LANG native Windows execution in PR CI. | An affected `twig-aot`/LANG dependency change selects an actual Windows executable smoke run, with its toolchain present; assert real execution rather than a green Clippy-only job. Preserve platform-plan gating and keep the known GC early returns explicit. |
+| 1 | VM-024 | queued behind VM-030 | Protect the non-ALGOL language matrix in normal CI. | Every non-ALGOL `PROGRAMS` row executes on each available declared backend; no empty selection or silent failure-to-skip conversion; full ALGOL diagnostics remain available. |
+| 2 | VM-025 | queued; coordinate with ALGOL owner | Reproduce the full matrix's current Linux failures and restore full CI coverage after their repair. | Record exact failing cells and owning PRs; remove the full-matrix exclusion only after the complete target runs green on supported CI hosts. |
+| 3 | VM-026 | queued | Reconcile stale Twig, frontend-count, and completed-work claims in LANG-FULL and LANG-PLATFORM status documents. | Every remaining gap links a current source/test boundary; landed VM-010, VM-017, VM-018, VM-020, and VM-021 work is no longer described as missing. |
+| 4 | VM-027 | queued | Audit feature-by-backend coverage for all ten wired frontends, including dedicated McCarthy and Macsyma suites. | Inventory implemented features, declared/refused backend cells, executable proofs, and CI commands; split every uncovered implemented feature into a bounded parity item. |
+| 5 | VM-013 | design required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `out`, `adc`, `sbb`, rotations, carry, parity). | Document machine state and I/O contracts, then split into PR-sized operations with both portable and real 8008-simulator proofs; resolve only essential language-design questions with the user. |
+| 6 | VM-028 | queued | Audit Nib's remaining Intel-4004 arithmetic and control-flow parity beyond BCD storage. | Compare implemented operations against the 4004 backend and simulator; file bounded missing-operation or refusal tests and close them with executed proofs. |
+| 7 | VM-029 | queued | Audit the broader platform vision and native-runtime roadmaps into explicit completion milestones. | Separate landed capabilities from GC, tooling, IR-bridge/transpilation, and measured-performance work; give every retained milestone a testable acceptance criterion and owner. |
+| 7a | VM-031 | queued under VM-029 | Reconcile and complete native precise-GC frame-walk proofs. | Windows smoke has two explicit early-return differentials for the Rust/Twig frame boundary; inventory supported-host GC gaps, track each refusal, and execute live-byte reclamation proofs before calling native GC complete. |
 
 ## Discovery log
+
+- **VM-D023 — confirmed 2026-09-05:** with VM-030 applied, the proposed
+  non-ALGOL matrix ran for 308 seconds before failing on LLVM Dartmouth BASIC
+  multi-line real output. Expected `3.14\n.25\n-2.5`, observed
+  `3.14\r\n.25\r\n-2.5`. A fresh single-cell process with
+  `LANG_MATRIX_ONLY_CELL=352:Llvm` reproduces the mismatch in 0.35 seconds.
+  This is a host text-output comparison failure, independent of CRT symbol
+  linking. Promote VM-033 ahead of coverage work; retain the exact content and
+  control-character contract rather than broadly trimming away discrepancies.
+
+- **VM-D022 — confirmed 2026-09-05:** `.github/workflows/ci.yml` selects a
+  Windows job when `needs_rust` is true, but `Build and test affected packages`
+  on Windows additionally requires Swift or Elixir. Its dedicated Windows-only
+  Rust step is Clippy only and does not select the portable `twig-aot` crate.
+  Therefore a green Windows job for a Rust-only CRT repair does not execute
+  `windows_x86_64_smoke`. Promote VM-032 as the first coverage follow-up. Local
+  runs with both real linkers provide VM-030's Windows runtime evidence while
+  that gap is repaired separately.
+
+- **VM-D021 — confirmed 2026-09-05:** executing the proposed non-ALGOL
+  matrix on Windows failed on the very first native Twig `42` cell with
+  duplicate `__vcrt_InitializeCriticalSectionEx`, defined by both
+  `libvcruntime.lib` and `vcruntime.lib`. The static library was added for an
+  earlier custom `/ENTRY:main` path; that custom entry was removed by
+  `bc2cb05594`, but the static library and its old explanation remained.
+  Promote VM-030 ahead of VM-024. Remove the obsolete static CRT selection,
+  preserve the compiler's normal startup, and run actual Windows executables
+  before enabling additional matrix coverage. VM-024's draft patch is held
+  outside the checkout until this prerequisite lands.
 
 - **VM-D001 — confirmed 2026-08-27:** JVM scalar concretization narrowed
   COBOL's explicit `i64` constant `10^12` to `i32`, so nested fixed-point
