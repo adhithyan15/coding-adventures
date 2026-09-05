@@ -1,6 +1,6 @@
 # OCAML04 — Process-free canonical build substrate
 
-Status: in progress
+Status: complete in PR #13366
 
 ## Purpose
 

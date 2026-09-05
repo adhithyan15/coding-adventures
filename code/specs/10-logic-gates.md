@@ -313,6 +313,7 @@ def nand_xor(a: int, b: int) -> int: ...
 # Multi-input variants
 def AND_N(*inputs: int) -> int: ...  # AND with N inputs
 def OR_N(*inputs: int) -> int: ...   # OR with N inputs
+def XOR_N(*inputs: int) -> int: ...  # XOR parity across N inputs
 
 # === Sequential Logic ===
 
@@ -372,6 +373,12 @@ Combinational circuits:
 
 Inputs outside {0, 1} should raise a ValueError with a clear message.
 Tri-state buffer returns `None` for high-impedance state.
+
+Portable implementations expose an explicit left/right shift direction rather
+than selecting direction through hidden configuration. Counter state is a
+structured value containing both the visible bit vector and the complete
+flip-flop state needed by the next rising edge. Bit vectors and select vectors
+are least-significant-bit first.
 
 ## Test Strategy
 
