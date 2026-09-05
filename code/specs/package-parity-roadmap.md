@@ -12933,11 +12933,12 @@ HMAC, HKDF, and PBKDF2 consumer. This package-only pure-math prerequisite adds
 no filesystem, process, network, environment, credential, or native authority.
 
 Before publication, the branch rebased conflict-free onto exact `origin/main`
-`5f9c9ae31d4cd4f411013c3b49b2109432b1b0f7`. The intervening SPICE Rust ISC
+`58dec49a6d92b4df1b6a11e83439b93066cc5595`. The intervening SPICE Rust ISC
 and NC model-card repairs, Hindi coming-forms curriculum tranche, SwiftUI
-one-of slot states, and lang-aot Cargo artifact-path repair change no package
-identity, established lane, selected path, or collision bucket, so all
-inventory counts above remain reporter-exact.
+one-of slot states, lang-aot Cargo artifact-path repair, Rust HTML parser fix,
+and VisiCalc shared workbook design change no package identity, established
+lane, selected path, or collision bucket, so all inventory counts above remain
+reporter-exact.
 
 The parallel security and performance review found no authority, secret
 retention, correctness, or bounded-residency blocker. It did measure
