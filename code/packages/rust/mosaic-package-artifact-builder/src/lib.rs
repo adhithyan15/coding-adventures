@@ -4826,6 +4826,35 @@ version = "1"
     }
 
     #[test]
+    fn swiftui_package_build_activates_one_of_style_state() {
+        let pkg = make_package("mosaic-pkg-button", &["Button"]);
+        write_component_sources(
+            pkg.path(),
+            "Button",
+            "component Button { slot variant : one-of primary danger ; }",
+            "layout Button { HostButton [ button ] ( label: \"Delete\" ) }",
+            "style Button { part button { state danger { background: #dc3545 ; } } }",
+        );
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::SwiftUI,
+            emit_project: false,
+            theme: None,
+        })
+        .expect("SwiftUI package should build");
+
+        let swift = fs::read_to_string(out.path().join("swiftui/Button.swift")).unwrap();
+        assert!(
+            swift.contains("variant == \"danger\""),
+            "generated Swift:\n{swift}"
+        );
+        assert!(swift.contains("Color(red: 0.863, green: 0.208, blue: 0.271)"));
+        assert!(swift.contains("let variant: String"));
+    }
+
+    #[test]
     fn dependency_style_state_preserves_its_dependency_slot_owner() {
         let workspace = TempDir::new().unwrap();
         let child = workspace.path().join("mosaic-pkg-accent");
