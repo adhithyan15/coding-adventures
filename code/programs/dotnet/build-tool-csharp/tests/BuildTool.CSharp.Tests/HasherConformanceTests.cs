@@ -545,14 +545,24 @@ public sealed class HasherConformanceTests
             "code/packages/csharp/demo",
             "declared_sources",
             Hasher.LanguageSourceInputRegistryDigest,
-            ["src/[^].cs", "src/[]].cs"],
             [
+                "src/[!a].cs",
+                "src/[-a].cs",
+                "src/[a-].cs",
+                "src/[a-c].cs",
+                "src/[^].cs",
+                "src/[]].cs",
+            ],
+            [
+                new SourceCollectionCandidate("src/-.cs", "file", false, [0x60]),
                 new SourceCollectionCandidate("src/^.cs", "file", false, [0x61]),
                 new SourceCollectionCandidate("src/].cs", "file", false, [0x62]),
                 new SourceCollectionCandidate("src/a.cs", "file", false, [0x63]),
+                new SourceCollectionCandidate("src/b.cs", "file", false, [0x64]),
+                new SourceCollectionCandidate("src/c.cs", "file", false, [0x65]),
             ]);
         Assert.Equal(
-            ["src/].cs", "src/^.cs"],
+            ["src/-.cs", "src/].cs", "src/^.cs", "src/a.cs", "src/b.cs", "src/c.cs"],
             Hasher.SelectSourceCandidates(request).Select(file => file.Path));
 
         Assert.Equal(

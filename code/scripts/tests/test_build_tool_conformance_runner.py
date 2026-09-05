@@ -110,6 +110,24 @@ class StrictJsonTests(unittest.TestCase):
         self.assertIsNone(runner.portable_glob_error("src/*.*"))
         self.assertIsNotNone(runner.portable_glob_error("src/foo."))
 
+    def test_portable_glob_character_classes_match_neutral_semantics(self) -> None:
+        cases = (
+            ("src/[!a].cs", "src/b.cs", True),
+            ("src/[!a].cs", "src/a.cs", False),
+            ("src/[]].cs", "src/].cs", True),
+            ("src/[-a].cs", "src/-.cs", True),
+            ("src/[a-].cs", "src/-.cs", True),
+            ("src/[a-c].cs", "src/b.cs", True),
+            ("src/[.cs", "src/[.cs", True),
+            ("src/[^].cs", "src/^.cs", True),
+        )
+        for pattern, path, expected in cases:
+            with self.subTest(pattern=pattern, path=path):
+                self.assertEqual(
+                    expected,
+                    runner._portable_glob_matches(pattern, path),
+                )
+
     def test_schema_validation_never_retrieves_external_references(self) -> None:
         for keyword in ("$ref", "$dynamicRef"):
             schema = {
