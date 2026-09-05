@@ -12877,6 +12877,25 @@ changed no package identity or selected path. The inventory counts remain
 unchanged and collision-free, and all seven live open PRs have zero exact
 overlap with the seven changed paths.
 
+The implementation keeps the legacy `GetFileInformationByHandle` result and
+also queries `GetFileInformationByHandleEx(FileIdInfo)` from the same retained
+root. A pure exact-width helper admits those two native values and no low-DWORD
+alias. Tests first failed on the missing helper, then the complete execution,
+authority, and backend family passed 74 tests with 13 expected platform skips
+under both Python 3.10 and 3.13. The wider conformance family independently
+passes 224 tests with 23 expected skips under each interpreter; the execution
+module reaches 82% branch-aware coverage.
+
+Both process-free contract validators, all 78 semantic-runner tests, the full
+Go build-tool suite, vet, trimpath build, real 5,140-package no-change plan,
+package-parity, capability, OCaml-lock, formatting, lint-baseline, compile,
+Bandit, state-DAG, collision, diff, and secret gates are acceptable. Live SDK
+and handle probes confirm the exact 24-byte ABI, both interpreter projections,
+same-low-DWORD rejection, and no handle growth across 250 captures. Independent
+correctness, security, and bookkeeping reviews found no blocker and no added
+process, filesystem, network, environment, credential, dependency, or policy
+authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
