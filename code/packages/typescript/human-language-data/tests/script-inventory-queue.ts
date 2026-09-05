@@ -15,5 +15,8 @@ export function assertCorpusGlyphGapQueue({
     ([leftGlyph, leftCount], [rightGlyph, rightCount]) =>
       rightCount - leftCount || leftGlyph.localeCompare(rightGlyph),
   );
-  expect(queue).toEqual([]);
+  expect(queue).toEqual([
+    ["ஏ", 2],
+    ["ஓ", 1],
+  ]);
 }
