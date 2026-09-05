@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.1
+
+- Replaced the boxed, repeatedly rotated 64-word compression schedule with a
+  reusable 16-word unboxed rolling schedule.
+- Process complete caller blocks directly and copy only a bounded bridge block
+  plus the terminal sub-block remainder during incremental updates.
+- Added an optimized RTS-statistics allocation gate for the million-byte FIPS
+  vector in one-chunk and 8 KiB streaming modes, each capped at 128 MiB.
+
 ## 0.2.0
 
 - Added an opaque immutable incremental SHA-256 context over strict

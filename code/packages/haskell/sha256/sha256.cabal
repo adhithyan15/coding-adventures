@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          sha256
-version:       0.2.0
+version:       0.2.1
 synopsis:      SHA-256 cryptographic hash function (FIPS 180-4) implemented from scratch
 description:
     A pure SHA-256 implementation with compatible list-based one-shot helpers.
@@ -18,6 +18,7 @@ library
     exposed-modules:  Sha256
     other-modules:    Sha256.Internal
     build-depends:    base >=4.14 && <5
+                    , array >=0.5 && <0.6
                     , bytestring >=0.10 && <0.13
     hs-source-dirs:   src
                       internal
@@ -34,4 +35,14 @@ test-suite spec
                     , sha256
                     , hspec == 2.*
                     , bytestring >=0.10 && <0.13
+    default-language: Haskell2010
+
+test-suite allocation-budget
+    type:             exitcode-stdio-1.0
+    main-is:          AllocationBudget.hs
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , sha256
+                    , bytestring >=0.10 && <0.13
+    ghc-options:      -rtsopts -with-rtsopts=-T
     default-language: Haskell2010

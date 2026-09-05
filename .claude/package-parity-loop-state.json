@@ -12,21 +12,21 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 14339,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/14339",
-    "branch": "codex/haskell-sha256-incremental-api",
-    "item_id": "haskell-sha256-incremental-streaming-api",
-    "opened_at": "2026-09-05T16:48:07Z",
-    "opened_revision": "05281a680f26c26043a46295375f103c6ab93cb1"
+    "number": 14352,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/14352",
+    "branch": "codex/haskell-sha256-performance-hardening",
+    "item_id": "haskell-sha256-streaming-performance-hardening",
+    "opened_at": "2026-09-05T17:49:37Z",
+    "opened_revision": "ac4ff2862a78739dc229a3477630f013145fccca"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-05T16:48:12Z",
-    "pr_number": 14339,
+    "observed_at": "2026-09-05T17:49:37Z",
+    "pr_number": 14352,
     "status": "pending",
-    "notes": "PR #14339 is the sole active parity PR. GitHub reports the ready-for-review head mergeable with four initial checks pending and mergeStateStatus BLOCKED. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable and no conflict remains."
+    "notes": "PR #14352 is the sole active parity PR. GitHub reports the ready-for-review head mergeable with CI and CodeQL detection checks queued or in progress and mergeStateStatus BLOCKED only while checks run. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable and no conflict remains."
   },
   "last_inventory": {
-    "revision": "58dec49a6d92b4df1b6a11e83439b93066cc5595",
+    "revision": "827332dd63690c870599e193a973f4c0b19dc278",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1413,
@@ -1063,10 +1063,19 @@
       "notes": "Discovered by the post-#13544 source-hashing audit. Elixir recursively hashes without the exact generated-component registry and lacks portable path framing and OCaml source recognition. Repair those bounded collector semantics, consume the complete checked language source-input registry in production, and prove exact projection equality with no undeclared selector."
     },
     {
+      "id": "build-tool-perl-blib-generated-directory-registry-repair",
+      "title": "Resolve Perl blib generated-directory registry authority",
+      "status": "pending",
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the parallel Perl source-hashing readiness audit after PR #14339. Production Perl correctly prunes the generated blib tree, but the canonical generated-directory registry omits blib and exact projection rules prohibit an undeclared engine-only component. Removing the prune would hash generated .pm files. Resolve the shared registry, fixture, digest, and adopted projection authority or record a narrow reviewed exception before Perl source hashing claims exact registry parity."
+    },
+    {
       "id": "build-tool-perl-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-perl-blib-generated-directory-registry-repair"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete checked language source-input registry and normalized framing contract in one engine-scoped tranche, proving exact production lookup equality."
@@ -1074,7 +1083,7 @@
     {
       "id": "haskell-sha256-incremental-streaming-api",
       "title": "Add incremental streaming to the Haskell SHA-256 package",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/haskell-sha256-incremental-api",
       "pr_number": 14339,
@@ -1090,16 +1099,33 @@
       "validation_revision": "654a41806ab78d2fd896885100829494b24d6b3b",
       "validation_notes": "GHC 9.4.8 and Cabal 3.16.1 pass 25 Hspec examples under -Wall -Werror, including FIPS empty/abc/multi-block/million-byte vectors, binary bytes, padding and 8 KiB boundaries, every selected split, byte-at-a-time updates, empty updates, repeated finalization, update after finalization, immutable branches, exact digest shapes, and checked FIPS length-domain boundaries. HPC reports 96% top-level definitions, 84% alternatives, and 98% expressions overall; the private counter-invariant module is 100% covered. Cabal check is clean, sdist includes source/internal/tests/docs, dependencies are current against the installed Hackage index, and both literal generic and Windows BUILD fronts pass. The one-line Windows front exits zero only when Cabal is genuinely absent and propagates a real Cabal failure. HMAC 5, HKDF 4, and PBKDF2 4 downstream suites pass. The real Go build tool evaluates 45 Starlark files, discovers 5,140 packages, selects exactly six affected Haskell packages, and builds all six; its complete tests, vet, and trimpath build pass. Package-parity, capability-taxonomy, Haskell capability, and OCaml lock suites pass 66 tests with two expected skips and 821 subtests. The exact-main reporter remains collision-clean at the recorded inventory counts, the 710-owner/1,163-edge state graph is unique, complete, acyclic, and status-valid, and diff, line-wrap, credential, authority, license, and open-PR overlap checks are clean.",
       "review_notes": "Three independent read-only reviews found no cryptographic, API, authority, secret-retention, packaging, or documentation blocker. They identified and resolved a cross-line Windows BUILD executor bug and silent out-of-domain Word64 length wrap. The performance audit measured bounded 606 KB maximum residency but 932,085,064 bytes allocated for the million-byte vector; that non-blocking repository-scale concern is now the explicit pending haskell-sha256-streaming-performance-hardening owner and a hard prerequisite of Haskell portable source hashing.",
+      "merged_head_revision": "629dbdb5d0b9b33e028ef16e77ae1b557b2a9208",
+      "merged_at": "2026-09-05T17:11:55Z",
+      "merge_commit": "29ab3c65ff705d1f78367c0c1468c9ea7e29dff2",
+      "merge_notes": "Every required final-head check was acceptable and GitHub reported no merge conflict before guarded squash auto-merge was enabled at 2026-09-05T16:52:30Z with an exact head lease. GitHub merged the PR without a plain manual merge command. One duplicate push-triggered workflow remained in progress after the merge and was not a required merge gate.",
       "selection_notes": "Selected after PR #14329 completed 42 acceptable final-head checks and merged through guarded squash auto-merge as 327029a998efbb7e6ac964654838812692259d3b. The exact-main collision-checked inventory remains identity-neutral at 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel audits ranked Haskell portable source hashing highest at three direct and four transitive descendants, then found this missing local SHA-256 streaming API as its smallest coherent prerequisite. The package-only tranche preserves one-shot consumers and adds no filesystem, process, network, environment, credential, or native authority. Eight live open PRs have zero exact overlap with the planned package, HF03 spec, state, roadmap, and changelog paths. Reconciliation and selection leave the 709-owner/1,161-edge graph unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 206 merged, 502 pending, and exactly this owner in progress.",
       "notes": "The Haskell build tool cannot adopt the portable source-hashing contract safely while its local SHA-256 package only materializes complete byte lists. Add an opaque initialized context, exact chunk update, non-destructive final digest and lowercase hex operations, strict 64-byte block processing, and a copied sub-block remainder while preserving the existing one-shot wrappers. Prove FIPS vectors, empty and binary bytes, arbitrary fragmentation, SHA-256 padding boundaries, 8 KiB file-chunk boundaries, repeatable finalization, and continued downstream HMAC/HKDF/PBKDF2 compatibility without adding filesystem, process, network, environment, credential, or native authority."
     },
     {
       "id": "haskell-sha256-streaming-performance-hardening",
       "title": "Bound Haskell SHA-256 streaming allocation amplification",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["haskell-sha256-incremental-streaming-api"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/haskell-sha256-performance-hardening",
+      "pr_number": 14352,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14352",
+      "opened_at": "2026-09-05T17:49:37Z",
+      "opened_revision": "ac4ff2862a78739dc229a3477630f013145fccca",
+      "selected_at": "2026-09-05T17:20:29Z",
+      "selection_revision": "29ab3c65ff705d1f78367c0c1468c9ea7e29dff2",
+      "selection_notes": "Selected from fresh exact-main worktree C:/Users/adhit/worktrees/ca-parity-haskell-sha256-performance-20260905-1712 after PR #14339 merged through guarded auto-merge and the collision-checked inventory remained unchanged at 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Parallel Rust, Perl, and Elixir audits added three previously unowned prerequisites/follow-ups and independently validated the resulting graph. This bounded pure-Haskell optimization is the smallest ready dependency-shaped repair, closes a measured 932 MB allocation amplification before repository-scale source hashing, and gates five unfinished descendants without changing public API or adding authority. Selection leaves 713 owners and 1,169 edges at 207 merged, 505 pending, and exactly this owner in progress.",
+      "implementation_revision": "cc01856b704fd3487e4da09bc32e8f26e164238f",
+      "validation_revision": "3b68c47ce3d71ef1b34405b8c0d176ba414acbef",
+      "rebase_revision": "827332dd63690c870599e193a973f4c0b19dc278",
+      "rebase_notes": "Rebased conflict-free before final validation after exact origin/main advanced through unrelated Rust SPICE model-card, Hindi curriculum, language-VM audit, Qt/Mosaic slot-state, HTML parser, and VisiCalc/Mosaic rendering work. The intervening paths do not overlap this tranche and add no package root, BUILD front, recognized manifest, identity, collision, or language-lane change. The refreshed reporter-exact inventory remains 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets.",
+      "validation_notes": "The red allocation gate reproduced 928,951,488 allocated bytes for the original million-byte one-chunk path. The 16-slot unboxed rolling schedule and bounded bridge/remainder path reduce final optimized allocations to 57,521,408 bytes for one chunk and 57,557,872 bytes for 8 KiB streaming; both remain stable across repeated fresh processes and below the 128 MiB ceiling while verifying the FIPS digest. GHC 9.4.8 and Cabal 3.16.1 pass all 25 functional examples under -Wall -Werror and both allocation scenarios through the generic and Windows BUILD fronts pinned to -O2. Functional-only HPC reports 96% top-level definitions, 90% alternatives, and 99% expressions. Cabal check is clean; sdist includes the source, allocation test, README, and changelog; dependencies are current against the installed index; and public-library Haddock coverage is 100%. HMAC 5, HKDF 4, and PBKDF2 4 downstream suites pass with their transitive SHA-256 tests. The complete Go build-tool tests, vet, trimpath build, 45-file Starlark evaluation, 5,140-package discovery, and exact six-package affected plan pass. Package-parity, capability-taxonomy, Haskell capability, and OCaml lock suites pass 68 tests with two expected Windows symlink skips. The 713-owner/1,169-edge state graph remains unique, complete, acyclic, status-valid, and free of merged-to-unmerged edges; collision, diff, scope, dependency, license, authority, credential, and independent review gates are clean.",
+      "review_notes": "Three parallel read-only reviews independently verified rolling-schedule indexing, strict state forcing, direct ByteString bounds, copied bridge/remainder ownership, checked FIPS length handling, unchanged public exports, dependency/license compatibility, lifecycle integrity, and open-PR non-overlap. The allocation review found that an unpinned -O0 caller would fail the budget at 5,413,027,320 bytes; both canonical BUILD fronts now pin Cabal optimization level 2 and pass the real gate. The exact 128 MiB boundary is inclusive by specification: allocations greater than the ceiling fail.",
+      "publication_notes": "Opened ready-for-review PR #14352 from clean validated head ac4ff2862a78739dc229a3477630f013145fccca after a normal first push from exact origin/main 827332dd63690c870599e193a973f4c0b19dc278. Immediately before publication, no active parity PR or overlapping Haskell SHA-256 PR existed; the exact diff, allocation, package/downstream, BUILD, coverage, Go build-tool, inventory, graph, dependency, license, authority, credential, and three independent review gates were acceptable. GitHub reports the PR non-draft, mergeable, and blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required final-head check is terminal and acceptable and no conflict exists.",
       "notes": "Discovered by the final parallel performance audit of the incremental API. The optimized million-byte vector remains bounded at 606 KB maximum residency and completes in 0.1185 seconds, but allocates 932,085,064 bytes because each 64-byte block is unpacked into lists and the message schedule repeatedly indexes, drops, and appends. The update path can also copy an entire caller chunk when joining a retained remainder, although the planned build-tool consumer will use bounded 8 KiB chunks. Optimize or establish an explicit acceptable allocation budget before the Haskell build-tool source-hashing owner lands; retain the opaque immutable API and all current vectors."
     },
     {
@@ -1187,10 +1213,19 @@
       "notes": "Discovered by the post-#13544 source-hashing audit. After Ruby adopts the neutral generated-directory registry, add OCaml source recognition and normalized unambiguous path framing as a separate bounded follow-up."
     },
     {
+      "id": "rust-starlark-executable-pipeline-foundation",
+      "title": "Build the executable Rust Starlark source pipeline",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the parallel Rust Starlark safety-readiness audit after PR #14339. The Rust build-tool evaluator is dormant, is not declared in the live module graph, and cannot yet execute canonical BUILD source through the repository-local lexer, parser, compiler, and VM. Add a fallible source pipeline, grammar-to-compiler AST bridge, required Starlark values and language features, and a non-tracing semantic execution hook suitable for deterministic metering. Keep the pipeline inert and outside production build discovery until the separate repository-containment and safety owner lands."
+    },
+    {
       "id": "build-tool-rust-starlark-evaluator-safety-conformance",
       "title": "Make Rust Starlark evaluation repository-contained and deterministically bounded",
       "status": "pending",
-      "depends_on": ["build-tool-starlark-metering-corpus"],
+      "depends_on": ["build-tool-starlark-metering-corpus", "rust-starlark-executable-pipeline-foundation"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13608 readiness and security audit before selecting Rust declared-source metadata plumbing. The dormant Rust build-tool evaluator constructs the repository-local interpreter with FsResolver, whose raw root-plus-label concatenation permits traversal-like loads and leaks absolute paths, while the interpreter meters only recursion and cannot satisfy the neutral step, aggregate, range/value, load-depth, module-count, cycle, and output limits. Add a repository-contained immutable resolver, deterministic metering and redacted fail-closed diagnostics, consuming host-load-denied and every Starlark metering fixture before any production Rust build-tool path activates this evaluator. This is the early Rust child of the remaining-engines metering umbrella, split because metadata plumbing must not activate unsafe host reads or unbounded evaluation while the broader umbrella remains blocked on the Go oracle."
@@ -1282,6 +1317,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Perl concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-perl-hashing-cache-front-door-integration",
+      "title": "Wire Perl hashing and cache through the build-tool front door",
+      "status": "pending",
+      "depends_on": ["build-tool-perl-portable-source-hashing-conformance", "build-tool-perl-portable-dependency-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the parallel Perl hashing readiness audit after PR #14339. BuildTool.pm imports Hasher and Cache, but run() always routes non-forced decisions through GitDiff, never calls either imported component, and exposes no hash-mode CLI path. After portable source and dependency framing land, wire their combined digest and cache semantics through the real orchestrator and command-line front door with end-to-end evidence rather than treating isolated helper tests as production adoption."
     },
     {
       "id": "build-tool-haskell-portable-dependency-hashing-conformance",

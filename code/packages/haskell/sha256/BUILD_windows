@@ -1,1 +1,1 @@
-powershell -NoProfile -Command "if (Get-Command cabal -ErrorAction SilentlyContinue) { & cabal test all; exit $LASTEXITCODE } else { Write-Output 'cabal not found -- skipping'; exit 0 }"
+powershell -NoProfile -Command "if (Get-Command cabal -ErrorAction SilentlyContinue) { & cabal test all --enable-optimization=2; exit $LASTEXITCODE } else { Write-Output 'cabal not found -- skipping'; exit 0 }"
