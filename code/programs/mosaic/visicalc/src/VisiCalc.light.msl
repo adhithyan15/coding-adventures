@@ -1,73 +1,27 @@
 style VisiCalc {
-  part workbook { background: #f6f8f5; color: #1c3029; min-height: 100vh; }
-  part toolbar { padding: 24px; gap: 20px; align-items: center; }
-  part title { font-size: 28px; font-weight: 700; }
-  part subtitle { font-size: 14px; color: #66796e; flex: 1; }
-  part new-button { padding: 10px; border-radius: 8px; background: #245c46; color: #ffffff; }
-  part formula-bar { padding: 12px; gap: 12px; background: #ffffff; align-items: center; }
-  part address-label { font-family: monospace; min-width: 64px; text-align: center; font-size: 14px; }
-  part formula-symbol { font-family: serif; font-size: 20px; color: #66796e; }
-  part formula-field { flex: 1; padding: 10px; font-family: monospace; font-size: 14px; background: #f6f8f5; color: #1c3029; }
-
-  part sheet {
-    font-family:     monospace ;
-    font-size:       12px ;
-    color:           #1f1f1f ;
-    background:      #ffffff ;
-    border-collapse: collapse ;
-    width:           100% ;
-  }
-
-  // Body cells. The `border-*` triplet draws the gridlines.
+  part workbook { background: #f4f3ed; color: #203d34; min-height: 100vh; padding: 24px; box-sizing: border-box; font-family: sans-serif; }
+  part toolbar { padding: 12px 0px 28px; gap: 24px; align-items: center; flex-wrap: wrap; }
+  part brand { gap: 4px; }
+  part eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #66746b; }
+  part title { font-family: serif; font-size: 38px; font-weight: 400; letter-spacing: 1px; }
+  part subtitle { font-size: 13px; color: #66746b; flex: 1; }
+  part new-button { padding: 12px 18px; border-radius: 8px; border: 1px solid #29684e; background: #29684e; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; }
+  part formula-bar { padding: 10px; gap: 12px; background: #fffef9; border: 1px solid #dce2d9; border-radius: 10px; align-items: center; }
+  part address-label { font-family: monospace; min-width: 52px; text-align: center; font-size: 14px; font-weight: 700; color: #29684e; }
+  part formula-symbol { font-family: serif; font-size: 22px; color: #66746b; }
+  part formula-field { flex: 1; min-width: 0px; padding: 10px; border: 1px solid #dce2d9; border-radius: 6px; font-family: monospace; font-size: 14px; background: #f4f3ed; color: #203d34; }
+  part sheet-toolbar { padding: 24px 2px 12px; gap: 16px; align-items: center; flex-wrap: wrap; }
+  part sheet-name { font-size: 13px; font-weight: 700; flex: 1; }
+  part sheet-hint { font-size: 12px; color: #66746b; }
+  part sheet-frame { overflow: auto; min-width: 0px; border: 1px solid #dce2d9; border-radius: 8px; background: #fffef9; }
+  part sheet { font-family: monospace; font-size: 13px; color: #203d34; background: #fffef9; border-collapse: collapse; width: 100%; }
   part cell {
-    border-width: 1px ;
-    border-style: solid ;
-    border-color: #c8c8c8 ;
-    padding:      2px ;
-    height:       22px ;
-
-    // Active-cell highlight. Excel-blue tuned for a light theme.
-    state selected {
-      background: #cce5ff ;
-      color:      #000000 ;
-      outline:    1px solid #007acc ;
-    }
-
-    // In-progress edit highlight. Light mint band so the editing
-    // affordance reads against #cce5ff (selected) without colliding.
-    state editing {
-      background: #ccf4d9 ;
-      outline:    1px solid #007acc ;
-    }
+    border: 1px solid #dce2d9; padding: 6px 10px; height: 32px;
+    min-width: 72px; box-sizing: border-box; text-align: right; justify-content: center;
+    state selected { background: #deeddd; color: #203d34; outline: 2px solid #29684e; outline-offset: 0px; }
+    state editing { background: #f3ecc9; color: #203d34; outline: 2px solid #29684e; outline-offset: 0px; }
   }
-
-  // Column-header cells.
-  part header-cell {
-    background:  #f3f3f3 ;
-    color:       #555555 ;
-    font-weight: normal ;
-    text-align:  center ;
-    border-width: 1px ;
-    border-style: solid ;
-    border-color: #c8c8c8 ;
-    // Explicit header-cell height (see the dark stylesheet) so a backend that
-    // sizes the cell box from its style height doesn't collapse the header row.
-    height:      24px ;
-  }
-
-  part header-row {
-    height: 24px ;
-  }
-
-  // Body data rows: alternating zebra-stripe on light tones.
-  part data-row {
-    height: 22px ;
-
-    state even {
-      background: #ffffff ;
-    }
-    state odd {
-      background: #f7f7f7 ;
-    }
-  }
+  part header-cell { background: #f4f3ed; color: #66746b; font-weight: 600; text-align: center; border: 1px solid #dce2d9; height: 32px; min-width: 72px; line-height: 32px; box-sizing: border-box; }
+  part header-row { height: 32px; }
+  part data-row { height: 32px; }
 }

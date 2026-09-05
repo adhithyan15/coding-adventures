@@ -1,8 +1,11 @@
 layout VisiCalc {
   Column [workbook] {
     Row [toolbar] {
-      Text [title] (content: "VisiCalc", a11y-role: heading)
-      Text [subtitle] (content: "A little room for big ideas")
+      Column [brand] {
+        Text [eyebrow] (content: "THE WORKBOOK")
+        Text [title] (content: "VisiCalc", a11y-role: heading)
+      }
+      Text [subtitle] (content: "A little room for big ideas.")
       HostButton [new-button] (label: "New workbook", onClick: emit: onNewWorkbook)
     }
     Row [formula-bar] {
@@ -15,7 +18,12 @@ layout VisiCalc {
         onCommit: emit: onCommit, onCancel: emit: onCancel
       )
     }
-    pkg::mosaic-pkg-grid::Grid (
+    Row [sheet-toolbar] {
+      Text [sheet-name] (content: "Sheet 1")
+      Text [sheet-hint] (content: "Enter to apply · Esc to cancel")
+    }
+    Column [sheet-frame] {
+      pkg::mosaic-pkg-grid::Grid (
       viewport-rows: slot: viewport-rows,
       column-headers: slot: column-headers,
       column-widths: slot: column-widths,
@@ -28,6 +36,7 @@ layout VisiCalc {
       onFormulaChange: emit: onFormulaChange,
       onEditCommit: emit: onEditCommit,
       onEditCancel: emit: onEditCancel
-    )
+      )
+    }
   }
 }
