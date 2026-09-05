@@ -65,6 +65,14 @@ otherwise this exact regression can recur despite a green Windows job.
 
 ## VM-035 implementation contract (selected after #14325 merged)
 
+Local validation: the new isolated-target regression failed against the old
+helper with a nonexistent default archive, then passed after Cargo artifact
+discovery was implemented (three parent/parser tests; the ignored child is
+explicitly executed by its parent). The original Twig heap cell `2:Llvm`
+compiled and ran with its single-cell sentinel in both a fresh target directory
+containing spaces and the default directory. All-target lang-aot Clippy passed
+with warnings denied. Current-head hosted CI remains the merge gate.
+
 PR #14325 merged as `bf9043d695` after all applicable checks passed on
 `618579d847`. Reprioritization selects the reproduced archive lookup defect
 VM-035 before the larger VM-027 feature audit; VM-025 remains separately owned.

@@ -5,10 +5,10 @@
 //! by any integration test without emitting a spurious empty test binary.
 
 use std::path::PathBuf;
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 /// Build gc-core-capi's release staticlib and return the path to
-/// `libgc_core_capi.a` in the workspace target directory.
+/// the static archive reported by Cargo, including custom target directories.
 ///
 /// #118b-2b retired `twig-aot/runtime/twig_gc.c`; the garbage collector now lives
 /// in the `gc-core-capi` crate. The LLVM/WASM emit tests used to hand `twig_gc.c`
@@ -26,23 +26,69 @@ pub fn gc_core_capi_archive() -> PathBuf {
     let workspace_root = manifest.parent().expect("lang-aot has a parent dir");
 
     let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".into());
-    let status = Command::new(&cargo)
-        .args(["build", "--release", "-p", "gc-core-capi"])
+    let output = Command::new(&cargo)
+        .args([
+            "build",
+            "--release",
+            "-p",
+            "gc-core-capi",
+            "--message-format=json-render-diagnostics",
+        ])
         .current_dir(workspace_root)
-        .status()
+        // Cargo keeps readable diagnostics on stderr; stdout is the artifact protocol.
+        .stderr(Stdio::inherit())
+        .output()
         .expect("spawn cargo build for gc-core-capi staticlib");
-    assert!(status.success(), "gc-core-capi staticlib build failed");
+    assert!(
+        output.status.success(),
+        "gc-core-capi staticlib build failed: {}",
+        output.status
+    );
+    let messages = std::str::from_utf8(&output.stdout).expect("Cargo JSON must be UTF-8");
+    let archive = gc_staticlib_from_messages(messages).expect("locate Cargo's GC staticlib");
+    assert!(
+        archive.is_file(),
+        "Cargo-reported archive does not exist: {}",
+        archive.display()
+    );
+    archive
+}
 
-    // Staticlib naming is toolchain-specific: MSVC emits `gc_core_capi.lib`,
-    // every other toolchain emits `libgc_core_capi.a`. Return whichever exists.
-    let release = workspace_root.join("target").join("release");
-    let unix = release.join("libgc_core_capi.a");
-    let msvc = release.join("gc_core_capi.lib");
-    if msvc.exists() && !unix.exists() {
-        msvc
-    } else {
-        unix
+/// Select the staticlib from Cargo's artifact stream, never from a guessed path.
+/// A crate may also emit an rlib, DLL and DLL import library in the same record.
+/// Exact staticlib basenames distinguish those outputs on Unix and MSVC hosts.
+pub fn gc_staticlib_from_messages(messages: &str) -> Result<PathBuf, String> {
+    let mut archives = std::collections::BTreeSet::new();
+    for (index, line) in messages.lines().enumerate() {
+        let message: serde_json::Value = serde_json::from_str(line)
+            .map_err(|error| format!("invalid Cargo JSON on line {}: {error}", index + 1))?;
+        if message["reason"] != "compiler-artifact"
+            || message["target"]["name"] != "gc_core_capi"
+            || !message["target"]["crate_types"]
+                .as_array()
+                .is_some_and(|types| types.iter().any(|kind| kind == "staticlib"))
+        {
+            continue;
+        }
+        if let Some(filenames) = message["filenames"].as_array() {
+            for filename in filenames.iter().filter_map(|value| value.as_str()) {
+                let path = PathBuf::from(filename);
+                if matches!(
+                    path.file_name().and_then(|name| name.to_str()),
+                    Some("gc_core_capi.lib" | "libgc_core_capi.a")
+                ) {
+                    archives.insert(path);
+                }
+            }
+        }
     }
+    if archives.len() != 1 {
+        return Err(format!(
+            "expected one gc_core_capi staticlib from Cargo, found {}: {archives:?}",
+            archives.len()
+        ));
+    }
+    Ok(archives.into_iter().next().unwrap())
 }
 
 /// The `clang`/`cc` arguments that replace the retired `twig_gc.c` object: the
@@ -65,7 +111,17 @@ pub fn gc_link_args() -> Vec<String> {
         args.push("-ldl".into());
     }
     if cfg!(target_os = "windows") {
-        for lib in ["ucrt", "vcruntime", "msvcrt", "kernel32", "ws2_32", "userenv", "advapi32", "bcrypt", "ntdll"] {
+        for lib in [
+            "ucrt",
+            "vcruntime",
+            "msvcrt",
+            "kernel32",
+            "ws2_32",
+            "userenv",
+            "advapi32",
+            "bcrypt",
+            "ntdll",
+        ] {
             args.push(format!("-l{lib}"));
         }
     }

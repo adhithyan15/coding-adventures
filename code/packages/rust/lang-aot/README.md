@@ -1,5 +1,10 @@
 # lang-aot
 
+GC-linked integration tests use the static archive path reported by Cargo, so
+`CARGO_TARGET_DIR` and Cargo-configured artifact directories are respected.
+`cargo test -p lang-aot --test cargo_archive_path` checks artifact selection and
+builds the archive in an isolated temporary target directory containing spaces.
+
 Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, and Macsyma** to
 native executables through the shared LANG VM chain.

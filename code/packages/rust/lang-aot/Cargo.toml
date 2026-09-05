@@ -67,6 +67,8 @@ name = "lang-aot"
 path = "bin/lang_aot.rs"
 
 [dev-dependencies]
+# Decode Cargo artifact messages for the integration tests' GC archive lookup.
+serde_json = "1"
 tempfile = "3"
 intel4004-simulator = { path = "../intel4004-simulator" }
 # Executes the intel8080-backend e2e smoke test's emitted bytes to check
