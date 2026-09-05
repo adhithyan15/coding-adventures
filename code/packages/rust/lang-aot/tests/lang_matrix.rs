@@ -4979,6 +4979,36 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // VM-044: three loop-carried additions wrap 250 + 30 to 24, then the
+    // function returns that value across a call boundary for visible output.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn count() -> u8 { let n: u8 = 250; let i: u8 = 0; \
+              while i < 3 { n = n + 10; i = i + 1; } return n; } \
+              fn main() { out(1, count()); }",
+        expect: Expect::Stdout("24"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // The conditional break must leave the loop only after its third body.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { let n: u8 = 0; loop { n = n + 1; \
+              if n == 3 { break; } } out(1, n); }",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Inner break resumes the outer body; outer break resumes main. A single
+    // shared break label would skip one of these distinct output markers.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { loop { loop { out(1, 4); break; } \
+              out(1, 2); break; } out(1, 7); }",
+        expect: Expect::Stdout("4\n2\n7"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // FLOW-MATIC — unified-matrix baseline (VM-020). A file-qualified field is
     // initialised to zero, moved through the frontend's scalar-field path, and
     // rendered by WRITE-ITEM through the shared recursive integer printer plus

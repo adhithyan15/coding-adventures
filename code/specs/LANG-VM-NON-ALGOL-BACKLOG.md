@@ -80,6 +80,11 @@ log it and prioritize a bounded fix before promoting the affected cell.
 Update inventory counts, changelog and backlog evidence. Byte wrapping and
 calls must be observed at runtime, not merely validator acceptance.
 
+VM-044 local execution: rows 373, 374 and 375 passed on all seven standard
+backends, each in a fresh process with the ran-cell sentinel (21 executions,
+zero skips). No runtime fix was needed. The corpus now declares 12 Oct rows
+and 169 non-ALGOL programs / 1203 cells. Hosted CI remains the merge gate.
+
 ## VM-037 implementation contract (selected after #14349 merged)
 
 PR #14349 merged as `839e4191e8` after all applicable checks passed on
