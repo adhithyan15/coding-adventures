@@ -1,11 +1,12 @@
 # UI49 — Varying a mosstyle part by a slot value
 
 **Tracked by:** [#14037](https://github.com/adhithyan15/coding-adventures/issues/14037)
-**Status:** Specification (decision recorded, not yet implemented)
+**Status:** Specification complete; implementation continues in #14036
 **Layer:** UI / mosstyle language + all nine emitters
 **Depends on:** UI15 (mosstyle), UI27 §5 (structural states), UI41 (typed properties)
 **Unblocks:** #14036 (six toolkit components with inert `variant`/`size`), and
 through it #14017 and the component program (#14011)
+**Landed foundation:** `one-of` slots in #14210
 
 ---
 
@@ -113,6 +114,9 @@ the language.
 This is worth doing for its own sake. It also lets emitters lower to real
 native enums instead of stringly-typed values.
 
+The `one-of` syntax and compiler IR landed in #14210. The remaining UI49 work
+is the style-state activation and backend lowering tracked by #14036.
+
 ### 3.2 `.msl` state names may be a slot's enum values
 
 **No new mosstyle syntax at all:**
@@ -166,14 +170,31 @@ declared, and a warning where a variant name shadows a built-in state (§4.1).
 
 ## 4. Rules
 
-### 4.1 Collisions
+### 4.1 Collisions and ownership
 
 A component may not declare an enum value equal to a built-in state name.
 `error` and `selected` are already states, and a slot with a `selected` value
 would make `state selected` ambiguous. This is a hard compile error naming both
 the slot and the colliding built-in.
 
-### 4.2 Precedence
+Enum values are also unique across all `one-of` slots in one component. For
+example, `variant : one-of compact regular` and
+`size : one-of compact spacious` is a compile error naming both slots and the
+duplicate `compact` value. This keeps the stylesheet syntax flat while giving
+every enum state exactly one owning slot.
+
+### 4.2 Activation
+
+An enum state is active when its owning slot equals that state's name. Given
+`slot variant : one-of primary danger`, `state danger` means
+`variant == "danger"`; it does not require a `state-when-danger` property in
+the `.mll`. The compiler records the state-to-slot ownership for emitters.
+
+Built-in interaction and structural states keep their existing activation
+sources. They cannot be activated by a slot because §4.1 forbids an enum value
+from reusing their names.
+
+### 4.3 Precedence
 
 Most specific wins, and the order is fixed so it is predictable:
 
@@ -187,12 +208,12 @@ pressed. Multiple enum slots (`variant` **and** `size`) both apply, and they
 must not conflict on the same property — a `size` state setting `background` is
 legal but suspicious, and is worth a lint rather than an error.
 
-### 4.3 Theme composition
+### 4.4 Theme composition
 
 Unchanged. Variants live inside `.light.msl` / `.dark.msl` like everything else,
 so variant colors differ per theme without a new axis.
 
-### 4.4 What an unset slot does
+### 4.5 What an unset slot does
 
 An `one-of` slot with no value falls through to the base part properties. It is
 not an error — that is exactly the "unset" story a component must render.
@@ -233,16 +254,15 @@ its own pass once the mechanism is proven on one component.
 
 ---
 
-## 7. Open questions
+## 7. Decisions completed while specifying
 
-1. **Should `one-of` values be namespaced per slot?** With two enum slots on one
-   component, `state sm` and `state danger` are flat. Flat is simpler and reads
-   better; qualified (`state size:sm`) is unambiguous and survives a later
-   collision between two slots' value sets. §4.1 forbids collisions with
-   *built-ins* but not between two enum slots of the same component.
-2. **Do emitters lower `one-of` to a real native enum?** Attractive for
-   type-safety in Compose/SwiftUI/XAML, but it widens this from a styling change
-   to an interface-lowering change. Probably a later cycle.
+1. **Enum state names stay flat.** `state danger` is intentionally preferred to
+   `state variant:danger`. Collisions between slots are compile errors (§4.1),
+   which preserves a unique state-to-slot mapping without adding syntax.
+2. **UI49 does not require native enum types.** Hosts keep their existing
+   string representation; TypeScript may retain the union type introduced in
+   #14210. Native enums can be added later without changing the styling
+   contract or blocking the nine runtime lowerings.
 3. **Is `disabled` special?** Checked: **latent, not live.** Nine components
    declare a `disabled` slot — `Button`, `Checkbox`, `Input`, `Field`,
    `InputGroup`, `NumberInput`, `Radio`, `Select`, `Slider` — and **none** of

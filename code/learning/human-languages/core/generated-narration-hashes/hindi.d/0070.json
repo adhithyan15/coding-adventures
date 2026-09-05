@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 70,
-  "sourceHash": "fnv1a64:52ccf706ca3baa28",
+  "sourceHash": "fnv1a64:902c6f7c9f898bcf",
   "lessonIds": [
     "HI-C70-sakna",
     "HI-C70-chahna",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch70.txt",
   "json": "hindi/narration/ch70.json",
-  "textHash": "fnv1a64:8026b317a8c85dfb",
-  "jsonHash": "fnv1a64:43a4f6e6ffb1f327",
+  "textHash": "fnv1a64:7d58d4e989d7b508",
+  "jsonHash": "fnv1a64:eb75008c2acec453",
   "findings": []
 }
