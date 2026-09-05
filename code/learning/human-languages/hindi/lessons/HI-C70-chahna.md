@@ -8,9 +8,9 @@ spine_node: SPINE-SAY-WHAT-I-WANT
 sequence: 2690
 chapter: 70
 type: word
-headword: चाहना
-romanization: "chāhnā"
-gloss: to want — and the one verb in this chapter that takes a full infinitive rather than a bare stem
+headword: चाहना / चाहता
+romanization: "chāhnā / chāhtā"
+gloss: to want / want — infinitive / masculine singular
 concept_tag: VERB-WANT
 prerequisites: [HI-C70-sakna, HI-C68-lekin]
 sounds: [matra-aa, hindi-ha]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-C70-sakna, HI-C05-bolna, HI-C42-come]
 ---
 
-# चाहना (*chāhnā*) — to want
+# चाहना / चाहता (*chāhnā / chāhtā*) — to want / want
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01] -->
@@ -71,9 +71,9 @@ kinds of object; this lesson teaches only the verb.
 <!-- hl-activity: {"id":"HI-C70-chahna-r1","kind":"text","assesses":["HI-LEX-CHAHNA-01","HI-GRAMMAR-SAKNA-STEM-01"],"prompt":"Say that you can speak Hindi and then that you want to speak Hindi, and name the difference.","answer":"maiṁ hindī bol saktā hūṁ; maiṁ hindī bolnā chāhtā hūṁ — saknā takes the bare stem, chāhnā the full -nā","accepted":["मैं हिंदी बोल सकता हूँ मैं हिंदी बोलना चाहता हूँ"],"feedback":{"correct":"Stem for saknā, infinitive for chāhnā.","incorrect":"Listen for the -nā: chāhnā keeps it, saknā drops it."},"response_seconds":30} -->
 
 [PAUSE 1s]
-- [YOU SAY: *maiṁ hindī bolnā chāhtā hūṁ*]
-- [YOU SAY: the pair back to back — *bol saktā hūṁ* / *bolnā chāhtā hūṁ*]
-- [YOU SAY: *maiṁ ānā chāhtā hūṁ* against *maiṁ ā saktā hūṁ*]
+- [YOU SAY: **मैं हिंदी बोलना चाहता हूँ** (*maiṁ hindī bolnā chāhtā hūṁ*)]
+- [YOU SAY: the pair back to back — **बोल सकता हूँ** (*bol saktā hūṁ*) / **बोलना चाहता हूँ** (*bolnā chāhtā hūṁ*)]
+- [YOU SAY: **मैं आना चाहता हूँ** (*maiṁ ānā chāhtā hūṁ*) against **मैं आ सकता हूँ** (*maiṁ ā saktā hūṁ*)]
 - [YOU RECALL: read **लेकिन**]
 
 ## Wrap-up Recall
