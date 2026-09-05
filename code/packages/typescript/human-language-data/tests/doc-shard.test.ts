@@ -326,6 +326,25 @@ describe("docShardFilename", () => {
 });
 
 describe("Markdown shard filename grammar", () => {
+  it("rejects a document title copied into a numbered entry", () => {
+    const root = mkdtempSync(join(tmpdir(), "doc-shard-title-"));
+    const plan = DOC_SHARD_PLANS[0];
+    const document = join(root, "CHANGELOG.md");
+    const dir = docShardDirectoryFor(document);
+    const heading = `${"#".repeat(plan.headingLevel)} Fixed entry`;
+    const name = docShardFilename(10, docSlug(heading), headingDigest(heading));
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, DOC_META_SHARD), "# Changelog\n\n");
+    try {
+      writeFileSync(join(dir, name), `# Changelog\n\n${heading}\n\nDetails.\n`);
+      expect(() => readDocShards(document, plan)).toThrow(/must start with its level-.*heading/);
+      writeFileSync(join(dir, name), `${heading}\n\nDetails.\n`);
+      expect(readDocShards(document, plan)?.get(name)).toBe(`${heading}\n\nDetails.\n`);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it("accepts metadata and positive rank/slug/digest section names", () => {
     expect(isValidDocShardName(DOC_META_SHARD)).toBe(true);
     expect(isValidDocShardName("00010-A-0f0f0f0f.md")).toBe(true);

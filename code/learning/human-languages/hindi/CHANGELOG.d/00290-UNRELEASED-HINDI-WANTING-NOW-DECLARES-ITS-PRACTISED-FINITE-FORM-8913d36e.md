@@ -1,5 +1,3 @@
-# Changelog
-
 ## Unreleased — Hindi wanting now declares its practised finite form
 
 Chapter 70 already introduces **चाहना** as “to want,” models **चाहता**

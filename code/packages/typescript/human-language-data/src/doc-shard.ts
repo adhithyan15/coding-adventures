@@ -435,6 +435,13 @@ export function readDocShards(documentPath: string, plan: DocShardPlan): Map<str
     try {
       const body = readFileSync(path, "utf8");
       const legacyDigest = legacyDocShardSha256(plan, name);
+      if (name !== DOC_META_SHARD && legacyDigest === undefined &&
+          !headingPattern(plan.headingLevel).test(body.split(/\r?\n/, 1)[0])) {
+        throw new Error(
+          `doc shard ${reportableFilename(name)} must start with its level-${plan.headingLevel} heading; ` +
+            `the document preamble belongs in ${DOC_META_SHARD}`,
+        );
+      }
       if (legacyDigest !== undefined) {
         const actualDigest = createHash("sha256").update(body, "utf8").digest("hex");
         if (actualDigest !== legacyDigest) {
