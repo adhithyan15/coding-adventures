@@ -13220,9 +13220,10 @@ descendants; package execution remains the separate cross-platform evidence
 frontier.
 
 Before publication, the completed tranche rebased without conflict onto exact
-`origin/main` `ace4a79dce07f4ca1a1663e1a458d364a66ce05d`. The six intervening
-SPICE, Mosaic, generic-CI, Hindi, and UI documentation commits add no package
-identity or state owner. Their only exact overlap is generic `ci.yml`; the
+`origin/main` `8e52198a5ba63fab43f62037d2367e1bd8fab759`. Six intervening SPICE,
+Mosaic, generic-CI, Hindi, and UI documentation commits plus the later Rust
+language-VM delimiter-indexing repair add no package identity or state owner.
+Their only exact overlap is generic `ci.yml`; the
 automatic merge preserves main's 15-shard rebalance and five pinned npm repair
 installs together with the guarded OCaml matrix, checksum bootstrap, Windows
 retention, and conditional serialized execution. The collision-checked report
