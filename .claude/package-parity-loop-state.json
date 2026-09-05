@@ -20,10 +20,10 @@
     "opened_revision": "39a2ceacb56f0391bb42c3601ddd3693fb9a8faf"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-05T08:19:22Z",
+    "observed_at": "2026-09-05T08:30:00Z",
     "pr_number": 14251,
     "status": "pending",
-    "notes": "PR #14251 remains MERGEABLE. The first D18F/D18P/D18Q/D18T wave stopped at the first unlocked TypeScript prerequisite (hkdf); after locking it, the replacement wave advanced and stopped at the next unlocked prerequisite (ed25519). The complete affected setup chain had exactly three unlocked packages, so the same branch now locks hkdf, ed25519, and x25519. Clean npm ci and zero-vulnerability lockfile audits passed for all three, the exact eleven-package D18F TypeScript install sequence passed, and all 10 D18F TypeScript fixture tests passed; replacement CI must finish before guarded auto-merge can be enabled."
+    "notes": "PR #14251 remains conflict-free. The D18 TypeScript dependency repair now locks the complete affected chain: hkdf, ed25519, and x25519. The next CI wave reached the repo-wide TypeScript portability contract and correctly reported that the locked-compiler census increased from 466 to 469; the same branch updates that exact repository invariant. Clean npm ci and zero-vulnerability lockfile audits passed for all three packages, the exact eleven-package D18F TypeScript install sequence and all 10 fixture tests passed, and the focused portability suite passes; replacement CI must finish before guarded auto-merge can be enabled."
   },
   "last_inventory": {
     "revision": "8fe279a38603d7a53147624d65d6ecf288585199",

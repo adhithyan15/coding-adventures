@@ -478,7 +478,9 @@ console.log(prose, nested);
         # +1: forme-dev-server locks its compiler and test runner.
         # +1: the TypeScript build tool locks the compiler that now gates its
         # generic BUILD front before coverage.
-        self.assertEqual(summary.locked_compilers, 466)
+        # +3: hkdf, ed25519, and x25519 lock the TypeScript prerequisites
+        # shared by the D18 conformance lanes.
+        self.assertEqual(summary.locked_compilers, 469)
 
 
 if __name__ == "__main__":
