@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "id": "diff-selection/repository-boundary-reverse-index",
+  "domain": "diff_selection",
+  "summary": "An exact shared repository input selects its registered consumer before dependent and prerequisite closure.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "diff_selection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "diff_selection",
+    "options": {
+      "packages": [
+        {
+          "name": "swift/base",
+          "rel_path": "code/packages/swift/base",
+          "source_mode": "strict_globs",
+          "source_globs": [
+            "Sources/**/*.swift"
+          ]
+        },
+        {
+          "name": "swift/conduit",
+          "rel_path": "code/packages/swift/conduit",
+          "source_mode": "strict_globs",
+          "source_globs": [
+            "Sources/**/*.swift"
+          ]
+        },
+        {
+          "name": "swift/app",
+          "rel_path": "code/packages/swift/app",
+          "source_mode": "strict_globs",
+          "source_globs": [
+            "Sources/**/*.swift"
+          ]
+        }
+      ],
+      "edges": [
+        [
+          "swift/base",
+          "swift/conduit"
+        ],
+        [
+          "swift/conduit",
+          "swift/app"
+        ]
+      ],
+      "forced_packages": [],
+      "unknown_path_policy": "error",
+      "boundary_sha256": "963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f"
+    },
+    "changed_paths": [
+      "code/packages/rust/Cargo.toml"
+    ]
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "diff-selection/repository-boundary-reverse-index",
+    "domain": "diff_selection",
+    "outcome": "ok",
+    "result": {
+      "changed_packages": [
+        "swift/conduit"
+      ],
+      "affected_packages": [
+        "swift/app",
+        "swift/conduit"
+      ],
+      "prerequisite_packages": [
+        "swift/base"
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

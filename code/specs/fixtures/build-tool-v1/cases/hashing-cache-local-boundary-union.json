@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "id": "hashing-cache/local-boundary-union",
+  "domain": "hashing_cache",
+  "summary": "Package hashing raw-UTF-8 sorts the caller-supplied deduplicated union of local and repository-boundary inputs.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "hashing_cache"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/swift/conduit/Package.swift",
+        "content_utf8": "local\n"
+      },
+      {
+        "path": "code/packages/rust/Cargo.toml",
+        "content_utf8": "boundary\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "hashing_cache",
+    "options": {
+      "algorithm": "sha256-v1",
+      "package": "swift/conduit",
+      "include_paths": [
+        "code/packages/swift/conduit/Package.swift",
+        "code/packages/rust/Cargo.toml"
+      ],
+      "dependency_digests": [],
+      "dependents": [],
+      "prior_cache": {
+        "state": "missing"
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "hashing-cache/local-boundary-union",
+    "domain": "hashing_cache",
+    "outcome": "ok",
+    "result": {
+      "package_digest": "1f1f31cb07d8b63eff09f66340a0cfb4ad8507920042350e45db379bd0c0dd9f",
+      "dependencies_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "combined_digest": "1bad5fc9d106e9ce517c82284939f4a4a90f770107f4d2e431aba95a6b9cc229",
+      "cache_status": "miss",
+      "invalidated_packages": [
+        "swift/conduit"
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}
