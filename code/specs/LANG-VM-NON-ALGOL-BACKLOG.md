@@ -63,6 +63,29 @@ VM-033 (Windows text-output newlines), which now precedes coverage work. After
 that repair, missing Windows runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
 otherwise this exact regression can recur despite a green Windows job.
 
+## VM-035 implementation contract (selected after #14325 merged)
+
+PR #14325 merged as `bf9043d695` after all applicable checks passed on
+`618579d847`. Reprioritization selects the reproduced archive lookup defect
+VM-035 before the larger VM-027 feature audit; VM-025 remains separately owned.
+
+The shared `lang-aot/tests/common` GC archive helper must obtain the staticlib
+path from the successful nested Cargo build's JSON compiler-artifact messages.
+Match the `gc_core_capi` staticlib target and its `.a`/MSVC `.lib` archive,
+excluding rlibs, dynamic libraries and import libraries. Reject malformed,
+missing or ambiguous archive messages and nonexistent output paths; never fall
+back to a guessed workspace/target filename. Preserve actionable compiler
+failure diagnostics and honor Cargo's target-directory/configuration choices.
+
+Use the existing Cargo build as the authority, with a test-only JSON dependency.
+Add a normal BUILD regression that launches a child test process with a fresh
+`CARGO_TARGET_DIR` containing spaces. It must build and find the actual archive
+under that directory, without mutating the parent test process environment.
+Verify JSON selection for Unix and MSVC names and unrelated/no/ambiguous
+artifacts. Confirm the original heap LLVM matrix cell runs in a fresh process
+with a nondefault target directory. Preserve default-layout use, other test
+runners, production runtime semantics and separately owned ALGOL behavior.
+
 ## VM-026 implementation contract (selected after #14317 merged)
 
 PR #14317 merged as `6fcc258b32` after every applicable current-head check
@@ -218,8 +241,8 @@ backends, and all-target Clippy is clean. Full-matrix completion is not claimed.
 | — | VM-032 | done ([#14295](https://github.com/adhithyan15/coding-adventures/pull/14295)) | Protect LANG native Windows execution in PR CI. | An affected `twig-aot`/LANG dependency change selects an actual Windows executable smoke run, with its toolchain present; assert real execution rather than a green Clippy-only job. Preserve platform-plan gating and keep the known GC early returns explicit. |
 | — | VM-024 | done ([#14317](https://github.com/adhithyan15/coding-adventures/pull/14317)) | Protect the non-ALGOL language matrix in normal CI. | Every non-ALGOL `PROGRAMS` row executes on each available declared backend; no empty selection or silent failure-to-skip conversion; full ALGOL diagnostics remain available. |
 | 2 | VM-025 | queued; coordinate with ALGOL owner | Reproduce the full matrix's current Linux failures and restore full CI coverage after their repair. | Record exact failing cells and owning PRs; remove the full-matrix exclusion only after the complete target runs green on supported CI hosts. |
-| 3 | VM-026 | selected | Reconcile stale Twig, frontend-count, and completed-work claims in LANG-FULL and LANG-PLATFORM status documents. | Every remaining gap links a current source/test boundary; landed VM-010, VM-017, VM-018, VM-020, and VM-021 work is no longer described as missing. |
-| 3b | VM-035 | queued | Honor Cargo target-directory overrides in shared AOT test archive discovery. | With a nondefault `CARGO_TARGET_DIR`, locate the archive Cargo actually built and execute a heap LLVM cell; never return a nonexistent guessed path. |
+| — | VM-026 | done ([#14325](https://github.com/adhithyan15/coding-adventures/pull/14325)) | Reconcile stale Twig, frontend-count, and completed-work claims in LANG-FULL and LANG-PLATFORM status documents. | Every remaining gap links a current source/test boundary; landed VM-010, VM-017, VM-018, VM-020, and VM-021 work is no longer described as missing. |
+| 3b | VM-035 | selected | Honor Cargo target-directory overrides in shared AOT test archive discovery. | With a nondefault `CARGO_TARGET_DIR`, locate the archive Cargo actually built and execute a heap LLVM cell; never return a nonexistent guessed path. |
 | 4 | VM-027 | queued | Audit feature-by-backend coverage for all ten wired frontends, including dedicated McCarthy and Macsyma suites. | Inventory implemented features, declared/refused backend cells, executable proofs, and CI commands; split every uncovered implemented feature into a bounded parity item. |
 | 5 | VM-013 | design required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `out`, `adc`, `sbb`, rotations, carry, parity). | Document machine state and I/O contracts, then split into PR-sized operations with both portable and real 8008-simulator proofs; resolve only essential language-design questions with the user. |
 | 6 | VM-028 | queued | Audit Nib's remaining Intel-4004 arithmetic and control-flow parity beyond BCD storage. | Compare implemented operations against the 4004 backend and simulator; file bounded missing-operation or refusal tests and close them with executed proofs. |
