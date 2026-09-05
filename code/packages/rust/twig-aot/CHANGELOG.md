@@ -1,5 +1,14 @@
 # Changelog — `twig-aot`
 
+## Unreleased — required Windows runtime CI (VM-032)
+
+Select a dedicated Windows executable smoke step from the Windows build-plan
+closure for affected Twig/LANG AOT changes. Bootstrap MSVC even for Rust-only
+changes and require a real linker with `LANG_REQUIRE_WINDOWS_AOT=1`, preventing
+an all-skipped green result. Local optional-linker behavior and the two known
+precise-GC early returns remain explicit. The selector validates plan shapes,
+respects platform overrides, and self-selects when its wiring changes.
+
 ## Unreleased — Windows dynamic CRT link repair (VM-030)
 
 Remove `libvcruntime.lib` from the Windows executable link. Normal CRT startup

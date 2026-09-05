@@ -6754,3 +6754,5 @@ Two notes on how it was handled:
   `--yes` as well as `-y`, checked in both directions — a test that only knew
   `-y` would fail a correct future edit, which is the same false-positive trap
   as the allowlist.
+
+- **Scope workflow wiring tests to the owning job before matching step names.** CI repeats `Set up Rust` across contract and build jobs. VM-032 initially matched an unrelated contract setup step and falsely reported a missing runtime flag. Inspect the build job specifically, then assert its selection, toolchain, and execution guards together.

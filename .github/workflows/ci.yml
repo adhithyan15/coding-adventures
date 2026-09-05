@@ -84,6 +84,7 @@ jobs:
       needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
       needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
       needs_cpp: ${{ steps.toolchains.outputs.needs_cpp }}
+      needs_lang_windows: ${{ steps.lang-windows.outputs.required }}
       needs_venture_windows: ${{ steps.venture-windows.outputs.required }}
       needs_mosaic_xaml_windows: ${{ steps.mosaic-xaml-windows.outputs.required }}
       needs_mosaic_swift_runtime: ${{ steps.mosaic-swift-runtime.outputs.required }}
@@ -223,6 +224,15 @@ jobs:
             print(f"  skip {gate}")
           PY
 
+      - name: Detect LANG Windows runtime acceptance
+        id: lang-windows
+        shell: bash
+        run: |
+          python3 code/scripts/lang_windows_ci_acceptance.py \
+            build-plan.json \
+            --repo-root . \
+            --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
+
       - name: Detect Venture native-shell acceptance
         id: venture-windows
         shell: bash
@@ -336,6 +346,7 @@ jobs:
           NEEDS_SWIFT: ${{ steps.toolchains.outputs.needs_swift }}
           NEEDS_ELIXIR: ${{ steps.toolchains.outputs.needs_elixir }}
           NEEDS_RUST: ${{ steps.toolchains.outputs.needs_rust }}
+          NEEDS_LANG_WINDOWS: ${{ steps.lang-windows.outputs.required }}
           NEEDS_VENTURE_WINDOWS: ${{ steps.venture-windows.outputs.required }}
           NEEDS_MOSAIC_XAML_WINDOWS: ${{ steps.mosaic-xaml-windows.outputs.required }}
           NEEDS_MOSAIC_SWIFT_RUNTIME: ${{ steps.mosaic-swift-runtime.outputs.required }}
@@ -397,7 +408,7 @@ jobs:
 
           def needs_windows():
             """The Windows leg's *build* step is guarded to Swift/Elixir and its
-            other build steps to venture/XAML/Rust-clippy -- but it also carries
+            other build steps to LANG/venture/XAML/Rust-clippy -- but it also carries
             two suites gated on runner.os alone: the ADJ Windows Job-object
             containment tests and the MSVC bootstrap test. Those have no
             toolchain flag, so they need their own gate, or a change to the
@@ -407,6 +418,7 @@ jobs:
               or flag("NEEDS_SWIFT")
               or flag("NEEDS_ELIXIR")
               or flag("NEEDS_RUST")
+              or flag("NEEDS_LANG_WINDOWS")
               or flag("NEEDS_VENTURE_WINDOWS")
               or flag("NEEDS_MOSAIC_XAML_WINDOWS")
             )
@@ -525,6 +537,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_d18t_durable_epoch_activation_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_onvif_origin_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ci_gate_registry.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_lang_windows_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_venture_windows_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_xaml_windows_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_swift_runtime_ci_acceptance.py'
@@ -1170,17 +1183,17 @@ jobs:
       # linker that Lua needs to compile. By installing MSVC + Lua
       # first, the MSVC `link.exe` is in PATH before Ruby's MSYS2.
 
-      # MSVC on Windows serves two consumers: Lua (needs the MSVC linker) and
-      # the C/C++ lane (needs `cl.exe` for the MSVC arm of the pure-ISO check).
-      # A single bootstrap invocation covers both — invoking it twice would
+      # MSVC supplies the linker and SDK libraries for LANG and Venture, Lua,
+      # and the C/C++ lane (`cl.exe` for the MSVC arm of the pure-ISO check).
+      # A single bootstrap invocation covers these consumers — invoking it twice would
       # double-prepend the MSVC environment.
       - name: Test MSVC environment bootstrap
         if: runner.os == 'Windows'
         shell: pwsh
         run: python -m unittest discover -s code/scripts/tests -p 'test_setup_msvc_dev_cmd.py'
 
-      - name: Set up MSVC (Lua linker + C/C++ cl.exe + Venture browser)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
+      - name: Set up MSVC (Lua + C/C++ + Venture + LANG)
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true') && runner.os == 'Windows'
         shell: pwsh
         run: python code/scripts/setup_msvc_dev_cmd.py --arch x64
 
@@ -1300,7 +1313,7 @@ jobs:
           clang --version | head -1
 
       - name: Set up Rust
-        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true' || needs.detect.outputs.needs_mosaic_swift_runtime == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' || needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true' || needs.detect.outputs.needs_mosaic_swift_runtime == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' || needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
         # Uses the `stable` channel (matching the rest of this repo's Rust CI).
         # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
         # release, so a new Rust release can surface new lints on `main` — treat
@@ -1809,6 +1822,20 @@ jobs:
             $shardFlag = @('-shard-index', '${{ matrix.shard_index }}')
           }
           & ./build-tool.exe -root . @planFlag @shardFlag -validate-build-files -language swift
+
+      # Rust-only Windows changes do not enter the general BUILD step. This
+      # separate runtime gate must link and launch executables, not just lint.
+      - name: Test LANG Windows native execution
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_lang_windows == 'true'
+        shell: pwsh
+        working-directory: code/packages/rust
+        env:
+          LANG_REQUIRE_WINDOWS_AOT: "1"
+        run: |
+          cargo test -p twig-aot --test windows_x86_64_smoke -- --nocapture
+          if ($LASTEXITCODE -ne 0) {
+            throw "LANG Windows native execution failed with exit code $LASTEXITCODE"
+          }
 
       - name: Build and test Venture Windows acceptance
         if: runner.os == 'Windows' && needs.detect.outputs.needs_venture_windows == 'true'
