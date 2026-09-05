@@ -11,12 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 14339,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/14339",
+    "branch": "codex/haskell-sha256-incremental-api",
+    "item_id": "haskell-sha256-incremental-streaming-api",
+    "opened_at": "2026-09-05T16:48:07Z",
+    "opened_revision": "05281a680f26c26043a46295375f103c6ab93cb1"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-05T15:52:00Z",
-    "pr_number": 14329,
-    "status": "merged",
-    "notes": "All 42 final-head checks reached terminal acceptable conclusions: 11 passed and 31 were expected skips. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #14329 without a plain manual merge command."
+    "observed_at": "2026-09-05T16:48:12Z",
+    "pr_number": 14339,
+    "status": "pending",
+    "notes": "PR #14339 is the sole active parity PR. GitHub reports the ready-for-review head mergeable with four initial checks pending and mergeStateStatus BLOCKED. Guarded auto-merge remains disabled until every required final-head check is terminal and acceptable and no conflict remains."
   },
   "last_inventory": {
     "revision": "58dec49a6d92b4df1b6a11e83439b93066cc5595",
@@ -1067,10 +1074,14 @@
     {
       "id": "haskell-sha256-incremental-streaming-api",
       "title": "Add incremental streaming to the Haskell SHA-256 package",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/haskell-sha256-incremental-api",
-      "pr_number": null,
+      "pr_number": 14339,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/14339",
+      "opened_at": "2026-09-05T16:48:07Z",
+      "opened_revision": "05281a680f26c26043a46295375f103c6ab93cb1",
+      "publication_notes": "Opened ready-for-review PR #14339 after a normal first push from the fully validated branch and confirmation that no parity PR was active. GitHub reports the initial head mergeable with four checks pending and mergeStateStatus BLOCKED, so guarded auto-merge remains disabled.",
       "selected_at": "2026-09-05T16:05:33Z",
       "selection_revision": "327029a998efbb7e6ac964654838812692259d3b",
       "rebase_revision": "58dec49a6d92b4df1b6a11e83439b93066cc5595",
