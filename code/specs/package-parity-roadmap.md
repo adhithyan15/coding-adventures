@@ -12738,6 +12738,46 @@ aggregate. The dependency graph therefore contains 667 owners and 1,038 edges:
 inventory metrics remain unchanged because this is a behavioral repair rather
 than a new identity or lane.
 
+### Post-PR #14291 inventory and parallel backlog reconciliation
+
+PR #14291 completed all 47 final-head checks with 40 successes and seven
+expected skips. GitHub reported no merge conflict and executed guarded squash
+auto-merge as `2096c95f20c157074dbb237171262ba451adf0d9`.
+
+The collision-checked schema-3 inventory at exact `origin/main`
+`4b1d12496e0c74d63a1a930d40934b2a22de81a6` now contains 15 established
+lanes, 1,412 implementation identities, 4,628 implementation slots, and 1,451
+all-reported identities. The four bands are 175/265, 123/934, 172/2,165, and
+942/13,188; Rust has 753 singletons, OCaml remains emerging at zero packages,
+and canonical collisions and unknown language buckets remain zero. The only
+identity addition is `rust/visicalc-mosaic-app`, now owned by an explicit
+native/generated-wrapper applicability review.
+
+Parallel read-only audits exposed work that the earlier broad umbrellas did not
+own precisely. A repository-boundary reverse-diff and digest corpus now gates
+nine current-engine adoption leaves. JVM, Dart, and OCaml each have a current-
+contract promotion owner wired into source hashing, dependency hashing, CI gate,
+extra toolchain, Dune discovery, CLI, Starlark, validation, atomic plan writing,
+orphan validation, and tracked-artifact closure. OCaml promotion additionally
+requires representative classical-cipher and ZIP-owned raw-RFC-1951 consumers.
+
+Strict singleton ownership found exact owners for 207 of 753 Rust-only
+identities and 546 without exact ownership: 170 have portable-core evidence, 58
+have native-host evidence, 89 have generated/applicability evidence, and 229
+remain unresolved. The first high-confidence dependency frontier is
+`constraint-core`, `smart-home-core`, then `matrix-ir`. Separate classification
+owners record 93 unowned Java/Kotlin/Dart and 50 unowned Swift high-consensus
+identities, 117 unowned identities in the five-to-nine-language band, and 157
+in the two-to-four-language band. These are discovery owners that must decompose
+into bounded children before implementation; they are not parity exemptions.
+
+The next dependency-shaped implementation candidate is
+`build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus`.
+Its prerequisites are merged, it is process-free, and it defines shared
+semantics before nine engine-specific leaves can proceed. A live sweep of all
+seven open PRs found zero exact or semantic overlap across its 11 planned paths;
+the fresh unpublished branch is based exactly on current `origin/main`.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
