@@ -85,6 +85,12 @@ If execution exposes another runtime failure, record its exact program/backend,
 confirm it in a fresh single-cell process, and promote a bounded repair before
 publishing the wider coverage gate. Full ALGOL CI remains separately VM-025.
 
+Local Windows validation passes the complete selected corpus: 163 programs,
+1,161 executed backend cells, zero skips, in 351.52 seconds. All-target
+`lang-aot` Clippy and security review pass. The first alternate-target-layout
+attempt is recorded as VM-D025/VM-035; the passing result uses Cargo's normal
+workspace target directory. Hosted current-head CI remains the merge gate.
+
 ## VM-032 implementation contract (selected after #14289 merged)
 
 PR #14289 merged as `e6765d7711` after all applicable checks passed on
