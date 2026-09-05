@@ -279,6 +279,38 @@ backends, and all-target Clippy is clean. Full-matrix completion is not claimed.
 | 7 | VM-029 | queued | Audit the broader platform vision and native-runtime roadmaps into explicit completion milestones. | Separate landed capabilities from GC, tooling, IR-bridge/transpilation, and measured-performance work; give every retained milestone a testable acceptance criterion and owner. |
 | 7a | VM-031 | queued under VM-029 | Reconcile and complete native precise-GC frame-walk proofs. | Windows smoke has two explicit early-return differentials for the Rust/Twig frame boundary; inventory supported-host GC gaps, track each refusal, and execute live-byte reclamation proofs before calling native GC complete. |
 
+## VM-027 audit discoveries and next priorities
+
+The [feature/backend inventory](LANG-VM-FEATURE-COVERAGE.md) compares ten
+frontends with the eight-language unified corpus and dedicated suites. Local
+McCarthy (19 x 7) and Macsyma (21 x 7) capstones passed. No executed red cell
+was discovered. Missing existing-feature proofs therefore take priority over
+new machine semantics. After this audit merges, select VM-036 first: existing
+native code should be exercised on Windows/Linux before expanding coverage.
+VM-025 remains separately owned. The following queue precedes VM-013/028/029;
+items requiring new runtime lowering follow the coverage-only promotions.
+
+| Order | Item | Bounded work and executable acceptance |
+|---|---|---|
+| 1 | VM-036 | Run McCarthy's existing 19-program native capstone on Windows/Linux as well as macOS. Assert a present linker cannot silently skip; wire actual Windows execution into CI and prove all 19 results. |
+| 2 | VM-037 | Promote FLOW-MATIC compare/branch/jump behavior beyond the scalar-output baseline. Use terminating, discriminating output programs on all seven standard columns. |
+| 3 | VM-044 | Promote Oct while/loop/break and returned function values to observable seven-column programs; prove u8 wrap and actual branch/call effects. |
+| 4 | VM-045 | Promote COBOL reference modification to standard columns: constant and dynamic bounds, result text and explicit invalid-bound behavior, compared with its existing oracle. |
+| 5 | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
+| 6 | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
+| 7 | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |
+| 8 | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
+| 9 | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
+| 10 | VM-040 | Inventory remaining BEAM cells separately for Twig strings, Twig records/closures, Nib scalars, BASIC f64/I/O, Oct u8/I/O, FLOW-MATIC and COBOL. Each family first gets a discriminating probe; split actual lowering defects before implementation. Brainfuck remains the explicit excluded tape design. |
+| 11 | VM-042 | Pin Brainfuck's intentional BEAM exclusion with a driver-level error assertion for mutable tape operations; distinguish supported frontend compilation from backend refusal. |
+| 12 | VM-041 | Isolate Twig captured/reassigned runtime-string lowering from existing source-local string metadata; add one captured-string value proof before wider dynamic-string expansion. |
+| 13 | VM-048 | Define a representation-neutral observation for Macsyma's implemented inert symbolic Apply, then promote one oracle-derived symbolic result per backend; do not compare raw pointer/tag identities. |
+
+BASIC two-dimensional numeric arrays were verified in the matrix and lowerer,
+so their stale README description is corrected here rather than creating a new
+implementation item. The known DEF FN-global and print-zone semantics remain
+future frontend design scope, not missing proofs for already-implemented code.
+
 ## Discovery log
 
 - **VM-D026 — confirmed 2026-09-05:** source/document inspection for VM-026
