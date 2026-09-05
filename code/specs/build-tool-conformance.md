@@ -1099,7 +1099,7 @@ structured command fields use the shared definitions in the corpus schema.
 | Domain | `input.options` | Successful `result` |
 |---|---|---|
 | `ci_gate_selection` | a validated closed registry, nullable affected-package and changed-file snapshots, and `force` | every gate sorted by id with its required verdict and deterministic `run_` output name |
-| `diff_selection` | packages with repository-relative roots and an explicit `package_prefix` or `strict_globs` source mode, dependency edges, forced packages, and an `all` or `error` unknown-path policy | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
+| `diff_selection` | packages with repository-relative roots and an explicit `package_prefix` or `strict_globs` source mode, dependency edges, forced packages, an `all` or `error` unknown-path policy, and an optional pinned repository source-input boundary digest | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
 | `source_collection` | an `extension` or `declared_sources` mode, exact extensions, special filenames, portable globs, and bounded inert file/symlink/reparse candidate records | sorted normalized included file paths with lowercase SHA-256 content digests |
 | `hashing_cache` | SHA-256 mode, package, included paths, dependency digests, dependents, and a closed missing, corrupt, or typed prior-cache record | lowercase `package_digest`, `dependencies_digest`, `combined_digest`, cache status, and sorted invalidated packages |
 | `starlark` | repository-contained entrypoint, v1 `_ctx`, and declared legacy fallback policy | sorted targets containing rule metadata, structured commands, deterministic display rendering, and the per-target command source |
@@ -1113,7 +1113,9 @@ These records intentionally model decisions, not host operations:
 - CI gate selection receives a validated registry and inert change snapshots;
   it never reads the registry, invokes Git, constructs the graph, writes
   `$GITHUB_OUTPUT`, or schedules a workflow;
-- diff selection receives `changed_paths`; it never invokes Git;
+- diff selection receives `changed_paths` and, when boundary selection is
+  requested, the already validated repository source-input boundary; it never
+  invokes Git or reads the checkout;
 - source collection receives inert candidate records; it never enumerates or
   opens a checkout and never follows a linked component;
 - hashing receives inline bytes; it never reads host metadata;
@@ -1124,8 +1126,21 @@ These records intentionally model decisions, not host operations:
   typed record and then classify an explicitly supplied post-parse outcome.
   They never invoke a front door or launch a build.
 
-Hashing v1 uses SHA-256 over an unambiguous byte stream. Included files are
-sorted by normalized forward-slash path. For each file, append the unsigned
+When `diff_selection.options.boundary_sha256` is present, it MUST equal the
+digest of the validated repository source-input boundary before any package is
+selected. Each changed path is matched exactly against that boundary's input
+paths. An exact match selects every declared package whose `rel_path` is in the
+input's applicability projection before dependent and prerequisite closure.
+There is no case folding, prefix, ancestor, basename, glob, or near-path match.
+A boundary path with no applicable declared consumer remains unknown and follows
+`unknown_path_policy`. The boundary object is inert validated input; this pure
+operation does not inspect Git modes, object ids, stages, links, or host files.
+
+Hashing v1 uses SHA-256 over an unambiguous byte stream. The caller supplies the
+deduplicated union of package-local and applicable repository-boundary paths in
+`include_paths`; the oracle sorts that union by raw UTF-8 bytes of each
+normalized forward-slash path, independent of input-array order. For each file,
+append the unsigned
 64-bit big-endian path-byte length, UTF-8 path bytes, unsigned 64-bit
 big-endian content length, and exact content bytes. Dependency digests are
 sorted by package name and encoded the same way, using the package name as the
