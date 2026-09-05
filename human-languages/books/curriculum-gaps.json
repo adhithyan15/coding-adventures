@@ -86216,6 +86216,13 @@
         "count": 3
       },
       {
+        "lessonId": "HI-C07-nahin",
+        "language": "hindi",
+        "chapter": 7,
+        "glyphs": "आठय",
+        "count": 3
+      },
+      {
         "lessonId": "HI-C08-kripaya",
         "language": "hindi",
         "chapter": 8,
@@ -87011,13 +87018,6 @@
         "language": "hindi",
         "chapter": 5,
         "glyphs": "ँ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C07-nahin",
-        "language": "hindi",
-        "chapter": 7,
-        "glyphs": "आ",
         "count": 1
       },
       {
