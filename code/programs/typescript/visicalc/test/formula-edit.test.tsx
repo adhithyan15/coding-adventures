@@ -4,6 +4,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { App } from "../src/app/App";
+import { initialState, reducer } from "../src/app/state";
 
 // Exercise generated controls and the actual bundled Rust WASM engine. A mocked
 // setCell would miss lost commits and dependent-formula recomputation.
@@ -93,5 +94,68 @@ describe("direct formula-bar editing", () => {
     expect(cell(0, 0).textContent).toBe("");
     expect(cell(0, 4).textContent).toBe("23");
     expect(cell(4, 4).textContent).toBe("154");
+  });
+});
+
+async function gridKey(key: string, times = 1) {
+  // Flush each key so the next event sees the new presentation cursor.
+  for (let index = 0; index < times; index++) {
+    await act(async () => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
+    });
+  }
+}
+
+describe("viewport workbook coordinates", () => {
+  it("reveals row 31 and translates a click in the shifted slice before committing", async () => {
+    await gridKey("ArrowDown", 30);
+    expect(container.textContent).toContain("A31");
+    expect(container.querySelectorAll("tbody tr")).toHaveLength(30);
+    expect((cell(29, 0).firstElementChild as HTMLElement).style.background).toBe("rgb(38, 79, 120)");
+    // The first visible row is workbook row 2, not row 1.
+    await act(async () => { (cell(0, 0).firstElementChild as HTMLElement).click(); });
+    expect(formulaField().value).toBe("8");
+    await change("25");
+    await press("Enter");
+    expect(cell(0, 0).textContent).toBe("25");
+    await gridKey("ArrowUp");
+    expect(formulaField().value).toBe("15");
+    expect(cell(0, 0).textContent).toBe("15");
+    expect(cell(1, 0).textContent).toBe("25");
+    expect(cell(4, 4).textContent).toBe("186");
+  });
+
+  it("reveals the next row after an inline commit at the viewport edge", async () => {
+    await gridKey("ArrowDown", 29);
+    await gridKey("F2");
+    const editor = cell(29, 0).querySelector<HTMLInputElement>("input")!;
+    expect(editor).not.toBeNull();
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(editor, "42");
+      editor.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    await act(async () => {
+      editor.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    });
+    expect(container.textContent).toContain("A31");
+    expect(cell(28, 0).textContent).toBe("42");
+    expect((cell(29, 0).firstElementChild as HTMLElement).style.background).toBe("rgb(38, 79, 120)");
+    expect(container.querySelectorAll("input")).toHaveLength(1);
+    await gridKey("ArrowUp");
+    expect(formulaField().value).toBe("42");
+  });
+
+  it("clamps selection and scroll offsets to the workbook's valid window", () => {
+    const end = reducer(initialState, { type: "navigate", row: 1000, col: 1000 });
+    expect([end.selectedRow, end.selectedCol, end.viewportOffset]).toEqual([99, 25, 70]);
+    const start = reducer(end, { type: "navigate", row: -5, col: -3 });
+    expect([start.selectedRow, start.selectedCol, start.viewportOffset]).toEqual([0, 0, 0]);
+    for (const [offset, expected] of [[-1, 0], [1000, 70], [4.8, 4], [NaN, 0]]) {
+      expect(reducer(initialState, { type: "scroll", offset }).viewportOffset).toBe(expected);
+    }
+    const selected = reducer(initialState, {
+      type: "select", startRow: 65, startCol: 2, endRow: 65, endCol: 2,
+    });
+    expect([selected.selectedRow, selected.viewportOffset]).toEqual([65, 36]);
   });
 });

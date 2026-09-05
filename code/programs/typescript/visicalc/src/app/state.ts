@@ -80,6 +80,27 @@ export const initialState: AppState = {
   totalCols: 26,
 };
 
+/** Workbook coordinates are absolute; only the Grid boundary uses slice indices. */
+function clampIndex(value: number, count: number): number {
+  return Math.max(0, Math.min(Number.isFinite(value) ? Math.trunc(value) : 0, count - 1));
+}
+
+function selection(state: AppState, row: number, col: number) {
+  const selectedRow = clampIndex(row, state.totalRows);
+  const selectedCol = clampIndex(col, state.totalCols);
+  const size = Math.max(1, state.viewportSize);
+  const offset = selectedRow < state.viewportOffset
+    ? selectedRow
+    : selectedRow >= state.viewportOffset + size
+      ? selectedRow - size + 1
+      : state.viewportOffset;
+  return {
+    selectedRow,
+    selectedCol,
+    viewportOffset: clampIndex(offset, Math.max(1, state.totalRows - size + 1)),
+  };
+}
+
 // ---------------------------------------------------------------------
 // Reducer — UI26 §7.3.
 //
@@ -97,8 +118,7 @@ export function reducer(state: AppState, action: AppAction): AppState {
       return {
         ...state,
         ...exitEdit,
-        selectedRow: action.row,
-        selectedCol: action.col,
+        ...selection(state, action.row, action.col),
       };
     }
 
@@ -131,8 +151,7 @@ export function reducer(state: AppState, action: AppAction): AppState {
         editRow: -1,
         editCol: -1,
         editContent: "",
-        selectedRow: nextRow,
-        selectedCol: nextCol,
+        ...selection(state, nextRow, nextCol),
       };
     }
 
@@ -140,13 +159,15 @@ export function reducer(state: AppState, action: AppAction): AppState {
       return { ...state, editRow: -1, editCol: -1, editContent: "" };
 
     case "scroll":
-      return { ...state, viewportOffset: action.offset };
+      return {
+        ...state,
+        viewportOffset: clampIndex(action.offset, Math.max(1, state.totalRows - state.viewportSize + 1)),
+      };
 
     case "select":
       return {
         ...state,
-        selectedRow: action.startRow,
-        selectedCol: action.startCol,
+        ...selection(state, action.startRow, action.startCol),
       };
 
     // FormulaBar events

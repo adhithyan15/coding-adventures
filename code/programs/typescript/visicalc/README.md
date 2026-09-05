@@ -8,6 +8,10 @@ The investigation and implementation sequence are in
 Run `npm test` to regenerate Mosaic controls and verify formula-bar commit,
 cancel, clearing, and input keyboard handling against the actual Rust/WASM
 spreadsheet engine. Run `npm run build` for production TypeScript and Vite checks.
+The tests also cover crossing the rendered row-slice boundary, inline commits,
+and translating clicks back to workbook coordinates. The current fixed 30-row
+slice can extend below a short window; responsive sizing and generated scrolling
+remain tracked in [#14277](https://github.com/adhithyan15/coding-adventures/issues/14277).
 The VisiCalc interactions CI workflow runs both on Linux and Windows; native GUI
 acceptance remains separate work.
 
