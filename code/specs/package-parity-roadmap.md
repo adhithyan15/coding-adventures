@@ -2429,8 +2429,10 @@ language ports stay eligible for later dependency-shaped waves.
 The singleton inventory is led by 572 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-August 2 inventories added thirty-one Rust singleton identities that now
-have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
+The cohort frozen at inventory revision
+`d0cd8ba4c8ddc83f5312eaca16e7c5fdbfb7c6ea` contains exactly twenty-three
+Rust singleton identities that now have explicit classification work in the
+loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
 `venture-browser-core` needs a portable-core versus native-boundary review.
@@ -2505,7 +2507,7 @@ profiles despite concrete network calls, while `udp-client` and
 `smart-home-discovery` lack manifests. A separate high-leverage owner corrects
 those native boundaries before downstream approval.
 
-The twenty-fourth identity, `smart-home-wled-integration`, follows the same
+The later, separately owned `smart-home-wled-integration` identity follows the same
 mixed pattern. `/json/si` DTO validation, master and segment projection, stable
 identifiers, capability-bit interpretation, state normalization, brightness,
 RGB and mirek conversion, and JSON command planning form the portable candidate.
@@ -2520,8 +2522,9 @@ follow-up consolidates the duplicated Shelly/WLED DNS, TCP, request encoding,
 bounded response, chunked decoding, and error projection behind a native LAN-
 HTTP executor while keeping `smart-home-local-http` a pure request planner.
 
-The newest identity, `smart-home-nanoleaf-local-integration`, is another mixed
-split rather than a blind port. Credential syntax and credential-free origin
+The later, separately owned `smart-home-nanoleaf-local-integration` identity
+is another mixed split rather than a blind port. Credential syntax and
+credential-free origin
 configuration, bounded snapshot and state validation, stable identifiers,
 capability and state normalization, RGB/HSV and mirek conversion, command
 planning, verification, and hostile inputs are deterministic portable-core
@@ -12895,6 +12898,72 @@ same-low-DWORD rejection, and no handle growth across 250 captures. Independent
 correctness, security, and bookkeeping reviews found no blocker and no added
 process, filesystem, network, environment, credential, dependency, or policy
 authority.
+
+### Post-PR #14329 reconciliation and Haskell SHA-256 prerequisite
+
+PR #14329 completed all 42 final-head checks with 11 successes and 31 expected
+skips. GitHub reported no merge conflict and executed guarded squash auto-merge
+as `327029a998efbb7e6ac964654838812692259d3b` without a plain manual merge
+command.
+
+The collision-checked schema-3 inventory at that exact `origin/main` remains
+identity-neutral: 15 established lanes, 1,413 implementation identities, 4,629
+implementation slots, and 1,452 all-reported identities. The four bands remain
+175/265, 123/934, 172/2,165, and 943/13,202; Rust has 754 singletons,
+OCaml remains emerging at zero packages, and canonical collisions and unknown
+language buckets remain zero.
+
+The parallel backlog audit froze the July classifier to the exact 23-identity
+cohort present at `d0cd8ba4c8ddc83f5312eaca16e7c5fdbfb7c6ea`, added fourteen
+bounded portable or native-boundary owners for previously umbrella-only
+members, and rewired seven broad classifier edges to their actual package
+prerequisites. WLED, Govee, LIFX, Kasa, Reolink, Roku, Wemo, Sonos, and
+Nanoleaf are nine later identities with separate existing owners and do not
+belong to the frozen cohort.
+
+Haskell portable source hashing remains the highest-leverage ready build-tool
+candidate, with three direct and four transitive descendants. Its implementation
+audit found one missing package-level prerequisite: the local Haskell SHA-256
+package exposes only whole-list one-shot hashing, so a secure file collector
+cannot stream bounded chunks without buffering complete source bytes. The next
+selected tranche therefore adds an opaque strict incremental SHA-256 context,
+exact chunk updates, repeatable finalization, lowercase hex output, and
+boundary-vector coverage while preserving the existing one-shot API and every
+HMAC, HKDF, and PBKDF2 consumer. This package-only pure-math prerequisite adds
+no filesystem, process, network, environment, credential, or native authority.
+
+Before publication, the branch rebased conflict-free onto exact `origin/main`
+`58dec49a6d92b4df1b6a11e83439b93066cc5595`. The intervening SPICE Rust ISC
+and NC model-card repairs, Hindi coming-forms curriculum tranche, SwiftUI
+one-of slot states, lang-aot Cargo artifact-path repair, Rust HTML parser fix,
+and VisiCalc shared workbook design change no package identity, established
+lane, selected path, or collision bucket, so all inventory counts above remain
+reporter-exact.
+
+The parallel security and performance review found no authority, secret
+retention, correctness, or bounded-residency blocker. It did measure
+932,085,064 bytes allocated for the optimized million-byte vector despite only
+606 KB maximum residency, because the existing compression core constructs and
+rotates list schedules for every 64-byte block. That concern is now the explicit
+pending `haskell-sha256-streaming-performance-hardening` owner, and Haskell
+portable source hashing depends on it. This keeps the current API tranche
+coherent while ensuring repository-scale hashing receives a measured allocation
+budget or optimization before adoption.
+
+The concurrent backlog pass also corrected a stale OCaml dependency placement:
+the representative process-free package chain now depends on the already merged
+process-free substrate and CI toolchain, while the execution-coupled substrate
+is explicitly required by the later native OCaml build tool. The representative
+chain is therefore dependency-ready without weakening the native execution
+gate. Its tranche will also correct OCAML04's stale in-progress label for merged
+PR #13366. Three non-implementation source-hashing, dependency-hashing, and CI-
+gate aggregates now carry explicit selection blocks so prioritizers cannot
+mistake their prose-only closure records for implementation work.
+
+The reconciled graph now contains 710 owners and 1,163 edges: 206 merged, 503
+pending, and exactly one in progress. If this SHA-256 API PR merges, the measured
+streaming performance-hardening owner is the recommended next serial tranche;
+it has five unfinished descendants and gates Haskell repository-scale hashing.
 
 ## Autonomous Loop Protocol
 
