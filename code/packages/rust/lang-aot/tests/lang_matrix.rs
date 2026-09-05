@@ -5515,6 +5515,150 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("FIRST"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL reference modification: literal bounds, omitted length and first/last character.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 WS PIC X(5) VALUE \"ABCDE\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY WS(2:3).\n\
+               000000 DISPLAY WS(3:).\n\
+               000000 DISPLAY WS(1:1).\n\
+               000000 DISPLAY WS(5:1).\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("BCD\nCDE\nA\nE"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL reference modification: live computed indices, mixed bounds and omitted length.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 WS PIC X(5) VALUE \"ABCDE\".\n\
+               000000 01 J PIC 9 VALUE 0.\n\
+               000000 01 K PIC 9 VALUE 3.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 COMPUTE J = 1 + 1.\n\
+               000000 DISPLAY WS(J:K).\n\
+               000000 DISPLAY WS(2:K).\n\
+               000000 MOVE 3 TO J.\n\
+               000000 DISPLAY WS(J:).\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("BCD\nBCD\nCDE"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL reference modification: computed slices drive both comparison branches and EVALUATE.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 WS PIC X(5) VALUE \"ABCDE\".\n\
+               000000 01 J PIC 9 VALUE 2.\n\
+               000000 01 K PIC 9 VALUE 2.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 IF WS(J:K) = \"BC\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".\n\
+               000000 IF WS(J:K) = \"ZZ\" DISPLAY \"BAD\" ELSE DISPLAY \"DIFF\".\n\
+               000000 EVALUATE WS(J:K)\n\
+               000000 WHEN \"BC\" DISPLAY \"HIT\"\n\
+               000000 WHEN OTHER DISPLAY \"MISS\"\n\
+               000000 END-EVALUATE.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("MATCH\nDIFF\nHIT"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL reference modification: constant MOVE pads and truncates; markers retain spaces.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 WS PIC X(5) VALUE \"ABCDE\".\n\
+               000000 01 WIDE PIC X(5).\n\
+               000000 01 NARROW PIC X(2).\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 MOVE WS(2:2) TO WIDE.\n\
+               000000 MOVE WS(2:4) TO NARROW.\n\
+               000000 DISPLAY WIDE \"|\".\n\
+               000000 DISPLAY NARROW \"|\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("BC   |\nBC|"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL reference modification: runtime MOVE uses the live slice length for fitting.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 WS PIC X(5) VALUE \"ABCDE\".\n\
+               000000 01 J PIC 9 VALUE 2.\n\
+               000000 01 K PIC 9 VALUE 2.\n\
+               000000 01 WIDE PIC X(5).\n\
+               000000 01 NARROW PIC X(2).\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 MOVE WS(J:K) TO WIDE.\n\
+               000000 MOVE 4 TO K.\n\
+               000000 MOVE WS(J:K) TO NARROW.\n\
+               000000 DISPLAY WIDE \"|\".\n\
+               000000 DISPLAY NARROW \"|\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("BC   |\nBC|"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL reference modification: a runtime end past item width must trap.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 WS PIC X(5) VALUE \"ABCDE\".\n\
+               000000 01 J PIC 9 VALUE 4.\n\
+               000000 01 K PIC 9 VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY WS(J:K).\n\
+               000000 STOP RUN.",
+        expect: Expect::Trap,
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL reference modification: a runtime zero start must trap after one-based conversion.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 WS PIC X(5) VALUE \"ABCDE\".\n\
+               000000 01 J PIC 9 VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY WS(J:2).\n\
+               000000 STOP RUN.",
+        expect: Expect::Trap,
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -5850,7 +5994,9 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
         || ll.contains("@__twig_gc_alloc")
         || ll.contains("@__twig_alloc_bytes")
         || ll.contains("@__twig_alloc_ref_array_bytes")
-        || ll.contains("@__twig_gc_live_bytes");
+        || ll.contains("@__twig_gc_live_bytes")
+        // Runtime slices must execute the production bounds-checked helper.
+        || ll.contains("@__twig_str_slice");
     if uses_gc_runtime {
         let rt = |name: &str| {
             std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)

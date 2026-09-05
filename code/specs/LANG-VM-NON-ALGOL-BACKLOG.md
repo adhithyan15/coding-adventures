@@ -113,6 +113,14 @@ runtime MOVE's incorrect WASM output and fix the narrow string-lowering fact
 or copy defect responsible, with the failing canonical program as regression
 proof. Do not alter COBOL semantics or remove failing backend declarations.
 
+VM-045/050/051/052 local validation: all seven new rows (401–407) pass all
+seven standard backends in fresh processes with ran-cell sentinels: 49
+executions, zero skips. The frontend oracle suite passes 66 tests; affected
+backend libraries pass 281 tests, and LLVM integration passes 127 tests.
+Native and LLVM now route computed slices through the production checked
+runtime helper. WASM propagates runtime representation from computed bounds
+through downstream string copies. Hosted CI remains the merge gate.
+
 ## VM-044 implementation contract (selected after #14358 merged)
 
 PR #14358 merged as `669d5fcc1e` after all current-head checks passed on

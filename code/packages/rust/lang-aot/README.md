@@ -1,5 +1,9 @@
 # lang-aot
 
+COBOL reference-modification rows cover ASCII slices with literal/computed
+bounds, comparisons, MOVE padding/truncation and invalid-bound traps on the
+seven standard backends. Existing byte/character and category limits remain.
+
 Oct's matrix includes while-loop byte wrapping returned through a function call,
 conditional loop exit, and nested break targets on the seven standard backends.
 

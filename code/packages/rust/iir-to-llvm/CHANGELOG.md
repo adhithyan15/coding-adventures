@@ -1,5 +1,9 @@
 # Changelog — iir-to-llvm
 
+## Unreleased — runtime substring parity
+
+Computed string slices use the shared checked runtime helper and clear stale literal facts; constant slice folding remains available.
+
 ## 0.57.0 - 2026-08-13 - a global's storage type is declared, not inferred from a store
 
 `global_load` took the slot's type from the instruction's hint; `global_store`
