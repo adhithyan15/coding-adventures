@@ -39,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 139-case bootstrap corpus covers every process-free v1 domain:
+The 141-case bootstrap corpus covers every process-free v1 domain:
 
 - validated CI gate selection with exact package intersection, path and
   globstar matching, explicit false verdicts, deterministic output names, and
@@ -67,8 +67,10 @@ The 139-case bootstrap corpus covers every process-free v1 domain:
 - the build-plan distinction between `affected_packages: null` and `[]`, plus
   atomic replacement of an existing destination by a second complete plan; and
 - fail-closed rejection of a future plan version;
-- conservative diff selection and prerequisite closure;
-- framed SHA-256 hashing plus hit, miss, and corrupt-cache recovery;
+- conservative diff selection and prerequisite closure, including exact reverse
+  selection from a digest-pinned repository source-input boundary;
+- framed SHA-256 hashing over the caller-supplied, deduplicated union of local
+  and repository-boundary inputs, plus hit, miss, and corrupt-cache recovery;
 - case-sensitive source collection across the complete generated-artifact
   registry and the closed 23-language source-input registry, including all
   five BUILD fronts, root-only capability and package metadata, reviewed
@@ -176,7 +178,12 @@ The process-free execution validator captures that corpus once as a typed,
 immutable exact-byte snapshot. POSIX uses retained directory descriptors;
 Windows requires a fixed non-remappable local volume, retains a non-reparse
 directory chain, enumerates the root by handle, and matches each member's
-volume and file identity while topology changes are blocked. Direct
+volume and file identity while topology changes are blocked. The retained root
+provides both the legacy 32-bit `dwVolumeSerialNumber` and, when available, the
+64-bit `FILE_ID_INFO.VolumeSerialNumber`; a member's `st_dev` must equal one of
+those exact native values. Implementations must not truncate or mask `st_dev`,
+and failure to obtain the extended value falls back only to exact legacy
+equality. Direct
 lowercase-`.json` names must be portable, exact NFC, unique after case folding,
 regular, singly linked, bounded, and identity-stable. Digesting, semantic
 validation, and typed selection all consume the retained bytes instead of

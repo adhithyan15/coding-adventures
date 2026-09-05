@@ -4768,6 +4768,64 @@ version = "1"
     }
 
     #[test]
+    fn webcomponent_package_build_activates_one_of_style_state() {
+        let pkg = make_package("mosaic-pkg-button", &["Button"]);
+        write_component_sources(
+            pkg.path(),
+            "Button",
+            "component Button { slot variant : one-of primary danger ; }",
+            "layout Button { HostButton [ button ] ( label: \"Delete\" ) }",
+            "style Button { part button { state danger { background: #dc3545 ; } } }",
+        );
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::WebComponent,
+            emit_project: false,
+            theme: None,
+        })
+        .expect("WebComponent package should build");
+
+        let js = fs::read_to_string(out.path().join("webcomponent/Button.js")).unwrap();
+        assert!(
+            js.contains("variant === \"danger\""),
+            "generated JS:\n{js}"
+        );
+        assert!(js.contains("background: #dc3545"));
+        assert!(js.contains("const variant = this.getAttribute(\"variant\")"));
+    }
+
+    #[test]
+    fn compose_package_build_activates_one_of_style_state() {
+        let pkg = make_package("mosaic-pkg-button", &["Button"]);
+        write_component_sources(
+            pkg.path(),
+            "Button",
+            "component Button { slot variant : one-of primary danger ; }",
+            "layout Button { HostButton [ button ] ( label: \"Delete\" ) }",
+            "style Button { part button { state danger { background: #dc3545 ; } } }",
+        );
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Compose,
+            emit_project: false,
+            theme: None,
+        })
+        .expect("Compose package should build");
+
+        let kotlin = fs::read_to_string(out.path().join("compose/Button.kt")).unwrap();
+        assert!(
+            kotlin.contains("variant == \"danger\""),
+            "generated Kotlin:\n{kotlin}"
+        );
+        assert!(kotlin.contains("Color(0xFFDC3545)"));
+        assert!(kotlin.contains("variant: String"));
+    }
+
+    #[test]
     fn dependency_style_state_preserves_its_dependency_slot_owner() {
         let workspace = TempDir::new().unwrap();
         let child = workspace.path().join("mosaic-pkg-accent");

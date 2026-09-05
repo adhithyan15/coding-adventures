@@ -459,6 +459,9 @@
                 "all",
                 "error"
               ]
+            },
+            "boundary_sha256": {
+              "$ref": "#/$defs/digest"
             }
           }
         },

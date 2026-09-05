@@ -1515,6 +1515,15 @@ mod tests {
         assert_eq!(def.parts[0].base[0].value, "1px");
     }
 
+    #[test]
+    fn viewport_dimensions_preserve_unit_adjacency() {
+        for value in ["100vh", "50vw", "12.5vmin", "75vmax", "4px", "100%"] {
+            let src = format!("style Grid {{ part root {{ min-height: {value}; }} }}");
+            let def = parse_and_analyze(&src);
+            assert_eq!(def.parts[0].base[0].value, value);
+        }
+    }
+
     // ── Lattice emitter ──────────────────────────────────────────────────────
 
     #[test]

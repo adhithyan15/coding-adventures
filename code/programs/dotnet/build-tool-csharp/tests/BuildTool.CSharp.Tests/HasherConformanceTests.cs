@@ -104,7 +104,7 @@ public sealed class HasherConformanceTests
             .GetFiles(Path.Combine(FixtureDirectory, "cases"), "hashing-cache-*.json")
             .OrderBy(path => path, StringComparer.Ordinal)
             .ToArray();
-        Assert.Equal(3, fixturePaths.Length);
+        Assert.Equal(4, fixturePaths.Length);
 
         foreach (var fixturePath in fixturePaths)
         {

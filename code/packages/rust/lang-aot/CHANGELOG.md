@@ -1,5 +1,13 @@
 # Changelog — `lang-aot`
 
+## Unreleased — non-ALGOL matrix CI coverage (VM-024)
+
+Run every non-ALGOL canonical matrix row and its declared backends in normal
+BUILD, including BASIC RND/mixed DATA, Twig dynamic values and Nib BCD. Retain
+strict runner/result checks, reject empty corpora and post-detection skips, and
+report executed versus missing-tool cells. Full ALGOL coverage remains VM-025.
+
+
 ## Unreleased — portable matrix text and mixed JVM arithmetic (VM-033/VM-034)
 
 Matrix text-output expectations and BASIC differential comparisons now accept

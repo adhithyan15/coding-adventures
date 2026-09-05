@@ -4,22 +4,22 @@
   "chapter": 73,
   "title": "Two Actions, One Clause",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:45a9a0594cd65417",
+  "sourceHash": "fnv1a64:71bf5b95025bf977",
   "lessons": [
     {
       "id": "HI-C73-kar",
       "sequence": 2780,
-      "title": "-कर (-kar) — having done it",
-      "headword": "-कर",
-      "romanization": "-kar",
-      "gloss": "having done — one ending that chains two actions into one clause, and the way Hindi actually tells a sequence",
+      "title": "-कर / देखकर / करके (-kar / dekhkar / karke) — chaining actions in sequence",
+      "headword": "-कर / देखकर / करके",
+      "romanization": "-kar / dekhkar / karke",
+      "gloss": "having done / having looked / having done — suffix / regular example / irregular example",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:45ee788e34523a8e",
+      "sourceHash": "fnv1a64:961be805f1adc8d5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -57,7 +57,7 @@
             },
             {
               "kind": "speech",
-              "text": "The move is the same shape as सकना: take the -ना off the first verb and put -कर (-kar) on the bare stem."
+              "text": "The move is the same shape as सकना: take the -ना off the first verb and put -कर on the bare stem."
             },
             {
               "kind": "speech",
@@ -95,20 +95,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "dekhnā becomes dekhkar, then karnā becomes karke",
+              "instruction": "देखना (dekhnā) becomes देखकर (dekhkar), then करना (karnā) becomes करके (karke)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *dekhnā* → *dekhkar*, then *karnā* → *karke*]"
+              "source": "[YOU SAY: **देखना** (*dekhnā*) → **देखकर** (*dekhkar*), then **करना** (*karnā*) → **करके** (*karke*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "maiṁ kitāb dekhkar ātā hūṁ",
+              "instruction": "मैं किताब देखकर आता हूँ (maiṁ kitāb dekhkar ātā hūṁ)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *maiṁ kitāb dekhkar ātā hūṁ*]"
+              "source": "[YOU SAY: **मैं किताब देखकर आता हूँ** (*maiṁ kitāb dekhkar ātā hūṁ*)]"
             },
             {
               "kind": "prompt",
@@ -152,7 +152,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does -कर (-kar) attach to? (The bare stem, after the -ना comes off.) How many verbs in a -कर (-kar) sentence take a person ending? (One — the last.)"
+              "text": "What does -कर attach to? (The bare stem, after the -ना comes off.) How many verbs in a -कर sentence take a person ending? (One — the last.)"
             },
             {
               "kind": "speech",
@@ -191,7 +191,7 @@
             },
             {
               "kind": "speech",
-              "text": "You now have three ways to put two actions in one sentence: aur between two clauses, the जब … तब frame, and -कर (-kar) inside a single clause. Only one of them conjugates just once."
+              "text": "You now have three ways to put two actions in one sentence: aur between two clauses, the जब … तब frame, and -कर inside a single clause. Only one of them conjugates just once."
             }
           ]
         },
@@ -227,7 +227,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which of the two a Hindi speaker says more often — the -कर (-kar) one",
+              "instruction": "which of the two a Hindi speaker says more often — the -कर one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -267,7 +267,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many person endings does a -कर (-kar) sentence carry? (One.) And an aur sentence with two verbs? (Two.) Then stop."
+              "text": "How many person endings does a -कर sentence carry? (One.) And an aur sentence with two verbs? (Two.) Then stop."
             }
           ]
         }

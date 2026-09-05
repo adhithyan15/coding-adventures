@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed - viewport dimensions
+
+- Preserve `vh`, `vw`, `vmin`, and `vmax` as dimension units instead of
+  emitting invalid CSS such as `100 vh`. Discovered by the VisiCalc root app.
+
 ### Added - model-declared `one-of` states (UI49)
 
 - Added model-neutral `SlotStateAxis` input and model-aware compile entry points.

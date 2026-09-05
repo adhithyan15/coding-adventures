@@ -1,16 +1,28 @@
 # LANG-FULL E6 (layer 2) — general dynamic dispatch on the code-gen backends
 
-**Status:** design / specs-first, for sign-off.
+**Status (2026-09-05):** core E6 dispatch proofs landed; original design rationale retained below.
 **Enabler:** E6. **Depends on:** E6 layer-1 (typed `i64` module globals,
 [`lang-full-e6-globals.md`](lang-full-e6-globals.md), ✅ landed) · E5 (heap
 aggregates) · the McCarthy Lisp L3b dynamic-value work (✅ landed — see §2).
 **Unblocks:** Twig lists (**TW3**), records / match / unions (**TW6**),
 lambda / closures (**TW5**), dynamic globals, and dynamically-typed arithmetic —
-i.e. the Lisp core that today runs only on the tree-walking `twig-vm`.
+i.e. the Lisp core that originally ran only on the tree-walking `twig-vm`.
 
 ---
 
-## 0. One-paragraph summary
+## Current proof boundary
+
+The [unified matrix](../packages/rust/lang-aot/tests/lang_matrix.rs) now executes
+lists, boxed arithmetic, records, unions, closures, symbol/quote identity and
+forward globals on the five code generators and VM/JIT. VM-010 also added the
+discriminating `(define (f) (+ g 1)) (define g 41) (f)` → 42 row for boxed-global
+arithmetic. Selected rows additionally declare BEAM. These proofs run with the
+non-ALGOL normal BUILD selection landed in #14317. Runtime-created symbol/name
+recovery and unproven dynamic string forms are separate feature coverage, not
+reasons to reopen already-proven E6 core cells; see
+[VM-027](LANG-VM-NON-ALGOL-BACKLOG.md).
+
+## 0. Original design summary (historical)
 
 E6 is the roadmap's "dynamic dispatch" fork — the reason most of Twig (lists,
 closures, records, symbols, dynamic `+`) runs only on the interpreter. The good
@@ -321,7 +333,7 @@ E6d-7.
    `call_indirect`/`funcref`**). JVM/CLR/LLVM/native already run closures.
    Impl PRs: E6d-7a (iir-to-wasm lowering) → E6d-7b (matrix cell). Proof:
    `((lambda (x) (+ x 1)) 41)` → 42 on all 5 code-gen backends.
-8. **E6d-8 — dynamic globals (✅ read/write roundtrip shipped; arith follow-up).**
+8. **E6d-8 — dynamic globals (✅ read/write and arithmetic shipped).**
    A forward-referenced Twig value global (read before its `define`) is emitted as
    `call_builtin "global_get"/"global_set"` over `any`. The shared `lower_global_io`
    pass rewrites those to typed `global_load`/`global_store` (which every backend
@@ -330,10 +342,10 @@ E6d-7.
    global hit an unsupported `call_builtin`. Fix: add `lower_global_io` (step 0) to
    all those pipelines. Proof (shipped): `(define (f) g) (define g 42) (f)` → 42 on
    [NativeAot, Llvm, Wasm, Jvm, Clr] (`main` `global_store`s g=42, `f` `global_load`s
-   it); WASM + real dotnet CLR verified, native/LLVM/JVM via CI. **Follow-up:** a
-   dynamic global feeding dynamic *arithmetic* (`(+ g 2)`) traps — the slot stores a
-   raw `i64` but `lower_dynamic_arith` treats the `any`-typed `global_load` result as
-   boxed and inserts an `unbox`. Needs the slot widened to a boxed `any`.
+   it). VM-010 extended this proof to VM/JIT and added
+   `(define (f) (+ g 1)) (define g 41) (f)` → 42 on all seven standard engines
+   (also BEAM in the current corpus). The old raw-slot/unbox arithmetic failure
+   is repaired; boxed-global arithmetic is no longer an open follow-up.
 
 Ordering rationale: E6d-2 (arithmetic) is the widest single unlock and blocks any
 "compute a number dynamically" proof; lists/records/unions all reduce to cons

@@ -2481,6 +2481,17 @@ def _validate_pure_case_semantics(
                     "CASE_PACKAGE_REFERENCE_UNKNOWN",
                     f"forced package is not declared: {name}",
                 )
+        if boundary_digest := options.get("boundary_sha256"):
+            boundary = (
+                repository_source_input_boundary
+                or _default_repository_source_input_boundary()
+            )
+            if boundary_digest != repository_source_input_boundary_digest(boundary):
+                raise ConformanceError(
+                    "CASE_REPOSITORY_SOURCE_BOUNDARY_DIGEST_MISMATCH",
+                    "diff-selection case does not pin the validated repository "
+                    "source-input boundary",
+                )
     elif domain == "hashing_cache":
         workspace_paths = {entry.path for entry in staged_files}
         include_paths = options["include_paths"]
@@ -2828,10 +2839,31 @@ def _expected_ci_gate_selection(options: dict[str, Any]) -> list[dict[str, Any]]
 def _expected_diff_selection(
     options: dict[str, Any],
     changed_paths: list[str],
+    repository_source_input_boundary: dict[str, Any] | None = None,
 ) -> tuple[set[str], set[str], set[str]] | None:
     packages = options["packages"]
     changed: set[str] = set(options["forced_packages"])
     unknown = False
+    boundary_reverse_index: dict[str, set[str]] = {}
+    if boundary_digest := options.get("boundary_sha256"):
+        boundary = (
+            repository_source_input_boundary
+            or _default_repository_source_input_boundary()
+        )
+        if boundary_digest != repository_source_input_boundary_digest(boundary):
+            raise ConformanceError(
+                "CASE_REPOSITORY_SOURCE_BOUNDARY_DIGEST_MISMATCH",
+                "diff-selection case does not pin the validated repository "
+                "source-input boundary",
+            )
+        for package in packages:
+            for entry in boundary["boundaries"]:
+                if not _repository_boundary_applies(entry, package["rel_path"]):
+                    continue
+                for boundary_input in entry["inputs"]:
+                    boundary_reverse_index.setdefault(
+                        boundary_input["path"], set()
+                    ).add(package["name"])
     build_names = {
         "BUILD",
         "BUILD_windows",
@@ -2840,7 +2872,9 @@ def _expected_diff_selection(
         "BUILD_mac_and_linux",
     }
     for path in changed_paths:
-        path_known = False
+        boundary_consumers = boundary_reverse_index.get(path, set())
+        path_known = bool(boundary_consumers)
+        changed.update(boundary_consumers)
         for package in packages:
             root = package["rel_path"]
             if path != root and not path.startswith(f"{root}/"):
@@ -2894,8 +2928,9 @@ def _expected_hashes(
     staged_files: list[WorkspaceFile],
 ) -> tuple[str, str, str]:
     workspace = {entry.path: entry.content for entry in staged_files}
+    include_paths = _utf8_sorted(options["include_paths"])
     package_digest = _framed_digest(
-        [(path, workspace[path]) for path in options["include_paths"]]
+        [(path, workspace[path]) for path in include_paths]
     )
     dependencies_digest = _framed_digest(
         [
@@ -3746,6 +3781,7 @@ def _validate_pure_result_semantics(
         expected_sets = _expected_diff_selection(
             options,
             case["input"]["changed_paths"],
+            repository_source_input_boundary,
         )
         if expected_sets is None:
             if outcome != "error" or "DIFF_UNKNOWN_PATH" not in diagnostic_codes:

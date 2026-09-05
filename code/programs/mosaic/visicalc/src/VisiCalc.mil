@@ -1,0 +1,20 @@
+component VisiCalc {
+  slot cell-address : text ;
+  slot formula : text ;
+  slot read-only : bool ;
+  slot column-headers : list<text> ;
+  slot column-widths : list<number> ;
+  slot viewport-rows : list<list<text>> ;
+  slot grid-selected-row : number ;
+  slot selected-col : number ;
+  slot grid-edit-row : number ;
+  slot edit-col : number ;
+  slot edit-content : text ;
+  emit onGridNavigate ( row : number , col : number ) ;
+  emit onFormulaChange ( value : text ) ;
+  emit onCommit ;
+  emit onCancel ;
+  emit onEditCommit ;
+  emit onEditCancel ;
+  emit onNewWorkbook ;
+}

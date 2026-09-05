@@ -1,78 +1,58 @@
-# Language × Backend platform matrix — every language on every (non-BEAM) backend
+# Language × Backend platform matrix
 
-**Goal:** verify, *by running*, that **every language frontend in the repo** executes
-correctly on **every backend except BEAM** — the same completeness bar McCarthy Lisp
-already clears, extended to the whole language family. LLVM coverage for every
-language is an explicit priority.
+**Current status (2026-09-05):** the shared LANG driver wires ten languages.
+The baseline target remains seven standard engines: native AOT, LLVM, WASM,
+JVM, CLR, VM, and JIT. Selected BEAM cells extend that baseline per program.
+A wired frontend or a green baseline program is not a full language proof.
 
-This is the generalization of the McCarthy `MCCARTHY-LISP-PLATFORM-MATRIX.md` /
-`CLR-REAL-RUNTIME-VERIFICATION.md` chapters: McCarthy was the reference language run
-on all 8 backends; this chapter brings the other six languages up to the same
-cross-backend bar (minus BEAM).
+## Current coverage and its source
 
-## Why this is mostly verification, not new backends
+| Languages | Authoritative executable corpus | Coverage boundary |
+|---|---|---|
+| Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, ALGOL 60, FLOW-MATIC, COBOL-60 | [`lang_matrix.rs`](../packages/rust/lang-aot/tests/lang_matrix.rs), canonical `PROGRAMS` | Each program declares its proven backends; the declaration is the coverage unit, not the language name |
+| McCarthy Lisp | [`conformance.rs`](../packages/rust/lang-aot/tests/conformance.rs) | Dedicated W16 core conformance, with host/toolchain gates |
+| Macsyma | [`macsyma_conformance.rs`](../packages/rust/lang-aot/tests/macsyma_conformance.rs) | v0 integer arithmetic/assignment across the five code generators, its VM and universal JIT; broader symbolic semantics need their own proofs |
 
-Every language frontend lowers to **one shared IIR** (`interpreter-ir::IIRModule`):
+The ten [`Language` variants](../packages/rust/lang-aot/src/lib.rs) feed shared
+IIR, then the applicable lowering and runtime path. The unified VM/JIT runners
+are generic IIR engines; they are not limited to the historical McCarthy
+interpreter. Dedicated language suites still retain their own reference VMs.
 
-```
-Twig / Nib / Brainfuck / Dartmouth BASIC / Oct / ALGOL 60   (+ McCarthy)
-        │  each via <lang>_iir_compiler::compile_source
-        ▼
-                 IIRModule  (the lingua franca)
-        │
-        ├── vm-core::VMCore                  → VM        (generic IIR interpreter, all 6)
-        ├── jit-core::JITCore + GenericCirJit → JIT      (generic IIR JIT, all 6)
-        ├── twig-aot + aarch64/x86_64-backend→ native AOT
-        ├── iir-to-llvm                      → LLVM  → real clang
-        ├── iir-to-wasm                      → WASM  → wasm-runtime
-        ├── iir-to-jvm-class-file            → JVM   → real java
-        ├── iir-to-cil-bytecode              → CLR   → real ilasm + real dotnet
-        └── iir-to-beam                      → BEAM  (OUT OF SCOPE — see below)
+```text
+10 wired Language variants → shared IIR → applicable lowering/runtime
+                                         ├─ native AOT / LLVM / WASM / JVM / CLR
+                                         ├─ VM / JIT
+                                         └─ BEAM where the program declares it
 ```
 
-Each backend consumes the shared IIR, so a backend is *language-agnostic by
-construction*: a frontend that lowers to IIR can in principle reach every backend
-for free. The work here is therefore mostly **(a)** adding cross-language conformance
-that proves each `(language, backend)` cell by running it, and **(b)** fixing the
-real lowering / runtime gaps that running surfaces — not writing new code generators.
+Twig symbol identity, forward-global reads and boxed-global arithmetic are
+already executed on VM/JIT as well as the five code generators (VM-010).
+FLOW-MATIC has its `MOVE`/`WRITE-ITEM` baseline (VM-020); Macsyma's numeric
+conformance includes the universal JIT (VM-021). VM-027 in the
+[completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md) audits feature coverage
+across all ten languages. VM-014 is decomposed, not an untouched frontend task.
 
-The genuine exceptions, where new wiring (not just a test) is required — and a
-correction the LM0 probe surfaced by **running** each backend:
+## Normal CI versus full-platform audits
 
-- **VM and JIT are McCarthy-*specialized*, not general IIR interpreters.** Verified
-  in LM0: `mccarthy_lisp_vm::run` rejects ordinary arithmetic/comparison ops with
-  `UnsupportedOp("add" / "mul" / "cmp_eq" / "cmp_lt" / "mod")` and the I/O ops with
-  `UnknownBuiltin("print_i64")` / `UnsupportedOp("alloc_bytes")`. It only ran the
-  *constant* programs (Twig `42`, Nib `return 42`, ALGOL `result := 42`, Oct void→0).
-  So the **VM and JIT columns are real op-coverage work**, not free: each must grow
-  the integer-arithmetic / comparison / (for I/O langs) tape + print ops before it
-  can run the non-McCarthy languages. The JIT additionally needs a generic
-  `run_on_jit(language, source)` (it has only `run_mccarthy_on_jit` today).
-- **The code-generator backends are general.** Native AOT, LLVM, WASM, JVM, and CLR
-  all compile the full IIR (existing tests already run Twig and ALGOL arithmetic on
-  WASM; LM0 runs all six languages on native AOT). So those five columns are mostly
-  **conformance tests + I/O wiring**, not new code generators.
-- **I/O languages produce results via stdout.** Brainfuck (`putchar`/`getchar`) and
-  Dartmouth BASIC (`PRINT`) print rather than return an exit code, so their
-  conformance captures stdout, and each backend's I/O intrinsics (`io_out` /
-  `putchar` / `print_i64`) must be exercised end-to-end.
+[`lang-aot/BUILD`](../packages/rust/lang-aot/BUILD) runs the dedicated suites,
+focused BASIC regressions, and every non-ALGOL unified corpus row. The
+[VM-024 PR #14317](https://github.com/adhithyan15/coding-adventures/pull/14317)
+passed local Windows execution of 163 programs / 1,161 cells / zero skips and
+all applicable hosted checks. The Linux/macOS package build invokes that
+selection. Windows Rust-only PRs instead have the dedicated native executable
+smoke gate introduced by
+[VM-032 PR #14295](https://github.com/adhithyan15/coding-adventures/pull/14295).
+Missing external tools remain explicit skips; detected-tool compile/link/run
+failures are failures. Two native precise-GC smoke early returns remain VM-031.
 
-> **Note (fixed in LM0):** the `Language` enum doc comments in `lang-aot/src/lib.rs`
-> were **stale** (they called DartmouthBasic / Oct "placeholders / no Rust
-> frontend"); all six frontends are in fact wired into `compile_source_to_iir`.
+The unfiltered unified matrix is still available with its fresh-process
+single-cell diagnostics. Its normal CI enablement remains VM-025, separately
+coordinated with ALGOL. Do not read the original all-green baseline below as a
+claim that the expanded current full matrix has passed on every host.
 
-## Scope
-
-**Languages (6):** Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, ALGOL 60.
-(McCarthy Lisp is already complete — it is the reference, not a worklist item.)
-
-**Backends (7):** VM, JIT, native AOT, LLVM, WASM, JVM, CLR.
-
-**Out of scope — BEAM.** The Erlang VM is a purely-functional, immutable-term
-runtime; languages with mutable imperative state (Brainfuck's tape, BASIC's
-variables/`GOTO`) do not map cleanly onto it, so BEAM stays McCarthy-only. (If a
-later chapter wants BEAM for the *expression* languages — Twig/Nib/Oct/ALGOL — it
-can be added then; this chapter does not pursue it.)
+BEAM was outside the original LM0 campaign. It now appears in selected unified
+rows as well as McCarthy's suite; it is neither universally supported nor
+McCarthy-only. Inspect each row's backend list for the exact contract.
 
 ## Methodology — prove every cell by RUNNING
 
@@ -97,7 +77,7 @@ asserts the result** — never on "the frontend lowers to IIR so it *should* wor
 (a known gap that needs a deeper backend/frontend change — grouped at the end so the
 achievable code-gen columns land first).
 
-## The matrix (target — every non-BEAM cell ✅)
+## Historical LM0 baseline (original six-language scope)
 
 | Language        | VM | JIT | native-AOT | LLVM | WASM | JVM | CLR |
 |-----------------|----|-----|-----------|------|------|-----|-----|
@@ -108,7 +88,7 @@ achievable code-gen columns land first).
 | Oct             | ✅ | ✅  | ✅        | ✅   | ✅   | ✅  | ✅  |
 | ALGOL 60        | ✅ | ✅  | ✅        | ✅   | ✅   | ✅  | ✅  |
 
-**native-AOT is uniformly ✅ as of LM0** — all six languages compile to a host
+**The original native-AOT baseline was uniformly ✅ at LM0** — all six languages compile to a host
 executable and run with the expected result (`lang-aot/tests/lang_matrix.rs`:
 Twig→42, Nib→42, Oct→0, ALGOL `17 mod 5`→2, Brainfuck→stdout `A`, BASIC→stdout `42`).
 The VM/JIT columns are op-coverage work (see above); the code-gen columns
@@ -389,5 +369,5 @@ shared IIR) and the generic **JIT** (`jit_core::JITCore` + the language-agnostic
 `GenericCirJit`, also over the shared IIR). Both are deliberately **generic** so a future
 Ruby/JS frontend runs on them with zero rework — the same "shared primitive, no
 per-language hack" principle as the code-gen backends. **Both execution columns are now
-complete — all six languages run on both — so the entire platform matrix is green (every
-language on every backend except BEAM, verified by running).**
+complete — all six languages run on both — so the original six-language baseline was green. This is historical milestone
+evidence; the expanded corpus and current CI boundaries are documented above.**

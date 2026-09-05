@@ -8,9 +8,9 @@ sequence: 420
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 chapter: 5
 type: word
-headword: करना / काम करना
-gloss: to do, to make (and काम करना, "to work")
-romanization: "karnā / kām karnā"
+headword: करना / काम करना / करता / करती
+gloss: to do or make / to work / do — infinitives / masculine / feminine
+romanization: "karnā / kām karnā / kartā / kartī"
 concept_tag: VERB-DO-MAKE
 prerequisites: [HI-C05-bolna]
 sounds: [matra-a]
@@ -31,7 +31,7 @@ variety: standard-hindi
 reviews_of: [HI-C05-bolna, HI-C05-rahna]
 ---
 
-# करना (karnā) — "to do," the most useful verb in Hindi
+# करना — "to do," "to work," and their present forms
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C05-BOLNA-01] -->
@@ -69,8 +69,8 @@ Hindi builds countless verbs as **noun + करना**:
 - **बात करना** (*bāt karnā*) = "talk-do" = "to converse"
 - **इंतज़ार करना** (*intazār karnā*) = "to wait"
 
-So *maiṁ kām kartā hūṁ* = "I work" (lit. "I work-do am"). Learn *karnā* and you
-unlock a whole grammar of "do-verbs."
+So **मैं काम करता हूँ** (*maiṁ kām kartā hūṁ*) = "I work" (lit. "I work-do
+am"). Learn *karnā* and you unlock a whole grammar of "do-verbs."
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -83,7 +83,7 @@ unlock a whole grammar of "do-verbs."
 
 [PAUSE 1s]
 - [YOU SAY: "karnā"]
-- [YOU SAY: "I work" (m./f.) — *maiṁ kām kartā hūṁ / kartī hūṁ*]
+- [YOU SAY: "I work" (m./f.) — **मैं काम करता हूँ / करती हूँ** (*maiṁ kām kartā hūṁ / kartī hūṁ*)]
 - [YOU SAY: the Chapter 1 word that shares its root (*namaskār* — the "making" of a bow)]
 
 ## Wrap-up Recall

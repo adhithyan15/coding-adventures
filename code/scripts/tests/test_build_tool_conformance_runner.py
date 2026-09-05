@@ -149,7 +149,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 139)
+        self.assertEqual(summary["case_count"], 141)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -3200,6 +3200,73 @@ class PureDomainValidationTests(unittest.TestCase):
             "CASE_REPOSITORY_SOURCE_ROOT_LANGUAGE_MISMATCH",
         )
 
+    def test_repository_boundary_reverse_diff_is_exact_and_digest_pinned(
+        self,
+    ) -> None:
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        case = load_case("diff-selection-repository-boundary.json")
+        options = case["input"]["options"]
+
+        self.assertEqual(
+            runner._expected_diff_selection(
+                options,
+                case["input"]["changed_paths"],
+                boundary,
+            ),
+            (
+                {"swift/conduit"},
+                {"swift/conduit", "swift/app"},
+                {"swift/base"},
+            ),
+        )
+        runner.validate_case_document(
+            case,
+            **self._schema_args(),
+            repository_source_input_boundary=boundary,
+        )
+
+        mismatched = copy.deepcopy(case)
+        mismatched["input"]["options"]["boundary_sha256"] = "0" * 64
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(
+                mismatched,
+                **self._schema_args(),
+                repository_source_input_boundary=boundary,
+            )
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_REPOSITORY_SOURCE_BOUNDARY_DIGEST_MISMATCH",
+        )
+
+        near_path = copy.deepcopy(case)
+        near_path["input"]["changed_paths"] = [
+            "code/packages/rust/Cargo.toml.backup"
+        ]
+        self.assertIsNone(
+            runner._expected_diff_selection(
+                near_path["input"]["options"],
+                near_path["input"]["changed_paths"],
+                boundary,
+            )
+        )
+
+    def test_hashing_cache_sorts_local_and_boundary_union_by_raw_utf8(self) -> None:
+        case = load_case("hashing-cache-local-boundary-union.json")
+        expected = case["expected"]["result"]
+        package_digest, dependencies_digest, combined_digest = (
+            runner._expected_hashes(
+                case["input"]["options"],
+                runner.preflight_workspace(case),
+            )
+        )
+
+        self.assertEqual(package_digest, expected["package_digest"])
+        self.assertEqual(dependencies_digest, expected["dependencies_digest"])
+        self.assertEqual(combined_digest, expected["combined_digest"])
+        runner.validate_case_document(case, **self._schema_args())
+
     def test_dependency_cycles_are_rejected_without_recursion(self) -> None:
         cyclic = load_case("diff-selection-transitive.json")
         cyclic["input"]["options"]["edges"].append(["python/app", "python/base"])
@@ -3484,7 +3551,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 139)
+        self.assertEqual(summary["case_count"], 141)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

@@ -181,6 +181,8 @@ impl VisiCalcMosaicApp {
         AppUpdate::new(json!({
             "cell-address": address, "formula": formula, "read-only": false,
             "selected-row": cursor.row, "selected-col": cursor.col,
+            "grid-selected-row": i64::from(cursor.row) - i64::from(cursor.offset),
+            "grid-edit-row": if edit_row < 0 { -1 } else { edit_row - i64::from(cursor.offset) },
             "viewport-offset": cursor.offset, "viewport-size": cursor.size,
             "viewport-rows": rows, "total-rows": ROWS, "total-cols": COLS,
             "column-headers": (1..=COLS).map(column_index_to_letters).collect::<Vec<_>>(),
@@ -222,8 +224,12 @@ impl MosaicApp for VisiCalcMosaicApp {
             return Err(invalid("event payload must be an object"));
         }
         match name(&event.name).as_str() {
-            "navigate" | "editStart" => {
-                let row = index(&event, "row", ROWS)?;
+            "navigate" | "gridNavigate" | "editStart" => {
+                let row = if name(&event.name) == "gridNavigate" {
+                    index(&event, "row", self.cursor.size)? + self.cursor.offset
+                } else {
+                    index(&event, "row", ROWS)?
+                };
                 let col = index(&event, "col", COLS)?;
                 // Validate every field before changing any state.
                 self.cursor.row = row;
@@ -346,6 +352,27 @@ mod tests {
 
     fn dispatch(app: &mut VisiCalcMosaicApp, event: &str, payload: Value) -> AppUpdate {
         app.dispatch(Event::new(1, event, payload)).unwrap()
+    }
+
+    #[test]
+    fn root_grid_events_translate_the_slice_in_the_shared_adapter() {
+        let mut app = VisiCalcMosaicApp::default();
+        let update = dispatch(&mut app, "navigate", json!({"row": 30, "col": 0}));
+        assert_eq!(update.props["viewport-offset"], 1);
+        assert_eq!(update.props["grid-selected-row"], 29);
+        assert_eq!(update.props["grid-edit-row"], -1);
+        let update = dispatch(&mut app, "onGridNavigate", json!({"row": 0, "col": 0}));
+        assert_eq!(update.props["cell-address"], "A2");
+        assert_eq!(update.props["formula"], "8");
+        assert_eq!(update.props["grid-selected-row"], 0);
+        let update = dispatch(&mut app, "editStart", json!({"row": 1, "col": 0}));
+        assert_eq!(update.props["grid-edit-row"], 0);
+        let snapshot = app.snapshot().unwrap();
+        assert!(app
+            .dispatch(Event::new(1, "gridNavigate", json!({"row": 30, "col": 0})))
+            .is_err());
+        assert_eq!(app.snapshot().unwrap(), snapshot);
+        assert_eq!(app.update().props, update.props);
     }
 
     #[test]

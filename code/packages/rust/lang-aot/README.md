@@ -408,3 +408,19 @@ Windows, and ARM64 macOS for free.
   intentionally minimal in V1.  Cross-OS support will land alongside
   multi-language `--emit-object` once we have a story for cross-host
   runtime archives.
+
+### Non-ALGOL matrix CI coverage (VM-024)
+
+Normal BUILD runs every non-ALGOL row of the canonical LANG matrix alongside
+the dedicated integration suites and focused BASIC regressions:
+
+```sh
+cargo test -p lang-aot --test lang_matrix non_algol_matrix_every_proven_cell_agrees -- --exact --nocapture
+```
+
+Each row executes its declared backends, with counts of programs, executed cells,
+and absent-tool skips. Compilation, linking, runtime and result errors fail;
+a detected toolchain cannot silently skip. The unfiltered matrix and its
+single-cell diagnostics remain available. Full ALGOL matrix CI is tracked as
+VM-025 in `LANG-VM-NON-ALGOL-BACKLOG.md`. The Windows Rust-only CI leg retains
+its dedicated native smoke gate; this BUILD command runs on Linux/macOS CI.
