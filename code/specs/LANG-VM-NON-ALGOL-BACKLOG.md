@@ -27,7 +27,8 @@ one fresh worktree and one PR; remove the worktree after merge.
 The loop keeps one active implementation PR. Before selecting another item,
 fetch `origin/main`, inspect the previous PR's actual merge state, record new
 discoveries, and rerank this backlog. Fix CI failures and merge conflicts on the
-active PR. Enable auto-merge only after its current-head checks finish green and
+active PR. Publish ready-for-review PRs, never drafts, so draft-specific check
+filters cannot suppress validation. Enable auto-merge only after its current-head checks finish green and
 no conflicts or blocking reviews remain; do not bypass checks. After merge,
 record completion and repeat from a clean feature worktree.
 
@@ -41,8 +42,7 @@ acceptance inventory (VM-029), rather than an implicit claim of completion.
 
 ### 2026-09-05 prioritization
 
-No new runtime failure has yet been executed in this pass. The directly observed
-CI gap ranks first: `lang-aot/BUILD` runs only the BASIC random differential
+The initial audit selected a directly observed CI gap: `lang-aot/BUILD` runs only the BASIC random differential
 tests from `lang_matrix`, so the new non-ALGOL conformance rows are not protected.
 The full matrix remains excluded for separately owned ALGOL Linux native-AOT
 array failures. VM-024 will run every non-ALGOL `PROGRAMS` row and its declared
@@ -52,6 +52,15 @@ linker, runtime, and result failures remain failures. Report executed and skippe
 cells and reject an empty selection. Validate on the local host and all PR CI
 hosts before enabling auto-merge. Promote any discovered runtime failure ahead
 of further coverage or semantic work.
+
+Executing that selection exposed VM-030 on the very first Windows native cell.
+PR #14265 repairs it; 62 library tests and all-target Clippy pass. Both LLVM
+`lld-link` and Microsoft `link.exe` run the Windows smoke suite successfully
+(eight reported tests, six exercised tests and two explicit GC early returns).
+The original failing LANG cell `0:NativeAot` passes with the single-cell sentinel.
+Current-head CI remains the merge gate. After this repair, missing Windows
+runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
+otherwise this exact regression can recur despite a green Windows job.
 
 ## Ranked backlog
 
@@ -75,7 +84,8 @@ of further coverage or semantic work.
 | — | VM-023 | done ([#13773](https://github.com/adhithyan15/coding-adventures/pull/13773)) | Audit and repair the same stateful-directory build defect across non-ALGOL TypeScript parser and lexer frontends. | Every affected package's normal and Windows build scripts run that package's own tests, with an automated guard against ending in a dependency directory. |
 | — | VM-012 | done ([#13785](https://github.com/adhithyan15/coding-adventures/pull/13785)) | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
 | — | VM-018 | done ([#13802](https://github.com/adhithyan15/coding-adventures/pull/13802)) | Define and implement portable Dartmouth BASIC `RND` semantics. | Merged as `8ceb8efc60`; the matrix includes negative reseeding, positive advancement, zero repeat, and shared `DEF FN` state on seven backends. |
-| 0 | VM-030 | selected; discovered by VM-024 | Repair Windows native-AOT CRT linking. | Twig `42` and arithmetic execute through the Windows smoke suite using the dynamic CRT without duplicate `__vcrt_InitializeCriticalSectionEx`; validate both available Microsoft/LLVM linkers and preserve normal CRT startup. |
+| 0 | VM-030 | in review ([#14265](https://github.com/adhithyan15/coding-adventures/pull/14265)); discovered by VM-024 | Repair Windows native-AOT CRT linking. | Twig `42` and arithmetic execute through the Windows smoke suite using the dynamic CRT without duplicate `__vcrt_InitializeCriticalSectionEx`; validate both available Microsoft/LLVM linkers and preserve normal CRT startup. |
+| 0a | VM-032 | queued | Protect LANG native Windows execution in PR CI. | An affected `twig-aot`/LANG dependency change selects an actual Windows executable smoke run, with its toolchain present; assert real execution rather than a green Clippy-only job. Preserve platform-plan gating and keep the known GC early returns explicit. |
 | 1 | VM-024 | queued behind VM-030 | Protect the non-ALGOL language matrix in normal CI. | Every non-ALGOL `PROGRAMS` row executes on each available declared backend; no empty selection or silent failure-to-skip conversion; full ALGOL diagnostics remain available. |
 | 2 | VM-025 | queued; coordinate with ALGOL owner | Reproduce the full matrix's current Linux failures and restore full CI coverage after their repair. | Record exact failing cells and owning PRs; remove the full-matrix exclusion only after the complete target runs green on supported CI hosts. |
 | 3 | VM-026 | queued | Reconcile stale Twig, frontend-count, and completed-work claims in LANG-FULL and LANG-PLATFORM status documents. | Every remaining gap links a current source/test boundary; landed VM-010, VM-017, VM-018, VM-020, and VM-021 work is no longer described as missing. |
@@ -86,6 +96,15 @@ of further coverage or semantic work.
 | 7a | VM-031 | queued under VM-029 | Reconcile and complete native precise-GC frame-walk proofs. | Windows smoke has two explicit early-return differentials for the Rust/Twig frame boundary; inventory supported-host GC gaps, track each refusal, and execute live-byte reclamation proofs before calling native GC complete. |
 
 ## Discovery log
+
+- **VM-D022 — confirmed 2026-09-05:** `.github/workflows/ci.yml` selects a
+  Windows job when `needs_rust` is true, but `Build and test affected packages`
+  on Windows additionally requires Swift or Elixir. Its dedicated Windows-only
+  Rust step is Clippy only and does not select the portable `twig-aot` crate.
+  Therefore a green Windows job for a Rust-only CRT repair does not execute
+  `windows_x86_64_smoke`. Promote VM-032 as the first coverage follow-up. Local
+  runs with both real linkers provide VM-030's Windows runtime evidence while
+  that gap is repaired separately.
 
 - **VM-D021 — confirmed 2026-09-05:** executing the proposed non-ALGOL
   matrix on Windows failed on the very first native Twig `42` cell with
