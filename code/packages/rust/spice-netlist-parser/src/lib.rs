@@ -2639,6 +2639,16 @@ fn parse_element(
             if !base_emitter_junction_potential.is_finite() || base_emitter_junction_potential <= 0.0 {
                 return Err(NetlistParseError::new("BJT VJE must be finite and positive"));
             }
+            let base_emitter_grading_coefficient = *model
+                .params
+                .get("MJE")
+                .or_else(|| model.params.get("ME"))
+                .unwrap_or(&0.33);
+            if !base_emitter_grading_coefficient.is_finite()
+                || !(0.0..1.0).contains(&base_emitter_grading_coefficient)
+            {
+                return Err(NetlistParseError::new("BJT MJE must be finite and in [0, 1)"));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2693,6 +2703,7 @@ fn parse_element(
             bjt.reverse_emission_coefficient = reverse_emission_coefficient;
             bjt.forward_emission_coefficient = forward_emission_coefficient;
             bjt.base_emitter_junction_potential = base_emitter_junction_potential;
+            bjt.base_emitter_grading_coefficient = base_emitter_grading_coefficient;
             Ok(Element::Bjt(bjt))
         }
         'J' => {
