@@ -1369,7 +1369,7 @@ Rload out 0 1k
 fn parses_bjt_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05 VAF=75 VA=120 VAR=60 VB=90 IKF=3m IK=5m IKR=4m TNOM=27 T_NOM=35 KF=2p AF=1.3 PTF=30 XTF=0.4 ITF=2m VTF=0.6 RE=5 RC=7 RB=9 RBM=4)
+.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05 VAF=75 VA=120 VAR=60 VB=90 IKF=3m IK=5m IKR=4m TNOM=27 T_NOM=35 KF=2p AF=1.3 PTF=30 XTF=0.4 ITF=2m VTF=0.6 RE=5 RC=7 RB=9 RBM=4 IRB=2m)
 Vcc vcc 0 DC 5
 Vbase base 0 DC 0.7
 Q1 vcc base out fast
@@ -1422,6 +1422,7 @@ Rload out 0 1k
     assert_close(bjt.collector_resistance, 7.0);
     assert_close(bjt.base_resistance, 9.0);
     assert_close(bjt.minimum_base_resistance.unwrap(), 4.0);
+    assert_close(bjt.base_resistance_half_current, 2.0e-3);
 
     let result = dc_op(&parsed.circuit).unwrap();
     let out = result.voltage("out").unwrap();
@@ -1791,6 +1792,28 @@ fn rejects_invalid_bjt_minimum_base_resistance() {
         assert!(error
             .to_string()
             .contains("BJT RBM must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_base_resistance_half_current() {
+    let parsed = parse_netlist(".model shaped NPN(IRB=2m)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_resistance_half_current, 2.0e-3);
+}
+
+#[test]
+fn rejects_invalid_bjt_base_resistance_half_current() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(IRB={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT IRB must be finite and non-negative"));
     }
 }
 
