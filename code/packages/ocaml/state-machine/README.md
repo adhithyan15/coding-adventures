@@ -27,13 +27,55 @@ modal-mode structure exercise the direct directed-graph dependency.
 
 - coding-adventures-directed-graph 0.1.0
 
+## Installation
+
+Install a released package with `opam install coding-adventures-state-machine`.
+From this source directory, pin the local dependency chain leaf-first and
+install the package:
+
+```bash
+opam pin add --no-action -y coding-adventures-graph ../graph
+opam pin add --no-action -y coding-adventures-directed-graph ../directed-graph
+opam install .
+```
+
+## Usage
+
+```ocaml
+open Coding_adventures_state_machine
+
+let () =
+  let transitions =
+    [ { source = "locked"; event = "coin"; target = "unlocked" } ]
+  in
+  match
+    Dfa.create ~states:[ "locked"; "unlocked" ] ~alphabet:[ "coin" ]
+      ~transitions ~initial:"locked" ~accepting:[ "unlocked" ] ()
+  with
+  | Error _ -> prerr_endline "invalid machine definition"
+  | Ok machine -> (
+      match Dfa.process machine "coin" with
+      | Ok state -> Printf.printf "current state: %s\n" state
+      | Error (Unknown_event event) ->
+          Printf.eprintf "unknown event: %s\n" event
+      | Error _ -> prerr_endline "transition failed")
+```
+
+Compile and run the example with:
+
+```bash
+opam exec -- ocamlfind ocamlc -linkpkg -package coding-adventures-state-machine example.ml -o example.bc
+opam exec -- ocamlrun example.bc
+```
+
 ## Development
 
 The build recipe pins the complete leaf-first local closure, installs exact
 development dependencies, checks formatting, runs Alcotest with bisect_ppx,
-and fails if the production source is absent from measured coverage.
+and fails if the production source is absent from measured coverage. Numeric
+95% threshold enforcement belongs to the cross-platform package CI contract.
 
-    bash BUILD
+    bash -e BUILD
 
 The package targets OCaml 5.2.1, Dune 3.17.2, Alcotest 1.9.0,
 bisect_ppx 2.8.3, and ocamlformat 0.27.0.
