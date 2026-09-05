@@ -1,7 +1,7 @@
 # VisiCalc presentation contract
 
 `budget-v1.json` is the shared workbook seed. The React host imports it directly;
-the Rust MosaicApp adapter must consume the same source values. Expected totals
+the Rust MosaicApp adapter consumes the same source values. Expected totals
 in `presentation-contract-v1.json` are explicit independent assertions.
 
 The contract uses Mosaic runtime event envelopes (`type` and `payload`) and
@@ -24,6 +24,12 @@ and compares the complete rendered slice with the engine's computed window.
 Unknown events fail the replay. Run `npm test` from
 `code/programs/typescript/visicalc`; the Linux/Windows VisiCalc workflow executes
 this replay and the production build, which also type-checks the tests.
+
+`cargo test -p visicalc-mosaic-app` from `code/packages/rust` replays this same
+fixture against the standard Rust adapter and spreadsheet-core. The adapter's
+additional tests cover snapshot/restore, atomic errors, resizing and the native
+C ABI. Both replays run in the VisiCalc Linux/Windows workflow. Generated native
+controls and the standard web host still need integration and UI acceptance.
 
 Version 1 establishes the working edit/navigation baseline for the adapter
 migration. It does **not** certify physical scrolling, responsive viewport sizing,

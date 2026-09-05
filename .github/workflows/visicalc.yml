@@ -9,6 +9,8 @@ on:
       - 'code/programs/mosaic/visicalc/**'
       - 'code/packages/mosaic/mosaic-pkg-grid/**'
       - 'code/packages/rust/mosaic-*/**'
+      - 'code/packages/rust/visicalc-mosaic-app/**'
+      - 'code/packages/rust/spreadsheet-core/**'
       - 'code/packages/rust/mosmodel-compiler/**'
       - 'code/packages/rust/moslayout-compiler/**'
       - 'code/packages/rust/mosstyle-compiler/**'
@@ -21,6 +23,8 @@ on:
       - 'code/programs/mosaic/visicalc/**'
       - 'code/packages/mosaic/mosaic-pkg-grid/**'
       - 'code/packages/rust/mosaic-*/**'
+      - 'code/packages/rust/visicalc-mosaic-app/**'
+      - 'code/packages/rust/spreadsheet-core/**'
       - 'code/packages/rust/mosmodel-compiler/**'
       - 'code/packages/rust/moslayout-compiler/**'
       - 'code/packages/rust/mosstyle-compiler/**'
@@ -56,6 +60,8 @@ jobs:
         run: bash ../../../scripts/ci/apt-install.sh libcairo2-dev
       - name: Install web dependencies
         run: npm ci --no-audit --no-fund
+      - name: Test the standard Rust application and native ABI
+        run: cargo test --manifest-path ../../../packages/rust/Cargo.toml -p visicalc-mosaic-app
       - name: Regenerate Mosaic controls and test the real WASM engine
         run: npm test
       - name: Check the production build

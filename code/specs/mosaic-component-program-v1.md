@@ -75,16 +75,19 @@ starting from the app — surfaced a chain that had been invisible:
    `Input`. `Button.light.msl` says so in its own header: "the variant slot is
    accepted by the .mil and stays unused at the styling layer — every variant
    renders with the base style." All eight Button variants are identical.
-4. **Because the mechanism to vary a part by a slot value was never designed**
-   ([#14037](https://github.com/adhithyan15/coding-adventures/issues/14037)). `mosaic-pkg-toolkit.md` §4.1 proposes `part alert/danger`
-   sub-parts and §10 leaves the syntax an open question; the components shipped
-   their API surface ahead of it.
+4. **The mechanism to vary a part by a slot value had never been designed.**
+   UI49 settled it in
+   [#14059](https://github.com/adhithyan15/coding-adventures/pull/14059):
+   enumerated `one-of` values become slot-owned mosstyle states. The enum slot
+   foundation landed in
+   [#14210](https://github.com/adhithyan15/coding-adventures/pull/14210);
+   runtime style selection and the six toolkit retrofits remain #14036.
 
 A story per variant renders eight identical buttons. It is unmissable in a
 MosaicBook grid and invisible in prose — which is the entire argument for this
 program, demonstrated on the first component examined under it.
 
-It also reorders Track A: #14037 (design) → #14036 (variants work) → #14031
+It also reorders Track A: #14036 (variants work; UI49 design complete) → #14031
 (stories possible) → #14012 (gate them). Gating first would have certified 63
 components on empty fixtures, and passed a story of eight identical buttons.
 
@@ -247,7 +250,8 @@ Every component already built gets released with a test app that can be
 downloaded and run, and a showcase page that links to it. Nothing here requires
 a new component; it is entirely the "done" contract applied to existing work.
 
-- **A1 — the Phase 0 gaps, in this order:** stories for three-file components
+- **A1 — the Phase 0 gaps, in this order:** working slot-driven variants
+  ([#14036](https://github.com/adhithyan15/coding-adventures/issues/14036)), then stories for three-file components
   ([#14031](https://github.com/adhithyan15/coding-adventures/issues/14031)) — because a CI gate over impossible stories certifies
   nothing — then MosaicBook in CI ([#14012](https://github.com/adhithyan15/coding-adventures/issues/14012)), native previews
   ([#14013](https://github.com/adhithyan15/coding-adventures/issues/14013)), publishing ([#14014](https://github.com/adhithyan15/coding-adventures/issues/14014)), and the

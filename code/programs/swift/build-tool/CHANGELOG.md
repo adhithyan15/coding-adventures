@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Align declared-source glob matching with the language-neutral portable
+  grammar and exact 50,000,000-unit match-work budget. Character classes now
+  implement Python-compatible negation, ranges, and literal edge characters;
+  invalid classes fail before source or diff selection, and dynamic programming
+  bounds globstar and segment matching without regex backtracking.
 - Adopt the complete checked repository source-input boundary in production
   hashing and diff selection. A generated typed projection covers all 18
   boundaries, 21 registrations, 19 tracked paths, nine neutral cases, and the
@@ -31,8 +36,8 @@
   source beyond the per-file ceiling before the mutation check.
 - Complete portable source hashing with every established lane's primary
   sources and package metadata, the shared 26-component exact pruning registry, OCaml
-  coverage, strict declared-source selection, and both neutral collection
-  fixtures. Package digests now use the local pure Swift SHA-256 package and
+  coverage, strict declared-source selection, and all 13 neutral collection
+  cases. Package digests now use the local pure Swift SHA-256 package and
   hashing-v1 path/content length frames on every platform; no-follow reads
   retain and recheck ancestor/object identities, and failures use one stable,
   root-redacted CLI diagnostic with exit code `2`.

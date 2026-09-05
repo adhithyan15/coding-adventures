@@ -2538,6 +2538,20 @@ fn parse_element(
                     "BJT RB must be finite and non-negative",
                 ));
             }
+            let minimum_base_resistance = model.params.get("RBM").copied();
+            if minimum_base_resistance
+                .is_some_and(|resistance| !resistance.is_finite() || resistance < 0.0)
+            {
+                return Err(NetlistParseError::new(
+                    "BJT RBM must be finite and non-negative",
+                ));
+            }
+            let base_resistance_half_current = *model.params.get("IRB").unwrap_or(&0.0);
+            if !base_resistance_half_current.is_finite() || base_resistance_half_current < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT IRB must be finite and non-negative",
+                ));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
@@ -2577,6 +2591,8 @@ fn parse_element(
             bjt.emitter_resistance = emitter_resistance;
             bjt.collector_resistance = collector_resistance;
             bjt.base_resistance = base_resistance;
+            bjt.minimum_base_resistance = minimum_base_resistance;
+            bjt.base_resistance_half_current = base_resistance_half_current;
             Ok(Element::Bjt(bjt))
         }
         'J' => {

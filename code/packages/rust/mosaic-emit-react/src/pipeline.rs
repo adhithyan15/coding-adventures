@@ -6263,6 +6263,7 @@ mod tests {
                 }],
                 transitions: vec![],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "hover".to_string(),
                     transitions: vec![],
                     props: vec![StyleProp {
@@ -6721,6 +6722,7 @@ mod tests {
         let mut states: Vec<StateStyle> = Vec::new();
         if !even.is_empty() {
             states.push(StateStyle {
+                slot: None,
                 state: "even".to_string(),
                 transitions: vec![],
                 props: even
@@ -6734,6 +6736,7 @@ mod tests {
         }
         if !odd.is_empty() {
             states.push(StateStyle {
+                slot: None,
                 state: "odd".to_string(),
                 transitions: vec![],
                 props: odd
@@ -8671,6 +8674,7 @@ mod tests {
                 base: vec![],
                 transitions: vec![],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "hover".to_string(),
                     transitions: vec![],
                     props: vec![StyleProp {

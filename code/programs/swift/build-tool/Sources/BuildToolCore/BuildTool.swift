@@ -137,7 +137,7 @@ public enum BuildTool {
                     force = true
                 } else {
                     let packagePaths = Dictionary(uniqueKeysWithValues: packages.map { ($0.name, $0.path) })
-                    let changedPackages = GitDiff.mapFilesToPackages(
+                    let changedPackages = try GitDiff.mapFilesToPackages(
                         changedFiles: changedFiles,
                         packagePaths: packagePaths,
                         repoRoot: repoRoot,

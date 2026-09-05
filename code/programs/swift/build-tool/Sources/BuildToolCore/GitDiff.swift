@@ -24,8 +24,13 @@ public enum GitDiff {
         packagePaths: [String: String],
         repoRoot: String,
         packages: [BuildPackage]? = nil
-    ) -> Set<String> {
+    ) throws -> Set<String> {
         let packageByName = Dictionary(uniqueKeysWithValues: (packages ?? []).map { ($0.name, $0) })
+        for package in packageByName.values where package.isStarlark {
+            for pattern in package.declaredSrcs {
+                try Hasher.validatePortableGlob(pattern)
+            }
+        }
         let normalizedRoot = normalize(repoRoot)
         var relativePackagePaths: [String: String] = [:]
 
