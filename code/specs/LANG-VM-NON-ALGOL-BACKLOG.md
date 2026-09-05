@@ -63,6 +63,24 @@ VM-033 (Windows text-output newlines), which now precedes coverage work. After
 that repair, missing Windows runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
 otherwise this exact regression can recur despite a green Windows job.
 
+## VM-037 implementation contract (selected after #14349 merged)
+
+PR #14349 merged as `839e4191e8` after all applicable checks passed on
+`983ab9fbfe`. Hosted Windows explicitly reported 19 McCarthy native programs
+executed; Linux/macOS BUILD also passed. VM-036 is complete. Reprioritization
+selects VM-037, the next coverage-only item; ALGOL remains separately owned.
+
+Add canonical FLOW-MATIC programs proving a taken EQUAL branch, untaken
+LESS/GREATER branches reaching OTHERWISE, and an unconditional jump chain.
+All paths must terminate and wrong paths must print distinguishable output;
+use differing record widths/line counts rather than infinite-loop failure
+sentinels. Fields start at zero, so this slice does not claim positive LESS or
+GREATER comparisons over nonzero input (the EOF-aware input work is VM-039).
+Declare all seven standard backends and execute each new cell with strict
+existing result assertions, reporting missing tools honestly. Normal non-ALGOL
+BUILD must include the new rows automatically. Preserve frontend/runtime
+semantics. Update source-linked inventory counts and backlog validation.
+
 ## VM-036 implementation contract (selected after #14341 merged)
 
 The ten-frontend audit merged as `1fcd588c6b` after all checks passed on
@@ -320,8 +338,8 @@ items requiring new runtime lowering follow the coverage-only promotions.
 
 | Order | Item | Bounded work and executable acceptance |
 |---|---|---|
-| 1 | VM-036 | Run McCarthy's existing 19-program native capstone on Windows/Linux as well as macOS. Assert a present linker cannot silently skip; wire actual Windows execution into CI and prove all 19 results. |
-| 2 | VM-037 | Promote FLOW-MATIC compare/branch/jump behavior beyond the scalar-output baseline. Use terminating, discriminating output programs on all seven standard columns. |
+| done #14349 | VM-036 | Run McCarthy's existing 19-program native capstone on Windows/Linux as well as macOS. Assert a present linker cannot silently skip; wire actual Windows execution into CI and prove all 19 results. |
+| selected | VM-037 | Promote FLOW-MATIC compare/branch/jump behavior beyond the scalar-output baseline. Use terminating, discriminating output programs on all seven standard columns. |
 | 3 | VM-044 | Promote Oct while/loop/break and returned function values to observable seven-column programs; prove u8 wrap and actual branch/call effects. |
 | 4 | VM-045 | Promote COBOL reference modification to standard columns: constant and dynamic bounds, result text and explicit invalid-bound behavior, compared with its existing oracle. |
 | 5 | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
