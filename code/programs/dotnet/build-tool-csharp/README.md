@@ -17,6 +17,9 @@ the repo:
    consulting Git or the filesystem
 8. Parse exact `# needs-toolchain: NAME` metadata from the selected platform
    BUILD front and schedule canonical extra CI toolchains for affected packages
+9. Hash package sources through the complete checked language registry plus
+   exact repository-boundary inputs, using one stable tracked-index snapshot
+   before and after the package batch
 
 ## Usage
 
@@ -29,10 +32,33 @@ dotnet run -- --emit-plan --plan-file build-plan.json
 
 ## Design notes
 
-- Uses only the .NET base class library: `System.Text.Json`, `System.Xml`,
-  `System.Security.Cryptography`, and `System.Diagnostics`.
-- Keeps the handwritten engine in one literate source file and the
-  hash-verified generated Unicode data in one clearly marked generated source.
+- Uses no external managed dependencies. Registry, hashing, XML, and process
+  work use the .NET base class library; secure file traversal calls the native
+  kernel32 or libc APIs directly.
+- `SourceInputRegistries.Generated.cs` is the immutable production projection
+  of both neutral source-input registries. Regenerate it from the repository
+  root with
+  `powershell -File code/programs/dotnet/build-tool-csharp/tools/generate-source-input-registries.ps1`;
+  neither executable locates or decodes fixture JSON at runtime.
+- Source selection applies exact generated-component pruning, all seven
+  package-local selector roles, direct Starlark `srcs` globs, and the reviewed
+  repository-boundary registry. The same boundary projection reverse-indexes
+  a changed shared input to every exact consumer.
+- Package hashes sort canonical repository-relative UTF-8 paths and frame each
+  path and exact raw file body with unsigned 64-bit big-endian lengths before
+  SHA-256. Dependency and combined-digest framing remain a separate contract.
+- Live hashing incrementally bounds 100,000 candidates, 50,000 selected files,
+  50,000,000 declared-glob match-work units, 64 MiB per file, and 1 GiB per
+  package. Native no-follow opens reject linked,
+  reparse, non-regular, or multiply linked inputs. Each package retains the
+  repository root while reopening and revalidating directory and file identity
+  with constant descriptor use; complete Git
+  mode/OID/stage/path evidence is checked before and after batch hashing.
+  Package-hash failures expose only a stable quoted package identity; tracked
+  snapshot failures expose only a stable `SOURCE_HASH_*` code.
+- Keeps the handwritten engine and secure source reader in focused literate
+  source files, with hash-verified generated registries and Unicode data in
+  clearly marked generated sources.
 - Mirrors the current practical feature set of the TypeScript and Rust ports:
   shell `BUILD` files, manifest-based dependency resolution, git diff, cache,
   reporting, and plan emission.

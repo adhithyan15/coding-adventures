@@ -10879,6 +10879,7 @@ mod tests {
                     transitions: vec![],
                     states: vec![
                         mosstyle_compiler::StateStyle {
+                            slot: None,
                             state: "selected".into(),
                             transitions: vec![],
                             props: vec![
@@ -10893,6 +10894,7 @@ mod tests {
                             ],
                         },
                         mosstyle_compiler::StateStyle {
+                            slot: None,
                             state: "editing".into(),
                             transitions: vec![],
                             props: vec![StyleProp {

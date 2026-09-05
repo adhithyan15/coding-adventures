@@ -5742,6 +5742,7 @@ mod tests {
 
     fn state(name: &str, props: Vec<StyleProp>) -> StateStyle {
         StateStyle {
+            slot: None,
             state: name.to_string(),
             transitions: vec![],
             props,

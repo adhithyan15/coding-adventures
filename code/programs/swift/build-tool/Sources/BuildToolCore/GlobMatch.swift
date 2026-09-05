@@ -1,12 +1,45 @@
 import Foundation
 
 public enum GlobMatch {
+    private enum SegmentToken {
+        case invalid
+        case star
+        case anyScalar
+        case literal(Unicode.Scalar)
+        case characterClass(negated: Bool, members: [ClassMember])
+    }
+
+    private enum ClassMember {
+        case scalar(Unicode.Scalar)
+        case range(ClosedRange<UInt32>)
+    }
+
     public static func matchPath(_ pattern: String, _ path: String) -> Bool {
-        let normalizedPattern = normalize(pattern)
-        let normalizedPath = normalize(path)
-        let patternParts = splitPath(normalizedPattern)
-        let pathParts = splitPath(normalizedPath)
-        return matchSegments(patternParts, pathParts)
+        let patternParts = splitPath(normalize(pattern))
+        let pathParts = splitPath(normalize(path))
+        var previous = Array(repeating: false, count: pathParts.count + 1)
+        previous[0] = true
+
+        for patternPart in patternParts {
+            var current = Array(repeating: false, count: pathParts.count + 1)
+            if patternPart == "**" {
+                current[0] = previous[0]
+                for pathIndex in pathParts.indices {
+                    current[pathIndex + 1] =
+                        previous[pathIndex + 1] || current[pathIndex]
+                }
+            } else {
+                for pathIndex in pathParts.indices where previous[pathIndex] {
+                    current[pathIndex + 1] = matchSegment(
+                        patternPart,
+                        pathParts[pathIndex]
+                    )
+                }
+            }
+            previous = current
+        }
+
+        return previous[pathParts.count]
     }
 
     private static func normalize(_ value: String) -> String {
@@ -21,81 +54,140 @@ public enum GlobMatch {
         guard !value.isEmpty else {
             return []
         }
-        return value
-            .split(separator: "/")
+        return value.split(separator: "/")
             .map(String.init)
             .filter { !$0.isEmpty }
     }
 
-    private static func matchSegments(_ pattern: [String], _ path: [String]) -> Bool {
-        if pattern.isEmpty {
-            return path.isEmpty
-        }
-
-        if path.isEmpty {
-            return pattern.allSatisfy { $0 == "**" }
-        }
-
-        let head = pattern[0]
-        if head == "**" {
-            var rest = Array(pattern.dropFirst())
-            while rest.first == "**" {
-                rest.removeFirst()
-            }
-            for index in 0...path.count {
-                if matchSegments(rest, Array(path.dropFirst(index))) {
-                    return true
-                }
-            }
-            return false
-        }
-
-        guard matchSegment(head, path[0]) else {
-            return false
-        }
-        return matchSegments(Array(pattern.dropFirst()), Array(path.dropFirst()))
-    }
-
     private static func matchSegment(_ pattern: String, _ segment: String) -> Bool {
-        let regexPattern = "^" + convertSegmentToRegex(pattern) + "$"
-        guard let regex = try? NSRegularExpression(pattern: regexPattern) else {
-            return false
-        }
-        let range = NSRange(location: 0, length: segment.utf16.count)
-        return regex.firstMatch(in: segment, options: [], range: range) != nil
-    }
+        let tokens = tokenizeSegment(pattern)
+        let scalars = Array(segment.unicodeScalars)
+        var previous = Array(repeating: false, count: scalars.count + 1)
+        previous[0] = true
 
-    private static func convertSegmentToRegex(_ pattern: String) -> String {
-        var result = ""
-        var index = pattern.startIndex
-
-        while index < pattern.endIndex {
-            let character = pattern[index]
-            switch character {
-            case "*":
-                result += "[^/]*"
-                index = pattern.index(after: index)
-            case "?":
-                result += "[^/]"
-                index = pattern.index(after: index)
-            case "[":
-                let next = pattern.index(after: index)
-                if let end = pattern[next...].firstIndex(of: "]") {
-                    result += String(pattern[index...end])
-                    index = pattern.index(after: end)
-                } else {
-                    result += "\\["
-                    index = pattern.index(after: index)
+        for token in tokens {
+            var current = Array(repeating: false, count: scalars.count + 1)
+            switch token {
+            case .star:
+                current[0] = previous[0]
+                for scalarIndex in scalars.indices {
+                    current[scalarIndex + 1] =
+                        previous[scalarIndex + 1] || current[scalarIndex]
                 }
             default:
-                if ".+(){}^$|\\".contains(character) {
-                    result += "\\"
+                for scalarIndex in scalars.indices where previous[scalarIndex] {
+                    current[scalarIndex + 1] = tokenMatches(
+                        token,
+                        scalars[scalarIndex]
+                    )
                 }
-                result.append(character)
-                index = pattern.index(after: index)
             }
+            previous = current
         }
 
-        return result
+        return previous[scalars.count]
+    }
+
+    private static func tokenizeSegment(_ pattern: String) -> [SegmentToken] {
+        let scalars = Array(pattern.unicodeScalars)
+        var tokens: [SegmentToken] = []
+        var index = 0
+        while index < scalars.count {
+            switch scalars[index].value {
+            case 0x2A:
+                tokens.append(.star)
+                index += 1
+            case 0x3F:
+                tokens.append(.anyScalar)
+                index += 1
+            case 0x5B:
+                guard
+                    let parsed = parseCharacterClass(
+                        scalars,
+                        opening: index
+                    )
+                else {
+                    tokens.append(.literal(scalars[index]))
+                    index += 1
+                    continue
+                }
+                tokens.append(parsed.token)
+                index = parsed.nextIndex
+            default:
+                tokens.append(.literal(scalars[index]))
+                index += 1
+            }
+        }
+        return tokens
+    }
+
+    private static func parseCharacterClass(
+        _ scalars: [Unicode.Scalar],
+        opening: Int
+    ) -> (token: SegmentToken, nextIndex: Int)? {
+        var cursor = opening + 1
+        let negated = cursor < scalars.count && scalars[cursor].value == 0x21
+        if negated {
+            cursor += 1
+        }
+        let bodyStart = cursor
+        if cursor < scalars.count, scalars[cursor].value == 0x5D {
+            cursor += 1
+        }
+        while cursor < scalars.count, scalars[cursor].value != 0x5D {
+            cursor += 1
+        }
+        guard cursor < scalars.count else {
+            return nil
+        }
+
+        let body = Array(scalars[bodyStart..<cursor])
+        var members: [ClassMember] = []
+        var memberIndex = 0
+        while memberIndex < body.count {
+            if memberIndex + 2 < body.count,
+                body[memberIndex + 1].value == 0x2D
+            {
+                guard
+                    body[memberIndex].value <= body[memberIndex + 2].value
+                else {
+                    return (.invalid, cursor + 1)
+                }
+                let lower = body[memberIndex].value
+                let upper = body[memberIndex + 2].value
+                members.append(
+                    .range(lower...upper)
+                )
+                memberIndex += 3
+            } else {
+                members.append(.scalar(body[memberIndex]))
+                memberIndex += 1
+            }
+        }
+        return (
+            .characterClass(negated: negated, members: members),
+            cursor + 1
+        )
+    }
+
+    private static func tokenMatches(_ token: SegmentToken, _ scalar: Unicode.Scalar) -> Bool {
+        switch token {
+        case .invalid:
+            return false
+        case .star, .anyScalar:
+            return true
+        case .literal(let expected):
+            return expected == scalar
+        case .characterClass(let negated, let members):
+            let contained = members.contains { member in
+                switch member {
+                case .scalar(let expected):
+                    return expected == scalar
+                case .range(let range):
+                    return range.contains(scalar.value)
+                }
+            }
+            return negated ? !contained : contained
+        }
     }
 }

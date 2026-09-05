@@ -45,6 +45,38 @@ let evaluateToolchainSnapshot
 let discoverPackages (codeRoot: string) (platform: string) =
     Discovery.DiscoverPackages(codeRoot, platform)
 
+// Source selection is process-free at the F# boundary: callers supply the
+// bounded inert candidate snapshot and receive only normalized path/digest
+// records from the single reviewed shared engine.
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let selectSourceCandidates (request: SourceCollectionRequest) = Hasher.SelectSourceCandidates(request)
+
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let languageSourceInputRegistryJson () = Hasher.LanguageSourceInputRegistryJson
+
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let repositorySourceInputBoundaryJson () =
+    Hasher.RepositorySourceInputBoundaryJson
+
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let languageSourceInputRegistryDigest () =
+    Hasher.LanguageSourceInputRegistryDigest
+
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let repositorySourceInputBoundaryDigest () =
+    Hasher.RepositorySourceInputBoundaryDigest
+
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let canonicalLanguageSourceInputRegistryDigest (json: string) =
+    Hasher.CanonicalLanguageSourceInputRegistryDigest(json)
+
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let canonicalRepositorySourceInputBoundaryDigest (json: string) =
+    Hasher.CanonicalRepositorySourceInputBoundaryDigest(json)
+
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let hashPackageInputs (inputs: IReadOnlyList<PackageHashInput>) = Hasher.HashPackageInputs(inputs)
+
 [<EntryPoint>]
 let main argv =
     BuildToolApp.RunAsync(argv) |> Async.AwaitTask |> Async.RunSynchronously

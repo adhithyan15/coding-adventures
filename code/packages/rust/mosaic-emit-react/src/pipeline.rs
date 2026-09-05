@@ -619,7 +619,7 @@ pub fn from_pipeline(
 
     // 5. Precompute the per-part inline style strings from the mosstyle IR
     //    so the JSX walker can look up the right styles in O(1) per node.
-    let part_styles = build_part_style_map(style);
+    let part_styles = build_part_style_map(style, &interface.slots);
 
     // 6. Function declaration (UI24 §3.3).
     out.push_str(&emit_function(
@@ -4898,21 +4898,51 @@ fn primitive_to_jsx_tag(tag: &str) -> Result<JsxTag, PipelineEmitError> {
 /// CSS-in-JS fragment ready to drop inside a `style={{ ... }}` literal —
 /// e.g. `backgroundColor: "#1e1e1e", color: "#cccccc"`.
 ///
+/// Model-owned state blocks are appended to the base entry as conditional
+/// object spreads. Because every part-bearing primitive consumes that same
+/// entry, slot-driven states work for specialized host primitives as well as
+/// the generic tree walker. Built-in states retain their existing activation
+/// paths and their standalone composite entries.
+///
 /// ### What this function does NOT yet do
 ///
-/// - **State blocks** (`state hover { ... }`, `state focused { ... }`)
-///   are ignored. They need either CSS-class plumbing or a runtime
-///   pseudo-class observer; both are out of scope for this first cut.
-///   TODO: emit a `:hover` selector via a small inline `<style>` element,
-///   or hand the resolved CSS off to mosstyle's `emit_css` and surface it
-///   as a sibling artifact.
+/// - **Unwired built-in state blocks** (`state hover { ... }`, `state focused
+///   { ... }`) still need CSS-class plumbing or a runtime pseudo-class observer.
 /// - **CSS shorthand / shorthand expansion** — e.g. `border: 1px solid #ccc`
 ///   passes through verbatim, which works in React inline styles for most
 ///   shorthands but not all. We don't validate or expand.
-fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
+fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> HashMap<String, String> {
     let mut out = HashMap::with_capacity(style.parts.len());
     for part in &style.parts {
-        let fragment = build_inline_style_fragment(&part.base);
+        let mut fragments = Vec::new();
+        let base = build_inline_style_fragment(&part.base);
+        if !base.is_empty() {
+            fragments.push(base);
+        }
+
+        // UI49 — enum states are activated directly from their owning slot;
+        // they intentionally require no `state-when-*` layout property. Walk
+        // slots first so simultaneous variant axes follow .mil declaration
+        // order, then retain authored state order within each axis.
+        for slot in slots {
+            let slot_ident = to_camel_case_first_lower(&slot.name);
+            for state in part
+                .states
+                .iter()
+                .filter(|state| state.slot.as_deref() == Some(slot.name.as_str()))
+            {
+                let state_fragment = build_inline_style_fragment(&state.props);
+                if state_fragment.is_empty() {
+                    continue;
+                }
+                fragments.push(format!(
+                    "...(({slot_ident} === {}) ? {{ {state_fragment} }} : {{}})",
+                    js_string_literal(&state.state)
+                ));
+            }
+        }
+
+        let fragment = fragments.join(", ");
         if !fragment.is_empty() {
             out.insert(part.name.clone(), fragment);
         }
@@ -6248,10 +6278,10 @@ mod tests {
     }
 
     #[test]
-    fn state_blocks_are_ignored_in_first_cut() {
-        // A part with a `:hover` state block. The base style should still
-        // be emitted; the state block is silently dropped (with a TODO in
-        // the implementation).
+    fn unwired_builtin_state_blocks_are_ignored() {
+        // A part with a built-in `hover` state block. The base style should
+        // still be emitted; without state-when-hover or future pseudo-class
+        // plumbing, this interaction state remains dormant.
         let m = component("X", vec![], vec![]);
         let s = StyleDef {
             component_name: "X".to_string(),
@@ -6263,6 +6293,7 @@ mod tests {
                 }],
                 transitions: vec![],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "hover".to_string(),
                     transitions: vec![],
                     props: vec![StyleProp {
@@ -6282,6 +6313,124 @@ mod tests {
             "state blocks must not leak into the inline style, got:\n{}",
             result.output
         );
+    }
+
+    #[test]
+    fn ui49_slot_states_emit_in_model_slot_order_and_bind_style_only_slots() {
+        let m = component(
+            "X",
+            vec![
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                    true,
+                ),
+                slot(
+                    "size",
+                    SlotType::OneOf(vec!["regular".to_string(), "compact".to_string()]),
+                    true,
+                ),
+                slot("unused", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![StyleProp {
+                    name: "color".to_string(),
+                    value: "#111111".to_string(),
+                }],
+                transitions: vec![],
+                // Reverse the authored state order deliberately. UI49
+                // precedence is the model's slot order, not this Vec's order.
+                states: vec![
+                    StateStyle {
+                        state: "compact".to_string(),
+                        slot: Some("size".to_string()),
+                        props: vec![StyleProp {
+                            name: "padding".to_string(),
+                            value: "4px".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                    StateStyle {
+                        state: "danger".to_string(),
+                        slot: Some("variant".to_string()),
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#dc3545".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                ],
+            }],
+        };
+        let result = from_pipeline(&m, &box_root(Some("panel")), &s).expect("emit ok");
+        let output = &result.output;
+
+        let variant_pos = output
+            .find("variant === \"danger\"")
+            .expect("variant condition should be emitted");
+        let size_pos = output
+            .find("size === \"compact\"")
+            .expect("size condition should be emitted");
+        assert!(
+            variant_pos < size_pos,
+            "model slot order must set precedence"
+        );
+        assert!(output.contains("  variant,\n  size,\n  dispatch,"));
+        assert!(!output.contains("  unused,"));
+        assert!(output.contains("color: \"#111111\", ...((variant"));
+    }
+
+    #[test]
+    fn ui49_slot_state_reaches_specialized_host_button_style() {
+        let m = component(
+            "X",
+            vec![slot(
+                "variant",
+                SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                true,
+            )],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Delete".to_string()),
+                }],
+                children: vec![],
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    state: "danger".to_string(),
+                    slot: Some("variant".to_string()),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#dc3545".to_string(),
+                    }],
+                    transitions: vec![],
+                }],
+            }],
+        };
+        let result = from_pipeline(&m, &l, &s).expect("emit ok");
+
+        assert!(result.output.contains(
+            "<button style={{ ...((variant === \"danger\") ? { background: \"#dc3545\" } : {}) }}"
+        ));
+        assert!(result.output.contains("  variant,\n  dispatch,"));
     }
 
     #[test]
@@ -6721,6 +6870,7 @@ mod tests {
         let mut states: Vec<StateStyle> = Vec::new();
         if !even.is_empty() {
             states.push(StateStyle {
+                slot: None,
                 state: "even".to_string(),
                 transitions: vec![],
                 props: even
@@ -6734,6 +6884,7 @@ mod tests {
         }
         if !odd.is_empty() {
             states.push(StateStyle {
+                slot: None,
                 state: "odd".to_string(),
                 transitions: vec![],
                 props: odd
@@ -8671,6 +8822,7 @@ mod tests {
                 base: vec![],
                 transitions: vec![],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "hover".to_string(),
                     transitions: vec![],
                     props: vec![StyleProp {

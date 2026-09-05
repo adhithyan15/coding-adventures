@@ -63,6 +63,43 @@ VM-033 (Windows text-output newlines), which now precedes coverage work. After
 that repair, missing Windows runtime CI protection (VM-032) precedes the broader non-ALGOL matrix gate:
 otherwise this exact regression can recur despite a green Windows job.
 
+## VM-032 implementation contract (selected after #14289 merged)
+
+PR #14289 merged as `e6765d7711` after all applicable checks passed on
+`92250cbe12`. VM-033 and VM-034 are complete. Reprioritization now selects
+VM-032 ahead of VM-024: Windows must execute its native regression on affected
+PRs before widening the general matrix coverage.
+
+Derive a dedicated LANG Windows runtime flag from the build plan's Windows
+`affected_packages` override, falling back to the top-level affected closure
+only when there is no Windows override. Select `rust/twig-aot` or
+`rust/lang-aot`; the planner already propagates changes through their dependency
+closure. A null or missing closure means full coverage; an empty closure means
+no affected packages. Reject malformed plans. Changes to the workflow, selector,
+its tests, or the MSVC bootstrap must self-select the gate even for an empty
+package plan.
+
+Wire the flag into Windows runner selection, Rust setup, and the existing MSVC
+developer-environment setup. Add a dedicated Windows step running
+`cargo test -p twig-aot --test windows_x86_64_smoke -- --nocapture` with
+`LANG_REQUIRE_WINDOWS_AOT=1`. In that mode absence of a real linker must fail,
+not silently skip. Preserve optional local-toolchain skips without the flag and
+the two explicit, separately tracked precise-GC early returns (VM-031).
+
+Validate selection against Windows overrides, unrelated and full plans, and
+self-changes. Exercise the real Windows suite with the required flag, then run
+its scalar test binary with no linker on PATH and prove a nonzero result.
+Validate workflow wiring and the existing planner/metadata contracts. Actual
+hosted Windows runtime execution on the PR is the final acceptance evidence.
+
+Local validation: all eight smoke tests report success with the required flag;
+five launch programs, one checks the PE object, and two explicitly return for
+VM-031. Removing every linker from PATH makes the scalar test fail with exit
+101 in required mode, while optional local mode retains its documented skip.
+Six selector/wiring tests, 15 CI-registry tests, and five MSVC-bootstrap tests
+pass. The recorded #14265 plan selects this gate, Ruff and YAML parsing pass,
+and all-target `twig-aot` Clippy is clean. Hosted CI remains the merge gate.
+
 ## Ranked backlog
 
 ### VM-033 implementation contract (selected after #14265 merged)
@@ -124,10 +161,10 @@ backends, and all-target Clippy is clean. Full-matrix completion is not claimed.
 | — | VM-012 | done ([#13785](https://github.com/adhithyan15/coding-adventures/pull/13785)) | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
 | — | VM-018 | done ([#13802](https://github.com/adhithyan15/coding-adventures/pull/13802)) | Define and implement portable Dartmouth BASIC `RND` semantics. | Merged as `8ceb8efc60`; the matrix includes negative reseeding, positive advancement, zero repeat, and shared `DEF FN` state on seven backends. |
 | — | VM-030 | done ([#14265](https://github.com/adhithyan15/coding-adventures/pull/14265)); discovered by VM-024 | Repair Windows native-AOT CRT linking. | Merged `0e18482307`; both Windows linkers execute the smoke suite, 62 unit tests and Clippy pass, and Linux/macOS/Windows CI and both CI gates finished green. |
-| 0a | VM-033 | selected; reproduced after VM-030 | Define portable text-output comparison in the LANG matrix. | Windows LLVM BASIC cell `352:Llvm` prints correct values with CRLF but the LF expectation fails; normalize only the accepted host text-newline difference, preserve meaningful output bytes, and run discriminating multi-line cases on available backends. |
-| 0a prerequisite | VM-034 | selected with VM-033 | Preserve JVM integer arithmetic in mixed floating-point modules. | RND cell `360:Jvm` must produce `22`, `85032`, `85032`, `601352`; its `48271 * 48271` intermediate stays i64, while the existing integer-only simulator tests remain green. |
-| 0b | VM-032 | queued | Protect LANG native Windows execution in PR CI. | An affected `twig-aot`/LANG dependency change selects an actual Windows executable smoke run, with its toolchain present; assert real execution rather than a green Clippy-only job. Preserve platform-plan gating and keep the known GC early returns explicit. |
-| 1 | VM-024 | queued behind VM-030 | Protect the non-ALGOL language matrix in normal CI. | Every non-ALGOL `PROGRAMS` row executes on each available declared backend; no empty selection or silent failure-to-skip conversion; full ALGOL diagnostics remain available. |
+| — | VM-033 | done ([#14289](https://github.com/adhithyan15/coding-adventures/pull/14289)) | Define portable text-output comparison in the LANG matrix. | Windows LLVM BASIC cell `352:Llvm` prints correct values with CRLF but the LF expectation fails; normalize only the accepted host text-newline difference, preserve meaningful output bytes, and run discriminating multi-line cases on available backends. |
+| — | VM-034 | done ([#14289](https://github.com/adhithyan15/coding-adventures/pull/14289)) | Preserve JVM integer arithmetic in mixed floating-point modules. | RND cell `360:Jvm` must produce `22`, `85032`, `85032`, `601352`; its `48271 * 48271` intermediate stays i64, while the existing integer-only simulator tests remain green. |
+| 0 | VM-032 | selected | Protect LANG native Windows execution in PR CI. | An affected `twig-aot`/LANG dependency change selects an actual Windows executable smoke run, with its toolchain present; assert real execution rather than a green Clippy-only job. Preserve platform-plan gating and keep the known GC early returns explicit. |
+| 1 | VM-024 | queued behind VM-032 | Protect the non-ALGOL language matrix in normal CI. | Every non-ALGOL `PROGRAMS` row executes on each available declared backend; no empty selection or silent failure-to-skip conversion; full ALGOL diagnostics remain available. |
 | 2 | VM-025 | queued; coordinate with ALGOL owner | Reproduce the full matrix's current Linux failures and restore full CI coverage after their repair. | Record exact failing cells and owning PRs; remove the full-matrix exclusion only after the complete target runs green on supported CI hosts. |
 | 3 | VM-026 | queued | Reconcile stale Twig, frontend-count, and completed-work claims in LANG-FULL and LANG-PLATFORM status documents. | Every remaining gap links a current source/test boundary; landed VM-010, VM-017, VM-018, VM-020, and VM-021 work is no longer described as missing. |
 | 4 | VM-027 | queued | Audit feature-by-backend coverage for all ten wired frontends, including dedicated McCarthy and Macsyma suites. | Inventory implemented features, declared/refused backend cells, executable proofs, and CI commands; split every uncovered implemented feature into a bounded parity item. |

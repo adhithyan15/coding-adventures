@@ -14,7 +14,9 @@ orphan-crate and exemption-ledger snapshot. The
 `evaluateToolchainSnapshot` facade evaluates bounded, caller-supplied package
 and BUILD-front records through a native F# symbol. The `discoverPackages`
 facade likewise gives F# callers and tests an explicit entry into the shared
-.NET discovery engine.
+.NET discovery engine. The no-inline `selectSourceCandidates`, registry
+projection/digest, canonical-digest, and `hashPackageInputs` facades expose the
+portable source-hashing contract through native F# symbols.
 
 ## Why share the engine?
 
@@ -30,6 +32,16 @@ non-package BUILD roots, and exact case-sensitive generated-directory pruning,
 including Dune `_build`. Direct C# evidence additionally proves that `_Build`
 and `_build-example` remain source. This facade intentionally performs the same
 filesystem discovery as the CLI and adds no second implementation or authority.
+
+The source-hashing facades independently consume all 13 neutral source-
+collection cases and all three package-digest cases through F#. They prove the
+complete typed language and repository-boundary projections, both canonical
+registry digests, exact generated-component and link-boundary pruning, declared
+and extension selection, repository-relative UTF-8 framing, and raw-byte
+hashing. These facade calls remain process-free; the F# executable delegates
+live bounded traversal, native no-follow reads, full Git-index stability, and
+reverse boundary-diff selection to the same reviewed C# engine. Portable
+dependency and combined-digest framing remain a separate follow-up contract.
 
 The tracked-artifact facade deliberately reuses the reviewed C# data and result
 types. Its F# test surface independently consumes all five language-neutral

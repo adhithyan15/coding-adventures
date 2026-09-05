@@ -8,9 +8,9 @@ sequence: 400
 spine_node: SPINE-SAY-WHAT-I-DO
 chapter: 5
 type: word
-headword: बोलना
-gloss: to speak
-romanization: "bolnā"
+headword: बोलना / बोल
+gloss: to speak / speak — infinitive / stem
+romanization: "bolnā / bol"
 concept_tag: VERB-SPEAK
 prerequisites: [HI-C03-hun]
 sounds: [matra-o]
@@ -31,7 +31,7 @@ variety: standard-hindi
 reviews_of: []
 ---
 
-# बोलना (bolnā) — "to speak," your first full verb
+# बोलना / बोल (*bolnā / bol*) — "to speak" and its stem
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01] -->
@@ -58,9 +58,9 @@ takes all the other endings.
 ## Grammar Lens: stem + ending
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C05-BOLNA-01] -->
 
-The stem *bol-* is where the action lives; endings pin down who and when:
-*bol-tā* (speaking, m.), *bol-tī* (speaking, f.), *bol-o* (speak!, familiar
-command). You will build every tense by adding to a stem like this.
+The stem **बोल** (*bol-*) is where the action lives; endings pin down who and
+when: *bol-tā* (speaking, m.), *bol-tī* (speaking, f.), *bol-o* (speak!,
+familiar command). You will build every tense by adding to a stem like this.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -73,6 +73,7 @@ command). You will build every tense by adding to a stem like this.
 
 [PAUSE 1s]
 - [YOU SAY: "bolnā"]
+- [YOU SAY: strip **-ना** from **बोलना**, then read the stem **बोल** (*bol-*)]
 - [YOU SAY: the infinitive marker every Hindi verb ends in (*-nā*)]
 - [YOU SAY: three *-nā* verbs you now know (*bolnā, calnā, milnā*)]
 

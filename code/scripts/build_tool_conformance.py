@@ -53,6 +53,7 @@ RESERVED_ADAPTER_FLAGS = ("--conformance", "--workspace-root", "--output")
 CLI_MAX_ARGUMENTS = 64
 CLI_MAX_ARGUMENT_CHARACTERS = 256
 CLI_MAX_ARGUMENT_BYTES = 4096
+MAX_DECLARED_SOURCE_MATCH_WORK = 50_000_000
 CI_GATE_MACHINERY_EXACT = (
     ".github/workflows/ci.yml",
     "code/specs/data/ci-gates.json",
@@ -603,7 +604,41 @@ def portable_glob_error(value: Any) -> str | None:
             basename = segment.split(".", 1)[0].upper()
             if basename in WINDOWS_RESERVED_BASENAMES:
                 return "glob segment uses a Windows reserved basename"
+        if _glob_has_ambiguous_character_class(segment):
+            return "glob character class has an ambiguous or descending range"
     return None
+
+
+def _glob_has_ambiguous_character_class(segment: str) -> bool:
+    index = 0
+    while index < len(segment):
+        if segment[index] != "[":
+            index += 1
+            continue
+        cursor = index + 1
+        if cursor < len(segment) and segment[cursor] == "!":
+            cursor += 1
+        closing = cursor
+        if closing < len(segment) and segment[closing] == "]":
+            closing += 1
+        while closing < len(segment) and segment[closing] != "]":
+            closing += 1
+        if closing == len(segment):
+            index += 1
+            continue
+        body = segment[cursor:closing]
+        if any(operator in body for operator in ("--", "&&", "~~", "||")):
+            return True
+        member = cursor
+        while member + 2 < closing:
+            if segment[member + 1] == "-":
+                if ord(segment[member]) > ord(segment[member + 2]):
+                    return True
+                member += 3
+            else:
+                member += 1
+        index = closing + 1
+    return False
 
 
 def _utf8_sorted(values: Sequence[str]) -> list[str]:
@@ -2921,6 +2956,7 @@ def _expected_source_collection(
     }
     declared_srcs = options["declared_srcs"]
     files: list[dict[str, str]] = []
+    declared_source_match_work = 0
 
     for candidate in options["candidates"]:
         if candidate["kind"] != "file":
@@ -2967,9 +3003,16 @@ def _expected_source_collection(
             if scoped_matches:
                 included = True
         elif not included:
-            included = any(
-                _portable_glob_matches(pattern, path) for pattern in declared_srcs
-            )
+            for pattern in declared_srcs:
+                declared_source_match_work += (len(pattern) + 1) * (len(path) + 1)
+                if declared_source_match_work > MAX_DECLARED_SOURCE_MATCH_WORK:
+                    raise ConformanceError(
+                        "SOURCE_HASH_LIMIT_EXCEEDED",
+                        "declared source glob match work exceeds the package limit",
+                    )
+                if _portable_glob_matches(pattern, path):
+                    included = True
+                    break
         if included:
             files.append(
                 {

@@ -672,10 +672,12 @@ fn compose_component_with_model_and_style_options(
         &model.descriptor_json,
         package_search_paths,
     )?;
-    let own_style = mosstyle_compiler::compile_with_tokens(
+    let slot_states = slot_state_axes(&model.component);
+    let own_style = mosstyle_compiler::compile_with_tokens_and_slot_states(
         msl_src,
         Some(&layout.part_map_json),
         style_options.tokens,
+        &slot_states,
     )
     .map_err(|errs| pipeline_err(component, &errs[0]))?;
     let style = merge_dependency_styles(own_style.def, dependency_style_parts);
@@ -3825,10 +3827,12 @@ fn collect_dependency_component_style_parts(
         package_search_paths,
     )?;
 
-    let style_out = mosstyle_compiler::compile_with_tokens(
+    let slot_states = slot_state_axes(&mosmodel_out.component);
+    let style_out = mosstyle_compiler::compile_with_tokens_and_slot_states(
         &msl_src,
         Some(&layout_out.part_map_json),
         dependency_style_options.tokens,
+        &slot_states,
     )
     .map_err(|errs| pipeline_err(component, &errs[0]))?;
     dependency_parts.extend(style_out.def.parts);
@@ -3876,6 +3880,22 @@ fn merge_dependency_styles(
     dependency_parts.append(&mut own.parts);
     own.parts = dependency_parts;
     own
+}
+
+fn slot_state_axes(
+    model: &mosmodel_compiler::MosmodelComponent,
+) -> Vec<mosstyle_compiler::SlotStateAxis> {
+    model
+        .slots
+        .iter()
+        .filter_map(|slot| match &slot.r#type {
+            mosmodel_compiler::SlotType::OneOf(values) => Some(mosstyle_compiler::SlotStateAxis {
+                slot: slot.name.clone(),
+                values: values.clone(),
+            }),
+            _ => None,
+        })
+        .collect()
 }
 
 fn package_reference_err(component: &str, error: impl Into<String>) -> BuildError {
@@ -4697,6 +4717,96 @@ version = "1"
         let palette_path = root.join(relative_path);
         fs::create_dir_all(palette_path.parent().unwrap()).unwrap();
         fs::write(palette_path, source).unwrap();
+    }
+
+    #[test]
+    fn package_composition_binds_one_of_style_state_to_its_slot() {
+        let model = mosmodel_compiler::compile(
+            "component Button { slot variant : one-of primary danger ; }",
+        )
+        .expect("model should compile");
+        let composed = compose_component_with_model(
+            "Button",
+            model,
+            "layout Button { Box [ root ] { } }",
+            "style Button { part root { state danger { color: #ff0000 ; } } }",
+            &[],
+            None,
+        )
+        .expect("component should compose");
+
+        assert_eq!(
+            composed.style.parts[0].states[0].slot.as_deref(),
+            Some("variant")
+        );
+    }
+
+    #[test]
+    fn react_package_build_activates_one_of_style_state() {
+        let pkg = make_package("mosaic-pkg-button", &["Button"]);
+        write_component_sources(
+            pkg.path(),
+            "Button",
+            "component Button { slot variant : one-of primary danger ; }",
+            "layout Button { HostButton [ button ] ( label: \"Delete\" ) }",
+            "style Button { part button { state danger { background: #dc3545 ; } } }",
+        );
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+            theme: None,
+        })
+        .expect("React package should build");
+
+        let tsx = fs::read_to_string(out.path().join("react/Button.tsx")).unwrap();
+        assert!(tsx.contains("variant === \"danger\""), "generated TSX:\n{tsx}");
+        assert!(tsx.contains("background: \"#dc3545\""));
+        assert!(tsx.contains("  variant,\n  dispatch,"));
+    }
+
+    #[test]
+    fn dependency_style_state_preserves_its_dependency_slot_owner() {
+        let workspace = TempDir::new().unwrap();
+        let child = workspace.path().join("mosaic-pkg-accent");
+        write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+        write_component_sources(
+            &child,
+            "Accent",
+            "component Accent { slot variant : one-of primary danger ; }",
+            "layout Accent { Box [ accent-root ] { } }",
+            "style Accent { part accent-root { state danger { color: #ff0000 ; } } }",
+        );
+
+        let parent_model = mosmodel_compiler::compile(
+            "component Shell { slot variant : one-of primary danger ; }",
+        )
+        .expect("parent model should compile");
+        let composed = compose_component_with_model(
+            "Shell",
+            parent_model,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    pkg::mosaic-pkg-accent::Accent ( variant : slot: variant )
+  }
+}"#,
+            "style Shell { part shell-root { padding: 8 ; } }",
+            &[workspace.path().to_path_buf()],
+            None,
+        )
+        .expect("dependency component should compose");
+
+        let dependency_state = composed
+            .style
+            .parts
+            .iter()
+            .find(|part| part.name == "accent-root")
+            .and_then(|part| part.states.first())
+            .expect("dependency state should be merged");
+        assert_eq!(dependency_state.state, "danger");
+        assert_eq!(dependency_state.slot.as_deref(), Some("variant"));
     }
 
     // -----------------------------------------------------------------------

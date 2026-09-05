@@ -6766,3 +6766,5 @@ The next run identified EINTR from a native socket read inside Flutter. Retry In
 After native navigation worked, Venture exposed nested Expanded widgets around a styled HostInput. When a parent emitter owns an explicit flex wrapper, suppress the child's implicit wrapper; generated code can type-check while still violating Flutter's ParentDataWidget runtime contract.
 
 Hindi changelog fragments must begin with their level-2 entry heading. The document title belongs only in CHANGELOG.d/_meta.md; copying it into a numbered shard breaks the independent section-order test even when the heading digest and byte round trip pass.
+
+- **Scope workflow wiring tests to the owning job before matching step names.** CI repeats `Set up Rust` across contract and build jobs. VM-032 initially matched an unrelated contract setup step and falsely reported a missing runtime flag. Inspect the build job specifically, then assert its selection, toolchain, and execution guards together.

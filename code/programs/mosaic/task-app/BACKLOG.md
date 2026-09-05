@@ -12,9 +12,10 @@
 > adaptive container primitive.
 >
 > The native release P0 (#14249) is now closed and the product-scoped SemVer
-> lane (#13543) has published `task-app-v0.1.0`. The next dependency in the
-> component program is #14036: implement UI49 slot-driven variants before
-> stories or TaskApp composition can provide trustworthy coverage.
+> lane (#13543) has published `task-app-v0.1.0`. The UI49 model/compiler bridge
+> is complete through #14300; the current dependency is #14305, the React
+> reference lowering within #14036. The remaining backends and toolkit
+> retrofits still precede stories or trustworthy TaskApp composition coverage.
 >
 > The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
 > Phase 5, on components that are already proven in isolation. Until then the
