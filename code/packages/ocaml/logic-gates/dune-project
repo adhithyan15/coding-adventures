@@ -4,4 +4,5 @@
 (package
  (name coding-adventures-logic-gates)
  (synopsis "Pure digital logic gates and stateful circuit primitives")
- (description "Pure digital logic gates and stateful circuit primitives"))
+ (description
+  "Validated combinational and sequential digital logic primitives with explicit deterministic state snapshots"))

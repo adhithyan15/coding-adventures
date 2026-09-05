@@ -4,4 +4,5 @@
 (package
  (name coding-adventures-state-machine)
  (synopsis "Traceable DFA, NFA, PDA, and modal state machines")
- (description "Traceable DFA, NFA, PDA, and modal state machines"))
+ (description
+  "Bounded deterministic, nondeterministic, pushdown, and modal state machines with typed errors and chronological traces"))

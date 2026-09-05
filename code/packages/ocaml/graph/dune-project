@@ -4,4 +4,5 @@
 (package
  (name coding-adventures-graph)
  (synopsis "Deterministic generic undirected graph algorithms")
- (description "Deterministic generic undirected graph algorithms"))
+ (description
+  "Mutable generic undirected graphs with deterministic storage, property bags, traversal, shortest paths, and spanning trees"))
