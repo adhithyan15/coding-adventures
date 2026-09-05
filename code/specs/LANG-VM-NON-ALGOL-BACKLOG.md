@@ -228,6 +228,14 @@ backends, and all-target Clippy is clean. Full-matrix completion is not claimed.
 
 ## Discovery log
 
+- **VM-D026 — confirmed 2026-09-05:** source/document inspection for VM-026
+  confirms ten driver variants but only eight unified corpus languages;
+  McCarthy and Macsyma remain dedicated suites. Source doc comments also retain
+  older claims (for example Macsyma conformance's BEAM-is-McCarthy-only note).
+  The current spec reconciliation states the executed coverage boundary;
+  VM-027 must include those source comments when auditing feature/backend
+  declarations, rather than treating them as authoritative absence claims.
+
 - **VM-D025 — confirmed 2026-09-05:** VM-024 validation reused a merged
   worktree's Cargo target via `CARGO_TARGET_DIR`. The shared test helper
   `tests/common::gc_core_capi_archive` builds with Cargo's inherited override but
