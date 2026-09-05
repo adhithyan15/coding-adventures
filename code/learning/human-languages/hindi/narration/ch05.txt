@@ -3,7 +3,7 @@ Hindi, chapter 5: The First Verbs.
 
 
 Lesson 1 of 6.
-बोलना (bolnā) — "to speak," your first full verb.
+बोलना / बोल (bolnā / bol) — "to speak" and its stem.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
@@ -18,7 +18,7 @@ The word, taken apart.
 बोलना (bolnā, "to speak") is a native Indo-Aryan verb (from Prakrit bolla-, "to utter"). Notice its ending: -ना (-nā). Every Hindi verb, named in the dictionary, ends in -nā — it is the infinitive marker, Hindi's "to ___": bol-nā "to speak," cal-nā "to move" (you met it in caltā hūṁ), mil-nā "to meet" (from milenge). Strip the -nā and you have the stem (bol-) that takes all the other endings.
 
 Grammar Lens: stem + ending.
-The stem bol- is where the action lives; endings pin down who and when: bol-tā (speaking, m.), bol-tī (speaking, f.), bol-o (speak!, familiar command). You will build every tense by adding to a stem like this.
+The stem बोल (bol-) is where the action lives; endings pin down who and when: bol-tā (speaking, m.), bol-tī (speaking, f.), bol-o (speak!, familiar command). You will build every tense by adding to a stem like this.
 
 Sounds you'll need.
 ब (ba) + ो (the o-mātrā) becomes बो (bo); ल (la); ना (nā). Read बो, ल, ना becomes bolnā.
@@ -26,6 +26,8 @@ Sounds you'll need.
 Guided Practice.
 [pause 1 second]
 [your turn — say: "bolnā"]
+[pause 8 seconds for the answer]
+[your turn — say: strip -ना from बोलना, then read the stem बोल (bol-)]
 [pause 8 seconds for the answer]
 [your turn — say: the infinitive marker every Hindi verb ends in (-nā)]
 [pause 8 seconds for the answer]
@@ -122,7 +124,7 @@ Warm-up.
 You have the stem bol-. This lesson is the machine that turns any stem into a sentence about what someone does — and it is the single biggest piece of leverage in this book so far, because it fits every verb you will ever meet.
 
 You'll want to know first.
-बोलना (bolnā) — the infinitive, and how to strip -nā to get the stem.
+बोलना — the infinitive, and how to strip -nā to get the stem.
 हूँ — "I am," the verb this template leans on.
 
 Grammar Lens: stem + -tā/-tī/-te + honā.

@@ -4,22 +4,22 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ef4a110cdb5b9d64",
+  "sourceHash": "fnv1a64:e9b701100178edfd",
   "lessons": [
     {
       "id": "HI-C05-bolna",
       "sequence": 400,
-      "title": "बोलना (bolnā) — \"to speak,\" your first full verb",
-      "headword": "बोलना",
-      "romanization": "bolnā",
-      "gloss": "to speak",
+      "title": "बोलना / बोल (bolnā / bol) — \"to speak\" and its stem",
+      "headword": "बोलना / बोल",
+      "romanization": "bolnā / bol",
+      "gloss": "to speak / speak — infinitive / stem",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1ace085f5a32067a",
+      "sourceHash": "fnv1a64:2a91fbec97862fc1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -77,7 +77,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The stem bol- is where the action lives; endings pin down who and when: bol-tā (speaking, m.), bol-tī (speaking, f.), bol-o (speak!, familiar command). You will build every tense by adding to a stem like this."
+              "text": "The stem बोल (bol-) is where the action lives; endings pin down who and when: bol-tā (speaking, m.), bol-tī (speaking, f.), bol-o (speak!, familiar command). You will build every tense by adding to a stem like this."
             }
           ]
         },
@@ -111,6 +111,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"bolnā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strip -ना from बोलना, then read the stem बोल (bol-)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: strip **-ना** from **बोलना**, then read the stem **बोल** (*bol-*)]"
             },
             {
               "kind": "prompt",
@@ -510,7 +519,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बोलना (bolnā) — the infinitive, and how to strip -nā to get the stem."
+              "text": "बोलना — the infinitive, and how to strip -nā to get the stem."
             },
             {
               "kind": "speech",
