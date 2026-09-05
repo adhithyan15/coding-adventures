@@ -205,12 +205,7 @@ let test_sequential_state_errors () =
   in
   let invalid_value = { value = [ 2 ]; flip_flops = [ valid_zero ] } in
   expect_error (counter ~state:invalid_value ~width:1 ~clock:0 ());
-  let inconsistent =
-    {
-      value = [ 1 ];
-      flip_flops = [ valid_zero ];
-    }
-  in
+  let inconsistent = { value = [ 1 ]; flip_flops = [ valid_zero ] } in
   expect_error (counter ~state:inconsistent ~width:1 ~clock:0 ())
 
 let () =
