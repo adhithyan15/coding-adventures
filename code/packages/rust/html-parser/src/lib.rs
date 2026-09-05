@@ -11098,7 +11098,8 @@ fn populate_select_selectedcontent(select: &mut Element) {
             let Node::Element(element) = node else {
                 continue;
             };
-            if element.name == "option" {
+            let is_html_element = element.namespace.is_none();
+            if is_html_element && element.name == "option" {
                 let disabled = element.attribute("disabled").is_some() || disabled_by_optgroup;
                 if !disabled {
                     first.get_or_insert_with(|| element.children.clone());
@@ -11106,11 +11107,13 @@ fn populate_select_selectedcontent(select: &mut Element) {
                 if element.attribute("selected").is_some() {
                     *selected = Some(element.children.clone());
                 }
-            } else if !matches!(element.name.as_str(), "button" | "datalist" | "template") {
-                if element.name == "optgroup" && inside_optgroup {
+            } else if !(is_html_element
+                && matches!(element.name.as_str(), "button" | "datalist" | "template"))
+            {
+                if is_html_element && element.name == "optgroup" && inside_optgroup {
                     continue;
                 }
-                let entering_optgroup = element.name == "optgroup";
+                let entering_optgroup = is_html_element && element.name == "optgroup";
                 let disabled_by_optgroup = if entering_optgroup {
                     element.attribute("disabled").is_some()
                 } else {
@@ -47321,6 +47324,106 @@ mod tests {
             Token::Eof,
         ]);
         assert_selection(&direct_document.children);
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_option_ownership_is_namespace_aware() {
+        let source = "<!doctype html><!--é-->\r\n<select><button><selectedcontent>old</selectedcontent></button><svg><option selected>foreign</option></svg><option><b>real</b></option></select>";
+        let document = parse_html(source).unwrap();
+        let selectedcontent =
+            find_first_element_in_nodes(&document.children, "selectedcontent").unwrap();
+        assert_eq!(selectedcontent.children.len(), 1);
+        assert_eq!(element(&selectedcontent.children[0]).name, "b");
+        assert_eq!(element_text_content(selectedcontent), "real");
+        let foreign_option = find_first_element_in_nodes(&document.children, "option").unwrap();
+        assert_eq!(foreign_option.namespace.as_deref(), Some("svg"));
+        assert!(source.len() > source.chars().count());
+
+        for nodes in [
+            parse_html_fragment_for_context(
+                "<select><selectedcontent>old</selectedcontent><svg><option selected>foreign</option></svg><option>real</option></select>",
+                "body",
+            )
+            .unwrap(),
+            parse_html(
+                "<!doctype html><svg><foreignObject><select><selectedcontent>old</selectedcontent><svg><option selected>foreign</option></svg><option>real</option></select></foreignObject></svg>",
+            )
+            .unwrap()
+            .children,
+        ] {
+            assert_eq!(
+                element_text_content(
+                    find_first_element_in_nodes(&nodes, "selectedcontent").unwrap()
+                ),
+                "real"
+            );
+        }
+
+        let foreign_boundary = parse_html(
+            "<!doctype html><select><selectedcontent>old</selectedcontent><svg><datalist><foreignObject><option selected>included</option></foreignObject></datalist></svg><option>fallback</option></select>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&foreign_boundary.children, "selectedcontent").unwrap()
+            ),
+            "included"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "selected".to_string(),
+                    value: String::new(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("foreign".to_string()),
+            Token::EndTag {
+                name: "option".to_string(),
+            },
+            Token::EndTag {
+                name: "svg".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("real".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "real"
+        );
         assert!(direct
             .diagnostics()
             .iter()
