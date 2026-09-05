@@ -81,10 +81,13 @@ let test_dfa_limits_and_introspection () =
   Alcotest.(check bool) "complete" true (Dfa.is_complete machine);
   Alcotest.check strings "valid" [] (Dfa.validate machine);
   Alcotest.(check bool) "table populated" true (List.length (Dfa.to_table machine) = 4);
+  Alcotest.check strings "table header" [ "State"; "0"; "1" ]
+    (List.hd (Dfa.to_table machine));
   Alcotest.(check bool) "ascii deterministic" true
     (String.length (Dfa.to_ascii machine) > 0);
   Alcotest.(check bool) "dot deterministic" true
-    (String.starts_with ~prefix:"digraph DFA" (Dfa.to_dot machine));
+    (String.starts_with ~prefix:"digraph DFA" (Dfa.to_dot machine)
+    && String.contains (Dfa.to_dot machine) '_');
   let limited =
     dfa ~max_trace_entries:1 ~states:[ "a" ] ~alphabet:[ "x" ]
       ~transitions:[ { source = "a"; event = "x"; target = "a" } ]
@@ -238,7 +241,36 @@ let test_nfa_validation_and_limits () =
     |> get
   in
   expect_error (function Subset_limit_exceeded 1 -> true | _ -> false)
-    (Nfa.to_dfa one_subset)
+    (Nfa.to_dfa one_subset);
+  let collision =
+    base [ "start"; "a"; "b"; "a,b" ] [ "x"; "y" ]
+      [
+        { source = "start"; event = Some "x"; targets = [ "a"; "b" ] };
+        { source = "start"; event = Some "y"; targets = [ "a,b" ] };
+      ]
+      "start" [ "a,b" ]
+    |> get
+  in
+  let collision_dfa = get (Nfa.to_dfa collision) in
+  Alcotest.(check bool) "set-name collision x" false
+    (get (Dfa.accepts collision_dfa [ "x" ]));
+  Alcotest.(check bool) "set-name collision y" true
+    (get (Dfa.accepts collision_dfa [ "y" ]));
+  let canonical =
+    base [ "q"; "a"; "b" ] [ "x" ]
+      [ { source = "q"; event = Some "x"; targets = [ "b"; "a"; "b" ] } ]
+      "q" []
+    |> get
+  in
+  Alcotest.check strings "stored targets canonical" [ "a"; "b" ]
+    ((List.hd (Nfa.transitions canonical)).targets);
+  let dead =
+    base [ "q" ] [ "x" ] [] "q" [] |> get |> Nfa.to_dfa |> get
+  in
+  Alcotest.(check bool) "empty subset is explicit" true
+    (Dfa.states dead = [ "S0"; "S1" ] && Dfa.is_complete dead);
+  Alcotest.(check bool) "dead state rejects" false
+    (get (Dfa.accepts dead [ "x"; "x" ]))
 
 let test_minimization () =
   let source =
@@ -253,7 +285,7 @@ let test_minimization () =
       ~initial:"q0" ~accepting:[ "q1"; "q2" ] ()
   in
   let reduced = minimize source in
-  Alcotest.check strings "unreachable removed" [ "q0"; "q1" ]
+  Alcotest.check strings "unreachable removed" [ "M0"; "M1" ]
     (Dfa.states reduced);
   Alcotest.(check bool) "language preserved" true
     (get (Dfa.accepts reduced [ "x"; "x" ]));
@@ -275,10 +307,30 @@ let test_minimization_merges_reachable_states () =
       ~initial:"q0" ~accepting:[ "q1"; "q2" ] ()
   in
   let reduced = minimize source in
-  Alcotest.check strings "equivalent states merged" [ "q0"; "{q1,q2}" ]
+  Alcotest.check strings "equivalent states merged" [ "M0"; "M1" ]
     (Dfa.states reduced);
   Alcotest.(check bool) "a accepted" true (get (Dfa.accepts reduced [ "a" ]));
   Alcotest.(check bool) "empty rejected" false (get (Dfa.accepts reduced []))
+
+let test_minimization_opaque_names () =
+  let literal = "{a,b}" in
+  let source =
+    dfa ~states:[ "start"; "a"; "b"; literal ] ~alphabet:[ "x"; "y"; "z" ]
+      ~transitions:
+        [
+          { source = "start"; event = "x"; target = "a" };
+          { source = "start"; event = "y"; target = "b" };
+          { source = "start"; event = "z"; target = literal };
+        ]
+      ~initial:"start" ~accepting:[ "a"; "b" ] ()
+  in
+  let reduced = minimize source in
+  Alcotest.(check int) "opaque names remain unique" 3
+    (List.length (Dfa.states reduced));
+  Alcotest.(check bool) "x accepted" true (get (Dfa.accepts reduced [ "x" ]));
+  Alcotest.(check bool) "y accepted" true (get (Dfa.accepts reduced [ "y" ]));
+  Alcotest.(check bool) "literal state rejected" false
+    (get (Dfa.accepts reduced [ "z" ]))
 
 let test_pda_balanced_and_limits () =
   let transitions =
@@ -350,6 +402,32 @@ let test_pda_balanced_and_limits () =
 let pda_row source event stack_read target stack_push : Pda.transition =
   { source; event; stack_read; target; stack_push }
 
+let test_pda_an_bn () =
+  let machine =
+    Pda.create ~states:[ "push"; "pop"; "accept" ]
+      ~input_alphabet:[ "a"; "b" ] ~stack_alphabet:[ "$"; "A" ]
+      ~transitions:
+        [
+          pda_row "push" (Some "a") "$" "push" [ "$"; "A" ];
+          pda_row "push" (Some "a") "A" "push" [ "A"; "A" ];
+          pda_row "push" (Some "b") "A" "pop" [];
+          pda_row "pop" (Some "b") "A" "pop" [];
+          pda_row "pop" None "$" "accept" [ "$" ];
+        ]
+      ~initial:"push" ~initial_stack_symbol:"$" ~accepting:[ "accept" ] ()
+    |> get
+  in
+  List.iter
+    (fun word ->
+      Alcotest.(check bool) "a^n b^n accepted" true
+        (get (Pda.accepts machine word)))
+    [ [ "a"; "b" ]; [ "a"; "a"; "b"; "b" ]; [ "a"; "a"; "a"; "b"; "b"; "b" ] ];
+  List.iter
+    (fun word ->
+      Alcotest.(check bool) "a^n b^n rejected" false
+        (get (Pda.accepts machine word)))
+    [ [ "a"; "a"; "b" ]; [ "a"; "b"; "b" ]; [ "b"; "a" ] ]
+
 let test_pda_validation_and_epsilon () =
   let base ?(max_stack_depth = 4_096) ?(max_trace_entries = 2_048)
       ?(max_epsilon_steps = 10_000) states input_alphabet stack_alphabet
@@ -397,7 +475,7 @@ let test_pda_validation_and_epsilon () =
       | _ -> false)
     (base [ "q" ] [ "x" ] [ "$" ] [ duplicate; duplicate ] "q" "$" []);
   let machine =
-    base [ "q"; "done" ] [ "pop" ] [ "$" ]
+    base [ "q"; "done" ] [ "noop"; "pop" ] [ "$" ]
       [
         pda_row "q" (Some "pop") "$" "q" [];
         pda_row "q" None "$" "done" [ "$" ];
@@ -407,7 +485,7 @@ let test_pda_validation_and_epsilon () =
   in
   Alcotest.check strings "pda states accessor" [ "done"; "q" ]
     (Pda.states machine);
-  Alcotest.check strings "pda input accessor" [ "pop" ]
+  Alcotest.check strings "pda input accessor" [ "noop"; "pop" ]
     (Pda.input_alphabet machine);
   Alcotest.check strings "pda stack alphabet accessor" [ "$" ]
     (Pda.stack_alphabet machine);
@@ -415,6 +493,12 @@ let test_pda_validation_and_epsilon () =
     (Pda.accepting machine);
   Alcotest.(check int) "pda transition accessor" 2
     (List.length (Pda.transitions machine));
+  let before = Pda.current_state machine, Pda.stack machine, Pda.trace machine in
+  expect_error
+    (function Missing_pda_transition ("q", "noop", Some "$") -> true | _ -> false)
+    (Pda.process machine "noop");
+  Alcotest.check Alcotest.bool "named missing transition is atomic" true
+    (before = (Pda.current_state machine, Pda.stack machine, Pda.trace machine));
   ignore (get (Pda.process machine "pop"));
   Alcotest.(check (option string)) "empty stack top" None
     (Pda.stack_top machine);
@@ -577,7 +661,21 @@ let test_dfa_sequence_and_snapshots () =
   expect_error (function Unknown_event "z" -> true | _ -> false)
     (Dfa.process_sequence machine [ "x"; "z" ]);
   Alcotest.check Alcotest.bool "sequence preflight atomic" true
-    (before = (Dfa.current_state machine, Dfa.trace machine))
+    (before = (Dfa.current_state machine, Dfa.trace machine));
+  let calls = ref 0 in
+  let action = { name = "count"; run = (fun _ _ _ -> incr calls) } in
+  let bounded =
+    dfa ~max_trace_entries:1
+      ~actions:[ { source = "a"; event = "x"; action } ]
+      ~states:[ "a" ] ~alphabet:[ "x" ]
+      ~transitions:[ { source = "a"; event = "x"; target = "a" } ]
+      ~initial:"a" ~accepting:[] ()
+  in
+  expect_error (function Trace_limit_exceeded 1 -> true | _ -> false)
+    (Dfa.process_sequence bounded [ "x"; "x" ]);
+  Alcotest.(check int) "bounded plan runs no actions" 0 !calls;
+  Alcotest.(check int) "bounded plan allocates no trace" 0
+    (List.length (Dfa.trace bounded))
 
 let () =
   Alcotest.run "coding-adventures-state-machine"
@@ -597,8 +695,11 @@ let () =
           Alcotest.test_case "minimization" `Quick test_minimization;
           Alcotest.test_case "minimization merges reachable states" `Quick
             test_minimization_merges_reachable_states;
+          Alcotest.test_case "minimization opaque names" `Quick
+            test_minimization_opaque_names;
           Alcotest.test_case "pda balanced and limits" `Quick
             test_pda_balanced_and_limits;
+          Alcotest.test_case "pda a^n b^n" `Quick test_pda_an_bn;
           Alcotest.test_case "pda validation and epsilon" `Quick
             test_pda_validation_and_epsilon;
           Alcotest.test_case "modal explicit switching" `Quick

@@ -171,8 +171,8 @@ module Dfa = struct
 
   (* Planning the whole input first makes sequence failures atomic even when
      actions have effects that cannot be rolled back. *)
-  let plan_from machine start events =
-    let rec loop current records = function
+  let plan_from machine start remaining events =
+    let rec loop current records remaining = function
       | [] -> Ok (current, List.rev records)
       | event :: rest ->
           if not (String_set.mem event machine.alphabet_set) then
@@ -180,6 +180,8 @@ module Dfa = struct
           else (
             match Event_map.find_opt (current, event) machine.transition_map with
             | None -> Error (Missing_transition (current, event))
+            | Some _ when remaining = 0 ->
+                Error (Trace_limit_exceeded machine.max_trace_entries)
             | Some target ->
                 let action_name =
                   Event_map.find_opt (current, event) machine.action_map
@@ -188,9 +190,10 @@ module Dfa = struct
                 loop target
                   ({ source = current; event = Some event; target; action_name }
                   :: records)
+                  (remaining - 1)
                   rest)
     in
-    loop start [] events
+    loop start [] remaining events
 
   let run_actions machine records =
     List.iter
@@ -204,17 +207,16 @@ module Dfa = struct
       records
 
   let process_sequence machine events =
-    match plan_from machine machine.current events with
+    let remaining =
+      machine.max_trace_entries - List.length machine.trace_rev
+    in
+    match plan_from machine machine.current remaining events with
     | Error error -> Error error
     | Ok (target, records) ->
-        let next_size = List.length machine.trace_rev + List.length records in
-        if next_size > machine.max_trace_entries then
-          Error (Trace_limit_exceeded machine.max_trace_entries)
-        else (
-          run_actions machine records;
-          machine.current <- target;
-          machine.trace_rev <- List.rev_append records machine.trace_rev;
-          Ok records)
+        run_actions machine records;
+        machine.current <- target;
+        machine.trace_rev <- List.rev_append records machine.trace_rev;
+        Ok records
 
   let process machine event =
     match process_sequence machine [ event ] with
@@ -289,7 +291,7 @@ module Dfa = struct
     List.rev !warnings
 
   let to_table machine =
-    [ "state" :: alphabet machine ]
+    [ "State" :: alphabet machine ]
     @ List.map
         (fun state ->
           state
@@ -306,7 +308,15 @@ module Dfa = struct
   let quote value = "\"" ^ String.escaped value ^ "\""
 
   let to_dot machine =
-    let lines = ref [ "digraph DFA {"; "  rankdir=LR;" ] in
+    let lines =
+      ref
+        [
+          "digraph DFA {";
+          "  rankdir=LR;";
+          "  __start [shape=point];";
+          "  __start -> " ^ quote machine.initial_state ^ ";";
+        ]
+    in
     List.iter
       (fun state ->
         let shape =
@@ -342,6 +352,14 @@ module Nfa_key = struct
 end
 
 module Nfa_map = Map.Make (Nfa_key)
+
+module State_set_key = struct
+  type t = String_set.t
+
+  let compare = String_set.compare
+end
+
+module State_set_map = Map.Make (State_set_key)
 
 module Nfa = struct
   type t = {
@@ -426,9 +444,11 @@ module Nfa = struct
                           if Nfa_map.mem key map then
                             Error (Duplicate_transition (row.source, row.event))
                           else
+                            let targets = sorted_unique row.targets in
                             Ok
-                              ( Nfa_map.add key (sorted_unique row.targets) map,
-                                row :: rows ))
+                              ( Nfa_map.add key targets map,
+                                { row with targets = String_set.elements targets }
+                                :: rows ))
               in
               (match
                  Dfa.fold_result add (Nfa_map.empty, []) transitions
@@ -534,9 +554,6 @@ module Nfa = struct
     machine.trace_rev <- [];
     machine.trace_cells <- 0
 
-  let subset_name set =
-    "{" ^ String.concat "," (String_set.elements set) ^ "}"
-
   let to_dfa machine =
     let initial_set =
       epsilon_closure_set machine.transition_map
@@ -545,7 +562,11 @@ module Nfa = struct
     if machine.max_generated_states = 0 then
       Error (Subset_limit_exceeded machine.max_generated_states)
     else
-      let seen = ref (String_map.singleton (subset_name initial_set) initial_set) in
+      (* Sets, not rendered state names, are the identity.  Opaque breadth-first
+         names avoid collisions between {"a,b"} and {"a"; "b"}.  The empty
+         set is a real dead state, so the result is a complete DFA. *)
+      let seen = ref (State_set_map.singleton initial_set "S0") in
+      let next_id = ref 1 in
       let queue = Queue.create () in
       Queue.add initial_set queue;
       let rows = ref [] in
@@ -556,30 +577,41 @@ module Nfa = struct
           (fun event ->
             if Option.is_none !failure then
               let target = next_set machine subset event in
-              if not (String_set.is_empty target) then (
-                let target_name = subset_name target in
-                if not (String_map.mem target_name !seen) then
-                  if String_map.cardinal !seen >= machine.max_generated_states then
-                    failure := Some (Subset_limit_exceeded machine.max_generated_states)
-                  else (
-                    seen := String_map.add target_name target !seen;
-                    Queue.add target queue);
-                if Option.is_none !failure then
-                  rows :=
-                    {
-                      source = subset_name subset;
-                      event;
-                      target = target_name;
-                    }
-                    :: !rows))
+              let target_name =
+                match State_set_map.find_opt target !seen with
+                | Some name -> name
+                | None ->
+                    if
+                      State_set_map.cardinal !seen
+                      >= machine.max_generated_states
+                    then (
+                      failure :=
+                        Some
+                          (Subset_limit_exceeded machine.max_generated_states);
+                      "")
+                    else
+                      let name = "S" ^ string_of_int !next_id in
+                      incr next_id;
+                      seen := State_set_map.add target name !seen;
+                      Queue.add target queue;
+                      name
+              in
+              if Option.is_none !failure then
+                rows :=
+                  {
+                    source = State_set_map.find subset !seen;
+                    event;
+                    target = target_name;
+                  }
+                  :: !rows)
           machine.alphabet_set
       done;
       match !failure with
       | Some error -> Error error
       | None ->
           let accepting =
-            String_map.fold
-              (fun name subset result ->
+            State_set_map.fold
+              (fun subset name result ->
                 if
                   String_set.is_empty
                     (String_set.inter subset machine.accepting_set)
@@ -587,16 +619,24 @@ module Nfa = struct
                 else name :: result)
               !seen []
           in
-          Dfa.create ~states:(List.map fst (String_map.bindings !seen))
+          Dfa.create ~states:(List.map snd (State_set_map.bindings !seen))
             ~alphabet:(alphabet machine) ~transitions:(List.rev !rows)
-            ~initial:(subset_name initial_set) ~accepting ()
+            ~initial:"S0" ~accepting ()
 
   let quote value = "\"" ^ String.escaped value ^ "\""
 
   let event_name = function None -> "ε" | Some value -> value
 
   let to_dot machine =
-    let lines = ref [ "digraph NFA {"; "  rankdir=LR;" ] in
+    let lines =
+      ref
+        [
+          "digraph NFA {";
+          "  rankdir=LR;";
+          "  __start [shape=point];";
+          "  __start -> " ^ quote machine.initial_state ^ ";";
+        ]
+    in
     List.iter
       (fun state ->
         let shape =
@@ -672,20 +712,18 @@ let minimize machine =
     in
     partitions := List.sort Stdlib.compare next
   done;
-  let block_name block =
-    match String_set.elements block with
-    | [ value ] -> value
-    | values -> "{" ^ String.concat "," values ^ "}"
+  let named_blocks =
+    List.mapi (fun index block -> block, "M" ^ string_of_int index) !partitions
   in
   let name_for state =
-    !partitions
-    |> List.find (String_set.mem state)
-    |> block_name
+    named_blocks
+    |> List.find (fun (block, _) -> String_set.mem state block)
+    |> snd
   in
-  let states = List.map block_name !partitions in
+  let states = List.map snd named_blocks in
   let transitions =
     List.concat_map
-      (fun block ->
+      (fun (block, name) ->
         let representative = String_set.min_elt block in
         List.filter_map
           (fun event ->
@@ -694,21 +732,18 @@ let minimize machine =
               machine.Dfa.transition_map
             |> Option.map (fun target ->
                    {
-                     source = block_name block;
+                     source = name;
                      event;
                      target = name_for target;
                    }))
           (Dfa.alphabet machine))
-      !partitions
+      named_blocks
   in
   let accepting =
-    List.filter
-      (fun name ->
-        !partitions
-        |> List.find (fun block -> block_name block = name)
-        |> fun block ->
-        not (String_set.is_empty (String_set.inter block accepting)))
-      states
+    named_blocks
+    |> List.filter_map (fun (block, name) ->
+           if String_set.is_empty (String_set.inter block accepting) then None
+           else Some name)
   in
   match
     Dfa.create ~states ~alphabet:(Dfa.alphabet machine) ~transitions
