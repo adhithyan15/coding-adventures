@@ -6767,3 +6767,11 @@ building a function-wide literal table, or stale initializers can silently
 replace live output. Keep actual cross-backend substring/MOVE programs with
 padding markers and invalid-bound traps; frontend oracle tests and validator
 acceptance did not expose native/LLVM missing routing or WASM stale facts.
+
+## 2026-09-05 — Literal facts need program-point validity
+
+A function-wide map keyed by mutable string register cannot represent two
+successive literal assignments, even without branches. Printing between writes
+must observe the earlier value. Treat multiply written variables as runtime
+handles and propagate their representation; retain a sequential output test,
+not only tests that inspect the final receiver value.

@@ -100,6 +100,13 @@ focused regression proving reassigned literals are runtime values, rerun all
 new cells and the full non-ALGOL matrix, and report actual execution/skips.
 Keep COBOL semantics and the other backends unchanged.
 
+VM-046a/053 local validation: rows 408–410 each pass all seven standard
+backends in fresh processes with ran-cell sentinels (21 executions, zero skips).
+The frontend STRING/UNSTRING oracle selection passes 121 tests. The complete
+WASM package suite passes 235 tests including doctests. Focused matrix and
+all-target WASM Clippy pass. The broader non-ALGOL matrix is running; hosted
+CI remains the merge gate. Inventory now declares 179 non-ALGOL rows / 1273 cells.
+
 ## VM-045 implementation contract (selected after #14363 merged)
 
 PR #14363 merged as `7291d2684e` after all current-head checks passed on

@@ -1,5 +1,9 @@
 # lang-aot
 
+COBOL STRING SIZE rows prove full-width source copying, receiver truncation and
+untouched tail preservation, including a second write after changing a source.
+Visible markers retain spaces in the seven-backend output comparisons.
+
 COBOL reference-modification rows cover ASCII slices with literal/computed
 bounds, comparisons, MOVE padding/truncation and invalid-bound traps on the
 seven standard backends. Existing byte/character and category limits remain.
