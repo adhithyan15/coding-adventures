@@ -1369,7 +1369,7 @@ Rload out 0 1k
 fn parses_bjt_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05 VAF=75 VA=120 VAR=60 VB=90 IKF=3m IK=5m IKR=4m TNOM=27 T_NOM=35 KF=2p AF=1.3 PTF=30 XTF=0.4 ITF=2m VTF=0.6 RE=5 RC=7 RB=9 RBM=4 IRB=2m XCJC=0.6 ISE=2p NE=1.5 ISC=3p NC=2.5)
+.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05 VAF=75 VA=120 VAR=60 VB=90 IKF=3m IK=5m IKR=4m TNOM=27 T_NOM=35 KF=2p AF=1.3 PTF=30 XTF=0.4 ITF=2m VTF=0.6 RE=5 RC=7 RB=9 RBM=4 IRB=2m XCJC=0.6 ISE=2p NE=1.5 ISC=3p NC=2.5 XTB=-0.3)
 Vcc vcc 0 DC 5
 Vbase base 0 DC 0.7
 Q1 vcc base out fast
@@ -1428,6 +1428,7 @@ Rload out 0 1k
     assert_close(bjt.base_emitter_leakage_emission_coefficient, 1.5);
     assert_close(bjt.base_collector_leakage_saturation_current, 3.0e-12);
     assert_close(bjt.base_collector_leakage_emission_coefficient, 2.5);
+    assert_close(bjt.forward_beta_temperature_exponent, -0.3);
 
     let result = dc_op(&parsed.circuit).unwrap();
     let out = result.voltage("out").unwrap();
@@ -1960,6 +1961,23 @@ fn rejects_invalid_bjt_collector_leakage_emission_coefficient() {
             .to_string()
             .contains("BJT NC must be finite and positive"));
     }
+}
+
+#[test]
+fn parses_bjt_forward_beta_temperature_exponent() {
+    let parsed = parse_netlist(".model shaped NPN(XTB=-0.3)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.forward_beta_temperature_exponent, -0.3);
+}
+
+#[test]
+fn rejects_non_finite_bjt_forward_beta_temperature_exponent() {
+    let error = parse_netlist(".model bad NPN(XTB=1e999)\nQ1 c b e bad").unwrap_err();
+
+    assert!(error.to_string().contains("BJT XTB must be finite"));
 }
 
 #[test]
