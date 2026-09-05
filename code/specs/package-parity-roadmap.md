@@ -13079,6 +13079,16 @@ performance prerequisite, its toolchain and SHA-256 dependency are already
 validated, and it unlocks three direct plus four transitive unfinished build-
 tool descendants without adding authority.
 
+The Haskell source-hashing owner is therefore the sole in-progress item in a
+fresh clean worktree based on exact `origin/main`
+`eae0cacabf1e3d2c03c449686614bb62113fd832`; the intervening merged Rust SPICE
+change is disjoint and identity-neutral. Selection leaves 208 merged, 506
+pending, and one in-progress owner. The tranche is limited to the complete
+checked source registry, exact scoped projection, collision-safe portable path
+framing, incremental SHA-256 adoption, and its language-neutral fixtures and
+tests. It does not absorb graph/diff corpus expansion, execution authority, or
+another language's build-tool remediation.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -19,7 +19,7 @@
     "notes": "PR #14352 completed every required final-head check acceptably and GitHub reported CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that terminal check and conflict audit, and GitHub merged the PR immediately at 2026-09-05T18:16:25Z as 120d018dc15cec32ea328e7b5471bf7fb3f2873a without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "120d018dc15cec32ea328e7b5471bf7fb3f2873a",
+    "revision": "eae0cacabf1e3d2c03c449686614bb62113fd832",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1413,
@@ -1128,10 +1128,13 @@
     {
       "id": "build-tool-haskell-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Haskell build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["haskell-sha256-streaming-performance-hardening", "build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair"],
-      "branch": null,
+      "branch": "codex/haskell-build-tool-source-hashing",
       "pr_number": null,
+      "selected_at": "2026-09-05T18:18:57Z",
+      "selection_revision": "eae0cacabf1e3d2c03c449686614bb62113fd832",
+      "selection_notes": "Selected in fresh clean worktree C:/Users/adhit/worktrees/ca-parity-haskell-source-hashing-20260905-1816 after PR #14352 completed every final-head gate and merged through guarded squash auto-merge. Before selection, three parallel audits were incorporated: two missing neutral build-tool closure owners were added; stale Dart/JVM/Swift umbrella edges were corrected; OCaml capability, representative-CI, and C/C++ manifest applicability scope was strengthened; and the resulting 715-owner/1,179-edge graph was revalidated as unique, dependency-complete, acyclic, and free of merged-to-unmerged edges at 208 merged and 507 pending. The reporter-exact inventory on current origin/main remains schema 3 with 15 established lanes, 1,413 implementation identities, 4,629 slots, 1,452 all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202, 754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The current build-tool/OCaml strategic frontier ranks OCaml representative core first and Perl registry repair second by transitive leverage, but this bounded Haskell source-hashing tranche wins serial continuity: #14352 has just satisfied its final SHA-256 performance prerequisite, all four neutral registry/boundary prerequisites are merged, the toolchain and incremental hashing dependency are hot and validated, and the owner unlocks three direct plus four transitive unfinished descendants without changing authority. Seven live open PRs have zero semantic or path overlap; the last pre-selection main advance changes only the unrelated Rust SPICE parser and plan.",
       "notes": "Discovered by the post-#13544 source-hashing audit. Haskell lacks OCaml source recognition and its hashing collector uses an incomplete global registry whose case aliases can collide. Adopt the complete checked registry with exact scoped projection and portable path framing without mixing discovery-fixture work."
     },
     {
