@@ -19,6 +19,10 @@ spec = describe "Sha256" $ do
         sha256Hex []
             `shouldBe` "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
+    it "hashes the multi-block FIPS vector" $ do
+        sha256Hex (ascii "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq")
+            `shouldBe` "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1"
+
     it "returns a 32-byte digest" $ do
         length (sha256 (ascii "coding adventures")) `shouldBe` 32
 
