@@ -8,7 +8,7 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 710
 chapter: 22
 type: word
-headword: ग्यारह — बीस
+headword: ग्यारह बारह तेरह चौदह पंद्रह सोलह सत्रह अठारह उन्नीस बीस
 gloss: 11-20 — genuinely irregular, must be memorized individually; but उन्नीस (19) most likely preserves Sanskrit's OWN subtractive naming, the same logic as Latin's ūndēvīgintī
 romanization: "gyārah — bīs"
 concept_tag: HI-NUMBERS-11-20
