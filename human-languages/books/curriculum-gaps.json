@@ -26,8 +26,8 @@
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 31,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 268,
-    "scriptExposureExemptedGlyphs": 1373,
+    "scriptClosureViolations": 267,
+    "scriptExposureExemptedGlyphs": 1374,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
@@ -85198,9 +85198,9 @@
         "taughtGlyphs": 46,
         "shownGlyphs": 57,
         "neverTaughtGlyphs": 11,
-        "violations": 36,
-        "exposureOnly": 62,
-        "exposureExemptedGlyphs": 139,
+        "violations": 35,
+        "exposureOnly": 63,
+        "exposureExemptedGlyphs": 140,
         "headwordsWithoutRomanization": 1
       },
       {
@@ -86993,13 +86993,6 @@
         "count": 1
       },
       {
-        "lessonId": "HI-C04-milenge",
-        "language": "hindi",
-        "chapter": 4,
-        "glyphs": "ए",
-        "count": 1
-      },
-      {
         "lessonId": "HI-C05-bolta-hun",
         "language": "hindi",
         "chapter": 5,
@@ -87241,9 +87234,9 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 268,
-      "exposureOnly": 377,
-      "exposureExemptedGlyphs": 1373,
+      "violations": 267,
+      "exposureOnly": 378,
+      "exposureExemptedGlyphs": 1374,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
     },
@@ -103370,7 +103363,7 @@
         "atomChapterSpikes": 2,
         "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 36,
+        "scriptClosureViolations": 35,
         "neverTaughtGlyphs": 11,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
