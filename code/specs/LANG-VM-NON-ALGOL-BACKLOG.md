@@ -28,7 +28,8 @@ VM-056 local repair: the direct left/right/double-alias regression passes after
 reproducing wrong output before the fix. All 35 replacement cells now pass in
 fresh processes with positive sentinels and zero skips. All 236 WASM package
 tests (including doctests), 292 INSPECT oracle tests and focused Clippy pass.
-Full non-ALGOL matrix validation is running before publication.
+Full non-ALGOL matrix validation passed: 200 programs, 1420 exercised cells,
+zero skips in 635.72 seconds.
 
 Discovered follow-up **VM-057**: inspection found that runtime `str_slice`
 also assigns its destination before reading the source during the byte copy.

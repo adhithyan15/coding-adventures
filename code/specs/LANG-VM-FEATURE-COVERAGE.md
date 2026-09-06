@@ -133,3 +133,6 @@ frontend oracle comparison; the full INSPECT-filtered suite passes 287 tests.
 VM-047b locally executes all 35 replacement cells (427–431) with positive
 sentinels and zero skips after the VM-056 WASM concat alias repair. All 292
 INSPECT oracle tests and 236 WASM package tests including doctests pass.
+
+The VM-047b/056 full local non-ALGOL run passed all 200 programs and 1420
+cells, with zero skips (635.72 seconds).
