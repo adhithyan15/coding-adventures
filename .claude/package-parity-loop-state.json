@@ -20,10 +20,10 @@
     "opened_revision": "42a1b84a9c0b69f6b32c28a01aab970a458a73fa"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-05T23:32:15Z",
+    "observed_at": "2026-09-06T00:02:30Z",
     "pr_number": 14393,
     "status": "pending",
-    "notes": "PR #14393 is the sole active parity PR and remains mergeable. The validated local-pin checksum repair was pushed in 117cf9797a after current-head macOS and duplicate push-run Ubuntu failures. Local pin ingestion and strict follow-on dependency installs passed; lock validation, Go and TypeScript scaffold suites, TypeScript coverage/build/audit, parity collision, formatting, lint/vet, JSON, and diff checks passed. Replacement CI is queued. Guarded auto-merge remains disabled until every final-head required check is terminal and acceptable."
+    "notes": "PR #14393 is the sole active parity PR. Replacement CI exposed an OCamlformat 0.27 drift in the new directed-graph source, interface, and tests on macOS. The exact formatter output was applied; local OCamlformat 0.27 checks and git diff checks pass. A full local Windows Dune build still reaches the previously documented host-only missing x86_64-w64-mingw32-ar blocker, so hosted CI remains the platform gate. Guarded auto-merge remains disabled until the repair is pushed and every final-head required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "8e52198a5ba63fab43f62037d2367e1bd8fab759",

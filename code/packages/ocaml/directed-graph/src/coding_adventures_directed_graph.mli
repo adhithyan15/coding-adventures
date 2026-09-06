@@ -1,7 +1,7 @@
 (** Deterministic mutable directed and labeled graphs.
 
-    Forward and reverse indexes remain synchronized. [Node.compare] controls
-    all observable ordering, and weights must be finite and non-negative. *)
+    Forward and reverse indexes remain synchronized. [Node.compare] controls all
+    observable ordering, and weights must be finite and non-negative. *)
 
 module Make (Node : Map.OrderedType) : sig
   (** A directed graph over [Node.t]. *)
@@ -9,8 +9,8 @@ module Make (Node : Map.OrderedType) : sig
   type node = Node.t
   (** Node identity. *)
 
-  (** Generic string-keyed property values. Reserved edge key ["weight"] must
-      be a valid {!Number}. *)
+  (** Generic string-keyed property values. Reserved edge key ["weight"] must be
+      a valid {!Number}. *)
   type property_value =
     | String of string
     | Number of float
@@ -137,7 +137,8 @@ module Make (Node : Map.OrderedType) : sig
   (** Breadth-first traversal over outgoing edges with sorted tie breaking. *)
 
   val dfs : t -> node -> (node list, error) result
-  (** Iterative depth-first traversal over outgoing edges in sorted branch order. *)
+  (** Iterative depth-first traversal over outgoing edges in sorted branch
+      order. *)
 
   val topological_sort : t -> (node list, error) result
   (** Kahn ordering with the smallest ready node first, or {!Cycle}. *)
@@ -242,8 +243,7 @@ module Make (Node : Map.OrderedType) : sig
       labeled -> node -> string -> property_value -> (unit, error) result
     (** Replaces one node property. *)
 
-    val remove_node_property :
-      labeled -> node -> string -> (unit, error) result
+    val remove_node_property : labeled -> node -> string -> (unit, error) result
     (** Removes one node property. *)
 
     val edge_properties :
@@ -251,7 +251,12 @@ module Make (Node : Map.OrderedType) : sig
     (** Returns the shared immutable edge-property snapshot. *)
 
     val set_edge_property :
-      labeled -> node -> node -> string -> property_value -> (unit, error) result
+      labeled ->
+      node ->
+      node ->
+      string ->
+      property_value ->
+      (unit, error) result
     (** Replaces a shared structural edge property. *)
 
     val remove_edge_property :
@@ -267,7 +272,8 @@ module Make (Node : Map.OrderedType) : sig
     val neighbors : labeled -> node -> (node list, error) result
     (** Alias of labeled {!successors}. *)
 
-    val neighbors_weighted : labeled -> node -> ((node * float) list, error) result
+    val neighbors_weighted :
+      labeled -> node -> ((node * float) list, error) result
     (** Returns sorted outgoing neighbors with shared weights. *)
 
     val out_degree : labeled -> node -> (int, error) result

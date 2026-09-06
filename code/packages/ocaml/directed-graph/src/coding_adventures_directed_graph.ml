@@ -367,7 +367,7 @@ module Make (Node : Map.OrderedType) = struct
           Stack.push (start, true) stack;
           while (not !cycle) && not (Stack.is_empty stack) do
             let node, entering = Stack.pop stack in
-            if entering then
+            if entering then (
               match color node with
               | 1 -> cycle := true
               | 2 -> ()
@@ -377,7 +377,7 @@ module Make (Node : Map.OrderedType) = struct
                   adjacency_bindings graph.forward node
                   |> List.map fst |> List.rev
                   |> List.iter (fun successor ->
-                         Stack.push (successor, true) stack)
+                         Stack.push (successor, true) stack))
             else colors := Node_map.add node 2 !colors
           done))
       (nodes graph);

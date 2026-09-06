@@ -108,7 +108,8 @@ let test_depth_first_branch_order () =
   List.iter
     (fun (left, right) -> add_edge graph left right |> get)
     [ ("A", "B"); ("A", "C"); ("A", "D"); ("B", "C"); ("B", "E") ];
-  Alcotest.check strings "branch discovery order" [ "A"; "B"; "C"; "E"; "D" ]
+  Alcotest.check strings "branch discovery order"
+    [ "A"; "B"; "C"; "E"; "D" ]
     (get (dfs graph "A"));
   Alcotest.check Alcotest.bool "cross edge to black is not a cycle" false
     (has_cycle graph)
@@ -198,18 +199,18 @@ let test_labeled_delegation () =
     ];
   Alcotest.(check int) "delegated size" 4 (Labeled.size graph);
   Alcotest.(check int) "structural edges" 4 (List.length (Labeled.edges graph));
-  Alcotest.(check (float 0.)) "delegated weight" 2.
+  Alcotest.(check (float 0.))
+    "delegated weight" 2.
     (get (Labeled.edge_weight graph "A" "B"));
   Labeled.set_graph_property graph "kind" (String "dag");
   Labeled.set_node_property graph "A" "root" (Bool true) |> get;
   Labeled.set_edge_property graph "A" "B" "weight" (Number 4.) |> get;
   Alcotest.check Alcotest.bool "delegated properties" true
     (property_find_opt "kind" (Labeled.graph_properties graph)
-       = Some (String "dag")
+     = Some (String "dag")
     && property_find_opt "root" (get (Labeled.node_properties graph "A"))
        = Some (Bool true)
-    && property_find_opt "weight"
-         (get (Labeled.edge_properties graph "A" "B"))
+    && property_find_opt "weight" (get (Labeled.edge_properties graph "A" "B"))
        = Some (Number 4.));
   Alcotest.check Alcotest.bool "labeled weights synchronized" true
     (Labeled.edges_labeled graph
@@ -218,7 +219,8 @@ let test_labeled_delegation () =
   Labeled.remove_edge_property graph "A" "B" "weight" |> get;
   Labeled.remove_node_property graph "A" "root" |> get;
   Labeled.remove_graph_property graph "kind";
-  Alcotest.(check (float 0.)) "weight reset through delegate" 1.
+  Alcotest.(check (float 0.))
+    "weight reset through delegate" 1.
     (get (Labeled.edge_weight graph "A" "B"));
   Alcotest.check strings "delegated neighbors" [ "B"; "C" ]
     (get (Labeled.neighbors graph "A"));
@@ -272,8 +274,7 @@ let () =
           Alcotest.test_case "cycles and components" `Quick
             test_cycles_and_components;
           Alcotest.test_case "labeled edges" `Quick test_labeled_edges;
-          Alcotest.test_case "labeled delegation" `Quick
-            test_labeled_delegation;
+          Alcotest.test_case "labeled delegation" `Quick test_labeled_delegation;
           Alcotest.test_case "large iterative traversal" `Quick
             test_large_iterative_traversal;
         ] );
