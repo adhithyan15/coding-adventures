@@ -6795,3 +6795,14 @@ that zero into every `str_index(s, j)`. Exclude multiply defined integer
 registers from literal metadata and route unknown indices through the checked
 runtime helper. Run delimiter scans to validate loop-carried byte reads; a
 frontend oracle or literal-index test alone misses this native/LLVM gap.
+
+
+### WASM runtime string concatenation must preserve aliased operands (2026-09-05)
+
+INSPECT replacement exposed `str_concat result = result, character`: assigning
+the fresh handle to result before copying overwrote the input handle, producing
+NUL output or a trap. Preserve operand locals through all length and byte reads;
+write the destination last. Exercise left, right and double aliasing explicitly.
+
+Direct WASM IIR tests must give `str_eq` an i64/i32 result hint; `bool` is
+rejected by the backend validator before execution. Use the established test ABI.

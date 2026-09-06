@@ -1574,11 +1574,51 @@ fn emit_instr(
                 code.push(I64_ADD);
                 code.extend(encode_call(ensure_capacity));
 
-                // rd = new = i32.wrap(bump)  — the fresh block's base handle.
+                // Keep operand locals intact: rd may equal ra, rb, or both.
+                // The unchanged bump pointer addresses the fresh block while we
+                // write its header and copy bytes from the original handles.
+                // mem[new] = la + lb  — write the i32 length header.
                 code.extend(encode_global_get(bump));
                 code.extend(encode_i32_wrap_i64());
-                code.extend(encode_local_set(rd));
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_i32_store(0));
 
+                // memory.copy(new+4, a+4, la)  — splice operand a's bytes.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_wrap_i64());
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_memory_copy());
+
+                // memory.copy(new+4+la, b+4, lb)  — then operand b's bytes.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_wrap_i64());
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_memory_copy());
+
+                // Save the new handle on the stack, then reserve the allocation
+                // using the original operand lengths. Assign rd only after the
+                // final operand read, so in-place concatenation is safe.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_wrap_i64());
                 // bump = bump + i64(4 + la + lb)  — reserve header + both byte runs.
                 code.extend(encode_global_get(bump));
                 code.extend(encode_i32_const(4));
@@ -1592,39 +1632,7 @@ fn emit_instr(
                 code.push(I64_ADD);
                 code.extend(encode_global_set(bump));
 
-                // mem[new] = la + lb  — write the i32 length header.
-                code.extend(encode_local_get(rd));
-                code.extend(encode_local_get(ra));
-                code.extend(encode_i32_load(0));
-                code.extend(encode_local_get(rb));
-                code.extend(encode_i32_load(0));
-                code.push(I32_ADD);
-                code.extend(encode_i32_store(0));
-
-                // memory.copy(new+4, a+4, la)  — splice operand a's bytes.
-                code.extend(encode_local_get(rd));
-                code.extend(encode_i32_const(4));
-                code.push(I32_ADD);
-                code.extend(encode_local_get(ra));
-                code.extend(encode_i32_const(4));
-                code.push(I32_ADD);
-                code.extend(encode_local_get(ra));
-                code.extend(encode_i32_load(0));
-                code.extend(encode_memory_copy());
-
-                // memory.copy(new+4+la, b+4, lb)  — then operand b's bytes.
-                code.extend(encode_local_get(rd));
-                code.extend(encode_i32_const(4));
-                code.push(I32_ADD);
-                code.extend(encode_local_get(ra));
-                code.extend(encode_i32_load(0));
-                code.push(I32_ADD);
-                code.extend(encode_local_get(rb));
-                code.extend(encode_i32_const(4));
-                code.push(I32_ADD);
-                code.extend(encode_local_get(rb));
-                code.extend(encode_i32_load(0));
-                code.extend(encode_memory_copy());
+                code.extend(encode_local_set(rd));
             }
         }
 

@@ -6098,6 +6098,115 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 
+    // INSPECT replace all items: observe the rebuilt source text.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"ABABA\".\n\
+               000000 01 A PIC X VALUE \"A\".\n\
+               000000 01 B PIC X VALUE \"X\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL A BY B.\n\
+               000000 DISPLAY S.\n\
+               000000 INSPECT S REPLACING ALL \"Z\" BY \"Q\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"B\" TO A.\n\
+               000000 MOVE \"Y\" TO B.\n\
+               000000 INSPECT S REPLACING ALL A BY B.\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("XBXBX\nXBXBX\nXYXYX"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT replace leading gap: observe the rebuilt source text.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"00X00\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING LEADING \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"00X00\" TO S.\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"X0000\" TO S.\n\
+               000000 INSPECT S REPLACING LEADING \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("**X00\n**X**\nX0000"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT replace characters padding: observe the rebuilt source text.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"AB\".\n\
+               000000 01 R PIC X VALUE \"*\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 INSPECT S REPLACING CHARACTERS BY R.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 MOVE \"Q\" TO R.\n\
+               000000 INSPECT S REPLACING CHARACTERS BY R.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[AB   ]\n[*****]\n[QQQQQ]"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT replace no rechaining: observe the rebuilt source text.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"abQab\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL \"a\" BY \"b\" ALL \"b\" BY \"z\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("bzQbz"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT replace first match: observe the rebuilt source text.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"aQaaa\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"a\" BY \"y\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("xQxxx"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

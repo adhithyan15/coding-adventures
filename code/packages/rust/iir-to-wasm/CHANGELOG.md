@@ -1,5 +1,14 @@
 # Changelog — iir-to-wasm
 
+## Runtime concatenation operand aliasing (VM-056)
+
+Runtime string concatenation preserves both source handles until all lengths
+and bytes have been read, then assigns the destination. This supports a
+result local that is also the left operand, right operand or both. Executable
+regressions compare complete output for all three cases; COBOL INSPECT
+replacement adds five seven-backend conformance programs.
+
+
 ## Unreleased — repeated string assignment
 
 String variables written more than once use runtime handles even within one

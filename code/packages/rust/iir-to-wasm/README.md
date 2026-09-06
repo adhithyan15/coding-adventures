@@ -226,3 +226,12 @@ tests/
 | `wasm-module-encoder` | Serialises `WasmModule` to raw `.wasm` bytes |
 | `wasm-leb128` | Unsigned LEB128 encoding for WASM integer immediates |
 | `codegen-core` | Shared code-generation infrastructure (optional in v1) |
+
+
+## Runtime concatenation operand aliasing (VM-056)
+
+Runtime string concatenation preserves both source handles until all lengths
+and bytes have been read, then assigns the destination. This supports a
+result local that is also the left operand, right operand or both. Executable
+regressions compare complete output for all three cases; COBOL INSPECT
+replacement adds five seven-backend conformance programs.
