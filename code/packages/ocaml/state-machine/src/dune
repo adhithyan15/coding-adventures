@@ -1,0 +1,7 @@
+(library
+ (name coding_adventures_state_machine)
+ (public_name coding-adventures-state-machine)
+ (wrapped false)
+ (libraries coding-adventures-directed-graph)
+ (instrumentation
+  (backend bisect_ppx)))

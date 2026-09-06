@@ -1,0 +1,35 @@
+(executable
+ (name representative_smoke)
+ (modules representative_smoke)
+ (libraries
+  coding-adventures-logic-gates
+  coding-adventures-graph
+  coding-adventures-directed-graph
+  coding-adventures-state-machine))
+
+(executable
+ (name transitive_leaf_smoke)
+ (modules transitive_leaf_smoke)
+ (libraries coding-adventures-state-machine))
+
+(rule
+ (target representative.actual.json)
+ (action
+  (with-stdout-to representative.actual.json
+   (run %{exe:representative_smoke.exe}))))
+
+(rule
+ (target transitive-leaf.actual.json)
+ (action
+  (with-stdout-to transitive-leaf.actual.json
+   (run %{exe:transitive_leaf_smoke.exe}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff expected/representative.json representative.actual.json)))
+
+(rule
+ (alias runtest)
+ (action
+  (diff expected/transitive-leaf.json transitive-leaf.actual.json)))

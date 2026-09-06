@@ -882,7 +882,8 @@ class ModalStateMachine:
         """
         Process an input event in the current mode's DFA.
 
-        If the event triggers a mode transition, switch modes first.
+        Dispatch the event only to the current mode's DFA. Mode transitions
+        occur only through switch_mode; processing never switches implicitly.
         Returns the current state of the active DFA after processing.
         """
         ...

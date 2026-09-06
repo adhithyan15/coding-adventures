@@ -18,6 +18,11 @@ MANIFEST_RELATIVE_PATH = Path("code/specs/fixtures/ocaml-toolchain/toolchain-loc
 FIXTURE_ROOT_RELATIVE_PATH = Path("code/specs/fixtures/ocaml-toolchain")
 SCAFFOLD_ROOT_RELATIVE_PATH = Path("code/specs/fixtures/scaffold-generator")
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml.yml")
+GENERIC_WORKFLOW_RELATIVE_PATH = Path(".github/workflows/ci.yml")
+OCAML_BUILD_ROOT_RELATIVE_PATHS = (
+    Path("code/packages/ocaml"),
+    Path("code/programs/ocaml"),
+)
 
 DIRECT_VERSIONS = {
     "ocaml": "5.2.1",
@@ -116,6 +121,12 @@ EXPECTED_RUN_SHA256 = {
     "locked.install": "83aaefbc943f71a9be36cd9cfa8ac70919040de0d0e71748f93999b84023172c",
     "locked.run": "68cdbecd8ce825ae00f1f1516f3ab73bd06198ac9e3f1c238f06518a00353929",
 }
+GENERIC_BOOTSTRAP_RUN_SHA256 = (
+    "da5d03fbce1c2766acb87fc9c381292704bf18b7b8b4a5bbf164c2e3922dbe56"
+)
+GENERIC_MATRIX_PLAN_RUN_SHA256 = (
+    "02b36725b5036a9ac57023f94ec372936e0ee7f24dd8c9d5aec8d6f4a2eec8d0"
+)
 EXPECTED_RUN_METADATA = {
     "contract.validate": {"shell": None, "env": None},
     "fresh.bootstrap": {
@@ -572,6 +583,43 @@ def _validate_scaffold_build_files(repo_root: Path) -> None:
                 )
 
 
+def _validate_local_package_pins(repo_root: Path) -> None:
+    for root_index, relative_root in enumerate(OCAML_BUILD_ROOT_RELATIVE_PATHS):
+        build_root = repo_root / relative_root
+        if not build_root.exists():
+            if root_index == 0:
+                raise ContractError(f"OCaml package root is missing: {build_root}")
+            continue
+        if not build_root.is_dir():
+            raise ContractError(f"OCaml build root is not a directory: {build_root}")
+        paths = [
+            *build_root.glob("*/BUILD"),
+            *build_root.glob("*/BUILD_windows"),
+        ]
+        for path in sorted(paths):
+            _require_regular_file(path, "OCaml package BUILD file", boundary=repo_root)
+            try:
+                lines = path.read_text(encoding="utf-8").splitlines()
+            except (OSError, UnicodeError) as exc:
+                raise ContractError(
+                    f"cannot read OCaml package BUILD file {path}: {exc}"
+                ) from exc
+            for line_number, line in enumerate(lines, start=1):
+                command = line.strip()
+                is_local_pin = command.startswith("opam pin add ") and re.search(
+                    r"(?:^|\s)(?:\.\.?[/\\]|file:)", command
+                )
+                command_tokens = command.split()
+                required_flags = {"--working-dir", "--no-checksums"}
+                missing_flags = sorted(required_flags.difference(command_tokens))
+                if is_local_pin and missing_flags:
+                    relative_path = path.relative_to(repo_root)
+                    raise ContractError(
+                        f"{relative_path}:{line_number} local opam pin omits required "
+                        f"flags {missing_flags}"
+                    )
+
+
 def _workflow_mapping(value: object, label: str) -> Mapping[str, object]:
     if not isinstance(value, dict):
         raise ContractError(f"workflow {label} must be a mapping")
@@ -793,6 +841,7 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
     )
     expected_paths = [
         ".github/workflows/build-ocaml.yml",
+        ".github/workflows/ci.yml",
         "code/scripts/ocaml_toolchain_lock.py",
         "code/scripts/tests/test_ocaml_toolchain_lock.py",
         "code/specs/OCAML0*.md",
@@ -1044,6 +1093,199 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
         )
 
 
+def _extract_workflow_job(workflow_text: str, job_name: str) -> Mapping[str, object]:
+    """Parse one top-level job without accepting the generic workflow wholesale."""
+
+    lines = workflow_text.splitlines()
+    header = f"  {job_name}:"
+    try:
+        start = lines.index(header)
+    except ValueError as exc:
+        raise ContractError(f"generic CI omits jobs.{job_name}") from exc
+    end = len(lines)
+    for index in range(start + 1, len(lines)):
+        line = lines[index]
+        if re.fullmatch(r"  [A-Za-z0-9_-]+:", line):
+            end = index
+            break
+    fragment = "jobs:\n" + "\n".join(f"  {line}" for line in lines[start:end]) + "\n"
+    document = parse_restricted_workflow_yaml(fragment)
+    jobs = _workflow_mapping(document.get("jobs"), "jobs")
+    return _workflow_mapping(jobs.get(job_name), f"jobs.{job_name}")
+
+
+def validate_generic_ci_workflow_text(
+    manifest: Mapping[str, Any], workflow_text: str
+) -> None:
+    """Validate the narrowly reviewed OCaml bootstrap in generic CI."""
+
+    detect = _extract_workflow_job(workflow_text, "detect")
+    detect_steps = _steps_by_name(detect, "detect")
+    plan_step = _workflow_mapping(
+        detect_steps.get("Plan build matrix"), "jobs.detect.plan-build-matrix"
+    )
+    plan_env = _workflow_mapping(
+        plan_step.get("env"), "jobs.detect.plan-build-matrix.env"
+    )
+    if plan_env.get("NEEDS_OCAML") != "${{ steps.toolchains.outputs.needs_ocaml }}":
+        raise ContractError("generic CI matrix planner must receive exact NEEDS_OCAML")
+    plan_run = _workflow_string(
+        plan_step.get("run"), "jobs.detect.plan-build-matrix.run"
+    )
+    required_plan_fragments = (
+        '"rust", "wasm", "swift", "c", "cpp", "csharp", "fsharp", "dotnet", "ocaml"',
+        'or flag("NEEDS_OCAML")',
+    )
+    for fragment in required_plan_fragments:
+        if fragment not in plan_run:
+            raise ContractError(
+                f"generic CI matrix planner omits OCaml fragment {fragment!r}"
+            )
+    actual_plan_digest = hashlib.sha256(plan_run.encode("utf-8")).hexdigest()
+    if actual_plan_digest != GENERIC_MATRIX_PLAN_RUN_SHA256:
+        raise ContractError(
+            "generic CI matrix planner must equal reviewed digest "
+            f"{GENERIC_MATRIX_PLAN_RUN_SHA256}, found {actual_plan_digest}"
+        )
+
+    build = _extract_workflow_job(workflow_text, "build")
+    build_steps = _steps_by_name(build, "build")
+    checkout = _workflow_mapping(build_steps.get("Checkout"), "jobs.build.checkout")
+    if set(checkout) != {"name", "uses", "with"}:
+        raise ContractError("generic CI checkout has unreviewed step keys")
+    expected_checkout = f"actions/checkout@{manifest['actions']['checkout']}"
+    if checkout.get("uses") != expected_checkout:
+        raise ContractError(f"generic CI checkout must use {expected_checkout}")
+    checkout_inputs = _workflow_mapping(
+        checkout.get("with"), "jobs.build.checkout.with"
+    )
+    if checkout_inputs != {"fetch-depth": "0", "persist-credentials": "false"}:
+        raise ContractError(
+            "generic CI checkout must fetch history without persisting credentials"
+        )
+
+    setup = _workflow_mapping(
+        build_steps.get("Set up reviewed OCaml compiler and repository"),
+        "jobs.build.setup-ocaml",
+    )
+    expected_guard = (
+        "needs.detect.outputs.needs_ocaml == 'true' && "
+        "(matrix.sharded != true || contains(matrix.languages, 'ocaml'))"
+    )
+    expected_setup = {
+        "name": "Set up reviewed OCaml compiler and repository",
+        "id": "setup-ocaml",
+        "if": expected_guard,
+        "uses": f"ocaml/setup-ocaml@{manifest['actions']['setup_ocaml']}",
+        "with": {
+            "ocaml-compiler": (
+                f"ocaml-base-compiler.{manifest['direct_versions']['ocaml']}"
+            ),
+            "opam-repositories": (
+                "default: git+https://github.com/ocaml/opam-repository.git"
+                f"#{manifest['opam_repository_commit']}"
+            ),
+            "opam-pin": "false",
+            "dune-cache": "false",
+            "cache-prefix": (
+                "ocaml03-${{ github.sha }}-${{ github.run_id }}-"
+                "${{ github.run_attempt }}-build-${{ matrix.label }}"
+            ),
+            "windows-compiler": "mingw",
+            "windows-environment": "cygwin",
+            "github-token": "${{ github.token }}",
+        },
+    }
+    if setup != expected_setup:
+        raise ContractError("generic CI OCaml setup must equal the reviewed identity")
+
+    bootstrap = _workflow_mapping(
+        build_steps.get("Require reviewed OCaml bootstrap"),
+        "jobs.build.require-ocaml-bootstrap",
+    )
+    if set(bootstrap) != {"name", "if", "shell", "run"}:
+        raise ContractError("generic CI OCaml bootstrap has unreviewed step keys")
+    if (
+        bootstrap.get("if") != "steps.setup-ocaml.outcome == 'success'"
+        or bootstrap.get("shell") != "bash"
+    ):
+        raise ContractError("generic CI OCaml bootstrap guard or shell drifted")
+    bootstrap_run = _workflow_string(
+        bootstrap.get("run"), "jobs.build.require-ocaml-bootstrap.run"
+    )
+    required_bootstrap_fragments = (
+        "set -euo pipefail",
+        f'test "$(opam --version)" = "{manifest["direct_versions"]["opam"]}"',
+        f'test "$(opam exec -- ocamlc -version | tr -d \'\\r\')" = "{manifest["direct_versions"]["ocaml"]}"',
+        "opam repository list --all --short --color=never",
+        "opam repository list --all --color=never",
+        "validate-repository-report \\",
+        'test "$repository_names" = "default"',
+        "export OPAMREQUIRECHECKSUMS=true",
+        f"dune.{manifest['direct_versions']['dune']}",
+        f"alcotest.{manifest['direct_versions']['alcotest']}",
+        f"bisect_ppx.{manifest['direct_versions']['bisect_ppx']}",
+        f"ocamlformat.{manifest['direct_versions']['ocamlformat']}",
+        "--yes --require-checksums",
+        "validate-runtime",
+        "printf 'OPAMREQUIRECHECKSUMS=true\\n' >> \"$GITHUB_ENV\"",
+    )
+    for fragment in required_bootstrap_fragments:
+        if fragment not in bootstrap_run:
+            raise ContractError(
+                f"generic CI OCaml bootstrap omits required fragment {fragment!r}"
+            )
+    actual_bootstrap_digest = hashlib.sha256(bootstrap_run.encode("utf-8")).hexdigest()
+    if actual_bootstrap_digest != GENERIC_BOOTSTRAP_RUN_SHA256:
+        raise ContractError(
+            "generic CI OCaml bootstrap must equal reviewed digest "
+            f"{GENERIC_BOOTSTRAP_RUN_SHA256}, found {actual_bootstrap_digest}"
+        )
+    for forbidden in (
+        "continue-on-error:",
+        "|| true",
+        "opam-pin: true",
+        "dune-cache: true",
+    ):
+        if forbidden in bootstrap_run:
+            raise ContractError(
+                f"generic CI OCaml bootstrap contains forbidden {forbidden!r}"
+            )
+
+    incremental = _workflow_mapping(
+        build_steps.get("Build and test affected packages"),
+        "jobs.build.incremental",
+    )
+    incremental_if = _workflow_string(
+        incremental.get("if"), "jobs.build.incremental.if"
+    )
+    if "needs.detect.outputs.needs_ocaml == 'true'" not in incremental_if:
+        raise ContractError("generic Windows build must be eligible for OCaml")
+    full = _workflow_mapping(
+        build_steps.get("Full build on main merge"), "jobs.build.full"
+    )
+    incremental_run = _workflow_string(
+        incremental.get("run"), "jobs.build.incremental.run"
+    )
+    full_run = _workflow_string(full.get("run"), "jobs.build.full.run")
+    for label, run, invocation in (
+        (
+            "incremental",
+            incremental_run,
+            '$BT \\\n  "${job_flags[@]}" \\\n  -root .',
+        ),
+        ("full", full_run, '$BT "${job_flags[@]}" -root .'),
+    ):
+        if (
+            'if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then' not in run
+            or "job_flags=(-jobs 1)" not in run
+            or invocation not in run
+        ):
+            raise ContractError(
+                f"generic CI {label} build must serialize only an active OCaml switch"
+            )
+
+
 def validate_repository(
     repo_root: Path, *, check_workflow: bool = True
 ) -> dict[str, Any]:
@@ -1089,6 +1331,7 @@ def validate_repository(
         )
 
     _validate_scaffold_build_files(repo_root)
+    _validate_local_package_pins(repo_root)
 
     if check_workflow:
         workflow_path = repo_root / WORKFLOW_RELATIVE_PATH
@@ -1098,6 +1341,17 @@ def validate_repository(
         except (OSError, UnicodeError) as exc:
             raise ContractError(f"cannot read workflow {workflow_path}: {exc}") from exc
         validate_workflow_text(manifest, workflow_text)
+        generic_workflow_path = repo_root / GENERIC_WORKFLOW_RELATIVE_PATH
+        _require_regular_file(
+            generic_workflow_path, "generic CI workflow", boundary=repo_root
+        )
+        try:
+            generic_workflow_text = generic_workflow_path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            raise ContractError(
+                f"cannot read workflow {generic_workflow_path}: {exc}"
+            ) from exc
+        validate_generic_ci_workflow_text(manifest, generic_workflow_text)
     return manifest
 
 

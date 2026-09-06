@@ -146,6 +146,9 @@ graph.edge_properties("London", "Paris")["weight"] == 300
 When callers set the `weight` edge property to a number, `edge_weight` and weighted
 algorithms must observe the same value. If `weight` is absent, the default is `1.0`.
 Non-numeric `weight` values are invalid.
+Negative, NaN, and infinite weights are also invalid because the portable
+weighted algorithms are Dijkstra and Kruskal. Implementations reject them when
+an edge is added or when the canonical `weight` property is updated.
 
 ### Two ways to store a graph
 
@@ -326,6 +329,8 @@ API naming may follow each language's style (`addNode`, `AddNode`, `add_node`,
 - Algorithms must not mutate graph, node, or edge properties.
 - Property insertion order is not semantically meaningful.
 - Unknown properties are preserved by copy and serialization operations.
+- Generic implementations with an ordered-node parameter use that comparison
+  for every observable traversal, component, edge, and equal-cost tie order.
 
 ## Algorithms (Pure Functions)
 

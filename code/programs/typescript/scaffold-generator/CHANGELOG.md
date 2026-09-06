@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
 
 ### Fixed
 
+- OCaml dependency pins now scope checksum bypass to local worktree ingestion
+  while subsequent registry dependency installs retain strict checksums.
 - OCaml metadata rejects `*)` and safely quotes printable descriptions before
   any output is written.
 - Dune `%{...}` interpolation openers are rejected before any scaffold output.
