@@ -17,8 +17,9 @@ for the architecture, component catalog, and phasing plan.
   both the banner and its native close control in each theme; an omitted
   variant keeps the `info` base style. Composed from `Box` + `Row` + `Text` +
   `If` + `HostButton`.
-- **`Badge`** — small pill label. `Box[badge] { Text }`. Slots:
-  `label`, `variant`.
+- **`Badge`** — small pill label with a closed eight-value `variant` axis.
+  UI49 states render every legal value in both themes; an omitted variant
+  keeps the primary base style. `Box[badge] { Text }`.
 - **`Button`** — styled push button with closed `variant` (`primary`,
   `secondary`, `success`, `danger`, `warning`, `info`, `light`, `dark`)
   and `size` (`sm`, `md`, `lg`) axes plus a `disabled` slot. UI49-owned
@@ -127,10 +128,11 @@ cargo test
 
 Smoke tests assert every exported component's `.mil` / `.mll` /
 `.msl` triple round-trips through the three IR compilers, and that
-the manifest is internally consistent. Button and Alert additionally assert
-their closed axes, complete state ownership in both themes, and representative
-visual differences. MosaicBook stories for three-file components remain
-blocked by #14031; this package does not claim story coverage yet.
+the manifest is internally consistent. Button, Alert, and Badge additionally
+assert their closed axes, complete state ownership in both themes, and
+representative visual differences. MosaicBook stories for three-file
+components remain blocked by #14031; this package does not claim story
+coverage yet.
 
 `native_complete_gate.rs` (issue #12024) goes one step further: for
 each of the five native backends (SwiftUI, Qt, XAML, Flutter,
