@@ -1369,6 +1369,10 @@ fn ignored_native_property(
     native_radio_groups: &HashSet<String>,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
+        ("HostTable", "onViewportShift") if backend != Backend::React => Some((
+            "interaction.table-wheel-shift-unimplemented",
+            "measured table wheel routing is currently implemented only by React",
+        )),
         (_, "table-cell-role") if backend != Backend::React => Some((
             "accessibility.authored-table-cell-unimplemented",
             "authored table-cell roles and wrapper geometry are currently implemented only by React",

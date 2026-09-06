@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- Route opt-in table wheel input through measured signed row shifts, retaining
+  fractional motion across renders and releasing horizontal/zoom/boundary input.
+
 - Lower authored table-cell roles to semantic row/column headers or data cells,
   putting authored geometry on the actual wrapper. Preserve unannotated cells.
 - Reveal logical data columns past pinned row headers in either layout direction.

@@ -1,6 +1,6 @@
 // An opt-in numbered-row Grid. Data coordinates are unchanged by the header.
 layout RowHeaderGrid {
-  HostTable [sheet] (selected-row: slot: selected-row, selected-col: slot: selected-col, onViewportRows: emit: onViewportRows) {
+  HostTable [sheet] (selected-row: slot: selected-row, selected-col: slot: selected-col, onViewportRows: emit: onViewportRows, viewport-offset: slot: viewport-offset, total-rows: slot: total-rows, onViewportShift: emit: onViewportShift) {
     HostTableColGroup {
       Col (width: 48)
       For (each: slot: column-widths, as: w, index: cw) { Col (width: (w)) }

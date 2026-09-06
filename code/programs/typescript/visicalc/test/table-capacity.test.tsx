@@ -61,3 +61,34 @@ it("waits for measurable rows and diagnoses nonuniform geometry once", () => {
   expect(report).not.toHaveBeenCalled(); expect(warning).toHaveBeenCalledTimes(1);
   ref(null);
 });
+
+it("normalizes wheel units and retains fractional motion across ref changes", () => {
+  const shift = vi.fn();
+  let ref = mosaic$tableCapacityRef(vi.fn(), undefined, { offset: 10, total: 100, shift });
+  const wheel = (deltaY: number, deltaMode = 0) => {
+    const event = new WheelEvent("wheel", { deltaY, deltaMode, bubbles: true, cancelable: true });
+    table.dispatchEvent(event); expect(event.defaultPrevented).toBe(true);
+  };
+  ref(table); flush(); wheel(17); expect(shift).not.toHaveBeenCalled();
+  ref(null); ref = mosaic$tableCapacityRef(vi.fn(), undefined, { offset: 10, total: 100, shift });
+  ref(table); flush(); wheel(17); expect(shift).toHaveBeenLastCalledWith(1);
+  wheel(3, 1); expect(shift).toHaveBeenLastCalledWith(3);
+  wheel(-1, 2); expect(shift).toHaveBeenLastCalledWith(-9);
+  wheel(17); wheel(-17); expect(shift).toHaveBeenCalledTimes(3);
+  wheel(-17); expect(shift).toHaveBeenLastCalledWith(-1);
+  ref(null);
+});
+
+it("releases boundary and nonvertical gestures and removes wheel listeners", () => {
+  const shift = vi.fn(); const ref = mosaic$tableCapacityRef(vi.fn(), undefined, { offset: 0, total: 100, shift });
+  ref(table); flush();
+  for (const init of [{deltaY:-34}, {deltaY:34,deltaX:40}, {deltaY:34,ctrlKey:true}, {deltaY:34,shiftKey:true}]) {
+    const event = new WheelEvent("wheel", {...init,bubbles:true,cancelable:true});
+    table.dispatchEvent(event); expect(event.defaultPrevented).toBe(false);
+  }
+  ref(null);
+  const event = new WheelEvent("wheel", {deltaY:34,bubbles:true,cancelable:true});
+  table.dispatchEvent(event); expect(event.defaultPrevented).toBe(false); expect(shift).not.toHaveBeenCalled();
+  const end = mosaic$tableCapacityRef(vi.fn(), undefined, {offset:98,total:100,shift});
+  end(table); flush(); table.dispatchEvent(event); expect(event.defaultPrevented).toBe(false); end(null);
+});

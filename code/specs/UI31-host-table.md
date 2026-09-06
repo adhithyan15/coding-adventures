@@ -567,3 +567,31 @@ adding a header must not create resize/dispatch feedback or duplicate row counts
 Whole-workbook physical scroll transport remains a separate requirement of
 #14277. Numbered labels and bounded rendering must not be described as completed
 virtual scrolling while the scrollbar can only traverse the current slice.
+
+## 10. Measured wheel routing for a row window (React baseline)
+
+Tracking: #14405 under #14277. A HostTable already using onViewportRows may
+also bind onViewportShift(rows: number), viewport-offset and total-rows. The
+metadata describes a zero-based row window and total logical row count; the
+event requests a signed, nonzero integer displacement. The application owns
+clamping and absolute selection/edit identity. Missing measured-capacity wiring
+or window metadata is a compile error when the shift event is forwarded.
+
+The generated listener uses measured uniform row pitch for pixel-mode wheel
+input, one row per line unit, and measured capacity per page unit. Fractional
+motion accumulates across React ref rebinding; reversing direction discards the
+old-direction remainder. Unmeasurable geometry does not invent a row pitch.
+The listener is scoped to its own table, ignores input controls and horizontal,
+shift-wheel or zoom gestures, and leaves boundary motion to the containing
+scroll surface. It prevents default only while it can move the logical window.
+Cleanup removes the wheel listener along with the measurement observer.
+
+RowHeaderGrid forwards this optional event. VisiCalc's Rust adapter saturates
+and clamps the displacement without retargeting the selected cell or committing
+pending edits. Subsequent cell clicks translate through the new viewport offset.
+Native routing is reported as interaction.table-wheel-shift-unimplemented.
+
+This is discrete row-window routing, not smooth pixel virtualization. The
+native scrollbar still describes the materialized table; a whole-workbook
+scrollbar thumb, touch dragging and broader scroll accessibility remain required
+under #14277. Do not infer their completion from wheel traversal alone.

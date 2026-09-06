@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Diagnose unsupported measured table wheel routing on non-React backends.
+
 ### Fixed — XAML layout variants have distinct generated types
 
 Named layouts now suffix their generated XAML partial class, code-behind,

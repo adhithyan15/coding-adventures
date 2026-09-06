@@ -1,4 +1,6 @@
 component VisiCalc {
+  slot viewport-offset : number ;
+  slot total-rows : number ;
   slot row-headers : list<text> ;
   slot cell-address : text ;
   slot formula : text ;
@@ -18,5 +20,6 @@ component VisiCalc {
   emit onEditCommit ;
   emit onEditCancel ;
   emit onNewWorkbook ;
+  emit onViewportShift ( rows : number ) ;
   emit onViewportRows ( rows : number ) ;
 }
