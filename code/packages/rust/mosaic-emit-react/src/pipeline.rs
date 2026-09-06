@@ -3700,6 +3700,10 @@ fn emit_host_table_jsx(
         String::new()
     };
 
+    if find_emit_ref_prop(node, "onViewportShift").is_some_and(|name| emits.iter().any(|emit| emit.name == name))
+        && !find_emit_ref_prop(node, "onViewportRows").is_some_and(|name| emits.iter().any(|emit| emit.name == name)) {
+        return Err(PipelineEmitError::UnsafeSlotName("onViewportShift requires measured onViewportRows".into()));
+    }
     if let Some(name) = find_emit_ref_prop(node, "onViewportRows") {
         if let Some(declaration) = emits.iter().find(|emit| emit.name == name) {
             if declaration.params.len() != 1 || declaration.params[0].name != "rows" || declaration.params[0].r#type != EmitPayloadType::Number {
@@ -3707,10 +3711,28 @@ fn emit_host_table_jsx(
             }
             let event = to_camel_case_first_lower(&strip_on_prefix(name));
             validate_emit_name(&event)?;
-            let reveal = if let (Some(row), Some(col)) = (find_slot_ref_prop(node, "selected-row"), find_slot_ref_prop(node, "selected-col")) {
+            let mut reveal = if let (Some(row), Some(col)) = (find_slot_ref_prop(node, "selected-row"), find_slot_ref_prop(node, "selected-col")) {
                 format!(", table => mosaic$revealTableCell(table, {}, {})", to_camel_case_first_lower(row), to_camel_case_first_lower(col))
             } else { String::new() };
-            selection_ref = format!(" ref={{mosaic$tableCapacityRef(rows => dispatch({{ type: \"{event}\", rows }} ){reveal})}}");
+            let mut wheel = String::new();
+            if let Some(shift_name) = find_emit_ref_prop(node, "onViewportShift") {
+                if let Some(shift) = emits.iter().find(|emit| emit.name == shift_name) {
+                    if shift.params.len() != 1 || shift.params[0].name != "rows" || shift.params[0].r#type != EmitPayloadType::Number {
+                        return Err(PipelineEmitError::UnsafeSlotName("onViewportShift requires one numeric rows parameter".into()));
+                    }
+                    let offset = find_slot_ref_prop(node, "viewport-offset").ok_or_else(|| PipelineEmitError::UnsafeSlotName("onViewportShift requires viewport-offset".into()))?;
+                    let total = find_slot_ref_prop(node, "total-rows").ok_or_else(|| PipelineEmitError::UnsafeSlotName("onViewportShift requires total-rows".into()))?;
+                    let offset = to_camel_case_first_lower(offset);
+                    let total = to_camel_case_first_lower(total);
+                    validate_slot_or_field_name(&offset).map_err(PipelineEmitError::UnsafeSlotName)?;
+                    validate_slot_or_field_name(&total).map_err(PipelineEmitError::UnsafeSlotName)?;
+                    let shift_event = to_camel_case_first_lower(&strip_on_prefix(shift_name));
+                    validate_emit_name(&shift_event)?;
+                    if reveal.is_empty() { reveal = ", undefined".into(); }
+                    wheel = format!(", {{ offset: {offset}, total: {total}, shift: rows => dispatch({{ type: \"{shift_event}\", rows }}) }}");
+                }
+            }
+            selection_ref = format!(" ref={{mosaic$tableCapacityRef(rows => dispatch({{ type: \"{event}\", rows }} ){reveal}{wheel})}}");
         }
     }
 
@@ -9981,6 +10003,22 @@ mod tests {
         assert_eq!(table_cell_wrapper(&header, "td", &styles).unwrap(), ("td", String::new()));
         header.props.push(keyword_prop("table-cell-role", "button"));
         assert!(table_cell_wrapper(&header, "td", &styles).is_err());
+    }
+
+    #[test]
+    fn wheel_shift_requires_measured_capacity_and_window_metadata() {
+        let model = component("X", vec![slot("offset", SlotType::Number, true), slot("total", SlotType::Number, true)], vec![
+            emit("onRows", vec![param("rows", EmitPayloadType::Number)]),
+            emit("onShift", vec![param("rows", EmitPayloadType::Number)]),
+        ]);
+        let mut layout = host_table_layout(vec![]);
+        layout.root.props.push(emit_ref_prop("onViewportShift", "onShift"));
+        assert!(from_pipeline(&model, &layout, &empty_style("X")).is_err());
+        layout.root.props.push(emit_ref_prop("onViewportRows", "onRows"));
+        assert!(from_pipeline(&model, &layout, &empty_style("X")).is_err());
+        layout.root.props.extend([slot_ref_prop("viewport-offset", "offset"), slot_ref_prop("total-rows", "total")]);
+        let out = from_pipeline(&model, &layout, &empty_style("X")).unwrap().output;
+        assert!(out.contains("undefined, { offset: offset, total: total, shift: rows => dispatch({ type: \"shift\", rows }) }"));
     }
 
     #[test]

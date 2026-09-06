@@ -44,6 +44,14 @@ The actual-WASM test edits Z100 without touching Y100. Native row-header support
 is explicitly degraded and remains in #14388, alongside broader accessibility
 and text-scale acceptance. Whole-workbook physical scrolling is still required.
 
+React wheel/trackpad routing now advances the row window through the workbook.
+Live wheel input traversed rows 1–12, 38–49 and 89–100 with 12 rows materialized.
+Clicking the final row selected A100; entering 42 changed that cell, and returning
+to rows 1–12 left A1 at 15. The adapter preserves absolute selection and buffered
+edits while scrolling. Small deltas accumulate; horizontal, zoom and boundary
+gestures retain native behavior. This is discrete row movement: a whole-workbook
+scrollbar, smooth pixel virtualization and touch routing remain in #14277.
+
 Browser review on 2026-09-05 covered both generated themes at desktop width
 and the real Rust app in a 375px-wide preview. The narrow root's scroll width
 remained 375px, and editing A1 from 15 to 20 recomputed E5 to 174. Text scaling,

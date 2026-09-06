@@ -287,6 +287,13 @@ impl MosaicApp for VisiCalcMosaicApp {
                 self.cursor.offset = offset;
                 Ok(self.update())
             }
+            "viewportShift" => {
+                let rows = event.payload.get("rows").and_then(Value::as_i64)
+                    .filter(|rows| *rows != 0).ok_or_else(|| invalid("viewport shift must be a nonzero integer"))?;
+                self.cursor.offset = i64::from(self.cursor.offset).saturating_add(rows)
+                    .clamp(0, i64::from(ROWS - self.cursor.size)) as u32;
+                Ok(self.update())
+            }
             "viewportRows" => {
                 let rows = event.payload.get("rows").and_then(Value::as_u64)
                     .filter(|rows| *rows > 0).ok_or_else(|| invalid("capacity must be a positive integer"))?;
@@ -555,6 +562,29 @@ mod tests {
         let empty = dispatch(&mut app, "newWorkbook", json!({}));
         assert_eq!(empty.props["cell-address"], "A1");
         assert_eq!(empty.props["viewport-rows"][0][0], "");
+    }
+
+    #[test]
+    fn wheel_shift_clamps_without_retargeting_selection_or_pending_edits() {
+        let mut app = VisiCalcMosaicApp::default();
+        dispatch(&mut app, "formulaChange", json!({"value":"27"}));
+        let scrolled = dispatch(&mut app, "viewportShift", json!({"rows":i64::MAX}));
+        assert_eq!(scrolled.props["viewport-offset"], 70);
+        assert_eq!(scrolled.props["cell-address"], "A1");
+        assert_eq!(scrolled.props["row-headers"][0], "71");
+        assert_eq!(scrolled.props["formula"], "27");
+        dispatch(&mut app, "commit", json!({}));
+        let returned = dispatch(&mut app, "viewportShift", json!({"rows":i64::MIN}));
+        assert_eq!(returned.props["viewport-offset"], 0);
+        assert_eq!(returned.props["viewport-rows"][0][0], "27");
+        dispatch(&mut app, "viewportShift", json!({"rows":70}));
+        let clicked = dispatch(&mut app, "gridNavigate", json!({"row":0,"col":25}));
+        assert_eq!(clicked.props["cell-address"], "Z71");
+        let before = app.snapshot().unwrap();
+        for rows in [json!(0), json!(1.5), json!("3")] {
+            assert!(app.dispatch(Event::new(1, "viewportShift", json!({"rows":rows}))).is_err());
+            assert_eq!(app.snapshot().unwrap(), before);
+        }
     }
 
     #[test]

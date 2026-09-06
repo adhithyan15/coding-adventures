@@ -1,4 +1,6 @@
 component RowHeaderGrid {
+  slot viewport-offset : number ;
+  slot total-rows : number ;
   slot row-headers : list<text> ;
   slot viewport-rows  : list<list<text>> ;
   slot column-headers : list<text> ;
@@ -18,5 +20,6 @@ component RowHeaderGrid {
   emit onFormulaChange  ( value : text ) ;
   emit onEditCommit     ( value : text ) ;
   emit onEditCancel ;
+  emit onViewportShift ( rows : number ) ;
   emit onViewportRows ( rows : number ) ;
 }

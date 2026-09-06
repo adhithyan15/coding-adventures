@@ -6,6 +6,8 @@ the package follows semantic versioning.
 
 ## Unreleased
 
+- Forward optional measured viewport-shift requests through RowHeaderGrid.
+
 - Add opt-in RowHeaderGrid with parallel row labels, semantic cell roles and
   the existing Cell event contract. Existing Grid consumers remain compatible.
 

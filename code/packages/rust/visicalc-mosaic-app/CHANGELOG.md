@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Clamp relative viewport shifts without retargeting selection or pending edits.
+
 - Derive absolute row labels alongside the rendered window without adding a
   workbook data column or changing selection/edit coordinates.
 
