@@ -5375,9 +5375,7 @@ impl HtmlParser {
         }
 
         if !in_foreign_content
-            && self.has_open_element("template")
-            && !self.has_open_element("table")
-            && self.current_last_child_element_is("col")
+            && self.at_authored_template_column_group_boundary()
             && name != "col"
             && name != "template"
         {
@@ -6154,10 +6152,7 @@ impl HtmlParser {
             }
         }
 
-        if self.first_authored_open_template_index().is_some()
-            && !self.has_open_element("table")
-            && self.current_last_child_element_is("col")
-        {
+        if self.at_authored_template_column_group_boundary() {
             if !is_html_whitespace_text(&text) {
                 self.diagnostics.push(
                     ParserDiagnostic::new(
@@ -7806,12 +7801,7 @@ impl HtmlParser {
         } else if self.current_namespace().is_some() && !self.current_element_is(name) {
             return;
         }
-        if self.first_authored_open_template_index().is_some()
-            && self.current_namespace().is_none()
-            && self.current_element_is("template")
-            && self.current_last_child_element_is("col")
-            && name != "template"
-        {
+        if self.at_authored_template_column_group_boundary() && name != "template" {
             self.diagnostics.push(
                 ParserDiagnostic::new(
                     "unexpected-end-tag-in-template-column-group",
@@ -9402,6 +9392,14 @@ impl HtmlParser {
 
     fn current_template_insertion_mode(&self) -> Option<TemplateInsertionMode> {
         self.template_insertion_modes.last().copied()
+    }
+
+    fn at_authored_template_column_group_boundary(&self) -> bool {
+        self.first_authored_open_template_index().is_some()
+            && self.current_template_insertion_mode() == Some(TemplateInsertionMode::ColumnGroup)
+            && self.current_namespace().is_none()
+            && self.current_element_is("template")
+            && self.current_last_child_element_is("col")
     }
 
     fn apply_ruby_implied_end_tags(&mut self, incoming_name: &str) {
@@ -49841,6 +49839,124 @@ mod tests {
             .collect::<Vec<_>>();
         assert_eq!(diagnostics.len(), 1);
         assert_eq!(diagnostics[0].position, None);
+    }
+
+    #[test]
+    fn template_column_group_recovery_ignores_an_outer_table_scope() {
+        let source =
+            "<!doctype html><!--é-->\r\n<table><template><col><div>A</template>B";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let control = parse_html(
+            "<!doctype html><!--é-->\r\n<table><template><col></template>B",
+        )
+        .unwrap();
+        assert_eq!(output.document, control);
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    matches!(
+                        diagnostic.code.as_str(),
+                        "unexpected-start-tag-in-template-column-group"
+                            | "unexpected-character-in-template-column-group"
+                    )
+                })
+                .collect::<Vec<_>>(),
+            vec![
+                &start_tag_in_template_column_group_recovery(source, "div"),
+                &character_in_template_column_group_recovery(source, "</template>"),
+            ]
+        );
+        assert!(source.len() > source.chars().count());
+
+        let fragment_source = "<table><template><col><div>A</template>B";
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            fragment_source,
+            "html body",
+        )
+        .unwrap();
+        let template = find_first_element_in_nodes(&fragment.nodes, "template").unwrap();
+        assert_eq!(
+            template.children,
+            vec![Node::element("col".to_string(), Vec::new())]
+        );
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    matches!(
+                        diagnostic.code.as_str(),
+                        "unexpected-start-tag-in-template-column-group"
+                            | "unexpected-character-in-template-column-group"
+                    )
+                })
+                .collect::<Vec<_>>(),
+            vec![
+                &start_tag_in_template_column_group_recovery(fragment_source, "div"),
+                &character_in_template_column_group_recovery(
+                    fragment_source,
+                    "</template>"
+                ),
+            ]
+        );
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "col".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "template".to_string(),
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let template = find_first_element_in_nodes(&unpositioned.document.children, "template")
+            .unwrap();
+        assert_eq!(
+            template.children,
+            vec![Node::element("col".to_string(), Vec::new())]
+        );
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .filter(|diagnostic| {
+                    matches!(
+                        diagnostic.code.as_str(),
+                        "unexpected-start-tag-in-template-column-group"
+                            | "unexpected-character-in-template-column-group"
+                    )
+                })
+                .count(),
+            2
+        );
+        assert!(unpositioned
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
