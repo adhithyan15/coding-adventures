@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a7af6226767f6c95",
+  "sourceHash": "fnv1a64:43106338dad4e939",
   "lessons": [
     {
       "id": "HI-C34-sochna",
@@ -140,16 +140,16 @@
       "id": "HI-C34-samajhna",
       "sequence": 870,
       "title": "समझना (samajhnā) — \"to understand,\" which is to say \"to wake up\"",
-      "headword": "समझना",
-      "romanization": "samajhnā",
-      "gloss": "to understand — literally \"to wake up fully,\" on the same root as Buddha",
+      "headword": "समझना / समझ / समझता / समझती / समझते / समुझना",
+      "romanization": "samajhnā / samajh / samajhtā / samajhtī / samajhte / samujhnā",
+      "gloss": "to understand / understanding or sense / masculine, feminine, and respectful-plural present forms / older Hindi form",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:abb9e04f5fba986b",
+      "sourceHash": "fnv1a64:c2c482adf449c1d6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -215,7 +215,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The standard derivation takes समझना (samajhnā) back to Sanskrit सम् (sam-, \"fully, together\") + the root बुध् (budh-, \"to wake, to become aware\"). Older Hindi still says समुझना (samujhnā), and that surviving -u- is the fingerprint of budh- before it wore down."
+              "text": "The standard derivation takes समझना, samajhnā, back to Sanskrit सम् (sam-, \"fully, together\") + the root बुध् (budh-, \"to wake, to become aware\"). Older Hindi still says समुझना (samujhnā), and that surviving -u- is the fingerprint of budh- before it wore down."
             },
             {
               "kind": "speech",
