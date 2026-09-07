@@ -1,0 +1,11 @@
+{
+  "language": "marathi",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:2b6beeb1f9bb7262",
+  "lessonIds": [
+    "MR-W39-tha",
+    "MR-C39-tithe",
+    "MR-R39-there"
+  ],
+  "tex": "marathi/book/chapters/ch39-there.tex"
+}

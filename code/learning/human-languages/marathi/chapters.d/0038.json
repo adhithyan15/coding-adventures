@@ -1,0 +1,20 @@
+{
+  "chapter": 38,
+  "title": "Where, and When",
+  "label": "ch:mr-where-when",
+  "canDo": "I can ask where somebody lives and when they are coming, and I can turn any statement I already own into a question by swapping one word and moving nothing.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R38-where-when",
+    "kind": "production",
+    "summary": "Complete MR-R38-where-when and ask three questions about one person -- who, where, when -- then tell the two question types apart by whether the voice has to rise.",
+    "assesses": [
+      "MR-QUESTION-KUTHE",
+      "MR-QUESTION-KADHI",
+      "MR-GRAMMAR-WH-ORDER"
+    ],
+    "note": "kuṭhe closes SPINE-ASK-LOCATION, the A1 core node this track had left with no realization at all."
+  }
+}
