@@ -1,0 +1,4482 @@
+{
+  "version": 1,
+  "language": "latin",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY EXAMINING BODY. There is no modern Latin proficiency examination -- core/exam-levels.json records exam 'no modern proficiency exam' for this track -- and nothing here may be attributed to Euroclassica, to its European Curriculum for Latin, or to an ELEX paper: latin/assessment-spec.md states that ELEX is not a four-skill pre-A1-to-C2 ladder and that this project claims no equivalence to it. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT LATIN: they published a Spanish syllabus and have said nothing whatever about this language. READ THE THREE CLAIMS APART. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, this project's restatement of the A1 grammar, function, notion and orthography inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing here and all it establishes is a LEVEL. THE PROXY STANDS IN AN ODD RELATION TO THIS TARGET AND IT IS WORTH NAMING: Spanish is Latin's own descendant, so the proxy is a list of demands made by a daughter of the language being measured. Where the daughter kept the mother's machinery the transfer is exact -- este/ese/aquel descends from hic/iste/ille, and the demonstrative point can be taken over word for word. Where the daughter INNOVATED, the proxy asks for something Latin never had and the demand has to be inverted: Spanish's articles become the fact that Latin has none (LA-A1-ART-01), Spanish's four separate past-tense points become one perfect (LA-A1-V-07), Spanish's written accent becomes the macron, which marks length rather than stress and is therefore a larger demand rather than a smaller one (LA-A1-ORT-03). (2) THE LATIN EXPONENTS are editorial throughout and are this project's judgement and nobody else's. (3) THE COVERAGE NUMBER is a measure of the corpus against this list, and for THIS track it must be read with LA-A1-LEC-01 in front of it. THE CAVEAT IN exam-levels.json IS LOAD-BEARING AND IS CARRIED AS A POINT RATHER THAN A FOOTNOTE. It says CEFR is built around communicative can-do statements, that Latin is learned almost entirely for reading, and that a reading-only ladder would fit Latin better. This inventory therefore enumerates 54 functional points about speaking to a living interlocutor for a language that has none, because the shared spine across all 23 tracks requires it -- and LA-A1-LEC-01 says in the file that this is the wrong construct, following the Sanskrit inventory's precedent of a deliberately uncovered point recording what it cannot measure. Four further points (the Lectio column) enumerate the reading construct the caveat names, and three more (the Testimonium column) enumerate a demand only a DEAD language makes: telling an attested phrase from a modern pedagogical one. That column is where this track is strongest. THE SIX DROPPED PROXY POINTS ARE CHRONOLOGICAL, NOT GRAMMATICAL, WHICH IS UNIQUE IN THIS SERIES. Every other inventory that drops a point drops it because the target language lacks a structure. Latin drops the telephone, television and radio, the internet and e-mail, computing, photography, and the Spanish superscript abbreviation letter. The first five are anachronisms: all 112 lessons declare variety: classical, and a Classical Latin A1 inventory cannot demand a word for a thing that did not exist. WHY A PROXY AT ALL: no awarding body publishes a Latin content syllabus this project has read. NOT SEARCHED, BY INSTRUCTION: no external search was performed for this file; code/learning/human-languages/BACKLOG.d records the sourcing question as settled and directs that it not be repeated per track (HL-C287, HL-C290).",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Latin is attributed to DELE, the Instituto Cervantes or the Plan Curricular. EXAM ENVELOPE: ONE EXISTS AND IT IS PROJECT-DEFINED. Unlike italian/ and portuguese/, the latin/ track ships assessment-spec.md, assessment.json and task-shapes/a1.json, so a project-internal contract does bound this file: assessment.json names a 'Coding Adventures Latin A1 Assessment -- project-defined equivalent' with independent reading, listening, writing and speaking passes at 0.6, six cumulative writing stages, and two timed mocks whose rubrics and answer keys are named as REQUIRED FUTURE ARTIFACTS rather than as evidence. The spec states in its own words that the A1 task inventory existing 'alone is not readiness evidence'. This inventory does not claim otherwise. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.latin -- exam 'no modern proficiency exam', basis 'editorial', mapping 'cefr', with the reading-construct caveat that LA-A1-LEC-01 carries. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 112 lesson files in code/learning/human-languages/latin/lessons/, which introduce 211 distinct atoms between them -- 86 LEX, 71 ETYMON, 29 PRAGMATICS, 15 GRAMMAR, 6 PHONO, 3 DIALOGUE and 1 TASK. All 112 declare variety: classical and register: neutral. NOT SEARCHED, BY INSTRUCTION: no external search for a Latin content syllabus was performed for this file. See `about`.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "This project's restatement of the A1 inventories the Instituto Cervantes publishes behind DELE. The only inventory in this repository that restates a real awarding body's published syllabus, so it is the only one that can lend a LEVEL. It lends a level and never a language -- and here it is a DAUGHTER language of the target, which makes some transfers exact and others inversions."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "Public, third-party and language-neutral, and the backbone latin/assessment-spec.md itself names. It can anchor a can-do and never a Latin form. It is also the framework whose communicative shape exam-levels.json's caveat says does not fit a reading language, which is why LA-A1-LEC-01 leans on it to say so."
+    },
+    {
+      "id": "LA-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/latin/ -- 112 lessons across 47 chapters, curriculum.d and chapters.d",
+      "note": "Our own work. It is what every probe resolves against and it is finite and auditable, but agreeing with it is not corroboration. Where a point's note says a word is missing, that absence was read out of this directory."
+    },
+    {
+      "id": "LA-ENVELOPE",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/latin/assessment-spec.md, assessment.json and task-shapes/a1.json",
+      "note": "The project-internal contract for this track, which italian/ and portuguese/ do not have. It names Classical Latin as the assessed variety, the reconstructed classical pronunciation as the default model, four independently passed skills at 0.6, and mock rubrics and answer keys as required future artifacts. It bounds what this file may claim and it is not external evidence."
+    },
+    {
+      "id": "ED-LATIN",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Latin",
+      "note": "Every Latin exponent below. Deciding that Spanish's three article points collapse into the single fact that Latin has none, that its four past-tense points land on one untaught perfect, that its nine punctuation points collapse into the fact that Roman texts had no punctuation at all, and that the telephone and the internet are dropped rather than restated -- all of that is chosen here. It is a working default to be corrected, not a standard."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [
+      {
+        "spanishPoints": [
+          "A1-NE09-03"
+        ],
+        "why": "The telephone. All 112 lessons declare variety: classical, and latin/assessment-spec.md names Classical Latin as the assessed variety. A Classical Latin A1 inventory cannot demand a word for an object that did not exist, and inventing a Neo-Latin coinage here would be exactly the kind of unlabelled invention LA-A1-TES-01 credits this track with refusing."
+      },
+      {
+        "spanishPoints": [
+          "A1-NE09-05"
+        ],
+        "why": "Television and radio. Anachronistic for the same reason. The wider notion, information and communication, is enumerated at LA-A1-NE-33 and the Roman shapes of it -- the letter and the inscription -- are enumerated at LA-A1-NE-34 and LA-A1-ORT-10."
+      },
+      {
+        "spanishPoints": [
+          "A1-NE09-06"
+        ],
+        "why": "The internet, and dictating an e-mail address. Anachronistic, and the second half of it -- dictating letter by letter -- is a real demand that survives translation and is enumerated at LA-A1-ORT-01 instead."
+      },
+      {
+        "spanishPoints": [
+          "A1-NE16-02"
+        ],
+        "why": "Computing and new technology. Anachronistic. The mathematical half of the same PCIC section, the notion of number, transfers intact and is at LA-A1-NE-57."
+      },
+      {
+        "spanishPoints": [
+          "A1-NE18-05"
+        ],
+        "why": "Photography. Anachronistic. The rest of the artistic block transfers -- theatre in particular, which is Roman and is enumerated at LA-A1-NE-64."
+      },
+      {
+        "spanishPoints": [
+          "A1-O1-06"
+        ],
+        "why": "Superscript letters in frequent abbreviations. Roman abbreviation is by truncation and by initial (S.P.D., cos., D.M.) and raises nothing; there is no Latin convention to restate this onto. The general abbreviation demand transfers and is at LA-A1-ORT-10."
+      }
+    ],
+    "note": "SIX POINTS DROPPED, AND FIVE OF THEM ARE DROPPED FOR A REASON NO OTHER INVENTORY IN THIS SERIES HAS USED: they are ANACHRONISMS rather than grammatical mismatches. Every other track drops a Spanish point because the target language lacks a structure -- Tamil writes no accent, so the accentuation rules go. Latin drops the telephone, television, the internet, computing and photography because the language as this track teaches it (variety: classical on all 112 lessons) has no referent for them. RESTATING A POINT AROUND THE TARGET LANGUAGE'S MACHINERY IS DERIVING IT, and that rule was applied first everywhere else: the articles Latin has not got, the punctuation Roman texts did not use, the inverted question mark, the gustar frame, the possessive that is a dative case rather than a word -- all restated, none dropped."
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points), the Council of Europe CEFR Companion Volume A1 descriptors, and latin/assessment-spec.md",
+      "note": "THE DIMENSION exam-levels.json's CAVEAT SAYS IS THE WRONG ONE FOR THIS TRACK, and it is enumerated anyway because the shared spine requires it. See LA-A1-LEC-01, which is a deliberately uncovered point recording that a communicative function column measures something Latin is not learned for. Within that limit the column is genuinely useful, because it surfaces gaps a reading course still cannot afford: the track can greet, thank, apologise, say please, say yes and say no by chapter 4, and cannot ask anybody to repeat anything at all (LA-A1-F6-05)."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
+      "note": "Walking the Spanish grammar column surfaced demands no reading of the Latin corpus alone would have named: that non is taught as a word and never attached to a verb, that qui/quae/quod return zero occurrences in a reading course, that twenty-five nouns are cited with their genitives and the genitive's job is never stated, that forty verb paradigms are given and the four conjugations are never named as classes. It does not close, because Latin makes demands Spanish cannot see at all -- the case system, free word order, the accusative-and-infinitive, the enclitic question particle -- and those are enumerated in a Casus column of their own on the project's judgement."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json for the orthographic demands, and latin/pronunciation-reference.md",
+      "note": "Latin and Spanish share an alphabet, so this column is not about a new writing system. What the proxy cannot supply is the two things that make Latin orthography its own subject: the macron, which marks LENGTH where a Spanish accent marks stress and which the corpus writes faithfully and scores in its dictation lessons, and the fact that a modern edition's punctuation, word spacing and capitalisation are all editorial rather than Roman -- which collapses nine proxy punctuation points into one untaught fact. The pronunciation-and-prosody half of the source inventory is not level-split, which is why the proxy's own phonology dimension is partial, and that carries straight through."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's general and specific notion inventories)",
+      "note": "Walked at the granularity of the proxy's numbered subsections. It does not close: which Latin words an A1 reader must hold is what a real Latin syllabus would say, and this project has read none. What the column does show is a corpus with an unusual profile -- roughly forty verbs with full paradigms, twenty-five concrete nouns of house, world, night and table, six colours, six time nouns, and almost nothing social or civic. urbs, liber, amicus, deus, lex and miles are all absent, which for a course whose subject is Rome is the finding this column exists to produce."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped, and its note is written as a work queue naming what would close it. Every atom named in every probe was checked mechanically against the 211 atoms the latin track actually introduces; a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so an id was never invented to fill a point. TWO HABITS ARE NAMED SO THEY ARE NOT HIDDEN GENEROSITIES. First, this track files a great deal under PRAGMATICS and ETYMON rather than LEX -- 29 PRAGMATICS and 71 ETYMON atoms against 86 LEX -- so probing a greeting, a courtesy formula or a time word often names a pragmatics or etymology id. The word IS introduced by that lesson. Second, and more importantly for this track: A VERB LESSON HERE INTRODUCES A PARADIGM, NOT A SENTENCE. sedeo's lesson gives all six present forms; it does not put sedeo in a sentence or give it anything to sit on. So a covered lexical point means the learner can DECLINE OR CONJUGATE the word and very often cannot USE it, and the notes say so wherever it matters. A POINT IS NOT COUNTED AS COVERED WHEN ONLY PART OF WHAT IT NAMES IS TAUGHT: bene without male leaves general evaluation uncovered; cras without hodie and heri leaves the time deictics uncovered; quomodo without ubi leaves the interrogative adverbs uncovered; emo without vendo leaves commerce uncovered. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or an empty list with `latinSpecific: true`. `anchorIds` records which anchor each point leans on, and the anchor's `kind` says whether that was something read or something decided. Neither field is read by any code; both are carried so the derivation can be audited rather than trusted.",
+  "points": [
+    {
+      "id": "LA-A1-N-01",
+      "category": "Nomen (the noun)",
+      "label": "proper nouns: a personal name, given and asked for",
+      "probe": [
+        "LA-LEX-QUID-TIBI-NOMEN-01",
+        "LA-DIALOGUE-MEETING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "Marcus and Iulia trade names in chapter 21's scene, on the frame chapter 20 builds."
+    },
+    {
+      "id": "LA-A1-N-02",
+      "category": "Nomen (the noun)",
+      "label": "place names",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "Not one place name is introduced. Roma itself never appears as a word to be learnt, which is a strange absence in a Latin course and an easy one to close."
+    },
+    {
+      "id": "LA-A1-N-03",
+      "category": "Nomen (the noun)",
+      "label": "common nouns naming periods of time",
+      "probe": [
+        "LA-LEX-DIES-01",
+        "LA-LEX-NOX-01",
+        "LA-ETYMON-MANE-02",
+        "LA-ETYMON-VESPER-01",
+        "LA-LEX-HORA-01",
+        "LA-ETYMON-MERIDIES-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "note": "dies, nox, mane, vesper, hora, meridies -- six, each with a chapter of its own between 28 and 35. The track's strongest notional block after the verbs."
+    },
+    {
+      "id": "LA-A1-N-04",
+      "category": "Nomen (the noun)",
+      "label": "gender: how a Latin noun's gender is known, and that it is not guessable from meaning",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ],
+      "note": "The Spanish point is masculine in -o, feminine in -a. Latin's demand is larger and differently shaped -- three genders, five declensions, and gender read off the genitive rather than the nominative -- and the corpus states it only in passing, on manus as a rare feminine in a masculine-looking group and on vesper against vespera. No lesson sets out how gender is known."
+    },
+    {
+      "id": "LA-A1-N-05",
+      "category": "Nomen (the noun)",
+      "label": "gender by heteronymy: the paired kinship words",
+      "probe": [
+        "LA-ETYMON-PATER-MATER-01",
+        "LA-ETYMON-FRATER-SOROR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "note": "pater/mater and frater/soror, chapter 7."
+    },
+    {
+      "id": "LA-A1-N-06",
+      "category": "Nomen (the noun)",
+      "label": "number: the plural",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "NOT TAUGHT AS A NOUN OPERATION ANYWHERE. The plural exists in the corpus only on verbs (salvete against salve, sedemus against sedeo) and in the frozen plural of the weekdays. Twenty-five nouns are taught in chapters 44 to 47 and not one of them is ever pluralised."
+    },
+    {
+      "id": "LA-A1-N-07",
+      "category": "Nomen (the noun)",
+      "label": "the dictionary citation: a noun is stored with its genitive, a verb with its infinitive",
+      "probe": [
+        "LA-LEX-C44-HOUSE-01",
+        "LA-LEX-C45-WORLD-01",
+        "LA-LEX-SUM-01",
+        "LA-LEX-DICO-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "domus, domus; terra, terrae; sum, esse; dico, dicere. EVERY noun and verb in this track is headed by its citation pair, without exception, which is exactly the habit a reader needs to use a dictionary. No proxy point exists for it because Spanish nouns are cited bare. This is the strongest thing the track does that the proxy cannot see."
+    },
+    {
+      "id": "LA-A1-ADJ-01",
+      "category": "Adiectivum (the adjective)",
+      "label": "the adjective agreeing with its noun in gender, number and case",
+      "probe": [
+        "LA-GRAMMAR-BONAM-NOCTEM-01",
+        "LA-GRAMMAR-BONUM-VESPERUM-01",
+        "LA-GRAMMAR-BONUM-VESPERUM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03",
+        "A1-ADJ-04"
+      ],
+      "note": "Taught on ONE adjective, bonus, in three greetings: bonam noctem (fem. acc.), bonum vesperum (masc. acc.), bonam vesperam (the feminine alternate). The agreement is genuinely worked, and it is worked on a single word."
+    },
+    {
+      "id": "LA-A1-ADJ-02",
+      "category": "Adiectivum (the adjective)",
+      "label": "qualifying adjectives in attributive use, beyond the greeting formulas",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "note": "Six colour adjectives are taught (niger, albus, ruber, caeruleus, viridis, flavus) and not one is ever attached to a noun. magnus, parvus, novus, bonus outside the greetings: absent."
+    },
+    {
+      "id": "LA-A1-ADJ-03",
+      "category": "Adiectivum (the adjective)",
+      "label": "the adjective used predicatively",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "note": "sum is taught with its full paradigm and no adjective is ever put after it."
+    },
+    {
+      "id": "LA-A1-ADJ-04",
+      "category": "Adiectivum (the adjective)",
+      "label": "position: the Latin adjective is mobile, and the mobility carries emphasis",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "note": "The Spanish point is postnominal-and-restrictive. Latin word order is free and adjective position is a stylistic instrument rather than a rule, which is a HARDER demand than the proxy makes, and the corpus never raises it."
+    },
+    {
+      "id": "LA-A1-ADJ-05",
+      "category": "Adiectivum (the adjective)",
+      "label": "relational adjectives: the gentilic",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ],
+      "note": "Romanus, Graecus, Latinus: none of them. The learner cannot say which people they belong to, or that the language they are reading is Latin."
+    },
+    {
+      "id": "LA-A1-ADJ-06",
+      "category": "Adiectivum (the adjective)",
+      "label": "degree: valde, and the -issimus superlative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01"
+      ],
+      "note": "valde returns zero occurrences in 112 files and no superlative is formed anywhere. bene is taught (chapter 27) and is never modified."
+    },
+    {
+      "id": "LA-A1-ART-01",
+      "category": "Articulus (the article Latin has not got)",
+      "label": "Latin has NO article, definite or indefinite, and a reader must supply one",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-03",
+        "A1-ART-04"
+      ],
+      "note": "THREE PROXY POINTS COLLAPSE INTO ONE FACT, and the fact is never stated. domus is a house, the house or just house depending on the sentence, and a learner coming from English or Spanish will look for the missing word. The track teaches twenty-five nouns without once saying that the article they are used to is not coming. Restated rather than dropped, exactly as Tamil's inventory restates the same absence."
+    },
+    {
+      "id": "LA-A1-ART-02",
+      "category": "Articulus (the article Latin has not got)",
+      "label": "the fused preposition: mecum, tecum, nobiscum",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ART-02"
+      ],
+      "note": "The Spanish point is al and del, a preposition contracting with an article. Latin has no article to contract with, and its nearest counterpart is the preposition cum enclitic on a pronoun -- mecum, tecum. Absent from the corpus; cum returns zero occurrences in 112 files in any use."
+    },
+    {
+      "id": "LA-A1-DEM-01",
+      "category": "Demonstrativa (pointing)",
+      "label": "the demonstrative forms: hic, iste, ille",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01"
+      ],
+      "note": "hic and ille both return ZERO occurrences in 112 files. Latin's three-way system is the ancestor of the Spanish three-way system the proxy point describes, so the demand transfers exactly, and nothing meets it."
+    },
+    {
+      "id": "LA-A1-DEM-02",
+      "category": "Demonstrativa (pointing)",
+      "label": "spatial deixis: near me, near you, over there",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-DEM-02"
+      ],
+      "note": "Absent. This is the one place in the inventory where the Spanish point can be taken over word for word, because este/ese/aquel descends from hic/iste/ille."
+    },
+    {
+      "id": "LA-A1-DEM-03",
+      "category": "Demonstrativa (pointing)",
+      "label": "the demonstrative agreeing with its noun, and standing alone as a pronoun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03"
+      ],
+      "note": "The Spanish point says the demonstrative cannot take an article; in Latin there is no article to exclude, and the demand behind it -- that the demonstrative declines with its noun and can also stand alone -- is what a reader actually needs. Absent."
+    },
+    {
+      "id": "LA-A1-POS-01",
+      "category": "Possessio (possession)",
+      "label": "the possessive adjectives: meus, tuus",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "note": "meus and tuus both return ZERO occurrences in 112 files. The learner CAN say my name is (see LA-A1-POS-03) and cannot say my anything else."
+    },
+    {
+      "id": "LA-A1-POS-02",
+      "category": "Possessio (possession)",
+      "label": "the possessives for several possessors: noster, vester",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-POS-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-POS-03",
+      "category": "Possessio (possession)",
+      "label": "the dative of possession, which is how Latin actually says whose something is",
+      "probe": [
+        "LA-LEX-QUID-TIBI-NOMEN-01",
+        "LA-GRAMMAR-NAME-CASE-VARIATION-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-POS-03"
+      ],
+      "note": "mihi nomen est, quid tibi nomen est -- literally the name is to me. Chapter 20 is careful about it and even records that Cicero keeps the name nominative while Livy and Sallust pull it into the dative. The Spanish point is about where a possessive stands; the Latin demand behind it is that possession is often a CASE rather than a word, and the corpus teaches exactly that construction and no other."
+    },
+    {
+      "id": "LA-A1-Q-01",
+      "category": "Numeri (quantity and number)",
+      "label": "cardinal numerals 1 to 10",
+      "probe": [
+        "LA-LEX-NUMBERS-1-5-01",
+        "LA-LEX-NUMBERS-6-10-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ]
+    },
+    {
+      "id": "LA-A1-Q-02",
+      "category": "Numeri (quantity and number)",
+      "label": "cardinal numerals 11 to 20, including subtractive 18 and 19",
+      "probe": [
+        "LA-LEX-UNDECIM-VIGINTI-01",
+        "LA-LEX-UNDECIM-VIGINTI-02",
+        "LA-PRAGMATICS-UNDECIM-VIGINTI-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ],
+      "note": "duodeviginti and undeviginti, two-from-twenty and one-from-twenty, taught as the genuine Latin oddity the Romance daughters regularised away."
+    },
+    {
+      "id": "LA-A1-Q-03",
+      "category": "Numeri (quantity and number)",
+      "label": "cardinal numerals above 20",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ],
+      "note": "viginti is the ceiling. Cato's quinque et sexaginta is quoted in chapter 14 and not taught. Roman numerals as a written system are also absent, which is a separate and surprising gap."
+    },
+    {
+      "id": "LA-A1-Q-04",
+      "category": "Numeri (quantity and number)",
+      "label": "the first three numerals decline, and the rest do not",
+      "probe": [
+        "LA-GRAMMAR-NUMBERS-1-5-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-04"
+      ],
+      "note": "unus/una/unum, duo/duae, tres/tria against fixed quattuor and up. Chapter 2 calls it a grammar seed and asks only that the learner notice it."
+    },
+    {
+      "id": "LA-A1-Q-05",
+      "category": "Numeri (quantity and number)",
+      "label": "ordinal numerals to tenth",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-Q-02"
+      ],
+      "note": "primus, secundus, tertius: absent. Quintilis and Sextilis are taught as month names in chapter 11 with their ordinal sense explained, which is the nearest the corpus comes."
+    },
+    {
+      "id": "LA-A1-Q-06",
+      "category": "Numeri (quantity and number)",
+      "label": "multus and paucus, agreeing",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-Q-03"
+      ],
+      "note": "Both return zero occurrences."
+    },
+    {
+      "id": "LA-A1-Q-07",
+      "category": "Numeri (quantity and number)",
+      "label": "satis",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-Q-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-PRON-01",
+      "category": "Pronomina (pronouns)",
+      "label": "the second person: tu against vos, a pure number contrast with no politeness in it",
+      "probe": [
+        "LA-LEX-TU-VOS-01",
+        "LA-LEX-TU-VOS-02",
+        "LA-PRAGMATICS-TU-VOS-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "Chapter 22 is unusually good on this: Classical Latin's vos carries NO politeness dimension, the polite vous is a Late Latin innovation descended from it, and German's Sie solved the same problem from a different pronoun entirely. A learner who has read this will not import a tu/usted habit."
+    },
+    {
+      "id": "LA-A1-PRON-02",
+      "category": "Pronomina (pronouns)",
+      "label": "the first person: ego, nos",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "ego never appears as a word. The -o ending is repeatedly said to BE the I (chapter 1, chapter 24), which is the right teaching and leaves the pronoun itself untaught for the emphatic uses that need it."
+    },
+    {
+      "id": "LA-A1-PRON-03",
+      "category": "Pronomina (pronouns)",
+      "label": "the third person, which Latin builds from a demonstrative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "Latin has no dedicated third-person pronoun and presses is/ea/id into the job. Absent, and behind LA-A1-DEM-01 as well."
+    },
+    {
+      "id": "LA-A1-PRON-04",
+      "category": "Pronomina (pronouns)",
+      "label": "pro-drop: the ending IS the subject",
+      "probe": [
+        "LA-GRAMMAR-GRATIAS-03",
+        "LA-GRAMMAR-PROPEDIEM-TE-VIDEBO-03",
+        "LA-LEX-SUM-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "Stated in chapter 1 on ago, again in chapter 24 on videbo, and demonstrated on every one of the forty-odd verb paradigms. The PCIC A1 grammar column has no slot for it because Spanish inherited the same habit and takes it for granted."
+    },
+    {
+      "id": "LA-A1-PRON-05",
+      "category": "Pronomina (pronouns)",
+      "label": "the accusative object pronoun: te",
+      "probe": [
+        "LA-LEX-PROPEDIEM-TE-VIDEBO-01",
+        "LA-LEX-CRAS-TE-VIDEBO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02"
+      ],
+      "note": "te videbo, taught twice, and chapter 24 names te as the direct object in as many words. me is never taught."
+    },
+    {
+      "id": "LA-A1-PRON-06",
+      "category": "Pronomina (pronouns)",
+      "label": "the dative pronoun: mihi, tibi",
+      "probe": [
+        "LA-LEX-QUID-TIBI-NOMEN-01",
+        "LA-GRAMMAR-GRATIAS-03",
+        "LA-ETYMON-IGNOSCE-MIHI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-05"
+      ],
+      "note": "mihi nomen est, gratias tibi ago, ignosce mihi. Three separate constructions, all in the first twenty chapters. The Spanish point is the unstressed dative with gustar; Latin's dative is a case rather than a clitic, and the corpus teaches it in three of its commonest jobs."
+    },
+    {
+      "id": "LA-A1-PRON-07",
+      "category": "Pronomina (pronouns)",
+      "label": "the reflexive: se, and the -se verbs",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-PRON-08",
+      "category": "Pronomina (pronouns)",
+      "label": "the relative pronoun qui, quae, quod",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05"
+      ],
+      "note": "All three forms return ZERO occurrences in 112 files. The single most common word in surviving Latin prose is absent from a track whose declared purpose is reading."
+    },
+    {
+      "id": "LA-A1-PRON-09",
+      "category": "Pronomina (pronouns)",
+      "label": "interrogative pronouns: quis and quid",
+      "probe": [
+        "LA-PRAGMATICS-QUID-AGIS-01",
+        "LA-LEX-QUID-TIBI-NOMEN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "note": "quid is taught twice over, in quid agis? and quid tibi nomen est?. quis appears twice in chapter 26 and is not taught, so the WHAT question is available and the WHO question is not."
+    },
+    {
+      "id": "LA-A1-PRON-10",
+      "category": "Pronomina (pronouns)",
+      "label": "the exclamative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ],
+      "note": "Latin's accusative of exclamation IS taught (chapter 30) and is filed at LA-A1-CAS-04; the exclamative PRONOUN, quantus or qualis, is absent."
+    },
+    {
+      "id": "LA-A1-PRON-11",
+      "category": "Pronomina (pronouns)",
+      "label": "pronouns after a preposition",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-08"
+      ],
+      "note": "No preposition in the corpus takes a pronoun. de mane is quoted and post meridiem is quoted, and both take nouns."
+    },
+    {
+      "id": "LA-A1-ADV-01",
+      "category": "Adverbia (adverbs)",
+      "label": "place deictics: hic, illic",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01"
+      ],
+      "note": "Absent, with the demonstratives they are built from."
+    },
+    {
+      "id": "LA-A1-ADV-02",
+      "category": "Adverbia (adverbs)",
+      "label": "time deictics: hodie, heri, cras",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "note": "cras is taught, in chapter 25's cras te videbo, and hodie and heri both return ZERO occurrences. One third of the set is not the set: a reader who meets heri in a text has nothing to match it against."
+    },
+    {
+      "id": "LA-A1-ADV-03",
+      "category": "Adverbia (adverbs)",
+      "label": "quantity adverbs",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-ADV-04",
+      "category": "Adverbia (adverbs)",
+      "label": "manner adverbs: bene, male",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04"
+      ],
+      "note": "bene has a whole chapter (27) and male has nothing, so the pair is half taught. valeo answers how one is; there is no way to say that anything went badly."
+    },
+    {
+      "id": "LA-A1-ADV-05",
+      "category": "Adverbia (adverbs)",
+      "label": "polarity: ita and non",
+      "probe": [
+        "LA-LEX-ITA-NON-03",
+        "LA-ETYMON-ITA-NON-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "note": "COVERED, AND THE TRACK GOT THERE IN CHAPTER 1. ita (thus, so) and non (not) are taught together as the yes and no Latin does not really have, which is the honest framing. Several tracks in this series cannot say no at all; this one can, on day one."
+    },
+    {
+      "id": "LA-A1-ADV-06",
+      "category": "Adverbia (adverbs)",
+      "label": "connective adverbs: quoque, etiam",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "note": "Both absent."
+    },
+    {
+      "id": "LA-A1-ADV-07",
+      "category": "Adverbia (adverbs)",
+      "label": "interrogative adverbs: quomodo, ubi",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "note": "quomodo is taught properly, with a chapter of its own (26) tracing it to Italian come, Spanish como and French comment. ubi returns ZERO occurrences, so the learner can ask HOW and cannot ask WHERE. Half a point."
+    },
+    {
+      "id": "LA-A1-ADV-08",
+      "category": "Adverbia (adverbs)",
+      "label": "cur against quia: asking why and answering it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08"
+      ],
+      "note": "Spanish spends an A1 point on por que against porque. Latin's pair is cur and quia (or quod), and both members return zero occurrences. The whole causal apparatus is missing; see LA-A1-CJ-11."
+    },
+    {
+      "id": "LA-A1-V-01",
+      "category": "Verbum (the verb)",
+      "label": "the present indicative, all six persons",
+      "probe": [
+        "LA-LEX-SUM-01",
+        "LA-LEX-SEDEO-01",
+        "LA-LEX-VIDEO-01",
+        "LA-LEX-DICO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "THE TRACK'S GREATEST STRENGTH. Chapters 37 to 43 give roughly forty verbs and the six-person present is set out for them, sum included. Whatever else this inventory reports missing, the learner can conjugate."
+    },
+    {
+      "id": "LA-A1-V-02",
+      "category": "Verbum (the verb)",
+      "label": "the four conjugations, named as classes",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "The paradigms are given verb by verb and the SYSTEM behind them is never named: no lesson says that -are, -ere, -ere and -ire are four families with predictable endings, so a learner meeting an unseen verb has no rule to apply to it. Forty worked examples and no generalisation."
+    },
+    {
+      "id": "LA-A1-V-03",
+      "category": "Verbum (the verb)",
+      "label": "sum",
+      "probe": [
+        "LA-LEX-SUM-01",
+        "LA-ETYMON-SUM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-V-02"
+      ]
+    },
+    {
+      "id": "LA-A1-V-04",
+      "category": "Verbum (the verb)",
+      "label": "habeo, eo, do",
+      "probe": [
+        "LA-LEX-HABEO-01",
+        "LA-LEX-EO-01",
+        "LA-LEX-DO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-V-02"
+      ],
+      "note": "Chapter 37's irregulars, matching the ser/estar/haber/ir set the proxy point names."
+    },
+    {
+      "id": "LA-A1-V-05",
+      "category": "Verbum (the verb)",
+      "label": "the present's values: what is happening and what happens",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-V-03"
+      ],
+      "note": "Latin's present covers both and has no progressive at all, which is a SMALLER demand than the Spanish point makes and still needs saying, because a learner will look for the missing construction. No lesson says it."
+    },
+    {
+      "id": "LA-A1-V-06",
+      "category": "Verbum (the verb)",
+      "label": "the imperfect",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05"
+      ],
+      "note": "Absent. The tense a Latin narrative is mostly written in."
+    },
+    {
+      "id": "LA-A1-V-07",
+      "category": "Verbum (the verb)",
+      "label": "the perfect",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08",
+        "A1-V-09"
+      ],
+      "note": "FOUR PROXY POINTS LAND ON ONE TENSE AND IT IS NOT TAUGHT. Latin's perfect does the work of both Spanish preterite and Spanish present perfect. The corpus mentions tuli and fui inside etymologies (chapters 42 and 37) and teaches neither, so a learner cannot say anything about the past at all -- and the reading construct the caveat names is mostly reading about the past."
+    },
+    {
+      "id": "LA-A1-V-08",
+      "category": "Verbum (the verb)",
+      "label": "the perfect participle, and the principal parts a dictionary lists",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "note": "Every verb here is cited with two principal parts and Latin dictionaries list four. The participle is the third and fourth, and the corpus gives it only for futurus and tuli, in passing."
+    },
+    {
+      "id": "LA-A1-V-09",
+      "category": "Verbum (the verb)",
+      "label": "the future",
+      "probe": [
+        "LA-GRAMMAR-PROPEDIEM-TE-VIDEBO-03",
+        "LA-LEX-PROPEDIEM-TE-VIDEBO-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "videbo, with the -bo ending named as carrying I will. The PCIC A1 column has no future point at all, so this is enumerated here: the track teaches a tense the proxy does not ask for and does not teach the past, which the proxy asks for four times."
+    },
+    {
+      "id": "LA-A1-V-10",
+      "category": "Verbum (the verb)",
+      "label": "the imperative",
+      "probe": [
+        "LA-GRAMMAR-VALE-03",
+        "LA-GRAMMAR-SALVE-03",
+        "LA-ETYMON-IGNOSCE-MIHI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-V-11"
+      ],
+      "note": "salve, ave, vale and ignosce are all bare imperatives and chapter 1 says so outright -- Latin does not say hello, it ORDERS you to thrive -- with the singular/plural pair -e against -ete taught alongside. Four imperatives before chapter 5, which is more than most tracks in this series reach at all."
+    },
+    {
+      "id": "LA-A1-V-11",
+      "category": "Verbum (the verb)",
+      "label": "the infinitive",
+      "probe": [
+        "LA-LEX-SUM-01",
+        "LA-LEX-DICO-01",
+        "LA-LEX-VIDEO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ],
+      "note": "Every verb lesson is headed by its infinitive as the form a dictionary lists it under, and chapter 37 says so in as many words."
+    },
+    {
+      "id": "LA-A1-V-12",
+      "category": "Verbum (the verb)",
+      "label": "the participle used as an adjective",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-V-13"
+      ],
+      "note": "Latin has no gerund in the Spanish sense; the demand behind the proxy point -- a non-finite form doing adjectival or adverbial work -- lands on the present and perfect participles, and natus is the only participle in the corpus (chapter 14, inside the frozen age formula)."
+    },
+    {
+      "id": "LA-A1-V-13",
+      "category": "Verbum (the verb)",
+      "label": "impersonal verbs with no subject at all",
+      "probe": [
+        "LA-GRAMMAR-WEATHER-VERBS-01",
+        "LA-LEX-WEATHER-VERBS-02"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "pluit, ningit, tonat -- chapter 15 gives three and names the pattern. Spanish keeps it for rain and switches to hacer for heat and sun, which the lesson also says, so the point is a genuine Latin demand the proxy's own grammar column cannot state."
+    },
+    {
+      "id": "LA-A1-V-14",
+      "category": "Verbum (the verb)",
+      "label": "suppletion: one verb built from two unrelated roots",
+      "probe": [
+        "LA-GRAMMAR-FERO-SUPPLETION-02",
+        "LA-ETYMON-FERO-03"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "fero/tuli, and sum/fui named in chapter 37. A reader who does not know that a Latin verb can change root mid-paradigm will not find tuli in a dictionary."
+    },
+    {
+      "id": "LA-A1-CAS-01",
+      "category": "Casus (the case system)",
+      "label": "the case system itself: meaning carried in endings rather than word order",
+      "probe": [
+        "LA-GRAMMAR-SALVE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SN-02",
+        "A1-SN-03"
+      ],
+      "note": "Chapter 1 states the principle on salve/salvete and calls it the feature that defines Latin. That is the statement; the SYSTEM -- how many cases there are, what each does -- is never set out, which is why the rest of this column is mostly empty."
+    },
+    {
+      "id": "LA-A1-CAS-02",
+      "category": "Casus (the case system)",
+      "label": "the nominative and the accusative, and telling subject from object",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SV-04"
+      ],
+      "note": "te videbo puts an accusative pronoun in front of a verb and chapter 24 names it as the direct object, which is one instance and not the contrast. No lesson puts a nominative noun and an accusative noun in the same sentence, so the central reading skill -- who is doing what to whom -- is untaught."
+    },
+    {
+      "id": "LA-A1-CAS-03",
+      "category": "Casus (the case system)",
+      "label": "the genitive, and reading it off the dictionary citation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "note": "Every one of the twenty-five nouns in chapters 44 to 47 is cited with its genitive and no lesson says what the genitive MEANS or that it identifies the declension. The form is on the page twenty-five times and its job is never given."
+    },
+    {
+      "id": "LA-A1-CAS-04",
+      "category": "Casus (the case system)",
+      "label": "the accusative of exclamation and wishing",
+      "probe": [
+        "LA-GRAMMAR-BONAM-NOCTEM-01",
+        "LA-GRAMMAR-BONUM-VESPERUM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SV-03"
+      ],
+      "note": "bonam noctem rather than bona nox, worked twice and with the genuinely attested Felicem natalem quoted beside it."
+    },
+    {
+      "id": "LA-A1-CAS-05",
+      "category": "Casus (the case system)",
+      "label": "the ablative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ],
+      "note": "Absent. The case with the widest range of jobs in the language, and the corpus does not name it once."
+    },
+    {
+      "id": "LA-A1-CAS-06",
+      "category": "Casus (the case system)",
+      "label": "the vocative, and addressing somebody by name",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SN-04"
+      ],
+      "note": "No lesson addresses a named person. The meeting scene trades names in the nominative and never calls anyone by one, so salve, Marce is out of reach -- and the vocative is one of the few Latin cases with an ending a beginner can hold."
+    },
+    {
+      "id": "LA-A1-CAS-07",
+      "category": "Casus (the case system)",
+      "label": "free word order, and what it costs a reader",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ],
+      "note": "The corollary of the case system and the thing that most surprises a reader of Latin. Never mentioned; every Latin sentence in the corpus is in an English-like order."
+    },
+    {
+      "id": "LA-A1-OS-01",
+      "category": "Oratio simplex (the simple sentence)",
+      "label": "the affirmative declarative",
+      "probe": [
+        "LA-LEX-VALEO-FAMILY-01",
+        "LA-DIALOGUE-WELLBEING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "valeo, gratias tibi ago, mihi nomen est Marcus. Chapter 19's exchange is five lines long and every one of them is a sentence the learner has built."
+    },
+    {
+      "id": "LA-A1-OS-02",
+      "category": "Oratio simplex (the simple sentence)",
+      "label": "the negative declarative, with non",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "non is TAUGHT as a word in chapter 1 and is never once put in front of a verb. The negator is in the learner's hands and the operation is not: non valeo, non intellego and non scio are all unsayable although every part of each is separately taught. A cheaper repair than any other gap in this file."
+    },
+    {
+      "id": "LA-A1-OS-03",
+      "category": "Oratio simplex (the simple sentence)",
+      "label": "yes-or-no questions, with -ne, nonne or num",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "note": "Latin marks a polar question with an enclitic particle, which is a demand Spanish does not make at all -- Spanish uses intonation. The corpus teaches no particle and asks no polar question."
+    },
+    {
+      "id": "LA-A1-OS-04",
+      "category": "Oratio simplex (the simple sentence)",
+      "label": "questions with an asking word",
+      "probe": [
+        "LA-PRAGMATICS-QUID-AGIS-01",
+        "LA-PRAGMATICS-UT-VALES-01",
+        "LA-LEX-QUOMODO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "note": "quid agis?, ut vales?, quomodo. Three, all about the person in front of you."
+    },
+    {
+      "id": "LA-A1-OS-05",
+      "category": "Oratio simplex (the simple sentence)",
+      "label": "impersonal existence: est and sunt used to say there is",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-OS-04"
+      ],
+      "note": "est is taught inside mihi nomen est, where it is a copula rather than an existential. Nothing in the corpus says there is."
+    },
+    {
+      "id": "LA-A1-OS-06",
+      "category": "Oratio simplex (the simple sentence)",
+      "label": "copular sentences with sum",
+      "probe": [
+        "LA-LEX-SUM-01",
+        "LA-LEX-QUID-TIBI-NOMEN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-OS-05",
+        "A1-SV-02"
+      ],
+      "note": "mihi nomen est Marcus. One frame, worked thoroughly."
+    },
+    {
+      "id": "LA-A1-OS-07",
+      "category": "Oratio simplex (the simple sentence)",
+      "label": "transitive and intransitive verbs",
+      "probe": [
+        "LA-LEX-VIDEO-01",
+        "LA-LEX-SEDEO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-OS-06"
+      ],
+      "note": "video takes an object in te videbo; sedeo, sto, dormio and curro take none. The contrast is available across chapters 37 to 41 and is never named as a contrast."
+    },
+    {
+      "id": "LA-A1-CJ-01",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "copulative coordination: et, -que, atque",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "note": "et occurs TWICE in 112 files and both are inside quoted classical sentences a lesson is discussing -- Cato's quinque et sexaginta annos natus in chapter 14, and valeo et salvos sum recte in chapter 19. It is glossed in passing in the second and taught in neither, and the enclitic -que that a reader meets on every page of Latin prose never appears at all."
+    },
+    {
+      "id": "LA-A1-CJ-02",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "negative coordination: neque, nec",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "note": "Zero occurrences, although non itself is taught in chapter 1."
+    },
+    {
+      "id": "LA-A1-CJ-03",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "disjunctive coordination: aut, vel",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-CO-03"
+      ],
+      "note": "Both return ZERO occurrences in 112 files."
+    },
+    {
+      "id": "LA-A1-CJ-04",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "adversative coordination: sed",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-CO-04"
+      ],
+      "note": "sed occurs only inside the Cicero letter quoted in chapter 24 (Sed, ut spero, propediem te videbo), where it is part of the citation and is translated but not taught."
+    },
+    {
+      "id": "LA-A1-CJ-05",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "distributive coordination: alius ... alius",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-CJ-06",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "the infinitive as subject",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-01"
+      ],
+      "note": "Absent. The infinitive is taught only as the citation form."
+    },
+    {
+      "id": "LA-A1-CJ-07",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "the complementary infinitive: volo videre",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-02"
+      ],
+      "note": "Absent, and the modal verbs that take one (volo, possum, debeo) are absent too."
+    },
+    {
+      "id": "LA-A1-CJ-08",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "the accusative and infinitive, which is how Latin reports a thought",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03"
+      ],
+      "note": "Spanish's point is creo QUE plus a finite clause. Latin does it with an accusative subject and an infinitive, which is one of the two constructions that most confuses a beginning reader, and the corpus never mentions it. cogito is taught as a word in chapter 38 and nothing is ever thought."
+    },
+    {
+      "id": "LA-A1-CJ-09",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "the relative clause",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "note": "TWO PROXY POINTS, ONE ABSENCE, AND THE MOST EXPENSIVE ONE IN THIS FILE. qui, quae and quod all return zero occurrences; see LA-A1-PRON-08. A track whose declared purpose is reading cannot read a sentence of connected Latin prose without this."
+    },
+    {
+      "id": "LA-A1-CJ-10",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "causal clauses: quod, quia",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ],
+      "note": "Both zero."
+    },
+    {
+      "id": "LA-A1-CJ-11",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "purpose: ut plus the subjunctive, or ad plus the gerund",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "note": "ut appears once, inside the quoted Cicero (ut spero), and the subjunctive is never mentioned in 112 files."
+    },
+    {
+      "id": "LA-A1-CJ-12",
+      "category": "Coniunctio et subiunctio (joining and subordination)",
+      "label": "simultaneity: cum, ubi",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "note": "Both zero."
+    },
+    {
+      "id": "LA-A1-F1-01",
+      "category": "Officia: dare et petere notitiam",
+      "label": "identify oneself by name",
+      "probe": [
+        "LA-LEX-QUID-TIBI-NOMEN-02",
+        "LA-DIALOGUE-MEETING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F1-01"
+      ]
+    },
+    {
+      "id": "LA-A1-F1-02",
+      "category": "Officia: dare et petere notitiam",
+      "label": "ask for information about a person",
+      "probe": [
+        "LA-LEX-QUID-TIBI-NOMEN-01",
+        "LA-PRAGMATICS-QUID-AGIS-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "note": "quid tibi nomen est? and quid agis?. A thing or a place cannot be asked about; see LA-A1-ADV-07 for the missing ubi."
+    },
+    {
+      "id": "LA-A1-F1-03",
+      "category": "Officia: dare et petere notitiam",
+      "label": "give personal information: name and age",
+      "probe": [
+        "LA-LEX-QUID-TIBI-NOMEN-02",
+        "LA-LEX-ANNOS-NATUS-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F1-03"
+      ],
+      "note": "mihi nomen est, and viginti annos natus sum -- which chapter 14 points out is NEITHER the Romance have-construction nor the Germanic be-construction but a third one Latin later abandoned. The age answer is capped at twenty by LA-A1-Q-03."
+    },
+    {
+      "id": "LA-A1-F1-04",
+      "category": "Officia: dare et petere notitiam",
+      "label": "ask for confirmation with a tag",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "note": "nonne and num are the Latin tags and both are absent; see LA-A1-OS-03."
+    },
+    {
+      "id": "LA-A1-F1-05",
+      "category": "Officia: dare et petere notitiam",
+      "label": "confirm or deny the previous statement",
+      "probe": [
+        "LA-LEX-ITA-NON-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F1-05"
+      ],
+      "note": "ita and non, chapter 1, taught together and taught honestly -- Latin has no bare yes and no, and the lesson says so rather than pretending."
+    },
+    {
+      "id": "LA-A1-F2-01",
+      "category": "Officia: sententiae et scientia",
+      "label": "ask for an opinion by handing the turn back",
+      "probe": [
+        "LA-DIALOGUE-WELLBEING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-01"
+      ],
+      "note": "B answers and returns ut vales? in chapter 19's exchange, which is the turn-handing move at this level."
+    },
+    {
+      "id": "LA-A1-F2-02",
+      "category": "Officia: sententiae et scientia",
+      "label": "give an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "note": "cogito is taught (chapter 38) and nothing can follow it; see LA-A1-CJ-08."
+    },
+    {
+      "id": "LA-A1-F2-03",
+      "category": "Officia: sententiae et scientia",
+      "label": "ask for an evaluation",
+      "probe": [
+        "LA-PRAGMATICS-QUID-AGIS-01",
+        "LA-PRAGMATICS-UT-VALES-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-03"
+      ],
+      "note": "quid agis? and ut vales?, both in chapter 19, and the lesson is careful that the first literally asks what are you doing."
+    },
+    {
+      "id": "LA-A1-F2-04",
+      "category": "Officia: sententiae et scientia",
+      "label": "evaluate with bene",
+      "probe": [
+        "LA-LEX-BENE-01",
+        "LA-LEX-VALEO-FAMILY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-04"
+      ],
+      "note": "valeo and bene. The negative half of the scale is missing (LA-A1-ADV-04), so a learner can only ever report that things are going well."
+    },
+    {
+      "id": "LA-A1-F2-05",
+      "category": "Officia: sententiae et scientia",
+      "label": "express approval and disapproval",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-F2-06",
+      "category": "Officia: sententiae et scientia",
+      "label": "express agreement",
+      "probe": [
+        "LA-LEX-ITA-NON-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-06"
+      ],
+      "note": "ita. Chapter 1 gives the learner the one-word agreement move on the first day."
+    },
+    {
+      "id": "LA-A1-F2-07",
+      "category": "Officia: sententiae et scientia",
+      "label": "express disagreement",
+      "probe": [
+        "LA-LEX-ITA-NON-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-07"
+      ],
+      "note": "non, as a bare answer. Note the limit: the WORD is available and the OPERATION is not, so a learner can contradict a question and cannot contradict a statement -- see LA-A1-OS-02."
+    },
+    {
+      "id": "LA-A1-F2-08",
+      "category": "Officia: sententiae et scientia",
+      "label": "show scepticism: nescio",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-08"
+      ],
+      "note": "scio is taught in chapter 37 and its negative compound nescio, which is the actual Latin word, is never given -- and non scio cannot be built either, for the reason at LA-A1-OS-02."
+    },
+    {
+      "id": "LA-A1-F2-09",
+      "category": "Officia: sententiae et scientia",
+      "label": "offer a counter-argument",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-09"
+      ],
+      "note": "Needs sed; see LA-A1-CJ-04."
+    },
+    {
+      "id": "LA-A1-F2-10",
+      "category": "Officia: sententiae et scientia",
+      "label": "express certainty by plain assertion",
+      "probe": [
+        "LA-LEX-VALEO-FAMILY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-10"
+      ]
+    },
+    {
+      "id": "LA-A1-F2-11",
+      "category": "Officia: sententiae et scientia",
+      "label": "express possibility",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-12"
+      ],
+      "note": "possum and forsitan are both absent."
+    },
+    {
+      "id": "LA-A1-F2-12",
+      "category": "Officia: sententiae et scientia",
+      "label": "ask whether somebody knows something",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-13"
+      ],
+      "note": "Absent; needs the polar question particle of LA-A1-OS-03."
+    },
+    {
+      "id": "LA-A1-F2-13",
+      "category": "Officia: sententiae et scientia",
+      "label": "express knowledge: scio and the other verb of knowing",
+      "probe": [
+        "LA-LEX-SCIO-01",
+        "LA-ETYMON-SCIO-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-14"
+      ],
+      "note": "scio, chapter 37, introduced explicitly as one of Latin's TWO verbs for knowing. The other, cognosco or nosco, is never given, so the split Spanish makes with saber and conocer is named and only half filled."
+    },
+    {
+      "id": "LA-A1-F2-14",
+      "category": "Officia: sententiae et scientia",
+      "label": "express ignorance",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-15"
+      ],
+      "note": "See LA-A1-F2-08."
+    },
+    {
+      "id": "LA-A1-F2-15",
+      "category": "Officia: sententiae et scientia",
+      "label": "ask about ability",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-16"
+      ],
+      "note": "Absent, and behind both possum and the polar question."
+    },
+    {
+      "id": "LA-A1-F2-16",
+      "category": "Officia: sententiae et scientia",
+      "label": "express ability",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F2-17"
+      ],
+      "note": "possum is absent."
+    },
+    {
+      "id": "LA-A1-F2-17",
+      "category": "Officia: sententiae et scientia",
+      "label": "say that you have understood, and that you have not",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "THE REPAIR COLUMN, CHECKED SEPARATELY. intellego is taught in chapter 38, and only as a dictionary entry with an etymology (inter plus lego, to read between); it never appears in a sentence, and non intellego cannot be built because negation is never attached to a verb (LA-A1-OS-02). So the commonest thing a beginner has to say is unsayable in both directions. The proxy has no A1 slot for it and CEFR's A1 descriptors do."
+    },
+    {
+      "id": "LA-A1-F3-01",
+      "category": "Officia: voluntates et sensus",
+      "label": "express liking",
+      "probe": [
+        "LA-LEX-AMO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-SV-01"
+      ],
+      "note": "amo, chapter 39. Latin has no gustar-style inverted frame at this level -- placet exists and is not taught -- so the demand is restated onto the plain transitive verb of loving, which the corpus does reach."
+    },
+    {
+      "id": "LA-A1-F3-02",
+      "category": "Officia: voluntates et sensus",
+      "label": "ask about a preference by offering alternatives",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F3-02"
+      ],
+      "note": "Needs aut; see LA-A1-CJ-03."
+    },
+    {
+      "id": "LA-A1-F3-03",
+      "category": "Officia: voluntates et sensus",
+      "label": "express a preference: malo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F3-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-F3-04",
+      "category": "Officia: voluntates et sensus",
+      "label": "express a wish: volo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F3-04"
+      ],
+      "note": "Absent. As in the Italian file, this is the single word that would unlock asking, ordering and inviting at this level."
+    },
+    {
+      "id": "LA-A1-F3-05",
+      "category": "Officia: voluntates et sensus",
+      "label": "ask about plans and intentions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F3-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-F3-06",
+      "category": "Officia: voluntates et sensus",
+      "label": "express a plan",
+      "probe": [
+        "LA-GRAMMAR-PROPEDIEM-TE-VIDEBO-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F3-06"
+      ],
+      "note": "propediem te videbo -- a future, and one attested twice in Cicero's own letters. A thin covering: it is one fixed sentence rather than a productive pattern, and the -bo ending is at least named as carrying I will."
+    },
+    {
+      "id": "LA-A1-F4-01",
+      "category": "Officia: alterum movere",
+      "label": "give an order or instruction",
+      "probe": [
+        "LA-GRAMMAR-VALE-03",
+        "LA-ETYMON-IGNOSCE-MIHI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ],
+      "note": "The imperative is taught in chapter 1 and used again in chapter 4. What is taught are the frozen courtesy imperatives; forming one from a new verb is not modelled."
+    },
+    {
+      "id": "LA-A1-F4-02",
+      "category": "Officia: alterum movere",
+      "label": "ask for something, softened",
+      "probe": [
+        "LA-ETYMON-QUAESO-01",
+        "LA-PRAGMATICS-QUAESO-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "note": "quaeso, chapter 3, literally I ask, I beg. THE ITALIAN TRACK HAS NO WORD FOR PLEASE AT ALL AND THIS ONE HAS IT BY CHAPTER 3."
+    },
+    {
+      "id": "LA-A1-F4-03",
+      "category": "Officia: alterum movere",
+      "label": "ask for help",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "note": "adiuvo is taught as a dictionary word in chapter 39 and never used; there is no equivalent of the Italian street shout, and no imperative is formed from it."
+    },
+    {
+      "id": "LA-A1-F4-04",
+      "category": "Officia: alterum movere",
+      "label": "respond to a request",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F4-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-F4-05",
+      "category": "Officia: alterum movere",
+      "label": "grant permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F4-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-F4-06",
+      "category": "Officia: alterum movere",
+      "label": "refuse permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F4-06"
+      ],
+      "note": "non is available as a bare answer (LA-A1-F2-07) and nothing softens or explains it."
+    },
+    {
+      "id": "LA-A1-F4-07",
+      "category": "Officia: alterum movere",
+      "label": "offer and invite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-F4-08",
+      "category": "Officia: alterum movere",
+      "label": "accept an offer",
+      "probe": [
+        "LA-LEX-ITA-NON-03",
+        "LA-ETYMON-GRATIAS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F4-08"
+      ],
+      "note": "ita and gratias tibi ago together do this job at A1, and chapter 1 supplies both."
+    },
+    {
+      "id": "LA-A1-F4-09",
+      "category": "Officia: alterum movere",
+      "label": "decline an offer",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F4-09"
+      ],
+      "note": "Bare non is available and the polite decline (benigne, the Latin no thank you) is not."
+    },
+    {
+      "id": "LA-A1-F5-01",
+      "category": "Officia: societas",
+      "label": "greet",
+      "probe": [
+        "LA-ETYMON-SALVE-02",
+        "LA-ETYMON-AVE-02",
+        "LA-GRAMMAR-SALVE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "note": "salve and ave, with the one-listener/many-listeners pair, in chapter 1."
+    },
+    {
+      "id": "LA-A1-F5-02",
+      "category": "Officia: societas",
+      "label": "greet by the time of day",
+      "probe": [
+        "LA-GRAMMAR-BONAM-NOCTEM-01",
+        "LA-PRAGMATICS-BONUM-MANE-01",
+        "LA-GRAMMAR-BONUM-VESPERUM-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "note": "bonum mane, bonum vesperum, bonam noctem -- and see LA-A1-TES-01, because the track's own lessons say these three are modern pedagogical phrases rather than Roman ones."
+    },
+    {
+      "id": "LA-A1-F5-03",
+      "category": "Officia: societas",
+      "label": "respond to a greeting",
+      "probe": [
+        "LA-DIALOGUE-WELLBEING-01",
+        "LA-DIALOGUE-DAY-CYCLE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-02"
+      ],
+      "note": "Two worked exchanges, one for wellbeing and one running a whole Roman day from morning to night."
+    },
+    {
+      "id": "LA-A1-F5-04",
+      "category": "Officia: societas",
+      "label": "address somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "note": "No vocative and no title. domine, magister and the rest are absent; see LA-A1-CAS-06."
+    },
+    {
+      "id": "LA-A1-F5-05",
+      "category": "Officia: societas",
+      "label": "introduce oneself",
+      "probe": [
+        "LA-LEX-QUID-TIBI-NOMEN-02",
+        "LA-DIALOGUE-MEETING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-04"
+      ]
+    },
+    {
+      "id": "LA-A1-F5-06",
+      "category": "Officia: societas",
+      "label": "introduce a third person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-04"
+      ],
+      "note": "Absent, and behind the missing demonstrative."
+    },
+    {
+      "id": "LA-A1-F5-07",
+      "category": "Officia: societas",
+      "label": "respond to an introduction",
+      "probe": [
+        "LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01",
+        "LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ],
+      "note": "volup est convenisse, an attested Plautine phrase -- and chapter 21 immediately says it greets a CHANCE ENCOUNTER between people who already know each other, so it is useful and is not a first-introduction formula. Counted covered because the slot has an exponent and the exponent's limits are taught with it, which is better evidence than most points in this file carry."
+    },
+    {
+      "id": "LA-A1-F5-08",
+      "category": "Officia: societas",
+      "label": "apologise",
+      "probe": [
+        "LA-ETYMON-IGNOSCE-MIHI-01",
+        "LA-PRAGMATICS-IGNOSCE-MIHI-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "note": "ignosce mihi, chapter 4. Another courtesy move the Italian track has not got."
+    },
+    {
+      "id": "LA-A1-F5-09",
+      "category": "Officia: societas",
+      "label": "thank, and answer thanks",
+      "probe": [
+        "LA-ETYMON-GRATIAS-02",
+        "LA-LEX-NIHIL-EST-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "note": "gratias tibi ago in chapter 1 and nihil est in chapter 23 -- and chapter 23 states plainly that Classical Latin has NO fixed reply to thanks and that nihil est is a modern conversational convention built from real words. See LA-A1-TES-01."
+    },
+    {
+      "id": "LA-A1-F5-10",
+      "category": "Officia: societas",
+      "label": "offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-08"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-F5-11",
+      "category": "Officia: societas",
+      "label": "propose a toast",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-09"
+      ],
+      "note": "bene tibi is the Latin toast and is absent, although vinum is taught in chapter 10."
+    },
+    {
+      "id": "LA-A1-F5-12",
+      "category": "Officia: societas",
+      "label": "congratulate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-10"
+      ],
+      "note": "Felicem natalem is QUOTED in chapter 30 as the attested model for the accusative of wishing, and is not taught as a thing to say. The nearest miss in the social column."
+    },
+    {
+      "id": "LA-A1-F5-13",
+      "category": "Officia: societas",
+      "label": "take leave",
+      "probe": [
+        "LA-ETYMON-VALE-02",
+        "LA-GRAMMAR-VALE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "note": "vale and valete, chapter 1, with the imperative named."
+    },
+    {
+      "id": "LA-A1-F5-14",
+      "category": "Officia: societas",
+      "label": "take leave naming when you will meet again",
+      "probe": [
+        "LA-LEX-PROPEDIEM-TE-VIDEBO-01",
+        "LA-LEX-CRAS-TE-VIDEBO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "note": "propediem te videbo and cras te videbo. Chapters 24 and 25, and the honesty label is on each: the first is Cicero's own, the second is built from classical pieces on the same pattern and is not itself attested as a unit."
+    },
+    {
+      "id": "LA-A1-F6-01",
+      "category": "Officia: sermonem regere (discourse and repair)",
+      "label": "open a conversation",
+      "probe": [
+        "LA-DIALOGUE-WELLBEING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F6-01"
+      ]
+    },
+    {
+      "id": "LA-A1-F6-02",
+      "category": "Officia: sermonem regere (discourse and repair)",
+      "label": "greet and respond within a conversation",
+      "probe": [
+        "LA-DIALOGUE-DAY-CYCLE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F6-02"
+      ]
+    },
+    {
+      "id": "LA-A1-F6-03",
+      "category": "Officia: sermonem regere (discourse and repair)",
+      "label": "ask for a person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F6-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-F6-04",
+      "category": "Officia: sermonem regere (discourse and repair)",
+      "label": "show that one is following",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "No backchannel of any kind. ita could do it and is never presented that way."
+    },
+    {
+      "id": "LA-A1-F6-05",
+      "category": "Officia: sermonem regere (discourse and repair)",
+      "label": "REPAIR: ask for a repetition",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "NOTHING. quid dicis?, iterum, quaeso, lentius: none of them. dico is taught as a dictionary word in chapter 37 and quaeso in chapter 3, so both halves of quid dicis, quaeso? are in the learner's hands and no lesson ever joins them. This track can apologise, thank and say please, and it cannot ask anyone to say something again."
+    },
+    {
+      "id": "LA-A1-F6-06",
+      "category": "Officia: sermonem regere (discourse and repair)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "note": "tace is absent, although the imperative pattern it needs is taught in chapter 1."
+    },
+    {
+      "id": "LA-A1-F6-07",
+      "category": "Officia: sermonem regere (discourse and repair)",
+      "label": "propose closing the conversation",
+      "probe": [
+        "LA-DIALOGUE-DAY-CYCLE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-F6-06"
+      ],
+      "note": "The day-cycle exchange closes on bonam noctem and vale."
+    },
+    {
+      "id": "LA-A1-NG-01",
+      "category": "Notiones generales (general notions)",
+      "label": "existence and having: sum and habeo",
+      "probe": [
+        "LA-LEX-SUM-01",
+        "LA-LEX-HABEO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01"
+      ],
+      "note": "Both verbs are taught with full paradigms in chapter 37. Neither is ever given anything to be or to have; see LA-A1-OS-05."
+    },
+    {
+      "id": "LA-A1-NG-02",
+      "category": "Notiones generales (general notions)",
+      "label": "presence and absence: cum and sine",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-02"
+      ],
+      "note": "Both zero occurrences."
+    },
+    {
+      "id": "LA-A1-NG-03",
+      "category": "Notiones generales (general notions)",
+      "label": "general quality, with sum",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-03"
+      ],
+      "note": "sum is taught and no quality is ever predicated of anything; see LA-A1-ADJ-03."
+    },
+    {
+      "id": "LA-A1-NG-04",
+      "category": "Notiones generales (general notions)",
+      "label": "locating an event in time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04"
+      ],
+      "note": "Six time nouns are taught (LA-A1-N-03) and nothing is ever placed in one. The ablative of time when, which is the construction, is at LA-A1-CAS-05 and absent."
+    },
+    {
+      "id": "LA-A1-NG-05",
+      "category": "Notiones generales (general notions)",
+      "label": "certainty and uncertainty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NG-06",
+      "category": "Notiones generales (general notions)",
+      "label": "numerical quantity",
+      "probe": [
+        "LA-LEX-NUMBERS-1-5-01",
+        "LA-LEX-NUMBERS-6-10-01",
+        "LA-LEX-UNDECIM-VIGINTI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG2-01"
+      ],
+      "note": "One to twenty."
+    },
+    {
+      "id": "LA-A1-NG-07",
+      "category": "Notiones generales (general notions)",
+      "label": "relative quantity: plus, minus, multum",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG2-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NG-08",
+      "category": "Notiones generales (general notions)",
+      "label": "degree",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG2-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NG-09",
+      "category": "Notiones generales (general notions)",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "note": "Absent. Roman measures (pes, milia passuum, libra) are exactly the kind of thing a reader meets early and none is given."
+    },
+    {
+      "id": "LA-A1-NG-10",
+      "category": "Notiones generales (general notions)",
+      "label": "location: saying where something is",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-01"
+      ],
+      "note": "No locative adverb, no preposition of place used in a sentence, and no ubi to ask with. The learner can name the sea, the earth and the sky and cannot say that anything is in any of them."
+    },
+    {
+      "id": "LA-A1-NG-11",
+      "category": "Notiones generales (general notions)",
+      "label": "relative position",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NG-12",
+      "category": "Notiones generales (general notions)",
+      "label": "distance",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NG-13",
+      "category": "Notiones generales (general notions)",
+      "label": "movement and stability",
+      "probe": [
+        "LA-LEX-EO-01",
+        "LA-LEX-VENIO-01",
+        "LA-LEX-CURRO-01",
+        "LA-LEX-AMBULO-01",
+        "LA-LEX-STO-01",
+        "LA-LEX-SEDEO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04"
+      ],
+      "note": "Six verbs of going, coming, running, walking, standing and sitting, across chapters 37, 40 and 41 -- an unusually complete block, with nowhere to go."
+    },
+    {
+      "id": "LA-A1-NG-14",
+      "category": "Notiones generales (general notions)",
+      "label": "orientation and direction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-05"
+      ],
+      "note": "Absent. West is discussed in chapter 33 as the etymological cousin of vesper, which is an etymology and not a direction word."
+    },
+    {
+      "id": "LA-A1-NG-15",
+      "category": "Notiones generales (general notions)",
+      "label": "order: ordinals, ante and post",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-06"
+      ],
+      "note": "post is quoted inside post meridiem in chapter 35 and never taught; ante is absent; the ordinals are at LA-A1-Q-05."
+    },
+    {
+      "id": "LA-A1-NG-16",
+      "category": "Notiones generales (general notions)",
+      "label": "origin: where somebody is from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07"
+      ],
+      "note": "No gentilic (LA-A1-ADJ-05), no place name (LA-A1-N-02) and no ablative of origin (LA-A1-CAS-05). Three separate gaps, one unanswerable question."
+    },
+    {
+      "id": "LA-A1-NG-17",
+      "category": "Notiones generales (general notions)",
+      "label": "the clock, and the parts of the day",
+      "probe": [
+        "LA-LEX-HORA-01",
+        "LA-PRAGMATICS-HORA-02",
+        "LA-LEX-MEDIUS-DIES-NOX-01",
+        "LA-ETYMON-MANE-02",
+        "LA-ETYMON-VESPER-01",
+        "LA-ETYMON-MERIDIES-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "note": "COVERED, AND BETTER THAN THE POINT ASKS: chapter 13 teaches hora AND that the Roman hour was not a fixed length, and chapter 35 records that Romans split the day at midday rather than into a separate afternoon, which is why chapter 36 has to explain that there is no good-afternoon greeting."
+    },
+    {
+      "id": "LA-A1-NG-18",
+      "category": "Notiones generales (general notions)",
+      "label": "locating in time: weekdays, months, seasons",
+      "probe": [
+        "LA-LEX-DIES-LUNAE-VENERIS-01",
+        "LA-LEX-SATURNI-SOLIS-01",
+        "LA-ETYMON-MENSES-01",
+        "LA-LEX-ANNI-TEMPORA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "Seven days as full planet-god phrases, twelve months INCLUDING the original Quintilis and Sextilis, four seasons. The today/yesterday/tomorrow half of the Spanish point is at LA-A1-ADV-02 and is not covered."
+    },
+    {
+      "id": "LA-A1-NG-19",
+      "category": "Notiones generales (general notions)",
+      "label": "anteriority and posteriority",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03"
+      ],
+      "note": "Absent; see LA-A1-NG-15."
+    },
+    {
+      "id": "LA-A1-NG-20",
+      "category": "Notiones generales (general notions)",
+      "label": "sight",
+      "probe": [
+        "LA-LEX-VIDEO-01",
+        "LA-ETYMON-VIDEO-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01"
+      ],
+      "note": "video, chapter 37, and the lesson makes the point that seeing and knowing were once one idea. Latin's track has the verb where the Italian track has only the organ."
+    },
+    {
+      "id": "LA-A1-NG-21",
+      "category": "Notiones generales (general notions)",
+      "label": "hearing",
+      "probe": [
+        "LA-LEX-AUDIO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-02"
+      ],
+      "note": "audio, chapter 40."
+    },
+    {
+      "id": "LA-A1-NG-22",
+      "category": "Notiones generales (general notions)",
+      "label": "colour",
+      "probe": [
+        "LA-LEX-NIGER-ALBUS-01",
+        "LA-ETYMON-RUBER-CAERULEUS-01",
+        "LA-ETYMON-VIRIDIS-FLAVUS-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "note": "Six colour words across chapters 6 and 18, with the honest observation that caeruleus is one of Latin's weakest colour terms."
+    },
+    {
+      "id": "LA-A1-NG-23",
+      "category": "Notiones generales (general notions)",
+      "label": "age",
+      "probe": [
+        "LA-LEX-ANNOS-NATUS-01",
+        "LA-PRAGMATICS-ANNOS-NATUS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ]
+    },
+    {
+      "id": "LA-A1-NG-24",
+      "category": "Notiones generales (general notions)",
+      "label": "open and closed",
+      "probe": [
+        "LA-LEX-APERIO-01",
+        "LA-LEX-CLAUDO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "note": "aperio and claudo, taught as a matched pair in chapter 41 -- and porta, the thing they act on, in chapter 44."
+    },
+    {
+      "id": "LA-A1-NG-25",
+      "category": "Notiones generales (general notions)",
+      "label": "general evaluation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-01"
+      ],
+      "note": "bene is taught and its opposite is not; bonus exists only inside the three greeting formulas and malus never appears. Half a scale."
+    },
+    {
+      "id": "LA-A1-NG-26",
+      "category": "Notiones generales (general notions)",
+      "label": "value and price",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02"
+      ],
+      "note": "emo is taught in chapter 43 and there is no money, no price and no way to ask one."
+    },
+    {
+      "id": "LA-A1-NG-27",
+      "category": "Notiones generales (general notions)",
+      "label": "attractiveness",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NG-28",
+      "category": "Notiones generales (general notions)",
+      "label": "quality: bonus and malus",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-04"
+      ],
+      "note": "See LA-A1-NG-25."
+    },
+    {
+      "id": "LA-A1-NG-29",
+      "category": "Notiones generales (general notions)",
+      "label": "acceptability",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NG-30",
+      "category": "Notiones generales (general notions)",
+      "label": "conformity",
+      "probe": [
+        "LA-LEX-ITA-NON-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-06"
+      ],
+      "note": "ita. Thin, and it is the exponent this level actually uses."
+    },
+    {
+      "id": "LA-A1-NG-31",
+      "category": "Notiones generales (general notions)",
+      "label": "correctness: right and wrong",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-07"
+      ],
+      "note": "recte is quoted once, inside valeo et salvos sum recte in chapter 19, and is not taught."
+    },
+    {
+      "id": "LA-A1-NG-32",
+      "category": "Notiones generales (general notions)",
+      "label": "interest",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-08"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NG-33",
+      "category": "Notiones generales (general notions)",
+      "label": "capacity and competence",
+      "probe": [
+        "LA-LEX-SCIO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-09"
+      ],
+      "note": "scio. Thin: knowing a thing is not the same as being able to do it, and possum is absent (LA-A1-F2-16). Counted covered because scio IS the Latin word this notion is built on and the corpus teaches it."
+    },
+    {
+      "id": "LA-A1-NG-34",
+      "category": "Notiones generales (general notions)",
+      "label": "ease and difficulty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-10"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NG-35",
+      "category": "Notiones generales (general notions)",
+      "label": "reflection and knowing: the verbs of mind",
+      "probe": [
+        "LA-LEX-COGITO-01",
+        "LA-LEX-INTELLEGO-01",
+        "LA-LEX-LEGO-01",
+        "LA-LEX-SCIO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01"
+      ],
+      "note": "cogito, intellego, lego, scio. Chapter 38 is exactly this notion and takes each verb apart -- cogito from shaking together, intellego from reading between."
+    },
+    {
+      "id": "LA-A1-NG-36",
+      "category": "Notiones generales (general notions)",
+      "label": "verbal expression: saying, speaking and writing",
+      "probe": [
+        "LA-LEX-DICO-01",
+        "LA-LEX-SCRIBO-01",
+        "LA-LEX-RESPONDEO-01",
+        "LA-LEX-ROGO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "note": "dico, scribo, respondeo, rogo. Four, and the asking and answering pair are taught as a pair."
+    },
+    {
+      "id": "LA-A1-NE-01",
+      "category": "Notiones speciales (specific notions)",
+      "label": "parts of the body",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "TWO body words in 112 files -- caput (chapter 8) and manus (chapter 8) -- and the proxy point asks for the set. Compare the Italian track, which teaches nine. This is the cheapest large gain available in the whole file."
+    },
+    {
+      "id": "LA-A1-NE-02",
+      "category": "Notiones speciales (specific notions)",
+      "label": "physical characteristics",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-03",
+      "category": "Notiones speciales (specific notions)",
+      "label": "actions and positions of the body",
+      "probe": [
+        "LA-LEX-STO-01",
+        "LA-LEX-SEDEO-01",
+        "LA-LEX-DORMIO-01",
+        "LA-LEX-AMBULO-01",
+        "LA-LEX-CURRO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE01-03"
+      ],
+      "note": "sto, sedeo, dormio, ambulo, curro -- chapters 40 and 41 give five, which is the fullest posture-and-motion block in this series."
+    },
+    {
+      "id": "LA-A1-NE-04",
+      "category": "Notiones speciales (specific notions)",
+      "label": "character and personality",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE02-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-05",
+      "category": "Notiones speciales (specific notions)",
+      "label": "personal data: the name and the age",
+      "probe": [
+        "LA-LEX-QUID-TIBI-NOMEN-02",
+        "LA-LEX-ANNOS-NATUS-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ]
+    },
+    {
+      "id": "LA-A1-NE-06",
+      "category": "Notiones speciales (specific notions)",
+      "label": "personal data: the Roman naming system",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "note": "praenomen, nomen and cognomen -- the tria nomina -- are what a reader needs to make sense of any Roman name they meet, and the corpus uses Marcus and Iulia without ever explaining the system behind them."
+    },
+    {
+      "id": "LA-A1-NE-07",
+      "category": "Notiones speciales (specific notions)",
+      "label": "documents",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02"
+      ],
+      "note": "Absent. tabula and liber would be the Roman equivalents and neither is taught."
+    },
+    {
+      "id": "LA-A1-NE-08",
+      "category": "Notiones speciales (specific notions)",
+      "label": "personal objects",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE03-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-09",
+      "category": "Notiones speciales (specific notions)",
+      "label": "family relationships",
+      "probe": [
+        "LA-ETYMON-PATER-MATER-01",
+        "LA-ETYMON-FRATER-SOROR-01",
+        "LA-PRAGMATICS-FRATER-SOROR-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "pater, mater, frater, soror -- four, chapter 7, with the note that Vulgar Latin later abandoned frater and soror for germanus."
+    },
+    {
+      "id": "LA-A1-NE-10",
+      "category": "Notiones speciales (specific notions)",
+      "label": "social relationships",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "note": "amicus is ABSENT, which is a striking gap: chapter 10 traces panis to companion and to the friendship-word every Romance daughter shares, and never teaches the Latin word for friend."
+    },
+    {
+      "id": "LA-A1-NE-11",
+      "category": "Notiones speciales (specific notions)",
+      "label": "celebrations and occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "note": "Absent, though Felicem natalem is quoted in chapter 30; see LA-A1-F5-12."
+    },
+    {
+      "id": "LA-A1-NE-12",
+      "category": "Notiones speciales (specific notions)",
+      "label": "the meals of the day",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01"
+      ],
+      "note": "prandium and cena are absent."
+    },
+    {
+      "id": "LA-A1-NE-13",
+      "category": "Notiones speciales (specific notions)",
+      "label": "drink",
+      "probe": [
+        "LA-ETYMON-AQUA-VINUM-01",
+        "LA-LEX-AQUA-VINUM-02",
+        "LA-LEX-C47-TABLE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "note": "aqua, vinum, lac."
+    },
+    {
+      "id": "LA-A1-NE-14",
+      "category": "Notiones speciales (specific notions)",
+      "label": "foodstuffs",
+      "probe": [
+        "LA-ETYMON-PANIS-01",
+        "LA-LEX-C47-TABLE-01",
+        "LA-LEX-C47-TABLE-02",
+        "LA-LEX-C47-TABLE-04",
+        "LA-LEX-C47-TABLE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03"
+      ],
+      "note": "panis, sal, mel, ovum, piscis -- five, and chapter 47 is built as a table of them."
+    },
+    {
+      "id": "LA-A1-NE-15",
+      "category": "Notiones speciales (specific notions)",
+      "label": "dishes and courses",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE05-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-16",
+      "category": "Notiones speciales (specific notions)",
+      "label": "eating out, or eating at all",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE05-05"
+      ],
+      "note": "The corpus has eight foodstuffs and NO VERB FOR EATING OR DRINKING. edo and bibo are both absent, so a learner can name bread, salt, honey, egg, fish, water, wine and milk and cannot say what to do with any of them."
+    },
+    {
+      "id": "LA-A1-NE-17",
+      "category": "Notiones speciales (specific notions)",
+      "label": "educational institutions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01"
+      ],
+      "note": "schola and ludus (in its school sense) are absent -- and ludo, to play, IS taught in chapter 42, which is the same word in its other sense."
+    },
+    {
+      "id": "LA-A1-NE-18",
+      "category": "Notiones speciales (specific notions)",
+      "label": "teacher and pupil",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE06-02"
+      ],
+      "note": "magister and discipulus absent, though puer is quoted inside the chapter 20 grammar frame puero nomen est."
+    },
+    {
+      "id": "LA-A1-NE-19",
+      "category": "Notiones speciales (specific notions)",
+      "label": "timetable, examinations and marks",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE06-03",
+        "A1-NE06-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-20",
+      "category": "Notiones speciales (specific notions)",
+      "label": "learning and teaching",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE06-04"
+      ],
+      "note": "disco and doceo are both absent; lego and intellego are taught and belong to the mind rather than the classroom."
+    },
+    {
+      "id": "LA-A1-NE-21",
+      "category": "Notiones speciales (specific notions)",
+      "label": "classroom language",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE06-06"
+      ],
+      "note": "Nothing; see LA-A1-F6-05."
+    },
+    {
+      "id": "LA-A1-NE-22",
+      "category": "Notiones speciales (specific notions)",
+      "label": "teaching materials",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE06-07"
+      ],
+      "note": "liber, stilus, tabula: absent. For a track about reading, the absence of liber is the one to fix first."
+    },
+    {
+      "id": "LA-A1-NE-23",
+      "category": "Notiones speciales (specific notions)",
+      "label": "working activity",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE07-03"
+      ],
+      "note": "laboro is absent."
+    },
+    {
+      "id": "LA-A1-NE-24",
+      "category": "Notiones speciales (specific notions)",
+      "label": "professions and posts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-25",
+      "category": "Notiones speciales (specific notions)",
+      "label": "workplaces and tools",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE07-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-26",
+      "category": "Notiones speciales (specific notions)",
+      "label": "unemployment and job-seeking",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE07-04"
+      ],
+      "note": "Absent, and anachronistic in its modern shape; the Roman counterpart a reader meets is the client-patron relation, also absent."
+    },
+    {
+      "id": "LA-A1-NE-27",
+      "category": "Notiones speciales (specific notions)",
+      "label": "rights and obligations at work",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE07-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-28",
+      "category": "Notiones speciales (specific notions)",
+      "label": "what a worker is like",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE07-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-29",
+      "category": "Notiones speciales (specific notions)",
+      "label": "games and playing",
+      "probe": [
+        "LA-LEX-LUDO-01",
+        "LA-ETYMON-LUDO-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE08-04"
+      ],
+      "note": "ludo, chapter 42."
+    },
+    {
+      "id": "LA-A1-NE-30",
+      "category": "Notiones speciales (specific notions)",
+      "label": "free time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01"
+      ],
+      "note": "otium, the single most characteristically Roman word in this whole notion, is absent."
+    },
+    {
+      "id": "LA-A1-NE-31",
+      "category": "Notiones speciales (specific notions)",
+      "label": "shows and spectacles",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE08-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-32",
+      "category": "Notiones speciales (specific notions)",
+      "label": "sport and the games",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE08-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-33",
+      "category": "Notiones speciales (specific notions)",
+      "label": "information and communication",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-34",
+      "category": "Notiones speciales (specific notions)",
+      "label": "written correspondence",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE09-02"
+      ],
+      "note": "scribo is taught in chapter 38 and epistula is absent -- and chapter 24 quotes Cicero's own letters twice, so the corpus reads a letter without naming one."
+    },
+    {
+      "id": "LA-A1-NE-35",
+      "category": "Notiones speciales (specific notions)",
+      "label": "the printed page, and the Roman book",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE09-04"
+      ],
+      "note": "liber and volumen are absent; see LA-A1-NE-22."
+    },
+    {
+      "id": "LA-A1-NE-36",
+      "category": "Notiones speciales (specific notions)",
+      "label": "housing: the parts of a dwelling",
+      "probe": [
+        "LA-LEX-C44-HOUSE-01",
+        "LA-LEX-C44-HOUSE-02",
+        "LA-LEX-C44-HOUSE-03",
+        "LA-LEX-C44-HOUSE-04",
+        "LA-LEX-C44-HOUSE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE10-02"
+      ],
+      "note": "domus, porta, murus, hortus, focus -- chapter 44 is a whole chapter of them, and domus is taught as the household rather than the walls."
+    },
+    {
+      "id": "LA-A1-NE-37",
+      "category": "Notiones speciales (specific notions)",
+      "label": "buying, selling and renting a dwelling",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01"
+      ],
+      "note": "emo is taught and vendo is not; nothing is ever bought."
+    },
+    {
+      "id": "LA-A1-NE-38",
+      "category": "Notiones speciales (specific notions)",
+      "label": "domestic activities",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE10-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-39",
+      "category": "Notiones speciales (specific notions)",
+      "label": "household objects and furniture",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE10-04"
+      ],
+      "note": "mensa, lectus, sella: absent. focus, the hearth, is taught (chapter 44) and is the only thing in a Latin house the learner can name."
+    },
+    {
+      "id": "LA-A1-NE-40",
+      "category": "Notiones speciales (specific notions)",
+      "label": "the post and messages",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-41",
+      "category": "Notiones speciales (specific notions)",
+      "label": "money and banking",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE11-02",
+        "A1-NE15-01"
+      ],
+      "note": "pecunia, argentum, as, denarius: none of them. Two proxy points, one absence."
+    },
+    {
+      "id": "LA-A1-NE-42",
+      "category": "Notiones speciales (specific notions)",
+      "label": "health services",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE11-03"
+      ],
+      "note": "medicus is absent."
+    },
+    {
+      "id": "LA-A1-NE-43",
+      "category": "Notiones speciales (specific notions)",
+      "label": "protection and security",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE11-04"
+      ],
+      "note": "Absent -- and this is the notion a Latin reader meets soonest, in the shape of miles and the army."
+    },
+    {
+      "id": "LA-A1-NE-44",
+      "category": "Notiones speciales (specific notions)",
+      "label": "shopping",
+      "probe": [
+        "LA-LEX-EMO-01",
+        "LA-ETYMON-EMO-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01"
+      ],
+      "note": "emo, chapter 43, taught with the observation that it once meant simply I take."
+    },
+    {
+      "id": "LA-A1-NE-45",
+      "category": "Notiones speciales (specific notions)",
+      "label": "clothing",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE12-02"
+      ],
+      "note": "toga and tunica are absent, which is a surprising omission in a course that spends chapters on Roman daily life."
+    },
+    {
+      "id": "LA-A1-NE-46",
+      "category": "Notiones speciales (specific notions)",
+      "label": "payment",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE12-03"
+      ],
+      "note": "Absent; see LA-A1-NE-41."
+    },
+    {
+      "id": "LA-A1-NE-47",
+      "category": "Notiones speciales (specific notions)",
+      "label": "health and illness",
+      "probe": [
+        "LA-LEX-VALEO-FAMILY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01"
+      ],
+      "note": "valeo, which is literally to be strong and is the corpus's health word; the lesson makes the link between the greeting and the state explicit. aeger and morbus are absent, so only the well half is sayable."
+    },
+    {
+      "id": "LA-A1-NE-48",
+      "category": "Notiones speciales (specific notions)",
+      "label": "centres of health care",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE13-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-49",
+      "category": "Notiones speciales (specific notions)",
+      "label": "medicine",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE13-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-50",
+      "category": "Notiones speciales (specific notions)",
+      "label": "hygiene, and the baths",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE13-04"
+      ],
+      "note": "balneum and aqua-as-washing are absent; aqua is taught only as a drink."
+    },
+    {
+      "id": "LA-A1-NE-51",
+      "category": "Notiones speciales (specific notions)",
+      "label": "travel objects and documents",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-52",
+      "category": "Notiones speciales (specific notions)",
+      "label": "accommodation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE14-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-53",
+      "category": "Notiones speciales (specific notions)",
+      "label": "getting about: roads and ships",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE14-03"
+      ],
+      "note": "via and navis are absent, and eo, venio and ambulo are all taught, so the corpus has every verb of travel and no road to use one on."
+    },
+    {
+      "id": "LA-A1-NE-54",
+      "category": "Notiones speciales (specific notions)",
+      "label": "commerce: the buyer and the seller",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE15-02"
+      ],
+      "note": "See LA-A1-NE-37."
+    },
+    {
+      "id": "LA-A1-NE-55",
+      "category": "Notiones speciales (specific notions)",
+      "label": "businesses and organisations",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE15-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-56",
+      "category": "Notiones speciales (specific notions)",
+      "label": "craft and industry",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE15-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-57",
+      "category": "Notiones speciales (specific notions)",
+      "label": "mathematics: the notion of number",
+      "probe": [
+        "LA-GRAMMAR-NUMBERS-1-5-03",
+        "LA-PRAGMATICS-UNDECIM-VIGINTI-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE16-01"
+      ],
+      "note": "Chapter 2 shows that the first three numerals bend and the rest do not, and chapter 16 takes the subtractive teens apart. That is number as a system rather than a list."
+    },
+    {
+      "id": "LA-A1-NE-58",
+      "category": "Notiones speciales (specific notions)",
+      "label": "government and politics",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01"
+      ],
+      "note": "senatus, consul, res publica, imperator: none of them. For a reading course this is a large hole -- these are among the first nouns in almost any Latin text."
+    },
+    {
+      "id": "LA-A1-NE-59",
+      "category": "Notiones speciales (specific notions)",
+      "label": "law and justice",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE17-02"
+      ],
+      "note": "lex and ius are absent."
+    },
+    {
+      "id": "LA-A1-NE-60",
+      "category": "Notiones speciales (specific notions)",
+      "label": "artistic disciplines",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01"
+      ],
+      "note": "ars is absent."
+    },
+    {
+      "id": "LA-A1-NE-61",
+      "category": "Notiones speciales (specific notions)",
+      "label": "music and dance",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE18-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "LA-A1-NE-62",
+      "category": "Notiones speciales (specific notions)",
+      "label": "architecture, sculpture and painting",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE18-03"
+      ],
+      "note": "Absent; murus and porta are taught as parts of a house, not as building."
+    },
+    {
+      "id": "LA-A1-NE-63",
+      "category": "Notiones speciales (specific notions)",
+      "label": "literature",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE18-04"
+      ],
+      "note": "lego is taught and poeta, carmen and fabula are absent. Plautus and Cicero are both quoted by name in chapters 21 and 24, so the corpus reads literature and does not name it."
+    },
+    {
+      "id": "LA-A1-NE-64",
+      "category": "Notiones speciales (specific notions)",
+      "label": "theatre",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE18-06"
+      ],
+      "note": "theatrum is absent, though chapter 21's phrase is Plautine and the lesson says so."
+    },
+    {
+      "id": "LA-A1-NE-65",
+      "category": "Notiones speciales (specific notions)",
+      "label": "religion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "note": "deus, templum, sacrum: absent. The corpus names Luna, Mars, Mercurius, Iuppiter, Venus, Saturnus and Sol in chapter 5 and names them as PLANETS behind the weekdays rather than as gods, so a reader has met seven Roman deities and been told nothing about Roman religion."
+    },
+    {
+      "id": "LA-A1-NE-66",
+      "category": "Notiones speciales (specific notions)",
+      "label": "the universe and the sky",
+      "probe": [
+        "LA-LEX-C45-WORLD-04",
+        "LA-LEX-C46-NIGHT-01",
+        "LA-LEX-C46-NIGHT-03",
+        "LA-LEX-C46-NIGHT-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ],
+      "note": "caelum, lux, stella, luna -- chapters 45 and 46. Better covered than in any other track in this series."
+    },
+    {
+      "id": "LA-A1-NE-67",
+      "category": "Notiones speciales (specific notions)",
+      "label": "country, town and city",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "note": "urbs, oppidum, patria: absent. For a course whose subject is Rome, the absence of urbs is worth naming twice."
+    },
+    {
+      "id": "LA-A1-NE-68",
+      "category": "Notiones speciales (specific notions)",
+      "label": "urban and rural spaces",
+      "probe": [
+        "LA-LEX-C44-HOUSE-04",
+        "LA-LEX-C45-WORLD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03"
+      ],
+      "note": "hortus and terra. Thin, and they are the two the proxy point is really about."
+    },
+    {
+      "id": "LA-A1-NE-69",
+      "category": "Notiones speciales (specific notions)",
+      "label": "climate and weather",
+      "probe": [
+        "LA-LEX-TEMPESTAS-PLUIT-01",
+        "LA-GRAMMAR-WEATHER-VERBS-01",
+        "LA-LEX-WEATHER-VERBS-02",
+        "LA-LEX-C45-WORLD-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "note": "tempestas, pluit, calor, sol, ventus. Chapter 15 also records the sense-shift -- tempestas narrowed to storm while tempus widened to weather -- which is more than the point asks."
+    },
+    {
+      "id": "LA-A1-NE-70",
+      "category": "Notiones speciales (specific notions)",
+      "label": "fauna",
+      "probe": [
+        "LA-LEX-CANIS-FELES-CATTUS-02",
+        "LA-LEX-C47-TABLE-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ],
+      "note": "canis, feles, cattus and piscis, with the observation that feles was Classical Latin's own word for cat and cattus the newcomer that pushed it out."
+    },
+    {
+      "id": "LA-A1-NE-71",
+      "category": "Notiones speciales (specific notions)",
+      "label": "flora",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ],
+      "note": "arbor, flos, herba: absent. hortus is taught as an enclosed piece of ground and nothing grows in it."
+    },
+    {
+      "id": "LA-A1-NE-72",
+      "category": "Notiones speciales (specific notions)",
+      "label": "fire, earth, sea and wind",
+      "probe": [
+        "LA-LEX-C45-WORLD-01",
+        "LA-LEX-C45-WORLD-02",
+        "LA-LEX-C45-WORLD-03",
+        "LA-LEX-C45-WORLD-05",
+        "LA-LEX-C46-NIGHT-02",
+        "LA-LEX-C46-NIGHT-05"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ],
+      "note": "terra, ignis, ventus, mare, umbra, somnus. Chapter 45 and 46 give ten concrete world nouns between them, which is the track's second-strongest lexical block after the verbs."
+    },
+    {
+      "id": "LA-A1-ORT-01",
+      "category": "Orthographia et interpunctio (spelling and punctuation)",
+      "label": "the Latin alphabet, and the letters it does not have",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-O1-01",
+        "A1-O1-03"
+      ],
+      "note": "The Roman alphabet had no J, no U as distinct from V, and no W, and modern editions add them. Chapter 1's pronunciation note says V is a W SOUND, which is the phonetic half; the letter inventory itself, and the fact that Iulia and Iuppiter are spelled with I, is never stated. Nothing in the track names the letters."
+    },
+    {
+      "id": "LA-A1-ORT-02",
+      "category": "Orthographia et interpunctio (spelling and punctuation)",
+      "label": "the vowels, and that vowel LENGTH is phonemic",
+      "probe": [
+        "LA-PHONO-SALVE-01",
+        "LA-PHONO-VALE-01",
+        "LA-PHONO-ITA-NON-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "Every word in the corpus is written with its macrons and the chapter 1 pronunciation notes carry the sound tag macron-long-vowel. Latin's five vowels each come in two lengths, which is a demand Spanish's five-for-five system does not make at all."
+    },
+    {
+      "id": "LA-A1-ORT-03",
+      "category": "Orthographia et interpunctio (spelling and punctuation)",
+      "label": "the macron: a length mark, not an accent",
+      "probe": [
+        "LA-PHONO-SALVE-01",
+        "LA-PHONO-MERIDIES-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-O2-01"
+      ],
+      "note": "Spanish's accentuation rules mark an EXCEPTION to a stress rule. The macron marks length, and length is what DETERMINES Latin stress, so the demand is inverted and larger. The corpus writes macrons everywhere and its writing lessons score them (the chapter 1 dictation marks the answer wrong without the macron on salve), which is the strongest evidence in this column."
+    },
+    {
+      "id": "LA-A1-ORT-04",
+      "category": "Orthographia et interpunctio (spelling and punctuation)",
+      "label": "the macron as the thing that separates two spellings",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-O2-02"
+      ],
+      "note": "Latin's exact counterpart of the Spanish diacritic tilde, and a bigger one: malum is an evil and malum an apple; populus a people and populus a poplar; puella is a nominative and puella an ablative. The corpus writes macrons faithfully and never once says that a macron can be the ONLY thing telling two words apart."
+    },
+    {
+      "id": "LA-A1-ORT-05",
+      "category": "Orthographia et interpunctio (spelling and punctuation)",
+      "label": "the consonants, and the reconstructed classical pronunciation",
+      "probe": [
+        "LA-PHONO-SALVE-01",
+        "LA-PHONO-GRATIAS-01",
+        "LA-PHONO-AVE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "v as w, c always hard, ti as tee. Taught as named sound tags on the chapter 1 greetings, and the assessment spec names the reconstructed classical model as the default."
+    },
+    {
+      "id": "LA-A1-ORT-06",
+      "category": "Orthographia et interpunctio (spelling and punctuation)",
+      "label": "capital letters, and lower-case where Latin differs",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "note": "Modern editions capitalise proper nouns; Roman inscriptions were entirely capital and Roman manuscripts entirely minuscule, and neither had the distinction at all. Never stated. The corpus does capitalise the month names and the planet-gods, correctly, without saying that this is an editorial convention."
+    },
+    {
+      "id": "LA-A1-ORT-07",
+      "category": "Orthographia et interpunctio (spelling and punctuation)",
+      "label": "syllable division, and where the stress falls",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "The penultimate rule -- stress the second-last syllable if it is heavy, otherwise the third-last -- is the one rule that lets a reader say any Latin word aloud, and the corpus gives stress word by word in respellings and never states the rule behind them."
+    },
+    {
+      "id": "LA-A1-ORT-08",
+      "category": "Orthographia et interpunctio (spelling and punctuation)",
+      "label": "the punctuation of a modern edition is EDITORIAL, not Roman",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-04",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "note": "NINE PROXY POINTS COLLAPSE INTO ONE FACT AND THE FACT IS THE INTERESTING PART. Classical Latin was written in scriptio continua with no punctuation, no word spaces and no lower case; every full stop, comma and question mark a reader sees is a modern editor's decision. That is a genuine A1 reading demand and no lesson in 112 files mentions it. The Spanish column's inverted question mark has no Latin counterpart and is restated here as part of the same fact rather than dropped."
+    },
+    {
+      "id": "LA-A1-ORT-09",
+      "category": "Orthographia et interpunctio (spelling and punctuation)",
+      "label": "Roman numerals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-O4-03"
+      ],
+      "note": "I, V, X, L, C, D, M. Twenty cardinal numbers are taught as WORDS and their written form is never given, so a learner who can say viginti cannot read XX."
+    },
+    {
+      "id": "LA-A1-ORT-10",
+      "category": "Orthographia et interpunctio (spelling and punctuation)",
+      "label": "abbreviations and initialisms",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02"
+      ],
+      "note": "S.P.D., cos., D.M., SPQR. Roman abbreviation is by truncation and by initial, and a reader meets it on the first inscription they look at. Absent."
+    },
+    {
+      "id": "LA-A1-LEC-01",
+      "category": "Lectio (the reading construct this ladder cannot measure)",
+      "label": "THIS INVENTORY MEASURES THE WRONG CONSTRUCT, AND SAYS SO",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "core/exam-levels.json's caveat for latin is load-bearing and this point exists to carry it: CEFR is built around communicative can-do statements, Latin is learned almost entirely for READING, and A1 here has been defined as can greet, introduce oneself and read a short exchange. The 54 functional points above ask what a candidate can say to a living interlocutor, and Latin has no living-speaker construct -- exam-levels.json records exam 'no modern proficiency exam', and latin/assessment-spec.md is explicit that Euroclassica's ELEX is not a four-skill pre-A1-to-C2 ladder and that no equivalence is claimed. So the functional column is enumerated because the shared spine requires it and NOT because it is the right measure of this track. Deliberately uncovered, following the precedent of the Sanskrit inventory's point about the pariksha it cannot measure. A reading-only ladder would fit Latin better and the caveat says so; until one exists, read every functional number in this file as a measure of something Latin was not learned for."
+    },
+    {
+      "id": "LA-A1-LEC-02",
+      "category": "Lectio (the reading construct this ladder cannot measure)",
+      "label": "read a short connected passage of unadapted Latin",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "The reading skill this track exists for, and the thing it is furthest from. Two Cicero clauses (chapter 24) and one Plautine phrase (chapter 21) are the only connected classical Latin in 112 files, and both are quoted for discussion rather than read. Nothing longer than a five-line constructed exchange appears anywhere."
+    },
+    {
+      "id": "LA-A1-LEC-03",
+      "category": "Lectio (the reading construct this ladder cannot measure)",
+      "label": "parse an unseen form: recognise the verb behind a shape you have not met",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "Forty verb paradigms are given (LA-A1-V-01) and the four conjugations are never named as classes (LA-A1-V-02), so a learner who meets amabat has no route back to amo. This is the single skill that separates a reader from a phrasebook user, and it is the one the corpus does not build."
+    },
+    {
+      "id": "LA-A1-LEC-04",
+      "category": "Lectio (the reading construct this ladder cannot measure)",
+      "label": "use a Latin dictionary: find a word from a form on the page",
+      "probe": [
+        "LA-LEX-C44-HOUSE-01",
+        "LA-LEX-SUM-01",
+        "LA-LEX-DICO-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "COVERED, AND IT IS THE READING SKILL THE TRACK ACTUALLY DELIVERS. Every noun is cited with its genitive and every verb with its infinitive, without exception, across 112 lessons -- so a learner who has read this track knows what a dictionary headword looks like and what the second form is for, even though nobody ever tells them what the genitive means (LA-A1-CAS-03)."
+    },
+    {
+      "id": "LA-A1-TES-01",
+      "category": "Testimonium (attested against reconstructed)",
+      "label": "tell an attested phrase from a modern pedagogical one",
+      "probe": [
+        "LA-GRAMMAR-BONAM-NOCTEM-02",
+        "LA-PRAGMATICS-BONUM-MANE-01",
+        "LA-PRAGMATICS-NIHIL-EST-03",
+        "LA-PRAGMATICS-CRAS-TE-VIDEBO-03"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "THE BEST THING THIS TRACK DOES AND NO PROXY POINT EXISTS FOR IT. A dead language taught conversationally invents phrases, and this corpus labels its own inventions: bonam noctem, bonum mane and bonum vesperum are marked as modern pedagogical formulas built on real grammar; nihil est is marked a modern conversational convention with no classical citation for that job; cras te videbo is marked as built from classical pieces on an attested pattern but not itself attested as a unit; and propediem te videbo is marked as Cicero's own, twice, with the letters named. An A1 learner who has read these lessons knows which of their own sentences a Roman would have recognised. Enumerated as latinSpecific because it is a demand only a dead language makes."
+    },
+    {
+      "id": "LA-A1-TES-02",
+      "category": "Testimonium (attested against reconstructed)",
+      "label": "know when the corpus has NO phrase for a slot, and why",
+      "probe": [
+        "LA-PRAGMATICS-SALVE-POST-MERIDIEM-01",
+        "LA-PRAGMATICS-TIMELESS-SALVE-01",
+        "LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "Chapter 36 spends two lessons explaining that there is no good-afternoon greeting because Latin has no simplex afternoon noun and salve works at any hour; chapter 21 explains that the Plautine meeting phrase greets people who already know each other. Refusing to invent a formula and saying why is a teachable move and the track makes it three times."
+    },
+    {
+      "id": "LA-A1-TES-03",
+      "category": "Testimonium (attested against reconstructed)",
+      "label": "know which Latin is being taught: Classical, and what that excludes",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "LA-CORPUS",
+        "ED-LATIN"
+      ],
+      "derivedFrom": [],
+      "latinSpecific": true,
+      "note": "All 112 lessons declare variety: classical, and latin/assessment-spec.md names Classical Latin as the assessed variety with post-classical and Neo-Latin introduced only where a task labels them. No LESSON ever tells the learner this. A reader who meets Ecclesiastical or Medieval Latin -- different pronunciation, different spelling, different vocabulary -- has been given nothing to place it with. This point was measured from the frontmatter and the spec, not imported."
+    }
+  ]
+}
