@@ -60,7 +60,7 @@ one verb, separated only by time.
 
 Sanskrit writes the root with **জ্ঞ**, a knot of *j* and *ñ*. Bengali does not say
 *jñ* at all — it says **gg**, so *jñāna* comes out *ggān*. The plain verb spares
-you the knot: **জানা** is simply জা + না, *jā-nā*.
+you the knot: **জানা** is জা + না, *jā-nā*, and nothing more.
 
 ## Grammar Lens: two knowings, and English has one word for both
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C07-JANA-02]; assesses=[] -->

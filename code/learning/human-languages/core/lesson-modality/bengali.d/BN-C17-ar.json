@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C17-ar",
+    "language": "bengali",
+    "chapter": 28,
+    "sequence": 1450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3f3da440d4416ff"
+  },
+  "findings": []
+}

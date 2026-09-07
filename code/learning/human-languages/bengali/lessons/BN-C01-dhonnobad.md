@@ -40,7 +40,7 @@ watch Bengali reshape it *twice*.
 <!-- hl-knowledge: introduces=[BN-CONCEPT-C01-DHONNOBAD-01]; assesses=[BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
 New: **ধ** dhô (a breathy *d*), **ব** bô, **দ** dô, and the conjunct **ন্য**
-(**ন** n + **য** y). With the **া** sign, read **ধ·ন্য·বা·দ**.
+(**ন** n + **য** y). With the **া** sign, read ধ·ন্য·বা·দ.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-NOMOSHKAR-01] -->

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Friend, Family, Brother, and Sister",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2f068cbe6a3e94a6",
+  "sourceHash": "fnv1a64:85cc3fde23429c76",
   "lessons": [
     {
       "id": "BN-C11-bondhu",
@@ -166,7 +166,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3b5d9f91dc7f381a",
+      "sourceHash": "fnv1a64:e33c462d8df34cda",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -482,7 +482,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f9b2115ac2725ea5",
+      "sourceHash": "fnv1a64:d7675958dfbcdccb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -533,7 +533,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "বোন is ব with the vowel sign ো (bo) plus ন (n), silent at the end — one plain consonant, no cluster, so the inherent vowel drops just as it did on দুধ and ভাত: bon, not bono."
+              "text": "বোন is ব with the vowel sign ো (bo) plus ন (n), silent at the end — one plain consonant, no cluster, so the inherent vowel drops exactly as it did on দুধ and ভাত: bon, not bono."
             }
           ]
         },

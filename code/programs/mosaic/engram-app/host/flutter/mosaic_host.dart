@@ -644,10 +644,26 @@ Uint8List _jsonByteArray(String json, String property) {
   } catch (_) {
     return Uint8List(0);
   }
-  if (decoded is! Map || decoded[property] is! List) {
+  if (decoded is! Map) {
     return Uint8List(0);
   }
-  final values = decoded[property] as List;
+  // Media and the exported `.apkg` moved to base64 because a JSON array of
+  // decimal numbers costs 3.6 wire bytes per byte (#13671). Both spellings are
+  // accepted so a host and the engine can be updated independently -- and
+  // because the failure mode otherwise is an EMPTY file rather than an error,
+  // which reads as a successful export of nothing.
+  final Object? payload = decoded[property];
+  if (payload is String) {
+    try {
+      return base64Decode(payload);
+    } catch (_) {
+      return Uint8List(0);
+    }
+  }
+  if (payload is! List) {
+    return Uint8List(0);
+  }
+  final values = payload;
   return Uint8List.fromList(
     values
         .whereType<num>()

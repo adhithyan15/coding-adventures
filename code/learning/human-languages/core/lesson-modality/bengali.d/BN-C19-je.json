@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C19-je",
+    "language": "bengali",
+    "chapter": 30,
+    "sequence": 1540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7868f2c07566c66f"
+  },
+  "findings": []
+}

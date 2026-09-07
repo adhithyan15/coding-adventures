@@ -1,0 +1,21 @@
+{
+  "chapter": 28,
+  "title": "Two Things at Once",
+  "label": "ch:bn-two-things-at-once",
+  "canDo": "I can put two nouns in one sentence with আর, mark either of them with -ও, offer a choice between them with বা, and refuse both with না … না.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-R17-joined-and-refused",
+    "kind": "production",
+    "summary": "The colours, foods and family words of eleven earlier chapters, joined two at a time for the first time: added with আর, marked with -ও, offered with বা, and refused with না … না.",
+    "assesses": [
+      "BN-LEX-C17-AR-01",
+      "BN-GRAMMAR-C17-O-CLITIC-01",
+      "BN-LEX-C17-BA-01",
+      "BN-GRAMMAR-C17-NA-NA-01"
+    ],
+    "note": "The payoff is the whole taught noun inventory becoming combinable, not the four joiners on their own."
+  }
+}

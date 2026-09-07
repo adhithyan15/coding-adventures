@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ff6f44d521e8f471",
+  "sourceHash": "fnv1a64:3cb876ae42f6c197",
   "lessons": [
     {
       "id": "BN-C09-neowa",
@@ -208,7 +208,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e343932a6725b7c6",
+      "sourceHash": "fnv1a64:2e72175aed9cdb38",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -302,7 +302,7 @@
             },
             {
               "kind": "speech",
-              "text": "Last lesson’s compound stacks on top: জিজ্ঞাসা করে নেওয়া (jijñāsā kôre neowā) — \"just go ahead and ask.\""
+              "text": "Last lesson’s compound stacks on top: জিজ্ঞাসা করে নেওয়া (jijñāsā kôre neowā) — \"go ahead and ask.\""
             }
           ]
         },

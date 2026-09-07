@@ -130,7 +130,7 @@ You'll want to know: খাওয়া.
 
 The word, taken apart.
 খাওয়া (khāwā) is Sanskrit √khād ("to chew, to bite"), smoothed through Prakrit khā-. Every neighbour eats with it: Hindi khānā, Marathi khāṇe, Gujarati khāvũ, Punjabi khāṇā.
-Past Sanskrit the trail goes cold. Khād- has no secure Indo-European pedigree outside Indo-Aryan, so there is no English cousin here — and one will not be manufactured. Some roots are simply local, and saying so is part of the method.
+Past Sanskrit the trail goes cold. Khād- has no secure Indo-European pedigree outside Indo-Aryan, so there is no English cousin here — and one will not be manufactured. Some roots are local and nothing more, and saying so is part of the method.
 
 Sounds you'll need: খ against ক.
 খ is kh: a k with a puff of breath behind it. Its plain partner ক (k) is the letter in Chapter 11's kāj. The puff is not decoration — it is the whole difference between two words, and Bengali gives each its own letter.
@@ -211,7 +211,7 @@ The word, taken apart.
 জানা (jānā) is Sanskrit √jñā ("to know"), the root under jñāna, "knowledge." Behind it stands PIE ǵneh₃-, and English is full of its children: know and knowledge by the direct Germanic road; notice, recognize and cognition through Latin nōscere; gnosis and diagnosis through Greek gignṓskein. Bengali jāni and English know are one verb, separated only by time.
 
 Sounds you'll need: জ্ঞ, the letter that lies.
-Sanskrit writes the root with জ্ঞ, a knot of j and ñ. Bengali does not say jñ at all — it says gg, so jñāna comes out ggān. The plain verb spares you the knot: জানা (jānā) is simply জা + না, jā-nā.
+Sanskrit writes the root with জ্ঞ, a knot of j and ñ. Bengali does not say jñ at all — it says gg, so jñāna comes out ggān. The plain verb spares you the knot: জানা (jānā) is জা + না, jā-nā, and nothing more.
 
 Grammar Lens: two knowings, and English has one word for both.
 [a table of 2 rows, read aloud]

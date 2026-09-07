@@ -1,0 +1,21 @@
+{
+  "chapter": 29,
+  "title": "Agreeing, Differing, and Saying Why",
+  "label": "ch:bn-agreeing-differing-saying-why",
+  "canDo": "I can agree with somebody and disagree with them, turn a second clause against the first with কিন্তু, and give a reason for either with কেননা.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "BN-R18-agree-and-differ",
+    "kind": "speaking",
+    "summary": "The first three-clause sentence in the track: a position, an objection to it, and a reason for the objection, built from কিন্তু, একমত and কেননা over the negators and joiners of the two chapters before.",
+    "assesses": [
+      "BN-LEX-C18-KINTU-01",
+      "BN-LEX-C18-EKMOT-01",
+      "BN-LEX-C18-KENONA-01",
+      "BN-GRAMMAR-C16-NOY-01",
+      "BN-GRAMMAR-C16-NEI-01"
+    ]
+  }
+}

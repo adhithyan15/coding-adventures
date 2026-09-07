@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 30,
+  "output": "bengali/book/chapters/ch30-when-you-are-lost.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

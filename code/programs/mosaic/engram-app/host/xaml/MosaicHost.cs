@@ -528,9 +528,23 @@ public static class MosaicHost
 
     private static byte[] JsonByteArray(JsonElement root, string property)
     {
-        if (!root.TryGetProperty(property, out var array) || array.ValueKind != JsonValueKind.Array)
+        if (!root.TryGetProperty(property, out var array))
         {
             throw new JsonException($"missing byte array property '{property}'");
+        }
+
+        // Media and the exported `.apkg` moved to base64 because a JSON array
+        // of decimal numbers costs 3.6 wire bytes per byte (#13671). Both
+        // spellings are accepted so a host and the engine can be updated
+        // independently.
+        if (array.ValueKind == JsonValueKind.String)
+        {
+            return Convert.FromBase64String(array.GetString() ?? string.Empty);
+        }
+
+        if (array.ValueKind != JsonValueKind.Array)
+        {
+            throw new JsonException($"property '{property}' is neither base64 nor an array");
         }
 
         var bytes = new byte[array.GetArrayLength()];

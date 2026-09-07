@@ -1,0 +1,128 @@
+Bengali, chapter 29: Agreeing, Differing, and Saying Why.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 4.
+কিন্তু (kintu) — but.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+The chapter before this joined things and offered a choice between them. Neither joiner can disagree with anything.
+[your turn — recall: the two joiners of the last chapter — ār, bā]
+[pause 8 seconds for the answer]
+
+You'll want to know: কিন্তু.
+আমি ভালো, কিন্তু আমার চা নেই — āmi bhālo, kintu āmār chā nei — I am well, but I have no tea.
+আর puts two things on the same side. কিন্তু (kintu) puts the second one against the first. It stands at the head of the clause it turns, after a comma in writing and after a small drop of the voice in speech.
+
+The word, taken apart.
+কিন্তু (kintu) is Sanskrit kim-tu, and both halves are recoverable. Kim is "what" — the same ancient word standing behind কি, which chapter three taught. Tu is an old particle meaning "however". So but in Bengali is literally what-however, a shrug frozen into a conjunction.
+Look at the middle of the written word: ন্ত is ন and ত fused by the mark chapter two taught for deleting the inherent vowel. Two letters, one shape, and no new letter to learn.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: āmi bhālo, kintu āmār chā nei]
+[pause 8 seconds for the answer]
+[your turn — say: the same two clauses with the other joiner — āmi bhālo ār āmār chā nei]
+[pause 8 seconds for the answer]
+[your turn — say: and hear what changed — the second one no longer argues]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the two Sanskrit pieces inside কিন্তু (kintu)? (Kim, "what", and tu, "however".) Which word taught in chapter three is built on the first of them? (কি.) And what does কিন্তু (kintu) do that আর cannot? (Turn the second clause against the first.)
+Source: Unicode Bengali chart.
+
+
+Lesson 2 of 4.
+একমত (ekmôt) — of one mind.
+
+Warm-up.
+[pause 2 seconds]
+আচ্ছা has been in this book since chapter one and it says I see. It does not say I agree, and nothing else here does either.
+[your turn — recall: the word that turns a clause against the one before it — kintu]
+[pause 8 seconds for the answer]
+
+You'll want to know: একমত.
+আমি একমত — āmi ekmôt — I agree.
+আমি একমত নই — āmi ekmôt nôi — I do not agree.
+The word is two words: এক, "one", which chapter twelve counted, and মত, "opinion". Of one mind. English builds the same picture out of Latin when it says unanimous — ūnus animus, one spirit.
+
+Grammar Lens: agreeing needs no verb, and disagreeing needs no new word.
+আমি একমত (ekmôt) has no verb in it, like আমি ভালো before it — so it is denied the same way, with নই. The whole of agreement and disagreement in Bengali is now two words the reader already owns arranged in two orders.
+Put কিন্তু (kintu) in front and you have the shape every conversation turns on: আমি একমত (ekmôt), কিন্তু (kintu) … — I agree, but …
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: āmi ekmôt]
+[pause 8 seconds for the answer]
+[your turn — say: āmi ekmôt nôi]
+[pause 8 seconds for the answer]
+[your turn — say: the polite half-agreement — āmi ekmôt, kintu …]
+[pause 8 seconds for the answer]
+[your turn — say: the one-word answers it can replace — hyã … nā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the two pieces of একমত (ekmôt)? (Ek, one, and môt, opinion.) Which negator denies it, and why that one? (নই — the sentence has no verb to put না after.) And which English word is built the same way out of Latin? (Unanimous.)
+Source: Unicode Bengali chart.
+
+
+Lesson 3 of 4.
+কেননা (kenonā) — because.
+
+Warm-up.
+[pause 2 seconds]
+Two lessons ago you could contradict somebody, and one lesson ago you could agree with them. Neither lets you say why.
+[your turn — recall: the two items before this one — kintu, ekmôt]
+[pause 8 seconds for the answer]
+
+You'll want to know: কেননা.
+আমি একমত নই, কেননা আমার চা নেই — āmi ekmôt nôi, kenonā āmār chā nei — I do not agree, because I have no tea.
+কেননা (kenonā) stands at the head of the reason, the way কিন্তু (kintu) stands at the head of the objection. The order is fixed: the claim first, the reason after it.
+
+The word, taken apart.
+Pull কেননা (kenonā) apart and the negator of chapter twenty-seven falls out of it: কেন ("why") plus না ("not"). Bengali's word for because is a rhetorical question worn smooth — why not? — which is the same move English made in forasmuch as and inasmuch as before those went out of use.
+Bengali writes another word here in everyday speech, kāraṇ, from Sanskrit kāraṇa, "cause". It is the commoner of the two and it needs a letter this book has not taught, so it is named in romanization and left for a script lesson. কেননা (kenonā) costs no new letters at all — every piece of it is already yours.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: āmi ekmôt nôi, kenonā āmār chā nei]
+[pause 8 seconds for the answer]
+[your turn — say: the two halves the word is made of — kænô … nā]
+[pause 8 seconds for the answer]
+[your turn — say: an objection and then a reason — kintu … kenonā …]
+[pause 8 seconds for the answer]
+[your turn — say: āmi jāni nā, kenonā āmi bhābi nā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two words is কেননা (kenonā) built from? (কেন, why, and না, not.) Which comes first, the claim or the reason? (The claim — the reason follows it.) And which word does the same job at the head of an objection? (কিন্তু (kintu).)
+Source: Unicode Bengali chart.
+
+
+Lesson 4 of 4.
+Agreeing, differing, and saying why — an objection, an agreement and a reason — the first three-clause Bengali sentence in this book.
+
+Warm-up.
+[pause 4 seconds]
+Three items landed in this chapter, and between them they cover objecting, agreeing and explaining. Name all three.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: āmi ekmôt — then deny it, āmi ekmôt nôi]
+[pause 8 seconds for the answer]
+[your turn — say: the three-clause sentence — āmi ekmôt, kintu āmār chā nei, kenonā āmār dudh-o nei]
+[pause 8 seconds for the answer]
+[your turn — recall: eight lessons back, the joiner that offers a choice — bā]
+[pause 8 seconds for the answer]
+[your turn — recall: eleven lessons back, the negator of a verbless sentence — nôy]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of this chapter's three words heads an objection, and which heads a reason? (কিন্তু (kintu) the objection; কেননা (kenonā) the reason.) What is inside কেননা (kenonā) that chapter twenty-seven taught? (না.) And what would make the whole three-clause sentence a question? (A rising voice at the end, and nothing else.)

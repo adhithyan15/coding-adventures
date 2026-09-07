@@ -1,8 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "VERB-NEGATE",
-    "QUESTION-POLAR"
+  "segments": [
+    "BN-PATH-023"
   ],
+  "omits": [],
   "relocates": {}
 }

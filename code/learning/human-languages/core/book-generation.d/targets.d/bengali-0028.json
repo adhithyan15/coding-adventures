@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 28,
+  "output": "bengali/book/chapters/ch28-two-things-at-once.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

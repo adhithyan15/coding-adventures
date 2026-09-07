@@ -76,7 +76,7 @@ moves with it:
 | তুমি বোঝো | *bojho* — stays *o* |
 
 Same law as *dekhi* against *dækhe*: the high *-i* pulls the stem vowel up after
-it. Bengali simply chose to write this one down.
+it. Bengali chose to write this one down.
 
 And now three knowings where English has one: **জানা** for a fact, **চেনা** for
 a person, **বোঝা** for the thing that finally lands. ভাবা is the turning-over;

@@ -186,6 +186,30 @@ that waits until something has come between.
 | 114 | e-indep | এ | the third pair — the arrangement becomes predictable |
 | 115 | ek-read | এক | the payoff: *one*, twenty-six pieces, eighteen words off a page |
 
+## Chapters 27–30 — negation, joining, and repair
+
+| # | Slug | Item | What it turns on |
+|---|---|---|---|
+| 140 | na-verb | না | the answer "no" from chapter one, moved to the end of a sentence |
+| 141 | noy | নয় / নই | the copula is a ghost — audible only when you refuse it |
+| 142 | nei | নেই | not আছি না: the negator and the আছ- stem fused long ago |
+| 143 | polar | তুমি ভালো? | a question with nothing added but pitch |
+| 144 | R — three noes | | each of the three run against a frame from chapter three |
+| 145 | ar | আর | Sanskrit *apara*, "one more" — the counting sense behind *and* |
+| 146 | o | -ও | the shortest grammatical word in the book, and it cannot stand alone |
+| 147 | ba | বা | four thousand years, one syllable, and the same *-ve* as Latin *sīve* |
+| 148 | na-na | না … না | the one place না goes first |
+| 149 | R — joined and refused | | the colours joined, offered and refused |
+| 150 | kintu | কিন্তু | *kim-tu*, "what-however" — a shrug frozen into a conjunction |
+| 151 | ekmot | একমত | "of one mind", the shape English borrows from Latin for *unanimous* |
+| 152 | kenona | কেননা | *why not?* worn smooth, with chapter twenty-seven's না inside it |
+| 153 | R — agree and differ | | the first three-clause sentence in the track |
+| 154 | je | যে | the Sanskrit relative stem, and what ভাবা was missing |
+| 155 | jokhon | যখন | one frame, three heads: য-, ত-, ক- |
+| 156 | abar-bolben | আবার বলবেন | no new words at all — chapters seven, eleven and twenty-two |
+| 157 | dhire | ধীরে | *steady* before *slow*, and doubled the way Bengali doubles adverbs |
+| 158 | R — lost and found | | the two sentences a lost learner needs |
+
 ## Next
 
 Chapters 17–18 still need session-map entries. On the script side, the next

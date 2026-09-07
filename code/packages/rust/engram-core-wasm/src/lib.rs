@@ -1933,7 +1933,7 @@ impl EngramSession {
     pub fn export_anki_apkg(&self) -> String {
         catch_json(
             || match write_legacy_apkg_from_engram_state(&self.state, &[]) {
-                Ok(apkg) => Ok(ok_with("apkg", &apkg)),
+                Ok(apkg) => Ok(ok_with("apkg", &Base64Bytes(apkg))),
                 Err(error) => Ok(error_json(&error.message)),
             },
         )
@@ -6267,6 +6267,30 @@ fn catch_json(run: impl FnOnce() -> Result<String, String>) -> String {
 /// failed operation, indistinguishable by any caller from a genuinely empty
 /// state. It now returns the error envelope, which is what every other failure
 /// path here returns.
+/// A `Vec<u8>` that serialises as base64 rather than a JSON array of numbers.
+///
+/// The third instance of the amplification #13671 fixed, and the one a
+/// `pub data: Vec<u8>` grep does not find: the exported `.apkg` is a local
+/// handed straight to `ok_with`. A legacy package stores its media
+/// uncompressed, so this response carries the collection's whole media set --
+/// measured at 4.00x wire and 5.5-8.25x peak through the derive, on a path
+/// whose own docs say it runs on wasm too.
+///
+/// Only the write side is needed: nothing deserialises this response back into
+/// Rust; each host writes the bytes to a file. All six host adapters accept
+/// base64 OR the legacy array, so neither side depends on the other landing
+/// first.
+struct Base64Bytes(Vec<u8>);
+
+impl serde::Serialize for Base64Bytes {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&coding_adventures_base64::encode(
+            &self.0,
+            &coding_adventures_base64::STANDARD,
+        ))
+    }
+}
+
 fn ok_with(key: &str, value: &impl serde::Serialize) -> String {
     let mut buffer = Vec::new();
     buffer.extend_from_slice(b"{\"ok\":true,");
@@ -11316,12 +11340,12 @@ mod tests {
         let source = EngramSession::new_demo();
         let exported: Value = serde_json::from_str(&source.export_anki_apkg()).unwrap();
         assert_eq!(exported["ok"], true);
-        let apkg = exported["apkg"]
-            .as_array()
-            .unwrap()
-            .iter()
-            .map(|value| value.as_u64().unwrap() as u8)
-            .collect::<Vec<_>>();
+        // base64 now, not an array of decimal numbers (#14438).
+        let apkg = coding_adventures_base64::decode(
+            exported["apkg"].as_str().unwrap(),
+            &coding_adventures_base64::STANDARD,
+        )
+        .unwrap();
         assert!(!apkg.is_empty());
 
         let mut target = EngramSession::new();

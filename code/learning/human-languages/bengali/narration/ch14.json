@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "The Mind and the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:af7da8853d1d6ca9",
+  "sourceHash": "fnv1a64:2adf17a2e627ca88",
   "lessons": [
     {
       "id": "BN-C08-bhaba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:07b9ffad4bc9cfcb",
+      "sourceHash": "fnv1a64:5341927947d2e96b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -195,7 +195,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:72866755fda483f6",
+      "sourceHash": "fnv1a64:96cb6b2d03a6fb2e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -290,7 +290,7 @@
             },
             {
               "kind": "speech",
-              "text": "Same law as dekhi against dækhe: the high -i pulls the stem vowel up after it. Bengali simply chose to write this one down."
+              "text": "Same law as dekhi against dækhe: the high -i pulls the stem vowel up after it. Bengali chose to write this one down."
             },
             {
               "kind": "speech",
