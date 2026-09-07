@@ -20,10 +20,10 @@ script** and Bengali sounds.
 
 - ***s* → "sh".** স (and শ, ষ) is usually pronounced "sh": আসি is *āshi*, not
   *āsi*.
-- **No separate *v* or *w*.** Bengali has only ব *b*, so Sanskrit *vāda* → *bad*,
+- **No separate *v* or *w*.** Bengali has only ব *b*, so Sanskrit *vāda* → *bād*,
   *Vishnu* → *Bishnu*. This *v→b* shift is a Bengali signature.
-- **Conjuncts.** A *hasanta* strips a consonant's vowel so it fuses with the
-  next: স্ + ক → স্ক, চ + ছ → চ্ছ. Many conjuncts take special shapes learned as
+- **Conjuncts.** A *hasanta* (্) strips a consonant's vowel so it fuses with the
+  next: স্ + ক → স্ক, চ্ + ছ → চ্ছ. Many conjuncts take special shapes learned as
   you meet them.
 
 ## Bengali in the family
@@ -31,7 +31,8 @@ script** and Bengali sounds.
 Bengali (*Bāṅlā*) is **Indo-Aryan** — from Sanskrit, like Hindi, Marathi, and
 Punjabi — and its script descends, with Devanagari, from the old Brahmi writing
 of India, which is why they share the hanging top line. Spoken across West Bengal
-(India) and Bangladesh by some 250 million people, it is the language of Tagore
-and the only tongue to have written the national anthem of *two* countries. The
+(India) and Bangladesh by some 250 million people, it carries an immense
+literary tradition — Tagore's poetry, and the national anthems of *two*
+countries, the only tongue that can say so. The
 lessons trace its Sanskrit roots and, where they reach, the wider Indo-European
 family that also shaped English.

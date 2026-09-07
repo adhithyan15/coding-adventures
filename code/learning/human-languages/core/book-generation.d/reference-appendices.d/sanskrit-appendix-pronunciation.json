@@ -1,0 +1,10 @@
+{
+  "language": "sanskrit",
+  "title": "The Devanagari script and Sanskrit sounds --- a reference",
+  "shortTitle": "Devanagari & Sanskrit sounds (reference)",
+  "runningHead": "Devanagari",
+  "source": "sanskrit/pronunciation-reference.md",
+  "output": "sanskrit/book/chapters/appendix-pronunciation.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}
