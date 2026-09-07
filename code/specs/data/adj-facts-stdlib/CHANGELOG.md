@@ -6,7 +6,7 @@ landed and why, not a semver-tracked API.
 ## Unreleased
 
 - **#13934 installment 4g: five values that were a real paragraph with a lesson table welded onto
-  it.** 5 value lines, 37 row lines and 231 comment lines across **5** `.adj` files —
+  it.** 5 value lines, 37 row lines and 242 comment lines (added, vs origin/main) across **5** `.adj` files —
   `language/digraph-sound`, `diphthong-sound`, `silent-letter-sound`, `long-vowel-team-sound` and
   `other-vowel-team-sound` — plus five README Source cells and five e2e test files. **Five mutations
   redden.**
@@ -72,8 +72,9 @@ landed and why, not a semver-tracked API.
   Each is re-anchored on the repaired value, taken from the `.adj` file rather than retyped. The
   five NEW pins are built differently on purpose: a positive needle that is **discriminating** (a
   sentence the stitch dropped, or the U+2019 the stitch flattened — either fails on the old value)
-  and negative needles that **span the seam** (`speech sound. Digraphs` joins the paragraph's last
-  words to the heading welded after them). A needle wholly inside either side would still pass a
+  and negative needles that **span the seam** (`speech sound. Digraphs` joins the last words the
+  stitch CARRIED — mid-paragraph in three of the five, since those three dropped the closing
+  sentences — to the heading welded after them). A needle wholly inside either side would still pass a
   half-undone repair.
 
   ### The extractor launders the byte the rule exists to protect
@@ -170,8 +171,9 @@ landed and why, not a semver-tracked API.
   page and a different weld). **Two** are prose *describing* a table ("MathWorld's Platonic Solid
   table gives, for each solid, its number of vertices: …") sitting in a field that claims to quote.
   **Three** are table dumps — `chemistry/atomic-weights:73` ships
-  `6\tC\tcarbon\t 12.011 ± 0.002    8\tO\toxygen\t 15.999 ± 0.001`: two element rows joined by tab
-  escapes, which the reader turns into real tabs. Round 3 corrected that description twice over.
+  `6\tC\tcarbon\t 12.011 ± 0.002    8\tO\toxygen\t 15.999 ± 0.001`: two element rows whose FIELDS are joined by
+  tab escapes, which the reader turns into real tabs, the two rows themselves separated by four
+  spaces. Round 3 corrected that description twice over.
   The first draft rendered it `6tCtcarbont`, silently dropping the backslashes — **a non-verbatim
   quotation inside the entry documenting a repair for non-verbatim quotation** — and then
   explained it as "tab characters flattened into a literal `t`", which is not what the field does
@@ -179,7 +181,25 @@ landed and why, not a semver-tracked API.
   drops, and **one** is an invented `|` separator.
 
   Groups two and three are the same defect as this one and repairable the same way. The rest waits
-  on the owner's three questions. And a standing correction to how that list was described:
+  on the owner's three questions.
+
+  ### The review pattern, which outlives this installment
+
+  Security review ran **four rounds**. Round 1 found a real data defect (the NBSP). Rounds 2, 3 and 4
+  found only documentation-accuracy defects — but two of those were *caused by the previous round's
+  fix*: round 2's rewriter deleted the subject of a sentence in four files, and round 3's
+  singular/plural splice said digraph dropped two closing sentences when it dropped one.
+
+  The through-line is sharper than any single fix. Three separate rounds reported the class of "prose
+  crediting `source` with content only the lesson table holds" **swept**, and each time the next round
+  found more — because each fix was a LIST of the sites the reviewer named, not a SWEEP of the class.
+  It terminated when the examples ran out, and was reported complete. Round 4 ends with an actual grep
+  over all eleven touched files. It reported eight survivors: two real, and six where the screen had
+  matched "source" inside "Re**source**s" — a screen for a word that could not tell a word from a
+  substring of another word.
+
+  *When review names instances of a class, fix the class and prove it with a screen. A fix that stops
+  when the named examples run out will be reported as complete and will not be.* And a standing correction to how that list was described:
   **"agreed-actionable" has meant "no screen objects", not "verified as ordinary work"** — the
   reading is what tells them apart, and it took reading all fifteen to find that only six were this.
 

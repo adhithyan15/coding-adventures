@@ -116,7 +116,7 @@ fn other_vowel_team_sound_reverse_binds_all_four_spellings_of_long_u_sound() {
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
     // Lesson 90 ("oo") and lesson 91 ("ew", "ui", "ue") pair FOUR spellings
-    // with the same source-notated long-U sound.
+    // with the same long-U sound, in the lesson table's own notation.
     assert!(out.contains("\"Sp\":\"oo\""), "oo carries long_u_sound: {out}");
     assert!(out.contains("\"Sp\":\"ew\""), "ew carries long_u_sound too: {out}");
     assert!(out.contains("\"Sp\":\"ui\""), "ui carries long_u_sound too: {out}");

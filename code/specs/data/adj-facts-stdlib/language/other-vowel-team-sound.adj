@@ -35,7 +35,8 @@
 %
 % DESIGN NOTE — why "oo" carries TWO rows, the SAME one-key/many-values
 % shape `digraph-sound.adj`'s own "th" row already established: the cited
-% source splits "oo" into two separate lessons, one per pronunciation —
+% page's lesson table splits "oo" into two separate lessons, one per
+% pronunciation —
 % lesson 89 gives "oo /oo/" (the short, repeated-vowel sound heard in
 % "book") and lesson 90 gives "oo /ū/" (a genuinely different, longer sound
 % heard in "moon") — rather than treating "oo" as a single sound the way it
@@ -76,7 +77,7 @@
 % table disambiguates the one genuinely overlapping spelling with an
 % explicit `_short_e` suffix on the atom itself, naming which of the two
 % tabled senses it stands for right in the key — the identical
-% source-driven atom-label convention `long-vowel-team-sound.adj`'s
+% page-driven atom-label convention `long-vowel-team-sound.adj`'s
 % `ow_long_o` and `suffix-meaning.adj`'s `_er_agentive` already established.
 % A query on the bare atom `ea` against THIS table's predicate honestly
 % ABSTAINS — this table asserts nothing about a bare `ea`, so no answer is

@@ -108,7 +108,8 @@ fn digraph_sound_th_recalls_both_voiced_and_unvoiced() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
-    // th is a genuine one-key/many-values row pair -- the source splits it
+    // th is a genuine one-key/many-values row pair -- the page's lesson
+    // table splits it
     // into a voiced lesson (as in "this") and an unvoiced lesson (as in
     // "think"), so a forward recall yields BOTH sounds, not just one.
     assert!(
@@ -122,7 +123,7 @@ fn digraph_sound_th_recalls_both_voiced_and_unvoiced() {
 }
 
 #[test]
-fn digraph_sound_wh_and_ph_share_the_same_source_lesson() {
+fn digraph_sound_wh_and_ph_share_the_same_lesson_cell() {
     let dir = scratch("wh_ph");
     place_lib(&dir);
     std::fs::write(
@@ -180,7 +181,7 @@ fn digraph_sound_abstains_honestly_on_an_untabled_digraph() {
 /// stitch dropped, with the page's own U+2019 apostrophe. The FIRST
 /// negative needle SPANS THE SEAM, joining the last words the stitch DID
 /// carry to the heading welded after them — mid-paragraph, since this
-/// file's stitch dropped the closing sentences, so it matches only if the
+/// file's stitch dropped the closing sentence, so it matches only if the
 /// weld is back; a needle wholly inside either side would not discriminate.
 /// The other two are artifacts the stitch invented outright, and they are
 /// not the same kind of artifact. The colon after the unit heading occurs

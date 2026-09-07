@@ -95,7 +95,7 @@ fn diphthong_sound_reverse_binds_both_spellings_of_oi_sound() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
-    // Many-keys-to-one-sound: the source's own lesson 95 pairs BOTH "oi"
+    // Many-keys-to-one-sound: the cited page's own lesson 95 pairs BOTH "oi"
     // and "oy" with the same /oi/ sound, so a backward recall on the
     // sound must yield both spellings, not just one.
     assert!(out.contains("\"D\":\"oi\""), "oi carries oi_sound: {out}");

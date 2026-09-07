@@ -52,7 +52,7 @@
 % risk that silent misread, this table disambiguates the one genuinely
 % overlapping spelling with an explicit `_long_o` suffix on the atom itself,
 % naming which of the two tabled senses it stands for right in the key
-% — the SAME kind of new, source-driven atom-label convention
+% — the SAME kind of new, page-driven atom-label convention
 % `prefix-meaning.adj`'s trailing-underscore `un_`/`re_`/`dis_` labels
 % already established for this stdlib when the plain punctuated form wasn't
 % representable. A query on the bare atom `ow` against THIS table's
