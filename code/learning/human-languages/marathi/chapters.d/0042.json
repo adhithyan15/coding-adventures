@@ -1,0 +1,21 @@
+{
+  "chapter": 42,
+  "title": "In, On, Under",
+  "label": "ch:mr-in-on-under",
+  "canDo": "I can say that a thing is in, on or under a place, running three postpositions off one oblique stem, and I can use var and khālī as bare adverbs when there is no noun to glue them to.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R42-inside-outside",
+    "kind": "production",
+    "summary": "Complete MR-R42-inside-outside and put a room in, on and under a house from a single bent stem, then say there is something in the room.",
+    "assesses": [
+      "MR-POSTP-MADHYE",
+      "MR-POSTP-VAR",
+      "MR-POSTP-KHAALI",
+      "MR-GRAMMAR-OBLIQUE"
+    ],
+    "note": "Marathi has no separate verb for there is; the chapter's real payoff is the existential sentence that falls out of a locative plus āhe."
+  }
+}

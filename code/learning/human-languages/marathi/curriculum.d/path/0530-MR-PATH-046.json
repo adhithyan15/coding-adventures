@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-046",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "MR-C43-javal",
+    "MR-C43-samor",
+    "MR-C43-laamb",
+    "MR-R43-how-far"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-059-NEAR-OPPOSITE-FAR"
+  ],
+  "after": []
+}

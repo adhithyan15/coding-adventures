@@ -244,8 +244,9 @@
       "id": "MR-A1-N-09",
       "category": "The noun",
       "label": "the oblique stem a noun takes before any postposition",
-      "probe": null,
-      "note": "MARATHI-SPECIFIC AND THE LARGEST STRUCTURAL GAP IN THE TRACK. Spanish has no counterpart because it marks case with prepositions and no stem change. Marathi puts almost every case relation on a postposition and almost every postposition demands an oblique stem first, so this one rule stands between the taught vocabulary and any sentence about place, time, direction or accompaniment.",
+      "probe": [
+        "MR-GRAMMAR-OBLIQUE"
+      ],
       "anchorIds": [
         "editorial-marathi-structure",
         "ca-marathi-task-shapes-a1"
@@ -649,7 +650,7 @@
       "category": "Pronouns",
       "label": "a pronoun before a postposition takes its oblique form",
       "probe": null,
-      "note": "Untaught, and blocked behind MR-A1-N-09. Spanish's stressed pronouns after a preposition are the same demand with a much smaller cost.",
+      "note": "Untaught. The noun half of this is now closed -- MR-A1-N-09 covers the oblique stem -- so what remains is specifically the PRONOUN's own oblique form (maazhyaa-, tyaa-), which no lesson supplies. Spanish's stressed pronouns after a preposition are the same demand with a much smaller cost.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1093,7 +1094,7 @@
       "category": "The verb",
       "label": "possession: the postposition plus aahe construction",
       "probe": null,
-      "note": "Untaught. Marathi has no verb 'to have', so this is blocked behind MR-A1-N-09 and the postpositions rather than behind a missing word.",
+      "note": "Untaught. Marathi has no verb 'to have', so the construction is a postposition plus aahe. MR-A1-N-09 and MR-A1-P-02 are now covered, so the stem and the locative are no longer the blockers; the -kade of MR-A1-P-05 is.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-spine"
@@ -1121,8 +1122,11 @@
       "id": "MR-A1-P-02",
       "category": "Case and postpositions",
       "label": "the locative -t and -var: in, at, on",
-      "probe": null,
-      "note": "MARATHI-SPECIFIC (Spanish uses prepositions and needs no stem). Untaught, and it is what the reading paper's signs and notices are made of.",
+      "probe": [
+        "MR-GRAMMAR-POSTPOSITION-ON-NOUN",
+        "MR-GRAMMAR-OBLIQUE",
+        "MR-POSTP-VAR"
+      ],
       "anchorIds": [
         "editorial-marathi-structure",
         "ca-marathi-task-shapes-a1"
@@ -1135,7 +1139,7 @@
       "category": "Case and postpositions",
       "label": "accompaniment and instrument: -shii, barobar, -ne",
       "probe": null,
-      "note": "MARATHI-SPECIFIC. 'With my friend' is an A1 sentence and the track teaches mitra with no way to attach it.",
+      "note": "MARATHI-SPECIFIC. 'With my friend' is an A1 sentence and the track teaches mitra with no way to attach it. The oblique stem it would need is now taught (MR-A1-N-09), so this point is blocked on the three exponents alone -- -shii, barobar and the instrumental -ne -- and no longer on the stem underneath them.",
       "anchorIds": [
         "editorial-marathi-structure",
         "ca-marathi-task-shapes-a1"
@@ -1148,7 +1152,7 @@
       "category": "Case and postpositions",
       "label": "source and starting point: -huun, paasuun",
       "probe": null,
-      "note": "MARATHI-SPECIFIC. 'I am from Pune' is the second sentence of every A1 speaking interview.",
+      "note": "MARATHI-SPECIFIC. 'I am from Pune' is the second sentence of every A1 speaking interview. The stem is now taught (MR-A1-N-09); -huun and paasuun are what is missing.",
       "anchorIds": [
         "editorial-marathi-structure",
         "ca-marathi-task-shapes-a1"
@@ -1161,7 +1165,7 @@
       "category": "Case and postpositions",
       "label": "goal and limit: -kade, paryant",
       "probe": null,
-      "note": "MARATHI-SPECIFIC. Required by the transactional role-play.",
+      "note": "MARATHI-SPECIFIC. Required by the transactional role-play. The stem is now taught; -kade and paryant are what is missing, and paryant additionally needs the reph of MR-A1-OR-21, which no lesson teaches.",
       "anchorIds": [
         "editorial-marathi-structure",
         "ca-marathi-task-shapes-a1"
@@ -1173,8 +1177,13 @@
       "id": "MR-A1-P-06",
       "category": "Case and postpositions",
       "label": "postpositions of place: var, khaalii, madhye, javal, samor",
-      "probe": null,
-      "note": "MARATHI-SPECIFIC in form; the demand is Spanish's relative-position point. SPINE-ASK-LOCATION is an A1 node the track does not realize.",
+      "probe": [
+        "MR-POSTP-VAR",
+        "MR-POSTP-KHAALI",
+        "MR-POSTP-MADHYE",
+        "MR-POSTP-JAVAL",
+        "MR-POSTP-SAMOR"
+      ],
       "anchorIds": [
         "editorial-marathi-structure",
         "ca-spine"
@@ -1398,8 +1407,11 @@
       "id": "MR-A1-OS-04",
       "category": "The simple sentence",
       "label": "existential sentences",
-      "probe": null,
-      "note": "Untaught. Spanish's impersonal hay is Marathi's aahe with a locative, so this is blocked behind MR-A1-P-02.",
+      "probe": [
+        "MR-GRAMMAR-OBLIQUE",
+        "MR-POSTP-MADHYE",
+        "MR-LEX-AAHE-COPULA"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2424,7 +2436,7 @@
       "category": "Existential notions",
       "label": "existence and non-existence",
       "probe": null,
-      "note": "Still blocked, and now by one thing rather than two. MR-A1-OS-01 is closed, so non-existence can be said; existence in a place still needs MR-A1-V-20 and the locative MR-A1-P-02.",
+      "note": "Still blocked, and now by one thing rather than two. MR-A1-OS-01 is closed, so non-existence can be said, and MR-A1-P-02 closed in chapter 42, so a thing can be placed. What is left is possession: Marathi has no verb 'to have', and the -kade construction of MR-A1-V-20 has no exponent, so 'I have one' cannot be said at all.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2437,8 +2449,11 @@
       "id": "MR-A1-NG1-02",
       "category": "Existential notions",
       "label": "presence and absence",
-      "probe": null,
-      "note": "Blocked behind the locative, MR-A1-P-02.",
+      "probe": [
+        "MR-POSTP-MADHYE",
+        "MR-LEX-AAHE-COPULA",
+        "MR-GRAMMAR-NEGATE-NAHI"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2510,8 +2525,12 @@
       "id": "MR-A1-NG3-01",
       "category": "Spatial notions",
       "label": "location: being somewhere",
-      "probe": null,
-      "note": "Blocked behind MR-A1-P-02 alone now. MR-A1-ADV-01 is covered -- ithe and tithe both have atoms -- so a place can be pointed at; putting a thing IN a place still needs the locative.",
+      "probe": [
+        "MR-GRAMMAR-POSTPOSITION-ON-NOUN",
+        "MR-POSTP-MADHYE",
+        "MR-LEX-ITHE",
+        "MR-LEX-TITHE"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2524,8 +2543,12 @@
       "id": "MR-A1-NG3-02",
       "category": "Spatial notions",
       "label": "relative position: javal, laamb, ujvii, daavii",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-POSTP-JAVAL",
+        "MR-LEX-LAAMB",
+        "MR-LEX-UJVA",
+        "MR-LEX-DAAVA"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -2538,8 +2561,10 @@
       "id": "MR-A1-NG3-03",
       "category": "Spatial notions",
       "label": "distance",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-POSTP-JAVAL",
+        "MR-LEX-LAAMB"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -2571,7 +2596,7 @@
       "category": "Spatial notions",
       "label": "orientation and direction",
       "probe": null,
-      "note": "Untaught; blocked behind MR-A1-P-05.",
+      "note": "Untaught; blocked behind MR-A1-P-05. ujvaa and daavaa are now taught (chapter 44) so the two SIDES exist, but sending somebody toward one needs the goal postposition -kade, which has no exponent. Naming a side is not giving a direction.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -2599,7 +2624,7 @@
       "category": "Spatial notions",
       "label": "origin: where one is from",
       "probe": null,
-      "note": "The city is taught as a form FIELD (MR-A1-FORM-LABEL-SHAHAR); saying one comes FROM it needs the ablative of MR-A1-P-04. The noun without the postposition answers a form and not an interviewer.",
+      "note": "The city is taught as a form FIELD (MR-A1-FORM-LABEL-SHAHAR) and can now be a PLACE too -- puṇyāt, puṇyājavaḷ -- because the oblique stem and the locative are covered. Saying one comes FROM it still needs the ablative of MR-A1-P-04, which has no exponent. The noun without that postposition answers a form and not an interviewer.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-task-shapes-a1"
@@ -3506,8 +3531,10 @@
       "id": "MR-A1-NE10-02",
       "category": "Housing",
       "label": "types of dwelling and its rooms",
-      "probe": null,
-      "note": "SPINE-NAME-EVERYDAY-THINGS is an A1 core node and the track omits LODGING-ROOM, its only listed concept.",
+      "probe": [
+        "MR-LEX-GHAR",
+        "MR-LEX-KHOLI"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-spine"
@@ -3535,7 +3562,7 @@
       "category": "Housing",
       "label": "household objects and furniture",
       "probe": null,
-      "note": "Untaught; daar and khidkii have no atoms, and a sign-and-label reading part labels exactly this kind of thing.",
+      "note": "Untaught; daar and khidkii have no atoms, and a sign-and-label reading part labels exactly this kind of thing. The dwelling itself is now taught (MR-A1-NE10-02, chapter 41), so this is the remaining half of Housing rather than the whole of it.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"

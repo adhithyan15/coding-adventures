@@ -1,0 +1,11 @@
+{
+  "language": "marathi",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:5c8652033893e867",
+  "lessonIds": [
+    "MR-C44-ujva",
+    "MR-C44-daava",
+    "MR-R44-directions"
+  ],
+  "tex": "marathi/book/chapters/ch44-right-and-left.tex"
+}
