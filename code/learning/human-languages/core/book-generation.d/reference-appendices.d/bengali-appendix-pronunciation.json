@@ -1,0 +1,10 @@
+{
+  "language": "bengali",
+  "title": "The Bengali script --- a reference",
+  "shortTitle": "The Bengali script (reference)",
+  "runningHead": "Bengali script",
+  "source": "bengali/pronunciation-reference.md",
+  "output": "bengali/book/chapters/appendix-pronunciation.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

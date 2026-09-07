@@ -1,0 +1,579 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 46,
+  "title": "Where You Came From",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:76408702efe775a1",
+  "lessons": [
+    {
+      "id": "MR-C46-huun",
+      "sequence": 1840,
+      "title": "-हून (-hūn) — from",
+      "headword": "-हून",
+      "romanization": "-hūn",
+      "gloss": "from — the ending that answers the second question of every spoken interview",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25c93343f11c2da0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter twenty-three taught शहर as a line on a form. A form wants the name of a city. An interviewer wants something else."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say -ne, then -śī, and name which one takes a person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *-ne*, then *-śī*, and name which one takes a person]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -हून",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-हून — -hūn — from."
+            },
+            {
+              "kind": "speech",
+              "text": "मी पुण्याहून येतो. — mī puṇyāhūn yeto. — I come from Pune."
+            },
+            {
+              "kind": "speech",
+              "text": "That sentence is the second thing said in almost every spoken A1 interview, and until this lesson the book could write शहर: पुणे on a form and not say it out loud. A form field is a label; -हून (-hūn) is an answer."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem is the one you already bend: पुणे becomes पुण्या-, then -हून (-hūn), no space. And because इथे and तिथे are place words too, they take it and give you two more:"
+            },
+            {
+              "kind": "speech",
+              "text": "इथून — ithūn — from here तिथून — tithūn — from there."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what happened to the shape: इथे ends in -ए and the ending replaced it, exactly as it does on पुणे. The rule you learned in chapter forty-one is doing all the work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī puṇyāhūn yeto — I come from Pune",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī puṇyāhūn yeto* — I come from Pune]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ithūn, then tithūn — from here, from there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ithūn*, then *tithūn* — from here, from there]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāhūn — from the house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāhūn* — from the house]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C46-huun-r1",
+              "prompt": "Say that you come from Pune, then from here.",
+              "assesses": [
+                "MR-POSTP-HUUN",
+                "MR-GRAMMAR-OBLIQUE"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "mī puṇyāhūn yeto; ithūn",
+                "मी पुण्याहून येतो इथून"
+              ],
+              "feedback": {
+                "correct": "An origin, said rather than filled in.",
+                "incorrect": "puṇe bends to puṇyā-; ithe drops its -e for -ūn."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What can you now say that a form field could not? (I come from Pune — an answer, not a label.) What does इथे become with it? (इथून.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: हून."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C46-paasun",
+      "sequence": 1850,
+      "title": "पासून (pāsūn) — from, since",
+      "headword": "पासून",
+      "romanization": "pāsūn",
+      "gloss": "from, since — the starting point of a journey and of a stretch of time, in one word",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acc634cb41a529e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "-हून (-hūn) says where a journey began. It does not say when one did."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पासून",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पासून — pāsūn — from, since."
+            },
+            {
+              "kind": "speech",
+              "text": "उद्यापासून — udyāpāsūn — from tomorrow onwards."
+            },
+            {
+              "kind": "speech",
+              "text": "पासून (pāsūn) is written joined, like -हून (-hūn), and takes the same oblique stem. What makes it worth its own lesson is that it works on time as well as place — Marathi uses one word where English splits from and since, and a Marathi speaker feels no difference between the start of a road and the start of a week."
+            },
+            {
+              "kind": "speech",
+              "text": "Against -हून (-hūn) the contrast is direction of attention. -हून (-hūn) looks back at the place you LEFT; पासून (pāsūn) looks forward from a starting point that is still running:"
+            },
+            {
+              "kind": "speech",
+              "text": "पुण्याहून — I came from Pune, and I am elsewhere now. उद्यापासून — starting tomorrow, and continuing."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why a notice about opening hours uses पासून (pāsūn) and a traveller uses -हून (-hūn)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyāpāsūn — from tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyāpāsūn* — from tomorrow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāpāsūn — from the house onwards",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāpāsūn* — from the house onwards]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — puṇyāhūn, udyāpāsūn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *puṇyāhūn*, *udyāpāsūn*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C46-paasun-r1",
+              "prompt": "Say 'from tomorrow' and 'from Pune', and name which one is about time.",
+              "assesses": [
+                "MR-POSTP-PAASUN",
+                "MR-POSTP-HUUN"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "udyāpāsūn; puṇyāhūn",
+                "उद्यापासून पुण्याहून"
+              ],
+              "feedback": {
+                "correct": "One starts a stretch, the other names a source.",
+                "incorrect": "pāsūn does time and a running start; -hūn names where you left."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two also does TIME? (पासून (pāsūn).) Which one looks back at where you left? (-हून (-hūn).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: पासून (pāsūn)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C46-kuthun",
+      "sequence": 1860,
+      "title": "कुठून (kuṭhūn) — from where",
+      "headword": "कुठून",
+      "romanization": "kuṭhūn",
+      "gloss": "from where — the interview's opening question, built out of two things you already own",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffeb75d814d082f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can answer I come from Pune. Nobody has asked you yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कुठून",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुठून — kuṭhūn — from where."
+            },
+            {
+              "kind": "speech",
+              "text": "तुम्ही कुठून येता? — tumhī kuṭhūn yetā? — where are you from?"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing here is new except the answer to a question you can now finally ask. कुठून (kuṭhūn) is कुठे with -हून (-hūn) on it, and the -ए dropped for -ऊ in exactly the way इथे became इथून two lessons ago. A place word, an ablative, and the same rule."
+            },
+            {
+              "kind": "speech",
+              "text": "Its position obeys chapter thirty-eight: an asking word stands in the answer's own slot, so कुठून (kuṭhūn) sits precisely where पुण्याहून would sit and nothing moves to the front."
+            },
+            {
+              "kind": "speech",
+              "text": "तुम्ही पुण्याहून येता. becomes तुम्ही कुठून (kuṭhūn) येता?"
+            },
+            {
+              "kind": "speech",
+              "text": "Now put the whole family beside each other, because they are one shape with three stems and you have owned two of them since chapter forty:"
+            },
+            {
+              "kind": "speech",
+              "text": "कुठून (kuṭhūn) from where, इथून from here, तिथून from there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭhūn — from where",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭhūn* — from where]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumhī kuṭhūn yetā? — and answer it about yourself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumhī kuṭhūn yetā?* — and answer it about yourself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three together — kuṭhūn, ithūn, tithūn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three together — *kuṭhūn*, *ithūn*, *tithūn*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C46-kuthun-r1",
+              "prompt": "Ask where somebody is from, then answer with Pune.",
+              "assesses": [
+                "MR-QUESTION-KUTHUN",
+                "MR-POSTP-HUUN"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "tumhī kuṭhūn yetā? — mī puṇyāhūn yeto",
+                "तुम्ही कुठून येता? मी पुण्याहून येतो"
+              ],
+              "feedback": {
+                "correct": "An interview opening, both halves.",
+                "incorrect": "kuṭhūn takes the slot puṇyāhūn would take; nothing moves."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two pieces is कुठून (kuṭhūn) made of? (कुठे plus -हून (-hūn).) Where in the sentence does it stand? (Where the answer would stand.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R46-from",
+      "sequence": 1870,
+      "title": "Answer the second interview question",
+      "headword": "कुठून? — पुण्याहून.",
+      "romanization": "kuṭhūn? — puṇyāhūn.",
+      "gloss": "the interview's second exchange, asked and answered without a form",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bbdc583444a8ac2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the question and its answer as one exchange, both halves aloud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumhī kuṭhūn yetā? — then answer it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumhī kuṭhūn yetā?* — then answer it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyāpāsūn — and hear that this one is a time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyāpāsūn* — and hear that this one is a time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitrāśī — and notice this chapter did not touch it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitrāśī* — and notice this chapter did not touch it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say देणे and its root — deṇe, from the ancient deh₃-, \"to give\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **देणे** and its root — *deṇe*, from the ancient *deh₃-*, \"to give\"]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R46-from-run",
+              "prompt": "Ask where somebody is from, answer it, then say from tomorrow onwards.",
+              "assesses": [
+                "MR-QUESTION-KUTHUN",
+                "MR-POSTP-HUUN",
+                "MR-POSTP-PAASUN"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "tumhī kuṭhūn yetā? — mī puṇyāhūn yeto. udyāpāsūn.",
+                "तुम्ही कुठून येता? मी पुण्याहून येतो उद्यापासून"
+              ],
+              "feedback": {
+                "correct": "A place left, and a time starting.",
+                "incorrect": "-hūn for the source, pāsūn for the stretch."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form field can you now turn into a spoken answer? (शहर — मी पुण्याहून येतो.) Which of the two endings also does time? (पासून (pāsūn).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

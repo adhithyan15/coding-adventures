@@ -1,0 +1,16 @@
+{
+  "id": "LA-PATH-033",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "LA-C49-possum",
+    "LA-C49-volo",
+    "LA-C49-qui",
+    "LA-C49-et",
+    "LA-C49-quando"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "LA-EXT-049-FRAME"
+  ]
+}

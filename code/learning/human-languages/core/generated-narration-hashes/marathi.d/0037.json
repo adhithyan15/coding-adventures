@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:5bee760e28c8734e",
+  "lessonIds": [
+    "MR-C37-kon",
+    "MR-C37-kiti",
+    "MR-R37-who-how-many"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "marathi/narration/ch37.txt",
+  "json": "marathi/narration/ch37.json",
+  "textHash": "fnv1a64:1bcbfc982290865b",
+  "jsonHash": "fnv1a64:094150bf6ef24cc5",
+  "findings": []
+}

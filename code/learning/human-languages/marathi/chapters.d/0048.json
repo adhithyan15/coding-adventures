@@ -1,0 +1,19 @@
+{
+  "chapter": 48,
+  "title": "Toward, and What You Have",
+  "label": "ch:mr-kade-and-have",
+  "canDo": "I can send somebody left or right, go to somebody's place, and say what I have and do not have in a language that has no verb for having.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R48-have-and-toward",
+    "kind": "production",
+    "summary": "Complete MR-R48-have-and-toward and give a direction, state a possession and hand something over -- ujvīkaḍe jā, mājhyākaḍe pāṇī āhe, mī mitrālā pāṇī deto.",
+    "assesses": [
+      "MR-POSTP-KADE",
+      "MR-GRAMMAR-POSSESSION"
+    ],
+    "note": "ujvaa and daavaa were taught four chapters ago and deliberately left as descriptions; -kade is what turns a side into a direction, which is why the two are apart."
+  }
+}

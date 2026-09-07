@@ -1,0 +1,831 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 52,
+  "title": "Ubi, Cur, Quia, Meus, Tuus",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:13eaaec597490330",
+  "lessons": [
+    {
+      "id": "LA-C52-ubi",
+      "sequence": 1350,
+      "title": "ubi — the question the quōmodo lesson left half-finished",
+      "headword": "ubi",
+      "romanization": "ubi",
+      "gloss": "where — the question the quōmodo lesson left half-finished",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37ec0863dbf22ed5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say epistula — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *epistula* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say amīcus — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *amīcus* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nesciō — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nesciō* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nesciō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nesciō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tē volup est convēnisse — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tē volup est convēnisse* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quid tibi nōmen est? — volup est convēnisse — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quid tibi nōmen est? — volup est convēnisse* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ubi — \"where.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The quōmodo lesson gave you \"how,\" and stopped. This is the other half of the pair every beginner needs, and the corpus went fifty-one chapters without it."
+            },
+            {
+              "kind": "speech",
+              "text": "Ubi est liber? — Where is the book? Ibi. — There. (Last chapter's word, finally with a question to answer.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Like quī and quandō, it is built on the kwo- stem. Latin also has quō (\"to where\") and unde (\"from where\") — Latin distinguishes three directions where English says only where, and this is the resting one."
+            },
+            {
+              "kind": "speech",
+              "text": "Ubique is \"everywhere,\" and English ubiquitous is that word: being in every where at once. Spanish donde and French où both descend from ubi with dē in front of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ubi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ubi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which earlier question word is ubi the pair of? (Quōmodo, how.) What does ubique mean, and what English word is it? (Everywhere; ubiquitous.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C52-cur",
+      "sequence": 1360,
+      "title": "cūr — and the two words that answer it",
+      "headword": "cūr",
+      "romanization": "cūr",
+      "gloss": "why — and the two words that answer it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70ab92c723b50fa3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ubi — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ubi* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pecūnia — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pecūnia* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say male — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *male* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say capiō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *capiō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tē volup est convēnisse — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tē volup est convēnisse* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tū / vōs — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tū / vōs* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cūr — \"why.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The third of this chapter's question words, and the one that opens the only question a learner cannot fake an answer to."
+            },
+            {
+              "kind": "speech",
+              "text": "Cūr nōn venīs? — Why are you not coming? (with the nescio lesson's rule.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Cūr is an older quor, the same kwo- stem again — quī, quandō, ubi, cūr, quid, quis, all one family. Recognise the qu- and you can spot a Latin question word without knowing which one it is."
+            },
+            {
+              "kind": "speech",
+              "text": "And like sed, it left no descendant. Spanish asks ¿por qué?, Italian perché, French pourquoi, all rebuilt from per or pro plus quid — \"for what.\" Latin's own word for why did not survive its own daughters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do quī, quandō, ubi and cūr share? (The kwo- stem — Latin's question family.) Did any Romance language keep cūr? (No — all rebuilt it from per + quid.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C52-quia",
+      "sequence": 1370,
+      "title": "quia — the answer cūr asks for",
+      "headword": "quia",
+      "romanization": "quia",
+      "gloss": "because — the answer cūr asks for",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e124da2ed49a896b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cūr — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cūr* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say medicus — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *medicus* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say malus — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *malus* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rogō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rogō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tū / vōs — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tū / vōs* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nihil est — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nihil est* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quia — \"because.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The word that completes the pair. Cūr asks; quia answers, and it hangs a whole second statement onto the first:"
+            },
+            {
+              "kind": "speech",
+              "text": "Cūr nōn venīs? Quia nōn possum. — Why are you not coming? Because I cannot."
+            },
+            {
+              "kind": "speech",
+              "text": "That sentence uses four things this tranche has given you — cūr, quia, the nōn in front of a verb, and possum — and nothing else. It is the first question-and-reason exchange this book can build."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin has three words here and they are not quite the same: quia states a plain cause, quod states one the hearer already accepts, and quoniam (\"since now\") states one both parties take for granted. A reader meets all three. Start with quia."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer cūr nōn venīs? using this chapter and the last two. (Quia nōn possum.) How many Latin words mean because? (Three — quia, quod, quoniam.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C52-meus",
+      "sequence": 1380,
+      "title": "meus — the possessive the name lesson did without",
+      "headword": "meus, mea, meum",
+      "romanization": "meus, mea, meum",
+      "gloss": "my — the possessive the name lesson did without",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4f1cd9a02df7d17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quia — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quia* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mīles — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mīles* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sed — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sed* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say adiuvō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *adiuvō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tū / vōs — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tū / vōs* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nihil est — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nihil est* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "meus, mea, meum — \"my.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The name-exchange lesson taught you to say mihi nōmen est, \"the name is to me,\" and called it the genuinely classical way to give your name. That is Latin's dative of possession, and it is why this word waited so long: for a name, a Roman preferred the case to the adjective."
+            },
+            {
+              "kind": "speech",
+              "text": "For everything else, the adjective is what you want, and it agrees with what is owned rather than with the owner:"
+            },
+            {
+              "kind": "speech",
+              "text": "liber meus — my book (masculine, so meus) epistula mea — my letter (feminine, so mea)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the opposite of English, where my never changes. It matches French mon livre / ma lettre and Spanish mi only in part — Spanish flattened the gender out of mi and kept it in mío."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meus, mea, meum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meus, mea, meum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does meus agree with, the owner or the thing owned? (The thing owned.) What did the name exchange use instead for a name? (Mihi nōmen est — the dative of possession.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C52-tuus",
+      "sequence": 1390,
+      "title": "tuus — and the pair of forms the tū / vōs lesson promised",
+      "headword": "tuus, tua, tuum",
+      "romanization": "tuus, tua, tuum",
+      "gloss": "your — and the pair of forms the tū / vōs lesson promised",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc978ae7e84775cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say meus — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *meus* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say epistula — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *epistula* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aut — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aut* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say amō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *amō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nihil est — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nihil est* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say propediem tē vidēbō — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *propediem tē vidēbō* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tuus, tua, tuum — \"your,\" to one person."
+            },
+            {
+              "kind": "speech",
+              "text": "The tū / vōs lesson made a point of it: in Classical Latin the difference is number only, with no politeness in it at all. This is tū's possessive, and it inherits that: tuus is not familiar or rude, it simply means the thing belongs to one person. For several, Latin says vester."
+            },
+            {
+              "kind": "speech",
+              "text": "Quid tibi nōmen est? — the name question, with tibi, the dative. Liber tuus. — Your book, with the adjective."
+            },
+            {
+              "kind": "speech",
+              "text": "Tibi and tuus are the same pronoun by two routes, which is worth hearing once: the case form and the adjective come from one word, and Latin lets you choose."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish tu, Italian tuo, French ton and Portuguese teu all descend from this — and every one of them acquired the politeness dimension that Latin's had not got."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuus, tua, tuum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuus, tua, tuum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is tuus familiar or polite? (Neither — Classical Latin marks number only.) Which earlier word is its case-form twin? (Tibi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

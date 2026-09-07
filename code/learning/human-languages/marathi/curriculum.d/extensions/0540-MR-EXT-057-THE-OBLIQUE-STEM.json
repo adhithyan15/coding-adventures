@@ -1,0 +1,14 @@
+{
+  "id": "MR-EXT-057-THE-OBLIQUE-STEM",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can take the oblique stem of a noun before a postposition, and say which of the three noun classes changes and which does not.",
+  "prerequisites": [
+    "MR-EXT-056-HOUSE-AND-ROOM"
+  ],
+  "lessons": [
+    "MR-C41-oblique",
+    "MR-R41-in-the-house"
+  ]
+}

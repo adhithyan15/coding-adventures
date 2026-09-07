@@ -1,0 +1,13 @@
+{
+  "id": "RU-PATH-022",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "lessons": [
+    "RU-C20-moch",
+    "RU-C20-nado"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-027-CAN-AND-MUST"
+  ],
+  "after": []
+}

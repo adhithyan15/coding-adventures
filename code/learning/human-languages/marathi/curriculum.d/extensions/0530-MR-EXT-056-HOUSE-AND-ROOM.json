@@ -1,0 +1,14 @@
+{
+  "id": "MR-EXT-056-HOUSE-AND-ROOM",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name a house and a room, and say which gender each is from its ending.",
+  "prerequisites": [
+    "MR-EXT-055-HERE"
+  ],
+  "lessons": [
+    "MR-C41-ghar",
+    "MR-C41-kholi"
+  ]
+}

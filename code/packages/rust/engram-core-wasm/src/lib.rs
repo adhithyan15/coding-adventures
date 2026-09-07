@@ -6248,14 +6248,42 @@ fn catch_json(run: impl FnOnce() -> Result<String, String>) -> String {
     }
 }
 
+/// Build `{"ok":true,"<key>":<value>}` in a single serialisation pass.
+///
+/// Written this way for two reasons, both of which the previous form got
+/// wrong.
+///
+/// **`to_value` built an intermediate tree.** It materialises one
+/// `serde_json::Value` per element before anything is rendered, and
+/// `MediaAssetRecord.data` is a `Vec<u8>` that serialises as an array of
+/// decimal numbers -- so one `Value` per media BYTE, around 24 bytes each on
+/// `wasm32`, on a target whose whole address space is 4 GB. Every byte of
+/// media cost roughly 24 bytes of peak heap on the SUCCESS path of a
+/// legitimate import. `to_writer` streams straight into the output buffer, so
+/// peak is the response itself and nothing more.
+///
+/// **A serialisation failure returned success.** `unwrap_or(Value::Null)`
+/// produced `{"ok":true,"state":null}` -- a success-shaped response for a
+/// failed operation, indistinguishable by any caller from a genuinely empty
+/// state. It now returns the error envelope, which is what every other failure
+/// path here returns.
 fn ok_with(key: &str, value: &impl serde::Serialize) -> String {
-    let mut object = serde_json::Map::new();
-    object.insert("ok".to_string(), Value::Bool(true));
-    object.insert(
-        key.to_string(),
-        serde_json::to_value(value).unwrap_or(Value::Null),
-    );
-    Value::Object(object).to_string()
+    let mut buffer = Vec::new();
+    buffer.extend_from_slice(b"{\"ok\":true,");
+    // The key goes through the serialiser rather than being pasted in, so it
+    // is quoted and escaped by the same code that will read it back.
+    if let Err(error) = serde_json::to_writer(&mut buffer, key) {
+        return error_json(&format!("could not serialise response key: {error}"));
+    }
+    buffer.push(b':');
+    if let Err(error) = serde_json::to_writer(&mut buffer, value) {
+        return error_json(&format!("could not serialise {key}: {error}"));
+    }
+    buffer.push(b'}');
+    match String::from_utf8(buffer) {
+        Ok(json) => json,
+        Err(error) => error_json(&format!("response was not valid UTF-8: {error}")),
+    }
 }
 
 fn parse_deck_options(
@@ -6464,7 +6492,9 @@ mod tests {
             value["state"]["mediaAssets"][0]["filename"],
             "audio/hola-v2.mp3"
         );
-        assert_eq!(value["state"]["mediaAssets"][0]["data"], json!([118, 50]));
+        // base64 of `v2`. Media no longer travels as a JSON array of
+        // decimal numbers: 4.6 wire bytes per byte of media (#13671).
+        assert_eq!(value["state"]["mediaAssets"][0]["data"], json!("djI="));
 
         let value: Value = serde_json::from_str(&session.dispatch(
             r#"{
@@ -6927,7 +6957,13 @@ mod tests {
 
         assert_eq!(value["ok"], true);
         assert_eq!(value["snapshot"]["app"], "engram");
-        assert_eq!(value["snapshot"]["version"], 1);
+        // The constant, not a literal: the version moved to 2 with the base64
+        // media encoding (#13671), and a literal here would have to be chased
+        // every time the format changes.
+        assert_eq!(
+            value["snapshot"]["version"],
+            engram_core::ENGRAM_SNAPSHOT_VERSION
+        );
         assert_eq!(value["snapshot"]["exportedAt"], NOW + 1);
         assert_eq!(value["snapshot"]["decks"][0]["id"], "deck");
         assert!(value["snapshot"].get("activeSession").is_none());
@@ -7919,7 +7955,7 @@ mod tests {
         assert_eq!(
             pruned["state"]["mediaAssets"],
             json!([
-                {"id":"media:audio","archiveName":"0","filename":"audio/hola.mp3","data":[109,112,51]}
+                {"id":"media:audio","archiveName":"0","filename":"audio/hola.mp3","data":"bXAz"}
             ])
         );
         assert_eq!(pruned["props"]["collection-media-count-value"], "1");
@@ -12085,5 +12121,117 @@ mod tests {
 
         assert_eq!(value["ok"], false);
         assert!(value["error"].as_str().unwrap().contains("invalid command"));
+    }
+
+    /// The envelope must carry the same DATA as the construction it replaced.
+    ///
+    /// Semantic equality, not byte equality, and the difference is the point.
+    /// `serde_json::Map` is a `BTreeMap` here -- no `preserve_order` feature
+    /// anywhere in the workspace -- so `to_value` sorted every nested object's
+    /// keys alphabetically, while streaming emits them in struct declaration
+    /// order. So `{"data":..,"id":..}` became `{"id":..,"data":..}`.
+    ///
+    /// That is a real change to the bytes on the wire, and it is safe here
+    /// because JSON objects are unordered and every host reads them by key:
+    /// `QJsonDocument` (Qt), `jsonDecode` (Flutter), `JsonDocument` (XAML),
+    /// `JSONSerialization` (SwiftUI), `org.json.JSONObject` (Compose). Checked
+    /// rather than assumed -- none of them index an object by position.
+    #[test]
+    fn ok_with_carries_the_same_data_as_the_value_tree_it_replaced() {
+        #[derive(serde::Serialize)]
+        struct Sample {
+            id: String,
+            data: Vec<u8>,
+            nested: Vec<Option<String>>,
+        }
+
+        let sample = Sample {
+            id: "deck \"one\"".to_string(),
+            data: vec![0, 1, 250, 255],
+            nested: vec![Some("a/b\n".to_string()), None],
+        };
+
+        let previous = {
+            let mut object = serde_json::Map::new();
+            object.insert("ok".to_string(), Value::Bool(true));
+            object.insert(
+                "state".to_string(),
+                serde_json::to_value(&sample).expect("sample serialises"),
+            );
+            Value::Object(object).to_string()
+        };
+
+        let current = ok_with("state", &sample);
+        assert_eq!(
+            serde_json::from_str::<Value>(&current).expect("valid JSON"),
+            serde_json::from_str::<Value>(&previous).expect("valid JSON"),
+            "the data must be identical; only key ORDER may differ"
+        );
+    }
+
+    /// Key order did change, and this says so out loud.
+    ///
+    /// Pinned deliberately: a future reader comparing responses as strings --
+    /// a golden fixture, a snapshot test -- needs to know the order is
+    /// declaration order and not sorted, rather than discovering it from a
+    /// confusing diff.
+    #[test]
+    fn ok_with_emits_declaration_order_not_sorted_order() {
+        #[derive(serde::Serialize)]
+        struct Sample {
+            zebra: u8,
+            alpha: u8,
+        }
+
+        let json = ok_with("state", &Sample { zebra: 1, alpha: 2 });
+        assert!(
+            json.contains(r#""zebra":1,"alpha":2"#),
+            "expected declaration order, got {json}"
+        );
+    }
+
+    /// A serialisation failure must not come back looking like success.
+    ///
+    /// `unwrap_or(Value::Null)` returned `{"ok":true,"state":null}`, which no
+    /// caller can tell apart from a genuinely empty state -- a failed
+    /// operation reported as a successful one.
+    #[test]
+    fn ok_with_reports_a_serialisation_failure_as_an_error() {
+        struct Unserialisable;
+        impl serde::Serialize for Unserialisable {
+            fn serialize<S: serde::Serializer>(&self, _: S) -> Result<S::Ok, S::Error> {
+                Err(serde::ser::Error::custom("nope"))
+            }
+        }
+
+        let json = ok_with("state", &Unserialisable);
+        let parsed: Value = serde_json::from_str(&json).expect("still valid JSON");
+        assert_eq!(
+            parsed["ok"], Value::Bool(false),
+            "a failed serialisation must not report ok:true -- got {json}"
+        );
+        assert!(
+            parsed["error"].as_str().unwrap_or_default().contains("state"),
+            "the error should name what failed: {json}"
+        );
+    }
+
+    /// Media travels through the envelope unchanged.
+    #[test]
+    fn ok_with_round_trips_media_bytes() {
+        #[derive(serde::Serialize)]
+        struct Wrapper {
+            data: Vec<u8>,
+        }
+        let bytes: Vec<u8> = (0..=255u8).cycle().take(4096).collect();
+        let json = ok_with("state", &Wrapper { data: bytes.clone() });
+        let parsed: Value = serde_json::from_str(&json).unwrap();
+        let read_back: Vec<u8> = parsed["state"]["data"]
+            .as_array()
+            .expect("array")
+            .iter()
+            .map(|v| v.as_u64().unwrap() as u8)
+            .collect();
+        assert_eq!(read_back, bytes);
     }
 }

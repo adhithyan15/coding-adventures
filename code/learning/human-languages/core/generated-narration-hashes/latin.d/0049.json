@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:9b2e08c405f47cd9",
+  "lessonIds": [
+    "LA-C49-possum",
+    "LA-C49-volo",
+    "LA-C49-qui",
+    "LA-C49-et",
+    "LA-C49-quando"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch49.txt",
+  "json": "latin/narration/ch49.json",
+  "textHash": "fnv1a64:53fa492c37fdd43d",
+  "jsonHash": "fnv1a64:271c45e1306e2a26",
+  "findings": []
+}

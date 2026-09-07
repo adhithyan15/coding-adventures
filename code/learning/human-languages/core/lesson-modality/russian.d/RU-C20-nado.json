@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C20-nado",
+    "language": "russian",
+    "chapter": 20,
+    "sequence": 1040,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9341ec52d9d925f1"
+  },
+  "findings": []
+}

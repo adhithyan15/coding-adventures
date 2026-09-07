@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-045",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "MR-C42-madhye",
+    "MR-C42-var",
+    "MR-C42-khaali",
+    "MR-R42-inside-outside"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-058-IN-ON-UNDER"
+  ],
+  "after": []
+}

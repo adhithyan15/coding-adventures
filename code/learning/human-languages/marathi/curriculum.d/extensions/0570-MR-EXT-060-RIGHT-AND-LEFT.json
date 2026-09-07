@@ -1,0 +1,15 @@
+{
+  "id": "MR-EXT-060-RIGHT-AND-LEFT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the right and left sides with an adjective that agrees with its noun, and run every place word in the book off one bent stem.",
+  "prerequisites": [
+    "MR-EXT-059-NEAR-OPPOSITE-FAR"
+  ],
+  "lessons": [
+    "MR-C44-ujva",
+    "MR-C44-daava",
+    "MR-R44-directions"
+  ]
+}

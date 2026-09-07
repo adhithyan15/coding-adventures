@@ -13,7 +13,7 @@ Ids (e.g. `ch-ach`) are cited in each lesson's frontmatter `sounds:` field.
 - `vowel-u-german` — **u** = *oo* as in *food* (*gut* = *goot*).
 - **Umlauts** shift the vowel forward: **ä** ≈ *eh*, **ö** ≈ the vowel in
   *fur*, **ü** = the front-rounded *ee* (same as French *u*). (Later.)
-- Doubled/长 vowels are long; a vowel before a doubled consonant is short.
+- Doubled vowels are long; a vowel before a doubled consonant is short.
 
 ## Consonants that differ
 
@@ -46,12 +46,12 @@ Not about *saying* words but *recognizing* them: German pushed certain
 consonants forward, so English and German cousins differ predictably. Learn
 it and you can guess across the two languages:
 
-| English | → German | example |
-|---|---|---|
-| d | t | goo**d** → gu**t**, **d**ay → **T**ag |
-| t | s / ss / z | wa**t**er → Wa**ss**er, **t**hat → da**s**, **t**en → **z**ehn |
-| p | pf / f | a**pp**le → A**pf**el, shi**p** → Schi**ff** |
-| k | ch | ma**k**e → ma**ch**en, boo**k** → Bu**ch** |
+- English **d** → German **t**: goo**d** → gu**t**, **d**ay → **T**ag.
+- English **t** → German **s / ss / z**: wa**t**er → Wa**ss**er, **t**hat →
+  da**s**, **t**en → **z**ehn.
+- English **p** → German **pf / f**: a**pp**le → A**pf**el, shi**p** →
+  Schi**ff**.
+- English **k** → German **ch**: ma**k**e → ma**ch**en, boo**k** → Bu**ch**.
 
 (This is a *different* shift from Grimm's Law, which is the older PIE→Germanic
 change shared by both English and German — see the *Nacht* lesson.)

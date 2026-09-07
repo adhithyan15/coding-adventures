@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R39-there",
+    "language": "marathi",
+    "chapter": 39,
+    "sequence": 1600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfcbfb550a2cac6f"
+  },
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:9ff382322e174135",
+  "lessonIds": [
+    "MR-C41-ghar",
+    "MR-C41-kholi",
+    "MR-C41-oblique",
+    "MR-R41-in-the-house"
+  ],
+  "tex": "marathi/book/chapters/ch41-the-oblique-stem.tex"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "RU-PATH-019",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "RU-C18-chto-vopros",
+    "RU-C18-chto-soyuz",
+    "RU-C18-dumayu-chto",
+    "RU-C18-znayu-chto",
+    "RU-W09-tire"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-024-CHTO"
+  ],
+  "after": []
+}

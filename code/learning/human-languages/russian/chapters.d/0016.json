@@ -1,0 +1,23 @@
+{
+  "chapter": 16,
+  "title": "And, Or, and Neither",
+  "label": "ch:ru-and-or-neither",
+  "canDo": "I can join two words or two whole sentences with i, offer a choice with ili, refuse both halves at once with ni ... ni, and agree with somebody using tozhe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C16-tozhe",
+    "kind": "task",
+    "summary": "The first two-clause sentence this book can make. Until this chapter the longest structure the track taught was a single clause, and i -- the commonest word in Russian -- had been printed twice as a conjunction without any lesson owning it. ni ... ni is the first joining pattern in the book that stands in FRONT of both halves rather than between them, and it needs the negative said three times in one short sentence.",
+    "assesses": [
+      "RU-LEX-I-01",
+      "RU-GRAMMAR-I-TWO-CLAUSES-01",
+      "RU-LEX-ILI-01",
+      "RU-GRAMMAR-NI-NI-01",
+      "RU-LEX-TOZHE-01",
+      "RU-GRAMMAR-TOZHE-NE-01"
+    ],
+    "note": "Carried on SPINE-DESCRIBE-QUALITIES, an A1 node with no concepts of its own. Coordination has no canonical spine concept -- the ladder stages CONNECTIVE-IF and CONNECTIVE-SO at B1 while the A1 inventory enumerates all thirteen joining devices -- so this chapter uses track-local concepts rather than claiming a canonical one the ladder places higher. Same choice, and the same reason, as the Punjabi coordinator chapter."
+  }
+}

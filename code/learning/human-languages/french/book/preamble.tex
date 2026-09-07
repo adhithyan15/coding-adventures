@@ -17,6 +17,14 @@
 \usepackage{longtable}
 \usepackage{tabularx}
 \usepackage{array}
+
+% The nasal vowels this book teaches are written with a tilde, and Latin
+% Modern Roman's cmap has a-, i-, n- and o-with-tilde but not e-with-tilde.
+% U+1EBD would reach the reader as a hole exactly where the vowel of *bien*
+% is being taught. This is the escape hatch core/main-font-charset.json
+% names for the case: let the accent be composed instead of looked up.
+\usepackage{newunicodechar}
+\newunicodechar{ẽ}{\~{e}}
 \usepackage[hidelinks]{hyperref}
 \usepackage[raggedright]{titlesec}
 \input{../../_shared/visual.tex}

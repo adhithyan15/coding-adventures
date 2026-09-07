@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 21,
+  "output": "russian/book/chapters/ch21-repair.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "RU-PATH-020",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "RU-C19-pochemu",
+    "RU-C19-potomu-chto",
+    "RU-C19-kogda-vopros",
+    "RU-C19-kogda-soyuz",
+    "RU-W10-zapyataya"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-025-REASON-AND-TIME"
+  ],
+  "after": []
+}

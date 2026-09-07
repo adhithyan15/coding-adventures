@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:d85c5c2e01671146",
+  "lessonIds": [
+    "LA-C54-edo",
+    "LA-C54-bibo",
+    "LA-C54-oculus",
+    "LA-C54-auris",
+    "LA-C54-pes"
+  ],
+  "tex": "latin/book/chapters/ch54-corpus.tex"
+}

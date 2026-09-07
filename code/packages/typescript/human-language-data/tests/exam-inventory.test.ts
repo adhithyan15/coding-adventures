@@ -996,9 +996,31 @@ describe("the committed Marathi A1 inventory", () => {
     // metric can see either class; only a target list asks the question that
     // exposes them. This pins the marker so a future edit cannot quietly collapse
     // the distinction back into an undifferentiated "not covered".
+    // WHAT CHANGED, AND WHY THE ASSERTION IS NOW A DIFFERENT SHAPE.
+    //
+    // The count used to be pinned at 13-or-more, and a floor on a count of
+    // KNOWN DEFECTS is a bad pin: it only ever rises, it rewards nobody for
+    // clearing one, and it went stale in the flattering direction for the
+    // AUTHOR rather than for the corpus. All 26 schema-v1 lessons were
+    // migrated to v2 in the chapters 9-12 work, and for a whole tranche
+    // afterwards this file still said the material was unmeasurable -- so
+    // eight points read as content debt while the teaching sat in the book,
+    // already done. That is the failure mode worth pinning against.
+    //
+    // The SCHEMA-V1 class is therefore asserted CLOSED, permanently: no point
+    // note may carry that marker again, because there is no schema-v1 lesson
+    // left in the track to carry it. EMPTY-INTRODUCES is the class that
+    // survives, it hides inside v2, and at least one point must still name it
+    // -- a zero there would mean somebody deleted the distinction rather than
+    // fixed it.
     const marked = inventory.points.filter((point) => (point.note ?? "").includes("MEASUREMENT GAP"));
-    expect(marked.length).toBeGreaterThanOrEqual(13);
+    expect(marked.length).toBeGreaterThanOrEqual(1);
     for (const point of marked) expect(point.probe, point.id).toBeNull();
+    const staleClass = inventory.points.filter((point) =>
+      (point.note ?? "").includes("SCHEMA-V1 MEASUREMENT GAP"),
+    );
+    expect(staleClass.map((point) => point.id)).toEqual([]);
+    expect(marked.some((point) => (point.note ?? "").includes("EMPTY-INTRODUCES"))).toBe(true);
     expect(inventory.probeSemantics).toMatch(/SCHEMA-V1 MEASUREMENT GAP/);
     expect(inventory.probeSemantics).toMatch(/EMPTY-INTRODUCES MEASUREMENT GAP/);
   });
@@ -1032,22 +1054,54 @@ describe("the committed Marathi A1 inventory", () => {
     // empty-category list below, which is the movement, and Demonstratives,
     // Temporal notions, Housing and Shopping stay in it, which is the remaining
     // work.
+    // 111 -> 124: the asking-word tranche (chapters 37-40), and two different
+    // kinds of movement inside one number, which is why they are reported
+    // apart. SEVEN points were EARNED by the nine new items: the interrogative
+    // pronouns and adverbs, the word-order rule behind them, asking about a
+    // person or a place, the ithe/tithe pair, and the dental row, which closed
+    // because one missing letter (थ) was the only thing keeping तिथे
+    // unwritable. SIX more were already taught and only LOOKED uncovered,
+    // because their notes still described chapters 9 to 12 as schema-v1 after
+    // those chapters had been migrated -- the politeness contrast, asking a
+    // name, asking how somebody is, asking for an evaluation, working
+    // activity, and the imperative. Nothing was authored for those six; a
+    // stale note was corrected. Work therefore leaves the empty-category list
+    // -- on a note fix, not on a lesson, which is worth saying plainly.
+    //
+    // 133 -> 142: the accompaniment tranche (chapters 45-48). Eleven items --
+    // three "with" endings that English collapses into one, the pronoun's own
+    // oblique, two ablatives and their question word, the animate object
+    // marker in its two remaining jobs, and -kade, which is how a language
+    // with no verb for HAVE says somebody has something. Case and
+    // postpositions went 3/6 to 5/6, Spatial notions 4/7 to 6/7, and The verb
+    // phrase 3/6 to 5/6. Only paryant keeps the postposition column open, and
+    // it is blocked on the same reph that MR-A1-OR-21 is: one script lesson
+    // pair closes both.
+    //
+    // 124 -> 133: the place tranche (chapters 41-44). Eleven items -- two nouns,
+    // the oblique stem, five postpositions and three ordinary place words --
+    // closed nine points, and the ratio comes from the STEM rather than from the
+    // vocabulary: MR-A1-N-09 is a single rule that four other points were
+    // sitting behind. Spatial notions went 1/7 to 4/7, Case and postpositions
+    // 1/6 to 3/6, Existential notions 0/5 to 2/5, and Housing leaves the
+    // empty-category list on its first lesson. Demonstratives, Temporal notions
+    // and Shopping stay in it, which is the remaining work.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(111);
-    expect(coverage.unmapped).toBe(190);
+    expect(coverage.covered).toBe(142);
+    expect(coverage.unmapped).toBe(159);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
-    for (const empty of ["Demonstratives", "Temporal notions", "Housing", "Shopping"]) {
+    for (const empty of ["Demonstratives", "Temporal notions", "Shopping"]) {
       expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
     }
     expect(coverage.byCategory["Coordination"]!.covered).toBe(5);
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 111/301 points covered (37%)",
+      "marathi A1 (partial inventory): 142/301 points covered (47%)",
     );
   }, 60_000);
 });
@@ -1825,16 +1879,23 @@ describe("the committed Gujarati A1 inventory", () => {
 //
 // Two results are worth pinning as SHAPE rather than as size:
 //
-//   1. The joining column is 0 of 13 — the sixth track running, and the first
-//      that is neither Indo-Aryan nor Dravidian. `i` ("and") is PRINTED as a
-//      conjunction in two lesson bodies and introduced by no lesson at all,
-//      which is a hair better than Gujarati's `ane` at zero occurrences and
-//      worse in one way: the word is on the page doing work the reader is
-//      never told about.
-//   2. The repair column is HALF closed, which no percentage would show. The
-//      track teaches `ya ne ponimayu` and `ya ne znayu` in full, and has no
+//   1. The joining column was 0 of 13 when this file was written — the sixth
+//      track running, and the first that is neither Indo-Aryan nor Dravidian.
+//      `i` ("and") was PRINTED as a conjunction in two lesson bodies and
+//      introduced by no lesson at all, which was a hair better than Gujarati's
+//      `ane` at zero occurrences and worse in one way: the word was on the page
+//      doing work the reader was never told about.
+//   2. The repair column was HALF closed, which no percentage would show. The
+//      track taught `ya ne ponimayu` and `ya ne znayu` in full, and had no
 //      word for sorry and no way to ask for a repeat: `izvinite`, `prostite`,
-//      `povtorite` and `medlenno` are each zero across all 88 files.
+//      `povtorite` and `medlenno` were each zero across all 88 files.
+//
+// BOTH ARE NOW CLOSED, by chapters 16-22 (35 lessons, 57 atoms). Thirteen of
+// thirteen joining devices are taught and the track can produce a two-clause
+// sentence for the first time; the repair kit exists. The assertions below are
+// re-pinned at the new figures and the shape claims are kept, in the past
+// tense, because the finding they record is about how this corpus was authored
+// rather than about where it stands today.
 // ---------------------------------------------------------------------------
 describe("the committed Russian A1 inventory", () => {
   const inventory = loadExamInventory("russian", "A1");
@@ -1952,8 +2013,8 @@ describe("the committed Russian A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(228);
-    expect(coverage.covered).toBe(73);
-    expect(coverage.unmapped).toBe(155);
+    expect(coverage.covered).toBe(104);
+    expect(coverage.unmapped).toBe(124);
     // Zero partials is a property of the "existing atoms only" rule, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1964,17 +2025,35 @@ describe("the committed Russian A1 inventory", () => {
     // absent, and the plural is absent outright rather than late.
     expect(coverage.byCategory["Padezh - case"]!).toEqual({ enumerated: 10, covered: 3 });
     // The sixth empty joining column in the series, and the first outside
-    // South Asia. Not one coordinator and not one subordinator is taught.
+    // South Asia — CLOSED. Both halves are now full: five coordinators
+    // (i, ili, ni ... ni, no/a, odin ... drugoy) and eight subordination
+    // points (the bare infinitive, chto, kotoryy, potomu chto, chtoby, kogda,
+    // li, and the column measured as a column).
     expect(coverage.byCategory["Sochinenie - joining two clauses"]!).toEqual({
       enumerated: 5,
-      covered: 0,
+      covered: 5,
     });
     expect(coverage.byCategory["Podchinenie - subordination"]!).toEqual({
       enumerated: 8,
-      covered: 0,
+      covered: 8,
     });
+    // The repair column, which had no word for sorry at all. What is still
+    // open is asking for somebody by name at a door, and asking somebody to be
+    // quiet.
+    expect(coverage.byCategory["Vesti razgovor - managing the conversation, and repairing it"]!)
+      .toEqual({ enumerated: 7, covered: 5 });
+    // Punctuation went 0/7 to 4/7: the full stop, the closing-only question
+    // mark, the dash that stands in for the absent copula, and the comma rule
+    // that could not be stated until the track owned a subordinator.
+    expect(coverage.byCategory["Punktuatsiya - punctuation"]!).toEqual({ enumerated: 7, covered: 4 });
     // And the other end: 29 of the 33 Cyrillic letters have their own writing
     // lesson, which is the closest thing this track has to a finished column.
+    // Unmoved by the joining tranche, and deliberately: every one of the
+    // thirteen joining devices, both apologies, the whole question family and
+    // all four punctuation marks were checked against the union of taught
+    // glyphs before a lesson was designed, and not one of them needed a new
+    // sign. The three untaught lower-case letters — shcha, the hard sign and
+    // e-oborotnoe — do not occur in any of them.
     // Reading that number alone would say the script is done; the five
     // uncovered points here — the letter names, the four untaught letters, the
     // cursive hand, the lower-case rule, the spelling rule — are the
@@ -1983,7 +2062,7 @@ describe("the committed Russian A1 inventory", () => {
     // Nothing in the corpus can be described, because no adjective is taught.
     expect(coverage.byCategory["Prilagatelnoe - the adjective"]!.covered).toBe(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "russian A1 (partial inventory): 73/228 points covered (32%)",
+      "russian A1 (partial inventory): 104/228 points covered (46%)",
     );
   }, 60_000);
 });

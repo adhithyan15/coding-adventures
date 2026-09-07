@@ -415,7 +415,7 @@ impl HostProfileRuntime {
             // A HostProfileRuntime IS the V1 agent surface -- that is what
             // `check_registration`'s S-I7 refusal established -- so its
             // outputs are walked for peer identities too.
-            runtime: InMemoryToolRuntime::new().as_agent_surface(),
+            runtime: InMemoryToolRuntime::agent_surface(),
             registered_tools: BTreeSet::new(),
         })
     }

@@ -1,0 +1,7 @@
+{
+  "language": "italian",
+  "title": "Italian pronunciation --- a reference",
+  "shortTitle": "Italian pronunciation (reference)",
+  "source": "italian/pronunciation-reference.md",
+  "output": "italian/book/chapters/appendix-pronunciation.tex"
+}

@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:dee639945cd9c1e2",
+  "lessonIds": [
+    "MR-C46-huun",
+    "MR-C46-paasun",
+    "MR-C46-kuthun",
+    "MR-R46-from"
+  ],
+  "tex": "marathi/book/chapters/ch46-from.tex"
+}

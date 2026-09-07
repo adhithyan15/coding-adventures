@@ -1,0 +1,26 @@
+{
+  "chapter": 21,
+  "title": "Excuse Me, and Say It Again",
+  "label": "ch:ru-repair",
+  "canDo": "I can apologise in both the light and the heavy way, open a request to a stranger, ask for a repeat, ask somebody to speak slowly, and ask for help.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "RU-C21-pomogite",
+    "kind": "task",
+    "summary": "The track could say ya ne ponimayu and ya ne znayu in full and had no word for sorry, no way to ask for a repeat and no way to open a request to a stranger: it could report a failure and do nothing about it. Five words close that. The chapter also names the -ite ending, which turns three words the reader would otherwise memorise separately into one set -- and the last of the five, pomogite, is built entirely out of parts the reader already had.",
+    "assesses": [
+      "RU-LEX-IZVINITE-01",
+      "RU-ETYMON-IZVINIT-VINA",
+      "RU-LEX-PROSTITE-01",
+      "RU-PRAGMATICS-IZVINITE-PROSTITE-01",
+      "RU-LEX-POVTORITE-01",
+      "RU-GRAMMAR-IMPERATIVE-ITE-01",
+      "RU-LEX-MEDLENNO-01",
+      "RU-GRAMMAR-GOVORITE-MEDLENNO-01",
+      "RU-LEX-POMOGITE-01"
+    ],
+    "note": "Realizes COURTESY-SORRY on SPINE-POLITE-REQUEST-REPAIR, a pre-A1 node whose second concept the track had omitted since it was written -- so the node's own can-do, 'repair a small social mistake', was unmet."
+  }
+}

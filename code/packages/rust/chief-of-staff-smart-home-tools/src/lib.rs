@@ -885,8 +885,29 @@ impl<B: StorageBackend + 'static> SmartHomeToolBridge<B> {
         &self.default_principal_id
     }
 
+    /// Register every smart-home tool into `tool_runtime`.
+    ///
+    /// Pre-flights the whole catalog before registering any of it, through
+    /// `InMemoryToolRuntime::check_registration` -- the same predicate
+    /// `register_handler` applies, so the two cannot drift.
+    ///
+    /// Registering as we go would return on the first refusal with everything
+    /// ahead of it already wired: a runtime whose contents depend on catalog
+    /// order. On an agent surface that is the fifteen peer-naming tools, but
+    /// it is not only those -- a duplicate id or an invalid definition strands
+    /// the runtime exactly the same way.
+    /// `HostProfileRuntime::check_registration` was written to avoid this;
+    /// this is the same rule for the same reason.
+    ///
+    /// The pre-flight refuses rather than skipping. A surface that silently
+    /// received a smaller catalog than it asked for is the loud-to-silent
+    /// trade this codebase does not make.
     pub fn register_all(&self, tool_runtime: &mut InMemoryToolRuntime) -> Result<(), ToolApiError> {
-        for definition in smart_home_tool_definitions() {
+        let definitions = smart_home_tool_definitions();
+        for definition in &definitions {
+            tool_runtime.check_registration(definition)?;
+        }
+        for definition in definitions {
             let handler = self.handler_for(&definition.tool_id);
             tool_runtime.register_handler(definition, handler)?;
         }
@@ -910,10 +931,32 @@ impl<B: StorageBackend + 'static> SmartHomeToolBridge<B> {
     /// `Array<Any>` collection outputs behind `list_bridges`, `list_devices`,
     /// `get_health`, `describe_capabilities` and `observe_supervision`.
     ///
+    /// The walk is the *output* half. The **input** half is enforced by the
+    /// agent-surface runtime itself: a tool whose schema names a peer is
+    /// refused at registration, before its handler can run, and this entry
+    /// point returns [`ToolApiError::ToolNamesAnotherAgent`] rather than a
+    /// failed [`ToolResult`].
+    ///
+    /// Both halves are needed, and the input half is the one that protects a
+    /// *write*. The walk runs after the handler returns, so for a reader it
+    /// withholds the answer -- but `set_desired_state` persists a
+    /// caller-supplied `requested_by` first, and a rejected result does not
+    /// unmake the record. Before the input refusal existed, a caller of this
+    /// entry point could commit a desired state attributed to any peer it
+    /// named and see `ok: true`.
+    ///
+    /// Not on the daemon's path, to be exact: `D18dSmartHomeModelTools`
+    /// refuses any tool outside `PRODUCTION_SMART_HOME_MODEL_TOOLS`, and
+    /// `set_desired_state` is not in it. The allowlist was the only thing
+    /// holding, though, and it lives in another crate -- so the guarantee
+    /// belonged here, where the name promises it, rather than in whatever a
+    /// future second caller of this method happens to check.
+    ///
     /// Deliberately a separate entry point rather than a flag on `invoke`.
     /// `invoke` serves non-agent callers and accepts any smart-home tool id,
-    /// including the ten audit and access-review readers that report on
-    /// principals by design. Those must keep working; only the model-facing
+    /// including the fifteen tools that name a principal by design -- the
+    /// audit, access-review and capability-grant readers, plus the
+    /// desired-state pair. Those must keep working; only the model-facing
     /// caller is an agent surface.
     pub fn invoke_for_agent(
         &self,
@@ -928,7 +971,7 @@ impl<B: StorageBackend + 'static> SmartHomeToolBridge<B> {
         agent_surface: bool,
     ) -> Result<ToolResult, ToolApiError> {
         let mut runtime = if agent_surface {
-            InMemoryToolRuntime::new().as_agent_surface()
+            InMemoryToolRuntime::agent_surface()
         } else {
             InMemoryToolRuntime::new()
         };
@@ -96524,6 +96567,9 @@ mod tests {
         // `PRODUCTION_SMART_HOME_MODEL_TOOLS` today; they are in the catalog
         // `register_all` offers, so this pins the exception rather than
         // discovering it later.
+        //
+        // This list is now also the enumeration of what `invoke_for_agent`
+        // refuses: every id below fails registration on an agent surface.
         let definitions = smart_home_tool_definitions();
         let named = chief_of_staff_tool_api::tools_naming_another_agent(&definitions)
             .into_iter()
@@ -96554,6 +96600,169 @@ mod tests {
             ],
             "a smart-home tool gained or lost a peer identity in its schema"
         );
+    }
+
+    /// Build a controller that grants `AGENT_ID` the whole smart-home surface,
+    /// so what these tests observe is the S-I7 rule and not a missing grant.
+    fn granted_bridge() -> SmartHomeToolBridge<InMemoryStorageBackend> {
+        let runtime = test_controller(hue_lighting_runtime());
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID))
+    }
+
+    #[test]
+    fn the_agent_surface_refuses_a_peer_named_write_before_it_lands() {
+        // The case the output walk cannot reach. `set_desired_state` persists
+        // the caller's `requested_by`, so by the time a walk could reject the
+        // RESULT the record already exists under the peer's name -- the agent
+        // forges an attribution and merely does not get told it worked.
+        //
+        // Asserting the error alone would not show that. The readback is the
+        // test: the write must never have happened.
+        // The byte-identical call both halves of this test use.
+        let peer_write = |call_id: &str| {
+            request(
+                call_id,
+                SMART_HOME_SET_DESIRED_STATE_TOOL_ID,
+                object([
+                    ("entity_id", string("entity-light-1")),
+                    (
+                        "desired",
+                        JsonValue::Array(vec![object([
+                            ("capability_id", string("light.on_off")),
+                            ("value", JsonValue::Bool(true)),
+                        ])]),
+                    ),
+                    ("requested_by", string("agent:some-other-peer")),
+                ]),
+                1_000,
+            )
+        };
+
+        // Positive control FIRST, on its own bridge. Without it a `count` of
+        // zero below proves nothing: any future fixture change that stopped
+        // this write from landing -- a grant tier, a missing state snapshot, a
+        // `desired` shape -- would leave the test green while the input gate
+        // regressed. This pins that these exact arguments DO land when the
+        // refusal is not in the way.
+        let control = granted_bridge();
+        let landed = control
+            .invoke(&peer_write("call-peer-write-control"))
+            .expect("the non-agent entry point serves this tool");
+        assert!(landed.ok, "control write failed: {:?}", landed.error);
+        let control_readback = control
+            .invoke(&request(
+                "call-peer-write-control-readback",
+                SMART_HOME_LIST_DESIRED_STATES_TOOL_ID,
+                object([]),
+                1_100,
+            ))
+            .expect("control readback");
+        assert_eq!(
+            field(control_readback.output.as_ref().expect("output"), "count"),
+            Some(&integer(1)),
+            "the control write did not land, so the assertion below is vacuous"
+        );
+
+        let bridge = granted_bridge();
+        let refused = bridge.invoke_for_agent(&peer_write("call-peer-write"));
+        assert!(
+            matches!(
+                refused,
+                Err(ToolApiError::ToolNamesAnotherAgent { ref tool_id, ref positions })
+                    if tool_id == SMART_HOME_SET_DESIRED_STATE_TOOL_ID
+                        && positions == &["requested_by".to_string()]
+            ),
+            "expected an S-I7 input refusal naming requested_by, got {refused:?}"
+        );
+
+        // Read back through the NON-agent entry point, which has no walk, so
+        // nothing here can hide a record that was in fact written.
+        let readback = bridge
+            .invoke(&request(
+                "call-peer-write-readback",
+                SMART_HOME_LIST_DESIRED_STATES_TOOL_ID,
+                object([]),
+                1_100,
+            ))
+            .expect("the non-agent entry point still serves this tool");
+        let output = readback.output.as_ref().expect("readback output");
+        assert_eq!(
+            field(output, "count"),
+            Some(&integer(0)),
+            "a refused peer-named write still reached the runtime"
+        );
+    }
+
+    #[test]
+    fn the_agent_surface_refuses_a_peer_named_read_at_the_input() {
+        // Reads were already refused, but at the OUTPUT -- the handler ran and
+        // the walk withheld the answer. Pinning the input refusal keeps the
+        // reason from silently reverting to the weaker one.
+        let refused = granted_bridge().invoke_for_agent(&request(
+            "call-peer-read",
+            SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID,
+            object([("principal_id", string("agent:some-other-peer"))]),
+            1_000,
+        ));
+        assert!(
+            matches!(
+                refused,
+                Err(ToolApiError::ToolNamesAnotherAgent { ref tool_id, .. })
+                    if tool_id == SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID
+            ),
+            "expected an S-I7 input refusal, got {refused:?}"
+        );
+    }
+
+    #[test]
+    fn register_all_refuses_an_agent_surface_without_half_wiring_it() {
+        // Registering as we go would stop at the first of the fifteen
+        // peer-naming tools with everything alphabetically ahead of it already
+        // wired -- a surface whose contents depend on catalog order. The
+        // registry must be untouched, not merely incomplete.
+        let mut runtime = InMemoryToolRuntime::agent_surface();
+        let refused = granted_bridge().register_all(&mut runtime);
+        assert!(
+            matches!(refused, Err(ToolApiError::ToolNamesAnotherAgent { .. })),
+            "expected a pre-flight refusal, got {refused:?}"
+        );
+        assert!(
+            runtime.list().is_empty(),
+            "register_all left {} tools behind on a refused agent surface",
+            runtime.list().len()
+        );
+
+        // The same catalog still registers whole on a non-agent surface.
+        let mut plain = InMemoryToolRuntime::new();
+        granted_bridge()
+            .register_all(&mut plain)
+            .expect("a non-agent surface takes the whole catalog");
+        assert_eq!(plain.list().len(), smart_home_tool_definitions().len());
+    }
+
+    #[test]
+    fn the_agent_surface_still_serves_a_tool_that_names_no_peer() {
+        // The refusal has to be narrow. A production tool -- one the daemon
+        // actually offers -- must still work through the same entry point,
+        // or this control has replaced a hole with an outage.
+        let served = granted_bridge()
+            .invoke_for_agent(&request(
+                "call-list-bridges",
+                SMART_HOME_LIST_BRIDGES_TOOL_ID,
+                object([]),
+                1_000,
+            ))
+            .expect("a peerless production tool must still register");
+        assert!(served.ok, "unexpected failure: {:?}", served.error);
     }
     use super::*;
     use chief_of_staff_tool_api::{

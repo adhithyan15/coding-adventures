@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "When, After, and Too",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1f75412bb82ebe02",
+  "sourceHash": "fnv1a64:418ee0a2e443b019",
   "lessons": [
     {
       "id": "MR-C36-jevha",
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc1cfcc03372687b",
+      "sourceHash": "fnv1a64:a19b8af9391d1025",
       "notice": null,
       "blocks": [
         {
@@ -204,7 +204,7 @@
             },
             {
               "kind": "speech",
-              "text": "Taken apart, -ल्यावर (-lyāvar) is a past participle in -ल- with वर (\"on, upon\") behind it. After reading is literally upon having-read. English reaches for the same preposition in upon reading, which makes this one of the few Marathi endings you can feel your way into rather than memorise."
+              "text": "Taken apart, -ल्यावर (-lyāvar) is a past participle in -ल- with the postposition var (\"on, upon\") behind it. After reading is literally upon having-read. English reaches for the same preposition in upon reading, which makes this one of the few Marathi endings you can feel your way into rather than memorise."
             },
             {
               "kind": "speech",
@@ -283,7 +283,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does -ल्यावर (-lyāvar) replace? (A whole जेव्हा … तेव्हा frame.) What is the वर in it doing? (It means upon — upon having done it.)"
+              "text": "What does -ल्यावर (-lyāvar) replace? (A whole जेव्हा … तेव्हा frame.) What is the var in it doing? (It means upon — upon having done it.)"
             }
           ]
         }

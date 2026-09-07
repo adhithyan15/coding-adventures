@@ -2,7 +2,8 @@
   "segments": [
     "LA-PATH-010",
     "LA-PATH-015",
-    "LA-PATH-020"
+    "LA-PATH-020",
+    "LA-PATH-034"
   ],
   "omits": [
     "QUESTION-WHAT",

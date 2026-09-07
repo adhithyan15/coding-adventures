@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-049-FRAME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can say what I can do and what I want, join two statements, and put a when-clause or a who-clause after a noun.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C49-possum",
+    "LA-C49-volo",
+    "LA-C49-qui",
+    "LA-C49-et",
+    "LA-C49-quando"
+  ]
+}

@@ -10884,3 +10884,27 @@ fn inspect_matrix_replace_first_match() {
                000000 STOP RUN.";
     assert_eq!(assert_matches_oracle(src), "xQxxx\n");
 }
+
+/// VM-057: `STRING` with a single sending field that is also the `INTO`
+/// receiver — the receiver's own register is both source and destination of
+/// the truncating reshape (`string_source` returns an item's live register
+/// directly, and a lone sending field skips the `str_concat` combining loop
+/// entirely). This is an oracle-agreement sanity check for the construct
+/// itself on the generic JIT/interpreter path; the WASM-specific aliasing
+/// hazard this exposed in the WASM backend's `str_slice` lowering has its own
+/// direct regression in `iir-to-wasm`'s `str_runtime_reassignment.rs` and a
+/// seven-backend `lang_matrix` cell.
+#[test]
+fn string_self_referential_source_and_receiver_is_unchanged() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. STRING-SELF-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"ABCDE\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING S DELIMITED BY SIZE INTO S.\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "ABCDE\n");
+}

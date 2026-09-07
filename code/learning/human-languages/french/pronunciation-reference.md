@@ -11,14 +11,14 @@ field.
 ## The big three habits (unlearn Spanish/English here)
 
 - `silent-final` — **most final consonants are silent.** *salut* → *sa-LU*
-  (no *t*); *vous* → *voo* (no *s*). Common exceptions kept: final *c, r, f,
-  l* (the word "CaReFuL"). *bonjour*'s *r* is pronounced.
+  (no *t*); *vous* → *voo* and *les* → *lay* (no *s*). Common exceptions kept:
+  final *c, r, f, l* (the word "CaReFuL"). *bonjour*'s *r* is pronounced.
 - `liaison` — a normally-silent final consonant **reconnects** onto a
   following vowel: *vous* + *avez* → *vou-zavez*. Comes later; just know it
   exists.
 - `nasal` — some vowels are **nasal**: air through the nose, and the *n*/*m*
   itself goes silent. *bon* is not "bon" but a nasal *bõ*; *bien* is a nasal
-  *byɛ̃*. See below.
+  *byẽ*. See below.
 
 ## Vowels
 
@@ -33,9 +33,11 @@ field.
 
 - `nasal-on` — **on / om** = nasal *õ* (like *song* without the *g*): *bon*,
   *bonjour*, *bonsoir*, *nom*.
-- `nasal-in` — **in / ain / ien** = nasal *ɛ̃*: *bien* (*byɛ̃*), *matin*,
+- `nasal-in` — **in / ain / ien** = nasal *ẽ*: *bien* (*byẽ*), *matin*,
   *bientôt*.
 - `nasal-an` — **an / en** = nasal *ã*: *enchanté* (*ã-shã-TAY*), *comment*.
+- `double-n-blocks-nasal` — a doubled *nn*/*mm* **cancels** the nasal and the
+  vowel goes back through the mouth: *bon* (*bõ*) vs. *bonne* (*bun*).
 
 ## Consonants that differ
 

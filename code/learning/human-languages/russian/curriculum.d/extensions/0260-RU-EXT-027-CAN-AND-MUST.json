@@ -1,0 +1,14 @@
+{
+  "id": "RU-EXT-027-CAN-AND-MUST",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say what I can and cannot do, and state an obligation in a sentence with no subject.",
+  "prerequisites": [
+    "RU-EXT-026-WANT"
+  ],
+  "lessons": [
+    "RU-C20-moch",
+    "RU-C20-nado"
+  ]
+}
