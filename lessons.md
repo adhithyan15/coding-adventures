@@ -7035,3 +7035,63 @@ Two things worth keeping:
 
 Verified by compiling and running the org.json call rather than reasoning from
 the docs, which is what turned "I think this coerces" into a fact.
+
+## Auto-merge raced my follow-up push, and main landed half a change
+
+The export-base64 PR failed CI, I pushed the fix, and the babysit loop reported
+`MERGED` — with the failing check still listed. Both were true: auto-merge
+squashed the branch head as it stood when the required checks went green, and
+my later pushes were not in it. The run that "failed" was the only run there
+ever was, for the first commit.
+
+So `main` got the half that changes the wire format and not the half that
+teaches the consumers to read it. The web smoke test on main fails, which I
+confirmed by stashing the fix and running it:
+
+```
+  main as-is: FAIL apkg merge succeeds in the browser build
+  with fix:   ALL PASS
+```
+
+Two things to carry:
+
+- **A babysit loop that only watches `state` will report success for a merge
+  that dropped your last commit.** It should compare the merged SHA against
+  what was pushed. `MERGED` answers "did the PR close", not "did my work land".
+- **`FAILED` next to `MERGED` is not a contradiction to explain away.** I
+  nearly read it as a stale annotation. Checking *which SHA* the run belonged
+  to is what turned it from noise into the actual finding — the run was for a
+  commit two pushes behind.
+
+The general form, which this file already has for the green direction: a status
+is about a specific revision, and the revision is the part that gets dropped
+when it is summarised.
+
+## "The workflow rebuilds it" was true of a different check
+
+I left the rebuilt `pkg/engram_engine.wasm` out of a fix, reasoning that the
+release workflow builds the wasm fresh and compares it against the fresh dist
+copy, so a committed binary would be noise. That is true — of the release
+workflow.
+
+The crate's BUILD file runs `node js/smoke.mjs` against the **checked-in**
+artifact, and its comment says why, citing the incident already in this file:
+
+> That artifact went two months stale without a single failure — it still
+> refused Anki import in the browser long after the source had stopped doing
+> so, and the smoke test agreed with it because the assertions were written
+> against the old behaviour too. Two stale things matching each other reads
+> exactly like a passing test.
+
+So CI failed on a branch where every local test passed, because locally I had
+rebuilt the artifact and never committed it.
+
+The sharper part: this also explains why `main` looked green while being
+broken. Main has the new source, the OLD committed artifact, and the OLD smoke
+assertions — artifact and test agree, so the BUILD check passes. Only the
+release workflow, which builds fresh, disagreed. **The failure mode the BUILD
+comment describes was live on main at the moment I read the comment.**
+
+Generalising: before deciding a build output does not need committing, find
+every check that consumes it. I checked one and generalised from it, and the
+one I checked was the one that regenerates it.

@@ -112,12 +112,26 @@ check("demo host deck rows", demo.props.deckRows, [
 // artifacts agreeing with each other reads exactly like a passing test, which is
 // why the wasm is now rebuilt and compared in CI rather than trusted.
 const exportedApkg = demoEngine.exportAnkiApkg();
+function decodeBase64(value) {
+  const binary = atob(value);
+  const out = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    out[index] = binary.charCodeAt(index);
+  }
+  return out;
+}
+
 check("apkg export succeeds in the browser build", exportedApkg.ok, true);
-check("apkg export returns bytes", exportedApkg.apkg.length > 0, true);
+// The payload is base64 now (#14438). `.length > 0` was true for the string
+// too, which is why only the merge below caught this -- a check that passes on
+// the wrong type is not checking the type.
+check("apkg export returns base64", typeof exportedApkg.apkg === "string", true);
+const apkgBytes = decodeBase64(exportedApkg.apkg);
+check("apkg export returns bytes", apkgBytes.length > 0, true);
 
 // A legacy package round-trips back in through the same ABI.
 const mergeEngine = createEngramEngine(wasm, { now: () => 1700000000000 });
-const mergedApkg = mergeEngine.mergeAnkiApkg(Uint8Array.from(exportedApkg.apkg));
+const mergedApkg = mergeEngine.mergeAnkiApkg(apkgBytes);
 check("apkg merge succeeds in the browser build", mergedApkg.ok, true);
 
 // Something that is not a package at all is still refused, so the assertions
