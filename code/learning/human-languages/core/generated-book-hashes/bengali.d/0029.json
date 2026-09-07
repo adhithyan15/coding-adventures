@@ -1,0 +1,12 @@
+{
+  "language": "bengali",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:ececbcb5768b6636",
+  "lessonIds": [
+    "BN-C18-kintu",
+    "BN-C18-ekmot",
+    "BN-C18-kenona",
+    "BN-R18-agree-and-differ"
+  ],
+  "tex": "bengali/book/chapters/ch29-agreeing-differing-saying-why.tex"
+}

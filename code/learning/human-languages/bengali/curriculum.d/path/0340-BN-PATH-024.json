@@ -1,0 +1,16 @@
+{
+  "id": "BN-PATH-024",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "BN-C17-ar",
+    "BN-C17-o",
+    "BN-C17-ba",
+    "BN-C17-na-na",
+    "BN-R17-joined-and-refused"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-025-JOINING"
+  ],
+  "after": []
+}

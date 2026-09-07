@@ -1,0 +1,161 @@
+Bengali, chapter 30: When You Are Lost.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+যে (je) — that.
+
+Warm-up.
+[pause 2 seconds]
+ভাবা, "to think", has been in this book since chapter fourteen, and in all that time nobody has been able to say what they think.
+[your turn — recall: two items back, the word that heads a reason — kenonā]
+[pause 8 seconds for the answer]
+
+You'll want to know: যে.
+আমি ভাবি যে চা ভালো — āmi bhābi je chā bhālo — I think that tea is good.
+আমি জানি যে তুমি ভালো — āmi jāni je tumi bhālo — I know that you are well.
+যে does one job: it takes a whole sentence and turns it into the object of a verb of thinking, knowing or saying. Everything before it is the frame; everything after it is the thought, unchanged, in the order it would have had standing alone.
+
+Grammar Lens: what English drops and Bengali keeps.
+English can leave that out — I think tea is good is ordinary English. Bengali speech drops যে (je) too, and Bengali writing keeps it. A learner should say it: the sentence is easier to hear coming when the joint is marked.
+The word is the Sanskrit relative stem ya-, an inheritance shared with Latin qui and English who. That is why the same syllable will later introduce a relative clause as well — one word, two jobs, and this lesson teaches the simpler one.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: āmi bhābi je chā bhālo]
+[pause 8 seconds for the answer]
+[your turn — say: āmi jāni je tumi bhālo]
+[pause 8 seconds for the answer]
+[your turn — say: an opinion, then an objection to it — āmi bhābi je chā bhālo, kintu dudh nôy]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does যে attach to the verb in front of it? (A whole sentence, as its object.) Does the sentence after it change shape? (No — it stands exactly as it would alone.) And which verb, taught in chapter fourteen, has been waiting for this word? (ভাবা, to think.)
+Source: Unicode Bengali chart.
+
+
+Lesson 2 of 5.
+যখন (jôkhon) — when.
+
+Warm-up.
+[pause 2 seconds]
+The lesson before this took the relative stem য and hung a sentence off a verb with it. The same stem, with an ending, hangs a sentence off a moment.
+[your turn — recall: the complementiser from the lesson before — je]
+[pause 8 seconds for the answer]
+
+You'll want to know: যখন.
+যখন আমি আসি, তখন চা খাই — jôkhon āmi āshi, tôkhon chā khāi — when I come, then I drink tea.
+Bengali does not leave the pair half-finished the way English does. যখন (jôkhon) opens the clause and তখন answers it, and a fluent speaker says both. English would say when I come, I drink tea and let the then be understood; Bengali puts it in.
+
+Grammar Lens: one frame, three prefixes.
+[a table of 3 rows, read aloud]
+word: যখন (jôkhon). prefix: য-, the relative. job: when … (opens a clause).
+word: তখন. prefix: ত-, the demonstrative. job: then (answers it).
+word: কখন. prefix: ক-, the interrogative. job: when? (asks).
+One ending, three heads. The same three letters begin যে (je) (relative), তুমি (demonstrative in origin) and কি and কেমন (interrogative) — which is to say the reader has been meeting this pattern since chapter three without being shown it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: jôkhon āmi āshi, tôkhon chā khāi]
+[pause 8 seconds for the answer]
+[your turn — say: the pair on its own — jôkhon … tôkhon]
+[pause 8 seconds for the answer]
+[your turn — say: a reason and a time in one breath — kenonā jôkhon āmi jāi …]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which word answers যখন (jôkhon), and does a Bengali speaker leave it out? (তখন, and no — both halves get said.) What do যখন (jôkhon), তখন and কখন share? (One ending, with the relative, demonstrative and interrogative heads in front of it.) And which word from the previous lesson shares the first of those heads? (যে (je).)
+Source: Unicode Bengali chart.
+
+
+Lesson 3 of 5.
+আবার বলবেন (ābār bôlben) — say it again.
+
+Warm-up.
+[pause 2 seconds]
+আবার was taught in chapter seven and বলা in chapter eleven. Nineteen chapters later they have never stood next to each other, and the sentence they make is the one a beginner needs more than any other.
+[your turn — recall: two items back, the complementiser — je]
+[pause 8 seconds for the answer]
+
+You'll want to know: আবার বলবেন.
+আবার বলবেন — ābār bôlben — please say it again.
+দয়া করে আবার বলবেন — doyā kore ābār bôlben — the same request, with please in front of it.
+The ending is not new. Chapter twenty-two taught māf kôrben, "excuse me", and named -বেন as the polite ending that sounds like a future and works as a request. Put it on বলা and you have asked somebody to repeat themselves without learning a single new word.
+
+Grammar Lens: the whole repair kit, in two sentences.
+A learner who is lost needs to say two things and no more: I do not understand and say it again. Chapter twenty-seven built the first out of না. This lesson builds the second out of two words from chapters seven and eleven. Neither needed new vocabulary; both needed somebody to put the pieces together.
+দয়া করে goes in front when the request should be softer, exactly as chapter twenty-two taught it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ābār bôlben]
+[pause 8 seconds for the answer]
+[your turn — say: doyā kore ābār bôlben]
+[pause 8 seconds for the answer]
+[your turn — say: the pair a lost learner needs — āmi bujhi nā … ābār bôlben]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which ending makes this a polite request, and where was it taught? (-বেন, in chapter twenty-two, on māf kôrben.) How many new words does this sentence need? (None — both were already in the book.) And what goes in front to soften it? (দয়া করে.)
+Source: Unicode Bengali chart.
+
+
+Lesson 4 of 5.
+ধীরে (dhīre) — slowly.
+
+Warm-up.
+[pause 2 seconds]
+Asking somebody to repeat themselves only helps if they repeat themselves at a speed you can follow.
+[your turn — recall: the request from the lesson before — ābār bôlben]
+[pause 8 seconds for the answer]
+
+You'll want to know: ধীরে.
+ধীরে বলবেন — dhīre bôlben — please speak slowly.
+ধীরে ধীরে বলবেন — dhīre dhīre bôlben — the same thing, said the way Bengali actually says it.
+The doubling is not emphasis for a foreigner's benefit. Bengali turns an adverb up by repeating it, and ধীরে (dhīre) ধীরে (dhīre) is the ordinary form of this word in speech; the single ধীরে (dhīre) is what a dictionary lists.
+
+The word, taken apart.
+ধীরে is Sanskrit dhīra, which meant steady, composed, deliberate long before it meant slow. The word is about the manner of a person, and only then about the speed of a thing — which is why asking somebody to speak dhīre is a gentler request than asking them to speak slowly in English.
+Its second letter carries the long i-sign chapter twenty-four taught on নীল. Four pieces, all of them already read.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: dhīre bôlben]
+[pause 8 seconds for the answer]
+[your turn — say: the doubled form — dhīre dhīre bôlben]
+[pause 8 seconds for the answer]
+[your turn — say: the whole repair kit — āmi bujhi nā … ābār bôlben … dhīre dhīre]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did ধীরে (dhīre) mean in Sanskrit before it meant slowly? (Steady, composed — a word about a person.) Why do Bengali speakers say it twice? (Doubling is how the language intensifies an adverb.) And which sign sits on its second letter? (The long i, from নীল.)
+Source: Unicode Bengali chart.
+
+
+Lesson 5 of 5.
+When you are lost — an opinion, a moment in time, and what to say when the conversation has got away from you.
+
+Warm-up.
+[pause 4 seconds]
+Four items landed in this chapter. Two of them join clauses and two of them rescue a conversation. Name all four.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: an opinion — āmi bhābi je chā bhālo]
+[pause 8 seconds for the answer]
+[your turn — say: a time — jôkhon āmi āshi, tôkhon chā khāi]
+[pause 8 seconds for the answer]
+[your turn — say: the repair kit in order — āmi bujhi nā … ābār bôlben … dhīre dhīre]
+[pause 8 seconds for the answer]
+[your turn — recall: eight lessons back, the word that heads an objection — kintu]
+[pause 8 seconds for the answer]
+[your turn — recall: fourteen lessons back, the joiner that adds — ār]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Four chapters ago this book could not deny a sentence, join two nouns, give a reason or ask for a repeat. Say the sentence that agrees and then objects. (আমি একমত, কিন্তু …) Say the one that reports a thought. (আমি ভাবি যে …) And say the two sentences a lost learner needs. (āmi bujhi nā and আবার বলবেন (ābār bôlben).)

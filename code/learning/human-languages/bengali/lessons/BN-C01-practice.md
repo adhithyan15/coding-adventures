@@ -32,7 +32,7 @@ reviews_of: [BN-C01-nomoshkar, BN-C01-dhonnobad, BN-C01-hyan-na, BN-C01-achchha,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-ACHCHHA-01, BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01, BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
-[PAUSE 2s] No new words. Just the five, mixed and recombined — and the one shift
+[PAUSE 2s] No new words. The five you have, mixed and recombined — and the one shift
 that ties them together.
 
 ## How to answer — rapid recall

@@ -41,7 +41,7 @@ of English.
 
 New: **হ** hô, the *y-phola* **্য** that glides the sound, and the nasal mark
 *chandrabindu* **ঁ** — a little moon-with-dot that sends the vowel through the
-nose. **না** is simply **ন** + **া**, *nā*.
+nose. **না** is **ন** + **া**, *nā*, and nothing else.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01] -->
