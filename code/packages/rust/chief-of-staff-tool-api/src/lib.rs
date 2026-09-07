@@ -5982,6 +5982,32 @@ mod tests {
     }
 
     #[test]
+    fn the_refusal_message_names_the_offending_field() {
+        // The message is what a host operator reads when a registration is
+        // refused. "names another agent" without the position sends them
+        // hunting through a schema; the field name ends the search.
+        let refused = InMemoryToolRuntime::agent_surface()
+            .register_handler(
+                peer_naming_definition("smart_home.set_desired_state", true),
+                |_arguments, _context| Ok(ToolHandlerOutput::new(JsonValue::Null)),
+            )
+            .expect_err("a peer-naming tool must be refused");
+        assert_eq!(
+            refused.to_string(),
+            "tool 'smart_home.set_desired_state' names another agent at \
+             requested_by and cannot be registered on an agent surface"
+        );
+    }
+
+    #[test]
+    fn a_runtime_reports_which_surface_it_is() {
+        // `register_all`-style bulk registrars branch on this to pre-flight
+        // their catalog, so it has to answer for both constructors.
+        assert!(InMemoryToolRuntime::agent_surface().is_agent_surface());
+        assert!(!InMemoryToolRuntime::new().is_agent_surface());
+    }
+
+    #[test]
     fn a_non_agent_surface_still_holds_the_same_tool() {
         // The refusal is scoped to the agent surface, not to the tool. Audit
         // and access-review callers report on principals by design and must
