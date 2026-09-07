@@ -65,12 +65,18 @@
 % feedback_no_byte_arithmetic_for_llm.)
 %
 % INSTALLMENT 4h RESTORED THE PAGE'S INDENTATION, and until it did, the
-% claim above was false by eight characters. NCBI serves this block inside a
-% `<pre>` that indents every line after the first by TWO SPACES; the shipped
-% value had them stripped, so it was verbatim only under a whitespace
-% normalisation. It is now an exact substring of the tag-stripped page,
-% verified against RAW HTML with a negative-control arm and pinned in CI,
-% where a mutation that strips the indentation again reddens the test.
+% claim above was false by TWELVE characters — and the first attempt at this
+% repair restored only eight, leaving it false by four and the block MORE
+% column-misaligned than it found it, which security review caught. NCBI
+% serves this block inside a `<pre>` that indents LINE 1 BY FOUR SPACES and
+% every later line by two, so all five data columns land at offset 11. The
+% shipped value had every one of those twelve characters stripped, so it was
+% verbatim only under a whitespace normalisation — and, worse for a block
+% the header tells you to read BY COLUMN, misaligned: decoding `atg` by
+% character index gave T where the page gives M. It is now an exact
+% substring of the tag-stripped page, verified against RAW HTML with a
+% negative-control arm and pinned in CI, where a mutation that strips the
+% indentation again reddens the test.
 %
 % Restoring it decided none of the questions held on #14111. Whitespace
 % inside a `<pre>` is RENDERED whitespace — the browser shows those two
@@ -94,7 +100,7 @@ table start_codon {
     row (ctg, start)
     row (atg, start)
 
-    source "AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\n  Starts = ---M------**--*----M---------------M----------------------------\n  Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG\n  Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG\n  Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"
+    source "    AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\n  Starts = ---M------**--*----M---------------M----------------------------\n  Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG\n  Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG\n  Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"
     locator "https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi"
     trust authoritative
 }

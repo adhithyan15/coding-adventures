@@ -114,7 +114,15 @@ fn the_three_libraries_together_satisfy_eulers_formula() {
     assert!(out.contains("\"F\":\"6\""), "cube F=6: {out}");
 }
 
-/// Installment 4h (#13934): Until installment 4h this field held author-composed prose ABOUT the page -- "MathWorld's Platonic Solid table gives, for each solid, its number of vertices: tetrahedron 4, cube 8, ..." -- which names the source in the third person, a thing no verbatim span ever does. It is now the page's own sentence. NOTE the weaker claim than installment 4g's: this span is verbatim under the extractor's whitespace collapse, NOT byte-exact against raw HTML, because the page's own bytes wrap the paragraph across five newlines. See #14111.
+/// Installment 4h (#13934): Until installment 4h this field held
+/// author-composed prose ABOUT the page -- "MathWorld's Platonic Solid
+/// table gives, for each solid, its number of vertices: tetrahedron 4, cube
+/// 8, ..." -- which names the source in the third person, a thing no
+/// verbatim span ever does. It is now the page's own sentence. NOTE the
+/// weaker claim than installment 4g's: this span is verbatim under the
+/// extractor's whitespace collapse, NOT byte-exact against raw HTML,
+/// because the page's own bytes wrap the paragraph across three newlines.
+/// See #14111.
 ///
 /// FULL ANCHORED CITATION PIN -- anchored on the `"source":"` key and
 /// closed on the terminating quote, so head, tail, punctuation,

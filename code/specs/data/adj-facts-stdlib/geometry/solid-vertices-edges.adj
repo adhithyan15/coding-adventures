@@ -45,7 +45,7 @@
 %
 % A CLAIM THIS FILE DOES NOT MAKE. Installment 4g's five repairs are
 % byte-exact against RAW HTML. These two are not, and cannot be: the page's
-% own bytes carry five newlines inside the vertices sentence, because the
+% own bytes carry three newlines inside the vertices sentence, because the
 % HTML source wraps the paragraph. They are verbatim under the extractor's
 % whitespace collapse — the same standard every one of this stdlib's
 % currently-verbatim values already meets — and that is a WEAKER claim than
@@ -81,10 +81,10 @@ table solid_edges {
     columns solid, edges
 
     row (tetrahedron, 6)      % 1st in the sentence's own order
-    row (cube, 12)            % "octahedron = cube", 2nd count
-    row (octahedron, 12)      % "octahedron = cube", 2nd count
-    row (dodecahedron, 30)    % "dodecahedron = icosahedron", 3rd count
-    row (icosahedron, 30)     % "dodecahedron = icosahedron", 3rd count
+    row (cube, 12)            % 3rd in the order, tied to octahedron by "="
+    row (octahedron, 12)      % 2nd in the order, tied to cube by "="
+    row (dodecahedron, 30)    % 4th in the order, tied to icosahedron by "="
+    row (icosahedron, 30)     % 5th in the order, tied to dodecahedron by "="
 
     source "The ordered number of edges are 6, 12, 12, 30, 30 (OEIS A063722; in the order tetrahedron, octahedron = cube, dodecahedron = icosahedron)."
     locator "https://mathworld.wolfram.com/PlatonicSolid.html"
