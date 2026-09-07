@@ -104,3 +104,29 @@ fn start_codon_abstains_honestly_on_an_unflagged_codon() {
         "gcc -> ? has no shipped row -- honest abstention, never invented: {out}"
     );
 }
+
+/// Installment 4h (#13934): The same NCBI `<pre>` block, cited by a second library that decodes a different line of it. Its header claimed the value "reproduces, byte-for-byte, the SAME NCBI page"; until installment 4h the indentation was stripped and the claim was false. The pin makes the claim checkable.
+///
+/// FULL ANCHORED CITATION PIN -- anchored on the `"source":"` key and
+/// closed on the terminating quote, so head, tail, punctuation,
+/// whitespace and length are pinned at once. The needle is generated
+/// FROM the .adj field rather than retyped, because a pin and a field
+/// that drift apart is a defect this effort has shipped twice.
+#[test]
+fn start_codon_source_carries_the_pages_own_indentation() {
+    let dir = scratch("pre_indent");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"start-codon.adj\"\n\
+         ? start_codon(atg, $R)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"source\":\"AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\\n  Starts = ---M------**--*----M---------------M----------------------------\\n  Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG\\n  Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG\\n  Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG\""),
+        "the citation is the page's own text, exactly: {out}"
+    );
+}

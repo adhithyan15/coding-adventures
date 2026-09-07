@@ -63,6 +63,28 @@
 % `genetic-code.adj` already carries. (See ../README.md;
 % feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts,
 % feedback_no_byte_arithmetic_for_llm.)
+%
+% INSTALLMENT 4h RESTORED THE PAGE'S INDENTATION, and until it did, the
+% claim above was false by eight characters. NCBI serves this block inside a
+% `<pre>` that indents every line after the first by TWO SPACES; the shipped
+% value had them stripped, so it was verbatim only under a whitespace
+% normalisation. It is now an exact substring of the tag-stripped page,
+% verified against RAW HTML with a negative-control arm and pinned in CI,
+% where a mutation that strips the indentation again reddens the test.
+%
+% Restoring it decided none of the questions held on #14111. Whitespace
+% inside a `<pre>` is RENDERED whitespace — the browser shows those two
+% spaces — so carrying it is the same call as carrying a page's U+00A0. That
+% is NOT the case filed on #14111 the same day, where newlines turn up
+% inside an ordinary wrapped paragraph: those are HTML source formatting
+% that renders as a single space, and which reading of `source` governs them
+% is the owner's call. The two look identical in a diff and are opposite in
+% kind, which is why each candidate gets its page read.
+%
+% Worth noting how long it went unseen: no instrument in this effort
+% compares a value to RAW HTML. The contiguity sweep compares against the
+% extractor's output, which normalises whitespace, and the CI pins compare
+% the engine's output to this field — the field to itself.
 % ============================================================================
 
 table start_codon {
@@ -72,7 +94,7 @@ table start_codon {
     row (ctg, start)
     row (atg, start)
 
-    source "AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\nStarts = ---M------**--*----M---------------M----------------------------\nBase1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG\nBase2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG\nBase3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"
+    source "AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\n  Starts = ---M------**--*----M---------------M----------------------------\n  Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG\n  Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG\n  Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"
     locator "https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi"
     trust authoritative
 }
