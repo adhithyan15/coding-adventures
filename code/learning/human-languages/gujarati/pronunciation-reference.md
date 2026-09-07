@@ -9,7 +9,7 @@ script** and Gujarati sounds.
 1. **Consonants carry a built-in "a" — and there is no top line.** ક = ka, ન =
    na, મ = ma, સ = sa — written left to right. Gujarati is Devanagari's sister,
    but it **dropped the *shirorekhā*** (the horizontal bar Devanagari, Bengali,
-   and Gurmukhi hang their letters from) and cut it away, so its letters stand
+   and Gurmukhi hang their letters from) — cut it away, so its letters stand
    free. This missing top line is the one thing to remember, and the fastest way
    to tell Gujarati from Hindi at a glance — the "headless script."
 2. **A vowel sign changes the built-in "a":** કા kā · કિ ki · કી kī · કુ ku ·
