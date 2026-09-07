@@ -489,7 +489,7 @@
       "category": "Quantifiers",
       "label": "cardinal numerals to one hundred: a price, an age, a house number",
       "probe": null,
-      "note": "Untaught, and demanded three times over by the A1 envelope -- the practical form, the role-play, and the interview's how-old-are-you.",
+      "note": "Untaught, and demanded four times over by the A1 envelope now rather than three -- the practical form, the role-play, the interview's how-old-are-you, and MR-A1-F1-03, which this is the last missing third of.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-task-shapes-a1"
@@ -649,8 +649,9 @@
       "id": "MR-A1-PRON-08",
       "category": "Pronouns",
       "label": "a pronoun before a postposition takes its oblique form",
-      "probe": null,
-      "note": "Untaught. The noun half of this is now closed -- MR-A1-N-09 covers the oblique stem -- so what remains is specifically the PRONOUN's own oblique form (maazhyaa-, tyaa-), which no lesson supplies. Spanish's stressed pronouns after a preposition are the same demand with a much smaller cost.",
+      "probe": [
+        "MR-GRAMMAR-PRON-OBLIQUE"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1093,8 +1094,11 @@
       "id": "MR-A1-V-20",
       "category": "The verb",
       "label": "possession: the postposition plus aahe construction",
-      "probe": null,
-      "note": "Untaught. Marathi has no verb 'to have', so the construction is a postposition plus aahe. MR-A1-N-09 and MR-A1-P-02 are now covered, so the stem and the locative are no longer the blockers; the -kade of MR-A1-P-05 is.",
+      "probe": [
+        "MR-POSTP-KADE",
+        "MR-GRAMMAR-POSSESSION",
+        "MR-LEX-AAHE-COPULA"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-spine"
@@ -1138,8 +1142,11 @@
       "id": "MR-A1-P-03",
       "category": "Case and postpositions",
       "label": "accompaniment and instrument: -shii, barobar, -ne",
-      "probe": null,
-      "note": "MARATHI-SPECIFIC. 'With my friend' is an A1 sentence and the track teaches mitra with no way to attach it. The oblique stem it would need is now taught (MR-A1-N-09), so this point is blocked on the three exponents alone -- -shii, barobar and the instrumental -ne -- and no longer on the stem underneath them.",
+      "probe": [
+        "MR-POSTP-BAROBAR",
+        "MR-POSTP-SHII",
+        "MR-POSTP-NE-INSTR"
+      ],
       "anchorIds": [
         "editorial-marathi-structure",
         "ca-marathi-task-shapes-a1"
@@ -1151,8 +1158,10 @@
       "id": "MR-A1-P-04",
       "category": "Case and postpositions",
       "label": "source and starting point: -huun, paasuun",
-      "probe": null,
-      "note": "MARATHI-SPECIFIC. 'I am from Pune' is the second sentence of every A1 speaking interview. The stem is now taught (MR-A1-N-09); -huun and paasuun are what is missing.",
+      "probe": [
+        "MR-POSTP-HUUN",
+        "MR-POSTP-PAASUN"
+      ],
       "anchorIds": [
         "editorial-marathi-structure",
         "ca-marathi-task-shapes-a1"
@@ -1165,7 +1174,7 @@
       "category": "Case and postpositions",
       "label": "goal and limit: -kade, paryant",
       "probe": null,
-      "note": "MARATHI-SPECIFIC. Required by the transactional role-play. The stem is now taught; -kade and paryant are what is missing, and paryant additionally needs the reph of MR-A1-OR-21, which no lesson teaches.",
+      "note": "MARATHI-SPECIFIC, and now half closed. -kade is taught (chapter 48) and carries possession, direction and 'at somebody's place' on its own. paryant is not, and it is the reason this point stays open: writing it needs the REPH of MR-A1-OR-21, which no lesson teaches, so the two debts are the same debt. Half a pair is not this point.",
       "anchorIds": [
         "editorial-marathi-structure",
         "ca-marathi-task-shapes-a1"
@@ -1316,8 +1325,9 @@
       "id": "MR-A1-VP-04",
       "category": "The verb phrase",
       "label": "the direct object: animates take -laa, inanimates do not",
-      "probe": null,
-      "note": "Untaught. Spanish's personal a is the same distinction under a different marker, which makes this one of the clearest one-to-one transfers in the file.",
+      "probe": [
+        "MR-GRAMMAR-OBJECT-LAA"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1330,8 +1340,9 @@
       "id": "MR-A1-VP-05",
       "category": "The verb phrase",
       "label": "the indirect object",
-      "probe": null,
-      "note": "The dative MARKER is taught (MR-A1-P-01) but only on an experiencer. Giving something to somebody is a different frame and no lesson supplies it.",
+      "probe": [
+        "MR-GRAMMAR-INDIRECT-OBJECT"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1684,7 +1695,7 @@
       "category": "Giving and asking for information",
       "label": "give personal information: name, age, origin",
       "probe": null,
-      "note": "One third of it works. Name is taught and so is city as a form field; AGE needs a number above five (MR-A1-QU-03) and ORIGIN needs the ablative (MR-A1-P-04). This is the A1 speaking interview's opening question.",
+      "note": "Two thirds of it works now. Name is taught, and ORIGIN closed in chapter 46 -- 'mii puNyaahuun yeto' is sayable and askable. AGE is what remains, and it needs a number above five (MR-A1-QU-03). This is the A1 speaking interview's opening question and it is now one number short of complete.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-task-shapes-a1"
@@ -2435,8 +2446,12 @@
       "id": "MR-A1-NG1-01",
       "category": "Existential notions",
       "label": "existence and non-existence",
-      "probe": null,
-      "note": "Still blocked, and now by one thing rather than two. MR-A1-OS-01 is closed, so non-existence can be said, and MR-A1-P-02 closed in chapter 42, so a thing can be placed. What is left is possession: Marathi has no verb 'to have', and the -kade construction of MR-A1-V-20 has no exponent, so 'I have one' cannot be said at all.",
+      "probe": [
+        "MR-GRAMMAR-POSSESSION",
+        "MR-GRAMMAR-NEGATE-NAHI",
+        "MR-POSTP-MADHYE",
+        "MR-LEX-AAHE-COPULA"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2595,8 +2610,11 @@
       "id": "MR-A1-NG3-05",
       "category": "Spatial notions",
       "label": "orientation and direction",
-      "probe": null,
-      "note": "Untaught; blocked behind MR-A1-P-05. ujvaa and daavaa are now taught (chapter 44) so the two SIDES exist, but sending somebody toward one needs the goal postposition -kade, which has no exponent. Naming a side is not giving a direction.",
+      "probe": [
+        "MR-POSTP-KADE",
+        "MR-LEX-UJVA",
+        "MR-LEX-DAAVA"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -2623,8 +2641,11 @@
       "id": "MR-A1-NG3-07",
       "category": "Spatial notions",
       "label": "origin: where one is from",
-      "probe": null,
-      "note": "The city is taught as a form FIELD (MR-A1-FORM-LABEL-SHAHAR) and can now be a PLACE too -- puṇyāt, puṇyājavaḷ -- because the oblique stem and the locative are covered. Saying one comes FROM it still needs the ablative of MR-A1-P-04, which has no exponent. The noun without that postposition answers a form and not an interviewer.",
+      "probe": [
+        "MR-POSTP-HUUN",
+        "MR-QUESTION-KUTHUN",
+        "MR-A1-FORM-LABEL-SHAHAR"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-task-shapes-a1"
@@ -4360,7 +4381,7 @@
       "category": "Devanagari letters and signs",
       "label": "the r-forms: reph above the line and rakaar below it",
       "probe": null,
-      "note": "Untaught, and they do not look like a virama join at all, so the conjunct principle does not transfer to them by itself. They appear in karya, purna and the reph of maarg.",
+      "note": "Untaught, and it now blocks a named word rather than only a class of them. The reph and the rakaar do not look like a virama join at all, so the conjunct principle does not transfer to them by itself. The rakaar has been SHOWN since chapter 18 -- mitra is spelled with one -- and never named; the reph appears in paryant, which MR-A1-P-05 is waiting for. Two script lessons close this point and that point together.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-assessment"

@@ -1,0 +1,20 @@
+{
+  "chapter": 46,
+  "title": "Where You Came From",
+  "label": "ch:mr-from",
+  "canDo": "I can say where I come from and ask somebody else, and I can start a stretch of time as well as a journey.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R46-from",
+    "kind": "production",
+    "summary": "Complete MR-R46-from and run the interview's second exchange both ways -- ask kuṭhūn yetā?, answer puṇyāhūn -- then start a stretch of time with udyāpāsūn.",
+    "assesses": [
+      "MR-POSTP-HUUN",
+      "MR-POSTP-PAASUN",
+      "MR-QUESTION-KUTHUN"
+    ],
+    "note": "The city has been a form FIELD since chapter 23 and could not be said out loud; this chapter turns a label into an answer."
+  }
+}

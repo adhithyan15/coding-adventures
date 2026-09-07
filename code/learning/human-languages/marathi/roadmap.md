@@ -170,6 +170,19 @@ lesson is `coreVoice` and both chapters stay fully drivable.
   they are in the tranche for that reason. A rule every new word obeys cannot be
   tested by the reader.
 
+## Chapters 45–48 — with, from, to whom, and having
+
+- **Authored.** Eleven items across four chapters: **बरोबर · माझ्याबरोबर ·
+  -शी · -ने**; **-हून · पासून · कुठून**; the animate object marker **-ला** and
+  the recipient; **-कडे** and the possession frame. A1 exam coverage 133/301 →
+  142/301, closing **Case and postpositions to 5 of 6**.
+
+  The one point still open in that column is `MR-A1-P-05`, and it is open for a
+  SCRIPT reason rather than a vocabulary one: **पर्यंत** cannot be written
+  without the reph, which `MR-A1-OR-21` also names. Two script lessons — the
+  reph and the rakaar that **मित्र** has carried unnamed since chapter 18 —
+  close both points at once.
+
 ## Planned
 
 | Chapter | Theme |
@@ -178,7 +191,7 @@ lesson is `coreVoice` and both chapters stay fully drivable.
 | 10 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
 | 11 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
 | 12+ | The rest of `SPINE-SAY-WHAT-I-DO` — *aikṇe* and the remaining core verbs now that *deṇe*, *sāṅgṇe* and *shikṇe* are authored — then past and future tenses (where gender returns on the verb), always with the Hindi/Dravidian contrast thread. Negation and yes-or-no questions are done: chapters 32 and 33 |
-| next | The remaining postpositions, all of which the oblique stem has now unblocked: accompaniment *-शी* / *बरोबर* and the instrumental *-ने* (`MR-A1-P-03`), the ablative *-हून* / *पासून* (`MR-A1-P-04`, which is *I am from Pune*), and the goal *-कडे* / *पर्यंत* (`MR-A1-P-05`). *-कडे* carries three more points on its own: possession (`MR-A1-V-20`, Marathi having no verb *to have*), existence (`MR-A1-NG1-01`) and direction (`MR-A1-NG3-05`). *पर्यंत* needs the reph, which closes `MR-A1-OR-21` with its rakaar partner |
+| next | The **reph** and the **rakaar** (`MR-A1-OR-21`), two script lessons that also unlock *पर्यंत* and with it `MR-A1-P-05` — the last open point in the postposition column. The rakaar has been shown in *मित्र* since chapter 18 and never named |
 | after that | The **adjective** (`SPINE-DESCRIBE-QUALITIES`, an A1 core node with no realization), which unblocks roughly fifteen further points including the exclamative *किती!*, colour, age, quality and physical description |
 
 Note: Marathi marks "you" by **register** (*tū* familiar / *tumhī* respectful,

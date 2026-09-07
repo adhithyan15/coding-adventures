@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C47-laa-object",
+    "language": "marathi",
+    "chapter": 47,
+    "sequence": 1880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdbcbd151dc6969e"
+  },
+  "findings": []
+}
