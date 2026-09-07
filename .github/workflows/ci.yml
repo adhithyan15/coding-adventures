@@ -1501,8 +1501,12 @@ jobs:
         # Windows runner. Pin the setup-beam revision proven on Windows 2025 /
         # VS 2026; NIF and Metal packages retain narrow machine-reported
         # BUILD_windows exceptions.
+        # setup-beam v1.24.1 -- version deliberately NOT a trailing
+        # comment here: the Elixir Windows contract matches this block
+        # literally and the SHA is bound in
+        # code/specs/fixtures/elixir-windows-build-front-v1/contract.json
         if: needs.detect.outputs.needs_elixir == 'true'
-        uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
+        uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
         with:
           elixir-version: '1.18.4'
           otp-version: '27.3.4.11'
