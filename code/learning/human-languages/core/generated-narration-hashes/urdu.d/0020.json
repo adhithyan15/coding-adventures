@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:75a85176c45a06e6",
+  "lessonIds": [
+    "UR-C20-aur",
+    "UR-C20-ya",
+    "UR-C20-lekin",
+    "UR-C20-thik-hai",
+    "UR-R20-joined-and-turned"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch20.txt",
+  "json": "urdu/narration/ch20.json",
+  "textHash": "fnv1a64:db199f8fd3113e68",
+  "jsonHash": "fnv1a64:acde53b4638dd1e7",
+  "findings": []
+}

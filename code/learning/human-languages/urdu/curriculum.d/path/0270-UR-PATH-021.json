@@ -1,0 +1,16 @@
+{
+  "id": "UR-PATH-021",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "UR-C20-aur",
+    "UR-C20-ya",
+    "UR-C20-lekin",
+    "UR-C20-thik-hai",
+    "UR-R20-joined-and-turned"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-031-JOINING"
+  ],
+  "after": []
+}

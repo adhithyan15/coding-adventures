@@ -75,7 +75,7 @@ shape is handed to you.
 <!-- hl-knowledge: introduces=[UR-ETYMON-PARHNA-RECITE]; assesses=[UR-LEX-PARHNA, UR-LEX-HAFIZ, UR-ETYMON-HAFIZ-ARABIC] -->
 
 **paṛhnā** comes from Prakrit *paḍhaï*, from Sanskrit **paṭh-**, “**to recite;
-to read aloud**.” Its *ṭh* softened into the flapped *ṛh* you have just
+to read aloud**.” Its *ṭh* softened into the flapped *ṛh* you have
 learned, and the meaning widened from reciting to reading to studying.
 
 Be honest about the far end: **paṭh-** has **no secure Indo-European ancestry**.

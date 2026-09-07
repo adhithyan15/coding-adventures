@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C21-kyun",
+    "language": "urdu",
+    "chapter": 21,
+    "sequence": 1110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b600e75c87390f17"
+  },
+  "findings": []
+}

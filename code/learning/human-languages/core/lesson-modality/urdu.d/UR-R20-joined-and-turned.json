@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R20-joined-and-turned",
+    "language": "urdu",
+    "chapter": 20,
+    "sequence": 1100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66c45304b855ab94"
+  },
+  "findings": []
+}

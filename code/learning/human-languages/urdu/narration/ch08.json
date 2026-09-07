@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1661ce4843aa19d7",
+  "sourceHash": "fnv1a64:f2cb33c4c76403bf",
   "lessons": [
     {
       "id": "UR-W08-vao",
@@ -229,7 +229,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d085795588aa2995",
+      "sourceHash": "fnv1a64:bd9dc49b62511de7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -334,11 +334,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "lenā — to take; then the stem, which is just le-",
+              "instruction": "lenā — to take; then the stem, which is le- alone",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **lenā** — to take; then the stem, which is just **le-**]"
+              "source": "[YOU SAY: **lenā** — to take; then the stem, which is **le-** alone]"
             },
             {
               "kind": "prompt",

@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:4052ffe41570f6d4",
+  "lessonIds": [
+    "UR-C19-nahin-verb",
+    "UR-C19-kya-polar",
+    "UR-C19-na-na",
+    "UR-R19-three-refusals"
+  ],
+  "tex": "urdu/book/chapters/ch19-the-word-that-was-deferred.tex"
+}

@@ -104,6 +104,23 @@ Urdu and Hindi share a large grammatical core, while the formal lexicon and
 writing systems make their histories visible. Both the shared structure and the
 Persian-Arabic vocabulary bridges are drawn out as you go. Script conventions are grounded in Northwestern University's *Zero Zabar*.
 
+## What the track can do, as of chapters 19–22
+
+A learner who reaches the end can now **deny** any verb the book taught (نہیں in
+front of it), **ask** any statement back as a yes-or-no question (کیا at the
+front), **refuse** two things at once (نہ … نہ), **join** (اور), **choose**
+(یا), **turn** (لیکن), **agree** (ٹھیک ہے), **ask why and who**, **answer why**
+with a cause (کیونکہ) or a purpose (کے لیے), **report a thought** (کہ) — and,
+when none of that works, say *maiṅ nahīṅ samajhtā*, **کیا کہا؟** and
+**آرام سے کہیں**.
+
+Seven words that would have covered further points are deliberately absent,
+because the script ladder has taught fifteen letters and each of these needs one
+it has not: معاف and مہربانی for apology and please, مگر for *but*, جب and جو
+for subordination, بھی for *also*, مت for the negative imperative. Every one is
+written down in `core/exam-inventory-urdu-a1.json` beside the letter that blocks
+it, which turns a vocabulary gap into a named script lesson.
+
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) orders the authored and planned chapters toward

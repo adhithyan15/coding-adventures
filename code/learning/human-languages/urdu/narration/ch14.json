@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Four Things You Wear",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cf499bace00f79c1",
+  "sourceHash": "fnv1a64:8df88f1dc1538204",
   "lessons": [
     {
       "id": "UR-C14-qamiz",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd63e5c175178280",
+      "sourceHash": "fnv1a64:c4d1169f145ba83a",
       "notice": null,
       "blocks": [
         {
@@ -375,7 +375,7 @@
             },
             {
               "kind": "speech",
-              "text": "But ٹوپی did something those two never did: it left Urdu and Hindi and became an English word. Topee, first recorded in English between 1825 and 1835, is borrowed directly from Hindi ṭopī, \"hat\" — the lightweight sun hat worn across British India. نیلا's cousin nīlī took four languages and a chemistry lab to become English aniline. ٹوپی simply walked straight into English as itself."
+              "text": "But ٹوپی did something those two never did: it left Urdu and Hindi and became an English word. Topee, first recorded in English between 1825 and 1835, is borrowed directly from Hindi ṭopī, \"hat\" — the lightweight sun hat worn across British India. نیلا's cousin nīlī took four languages and a chemistry lab to become English aniline. ٹوپی walked straight into English as itself."
             }
           ]
         },

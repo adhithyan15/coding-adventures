@@ -46,7 +46,7 @@ for a woman. One final copula completes the question.
 > to a man: **آپ کیسے ہیں؟** — *āp kaise haiṅ?*
 > to a woman: **آپ کیسی ہیں؟** — *āp kaisī haiṅ?*
 
-The order is **you + how + are?** Keep **ہیں** *haiṅ* final, just as **ہے** *hai*
+The order is **you + how + are?** Keep **ہیں** *haiṅ* final, exactly as **ہے** *hai*
 stayed final in the name question. Respectful **āp** takes this plural-shaped
 copula even when speaking to one person.
 

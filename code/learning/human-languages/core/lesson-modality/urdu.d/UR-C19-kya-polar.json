@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C19-kya-polar",
+    "language": "urdu",
+    "chapter": 19,
+    "sequence": 1030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bdde2ff53e1b420"
+  },
+  "findings": []
+}

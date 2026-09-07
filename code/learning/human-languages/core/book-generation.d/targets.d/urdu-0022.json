@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 22,
+  "output": "urdu/book/chapters/ch22-when-you-are-lost.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

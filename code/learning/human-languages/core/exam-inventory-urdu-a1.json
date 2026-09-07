@@ -791,7 +791,7 @@
         "A1-ADV-06"
       ],
       "urduSpecific": false,
-      "note": "Untaught. بھی is one word and would let a learner say 'me too', which is a stock A1 turn."
+      "note": "Untaught. بھی is one word and would let a learner say 'me too' — and it needs بے and دو چشمی ہے, neither taught by a script lesson. Cheap in vocabulary, blocked in script."
     },
     {
       "id": "UR-A1-ADV-05",
@@ -816,7 +816,10 @@
       "id": "UR-A1-ADV-06",
       "category": "Mutalliqat (adverbs)",
       "label": "کیوں ('why') against کیونکہ ('because')",
-      "probe": null,
+      "probe": [
+        "UR-LEX-KYUN",
+        "UR-LEX-KYUNKI"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -827,7 +830,7 @@
         "A1-SUB-06"
       ],
       "urduSpecific": false,
-      "note": "NEITHER EXISTS: کیوں returns zero occurrences and کیونکہ returns zero. A learner cannot ask for a reason or give one, and کیوں is a k- word that the chapter-17 family lesson had every opportunity to include."
+      "note": "Closed by chapter 21, and it needed both halves: کیوں in UR-C21-kyun and کیونکہ in UR-C21-kyunki. The chapter-17 k- family lesson that 'had every opportunity to include it' is now completed from the other end — کیوں and کون both join it."
     },
     {
       "id": "UR-A1-ADV-07",
@@ -1168,7 +1171,9 @@
       "id": "UR-A1-SEN-02",
       "category": "Jumla (the sentence)",
       "label": "the negative declarative",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-NAHIN-VERB"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1178,13 +1183,15 @@
         "A1-OS-01"
       ],
       "urduSpecific": false,
-      "note": "Untaught — see UR-A1-NEG-02. The word is in chapter 1 and the sentence it belongs in is nowhere."
+      "note": "Closed by chapter 19 together with UR-A1-NEG-02: the negative declarative and the negator are the same lesson in Urdu, because نہیں changes nothing but its own position."
     },
     {
       "id": "UR-A1-SEN-03",
       "category": "Jumla (the sentence)",
       "label": "the yes-or-no question, marked by کیا at the front or by intonation",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-KYA-POLAR"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1194,7 +1201,7 @@
         "A1-OS-02"
       ],
       "urduSpecific": false,
-      "note": "UNTAUGHT, AND ONE SENTENCE AWAY. کیا is already taught, in chapter 3, as the interrogative 'what'. Its second job — fronted, it turns any statement into a yes-or-no question — is never mentioned, and جی ہاں and نہیں are taught in chapter 1 as answers to a question the book cannot ask."
+      "note": "Closed by UR-C19-kya-polar (chapter 19), which realizes QUESTION-POLAR: کیا was taught in chapter 3 and its second job — fronted, marking a yes-or-no question — was never mentioned. One sentence away, exactly as this note said."
     },
     {
       "id": "UR-A1-SEN-04",
@@ -1331,7 +1338,9 @@
       "id": "UR-A1-QUE-04",
       "category": "Sawal (questions)",
       "label": "کون ('who')",
-      "probe": null,
+      "probe": [
+        "UR-LEX-KAUN"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1341,7 +1350,7 @@
         "A1-PRON-06"
       ],
       "urduSpecific": false,
-      "note": "SHOWN AND NOT TAUGHT. کون appears in exactly two lessons — UR-W08-vao, where it is a WRITING exercise for the letter و and is glossed 'who' in passing, and chapter 18's practice — and neither introduces a lexical atom for it. It is a k- word, its family lesson exists in chapter 17, and it is one line from being taught."
+      "note": "Closed by UR-C21-kaun (chapter 21). It was, as this note said, one line from being taught: the word had been shown twice as a writing exercise for و and glossed in passing, and now carries a lexical atom."
     },
     {
       "id": "UR-A1-QUE-05",
@@ -1414,7 +1423,9 @@
       "id": "UR-A1-NEG-02",
       "category": "Nafi (negation)",
       "label": "نہیں before the verb, which is how Urdu negates a sentence",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-NAHIN-VERB"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1424,7 +1435,7 @@
         "A1-OS-01"
       ],
       "urduSpecific": false,
-      "note": "UNTAUGHT, AND DELIBERATELY DEFERRED — which is worse than an oversight, because the deferral was never redeemed. The chapter-1 lesson introduces UR-GRAMMAR-NAHIN-NEGATION and says in as many words: 'Inside a sentence it commonly means not. That second job will matter when the track introduces verbs. Today you only need the complete answer.' Fourteen verbs and seventeen chapters later, no lesson comes back to it. میں نہیں سمجھتا — 'I do not understand' — is the sentence a beginner needs most, every piece of it is taught (میں in chapter 4, نہیں in chapter 1, سمجھنا in chapter 7, the present-tense agreement in chapter 6) and the corpus never puts them together."
+      "note": "Closed by UR-C19-nahin-verb (chapter 19), which realizes VERB-NEGATE on SPINE-NEGATE-AND-ASK and whose headword IS میں نہیں سمجھتا. The deferral chapter one made is redeemed by name in the lesson's first paragraph. نہیں itself needs no letter the ladder has not taught; سمجھتا needs three, so the sentence is printed whole in the lesson that owns it and left in romanization elsewhere."
     },
     {
       "id": "UR-A1-NEG-03",
@@ -1440,13 +1451,15 @@
         "A1-OS-01"
       ],
       "urduSpecific": false,
-      "note": "Untaught. Urdu uses a different negator before an imperative and another in a subjunctive, so this does not come free with UR-A1-NEG-02 — though with no imperative either (UR-A1-V-06) it is not the first thing to fix."
+      "note": "نہ is now taught, in UR-C19-na-na (chapter 19), as the negator that stands in front of a refused noun. مت is not, and this point needs both: it belongs in front of an imperative the track still does not have (UR-A1-V-06), and its second letter has no lesson in the script ladder either. Two blockers, both named."
     },
     {
       "id": "UR-A1-NEG-04",
       "category": "Nafi (negation)",
       "label": "negative coordination: نہ … نہ",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-NA-NA"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1456,13 +1469,15 @@
         "A1-CO-02"
       ],
       "urduSpecific": false,
-      "note": "Untaught, and downstream of the empty joining column."
+      "note": "Closed by UR-C19-na-na (chapter 19). نہ is taught as نہیں worn short, which is what it is, and as the one negator in the language that stands in FRONT of what it denies."
     },
     {
       "id": "UR-A1-JOIN-01",
       "category": "Rabt (joining and subordination)",
       "label": "اور ('and')",
-      "probe": null,
+      "probe": [
+        "UR-LEX-AUR"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1472,13 +1487,15 @@
         "A1-CO-01"
       ],
       "urduSpecific": false,
-      "note": "GLOSSED ONCE IN ROMANISATION, WRITTEN NEVER, TAUGHT NEVER — and it is the headline of this file. اور returns ZERO occurrences in Urdu script across 89 lessons. The word appears exactly once in the whole corpus, in a production prompt in chapter 15: '[YOU SAY: bārish, dhūp, aur hawā — rain, sunshine, and wind]'. The learner is asked to SAY a word the book has never taught and cannot read. A learner who owns 18 chapters — five weather words, four foods, four garments, five body words — cannot say 'rain and wind' from anything the corpus taught them."
+      "note": "Closed by UR-C20-aur (chapter 20). The chapter-15 practice line that asked the learner to SAY aur is quoted in the lesson and paid back in its Guided Practice, where every word of it is finally owned."
     },
     {
       "id": "UR-A1-JOIN-02",
       "category": "Rabt (joining and subordination)",
       "label": "یا ('or')",
-      "probe": null,
+      "probe": [
+        "UR-LEX-YA"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1489,13 +1506,15 @@
         "A1-F3-02"
       ],
       "urduSpecific": false,
-      "note": "ABSENT. All thirteen raw matches for یا were checked in context and every one is the tail of کیا. No alternative can be offered."
+      "note": "Closed by UR-C20-ya (chapter 20). The lesson states the finding this note recorded: every raw match for یا in the first eighteen chapters is the tail of کیا."
     },
     {
       "id": "UR-A1-JOIN-03",
       "category": "Rabt (joining and subordination)",
       "label": "لیکن / مگر ('but')",
-      "probe": null,
+      "probe": [
+        "UR-LEX-LEKIN"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1506,7 +1525,7 @@
         "A1-F2-09"
       ],
       "urduSpecific": false,
-      "note": "ABSENT: both return zero occurrences. Nothing can be qualified or contradicted."
+      "note": "Closed by UR-C20-lekin (chapter 20). مگر, the point's other half, needs گاف, which the script ladder has not reached; it is named in the lesson in romanization. لیکن is the commoner word and needs no letter the reader lacks."
     },
     {
       "id": "UR-A1-JOIN-04",
@@ -1522,13 +1541,15 @@
         "A1-CO-05"
       ],
       "urduSpecific": false,
-      "note": "Untaught, and blocked behind the missing numerals as well."
+      "note": "Untaught, and still blocked behind the missing numerals — now the only structural blocker, since the joining column's function words are taught."
     },
     {
       "id": "UR-A1-JOIN-05",
       "category": "Rabt (joining and subordination)",
       "label": "کہ, the complementiser: 'I think THAT …'",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-KI-COMPLEMENTISER"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1538,7 +1559,7 @@
         "A1-SUB-03"
       ],
       "urduSpecific": false,
-      "note": "ABSENT. All four raw matches for کہ were checked and every one is inside کہاں. سوچنا ('to think') is taught in chapter 7 and there is nothing to attach a clause to it with, so an opinion cannot be reported even though its verb is in the book."
+      "note": "Closed by UR-C21-ki (chapter 21). The lesson also names the collision this note half-saw: the borrowed complementiser کہ and the inherited stem of کہنا are spelled identically and are unrelated."
     },
     {
       "id": "UR-A1-JOIN-06",
@@ -1555,13 +1576,15 @@
         "A1-SUB-05"
       ],
       "urduSpecific": false,
-      "note": "Untaught — the same absence recorded from the pronoun side at UR-A1-PRON-08, filed here so the joining column stands as a work queue on its own."
+      "note": "Untaught. جو needs جیم, which the script ladder has not reached, and the same absence is recorded from the pronoun side at UR-A1-PRON-08. This is a script lesson before it is a vocabulary lesson."
     },
     {
       "id": "UR-A1-JOIN-07",
       "category": "Rabt (joining and subordination)",
       "label": "کیونکہ ('because')",
-      "probe": null,
+      "probe": [
+        "UR-LEX-KYUNKI"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1571,7 +1594,7 @@
         "A1-SUB-06"
       ],
       "urduSpecific": false,
-      "note": "ABSENT: zero occurrences, on both halves of Spanish's why/because pair."
+      "note": "Closed by UR-C21-kyunki (chapter 21), which realizes CONNECTIVE-BECAUSE on SPINE-SAY-WHY. Both halves of the pair this note named are now taught, and the second is built out of the first: کیوں plus کہ."
     },
     {
       "id": "UR-A1-JOIN-08",
@@ -1587,13 +1610,16 @@
         "A1-SUB-08"
       ],
       "urduSpecific": false,
-      "note": "ABSENT: zero occurrences. Urdu joins with a جب … تب correlative, so both halves are missing."
+      "note": "Untaught. جب … تب needs جیم and بے, neither of which the script ladder has reached, so this is the joining column's one remaining gap that a vocabulary tranche cannot close on its own."
     },
     {
       "id": "UR-A1-JOIN-09",
       "category": "Rabt (joining and subordination)",
       "label": "purpose: کے لیے plus an infinitive",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-KE-LIYE",
+        "UR-GRAMMAR-NA-INFINITIVE"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "UR-CORPUS",
@@ -1603,7 +1629,7 @@
         "A1-SUB-07"
       ],
       "urduSpecific": false,
-      "note": "Untaught. The infinitive itself IS taught, in chapter 6, so the missing half is only the postposition — one of the cheaper nulls in this column."
+      "note": "Closed by UR-C21-ke-liye (chapter 21). The note was right that only the postposition was missing: the infinitive has been taught since chapter 6 and the point needed nothing else."
     },
     {
       "id": "UR-A1-JOIN-10",
@@ -2372,7 +2398,7 @@
         "A1-F5-06"
       ],
       "urduSpecific": false,
-      "note": "UNTAUGHT, AND THIS IS THE GUJARATI SHAPE RATHER THAN THE BENGALI ONE. معاف returns ZERO occurrences in 89 files and there is no سوری, no معذرت and no equivalent anywhere. A learner cannot say sorry at all. Arabic teaches آسف in chapter 7 and Bengali دুঃখিত in chapter 22; Urdu teaches neither."
+      "note": "UNTAUGHT, AND THE BLOCKER IS NAMED. معاف کیجیے needs عین, فے and جیم and معذرت needs ذال and ذے; none of the five has a lesson in the script ladder, which teaches fifteen letters in eighty-nine lessons. The negation-and-joining tranche of chapters 19-22 was written entirely inside the taught letter set and deliberately did not launder these through the headword exemption. This point names its own fix, and it is a script lesson."
     },
     {
       "id": "UR-A1-FUN-12",
@@ -2390,7 +2416,7 @@
         "A1-F6-03"
       ],
       "urduSpecific": false,
-      "note": "UNTAUGHT, on the same footing. There is no way to interrupt, to squeeze past, or to open a conversation with a stranger."
+      "note": "Untaught, on the same footing as UR-A1-FUN-11 and blocked by the same letters. What the track gained in chapter 22 is the OTHER half of repair — saying you did not follow, and asking for the words back — which needs no letter the reader lacks."
     },
     {
       "id": "UR-A1-FUN-13",
@@ -2407,13 +2433,17 @@
         "A1-F4-02"
       ],
       "urduSpecific": false,
-      "note": "UNTAUGHT. براہ مہربانی and مہربانی both return zero occurrences. With no imperative either (UR-A1-V-06), nothing can be requested politely or at all."
+      "note": "UNTAUGHT. براہ مہربانی and مہربانی both need بے, which the script ladder has not reached. Worth recording precisely: UR-C06-bolna introduces an atom called UR-SCRIPT-BE-LETTER, so the track DOES teach the letter — but that lesson is `type: word` with no `delivery: script`, and measureScriptClosure only counts letters taught by a script lesson. The gap here is a measurement convention as much as a ladder position, and fixing it is a script-strand decision rather than a vocabulary one."
     },
     {
       "id": "UR-A1-FUN-14",
       "category": "Kaam (communicative functions)",
       "label": "say you do not understand, and ask for a repeat",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-NAHIN-VERB",
+        "UR-FUNC-KYA-KAHA",
+        "UR-LEX-ARAM-SE"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2425,7 +2455,7 @@
         "A1-F6-04"
       ],
       "urduSpecific": false,
-      "note": "UNTAUGHT, AND EVERY PIECE OF IT IS IN THE BOOK. میں (ch4) + نہیں (ch1) + سمجھنا (ch7) + the present-tense double agreement (ch6) is میں نہیں سمجھتا, and no lesson assembles it — see UR-A1-NEG-02, where the chapter-1 lesson explicitly defers the job and never returns. With no apology, no excuse-me and no please either, this track has NO REPAIR LANGUAGE AT ALL beyond شکریہ and نہیں. That is a functional hole a beginner hits in their first conversation and no coverage percentage surfaces it."
+      "note": "Closed by chapters 19 and 22, and the note's own accounting was the design: میں (ch4) + نہیں (ch1) + سمجھنا (ch7) + the present agreement (ch6) is the first sentence, کیا (ch3) + کہنا (new) is the second, and آرام (Persian) + سے (shown since ch3) is the third. This track had no repair language at all; it now has three sentences and needed one new word for them."
     },
     {
       "id": "UR-A1-FUN-15",
@@ -2471,7 +2501,10 @@
       "id": "UR-A1-FUN-17",
       "category": "Kaam (communicative functions)",
       "label": "agree and disagree with an opinion",
-      "probe": null,
+      "probe": [
+        "UR-FUNC-THIK-HAI",
+        "UR-LEX-LEKIN"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2484,7 +2517,7 @@
         "A1-NG6-06"
       ],
       "urduSpecific": false,
-      "note": "Untaught beyond جی ہاں and نہیں, and blocked further by the missing لیکن."
+      "note": "Closed by chapter 20. ٹھیک ہے agrees, ٹھیک نہیں ہے disagrees off chapter 19's negator, and لیکن — the word this note named as the further blocker — makes the half-agreement every real disagreement starts with."
     },
     {
       "id": "UR-A1-FUN-18",
@@ -2772,7 +2805,10 @@
       "id": "UR-A1-FUN-33",
       "category": "Kaam (communicative functions)",
       "label": "give an opinion",
-      "probe": null,
+      "probe": [
+        "UR-GRAMMAR-KI-COMPLEMENTISER",
+        "UR-LEX-SOCHNA"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2785,7 +2821,7 @@
         "A1-F2-11"
       ],
       "urduSpecific": false,
-      "note": "BLOCKED, NOT MERELY MISSING. سوچنا ('to think') is taught in chapter 7, the present tense is taught in chapter 6, and there is no کہ to attach a clause with (UR-A1-JOIN-05). 'I think that …' fails on the connective alone."
+      "note": "Closed by UR-C21-ki (chapter 21) over سوچنا from chapter 7. The note was precise: the verb was never the blocker, the connective was."
     },
     {
       "id": "UR-A1-FUN-34",

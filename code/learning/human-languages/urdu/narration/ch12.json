@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Water, Tea, Milk, Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b05966d398592d60",
+  "sourceHash": "fnv1a64:f3fa9503de7831ff",
   "lessons": [
     {
       "id": "UR-C12-pani",
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b29741bfef2a2f9b",
+      "sourceHash": "fnv1a64:d3406052f624e177",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -184,7 +184,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say merā pānī — my water, underneath just \"the drinkable thing.\" Here is the drink you would politely ask for right after it, and a letter from Chapter 9 makes a second appearance."
+              "text": "Say merā pānī — my water, underneath \"the drinkable thing.\" Here is the drink you would politely ask for right after it, and a letter from Chapter 9 makes a second appearance."
             }
           ]
         },
@@ -225,7 +225,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "چائے is borrowed from Classical Persian چای (chāy), which traces back to Northern Chinese chá, carried overland through Central Asia into Persian before Urdu ever had it. That is the same road khudā and dil travelled in earlier chapters — Persian into Urdu — just with a Chinese starting point this time instead of one further west."
+              "text": "چائے is borrowed from Classical Persian چای (chāy), which traces back to Northern Chinese chá, carried overland through Central Asia into Persian before Urdu ever had it. That is the same road khudā and dil travelled in earlier chapters — Persian into Urdu — with a Chinese starting point this time instead of one further west."
             },
             {
               "kind": "speech",
@@ -492,7 +492,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3915c83964475f79",
+      "sourceHash": "fnv1a64:435307591ba1b573",
       "notice": null,
       "blocks": [
         {
@@ -553,7 +553,7 @@
             },
             {
               "kind": "speech",
-              "text": "The dative-experiencer frame from Chapter 8 was built for -nā infinitives — paṛhnā, likhnā. It works just as well for a plain noun: whatever pleases you sits in the subject slot, and ہے agrees with it, not with you."
+              "text": "The dative-experiencer frame from Chapter 8 was built for -nā infinitives — paṛhnā, likhnā. It works as well for a plain noun: whatever pleases you sits in the subject slot, and ہے agrees with it, not with you."
             }
           ]
         },

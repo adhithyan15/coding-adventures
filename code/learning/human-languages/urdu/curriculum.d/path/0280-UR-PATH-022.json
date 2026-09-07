@@ -1,0 +1,17 @@
+{
+  "id": "UR-PATH-022",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "UR-C21-kyun",
+    "UR-C21-kaun",
+    "UR-C21-kyunki",
+    "UR-C21-ki",
+    "UR-C21-ke-liye",
+    "UR-R21-why-and-what-for"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-032-WHY-AND-WHAT-FOR"
+  ],
+  "after": []
+}

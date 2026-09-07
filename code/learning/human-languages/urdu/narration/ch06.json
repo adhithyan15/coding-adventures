@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Five Verbs at the Core",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:57e7b6ffc54c0e69",
+  "sourceHash": "fnv1a64:36569292747453be",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -886,7 +886,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34af438882321b58",
+      "sourceHash": "fnv1a64:fce7c5345ca43fda",
       "notice": null,
       "blocks": [
         {
@@ -940,7 +940,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new is being learned there. That is the point of a stem: the machine is already built, and each verb just walks into it."
+              "text": "Nothing new is being learned there. That is the point of a stem: the machine is already built, and each verb walks into it."
             }
           ]
         },

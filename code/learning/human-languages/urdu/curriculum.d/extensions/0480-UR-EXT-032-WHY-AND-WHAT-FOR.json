@@ -1,0 +1,18 @@
+{
+  "id": "UR-EXT-032-WHY-AND-WHAT-FOR",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask why and who, give a cause and give a purpose, and report what I think.",
+  "prerequisites": [
+    "UR-EXT-031-JOINING"
+  ],
+  "lessons": [
+    "UR-C21-kyun",
+    "UR-C21-kaun",
+    "UR-C21-kyunki",
+    "UR-C21-ki",
+    "UR-C21-ke-liye",
+    "UR-R21-why-and-what-for"
+  ]
+}

@@ -61,7 +61,7 @@ But **ٹوپی** did something those two never did: it left Urdu and Hindi and
 became an English word. **Topee**, first recorded in English between 1825
 and 1835, is borrowed directly from Hindi *ṭopī*, "hat" — the lightweight
 sun hat worn across British India. **نیلا**'s cousin *nīlī* took four
-languages and a chemistry lab to become English *aniline*. **ٹوپی** simply
+languages and a chemistry lab to become English *aniline*. **ٹوپی**
 walked straight into English as itself.
 
 ## Guided Practice

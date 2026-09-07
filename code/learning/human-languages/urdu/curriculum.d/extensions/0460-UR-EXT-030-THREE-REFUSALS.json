@@ -1,0 +1,16 @@
+{
+  "id": "UR-EXT-030-THREE-REFUSALS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can put نہیں in front of a verb, mark any statement as a yes-or-no question with کیا, and refuse two things at once.",
+  "prerequisites": [
+    "UR-EXT-029-SCRIPT-MEETING"
+  ],
+  "lessons": [
+    "UR-C19-nahin-verb",
+    "UR-C19-kya-polar",
+    "UR-C19-na-na",
+    "UR-R19-three-refusals"
+  ]
+}
