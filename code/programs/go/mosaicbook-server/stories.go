@@ -6,10 +6,23 @@
 //
 // # Pairing rule
 //
-// For every Foo.mosaic file found, we look for Foo.stories.json alongside it.
-// If Foo.stories.json exists we parse it for stories and an optional display
-// title.  If it does NOT exist we synthesise a single story called "Default"
-// with an empty fixtures object — the component still appears in the UI.
+// Both authoring forms pair with a sibling stories file on the base name:
+//
+//	Foo.mosaic                          -> Foo.stories.json
+//	Foo.mil + Foo.mll + Foo.light.msl   -> Foo.stories.json
+//
+// If it exists we parse it for stories and an optional display title. If it
+// does NOT exist we synthesise a single story called "Default" with an empty
+// fixtures object — the component still appears in the UI.
+//
+// If it exists but cannot be read or parsed, we still synthesise Default so the
+// component stays previewable, but record why on Component.StoriesError. A
+// broken stories file must not be indistinguishable from an absent one.
+//
+// The three-file form did not consult a stories file at all until #14031: it
+// hardcoded the empty Default. Since three-file UI29 is the only form this
+// repository uses, that meant no component had ever been rendered with a
+// populated slot, let alone across its own variants.
 //
 // # Component ID
 //
@@ -87,6 +100,17 @@ type Component struct {
 	// Stories is the list of story variants.  Always non-empty (at minimum the
 	// auto-generated "Default" story is present).
 	Stories []Story `json:"stories"`
+
+	// StoriesError describes why a sibling stories file was not used, when one
+	// exists but could not be read or parsed.  Empty when there was no file at
+	// all, or when the file loaded cleanly.
+	//
+	// A malformed stories file must not look identical to no stories file. The
+	// component still previews with the synthesized Default so the tool stays
+	// usable, but the reason is carried through to the API rather than
+	// discarded -- which is what lets a CI gate (#14012) reject it instead of
+	// certifying a component on empty fixtures.
+	StoriesError string `json:"storiesError,omitempty"`
 }
 
 // isThreeFile reports whether this component is authored in the UI29
@@ -159,14 +183,50 @@ func threeFileComponent(root, resolvedRoot, milPath, fileName string) (Component
 	}
 	id := strings.TrimSuffix(filepath.ToSlash(rel), ".mil")
 
+	// Stories come from a sibling `<base>.stories.json`, paired on the base
+	// name exactly as `.mll` and `.msl` are.
+	//
+	// Before this, `threeFileComponent` hardcoded a single empty "Default"
+	// story and never looked for a file. Three-file UI29 is the only authoring
+	// form this repository uses, so *every* component previewed with every slot
+	// unset: 63 components, 0 stories, and no variant, size, error, overflow or
+	// populated state was reachable for any of them (#14031). That is also how
+	// six toolkit components shipped `variant` slots that did nothing -- a
+	// story per variant would have rendered eight identical buttons.
+	title := componentTitleFromBase(base)
+	stories := []Story{{Name: "Default", Fixtures: map[string]interface{}{}}}
+	storiesError := ""
+
+	storiesPath := filepath.Join(dir, base+".stories.json")
+	// Same containment check as the other siblings: a stories file is read
+	// from disk, so it gets the symlink-escape treatment too.
+	if isRegularFileWithin(resolvedRoot, storiesPath) {
+		loaded, overrideTitle, err := loadStoriesFile(storiesPath)
+		switch {
+		case err != nil:
+			// Keep the component previewable, but say why its stories are
+			// missing rather than presenting it as a component that simply
+			// has none.
+			storiesError = err.Error()
+		case len(loaded) == 0:
+			storiesError = "stories file contains no stories"
+		default:
+			stories = loaded
+			if overrideTitle != "" {
+				title = overrideTitle
+			}
+		}
+	}
+
 	return Component{
 		ID:            id,
-		Title:         componentTitleFromBase(base),
+		Title:         title,
 		InterfacePath: milPath,
 		LayoutPath:    layout,
 		StylePath:     style,
 		ManifestPath:  findPackageManifest(dir, root, resolvedRoot),
-		Stories:       []Story{{Name: "Default", Fixtures: map[string]interface{}{}}},
+		Stories:       stories,
+		StoriesError:  storiesError,
 	}, true
 }
 
@@ -365,8 +425,9 @@ func discoverComponents(root string) ([]Component, error) {
 		// Look for a sibling .stories.json file (same base name, same dir).
 		storiesPath := strings.TrimSuffix(path, ".mosaic") + ".stories.json"
 		stories, overrideTitle, err := loadStoriesFile(storiesPath)
-		if err != nil {
-			// No stories file or parse error → use a single Default story.
+		if err != nil || len(stories) == 0 {
+			// No stories file, a parse error, or a file declaring none → use a
+			// single Default story so the component still appears.
 			stories = []Story{{Name: "Default", Fixtures: map[string]interface{}{}}}
 		}
 		if overrideTitle != "" {
@@ -402,14 +463,14 @@ func loadStoriesFile(path string) ([]Story, string, error) {
 		return nil, "", err
 	}
 
-	stories := sf.Stories
-	// If the file has no stories array, synthesise a Default story rather than
-	// returning an empty slice — the UI always needs at least one story.
-	if len(stories) == 0 {
-		stories = []Story{{Name: "Default", Fixtures: map[string]interface{}{}}}
-	}
-
-	return stories, sf.Title, nil
+	// Returns exactly what the file declares, including an empty slice.
+	//
+	// This used to synthesise a Default here, which made a file declaring
+	// `"stories": []` indistinguishable from one declaring a single Default
+	// story — so an authoring mistake was silently absorbed. The "UI always
+	// needs at least one story" rule now lives with the callers, which is
+	// where the difference can also be reported (Component.StoriesError).
+	return sf.Stories, sf.Title, nil
 }
 
 // componentTitleFromBase converts a CamelCase (or PascalCase) identifier into
