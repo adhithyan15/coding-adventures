@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C37-kiti",
+    "language": "marathi",
+    "chapter": 37,
+    "sequence": 1520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b096a1e6a62b8d5f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R40-asking-column",
+    "language": "marathi",
+    "chapter": 40,
+    "sequence": 1630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72a7cb3600733d1b"
+  },
+  "findings": []
+}

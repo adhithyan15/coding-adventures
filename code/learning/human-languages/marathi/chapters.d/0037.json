@@ -1,0 +1,19 @@
+{
+  "chapter": 37,
+  "title": "Who, and How Many",
+  "label": "ch:mr-who-how-many",
+  "canDo": "I can ask which person is meant with koṇ and ask for a quantity with kitī, and I can say what shape of answer each of the k- asking words wants.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "MR-R37-who-how-many",
+    "kind": "production",
+    "summary": "Complete MR-R37-who-how-many and sort three asking words by the shape of the answer they demand: a thing, a person, a number.",
+    "assesses": [
+      "MR-QUESTION-KON",
+      "MR-QUESTION-KITI"
+    ],
+    "note": "The chapter's payoff is the SORT, not the two new words: kāy was already taught and only becomes a system once it has siblings."
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-PATH-042",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "MR-W40-i-independent",
+    "MR-C40-ithe",
+    "MR-R40-asking-column"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-055-HERE"
+  ],
+  "after": []
+}

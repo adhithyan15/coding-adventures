@@ -1,0 +1,11 @@
+{
+  "language": "marathi",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:f6a568970bf02891",
+  "lessonIds": [
+    "MR-C37-kon",
+    "MR-C37-kiti",
+    "MR-R37-who-how-many"
+  ],
+  "tex": "marathi/book/chapters/ch37-who-how-many.tex"
+}

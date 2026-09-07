@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R38-where-when",
+    "language": "marathi",
+    "chapter": 38,
+    "sequence": 1570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a4f4af469db4802"
+  },
+  "findings": []
+}
