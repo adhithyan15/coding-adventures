@@ -1,0 +1,16 @@
+{
+  "id": "LA-PATH-036",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "LA-C52-ubi",
+    "LA-C52-cur",
+    "LA-C52-quia",
+    "LA-C52-meus",
+    "LA-C52-tuus"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "LA-EXT-052-ASK"
+  ]
+}

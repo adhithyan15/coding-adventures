@@ -1,0 +1,21 @@
+{
+  "chapter": 50,
+  "title": "Hic, Iste, Ille, Is, Ibi",
+  "label": "ch:la-demonstrativa",
+  "canDo": "I can point at something near me, something near you and something over there, refer back to a person already named, and say that a thing is there.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "LA-C50-ibi",
+    "kind": "task",
+    "summary": "The fifth word of the group, taken apart against the four before it.",
+    "assesses": [
+      "LA-LEX-C50-POINT-01",
+      "LA-LEX-C50-POINT-02",
+      "LA-LEX-C50-POINT-03",
+      "LA-LEX-C50-POINT-04",
+      "LA-LEX-C50-POINT-05"
+    ]
+  }
+}

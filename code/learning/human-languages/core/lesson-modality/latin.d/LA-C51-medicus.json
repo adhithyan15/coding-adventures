@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C51-medicus",
+    "language": "latin",
+    "chapter": 51,
+    "sequence": 1320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1006ec709f013394"
+  },
+  "findings": []
+}

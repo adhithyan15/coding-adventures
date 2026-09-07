@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C51-miles",
+    "language": "latin",
+    "chapter": 51,
+    "sequence": 1330,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2328531a372dae03"
+  },
+  "findings": []
+}

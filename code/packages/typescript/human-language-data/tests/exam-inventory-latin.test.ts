@@ -161,48 +161,83 @@ describe("the committed Latin A1 inventory", () => {
     }
   });
 
-  it("reports a joining column of ZERO, and a track that can say no but cannot negate", () => {
+  it("reports the joining column REBUILT by the vocabulary tranche", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(270);
-    expect(coverage.covered).toBe(92);
-    expect(coverage.unmapped).toBe(178);
+    expect(coverage.covered).toBe(132);
+    expect(coverage.unmapped).toBe(138);
     expect(coverage.partial).toBe(0);
-    // FLAT ZERO, like Tamil, Marathi, Hindi, Punjabi, Gujarati, Russian, Chinese,
-    // Japanese and Arabic before it. `et` occurs twice in 112 files and both are
-    // inside quoted classical sentences a lesson is discussing; `sed` only inside
-    // the Cicero letter quoted in chapter 24; `aut`, `vel`, `neque`, `quod`,
-    // `quia`, `cum` and `ubi` all return zero. So do `quī`, `quae` and `quod` —
-    // the commonest word in surviving Latin prose, missing from a reading course.
+    // WAS 0 OF 12, AND IT WAS THE ELEVENTH FLAT ZERO IN THIS SERIES. `et`
+    // occurred twice in 112 files and both were inside quoted classical
+    // sentences; `sed` only inside the Cicero letter; `aut`, `vel`, `neque`,
+    // `quod`, `quia`, `cum`, `ubi` and `quī` all returned zero.
+    //
+    // The tranche chose against those points rather than by topic: `et` with
+    // the enclitic `-que`, `sed`, `aut` with `vel` beside it, `quī` with its
+    // relative clause, `quia`, `quandō`, and `volō` for the complementary
+    // infinitive. Seven of twelve, from one chapter-and-a-bit of vocabulary.
     expect(coverage.byCategory["Coniunctio et subiunctio (joining and subordination)"]!).toEqual({
       enumerated: 12,
-      covered: 0,
+      covered: 7,
     });
-    expect(coverage.byCategory["Demonstrativa (pointing)"]!).toEqual({ enumerated: 3, covered: 0 });
-    // The verb column is the track's strength: roughly forty verbs with their
-    // full six-person present. The case system, which is what actually lets
-    // somebody read Latin, is 2 of 7.
+    // Was 0 of 3 and is now closed outright: hic, iste and ille, one lesson
+    // each, with the three-way system Spanish still keeps.
+    expect(coverage.byCategory["Demonstrativa (pointing)"]!).toEqual({ enumerated: 3, covered: 3 });
+    // Unmoved, and named so the next tranche knows where to go: the case system
+    // is what actually lets somebody read Latin and a vocabulary tranche cannot
+    // close it — LA-A1-CAS-02, -03, -05, -06 and -07 all need a grammar lesson.
     expect(coverage.byCategory["Casus (the case system)"]!).toEqual({ enumerated: 7, covered: 2 });
     expect(formatExamCoverage(coverage)).toContain(
-      "latin A1 (partial inventory): 92/270 points covered (34%)",
+      "latin A1 (partial inventory): 132/270 points covered (49%)",
     );
   }, 60_000);
 
-  it("keeps the two findings that no coverage percentage would surface", () => {
-    // (1) POLARITY AND NEGATION COME APART HERE, and that is worth more than
-    //     either half. `ita` and `nōn` are TAUGHT, in chapter 1 — this track can
-    //     say yes and no on day one, which Italian cannot and Urdu cannot. And
-    //     `nōn` is never once put in front of a verb, so `nōn intellegō` is
-    //     unsayable although both words are separately taught.
-    const polarity = inventory.points.find((point) => point.id === "LA-A1-ADV-05")!;
-    expect(polarity.probe).toEqual(["LA-LEX-ITA-NON-03", "LA-ETYMON-ITA-NON-02"]);
+  it("records what the tranche closed, and what it deliberately did not", () => {
+    // (1) NEGATION. `nōn` was taught as a WORD on the first day and never once
+    //     attached to a verb, so `nōn intellegō` was unsayable although both
+    //     halves were separately taught. The nesciō lesson states the rule in
+    //     one line and works it on four verbs, and it is the single cheapest
+    //     structural repair the inventory named.
     const negation = inventory.points.find((point) => point.id === "LA-A1-OS-02")!;
-    expect(negation.probe).toBeNull();
-    // (2) REPAIR. Checked separately from coverage, and there is NONE — even
-    //     though `dīcō` and `quaesō` are both taught, so both halves of
-    //     "quid dīcis, quaesō?" are in the learner's hands and unjoined.
+    expect(negation.probe).toEqual(["LA-GRAMMAR-C48-NON-VERB-01"]);
+    expect(negation.note).toMatch(/CLOSED BY THE TRANCHE/);
+    // …and polarity was already covered before the tranche, in chapter 1. The
+    // two coming apart is the finding; both halves are now present.
+    expect(inventory.points.find((point) => point.id === "LA-A1-ADV-05")!.probe).not.toBeNull();
+
+    // (2) REPAIR. There was NONE — dīcō and quaesō were both taught and no
+    //     lesson joined them. `iterum, quaesō` closes it.
     const repair = inventory.points.find((point) => point.id === "LA-A1-F6-05")!;
-    expect(repair.probe).toBeNull();
-    expect(repair.note).toMatch(/NOTHING/);
+    expect(repair.probe).toEqual(["LA-LEX-C53-SCHOOL-01", "LA-ETYMON-QUAESO-01"]);
+    expect(repair.note).toMatch(/IT WAS THE LARGEST HOLE IN THE COURSE/);
+    // The other half of the repair column — saying you have not understood —
+    // needed no new word at all, only the negation rule.
+    expect(inventory.points.find((point) => point.id === "LA-A1-F2-17")!.probe)
+      .toEqual(["LA-LEX-INTELLEGO-01", "LA-GRAMMAR-C48-NON-VERB-01"]);
+
+    // (3) WHAT THE TRANCHE COULD NOT CLOSE, kept uncovered rather than fudged.
+    //     Asking about ability needs a polar question particle, which is
+    //     grammar and not vocabulary; the reading construct the caveat names is
+    //     still the wrong measure; and the case system is untouched.
+    expect(inventory.points.find((point) => point.id === "LA-A1-F2-15")!.probe).toBeNull();
+    expect(inventory.points.find((point) => point.id === "LA-A1-LEC-01")!.probe).toBeNull();
+    expect(inventory.points.find((point) => point.id === "LA-A1-CAS-02")!.probe).toBeNull();
   });
+
+  it("closes every point it closes with an atom the tranche actually introduces", () => {
+    // The tranche was chosen AGAINST this file, so the check that matters is
+    // that the probes now point at real new atoms rather than at hopeful ids.
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "latin");
+    const tranche = [...taught].filter((atom) => /^LA-(LEX|GRAMMAR)-C(4[89]|5[0-4])-/.test(atom));
+    expect(tranche).toHaveLength(36);
+    const probed = new Set(inventory.points.flatMap((point) => point.probe ?? []));
+    const unused = tranche.filter((atom) => !probed.has(atom));
+    // EVERY one of the 36 earns its place. That is the property "ranked by
+    // points-per-item" is supposed to produce, and an inequality would let a
+    // future word in that closes nothing — so this is an equality against the
+    // empty list, named rather than counted.
+    expect(unused, "tranche atoms that no point probes").toEqual([]);
+  }, 60_000);
 });

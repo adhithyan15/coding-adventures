@@ -1,0 +1,21 @@
+{
+  "chapter": 51,
+  "title": "Amicus, Pecunia, Medicus, Miles, Epistula",
+  "label": "ch:la-urbani",
+  "canDo": "I can name a friend, money, a doctor, a soldier and a letter — five words a Roman town could not be described without.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "LA-C51-epistula",
+    "kind": "task",
+    "summary": "The fifth word of the group, taken apart against the four before it.",
+    "assesses": [
+      "LA-LEX-C51-CITY-01",
+      "LA-LEX-C51-CITY-02",
+      "LA-LEX-C51-CITY-03",
+      "LA-LEX-C51-CITY-04",
+      "LA-LEX-C51-CITY-05"
+    ]
+  }
+}
