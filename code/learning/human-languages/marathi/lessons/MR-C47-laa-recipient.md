@@ -36,7 +36,7 @@ reviews_of: [MR-C47-laa-object, MR-C22-dene, MR-C22-anne, MR-C42-var, MR-C46-huu
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-OBJECT-LAA] -->
 
-[PAUSE 2s] **मित्राला पाहतो** marks the person as what you look at. The same
+[PAUSE 2s] **मित्राला पाहतो** marks the person as the one being seen. The same
 ending marks a different role entirely, and the verb decides which.
 
 ## Grammar Lens: the thing stays bare, the person takes -ला

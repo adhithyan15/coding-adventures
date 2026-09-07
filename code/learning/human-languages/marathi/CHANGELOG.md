@@ -60,6 +60,15 @@
   `measureInfoDump` reads as a rule statement — and `ruleStatements` is a
   CEILING at 30 that may fall and never grow. The question was rewritten to ask
   about a sentence the reader has in front of them instead. 31 → 30.
+- **A third regression, caught by reading the printed page rather than a
+  number.** Four lessons in chapters 45 and 47 derived `sight` rather than
+  `voice`, so the book printed *"Hands-free start: none of the 5 lessons"* on
+  two chapters that teach nothing visual. Each was one incidental phrase
+  tripping a `SIGHT_CUE` rule — *"Look at the base it shares"*, *"Read the
+  middle column"*, *"I see the water"*, *"what you look at"*. None was
+  load-bearing, and two of the replacements read better: Marathi has no
+  articles, so **I see water** is the truer gloss of *mī pāṇī pāhto*. Both
+  chapters open hands-free again.
 - **`atomsTaught` 261 → 272; `atomsNeverRevisited` 1; `durationViolations` 0.**
 - **What was deliberately left uncovered, with the reason written into the
   inventory:** `MR-A1-P-05` (**-कडे** is taught and **पर्यंत** is not, and

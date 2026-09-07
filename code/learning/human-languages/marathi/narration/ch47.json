@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 47,
   "title": "Who You Give It To",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7e238612c186eaab",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:fa611b987b6f6c15",
   "lessons": [
     {
       "id": "MR-C47-laa-object",
@@ -14,20 +14,13 @@
       "romanization": "mitrālā",
       "gloss": "the object marker -ला — put on a person, left off a thing, and Marathi is strict about the difference",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b526ae60553aa024",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:bdbcbd151dc6969e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -62,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मी मित्राला पाहतो. — mī mitrālā pāhto. — I see my friend. मी पाणी पाहतो. — mī pāṇī pāhto. — I see the water."
+              "text": "मी मित्राला पाहतो. — mī mitrālā pāhto. — I see my friend. मी पाणी पाहतो. — mī pāṇī pāhto. — I see water."
             },
             {
               "kind": "speech",
@@ -101,11 +94,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "mī pāṇī pāhto — the water is not",
+              "instruction": "mī pāṇī pāhto — water is not",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *mī pāṇī pāhto* — the water is not]"
+              "source": "[YOU SAY: *mī pāṇī pāhto* — water is not]"
             },
             {
               "kind": "prompt",
@@ -120,7 +113,7 @@
               "kind": "activity",
               "scored": true,
               "id": "MR-C47-laa-object-r1",
-              "prompt": "Say that you see your friend, then that you see the water, and name the difference.",
+              "prompt": "Say that you see your friend, then that you see water, and name the difference.",
               "assesses": [
                 "MR-GRAMMAR-OBJECT-LAA",
                 "MR-LEX-MITRA",
@@ -165,20 +158,13 @@
       "romanization": "mitrālā deto",
       "gloss": "the indirect object — the same -ला again, this time for the person a thing goes TO",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de3a86b1af8d3711",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:62d52d58b632fef5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -193,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "मित्राला (mitrālā) पाहतो marks the person as what you look at. The same ending marks a different role entirely, and the verb decides which."
+              "text": "मित्राला (mitrālā) पाहतो marks the person as the one being seen. The same ending marks a different role entirely, and the verb decides which."
             }
           ]
         },

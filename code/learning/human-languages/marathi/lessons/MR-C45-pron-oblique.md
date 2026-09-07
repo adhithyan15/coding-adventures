@@ -52,7 +52,7 @@ subject form:
 >
 > **तुम्ही** → **तुमच्या-** → **तुमच्याबरोबर** — *with you* (respectful)
 
-Read the middle column. Each one is **माझं / तुझं / तुमचं** with its ending
+Say the middle form of each line aloud. Each one is **माझं / तुझं / तुमचं** with its ending
 changed to **-या**, which is exactly what a noun in **-ए** did back in
 chapter forty-one. The machinery is the same; only the starting form is
 different, and the starting form is the possessive.

@@ -49,7 +49,7 @@ been shown.
 > — *mī mitrālā pāhto.* — **I see my friend.**
 >
 > **मी पाणी पाहतो.**
-> — *mī pāṇī pāhto.* — **I see the water.**
+> — *mī pāṇī pāhto.* — **I see water.**
 
 Read those two across. Same verb, same position, and the marker appears on one
 and not the other. Marathi puts **-ला** on a direct object when the object is
@@ -67,11 +67,11 @@ on the end.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-OBJECT-LAA, MR-LEX-MITRA, MR-LEX-PAANI, MR-POSTP-BAROBAR, MR-POSTP-NE-INSTR, MR-POSTP-MADHYE, MR-LEX-PINE, MR-ETYMON-PINE-SAME-ROOT] -->
 
-<!-- hl-activity: {"id":"MR-C47-laa-object-r1","kind":"text","assesses":["MR-GRAMMAR-OBJECT-LAA","MR-LEX-MITRA","MR-LEX-PAANI"],"prompt":"Say that you see your friend, then that you see the water, and name the difference.","answer":"mī mitrālā pāhto; mī pāṇī pāhto","accepted":["मी मित्राला पाहतो मी पाणी पाहतो"],"feedback":{"correct":"Animate marked, inanimate bare.","incorrect":"Only the person takes -lā."},"response_seconds":28} -->
+<!-- hl-activity: {"id":"MR-C47-laa-object-r1","kind":"text","assesses":["MR-GRAMMAR-OBJECT-LAA","MR-LEX-MITRA","MR-LEX-PAANI"],"prompt":"Say that you see your friend, then that you see water, and name the difference.","answer":"mī mitrālā pāhto; mī pāṇī pāhto","accepted":["मी मित्राला पाहतो मी पाणी पाहतो"],"feedback":{"correct":"Animate marked, inanimate bare.","incorrect":"Only the person takes -lā."},"response_seconds":28} -->
 
 [PAUSE 1s]
 - [YOU SAY: *mī mitrālā pāhto* — the friend is marked]
-- [YOU SAY: *mī pāṇī pāhto* — the water is not]
+- [YOU SAY: *mī pāṇī pāhto* — water is not]
 - [YOU SAY: *malā* — and hear the same **-ला** you have used since chapter sixteen]
 
 ## Wrap-up Recall

@@ -1,11 +1,9 @@
 Marathi, chapter 47: Who You Give It To.
-3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+3 lessons. All 3 can be done entirely by ear.
 
 
 Lesson 1 of 3.
 मित्राला (mitrālā) — the object that is a person.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
@@ -14,7 +12,7 @@ Warm-up.
 [pause 8 seconds for the answer]
 
 Grammar Lens: a person you act on takes -ला; a thing does not.
-मी मित्राला पाहतो. — mī mitrālā pāhto. — I see my friend. मी पाणी पाहतो. — mī pāṇī pāhto. — I see the water.
+मी मित्राला पाहतो. — mī mitrālā pāhto. — I see my friend. मी पाणी पाहतो. — mī pāṇī pāhto. — I see water.
 Read those two across. Same verb, same position, and the marker appears on one and not the other. Marathi puts -ला on a direct object when the object is animate — a person, and usually an animal — and leaves it bare when the object is a thing.
 If you know Spanish this is the personal a under another name, and it behaves the same way: it is not politeness and not emphasis, it is a rule, and dropping it on a person is a mistake rather than a shade.
 The stem is the usual one: मित्र becomes मित्रा-, then -ला. And now the old मला makes sense: it is मी through its oblique, with this same -ला on the end.
@@ -23,12 +21,12 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: mī mitrālā pāhto — the friend is marked]
 [pause 8 seconds for the answer]
-[your turn — say: mī pāṇī pāhto — the water is not]
+[your turn — say: mī pāṇī pāhto — water is not]
 [pause 8 seconds for the answer]
 [your turn — say: malā — and hear the same -ला you have used since chapter sixteen]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 28 seconds]
-Say that you see your friend, then that you see the water, and name the difference.
+Say that you see your friend, then that you see water, and name the difference.
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -38,11 +36,9 @@ Which objects take -ला? (Animate ones — people and animals.) Is leaving it
 Lesson 2 of 3.
 मित्राला देतो (mitrālā deto) — giving it to somebody.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
 Warm-up.
 [pause 2 seconds]
-मित्राला (mitrālā) पाहतो marks the person as what you look at. The same ending marks a different role entirely, and the verb decides which.
+मित्राला (mitrālā) पाहतो marks the person as the one being seen. The same ending marks a different role entirely, and the verb decides which.
 
 Grammar Lens: the thing stays bare, the person takes -ला.
 मी मित्राला पाणी देतो. — mī mitrālā pāṇī deto. — I give water to my friend.

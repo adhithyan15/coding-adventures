@@ -55,7 +55,7 @@ chapters: **मित्र → मित्रा-**, then **बरोबर**.
 
 The word has a second life you should meet now, because you will hear it far
 more often than the first. Said alone, **बरोबर** means **that's right** —
-agreement, confirmation, *correct*. Look at the base it shares with **बरं**,
+agreement, confirmation, *correct*. It is built on the same base as **बरं**,
 the *fine, good* of chapter four: **बरोबर** is *good-alongside*, and a thing
 that lines up alongside another is both *with* it and *right*.
 
