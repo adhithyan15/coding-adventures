@@ -54,7 +54,7 @@ one first-person sound.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C02-NAAM-01] -->
 
 Note something Bengali does *not* do: **আমার** never changes for gender. Hindi and
-Punjabi have *merā* (m.) / *merī* (f.); Bengali has just **āmār**, for a man or a
+Punjabi have *merā* (m.) / *merī* (f.); Bengali has one form, **āmār**, for a man or a
 woman, a masculine or feminine thing. Bengali threw grammatical gender away
 entirely — you will see this again and again, and it makes Bengali, in this one
 respect, simpler than its western cousins.

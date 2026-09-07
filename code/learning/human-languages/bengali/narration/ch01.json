@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:75848839a7c61534",
+  "sourceHash": "fnv1a64:7286439380c40932",
   "lessons": [
     {
       "id": "BN-C01-nomoshkar",
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b16e1566e85d90a3",
+      "sourceHash": "fnv1a64:db6e7d9b5c17a30d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -305,7 +305,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: হ hô, the y-phola ্য that glides the sound, and the nasal mark chandrabindu ঁ — a little moon-with-dot that sends the vowel through the nose. না is simply ন + া, nā."
+              "text": "New: হ hô, the y-phola ্য that glides the sound, and the nasal mark chandrabindu ঁ — a little moon-with-dot that sends the vowel through the nose. না is ন + া, nā, and nothing else."
             }
           ]
         },
@@ -644,7 +644,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23205dedfc4fedb7",
+      "sourceHash": "fnv1a64:205ee0ac043493e9",
       "notice": null,
       "blocks": [
         {
@@ -660,7 +660,7 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. Just the five, mixed and recombined — and the one shift that ties them together."
+              "text": "No new words. The five you have, mixed and recombined — and the one shift that ties them together."
             }
           ]
         },
