@@ -1,0 +1,16 @@
+{
+  "id": "LA-PATH-034",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "LA-C50-hic",
+    "LA-C50-iste",
+    "LA-C50-ille",
+    "LA-C50-is",
+    "LA-C50-ibi"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "LA-EXT-050-POINT"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "RU-W08-tochka",
+    "language": "russian",
+    "chapter": 17,
+    "sequence": 890,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ba0ebb3ad582436d",
+    "detachableSegments": [
+      "Writing — the three closing marks"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

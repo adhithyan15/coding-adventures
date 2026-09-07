@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C20-chtoby",
+    "language": "russian",
+    "chapter": 20,
+    "sequence": 1020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c9a00f03f22f8cb"
+  },
+  "findings": []
+}

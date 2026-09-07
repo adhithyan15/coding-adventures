@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:c40c1902496ded77",
+  "lessonIds": [
+    "LA-C48-nescio",
+    "LA-C48-male",
+    "LA-C48-malus",
+    "LA-C48-sed",
+    "LA-C48-aut"
+  ],
+  "tex": "latin/book/chapters/ch48-negatio.tex"
+}

@@ -1,0 +1,880 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 22,
+  "title": "The Words That Ask, and the Word That Points Back",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:0c3c70c854a56ddf",
+  "lessons": [
+    {
+      "id": "RU-C22-kto",
+      "sequence": 1100,
+      "title": "кто (kto) — \"who,\" the twin of что",
+      "headword": "кто",
+      "romanization": "kto",
+      "gloss": "who — что's twin, and the one Russian says exactly as it is spelled",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07026a84392ea630",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The friend, the helping verb, and yesterday's request."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "помогать, and помогите with the polite -ите on it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *помогать*, and *помогите* with the polite **-ите** on it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "друг, on the root meaning to accompany",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *друг*, on the root meaning **to accompany**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "надо, the sentence with nobody in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *надо*, the sentence with nobody in it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "извините, which literally asks to be taken out of the guilt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *извините*, which literally asks to be taken **out of the guilt**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — кто",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "кто — kto — who."
+            },
+            {
+              "kind": "speech",
+              "text": "Three letters, one syllable, and — unlike что — it is said exactly as it is written. No ш ambush here."
+            },
+            {
+              "kind": "speech",
+              "text": "The two words are a matched pair, and Russian keeps the division sharper than English does:"
+            },
+            {
+              "kind": "speech",
+              "text": "кто (kto) asks about people."
+            },
+            {
+              "kind": "speech",
+              "text": "что asks about things."
+            },
+            {
+              "kind": "speech",
+              "text": "кто (kto)? on its own is a complete question, exactly as что? is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — the other plain member",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "кто (kto) is PIE kʷis; что is PIE kʷid. The same stem, twice, with two different endings — one for people and one for things — and the split is older than Russian, older than Latin, older than English."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin kept the same pair as quis and quid. English kept who and what. Russian kept кто (kto) and что. Three languages, one ancient distinction, none of them has ever let it go."
+            },
+            {
+              "kind": "speech",
+              "text": "That is now six of the family: как, какой (kakóy), что, почему, когда, кто (kto)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "кто (kto) and что in turn, and hear that only one of them lies about its spelling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *кто* and *что* in turn, and hear that only one of them lies about its spelling]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "кто (kto)? as a whole question",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *кто?* as a whole question]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six of the family in a row",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six of the family in a row]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"who.\" (That is кто (kto).) Which of кто (kto) and что is said as it is spelled? (кто (kto) is; что is not.) Which asks about people? (кто (kto).) Name the Latin pair that matches them. (Quis and quid.) And one look back: how do you ask for help? (That is помогите.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C22-kakoy",
+      "sequence": 1110,
+      "title": "какой (kakóy) — \"which,\" and the word the book already told you about",
+      "headword": "какой",
+      "romanization": "kakóy",
+      "gloss": "which, what kind of — the family member the book named two chapters before it taught it",
+      "script": "cyrillic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8a614ed3a35a09d9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The verb of the heart, and two recent words."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "любить, English love itself, and the л that appears from nowhere in я люблю",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *любить*, English *love* itself, and the **л** that appears from nowhere in *я люблю*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "простите, the heavier apology, and кто (kto)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *простите*, the heavier apology, and *кто*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "что hanging a whole clause under a verb, and the rule that tells извините from простите",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *что* hanging a whole clause under a verb, and the rule that tells *извините* from *простите*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — какой",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "какой — kakóy — which, what kind of."
+            },
+            {
+              "kind": "speech",
+              "text": "You have been told about this word once before, and by a farewell. When the book took пока apart it said that the old pronoun inside it became какой (kakóy) — so the word has been named in this book for six chapters without ever being taught. It is taught now."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at its ending and compare it with другой. The same -ой does the same job in both: it turns a stem into a word that stands in front of a noun."
+            },
+            {
+              "kind": "speech",
+              "text": "какой чай ты любишь? — kakóy chai ty lyúbish — which tea do you like?"
+            },
+            {
+              "kind": "speech",
+              "text": "Where что asks what thing, какой (kakóy) asks which one of these — and it is the natural partner of или when you are offering a choice out loud."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "какой (kakóy) — ka-KÓY, stress on the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *какой* — *ka-KÓY*, stress on the end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "какой (kakóy) чай ты любишь?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *какой чай ты любишь?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "offer a choice with или, then ask the same thing with какой (kakóy)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: offer a choice with **или**, then ask the same thing with **какой**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"which.\" (That is какой (kakóy).) Which farewell already told you about this word? (That was пока.) Which other word you own ends the same way and stands in front of a noun? (That is другой.) What is the difference between что and какой (kakóy)? (что asks what thing; какой (kakóy) asks which one.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C22-skolko",
+      "sequence": 1120,
+      "title": "сколько (skólka) — \"how many,\" and the family assembled",
+      "headword": "сколько",
+      "romanization": "skólka",
+      "gloss": "how many, how much — the question word Russian uses for both, where English needs two",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37be543c6c0dccb8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The two siblings, and two recent words."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "брат and сестра, the securest cognate pair in the book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *брат* and *сестра*, the securest cognate pair in the book]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "медленно, and какой (kakóy)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *медленно*, and *какой*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "how a Russian noun's ending tells you its gender",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: how a Russian noun's ending tells you its gender]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "я думаю, что …, and повторите with its polite -ите",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *я думаю, что …*, and *повторите* with its polite **-ите**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — сколько",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "сколько — skólka — how many, how much."
+            },
+            {
+              "kind": "speech",
+              "text": "Stress the first syllable; the final о is unstressed and says a."
+            },
+            {
+              "kind": "speech",
+              "text": "English splits this question in two and makes you choose: how many for things you can count, how much for things you cannot. Russian does not. One word covers both, and the noun after it changes shape instead — which is a case this book has not opened, so for now keep to the question on its own."
+            },
+            {
+              "kind": "speech",
+              "text": "сколько (skólka)? — a complete question, like the rest of the family."
+            },
+            {
+              "kind": "speech",
+              "text": "The smallest answer it can take is один, the number whose root became English one, an, a, alone and only."
+            },
+            {
+              "kind": "speech",
+              "text": "Its answer word is столько, \"that many\" — the same swap you saw when почему became потому: question-stem out, pointing-stem in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar lens — seven words, one stem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The whole set is now yours, and every member of it is the same ancient question-stem wearing a different ending:"
+            },
+            {
+              "kind": "speech",
+              "text": "кто (kto) — who."
+            },
+            {
+              "kind": "speech",
+              "text": "что — what."
+            },
+            {
+              "kind": "speech",
+              "text": "какой (kakóy) — which."
+            },
+            {
+              "kind": "speech",
+              "text": "как — how."
+            },
+            {
+              "kind": "speech",
+              "text": "когда — when."
+            },
+            {
+              "kind": "speech",
+              "text": "почему — why."
+            },
+            {
+              "kind": "speech",
+              "text": "сколько (skólka) — how many."
+            },
+            {
+              "kind": "speech",
+              "text": "Seven questions, one root. And two of them have pointing-word answers built by the same swap — потому for почему, столько for сколько (skólka) — so the family supplies its own replies."
+            },
+            {
+              "kind": "speech",
+              "text": "Learning any one of these in Russian really is most of the way to learning all of them, which is not true of the English set at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "сколько (skólka) — SKÓL-ka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *сколько* — *SKÓL-ka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the seven of the family in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the seven of the family in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pairs — почему / потому, сколько (skólka) / столько",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pairs — *почему / потому*, *сколько / столько*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many English questions does сколько (skólka) cover? (Two — how many and how much.) How many members does the question family have now? (Seven.) What single move turns two of them into their own answers? (Swapping the question-stem for the pointing-stem.) And one look back: which word means sister? (That is сестра.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C22-kotoryy",
+      "sequence": 1130,
+      "title": "который (katóryy) — the word that hangs a sentence onto a noun",
+      "headword": "который",
+      "romanization": "katóryy",
+      "gloss": "who, which, that — the word that hangs a whole clause onto a noun, and English 'whether' is its cousin",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4a57d361bb23c11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The drink with the long journey, and the newest pattern."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "кофе, which travelled Arabic to Turkish to Dutch, and the letter ф it needed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *кофе*, which travelled Arabic to Turkish to Dutch, and the letter **ф** it needed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "я хочу with a bare infinitive after it, and сколько (skólka)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *я хочу* with a bare infinitive after it, and *сколько*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "я не знаю, что …, and говорите медленно",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *я не знаю, что …*, and *говорите медленно*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — который",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "который — katóryy — who, which, that."
+            },
+            {
+              "kind": "speech",
+              "text": "Four syllables, stress on the second. It is the last member of the question family, and the one that does the most work, because it does not only ask — it joins."
+            },
+            {
+              "kind": "speech",
+              "text": "It goes back to PIE kʷo-teros: the question-stem you now know well, plus an ending that means which of two. Greek made poteros from it. English made whether — which is why whether still means which of the two underneath."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar lens — a whole clause, stuck onto a noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "что hangs a clause under a verb. который (katóryy) hangs one onto a noun:"
+            },
+            {
+              "kind": "speech",
+              "text": "друг, который читает — drug, katóryy chitáyet — the friend who reads."
+            },
+            {
+              "kind": "speech",
+              "text": "Name a thing, put a comma, say который (katóryy), and say a whole sentence about it. That is how a noun in Russian gets described at any length at all, and it is the last of the joining devices this book owes you."
+            },
+            {
+              "kind": "speech",
+              "text": "The comma is compulsory, as it is in front of every subordinator. English lets you drop that — the book I read — and Russian never does: который (katóryy) stays, and its comma stays with it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "друг, который (katóryy) читает",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *друг, который читает*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "name any person you own and hang a sentence on them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: name any person you own and hang a sentence on them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "который (katóryy) and English whether, and hear the shared ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *который* and English *whether*, and hear the shared ending]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does который (katóryy) attach a clause to? (A noun — where что attaches one to a verb.) May it be dropped the way English drops that? (No — never, and neither may its comma.) Which English word is its cousin? (Whether.) And one look back: which drink came by sea through three languages? (That is кофе.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C22-li",
+      "sequence": 1140,
+      "title": "ли (li) — the small word that has been hiding inside или",
+      "headword": "ли",
+      "romanization": "li",
+      "gloss": "whether — the doubting particle from inside или, standing on its own at last",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82049feb60609623",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The overland drink, and the word from yesterday."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "чай, carried west along the Silk Road while English tea came by sea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *чай*, carried west along the Silk Road while English *tea* came by sea]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "который (katóryy) hanging a clause onto a noun, and или built from и plus ли (li)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *который* hanging a clause onto a noun, and *или* built from **и** plus **ли**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the long dash standing where the missing verb would be, and помогите",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the long dash standing where the missing verb would be, and *помогите*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "вода, English water, and the request pattern you have used since the first chapter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *вода*, English *water*, and the request pattern you have used since the first chapter]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens — the doubting particle, alone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ли — li — whether."
+            },
+            {
+              "kind": "speech",
+              "text": "You met this word six chapters ago, welded to the end of и, and the book promised nothing about it then. Here it is on its own."
+            },
+            {
+              "kind": "speech",
+              "text": "ли (li) does two jobs, and they are the same job seen from two sides."
+            },
+            {
+              "kind": "speech",
+              "text": "One: it makes a yes-or-no question, without changing the word order at all. Put the word you are asking about first and ли (li) second:"
+            },
+            {
+              "kind": "speech",
+              "text": "понимаешь ли ты? — panimáyesh li ty — do you understand?"
+            },
+            {
+              "kind": "speech",
+              "text": "Two: it embeds one. English has to swap words for this — do you understand becomes whether you understand. Russian does not swap anything; it uses the same ли:"
+            },
+            {
+              "kind": "speech",
+              "text": "я не знаю, понимаешь ли ты — ya ne znáyu, panimáyesh li ty — I do not know whether you understand."
+            },
+            {
+              "kind": "speech",
+              "text": "The comma is there for the same reason as everywhere else in this book: a clause is hanging under a verb."
+            },
+            {
+              "kind": "speech",
+              "text": "So Russian's smallest joining word is also its question particle, and the doubt inside или turns out to have been the same doubt all along."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "понимаешь ли (li) ты?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *понимаешь ли ты?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "я не знаю, понимаешь ли (li) ты",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *я не знаю, понимаешь ли ты*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "или and then ли (li) alone, and hear the piece that was always in there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *или* and then **ли** alone, and hear the piece that was always in there]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the two jobs ли (li) does. (It makes a yes-or-no question, and it embeds one as whether.) Which word have you been carrying it inside since the joining chapter? (That is или.) Does Russian change the word order to embed a question? (No — the same ли (li) does both.) And one look back: which drink came overland? (That is чай.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

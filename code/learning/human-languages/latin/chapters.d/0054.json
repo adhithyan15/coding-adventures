@@ -1,0 +1,21 @@
+{
+  "chapter": 54,
+  "title": "Edo, Bibo, Oculus, Auris, Pes",
+  "label": "ch:la-corpus",
+  "canDo": "I can say that I eat and drink, and name the eye, the ear and the foot beside the head and hand I already had.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "LA-C54-pes",
+    "kind": "task",
+    "summary": "The fifth word of the group, taken apart against the four before it.",
+    "assesses": [
+      "LA-LEX-C54-BODY-01",
+      "LA-LEX-C54-BODY-02",
+      "LA-LEX-C54-BODY-03",
+      "LA-LEX-C54-BODY-04",
+      "LA-LEX-C54-BODY-05"
+    ]
+  }
+}

@@ -1,0 +1,823 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 53,
+  "title": "Iterum, Magister, Discipulus, Schola, Liber",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:981583f4f86847b8",
+  "lessons": [
+    {
+      "id": "LA-C53-iterum",
+      "sequence": 1400,
+      "title": "iterum — and the repair move this book could not make",
+      "headword": "iterum",
+      "romanization": "iterum",
+      "gloss": "again — and the repair move this book could not make",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a2876650520a451",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tuus — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tuus* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ubi — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ubi* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say possum — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *possum* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say audiō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *audiō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say propediem tē vidēbō — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *propediem tē vidēbō* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say crās tē vidēbō — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *crās tē vidēbō* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "iterum — \"again.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This one word closes the largest hole in this book. The quaesō lesson gave you \"please\"; the eight-verb chapter gave you dīcō, \"I say.\" Fifty-two chapters went by without a way of joining them, and here it is:"
+            },
+            {
+              "kind": "speech",
+              "text": "Iterum, quaesō. — Again, please. Quid dīcis? — What are you saying? Lentē, quaesō. — Slowly, please."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a repair: the move you make when you did not catch what somebody said. Every language teaches it in its first week, and this book — which could greet, thank, apologise and say please within four chapters — could not until now ask anyone to repeat anything."
+            },
+            {
+              "kind": "speech",
+              "text": "Iterum is built on the same i- stem as is from the pointing chapter, with an old comparative suffix: literally \"the other of the two,\" hence \"a second time.\" English iterate and reiteration are loans from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iterum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iterum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you ask a Roman to say it again? (Iterum, quaesō.) Which two earlier lessons did the parts come from? (The quaesō lesson, and the eight-verb chapter for dīcō.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C53-magister",
+      "sequence": 1410,
+      "title": "magister — the greater one, against minister, the lesser",
+      "headword": "magister, magistrī",
+      "romanization": "magister, magistrī",
+      "gloss": "the teacher — the greater one, against minister, the lesser",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:284c2939e99fca91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iterum — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iterum* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cūr — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cūr* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say volō — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *volō* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dormiō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dormiō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say propediem tē vidēbō — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *propediem tē vidēbō* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say crās tē vidēbō — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *crās tē vidēbō* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "magister — \"a teacher, a master.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The word is one half of a matched pair and the other half is minister. Magis means \"more,\" minus means \"less,\" and both take the same old contrastive suffix -ter: the greater one and the lesser one. A Roman magister outranks a Roman minister, and a modern government minister is still, etymologically, a servant."
+            },
+            {
+              "kind": "speech",
+              "text": "The English family is enormous, and all of it is one Latin word:"
+            },
+            {
+              "kind": "speech",
+              "text": "master, mister, Mr, mistress, Mrs, Miss, magistrate, maestro, magisterial — and Spanish maestro, French maître, Italian maestro."
+            },
+            {
+              "kind": "speech",
+              "text": "And magis itself you have met: The sed lesson recorded that sed died and magis became Spanish mas and Italian ma, \"but.\" The same \"more\" is inside both."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "magister, magistrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *magister, magistrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the pair magister belongs to? (Minister — greater and lesser.) Which earlier word is magis also behind? (The Romance but — Spanish mas, Italian ma.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C53-discipulus",
+      "sequence": 1420,
+      "title": "discipulus — from learning, and the reason discipline means what it does",
+      "headword": "discipulus, discipulī",
+      "romanization": "discipulus, discipulī",
+      "gloss": "the pupil — from learning, and the reason discipline means what it does",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef1b27cce7d15a08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say magister — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *magister* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quia — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quia* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quī — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quī* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sedeō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sedeō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say crās tē vidēbō — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *crās tē vidēbō* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quōmodo — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quōmodo* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "discipulus — \"a pupil.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Built on discō, \"I learn,\" which is itself a reduplicated form of the same root as doceō, \"I teach.\" Learning and teaching are one word split in two, and the pupil is named for the learning half."
+            },
+            {
+              "kind": "speech",
+              "text": "Then the word that grew out of it. Disciplīna originally meant simply \"teaching, instruction\" — what a discipulus receives. Only later did it narrow to the training that keeps order, and later still to punishment. English discipline carries all three senses at once, and a disciple is the discipulus of the Latin Bible."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the shape against the last lesson's. Magister and discipulus are the two ends of a Roman classroom, and Latin names one for rank and the other for what he does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "discipulus, discipulī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *discipulus, discipulī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What verb is discipulus built on? (Discō, I learn.) What did disciplīna first mean? (Teaching — not punishment.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C53-schola",
+      "sequence": 1430,
+      "title": "schola — a Greek word that first meant leisure",
+      "headword": "schola, scholae",
+      "romanization": "schola, scholae",
+      "gloss": "the school — a Greek word that first meant leisure",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b15c1eaa1478994",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say discipulus — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *discipulus* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say meus — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *meus* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say et — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *et* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say stō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *stō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quōmodo — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quōmodo* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bene — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bene* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schola — \"a school.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Greek, and the meaning has turned completely over. Scholē meant leisure — spare time, the opposite of work. Only a person with leisure could spend it on learned discussion, so the word moved to the discussion, then to the place the discussion happened, then to the building children are sent to."
+            },
+            {
+              "kind": "speech",
+              "text": "A word that meant free time now means the place you must be at nine."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin took it as schola, and every daughter kept it: Spanish escuela, Italian scuola, French école, Portuguese escola — and each of them props up the sc- with a vowel in front, exactly the way Portuguese props up escrever. English school, scholar and scholastic are loans; schedule is not, and the resemblance is a coincidence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "schola, scholae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *schola, scholae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did scholē originally mean? (Leisure.) Why do Spanish and French put a vowel in front of sc-? (They prop up the cluster — escuela, école.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C53-liber",
+      "sequence": 1440,
+      "title": "liber — and the bark it was written on",
+      "headword": "liber, librī",
+      "romanization": "liber, librī",
+      "gloss": "the book — and the bark it was written on",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0402e8326044fc79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say schola — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *schola* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tuus — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tuus* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quandō — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quandō* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ambulō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ambulō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quōmodo — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quōmodo* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bene — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bene* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "liber — \"a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The word for the thing this whole book is trying to let you read, and it arrives here, in the second-to-last chapter written so far."
+            },
+            {
+              "kind": "speech",
+              "text": "Liber first meant the inner bark of a tree — the surface Romans wrote on before papyrus was easy to get. The material became the text and the text became the book, the same journey English paper made from papyrus and volume made from volvō, \"I roll,\" because a Roman book was a scroll."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch out for the homograph. Līber with a long ī means \"free,\" and gives English liberty, liberal and deliver. Liber with a short i is the book. Two different words, four identical letters, and only the macron between them — the same lesson hic and hīc taught in the pointing chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish libro, Italian libro, French livre, Portuguese livro. English library and libretto (\"little book\") are loans."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liber, librī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liber, librī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did liber first mean? (Tree bark — the writing surface.) What separates liber from līber? (The macron — book against free.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

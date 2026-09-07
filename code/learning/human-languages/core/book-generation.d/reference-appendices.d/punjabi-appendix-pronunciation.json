@@ -1,0 +1,10 @@
+{
+  "language": "punjabi",
+  "title": "The Gurmukhi script --- a reference",
+  "shortTitle": "The Gurmukhi script (reference)",
+  "runningHead": "Gurmukhi",
+  "source": "punjabi/pronunciation-reference.md",
+  "output": "punjabi/book/chapters/appendix-pronunciation.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

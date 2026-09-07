@@ -2,7 +2,8 @@
   "segments": [
     "LA-PATH-011",
     "LA-PATH-019",
-    "LA-PATH-023"
+    "LA-PATH-023",
+    "LA-PATH-036"
   ],
   "omits": [
     "WORD-GOOD",

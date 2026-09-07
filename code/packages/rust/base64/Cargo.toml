@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_base64"
+version = "0.1.0"
+edition = "2021"
+description = "Base64 encoding and decoding (RFC 4648) implemented from scratch"
+
+[dependencies]

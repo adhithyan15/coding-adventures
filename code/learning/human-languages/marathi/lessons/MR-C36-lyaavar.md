@@ -56,7 +56,7 @@ stands at the front of the sentence with no second half required.
 | वाचणे | वाचल्यावर |
 | शिकणे | शिकल्यावर |
 
-Taken apart, **-ल्यावर** is a past participle in **-ल-** with **वर** ("on,
+Taken apart, **-ल्यावर** is a past participle in **-ल-** with the postposition *var* ("on,
 upon") behind it. *After reading* is literally *upon having-read*. English
 reaches for the same preposition in *upon reading*, which makes this one of the
 few Marathi endings you can feel your way into rather than memorise.
@@ -78,4 +78,4 @@ before the other began. Choose by which you mean, not by which is shorter.
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-LYAAVAR, MR-JOIN-JEVHA] -->
 
 [PAUSE 3s] What does **-ल्यावर** replace? (**A whole जेव्हा … तेव्हा frame**.)
-What is the **वर** in it doing? (**It means *upon* — upon having done it**.)
+What is the *var* in it doing? (**It means *upon* — upon having done it**.)

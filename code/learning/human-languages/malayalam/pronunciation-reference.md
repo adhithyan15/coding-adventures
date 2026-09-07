@@ -9,13 +9,14 @@ in one spot.
 
 1. **Consonants carry a built-in "a".** ക = "ka," മ = "ma," ര = "ra." You never
    write the short *a* — it's already there.
-2. **A vowel sign changes that built-in vowel.** Attached to a consonant:
-   - **ാ** = ā (കാ = kā) · **ി** = i · **ീ** = ī · **ു** = u · **ൂ** = ū · **െ**
-     = e · **േ** = ē · **ൊ** = o · **ോ** = ō. (The *e/o* signs are written
-     *before* their consonant but read after.)
+2. **A vowel sign changes that built-in vowel.** Attached to a consonant it
+   gives കാ = kā · കി = ki · കീ = kī · കു = ku · കൂ = kū · കെ = ke · കേ = kē ·
+   കൊ = ko · കോ = kō. The signs themselves are **ാ** ā · **ി** i · **ീ** ī ·
+   **ു** u · **ൂ** ū · **െ** e · **േ** ē · **ൊ** o · **ോ** ō. (The *e/o* signs
+   are written *before* their consonant but read after.)
 3. **The *chandrakkala* (്) strips the built-in vowel, and bare consonants join
-   as conjuncts.** സ + ക → സ്ക (ska), ന + ദ → ന്ദ (nda), ല + ല → ല്ല (lla). A
-   circle **anusvāram** (ം) adds a final nasal.
+   as conjuncts.** സ് + ക → സ്ക (ska), ന് + ദ → ന്ദ (nda), ല് + ല → ല്ല (lla).
+   A circle **anusvāram** (ം) adds a final nasal.
 
 ## Independent vowels (word-initial)
 

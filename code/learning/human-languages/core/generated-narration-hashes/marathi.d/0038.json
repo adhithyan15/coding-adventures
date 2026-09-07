@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:4cd1c210f326a651",
+  "lessonIds": [
+    "MR-C38-kuthe",
+    "MR-C38-kadhi",
+    "MR-C38-wh-order",
+    "MR-R38-where-when"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch38.txt",
+  "json": "marathi/narration/ch38.json",
+  "textHash": "fnv1a64:4beef8e680a18da1",
+  "jsonHash": "fnv1a64:bf55e4fd24fc37b9",
+  "findings": []
+}

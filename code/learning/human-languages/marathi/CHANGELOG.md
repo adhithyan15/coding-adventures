@@ -1,5 +1,230 @@
 # Changelog
 
+## 2026-09-07 — With, from, to whom, and how Marathi has things: 133 → 142 of 301 A1 points
+
+- **Chapters 45–48 close the postposition column, and A1 exam coverage moves
+  133/301 (44%) → 142/301 (47%).** Re-measured with `measureExamCoverage` on the
+  merged tree.
+- **Eleven items, nine points.** `MR-A1-P-03` (accompaniment and instrument),
+  `MR-A1-P-04` (source), `MR-A1-PRON-08` (the pronoun's own oblique),
+  `MR-A1-NG3-07` (origin), `MR-A1-VP-04` (the animate direct object),
+  `MR-A1-VP-05` (the indirect object), `MR-A1-V-20` (possession),
+  `MR-A1-NG1-01` (existence and non-existence) and `MR-A1-NG3-05` (orientation
+  and direction). **Case and postpositions 3/6 → 5/6**, **Spatial notions 4/7 →
+  6/7**, **The verb phrase 3/6 → 5/6**, **Existential notions 2/5 → 3/5**.
+- **What is taught, one item per lesson:**
+
+  | ch. | items |
+  |---|---|
+  | 45 | **बरोबर** alongside · **माझ्याबरोबर** the pronoun's oblique · **-शी** engaged with · **-ने** by means of |
+  | 46 | **-हून** from · **पासून** from, since · **कुठून** from where |
+  | 47 | **मित्राला** the animate object marker · **मित्राला … देतो** the recipient |
+  | 48 | **-कडे** toward, at somebody's side · **माझ्याकडे … आहे** how Marathi has things |
+- **Three English *with*s, three Marathi endings, and one question that sorts
+  them.** *Is this a companion, a partner in the act, or a tool?* — **बरोबर**,
+  **-शी**, **-ने**. English collapses all three; a learner who has only met
+  *with* over-applies whichever one they met first, so the contrast is the
+  lesson rather than a footnote to it.
+- **Marathi has no verb for *to have*, and chapter 48 is what it uses instead.**
+  **माझ्याकडे पाणी आहे** is *at-my-side water is*: the thing possessed is the
+  SUBJECT, **आहे** agrees with it and not with the owner, and denial is the
+  ordinary sentence negation of chapter 32. Every piece was already owned; only
+  the assembly is new. That construction alone closed `MR-A1-V-20` and
+  `MR-A1-NG1-01`.
+- **The dative marker gets its other two jobs.** **-ला** has been in the book
+  since chapter 16 and only ever on an experiencer (*मला चहा आवडतो*). Chapter 47
+  names the two it also does: the **animate direct object** — Spanish's personal
+  *a* under another marker, and a rule rather than a shade — and the
+  **recipient**. One ending, three roles, and the verb decides which.
+- **A side is not a direction, which is why they are four chapters apart.**
+  **उजवा** and **डावा** were taught in chapter 44 as descriptions and explicitly
+  left there; **-कडे** is what turns them into **उजवीकडे** and **डावीकडे**, on
+  the FEMININE form, because the unspoken noun *बाजू* is feminine.
+- **Zero new glyphs, zero closure violations, zero never-taught glyphs.** One
+  draft example was rewritten for this: *by hand* wanted **हात**, which no
+  lesson teaches, so the instrumental is demonstrated on **डोळा** instead — a
+  noun the book has had since chapter nineteen.
+- **`reinforcementWindowMisses` 352 → 348, and the tranche's own debt is zero.**
+  R4 fell 84 → 80; R1, R2 and R3 did not move. Decomposed: **0 created**, **27
+  exposed** by the added length (R2 for 3 older atoms, R3 for 11, R4 for 13) and
+  all 27 retrieved on purpose, **4 pre-existing misses cleared**.
+- **A forward reference this tranche created, and the fix.** The pronoun-oblique
+  lesson was first headed **माझ्या-**, and chapter 41 had already written
+  **माझ्या घरात** in bold sixteen lessons earlier — so a stem fragment as a
+  headword retroactively made an existing lesson a forward reference.
+  `forwardReferences` went 4 → 5 and is back at 4: the headword is now
+  **माझ्याबरोबर**, a whole word the lesson actually teaches, which is a better
+  headword on its own terms.
+- **A rule statement, spent and then given back.** The chapter-47 review's
+  wrap-up asked *which kind of direct object never takes it*, which
+  `measureInfoDump` reads as a rule statement — and `ruleStatements` is a
+  CEILING at 30 that may fall and never grow. The question was rewritten to ask
+  about a sentence the reader has in front of them instead. 31 → 30.
+- **A third regression, caught by reading the printed page rather than a
+  number.** Four lessons in chapters 45 and 47 derived `sight` rather than
+  `voice`, so the book printed *"Hands-free start: none of the 5 lessons"* on
+  two chapters that teach nothing visual. Each was one incidental phrase
+  tripping a `SIGHT_CUE` rule — *"Look at the base it shares"*, *"Read the
+  middle column"*, *"I see the water"*, *"what you look at"*. None was
+  load-bearing, and two of the replacements read better: Marathi has no
+  articles, so **I see water** is the truer gloss of *mī pāṇī pāhto*. Both
+  chapters open hands-free again.
+- **`atomsTaught` 261 → 272; `atomsNeverRevisited` 1; `durationViolations` 0.**
+- **What was deliberately left uncovered, with the reason written into the
+  inventory:** `MR-A1-P-05` (**-कडे** is taught and **पर्यंत** is not, and
+  writing **पर्यंत** needs the reph of `MR-A1-OR-21` — the two debts are one
+  debt, and half a pair is not this point), `MR-A1-OR-21` (the rakaar has been
+  SHOWN since chapter 18, in **मित्र**, and never named; two script lessons
+  close it and `MR-A1-P-05` together), and `MR-A1-F1-03` (name and origin now
+  work; AGE needs a number above five, so the interview's opening question is
+  one number short of complete).
+
+## 2026-09-07 — The place column: 124 → 133 of 301 A1 points
+
+- **Chapters 41–44 teach the oblique stem and the postpositions built on it, and
+  A1 exam coverage moves 124/301 (41%) → 133/301 (44%).** Re-measured with
+  `measureExamCoverage` on the merged tree, not derived from a delta.
+- **Eleven items closed nine points, and the ratio comes from the STEM, not the
+  vocabulary.** `MR-A1-N-09` — the oblique stem — is a single rule that four
+  other points were sitting behind, and the inventory said so in as many words:
+  *"this one rule stands between the taught vocabulary and any sentence about
+  place, time, direction or accompaniment."* Closing it moved **Spatial notions
+  1/7 → 4/7**, **Case and postpositions 1/6 → 3/6**, **Existential notions 0/5 →
+  2/5**, **The simple sentence 3/6 → 5/6**, and **Housing off the empty-category
+  list** on its first lesson.
+- **What is taught, one item per lesson:**
+
+  | ch. | items |
+  |---|---|
+  | 41 | **घर** house · **खोली** room · **घरा-** the oblique stem |
+  | 42 | **मध्ये** in · **वर** on, up · **खाली** under, down |
+  | 43 | **जवळ** near · **समोर** in front of · **लांब** far, long |
+  | 44 | **उजवा** right · **डावा** left |
+
+- **The two nouns come before the rule on purpose.** An oblique stem is only
+  visible on a noun the reader already owns, so **घर** and **खोली** are taught
+  first and the rule is stated on them — one that bends (**घर → घरा-**) and one
+  that does not (**खोली → खोली-**). The third class, **पुणे → पुण्या-**, has
+  been in the book since chapter twelve and is finally named.
+- **लांब, उजवा and डावा are in this tranche precisely because they are NOT
+  postpositions.** A rule that every new word obeys is not falsifiable. Three
+  words that do not take the oblique stem are what let a reader test whether
+  they have understood it.
+- **`SPINE-NAME-EVERYDAY-THINGS` stops being omitted.** `MR-C41-kholi` realizes
+  `LODGING-ROOM`, its only listed concept, so a second A1 **core** node's
+  omission ledger goes empty — the first was `SPINE-ASK-LOCATION` last tranche.
+- **Zero new glyphs.** Every one of the eleven items is spelled from Devanagari
+  the book already teaches; `scriptClosureViolations` and `neverTaughtGlyphs`
+  both stay at 0. **That was not free.** The first draft printed Sanskrit
+  **ऋजु** inside the *ujvā* lesson, whose independent **ऋ** no lesson teaches —
+  one violation, caught by re-measuring rather than by reading. It is now
+  written *ṛju* in romanization, which costs the reader nothing.
+- **`reinforcementWindowMisses` 360 → 352, and the tranche's own debt is zero.**
+  R3 fell 146 → 144 and R4 90 → 84. Decomposed:
+  - **created by this tranche: 0** — no atom introduced by these fifteen lessons
+    misses any window the track was long enough to have;
+  - **exposed by its length: 24** — fifteen more lessons made R2 judgeable for 3
+    older atoms, R3 for 14 and R4 for 7, and every one was retrieved on purpose;
+  - **pre-existing misses cleared: 8.**
+- **A forward reference the tranche CREATED, and the fix.** Teaching **वर** as a
+  headword retroactively made chapter 36's **-ल्यावर** lesson a forward
+  reference, because that lesson emphasises **वर** while explaining what the
+  ending is built from — six chapters before the word exists. `forwardReferences`
+  went 4 → 5 for that reason alone and is back at 4: the Devanagari is still on
+  the page, the emphasis is not, and the detector only reads emphasised runs for
+  a word this short. Nothing was hidden and nothing was lost.
+- **`atomsTaught` 250 → 261; `atomsNeverRevisited` unchanged at 1;
+  `durationViolations` 0; `orderDefects` 0.**
+- **What was deliberately left uncovered, with the reason written into the
+  inventory:** `MR-A1-P-03`, `MR-A1-P-04` and `MR-A1-P-05` (the stem underneath
+  them is now taught, so each is blocked on its own exponents alone — *-शी /
+  बरोबर / -ने*, *-हून / पासून*, *-कडे / पर्यंत* — and पर्यंत additionally needs
+  the reph of `MR-A1-OR-21`), `MR-A1-PRON-08` (the NOUN's oblique is closed; the
+  pronoun's own oblique form is not), `MR-A1-V-20` and `MR-A1-NG1-01` (Marathi
+  has no verb *to have*; the construction needs *-कडे*), `MR-A1-NG3-05`
+  (both sides are now named, and naming a side is not giving a direction — that
+  needs *-कडे* too), `MR-A1-NG3-07` (the city can now be a place; coming FROM it
+  needs the ablative), and `MR-A1-NE10-04` (*दार* and *खिडकी* have no atoms).
+
+## 2026-09-07 — The asking words: 111 → 124 of 301 A1 points
+
+- **Chapters 37–40 teach Marathi's interrogatives and the here/there pair, and
+  A1 exam coverage moves 111/301 (37%) → 124/301 (41%).** Both numbers are
+  `measureExamCoverage` against `core/exam-inventory-marathi-a1.json`,
+  re-measured on the merged tree, not arithmetic on a delta.
+- **The thirteen points split into two kinds, and they are reported apart
+  because they cost completely different things.**
+  - **Seven were EARNED by the nine new items**: `MR-A1-PRON-06` (कोण · काय ·
+    किती), `MR-A1-ADV-07` (कुठे · कधी · कसा), `MR-A1-OS-03` (where an asking
+    word stands), `MR-A1-F1-02` (ask about a person, a thing or a place),
+    `MR-A1-ADV-01` (इथे · तिथे), `MR-A1-OR-06` (the dental row), and
+    `MR-A1-F2-03` (ask for an evaluation).
+  - **Six were already taught and only LOOKED uncovered.** `MR-A1-F5-06`,
+    `MR-A1-F5-08`, `MR-A1-PRON-09`, `MR-A1-NE07-03`, `MR-A1-V-10` and
+    `MR-A1-F4-01` each carried a note saying the teaching sat in a schema-v1
+    lesson and could not be probed. Chapters 9–12 were migrated to schema v2
+    two tranches ago; the notes were never re-read. **Nothing was authored for
+    those six — a stale note was corrected.**
+- **The SCHEMA-V1 measurement-gap class is now closed and pinned closed.** Not
+  one point note in the inventory carries that marker any more, and
+  `exam-inventory.test.ts` asserts the list is empty rather than pinning a
+  floor on the count. A floor on a count of known defects only ever rises and
+  rewards nobody for clearing one; it also decayed in the flattering direction
+  for the AUTHOR rather than the corpus, because it hid work already done.
+  `MR-A1-V-17` is the last MEASUREMENT GAP left, and it is the other kind —
+  EMPTY-INTRODUCES, which hides inside schema v2.
+- **What is taught, one item per lesson:**
+
+  | ch. | items |
+  |---|---|
+  | 37 | **कोण** who · **किती** how many |
+  | 38 | **कुठे** where · **कधी** when · the rule that an asking word stands in the answer's own slot |
+  | 39 | **थ** the aspirated dental · **तिथे** there |
+  | 40 | **इ** the independent short *i* · **इथे** here |
+
+- **`SPINE-ASK-LOCATION` stops being omitted.** It is an A1 **core** node whose
+  single concept, `QUESTION-WHERE`, this track had no realization for at all.
+  `MR-C38-kuthe` realizes it and the omission ledger is empty.
+- **Two new glyphs, and both were forced rather than chosen.** थ is the only
+  missing letter of a dental row the book otherwise finished in chapter three,
+  and तिथे cannot be written without it — teaching it closes `MR-A1-OR-06`
+  outright. The independent इ is what इथे needs to begin at all. Every other
+  item in the tranche was filtered against the taught-glyph set before a word of
+  prose was written, so `scriptClosureViolations` and `neverTaughtGlyphs` both
+  stay at 0. The two script lessons sit two lessons apart, which is why this is
+  four chapters and not two: `minLessonsBetweenScriptSegments` is 2 and each
+  letter must land in the chapter immediately before the word that spends it.
+- **`reinforcementWindowMisses` 374 → 360, and the tranche's own debt is zero.**
+  R4 fell 104 → 90; R1, R2 and R3 did not move. Decomposed:
+  - **The tranche created 0 misses.** No atom introduced by these thirteen
+    lessons misses any window the track was long enough to have.
+  - **The tranche EXPOSED 30 windows that did not previously fit** — thirteen
+    lessons lengthen the track, so R2 became judgeable for four atoms, R3 for
+    thirteen and R4 for eleven — and every one of the 30 was retrieved on
+    purpose by a `practises` list placed at the right distance.
+  - **It also cleared 14 pre-existing R4 misses** that no earlier lesson sat far
+    enough out to answer.
+  The mechanism is the chapter boundary: every chapter opens by retrieving the
+  two preceding items **by name**, and — new in this tranche — every chapter
+  opener also carries a `[YOU RECALL: …]` for the item at the same position
+  **two chapters back**, which is distance 7–9 and therefore lands in R2, the
+  window a naive append always misses because within-chapter retrieval only
+  reaches distance 1–4.
+- **`atomsTaught` 241 → 250; `atomsNeverRevisited` unchanged at 1;
+  `durationViolations`, `forwardReferences`, `orderDefects` all unchanged.**
+- **What was deliberately left uncovered, with the reason written into the
+  inventory:** `MR-A1-PRON-07` (किती itself is now taught; the exclamative takes
+  an adjective or adverb and this track teaches none, so it is blocked behind
+  `SPINE-DESCRIBE-QUALITIES` and not behind a question word), `MR-A1-F6-02`
+  (both its named blockers cleared, but asking FOR a person — "is Mira there?" —
+  is a different move from asking where a named person is, and no lesson
+  supplies it), `MR-A1-OR-12` (I is now taught as an independent; II, O, AI and
+  AU are not, and four fifths of a set is not the set), `MR-A1-NG3-01` (इथे and
+  तिथे close the deictic half; putting a thing IN a place still needs the
+  locative), `MR-A1-PRON-01` and `MR-A1-POS-01` (both had their schema-v1 caveat
+  removed and stay uncovered on genuine content: no third person, no plural, no
+  possessor paradigm), and `MR-A1-V-17` (still an EMPTY-INTRODUCES gap).
+
 ## 2026-09-02 — The joining column: 88 → 111 of 301 A1 points
 
 - **Chapters 30–36 teach Marathi's joining words, and A1 exam coverage moves

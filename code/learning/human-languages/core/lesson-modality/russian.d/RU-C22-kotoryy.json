@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C22-kotoryy",
+    "language": "russian",
+    "chapter": 22,
+    "sequence": 1130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4a57d361bb23c11"
+  },
+  "findings": []
+}

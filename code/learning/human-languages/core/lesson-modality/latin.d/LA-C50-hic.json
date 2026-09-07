@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C50-hic",
+    "language": "latin",
+    "chapter": 50,
+    "sequence": 1250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff25379cd2a45aaa"
+  },
+  "findings": []
+}

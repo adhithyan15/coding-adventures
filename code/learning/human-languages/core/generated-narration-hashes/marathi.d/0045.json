@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:6467e3c94d84d69d",
+  "lessonIds": [
+    "MR-C45-barobar",
+    "MR-C45-pron-oblique",
+    "MR-C45-shii",
+    "MR-C45-ne",
+    "MR-R45-with"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch45.txt",
+  "json": "marathi/narration/ch45.json",
+  "textHash": "fnv1a64:5f59220e9ec5d901",
+  "jsonHash": "fnv1a64:b60cc7c4315fbb6c",
+  "findings": []
+}

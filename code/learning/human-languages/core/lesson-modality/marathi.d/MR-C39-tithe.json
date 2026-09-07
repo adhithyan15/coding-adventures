@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C39-tithe",
+    "language": "marathi",
+    "chapter": 39,
+    "sequence": 1590,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bb90ce69e821e659"
+  },
+  "findings": []
+}

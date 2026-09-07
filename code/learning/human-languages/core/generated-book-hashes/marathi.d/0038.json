@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:5668fbbb4a58801f",
+  "lessonIds": [
+    "MR-C38-kuthe",
+    "MR-C38-kadhi",
+    "MR-C38-wh-order",
+    "MR-R38-where-when"
+  ],
+  "tex": "marathi/book/chapters/ch38-where-when.tex"
+}

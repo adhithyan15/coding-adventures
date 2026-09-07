@@ -6806,3 +6806,111 @@ write the destination last. Exercise left, right and double aliasing explicitly.
 
 Direct WASM IIR tests must give `str_eq` an i64/i32 result hint; `bool` is
 rejected by the backend validator before execution. Use the established test ABI.
+
+
+### The destination-before-read hazard was not unique to str_concat (2026-09-07)
+
+VM-056 fixed `str_concat`; the same "assign the destination local, then read
+an operand local that may be the same local" shape existed in `str_slice`'s
+runtime path too, guessed at as a suspected defect (VM-057) rather than
+confirmed. A raw IIR-level probe (a `str_slice` whose dest and source share a
+variable name) reproduced wrong output before any fix — corrupted bytes
+instead of the correct slice — proving it was a real, not merely suspected,
+bug. The repair is the identical pattern: address the fresh block through the
+not-yet-advanced bump global while the source local is still needed, and
+`local.set` the destination only after the last read.
+
+Before trusting "just one op was buggy," grep every other lowering site that
+shares the same bump-allocate-and-copy shape (`ARRAY_BUMP_GLOBAL` +
+`memory.copy`) for the same ordering hazard. `alloc_array` copies no existing
+operand's bytes (only a requested length), so it was never exposed; the LLVM
+backend's `str_slice`/`str_concat` already read every operand into a value
+before overwriting the destination `env` entry, with a comment recording that
+was deliberate — so the class of bug is backend-lowering-shape-specific
+(mutable-local reuse keyed by variable name), not something to assume
+recurs in every backend just because one had it.
+
+Finding the actual real-world trigger mattered: COBOL reference-modification
+`MOVE base(i:j) TO dst` does NOT reach this hazard (`ref_mod_slice` always
+materializes into a fresh temp before the final reshape write), but
+`STRING <item> DELIMITED BY SIZE INTO <same item>` does — a lone sending
+field's register is returned directly by `string_source` with no temporary,
+so the truncating `str_slice`'s destination and source are the identical
+local. Guessing at "a MOVE-shaped example" instead of tracing the actual
+register data flow would have produced a regression that never touched the
+buggy path.
+
+## `to_value` builds one Value per element, and a `Vec<u8>` is a lot of elements
+
+`ok_with` in the wasm facade did `serde_json::to_value(value)` before rendering
+to a string. `to_value` materialises a `Value` tree first — one `Value` per
+array element — and `MediaAssetRecord.data` is a `Vec<u8>` serialising as an
+array of decimal numbers. So one heap `Value` per media BYTE, on a target whose
+entire address space is 4 GB.
+
+Measured with a counting global allocator rather than repeating the estimate:
+
+```
+  1024 KiB media | to_value peak 34.0 MiB (34.0x)  |  streamed peak 2.8 MiB (2.8x)  |  12.4x less
+```
+
+34x peak per media byte, constant across 64 KiB / 256 KiB / 1 MiB — so it is
+proportional, which is the property the issue asked to see demonstrated.
+Streaming with `to_writer` straight into the output buffer takes it to 2.8x.
+The residue is the numeric-array encoding itself; base64 is a separate change
+with a real blast radius across every host.
+
+**The interesting part was the part I got wrong.** I wrote that this was "not a
+wire-format change" and pinned it with a byte-equality test against the old
+construction. The test failed:
+
+```
+left:  {"ok":true,"state":{"id":..,"data":..,"nested":..}}
+right: {"ok":true,"state":{"data":..,"id":..,"nested":..}}
+```
+
+`serde_json::Map` is a `BTreeMap` unless the `preserve_order` feature is on —
+it is not, anywhere in this workspace — so `to_value` had been **sorting every
+nested object's keys alphabetically**, and streaming emits declaration order.
+Key order on the wire changed for every response the product makes.
+
+It is safe, but "JSON objects are unordered" is a claim about consumers, not a
+fact about this codebase, so I checked all five: `QJsonDocument`,
+`jsonDecode`, `JsonDocument`, `JSONSerialization`, `org.json.JSONObject` — all
+key-addressed, none indexing an object by position — then rebuilt and launched
+a native host against the changed facade. The test now asserts semantic
+equality and a second test pins the order change explicitly, so the next person
+comparing responses as strings learns it from a test name instead of a diff.
+
+Also fixed in passing: `unwrap_or(Value::Null)` turned a serialisation failure
+into `{"ok":true,"state":null}` — a success-shaped response for a failed
+operation. The Compose host already had `root.isNull("state")` in its failure
+condition, which is what defending against a silent failure downstream looks
+like when nobody fixed it upstream.
+
+## `cmd | tail -3 && echo clean` reports clean when the command failed
+
+Running clippy on a new crate:
+
+```sh
+cargo clippy -q -p coding_adventures_base64 --all-targets -- -D warnings 2>&1 | tail -3 && echo "  clean"
+```
+
+printed both the compile errors **and** "clean". `&&` tests the exit status of
+the last element of the pipeline — `tail`, which succeeded — not `cargo`. The
+happy word was printed by a shell that had no idea whether anything passed.
+
+I have used that pattern repeatedly this session, and it has been reporting
+success for whatever the pipeline's final stage happened to return. When the
+command genuinely passed, the output was indistinguishable from this. Use
+`set -o pipefail`, or test explicitly:
+
+```sh
+if cargo clippy ... ; then echo clean; else echo FAILED; fi
+```
+
+The general shape is one this file already has several instances of: **a status
+line that is not derived from the thing it claims to describe.** A byte scan
+that could not see undefined symbols, a mutation test whose mutation never
+applied, a guard whose fixtures encoded the same assumption it did — and now a
+"clean" that was just `tail` exiting zero.

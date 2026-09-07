@@ -1,0 +1,13 @@
+{
+  "id": "MR-PATH-043",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "MR-C41-ghar",
+    "MR-C41-kholi"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-056-HOUSE-AND-ROOM"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:ceaceca9594a0f84",
+  "lessonIds": [
+    "RU-C20-khotet",
+    "RU-C20-khochu-chitat",
+    "RU-C20-chtoby",
+    "RU-C20-moch",
+    "RU-C20-nado"
+  ],
+  "tex": "russian/book/chapters/ch20-want-can-must.tex"
+}

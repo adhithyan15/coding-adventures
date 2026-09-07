@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-052-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can ask where and why, answer with a because-clause, and say that a thing is mine or yours.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C52-ubi",
+    "LA-C52-cur",
+    "LA-C52-quia",
+    "LA-C52-meus",
+    "LA-C52-tuus"
+  ]
+}

@@ -1,0 +1,401 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 39,
+  "title": "There",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:c1ae5ac777119f2b",
+  "lessons": [
+    {
+      "id": "MR-W39-tha",
+      "sequence": 1580,
+      "title": "थ (tha) — the hole in the dental row",
+      "headword": "थ",
+      "romanization": "tha",
+      "gloss": "aspirated dental ta — the one gap left in a row you otherwise finished in chapter three",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5dd2729d723ba375",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter three gave you त, द, ध and न. Four of a row of five. This is the fifth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थ (tha)."
+            },
+            {
+              "kind": "speech",
+              "text": "थ is tha: त with the breath let out, exactly the step you already know from क/ख and from ट/ठ. The sound is a dental t with a puff after it — never the English th of this or thin."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape is worth a second look, because it is the one letter in the row that does not resemble its plain partner at all. त has a hook; थ is a loop with a stem through it. Do not expect to derive it — learn it as its own picture."
+            },
+            {
+              "kind": "speech",
+              "text": "Curled ठ and dental थ (tha) are the pair readers confuse: ठ is a bare circle, थ (tha) carries a vertical stem down the right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy थ twice with the model visible. Then write ठ beside it and check that only one of the two has a stem."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two is a bare circle? (ठ.) The word for there needs the other one, and arrives in the next lesson. End the line with? or! as before, and never both."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Devanagari tha stroke order."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W39-tha-r1",
+              "prompt": "Write aspirated dental tha, then curled ttha, and name the difference.",
+              "assesses": [
+                "MR-SCRIPT-THA-01",
+                "MR-SCRIPT-TTHA-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "थ; ठ — the stem"
+              ],
+              "feedback": {
+                "correct": "A stem tells them apart.",
+                "incorrect": "Add the vertical stem to one of them and leave the other bare."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C39-tithe",
+      "sequence": 1590,
+      "title": "तिथे (tithe) — there",
+      "headword": "तिथे",
+      "romanization": "tithe",
+      "gloss": "there — the far half of a pointing pair, and the first thing you can answer कुठे with",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:bb90ce69e821e659",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson ago you learned a letter and were told the word it was for. Here it is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तिथे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तिथे — tithe — there."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा तिथे आहे. — Mīrā tithe āhe. — Mira is there."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first complete answer you can give to कुठे without naming a city. Point across the room and say it."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at how it is built. जेव्हा … तेव्हा … taught you that Marathi keeps two matching stems: ज- for the one you ask about and त- for the one you point at. तिथे (tithe) is that same त-, the far-pointing stem, with a place ending. It comes down from Sanskrit तत्र (tatra, \"there\")."
+            },
+            {
+              "kind": "speech",
+              "text": "So the shape of the language is now visible in three columns: क- asks, त- points away. One column is still missing, and it is the near one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tithe — there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tithe* — there]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā tithe āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā tithe āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "greet Mira the way your named-reader message opens",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: greet Mira the way your named-reader message opens]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C39-tithe-r1",
+              "prompt": "Ask where Mira is, then answer 'there'.",
+              "assesses": [
+                "MR-LEX-TITHE",
+                "MR-QUESTION-KUTHE"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "mīrā kuṭhe āhe? — tithe",
+                "मीरा कुठे आहे? तिथे"
+              ],
+              "feedback": {
+                "correct": "Asked and answered without a place name.",
+                "incorrect": "Use kuṭhe to ask, and tithe on its own to answer."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which stem points away from you? (त-.) Which letter in तिथे (tithe) did you not have two lessons ago? (थ (tha).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: तिथे (tithe)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R39-there",
+      "sequence": 1600,
+      "title": "Ask a place, answer a place",
+      "headword": "कुठे? — तिथे.",
+      "romanization": "kuṭhe? — tithe.",
+      "gloss": "the first question-and-answer pair about place that needs no place name",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfcbfb550a2cac6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A question and its answer landed one lesson apart. Say the pair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭhe āhe? — then answer tithe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭhe āhe?* — then answer *tithe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadhī? — and notice it takes the same slot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadhī?* — and notice it takes the same slot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask का …? — the why-question from chapter thirty-four — and answer māhīt nāhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask **का …?** — the why-question from chapter thirty-four — and answer *māhīt nāhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the line of your named-reader message that gives your own name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the line of your named-reader message that gives your own name]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R39-there-run",
+              "prompt": "Ask where, answer there, then ask why.",
+              "assesses": [
+                "MR-QUESTION-KUTHE",
+                "MR-LEX-TITHE",
+                "MR-JOIN-KAA-WHY"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "kuṭhe āhe? — tithe. kā?",
+                "कुठे आहे? तिथे. का?"
+              ],
+              "feedback": {
+                "correct": "Place asked, place given, reason demanded.",
+                "incorrect": "Three turns: kuṭhe, tithe, then kā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write तिथे (tithe) once and check the middle letter carries a stem. (थ (tha), not ठ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -368,3 +368,114 @@ func TestComponentJSON_OmitsAbsolutePaths(t *testing.T) {
 		t.Errorf("absolute paths leaked into JSON: %s", blob)
 	}
 }
+
+// ── Stories (#14031) ──────────────────────────────────────────────────────
+//
+// Three-file components could not have stories at all: threeFileComponent
+// hardcoded a single empty "Default" and never looked for a file. Since
+// three-file UI29 is the only authoring form in this repository, no component
+// had ever been previewed with a populated slot -- which is how six toolkit
+// components shipped `variant` slots that did nothing.
+
+func TestDiscoverThreeFile_LoadsSiblingStories(t *testing.T) {
+	dir := t.TempDir()
+	writeThreeFileComponent(t, dir, "Button", ".light.msl")
+	mustWrite(t, filepath.Join(dir, "Button.stories.json"), `{
+	  "title": "Push Button",
+	  "stories": [
+	    {"name": "Primary", "fixtures": {"label": "Save", "variant": "primary"}},
+	    {"name": "Danger",  "fixtures": {"label": "Delete", "variant": "danger"}}
+	  ]
+	}`)
+
+	comps, err := discoverComponents(dir)
+	if err != nil {
+		t.Fatalf("discover: %v", err)
+	}
+	if len(comps) != 1 {
+		t.Fatalf("expected 1 component, got %d", len(comps))
+	}
+	c := comps[0]
+	if c.StoriesError != "" {
+		t.Fatalf("unexpected stories error: %s", c.StoriesError)
+	}
+	if len(c.Stories) != 2 {
+		t.Fatalf("expected 2 stories, got %d: %+v", len(c.Stories), c.Stories)
+	}
+	if c.Stories[0].Name != "Primary" || c.Stories[1].Name != "Danger" {
+		t.Fatalf("story names not preserved in order: %+v", c.Stories)
+	}
+	// The fixture has to survive, or the story renders the same empty
+	// component the synthesized Default did.
+	if got := c.Stories[0].Fixtures["variant"]; got != "primary" {
+		t.Fatalf("fixture value lost: got %v", got)
+	}
+	if c.Title != "Push Button" {
+		t.Fatalf("title override ignored: %q", c.Title)
+	}
+}
+
+func TestDiscoverThreeFile_NoStoriesFileSynthesisesDefault(t *testing.T) {
+	dir := t.TempDir()
+	writeThreeFileComponent(t, dir, "Badge", ".light.msl")
+
+	comps, err := discoverComponents(dir)
+	if err != nil {
+		t.Fatalf("discover: %v", err)
+	}
+	c := comps[0]
+	if len(c.Stories) != 1 || c.Stories[0].Name != "Default" {
+		t.Fatalf("expected a synthesized Default, got %+v", c.Stories)
+	}
+	// Absent is not an error -- only a file that exists and is broken is.
+	if c.StoriesError != "" {
+		t.Fatalf("absent stories file must not report an error: %s", c.StoriesError)
+	}
+}
+
+func TestDiscoverThreeFile_BrokenStoriesFileIsReportedNotSwallowed(t *testing.T) {
+	dir := t.TempDir()
+	writeThreeFileComponent(t, dir, "Alert", ".light.msl")
+	mustWrite(t, filepath.Join(dir, "Alert.stories.json"), "{ not json")
+
+	comps, err := discoverComponents(dir)
+	if err != nil {
+		t.Fatalf("discover: %v", err)
+	}
+	c := comps[0]
+	// Still previewable...
+	if len(c.Stories) != 1 || c.Stories[0].Name != "Default" {
+		t.Fatalf("expected fallback Default, got %+v", c.Stories)
+	}
+	// ...but the reason is carried, so a gate can reject it rather than
+	// certifying the component on empty fixtures.
+	if c.StoriesError == "" {
+		t.Fatal("a malformed stories file must not look identical to no stories file")
+	}
+}
+
+func TestDiscoverThreeFile_EmptyStoriesListIsReported(t *testing.T) {
+	dir := t.TempDir()
+	writeThreeFileComponent(t, dir, "Card", ".light.msl")
+	mustWrite(t, filepath.Join(dir, "Card.stories.json"), `{"stories": []}`)
+
+	comps, err := discoverComponents(dir)
+	if err != nil {
+		t.Fatalf("discover: %v", err)
+	}
+	c := comps[0]
+	if len(c.Stories) != 1 || c.Stories[0].Name != "Default" {
+		t.Fatalf("expected fallback Default, got %+v", c.Stories)
+	}
+	if c.StoriesError == "" {
+		t.Fatal("a stories file declaring no stories should say so")
+	}
+}
+
+func TestDiscoverThreeFile_StoriesFileIsHotReloadWatched(t *testing.T) {
+	// The watcher has to see the file, or editing a fixture would not refresh
+	// the preview and the seam would look broken rather than unwatched.
+	if !hasWatchedSuffix("Button.stories.json") {
+		t.Fatal("stories files must trigger a hot reload")
+	}
+}

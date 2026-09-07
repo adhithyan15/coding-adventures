@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "CONNECTIVE-BECAUSE"
+  "segments": [
+    "RU-PATH-020"
   ],
+  "omits": [],
   "relocates": {}
 }
