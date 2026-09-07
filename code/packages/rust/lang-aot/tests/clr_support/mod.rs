@@ -1,10 +1,16 @@
-//! Shared harness for the **real CoreCLR** McCarthy tests (CLR-real chapter).
+//! Shared harness for the **real CoreCLR** conformance tests (CLR-real chapter).
 //!
 //! `compile_source_to_cil_text` → write `.il` → assemble with real `ilasm` →
 //! run on real `dotnet` → parse the printed integer. Gated on `dotnet` + `ilasm`
 //! (returns `None`, i.e. *skip*, when either is absent — like the other
 //! external-tool backends). Each CLR-real test file (`clr_real_scalar`,
 //! `clr_real_cons`, …) `#[path]`-includes this module and asserts on the result.
+//!
+//! [`run_lang_on_real_clr`] takes an explicit [`Language`], so any frontend whose
+//! `compile_source_to_cil_text` output `ilasm` can assemble gets the same real-
+//! runtime proof — not only McCarthy. [`run_on_real_clr`] is the original
+//! McCarthy-only convenience wrapper, kept so the five existing `clr_real_*`
+//! McCarthy files need no changes.
 //!
 //! NOTE: this lives under `tests/clr_support/` (a subdirectory), so Cargo does not
 //! compile it as its own test binary.
@@ -70,11 +76,20 @@ pub fn find_ilasm() -> Option<PathBuf> {
 /// Compile McCarthy `src` → `.il` → real PE (`ilasm`) → run on real `dotnet`,
 /// returning the printed integer. `None` if the toolchain is unavailable (skip).
 pub fn run_on_real_clr(src: &str, tag: &str) -> Option<i64> {
+    run_lang_on_real_clr(Language::McCarthyLisp, src, tag)
+}
+
+/// Compile `src` in `language` → `.il` → real PE (`ilasm`) → run on real
+/// `dotnet`, returning the printed integer. `None` if the toolchain is
+/// unavailable (skip). The language-generic sibling of [`run_on_real_clr`]:
+/// any frontend whose `compile_source_to_cil_text` output real `ilasm` can
+/// assemble gets the identical real-runtime proof, not only McCarthy.
+pub fn run_lang_on_real_clr(language: Language, src: &str, tag: &str) -> Option<i64> {
     if !dotnet_ok() {
         return None;
     }
     let ilasm = find_ilasm()?;
-    let il = compile_source_to_cil_text(Language::McCarthyLisp, src, "Main")
+    let il = compile_source_to_cil_text(language, src, "Main")
         .unwrap_or_else(|e| panic!("emit .il for {src:?}: {e}"));
 
     let dir = std::env::temp_dir().join(format!("clr_real_{}_{tag}", std::process::id()));

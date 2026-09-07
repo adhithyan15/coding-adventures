@@ -323,6 +323,47 @@ typed arithmetic with generic identity `box`/`unbox` operations. The full
 21-program Macsyma conformance corpus agrees across VM, JIT, WASM, CLR, JVM,
 LLVM, and native AOT.
 
+**Macsyma on real CoreCLR (VM-049, `tests/clr_real_macsyma.rs`):** `macsyma_
+conformance.rs`'s CLR column runs on the **in-repo** `clr-simulator` — the
+always-on conformance floor, with no external dependency. It never proved the
+same emitted CIL loads and runs on a **real** .NET host, the gap VM-036 closed
+for native execution. `clr_real_macsyma.rs` closes it the same way McCarthy's
+`clr_real_scalar.rs` did: `compile_source_to_cil_text(Language::Macsyma, …)` →
+real `ilasm` → real `dotnet`, over the identical 21-program corpus
+`macsyma_conformance.rs` already agrees on (literals, all four binary ops,
+precedence/chains, exact division, unary, assignment/reference, multi-statement
+chains). Macsyma's lowerer always routes arithmetic through `call_builtin
+"+"/"-"/"*"/"/ "`, which `iir-builtin-lowering::dynamic_arith` expands to
+`unbox`/`add`/`box` **before** any backend sees it — ops the CIL text emitter
+already supports for McCarthy's cons/predicate paths — so no `iir-to-cil-
+bytecode::emit_il` change was needed; the gap was purely a missing test lane
+plus (VM-D028, below) a CI wiring gap that silently kept the *existing*
+McCarthy `clr_real_*` lane from ever running on a PR that touches only
+`lang-aot`. The simulator column in `macsyma_conformance.rs` is unchanged and
+remains the required, always-on conformance floor; `clr_real_macsyma.rs` only
+adds a real-runtime proof on top of it, gated on `dotnet`+`ilasm` exactly like
+McCarthy's real-CLR lane (skips cleanly when absent — confirmed on this
+sandbox, which lacks `ilasm`; see VM-047c). A toolchain-independent
+`macsyma_emits_valid_cil_text_for_full_corpus` test in the same file compiles
+the whole corpus to `.il` text and asserts success unconditionally, so this
+lane still exercises the real lowering path even on a host with no CLR
+toolchain at all.
+
+**VM-D028 (BUILD toolchain-declaration gap):** `lang-aot`'s BUILD file now
+carries `# needs-toolchain: dotnet`. Before this, `lang-aot`'s bucket language
+("rust") meant no PR touching only this crate ever set the CI `needs_dotnet`
+flag, so `.github/workflows/ci.yml`'s `actions/setup-dotnet` and `ilasm`
+NuGet-restore steps — both gated on that flag — never ran for such a PR. Every
+CLR-real test still skipped cleanly (the tool gate itself was always correct),
+but the skip meant the CLR-real column, McCarthy's included, was never actually
+exercised on its own PR merge-gate CI; only a forced main-branch full build
+(which sets every toolchain flag) ever proved it. Confirmed by inspecting a
+recent merged PR's hosted Linux job log: `needs_dotnet=false`, and the `.NET:
+$(dotnet --version)` verification line was generated but its `if` guard was
+`false`, so it never ran. This is the same class of gap VM-D022 found for
+Windows/Rust; the fix follows the same declarative pattern
+`java-to-semantic-ir/BUILD` already uses for its own extra Python dependency.
+
 `tests/conformance.rs` (W16) is the capstone: one shared table of **19** McCarthy
 programs (F1–F7) run through **all eight backends**, each asserting the identical
 integer result. The four in-process backends (VM/JIT/WASM/CLR) always run; JVM

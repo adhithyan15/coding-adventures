@@ -8,6 +8,92 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-049 implementation contract (selected after #14449 merged)
+
+Refreshed main is `df33215f43` (VM-047c merged as `db77422ad1`). No new
+executed failure or lowering defect was found; the ranked queue's next item
+was VM-049: a real .NET lane for the existing Macsyma arithmetic corpus.
+
+Investigation before writing any test found the actual gap narrower than "add
+CLR support to Macsyma" — Macsyma already has full CLR coverage through
+`macsyma_conformance.rs`'s `run_clr` backend, which runs the emitted CIL on
+the **in-repo** `clr-simulator`. What was missing is a **real** CoreCLR proof
+of the same corpus, mirroring the `CLR-real` chapter McCarthy's `conformance.rs`
+and five `clr_real_*.rs` files already established via
+`compile_source_to_cil_text` → real `ilasm` → real `dotnet`. That harness
+(`tests/clr_support/mod.rs`) was McCarthy-only: `run_on_real_clr` hardcoded
+`Language::McCarthyLisp`. Generalized it to `run_lang_on_real_clr(language,
+src, tag)`, with `run_on_real_clr` kept as a thin McCarthy-only wrapper so the
+five existing McCarthy files need no changes.
+
+Added `tests/clr_real_macsyma.rs` over the identical 21-program corpus
+`macsyma_conformance.rs::PROGRAMS` already agrees on across the simulator
+floor (literals, all four binary ops, precedence/chains, exact division,
+unary, assignment/reference, multi-statement chains) — not a narrower
+hand-picked subset. Before assuming `iir-to-cil-bytecode::emit_il` needed new
+op support (McCarthy's doc comments describe it growing per-slice: cons,
+predicates, `COND`, symbols, lambda — arithmetic was never listed), traced
+Macsyma's actual lowered shape: the frontend always emits `call_builtin
+"+"/"-"/"*"/"/ "` (per `macsyma_conformance.rs`'s own module doc), which the
+shared `iir-builtin-lowering::dynamic_arith` pass unconditionally expands to
+`unbox`/`add`/`box` **before any backend sees it** — ops `emit_il` already
+lowers for McCarthy's cons/predicate paths. A toolchain-independent
+`macsyma_emits_valid_cil_text_for_full_corpus` test (compiles all 21 programs
+to `.il` text, asserts success, no `dotnet`/`ilasm` needed) confirmed this
+locally: it passed on the first attempt, so no `emit_il` change was made. This
+is a coverage-lane addition on already-implemented lowering, not new codegen —
+the same shape VM-021 found for Macsyma's original CLR-simulator wiring.
+
+Investigating why McCarthy's pre-existing `clr_real_*` lane always reported a
+skip rather than sometimes a real pass — even on this sandbox's known missing
+`ilasm` (VM-047c), hosted CI installs it, so *some* prior hosted run should
+have exercised it — surfaced **VM-D028**: `lang-aot/BUILD` never declared
+`# needs-toolchain: dotnet`. `lang-aot`'s own bucket language is "rust", and
+`.github/workflows/ci.yml` only runs `actions/setup-dotnet` and restores the
+`ilasm` NuGet package when the CI-wide `needs_dotnet` flag is set — which
+without this declaration, no PR touching only `lang-aot` ever set. Confirmed
+against #14449 (VM-047c)'s own hosted Linux job log: `needs_dotnet=false`, and
+the `Verify tools` step's `.NET: $(dotnet --version)` line was generated but
+its guard was `if [ "false" = "true" ]`, so it never executed — meaning
+McCarthy's CLR-real column has *never* actually run on a normal PR merge-gate
+CI, only on a forced main-branch full build (which sets every toolchain flag
+via `is_main`). Every CLR-real test still skipped *correctly* the whole time
+— the tool gate itself was never wrong — but "correct skip" and "hosted CI
+proves real execution" are different claims, and the backlog's own acceptance
+criteria require the latter. Fixed by adding the declaration, the exact
+pattern `java-to-semantic-ir/BUILD` already uses for its own extra Python
+dependency; also added `clr_real_macsyma` to `BUILD`'s protected target list.
+This is squarely in VM-049's scope: without it, the new Macsyma real-CLR lane
+would have inherited the identical silent-skip gap on its own PR.
+
+VM-049 local execution: `macsyma_emits_valid_cil_text_for_full_corpus` passes
+all 21 programs (no toolchain needed). `macsyma_runs_on_real_coreclr` reports
+the expected honest skip on this host (`dotnet`/`ilasm` both absent,
+consistent with VM-047c). `macsyma_conformance.rs`'s simulator-floor test is
+unchanged and still passes 21 programs × 7 backends (147 agreements);
+`conformance.rs`'s McCarthy W16 capstone still passes 19 programs × 8 backends
+(152 agreements) and its own five `clr_real_*.rs` files still report the same
+honest skip after the shared-helper generalization — no regression. Focused
+Clippy on `lang-aot` with all targets and warnings denied is clean. The go
+build-tool's toolchain-declaration unit and fixture tests
+(`internal/discovery`, `toolchain_declaration_fixture_test.go`) pass unchanged,
+confirming `# needs-toolchain: dotnet` parses the same way
+`java-to-semantic-ir/BUILD`'s existing directive does. The full non-ALGOL
+matrix (`non_algol_matrix_every_proven_cell_agrees`) passed 206 programs, 1256
+cells exercised and 206 skipped (every program's CLR cell, the same
+host-wide missing-`ilasm` pattern VM-047c reported), zero failures, in 530.34
+seconds — identical shape to the pre-VM-049 baseline, as expected since this
+item adds a dedicated-suite lane, not unified-matrix rows. The two other
+`BUILD`-protected `lang_matrix` targets (`t7_differential_random_basic_`,
+`portable_text_stdout_`) also pass.
+
+Hosted CI is the first environment that can actually prove or disprove real
+CoreCLR execution for both the new Macsyma lane and McCarthy's pre-existing
+one, now that `needs_dotnet` will actually be set for this PR. If hosted CI
+also cannot produce a real pass (rather than a skip) for `clr_real_macsyma`
+and the existing `clr_real_*` files, that is a further, separate finding to
+record — not something to paper over by reverting the `BUILD` declaration.
+
 ## VM-056 repair contract (discovered during VM-047b)
 
 All five replacement programs fail on WASM (one bounds trap, four corrupted
@@ -743,7 +829,7 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | done #14370 | VM-045 | Promote COBOL reference modification to standard columns: constant and dynamic bounds, result text and explicit invalid-bound behavior, compared with its existing oracle. |
 | done #14394 | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
 | done (see PR below) | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
-| 7 | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |
+| done (see PR below) | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |
 | 8 | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
 | 9 | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
 | 10 | VM-040 | Inventory remaining BEAM cells separately for Twig strings, Twig records/closures, Nib scalars, BASIC f64/I/O, Oct u8/I/O, FLOW-MATIC and COBOL. Each family first gets a discriminating probe; split actual lowering defects before implementation. Brainfuck remains the explicit excluded tape design. |
@@ -756,10 +842,19 @@ VM-047c (region proofs, including BEFORE/AFTER used together across a
 combined statement's independently-regioned TALLYING/REPLACING halves)
 completed VM-047. The genuine, separate "single phrase carries both BEFORE
 and AFTER" intersection gap it exposed is VM-058, ranked with the other new-
-frontend-semantics items above rather than blocking VM-047c: no executed
-red cell or CI-protection gap outranks it, so VM-049 (rank 7, already ahead
-of VM-058 in this ordering) is the next selection unless a future audit finds
-a higher-priority red cell first.
+frontend-semantics items above rather than blocking VM-047c.
+
+VM-049 (real CoreCLR execution for the Macsyma arithmetic corpus) is complete:
+`tests/clr_real_macsyma.rs` proves the identical 21-program corpus the
+in-repo-simulator floor already agrees on, and the VM-D028 fix
+(`# needs-toolchain: dotnet` in `lang-aot/BUILD`) makes hosted PR CI actually
+install `ilasm` for it — and retroactively for McCarthy's pre-existing
+`clr_real_*` lane, which had the identical silent gap. No executed red cell or
+CI-protection gap outranks the next item, so **VM-038** (a real BEAM lane for
+Macsyma, mirroring what VM-049 just did for CLR) is next per this ordering,
+unless hosted CI on VM-049's own PR surfaces a red cell first — the first
+environment able to actually prove or disprove real CoreCLR execution for
+either CLR-real lane.
 
 BASIC two-dimensional numeric arrays were verified in the matrix and lowerer,
 so their stale README description is corrected here rather than creating a new
@@ -767,6 +862,22 @@ implementation item. The known DEF FN-global and print-zone semantics remain
 future frontend design scope, not missing proofs for already-implemented code.
 
 ## Discovery log
+
+- **VM-D028 — confirmed 2026-09-07:** while adding a real-CoreCLR lane for
+  Macsyma (VM-049), investigating why McCarthy's pre-existing `clr_real_*.rs`
+  lane had never been observed to report a real pass in hosted CI (only the
+  expected local skip, per VM-047c) found `lang-aot/BUILD` never declared
+  `# needs-toolchain: dotnet`. `lang-aot`'s bucket language is "rust", and
+  `.github/workflows/ci.yml` gates `actions/setup-dotnet` and the `ilasm`
+  NuGet restore on the CI-wide `needs_dotnet` flag, which without this
+  declaration no PR touching only `lang-aot` ever set. Confirmed against
+  #14449 (VM-047c)'s own hosted Linux job log: `needs_dotnet=false`, and the
+  `Verify tools` step's `.NET: $(dotnet --version)` line was generated but
+  guarded by `if [ "false" = "true" ]`, so it never ran. Every CLR-real test
+  still skipped correctly (the tool gate itself was never wrong), but the
+  CLR-real column had never actually executed on its own PR merge-gate CI,
+  only on a forced main-branch full build. Fixed within VM-049 by adding the
+  declaration, the same pattern `java-to-semantic-ir/BUILD` already uses.
 
 - **VM-D027 — confirmed 2026-09-07:** while validating VM-047c's "BEFORE and
   AFTER together" test coverage, a discriminating probe (`INSPECT S TALLYING C

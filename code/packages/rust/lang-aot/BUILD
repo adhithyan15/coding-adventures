@@ -9,6 +9,18 @@
 # SKIPS when absent, so a CI host without them reports skips, not failures; the
 # in-process suites (VM / JIT / WASM) always run.
 #
+# VM-049/VM-D028: `lang-aot`'s own bucket language is "rust", so before this
+# line existed no PR touching only this crate ever set `needs_dotnet`, and
+# `.github/workflows/ci.yml` only installs the real .NET SDK and restores the
+# `ilasm` NuGet package (the CLR-real assembler `clr_real_*.rs`/
+# `clr_real_macsyma.rs` need — see `tests/clr_support/mod.rs`) when that flag
+# is set. Every CLR-real test still SKIPPED cleanly without it (correct tool
+# gating), but a PR that only touches `lang-aot` never actually proved real
+# CoreCLR execution on its own merge-gate CI — only a forced main-branch full
+# build did. This declaration is what VM-032/VM-036 already established for
+# Windows native execution, applied to the CLR-real column.
+# needs-toolchain: dotnet
+#
 # ONE COMMAND, ONE LINE — DO NOT REFORMAT WITH BACKSLASH CONTINUATIONS. The
 # build tool reads a BUILD file with `readLines` (build-tool/internal/discovery),
 # which splits on newlines and runs EACH LINE as its own `sh -c`. A trailing `\`
@@ -27,7 +39,7 @@
 #   lang_matrix          ALGOL-owned native-AOT four-dimensional-array cases
 #                        remain red on Linux (VM-D005). All non-ALGOL corpus
 #                        rows and focused differentials run separately below.
-cargo test -p lang-aot --lib --test cargo_archive_path --test array_ref_tracing --test beam_cons --test beam_emit --test beam_predicates --test beam_symbols_lambda --test cil_cons --test cil_emit --test cil_lambda --test cil_predicates --test cil_symbols --test clr_real_cons --test clr_real_lambda --test clr_real_predicates --test clr_real_scalar --test clr_real_symbols --test conformance --test e6d2b_dynamic_arith --test end_to_end_smoke --test e6d6_llvm_records --test e6d6b_union_match_tagged --test e6d7a_wasm_closures --test historical_round_trip --test jit_mccarthy --test jvm_cons --test jvm_emit --test jvm_lambda --test jvm_predicates --test jvm_symbols --test llvm_cond --test llvm_cons --test llvm_gc_completion --test llvm_gc_write_barrier --test llvm_lambda --test llvm_predicates --test llvm_scalar --test llvm_symbols --test macos_native_lisp --test macsyma_conformance --test metacircular --test vm_gc_reclamation --test wasm_emit --test wasm_memory_growth
+cargo test -p lang-aot --lib --test cargo_archive_path --test array_ref_tracing --test beam_cons --test beam_emit --test beam_predicates --test beam_symbols_lambda --test cil_cons --test cil_emit --test cil_lambda --test cil_predicates --test cil_symbols --test clr_real_cons --test clr_real_lambda --test clr_real_macsyma --test clr_real_predicates --test clr_real_scalar --test clr_real_symbols --test conformance --test e6d2b_dynamic_arith --test end_to_end_smoke --test e6d6_llvm_records --test e6d6b_union_match_tagged --test e6d7a_wasm_closures --test historical_round_trip --test jit_mccarthy --test jvm_cons --test jvm_emit --test jvm_lambda --test jvm_predicates --test jvm_symbols --test llvm_cond --test llvm_cons --test llvm_gc_completion --test llvm_gc_write_barrier --test llvm_lambda --test llvm_predicates --test llvm_scalar --test llvm_symbols --test macos_native_lisp --test macsyma_conformance --test metacircular --test vm_gc_reclamation --test wasm_emit --test wasm_memory_growth
 cargo test -p lang-aot --test lang_matrix t7_differential_random_basic_
 cargo test -p lang-aot --test lang_matrix portable_text_stdout_
 cargo test -p lang-aot --test lang_matrix non_algol_matrix_every_proven_cell_agrees -- --exact --nocapture
