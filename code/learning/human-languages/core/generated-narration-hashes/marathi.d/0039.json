@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:c1ae5ac777119f2b",
+  "lessonIds": [
+    "MR-W39-tha",
+    "MR-C39-tithe",
+    "MR-R39-there"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch39.txt",
+  "json": "marathi/narration/ch39.json",
+  "textHash": "fnv1a64:58f84bd625c712b5",
+  "jsonHash": "fnv1a64:f7d3b065a1f179b0",
+  "findings": []
+}

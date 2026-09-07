@@ -1,7 +1,9 @@
 {
-  "segments": [],
-  "omits": [
-    "QUESTION-WHERE"
+  "segments": [
+    "MR-PATH-040",
+    "MR-PATH-041",
+    "MR-PATH-042"
   ],
+  "omits": [],
   "relocates": {}
 }

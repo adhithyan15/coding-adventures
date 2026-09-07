@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W39-tha",
+    "language": "marathi",
+    "chapter": 39,
+    "sequence": 1580,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5dd2729d723ba375",
+    "detachableSegments": [
+      "Script",
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
