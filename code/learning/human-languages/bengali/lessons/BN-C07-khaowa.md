@@ -54,7 +54,7 @@ Gujarati *khāvũ*, Punjabi *khāṇā*.
 
 Past Sanskrit the trail goes cold. *Khād-* has no secure Indo-European pedigree
 outside Indo-Aryan, so there is no English cousin here — and one will not be
-manufactured. Some roots are simply local, and saying so is part of the method.
+manufactured. Some roots are local and nothing more, and saying so is part of the method.
 
 ## Sounds you'll need: খ against ক
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

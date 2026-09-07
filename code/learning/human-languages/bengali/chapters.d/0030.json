@@ -1,0 +1,23 @@
+{
+  "chapter": 30,
+  "title": "When You Are Lost",
+  "label": "ch:bn-when-you-are-lost",
+  "canDo": "I can report what I think with যে, put one event beside another in time with যখন … তখন, and ask somebody to say it again, slowly, when I have not followed.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC",
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "BN-R19-lost-and-found",
+    "kind": "speaking",
+    "summary": "A learner who has stopped following says so and gets the sentence back: I do not understand, say it again, slowly — assembled out of না from chapter twenty-seven and two words the book taught in chapters seven and eleven — and then reports an opinion with যে and places it in time with যখন … তখন.",
+    "assesses": [
+      "BN-GRAMMAR-C19-JE-01",
+      "BN-LEX-C19-JOKHON-01",
+      "BN-FUNC-C19-ABAR-BOLBEN-01",
+      "BN-LEX-C19-DHIRE-01",
+      "BN-GRAMMAR-C16-NA-VERB-01"
+    ],
+    "note": "Two of the four items introduce no new vocabulary at all: the repair sentences are assemblies of words already in the book, which is why they were missing rather than hard."
+  }
+}

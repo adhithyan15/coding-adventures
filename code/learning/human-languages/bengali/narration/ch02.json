@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Hanging From the Head-Line, One Piece at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:18877a7167751ecc",
+  "sourceHash": "fnv1a64:8dc723b0a144f0f3",
   "lessons": [
     {
       "id": "BN-W01-na",
@@ -266,7 +266,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d18f1c6f68777d93",
+      "sourceHash": "fnv1a64:b626faa4945836a3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -304,7 +304,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The mark you just learned only works attached to a consonant. So what do you write when a word begins with that vowel?"
+              "text": "The mark you learned a moment ago only works attached to a consonant. So what do you write when a word begins with that vowel?"
             },
             {
               "kind": "speech",

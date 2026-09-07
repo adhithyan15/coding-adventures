@@ -38,7 +38,7 @@ reviews_of: [BN-W01-aa-matra]
 ## Script
 <!-- hl-knowledge: introduces=[BN-SCRIPT-AA-01]; assesses=[BN-SCRIPT-NA-01, BN-SCRIPT-AA-MATRA-01] -->
 
-The mark you just learned only works **attached to a consonant**. So what do you
+The mark you learned a moment ago only works **attached to a consonant**. So what do you
 write when a word **begins** with that vowel?
 
 A different character:

@@ -348,6 +348,21 @@ reintroduced 91 `Missing character` errors, and which Chapter 22's first pass
 repeated with a stray Arabic script aside before it was caught and replaced
 with a plain romanization.
 
+## What the track can do, as of chapters 27–30
+
+A learner who reaches the end of the book can now **deny** any sentence it
+taught them (না after a verb, নয় when there is no verb, নেই for a thing that is
+not there), **ask** any of them back with a rising voice, **join** two nouns
+(আর, -ও, বা) or refuse both (না … না), **argue** (কিন্তু, একমত, কেননা), **report
+a thought** (যে) and **place it in time** (যখন … তখন) — and, when none of that
+works, say *āmi bujhi nā* and **আবার বলবেন**, please say it again.
+
+Three words that would have covered the same ground were left in romanization
+because the letters they need have no lesson yet: **কারণ** needs ণ, **এবং** needs
+ং, and **বোঝা** needs ঝ. Each is written down in
+`core/exam-inventory-bengali-a1.json` beside the point it blocks, which turns a
+vocabulary gap into a named script lesson.
+
 ## Files
 
 - [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)

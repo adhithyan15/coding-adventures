@@ -1,0 +1,17 @@
+{
+  "id": "BN-EXT-024-THREE-NEGATORS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can deny a sentence with a verb, a sentence without one, and a thing that is not there, and I can turn any of the three into a yes-or-no question with my voice alone.",
+  "prerequisites": [
+    "BN-EXT-023-DISTANT-BAND"
+  ],
+  "lessons": [
+    "BN-C16-na-verb",
+    "BN-C16-noy",
+    "BN-C16-nei",
+    "BN-C16-polar",
+    "BN-R16-three-noes"
+  ]
+}

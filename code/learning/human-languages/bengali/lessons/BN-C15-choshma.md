@@ -49,7 +49,7 @@ cousin — and building something new out of it.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **চশমা** is spelled **চ** (*chô*) + **শ** (*shô*, the second *s*-letter
-শাড়ি just introduced) + **ম** (*mô*) + **া** (*ā*) — four sounds by the
+শাড়ি introduced a moment ago) + **ম** (*mô*) + **া** (*ā*) — four sounds by the
 spelling. Ordinary speech thins it to three: *chôsh-mā*, not *chô-sho-mā* —
 an everyday shortening this particular loanword has settled into.
 

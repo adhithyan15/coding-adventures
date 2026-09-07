@@ -75,7 +75,7 @@ Where does জামা (jama) come from? (Persian jāma, "robe, garment," the i
 
 
 Lesson 3 of 4.
-শাড়ি (shari) — "sari," a word English simply borrowed.
+শাড়ি (shari) — "sari," a word English borrowed whole.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
@@ -91,7 +91,7 @@ The letters in this word.
 শাড়ি (shari) opens with শ — a second letter for an s-family sound, a different one from স. Sanskrit distinguished three of these (স, শ, and a third, ষ); modern Bengali speech has merged them into one sound, but the spelling keeps them apart. Then া (ā), ড় (the flap you now know from কাপড় (kapor)), and ি (i): shā-ṛi.
 
 The word, taken apart.
-শাড়ি (shari) traces to Sanskrit śāṭī, "a strip of cloth, a garment," worn down through Middle Indic সাড়ী (sāḍī) into Bengali and Hindi's shared śāṛī/sāṛī. Here is the unusual part: every English cousin this book has traced so far — heart, nose, bind, come — went underground for thousands of years, worn down by sound change on both ends until only a shared ancient root connects them. This word took a different road. It entered English directly, in the modern era, as an ordinary borrowed word: "sari." No PIE root, no centuries of drift — just a garment's name, carried whole into another language's dictionary.
+শাড়ি (shari) traces to Sanskrit śāṭī, "a strip of cloth, a garment," worn down through Middle Indic সাড়ী (sāḍī) into Bengali and Hindi's shared śāṛī/sāṛī. Here is the unusual part: every English cousin this book has traced so far — heart, nose, bind, come — went underground for thousands of years, worn down by sound change on both ends until only a shared ancient root connects them. This word took a different road. It entered English directly, in the modern era, as an ordinary borrowed word: "sari." No PIE root, no centuries of drift — a garment's name, carried whole into another language's dictionary.
 
 Guided Practice.
 [pause 1 second]
@@ -125,7 +125,7 @@ You'll want to know: চশমা.
 আমার চশমা (choshma) (āmār chôshmā) — my glasses.
 
 The letters in this word.
-চশমা (choshma) is spelled চ (chô) + শ (shô, the second s-letter শাড়ি (shari) just introduced) + ম (mô) + া (ā) — four sounds by the spelling. Ordinary speech thins it to three: chôsh-mā, not chô-sho-mā — an everyday shortening this particular loanword has settled into.
+চশমা (choshma) is spelled চ (chô) + শ (shô, the second s-letter শাড়ি (shari) introduced a moment ago) + ম (mô) + া (ā) — four sounds by the spelling. Ordinary speech thins it to three: chôsh-mā, not chô-sho-mā — an everyday shortening this particular loanword has settled into.
 
 The word, taken apart.
 চশমা (choshma) is built on Persian chashm, "eye" — the exact word the eye lesson once named as চোখ's only named cousin outside the Indo-Aryan family, with no secure English descendant claimed for চোখ itself. চশমা (choshma) takes that word and adds a suffix that turns "eye" into "eye-thing": spectacles, the thing that sits in front of your eyes. Bengali did not build this the way it built জিজ্ঞাসা করা or সাহায্য করা, by hanging করা on a noun; it took a ready-made South Asian coinage on a Persian root, the same formation Hindi and Urdu also use.

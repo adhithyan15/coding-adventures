@@ -6233,6 +6233,142 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 
+    // VM-047c: INSPECT TALLYING FOR ALL ... BEFORE region — the count is bounded to
+    // the sub-slice left of the FIRST occurrence of the region delimiter. "AB0CD0"
+    // has one "0" before the first "C" (the "AB0" prefix), so the first op adds 1.
+    // The second op uses an ABSENT region delimiter ("Z" never occurs): per the ISO
+    // not-found asymmetry, a BEFORE region with no delimiter match is the WHOLE
+    // source, so it counts BOTH "0"s (indices 2 and 5) and adds 2 more (001 -> 003).
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY-BEFORE.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 01 C PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\".\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"Z\".\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("001\n003"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // VM-047c: INSPECT TALLYING FOR ALL ... AFTER region — the asymmetric partner of
+    // the BEFORE row above. "AB0CD0" has one "0" after the first "C" (the "D0"
+    // suffix), so the first op adds 1. The second op's region delimiter ("Z") is
+    // ABSENT: per the ISO not-found asymmetry an AFTER region with no delimiter
+    // match is EMPTY (not the whole source), so it adds 0 and the counter is
+    // unchanged (001 -> 001) — the defining asymmetry this row pins.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY-AFTER.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 01 C PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" AFTER \"C\".\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\".\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("001\n001"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // VM-047c: INSPECT REPLACING ALL ... BEFORE region — the rewrite is bounded to
+    // the sub-slice left of the first delimiter match. Bracket markers make the
+    // untouched trailing "0" visible. BEFORE "C" only reaches the "AB0" prefix, so
+    // just the index-2 "0" becomes "*". Resetting S and replacing BEFORE an ABSENT
+    // "Z" covers the WHOLE source (the not-found asymmetry), so both "0"s become "*".
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-BEFORE.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"C\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 MOVE \"AB0CD0\" TO S.\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"Z\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[AB0CD0]\n[AB*CD0]\n[AB*CD*]"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // VM-047c: INSPECT REPLACING ALL ... AFTER region — the asymmetric partner of
+    // the REPLACING BEFORE row above. AFTER "C" only reaches the "D0" suffix, so
+    // just the index-5 "0" becomes "*". Resetting S and replacing AFTER an ABSENT
+    // "Z" covers an EMPTY region (the not-found asymmetry), so NOTHING changes — the
+    // final bracketed line is byte-identical to the original, the defining asymmetry
+    // this row pins for REPLACING.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-AFTER.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"C\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 MOVE \"AB0CD0\" TO S.\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"Z\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[AB0CD0]\n[AB0CD*]\n[AB0CD0]"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // VM-047c: BEFORE and AFTER together in ONE INSPECT statement — the combined
+    // TALLYING...REPLACING form, each half carrying its OWN independent region kind.
+    // Both windows are derived over the SAME original "0A0B0" bytes (the tally never
+    // mutates the source), in ISO tally-then-replace order. TALLYING FOR ALL "0"
+    // BEFORE "B" restricts the count to "0A0" (indices 0/2) -> C = 002. REPLACING ALL
+    // "0" BY "*" AFTER "B" restricts the rewrite to the "0" AFTER the first "B"
+    // (index 4 only) -> "0A0B*". This is the standard's genuine "BEFORE and AFTER
+    // together" combination: two independently-regioned phrases in one statement, not
+    // two region keywords on a single delimiter phrase (see the VM-047c backlog
+    // contract for why a single-phrase `BEFORE x AFTER y` intersection stays
+    // unimplemented and out of this slice's scope).
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. COMBINED-REGIONS.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"0A0B0\".\n\
+               000000 01 C PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"B\"\n\
+               000000    REPLACING ALL \"0\" BY \"*\" AFTER \"B\".\n\
+               000000 DISPLAY C.\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("002\n0A0B*"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

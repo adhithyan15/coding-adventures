@@ -1,0 +1,169 @@
+Bengali, chapter 28: Two Things at Once.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+আর (ār) — and.
+
+Warm-up.
+[pause 2 seconds]
+The chapter before this one gave you three ways to deny a sentence. This chapter gives you the first way to make a sentence longer than one idea.
+[your turn — recall: the missing-thing negator — nei]
+[pause 8 seconds for the answer]
+[your turn — recall: five chapters back, the first two colours — lāl, nīl]
+[pause 8 seconds for the answer]
+
+You'll want to know: আর.
+চা আর দুধ — chā ār dudh — tea and milk.
+আমার চা আর জল নেই — āmār chā ār jôl nei. — I have no tea and no water.
+This book has taught four foods, four garments, five colours, four family words and four parts of the body — a hundred and thirty-nine lessons of nouns that could only ever be named one at a time. আর (ār) is the word that ends that.
+
+The word, taken apart.
+আর comes from Sanskrit apara, "the other one, the further one" — so the joining sense grew out of a counting sense, one more. It still carries that older meaning when it stands in front of a noun on its own: আর চা, more tea. Chapter seven's আবার (ābār, "again") is built on the same idea of one more time, which is why the two words sound like relatives. They are.
+Bengali also writes ebông for and in formal prose. It joins clauses more than nouns, and it needs a letter this book has not taught yet, so it is named here in romanization — ebông — and left for the script chapters.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: chā ār dudh]
+[pause 8 seconds for the answer]
+[your turn — say: jôl ār bhāt — water and rice]
+[pause 8 seconds for the answer]
+[your turn — say: lāl ār nīl — red and blue]
+[pause 8 seconds for the answer]
+[your turn — say: āmār chā ār jôl nei]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did আর (ār) mean before it meant and? (More, the other one — Sanskrit apara.) Which word taught in chapter seven is its relative? (আবার, again — one more time.) And what happens to a negator when two nouns are joined? (Nothing — it still sits at the end.)
+Source: Unicode Bengali chart.
+
+
+Lesson 2 of 5.
+-ও (-o) — the joiner that is one vowel long.
+
+Warm-up.
+[pause 2 seconds]
+The lesson before this taught আর (ār), which stands between two things. This one goes on the end of one thing, and means much the same.
+[your turn — recall: the letter chapter ten taught standing alone — ও]
+[pause 8 seconds for the answer]
+
+You'll want to know: -ও.
+আমিও — āmi-o — me too.
+আমিও ভালো — āmi-o bhālo. — I am well too.
+-ও (-o) never stands by itself. It is written onto the back of the word it attaches to, and it means that one as well. Where আর (ār) joins two nouns from between them, -ও (-o) marks each of them from behind: ভাই আর (ār) বোন is brother and sister; ভাইও বোনও is the brother as well, and the sister as well.
+
+Grammar Lens: the smallest word does the most work.
+Attaching -ও (-o) to a different word moves the emphasis without moving a syllable of the sentence:
+[a table of 2 rows, read aloud]
+আমিও ভালো means I too am well — somebody else is as well.
+আমি ভালোও means I am well as well as whatever else I am.
+English has to say too at the end and hope, or move the stress with the voice. Bengali puts the mark exactly on the word it belongs to. This is Sanskrit api, "also" — the particle Hindi still says whole as bhī.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: āmi-o — me too]
+[pause 8 seconds for the answer]
+[your turn — say: āmi-o bhālo]
+[pause 8 seconds for the answer]
+[your turn — say: the pair joined both ways — bhāi ār bon, then bhāi-o bon-o]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does -ও (-o) stand, and where does আর (ār) stand? (-ও (-o) on the back of a word; আর (ār) between two of them.) Can -ও (-o) be said on its own? (No — it has no life apart from the word it rides.) Which Hindi word is its cousin? (bhī, from the same Sanskrit api.)
+Source: Unicode Bengali chart.
+
+
+Lesson 3 of 5.
+বা (bā) — or.
+
+Warm-up.
+[pause 2 seconds]
+Two joiners so far, and both of them add. Name them, and say which one stands between and which one hangs off the back.
+
+You'll want to know: বা.
+চা বা দুধ — chā bā dudh — tea or milk.
+চা বা দুধ? — chā bā dudh? — tea or milk?
+Until this lesson nothing in this book could offer anybody a choice. আর (ār) gives them both; বা (bā) makes them pick. It sits exactly where আর (ār) sits, between the two things, and nothing else in the sentence changes.
+
+The word, taken apart.
+বা (bā) is Sanskrit vā, and it is one of the oldest unchanged words in this book: the same particle survives at the end of Latin sīve ("or if") and neve ("nor"). Four thousand years and one syllable.
+Put it inside the rising question this chapter's neighbour taught and you have the whole shape of an offer: two nouns, বা (bā) between them, and a voice that goes up at the end. That is how tea gets poured.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: chā bā dudh]
+[pause 8 seconds for the answer]
+[your turn — say: the same pair joined instead of split — chā ār dudh]
+[pause 8 seconds for the answer]
+[your turn — say: bhāt bā jôl — rice or water]
+[pause 8 seconds for the answer]
+[your turn — say: it as an offer, with the voice rising — chā bā dudh?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which joiner adds and which one chooses? (আর (ār) adds; বা (bā) chooses.) Where does বা (bā) stand? (Between the two things, exactly where আর (ār) does.) And what turns an offer into a question? (The rising voice — nothing is added.)
+Source: Unicode Bengali chart.
+
+
+Lesson 4 of 5.
+না … না … (nā … nā …) — neither, nor.
+
+Warm-up.
+[pause 2 seconds]
+Chapter twenty-seven was firm about this: না goes after. There is exactly one construction in which it goes first, and it is the one that denies both halves of a choice.
+[your turn — recall: the word that offers the choice — bā]
+[pause 8 seconds for the answer]
+
+You'll want to know: না … না …
+না চা, না দুধ — nā chā, nā dudh — neither tea nor milk.
+আমার না চা আছে, না দুধ — āmār nā chā āchhe, nā dudh — I have neither tea nor milk.
+One না in front of each thing refused. The pattern is the mirror image of আর (ār): where and stood once, between two nouns, neither stands twice, before each of them.
+
+Grammar Lens: three ways to refuse two things.
+[a table of 3 rows, read aloud]
+shape: আমার চা আর (ār) দুধ নেই. how it refuses: one negator at the end covers both.
+shape: চা-ও নেই, দুধ-ও নেই. how it refuses: each thing marked with -ও (-o), each denied.
+shape: না চা, না দুধ. how it refuses: the flat refusal, and the emphatic one.
+All three are correct Bengali. The first is what you say without thinking about it; the third is what you say when you want the refusal heard.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: nā chā, nā dudh]
+[pause 8 seconds for the answer]
+[your turn — say: the same refusal the ordinary way — āmār chā ār dudh nei]
+[pause 8 seconds for the answer]
+[your turn — say: the marked way — chā-o nei, dudh-o nei]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does না stand in an ordinary negative sentence, and where in this one? (After the verb ordinarily; in front of each refused thing here.) Which joiner does the pattern mirror? (আর (ār), one and between two becoming one no before each.)
+Source: Unicode Bengali chart.
+
+
+Lesson 5 of 5.
+Two things at once — three joiners, one refusal of both, and the first sentences in this book that hold more than one idea.
+
+Warm-up.
+[pause 4 seconds]
+Three joiners landed in this chapter. Name them, and say for each one whether it adds, marks, or chooses.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: two colours joined — kālo ār shādā]
+[pause 8 seconds for the answer]
+[your turn — say: the same two as a choice — kālo bā shādā]
+[pause 8 seconds for the answer]
+[your turn — say: yourself added to somebody — āmi-o]
+[pause 8 seconds for the answer]
+[your turn — say: both refused — nā kālo, nā shādā]
+[pause 8 seconds for the answer]
+[your turn — recall: five lessons back, the negator for a verbless sentence — nôy]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which joiner turns a statement into an offer once the voice rises? (বা (bā) — two things and a choice between them.) How many না does a double refusal need, and where do they go? (Two, one in front of each thing.) And which of this chapter's joiners cannot stand on its own? (-ও (-o).)

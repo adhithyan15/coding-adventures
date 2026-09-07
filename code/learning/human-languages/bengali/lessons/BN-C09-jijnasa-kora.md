@@ -80,7 +80,7 @@ pour in from Sanskrit, Persian, Arabic and English — each becoming a verb the
 moment করা stands behind it. Learn a noun, learn a verb.
 
 Last lesson’s compound stacks on top: **জিজ্ঞাসা করে নেওয়া** (*jijñāsā kôre
-neowā*) — "just go ahead and ask."
+neowā*) — "go ahead and ask."
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C09-JIJNASA-01, BN-GRAMMAR-C09-KORA-02, BN-LEX-C07-JANA-01, BN-GRAMMAR-C07-JANA-02, BN-LEX-C09-NEOWA-01, BN-GRAMMAR-C09-NEOWA-02] -->

@@ -1,0 +1,15 @@
+{
+  "id": "BN-EXT-028-REPAIR-KIT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say that I have not understood and ask somebody to say it again, slowly, without needing a word this book has not already taught me.",
+  "prerequisites": [
+    "BN-EXT-027-REPORT-AND-TIME"
+  ],
+  "lessons": [
+    "BN-C19-abar-bolben",
+    "BN-C19-dhire",
+    "BN-R19-lost-and-found"
+  ]
+}

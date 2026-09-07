@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R16-three-noes",
+    "language": "bengali",
+    "chapter": 27,
+    "sequence": 1440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5626ed6e722df4c"
+  },
+  "findings": []
+}

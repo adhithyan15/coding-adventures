@@ -63,7 +63,7 @@ one form whether the water, the sky, or the dress is blue.
 
 Here is the honest, careful version of a famous connection. English
 **"indigo"** does **not** come from *nīla* by sound change. It comes from
-**Greek** *indikón*, simply "the Indian [thing]" — because Greek and Roman
+**Greek** *indikón*, "the Indian [thing]" and no more — because Greek and Roman
 traders imported the dye *from* India and named it for its source. *Nīla*
 and "indigo" are not the same word wearing two disguises; they are two
 **separate** words for the same dye, linked by the history of trade, not by

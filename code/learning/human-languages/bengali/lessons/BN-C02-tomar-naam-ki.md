@@ -40,7 +40,7 @@ reviews_of: [BN-C02-ki, BN-C02-tumi-apni]
 
 **তোমার** (*tomār*, "your," from *tumi*) + **নাম** (name) + **কি** (what) →
 literally "**your name what?**" And note — still **no "is."** The zero copula
-holds here too: Bengali simply lays "your name" beside "what," and the question is
+holds here too: Bengali lays "your name" beside "what," and the question is
 complete.
 
 ## Grammar Lens: answering, and the respectful form
