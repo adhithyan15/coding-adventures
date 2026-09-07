@@ -116,7 +116,7 @@ describe("HL10 §7.4 — banned words in learner-facing prose", () => {
     // LOWER this as prose is rewritten; never raise it. A tranche that needs it
     // raised has written "just" or "simply" into a lesson, and the fix is the
     // sentence, not the number.
-    expect(total).toBeLessThanOrEqual(1076); // 1077 -> 1076: German chapter 6 arrived carrying six banned words and left with none, so the corpus debt FELL rather than the ceiling rising
+    expect(total).toBeLessThanOrEqual(1070); // 1076 -> 1070: the Russian joining tranche (#14432) landed AFTER the 1076 pin carrying seven of these, which took the corpus to 1077 and left this gate red on main. The fix is the sentence, not the number, exactly as the paragraph above says: all seven were rewritten -- 'completes the pair as securely as брат did', 'the obligation is stated and left hanging in the air', 'the present tense of быть is absent altogether' -- so the ceiling FALLS by six rather than rising by one. // 1077 -> 1076: German chapter 6 arrived carrying six banned words and left with none, so the corpus debt FELL rather than the ceiling rising
     expect(lessonsAffected).toBeLessThanOrEqual(875);
   });
 

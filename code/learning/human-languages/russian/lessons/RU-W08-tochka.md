@@ -51,7 +51,7 @@ reviews_of: [RU-C17-drugoy, RU-C16-tozhe, RU-C08-semya, RU-C09-ukho]
 
 Russian uses the same three marks English does, in the same three shapes:
 
-- **.** — **точка** — the full stop, and the Russian word means simply *a dot*
+- **.** — **точка** — the full stop, and the Russian word for it means *a dot*
 - **?** — the question mark
 - **!** — the exclamation mark
 

@@ -53,8 +53,8 @@ strokes, and the greeting turns into a question.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-NIHAOMA-01, ZH-GRAMMAR-MA-QUESTION-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **你好吗** once. Keep the three characters the same size — 吗 is not smaller
-just because it means nothing.
+Copy **你好吗** once. Keep the three characters the same size. 吗 is not written
+smaller for meaning nothing.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAOMA-01, ZH-ORTHO-NIHAOMA-01] -->

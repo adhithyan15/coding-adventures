@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:43a455fc9e6b0645",
+  "sourceHash": "fnv1a64:27b0118b3806ff32",
   "lessons": [
     {
       "id": "ZH-C19-hear-ma",
@@ -622,7 +622,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a65fb0b53d571311",
+      "sourceHash": "fnv1a64:e3e8ea3882a668ed",
       "notice": null,
       "blocks": [
         {
@@ -668,7 +668,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy 你好吗 (nǐ hǎo ma) once. Keep the three characters the same size — 吗 is not smaller just because it means nothing."
+              "text": "Copy 你好吗 (nǐ hǎo ma) once. Keep the three characters the same size. 吗 is not written smaller for meaning nothing."
             }
           ]
         },
@@ -1081,7 +1081,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e682baf8cf426f45",
+      "sourceHash": "fnv1a64:78495e9b466e4bb9",
       "notice": null,
       "blocks": [
         {
@@ -1128,7 +1128,7 @@
             },
             {
               "kind": "speech",
-              "text": "Mandarin now gives you two ways to ask a yes-or-no question, and this book has just handed you both in one chapter:"
+              "text": "Mandarin now gives you two ways to ask a yes-or-no question, and this book hands you both in this one chapter:"
             },
             {
               "kind": "speech",

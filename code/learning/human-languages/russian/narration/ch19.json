@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Why, Because, When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:643e8d654f6c89dd",
+  "sourceHash": "fnv1a64:63bbab1f5a996a87",
   "lessons": [
     {
       "id": "RU-C19-pochemu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43c0d8b436e24b6d",
+      "sourceHash": "fnv1a64:5caeeca701035f09",
       "notice": null,
       "blocks": [
         {
@@ -94,7 +94,7 @@
             },
             {
               "kind": "speech",
-              "text": "One word, one rising voice, one mark at the end, and you have asked for a reason about anything that has just been said. That is worth having before you can give a reason yourself."
+              "text": "One word, one rising voice, one mark at the end, and you have asked for a reason about anything the other person has said. That is worth having before you can give a reason yourself."
             }
           ]
         },

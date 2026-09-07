@@ -61,7 +61,7 @@ Put it straight after a finite verb and it goes to work:
 - **я хочу писать** — *ya khachú pisát* — I want **to write**.
 
 Count the words between the two verbs: **none**. English needs *to*; Russian
-needs nothing at all. The second verb simply stays in the form you learned it in.
+needs nothing at all. The second verb stays in the form you learned it in.
 
 That single fact turns every infinitive in this book into something you can say
 you want to do, which is fourteen new sentences from one pattern.

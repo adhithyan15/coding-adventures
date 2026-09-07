@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Excuse Me, and Say It Again",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:960fccf09fcbbafc",
+  "sourceHash": "fnv1a64:42ec0d40f08d26a3",
   "lessons": [
     {
       "id": "RU-C21-izvinite",
@@ -714,7 +714,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b02575fba132a3f2",
+      "sourceHash": "fnv1a64:f70bd2a770adaeaa",
       "notice": null,
       "blocks": [
         {
@@ -780,7 +780,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it once out loud. A course that can greet, thank, apologise, ask for a repeat, ask for slower speech and ask for help has covered every move a beginner needs to survive a conversation that goes wrong — and every one of those moves arrived in this chapter or the ones just behind it."
+              "text": "Say it once out loud. A course that can greet, thank, apologise, ask for a repeat, ask for slower speech and ask for help has covered every move a beginner needs to survive a conversation that goes wrong — and every one of those moves arrived in this chapter or the two behind it."
             }
           ]
         },

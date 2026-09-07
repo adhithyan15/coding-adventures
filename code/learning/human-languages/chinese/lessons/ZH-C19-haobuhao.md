@@ -52,7 +52,7 @@ is the whole rule, and it needs no new character because you have had 不 since
 the negation lesson.
 
 Mandarin now gives you **two** ways to ask a yes-or-no question, and this book
-has just handed you both in one chapter:
+hands you both in this one chapter:
 
 - **看书吗** — the light syllable on the end
 - **看不看书** — the word, denied, and said again

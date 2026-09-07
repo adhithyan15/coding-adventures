@@ -57,8 +57,8 @@ word in this book and the easiest to take apart.
 - **почему?** — on its own, it is a complete question.
 
 One word, one rising voice, one mark at the end, and you have asked for a reason
-about anything that has just been said. That is worth having before you can give
-a reason yourself.
+about anything the other person has said. That is worth having before you can
+give a reason yourself.
 
 ## The word, taken apart — по plus что
 <!-- hl-knowledge: introduces=[RU-ETYMON-POCHEMU-PO-CHTO]; assesses=[RU-LEX-POCHEMU-01, RU-LEX-CHTO-01, RU-ETYMON-CHTO-KWID] -->

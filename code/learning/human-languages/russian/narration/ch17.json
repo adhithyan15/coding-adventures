@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "But, Twice Over",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f67bf8a16cebb728",
+  "sourceHash": "fnv1a64:1b20cd90c405962d",
   "lessons": [
     {
       "id": "RU-C17-no",
@@ -522,7 +522,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:44e706acb06b04a5",
+      "sourceHash": "fnv1a64:f6d5e847ef2e7065",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -559,11 +559,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "сестра, which completes the pair just as securely",
+              "instruction": "сестра, which completes the pair as securely as брат did",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: *сестра*, which completes the pair just as securely]"
+              "source": "[YOU RECALL: *сестра*, which completes the pair as securely as *брат* did]"
             },
             {
               "kind": "prompt",
@@ -691,7 +691,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:ba0ebb3ad582436d",
+      "sourceHash": "fnv1a64:d6018cb145378aad",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -767,7 +767,7 @@
             },
             {
               "kind": "speech",
-              "text": ". — точка — the full stop, and the Russian word means simply a dot."
+              "text": ". — точка — the full stop, and the Russian word for it means a dot."
             },
             {
               "kind": "speech",

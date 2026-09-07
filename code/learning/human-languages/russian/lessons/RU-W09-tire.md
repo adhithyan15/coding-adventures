@@ -66,8 +66,8 @@ is not French at all.
 <!-- hl-knowledge: introduces=[]; assesses=[RU-PUNCT-TIRE-01, RU-GRAMMAR-ZERO-COPULA, RU-LEX-SESTRA, RU-LEX-PODRUGA] -->
 
 You learned early that Russian says *I am a student* with no verb in the middle:
-the present tense of **быть** is simply absent. On the page, that absence gets a
-mark of its own.
+the present tense of **быть** is absent altogether. On the page, that absence
+gets a mark of its own.
 
 Where the sentence would have needed **is**, and both halves are nouns, a Russian
 writer puts a dash:

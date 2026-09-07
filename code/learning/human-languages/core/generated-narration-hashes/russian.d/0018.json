@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 18,
-  "sourceHash": "fnv1a64:2bcedccda9405442",
+  "sourceHash": "fnv1a64:fe496d3869edc753",
   "lessonIds": [
     "RU-C18-chto-vopros",
     "RU-C18-chto-soyuz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "russian/narration/ch18.txt",
   "json": "russian/narration/ch18.json",
-  "textHash": "fnv1a64:0ec74382ad2b7aa3",
-  "jsonHash": "fnv1a64:628b89a1c73a6ad3",
+  "textHash": "fnv1a64:afff98dfe7e7af14",
+  "jsonHash": "fnv1a64:0ceb46bfaec03833",
   "findings": []
 }
