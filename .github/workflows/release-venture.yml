@@ -14,7 +14,7 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # master
         with:
           toolchain: "1.98"
@@ -36,7 +36,7 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # master
         with:
           toolchain: "1.98"
@@ -48,7 +48,7 @@ jobs:
       - name: Archive generated projects
         shell: bash
         run: tar -C "$RUNNER_TEMP" -czf "venture-${{ needs.validate.outputs.version }}-generated-projects.tar.gz" venture-generated
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: generated-projects
           path: venture-${{ needs.validate.outputs.version }}-generated-projects.tar.gz
@@ -58,7 +58,7 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # master
         with:
           toolchain: "1.98"
@@ -73,7 +73,7 @@ jobs:
           mkdir venture-linux-x86_64
           cp code/packages/rust/target/release/libventure_browser_cairo.so venture-linux-x86_64/
           tar -czf "venture-${{ needs.validate.outputs.version }}-linux-x86_64.tar.gz" venture-linux-x86_64
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: linux-bridge
           path: venture-${{ needs.validate.outputs.version }}-linux-x86_64.tar.gz
@@ -83,7 +83,7 @@ jobs:
     needs: validate
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # master
         with:
           toolchain: "1.98"
@@ -96,7 +96,7 @@ jobs:
           mkdir venture-macos-native
           cp code/packages/rust/target/release/libventure_browser_macos.dylib venture-macos-native/
           tar -czf "venture-${{ needs.validate.outputs.version }}-macos-native.tar.gz" venture-macos-native
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: macos-bridge
           path: venture-${{ needs.validate.outputs.version }}-macos-native.tar.gz
@@ -106,7 +106,7 @@ jobs:
     needs: validate
     runs-on: windows-2025
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # master
         with:
           toolchain: "1.98"
@@ -119,7 +119,7 @@ jobs:
           New-Item -ItemType Directory venture-windows-x86_64
           Copy-Item code/packages/rust/target/release/venture_browser_windows.dll venture-windows-x86_64/
           Compress-Archive venture-windows-x86_64 "venture-${{ needs.validate.outputs.version }}-windows-x86_64.zip"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: windows-bridge
           path: venture-${{ needs.validate.outputs.version }}-windows-x86_64.zip
@@ -129,7 +129,7 @@ jobs:
     needs: [validate, generated-projects, linux-bridge, macos-bridge, windows-bridge]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: artifacts
           merge-multiple: true
@@ -137,7 +137,7 @@ jobs:
         working-directory: artifacts
         run: sha256sum * > SHA256SUMS
       - name: Create draft prerelease
-        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           draft: true
           prerelease: true

@@ -1249,7 +1249,7 @@ jobs:
 
       - name: Set up LuaRocks (Unix)
         if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        uses: leafo/gh-actions-luarocks@v4
+        uses: leafo/gh-actions-luarocks@v6
 
       - name: Set up LuaRocks (Windows)
         if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
@@ -1629,7 +1629,7 @@ jobs:
 
       - name: Set up Gradle
         if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
-        uses: gradle/actions/setup-gradle@v6.3.0
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Disable long-lived Gradle services on Windows CI
         if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'

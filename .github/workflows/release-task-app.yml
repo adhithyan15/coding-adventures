@@ -262,7 +262,7 @@ jobs:
 
       - name: Set up Gradle
         if: matrix.backend == 'compose'
-        uses: gradle/actions/setup-gradle@v6.3.0
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Install Linux Rust build dependencies
         if: runner.os == 'Linux'
