@@ -1,5 +1,120 @@
 # Changelog — `lang-aot`
 
+## Unreleased — COBOL INSPECT replacement proofs (VM-047b)
+
+Add five matching oracle and seven-backend observations for ALL, LEADING,
+CHARACTERS, first-match priority and non-rechaining replacement. Cover item
+operands, reassignment, absent matches and padded spaces in observable output.
+These cases protect VM-056: WASM concat preserves aliased source handles.
+
+
+## Unreleased — COBOL INSPECT tallying proofs (VM-047a)
+
+Add matching oracle and seven-backend observations for ALL accumulation and
+zero matches, CHARACTERS including field padding, and LEADING stopping at the
+first mismatch. Reassigned source and delimiter items make later reads visible.
+
+
+## Unreleased — COBOL pointer/overflow proofs (VM-046c)
+
+Add eight seven-backend STRING/UNSTRING programs that jointly observe text,
+pointer writeback and overflow/success branches. Cover in-range offsets, exact
+fit, partial transfer, invalid starting pointers, exhausted input and a trailing
+delimiter. Bracketed output preserves spaces; normal non-ALGOL BUILD includes
+all new rows automatically.
+
+## Unreleased — COBOL delimiter proofs (VM-046b)
+
+Add five seven-backend rows for STRING first/absent/leading delimiters and
+UNSTRING field fitting, dropped excess fields, leading/consecutive empty fields
+and untouched receivers after exhaustion. Exercise literal and item delimiters
+with bracketed output preserving spaces. Normal non-ALGOL BUILD includes the
+new rows automatically; pointer/overflow remains VM-046c. The cases exposed
+and now protect native loop-index folding and LLVM runtime-index repairs
+(VM-054/055); the LLVM runner links the production checked indexing helper.
+
+## Unreleased — COBOL STRING SIZE proofs (VM-046a)
+
+Add three seven-backend rows for full-width sending fields with mixed literal
+input, truncated/exact-fit receivers and preserved nonblank tails after source
+reassignment. Visible markers keep spaces observable. Normal non-ALGOL BUILD
+includes these rows automatically; delimiter and pointer/overflow proofs remain
+separate backlog slices. The repeated-write row protects the WASM same-block
+string reassignment repair (VM-053), where the first print incorrectly used
+the later literal.
+
+## Unreleased — COBOL reference-modification proofs (VM-045)
+
+Add seven canonical rows for literal/computed substring bounds, omitted length,
+IF/EVALUATE, MOVE padding/truncation, and invalid runtime start/end traps.
+Trailing markers preserve padding evidence. All rows declare seven standard
+backends and are included automatically by normal non-ALGOL BUILD. The LLVM
+runner links the production runtime for checked substring helpers. The new
+cells exposed and now protect native/LLVM computed-slice lowering and WASM
+runtime-string propagation repairs (VM-050–052).
+
+## Unreleased — Oct loop and returned-call proofs (VM-044)
+
+Add canonical seven-backend programs for loop-carried u8 wrapping returned from
+a function, conditional loop exit, and nested break targets with distinct
+stdout markers. Normal non-ALGOL BUILD automatically includes the new rows.
+
+## Unreleased — FLOW-MATIC control-flow matrix proofs (VM-037)
+
+Add seven-backend canonical programs for taken EQUAL, false LESS/GREATER
+falling to OTHERWISE, and a two-jump chain. Wrong paths terminate with different
+record widths or line counts, so a miscompile fails by output rather than a
+hang. The normal non-ALGOL matrix gate automatically includes all three rows.
+
+## Unreleased — McCarthy native host coverage (VM-036)
+
+Run the existing McCarthy native capstone on Windows and Linux as well as
+macOS, using each host's executable compiler and linker probe. A focused
+19-program native corpus now runs in the Windows CI execution step; its
+required-linker flag fails rather than reporting success without execution.
+
+## Unreleased — ten-frontend coverage audit (VM-027)
+
+Document declared and executed coverage separately, including dedicated
+McCarthy/Macsyma capstones, frontend oracle tests and host/CI restrictions.
+Correct stale language counts/subsets and the non-McCarthy BEAM exclusion claim;
+record bounded coverage follow-ups without changing runtime behavior.
+
+## Unreleased — Cargo-reported GC archive location (VM-035)
+
+Resolve the GC static archive from Cargo's compiler-artifact messages so custom
+`CARGO_TARGET_DIR` and Cargo-configured layouts work. Reject missing, ambiguous
+or nonexistent archives; never substitute a stale default artifact or DLL
+import library. Normal BUILD runs parser checks and a real isolated Cargo build
+under a temporary directory containing spaces.
+
+## Unreleased — non-ALGOL matrix CI coverage (VM-024)
+
+Run every non-ALGOL canonical matrix row and its declared backends in normal
+BUILD, including BASIC RND/mixed DATA, Twig dynamic values and Nib BCD. Retain
+strict runner/result checks, reject empty corpora and post-detection skips, and
+report executed versus missing-tool cells. Full ALGOL coverage remains VM-025.
+
+
+## Unreleased — portable matrix text and mixed JVM arithmetic (VM-033/VM-034)
+
+Matrix text-output expectations and BASIC differential comparisons now accept
+CRLF as LF while preserving every other character. Brainfuck keeps its existing
+exact comparison. Raw stdout remains in failure messages. This repairs Windows
+LLVM BASIC multi-line output comparisons without changing generated programs.
+
+Normal BUILD runs focused positive/negative comparison regressions and the
+existing multi-line real, mixed DATA, and RND programs on every available
+declared backend. Full non-ALGOL and ALGOL matrix CI coverage remains tracked
+separately under VM-024 and VM-025.
+
+Those executions exposed a second defect: the JVM compatibility pass narrowed
+BASIC RND's i64 multiplication to i32 because all its literals fit in i32.
+The overflow made later samples negative. Modules using floating-point values
+now retain their integer widths across all functions: they already require
+real Java instead of the integer-only simulator. The existing integer-only
+simulator path remains covered, and RND's shared helper/product stays i64.
+
 ## 0.290.1 - 2026-09-01 (mechanical fallout from `wasm-execution`'s `GlobalStorage`, W35 third slice)
 
 Test-only mechanical fix: `tests/lang_matrix.rs`'s `PrintHost` and

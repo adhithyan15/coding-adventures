@@ -74,6 +74,12 @@ import { bool, err, isError, num, text, toNumber, toText } from "../cell-value.j
 // A CST child is either a rule node or a raw token.
 type CstChild = ASTNode | Token;
 
+// Reject oversized formulas before either parse. Catching a stack overflow
+// after parsing still spends seconds on thousands of arithmetic terms, twice
+// per setCell (dependency discovery and evaluation). Count UTF-16 code units
+// so this check needs no allocation proportional to the untrusted input.
+const MAX_FORMULA_LENGTH = 8_192;
+
 /** A thrown sentinel carrying a spreadsheet error code, used to unwind the
  *  recursive evaluator back to the top without littering every step with
  *  error-checking. Caught at the `evaluate` boundary and turned into a value. */
@@ -666,6 +672,7 @@ export const excelCasAdapter: FormulaAdapter = {
   },
 
   dependencies(raw: string): CellAddress[] {
+    if (raw.length > MAX_FORMULA_LENGTH) return [];
     try {
       const cst = parseExcelFormula(raw);
       const refs: CellAddress[] = [];
@@ -685,6 +692,7 @@ export const excelCasAdapter: FormulaAdapter = {
   },
 
   evaluate(raw: string, resolve: CellResolver): CellValue {
+    if (raw.length > MAX_FORMULA_LENGTH) return err("#VALUE!");
     let cst: ASTNode;
     try {
       cst = parseExcelFormula(raw);

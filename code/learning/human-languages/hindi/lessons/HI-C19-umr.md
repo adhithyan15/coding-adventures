@@ -8,9 +8,9 @@ spine_node: SPINE-EXCHANGE-NAMES
 sequence: 660
 chapter: 19
 type: phrase
-headword: उम्र
-gloss: age — the same word as Arabic's ʿumr, borrowed through Persian, beside formal Sanskrit āyu
-romanization: "umr"
+headword: उम्र / आयु
+gloss: age — everyday Perso-Arabic umr beside formal Sanskrit āyu
+romanization: "umr / āyu"
 concept_tag: HI-AGE
 prerequisites: [HI-C18-ghanta]
 sounds: [devanagari-conjunct-mra, devanagari-independent-vowel]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-C18-ghanta]
 ---
 
-# उम्र — the same word as Arabic
+# उम्र / आयु — everyday and formal words for age
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

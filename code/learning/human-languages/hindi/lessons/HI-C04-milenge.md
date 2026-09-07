@@ -8,9 +8,9 @@ sequence: 350
 spine_node: SPINE-TAKE-LEAVE
 chapter: 4
 type: word
-headword: मिलेंगे
-gloss: (we) will meet
-romanization: "milenge"
+headword: मिलेंगे / मिलना / मिल् / मिले / -एंगे / -गे
+gloss: (we or they) will meet / to meet / stem / future base / plural future ending and its final syllable
+romanization: "mileṅge / milnā / mil / mile / -eṅge / -ge"
 concept_tag: HI-VERB-MILNA
 prerequisites: [HI-C03-hun]
 sounds: [matra-e, anusvara]
@@ -41,8 +41,9 @@ reviews_of: []
 ## The letters in this word
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C04-MILENGE-01]; assesses=[HI-CONCEPT-C03-HUN-01] -->
 
-**म** (*ma*) + **ि**→**मि** (*mi*); **ल** (*la*) + **े** → **ले** (*le*); the
-*anusvāra* **ं** nasalises; **गे** (*ge*). Read **मि·ले·ं·गे** → *milenge*.
+**म** (*ma*) + **ि**→**मि** (*mi*); adding **ल** (*la*) + **े** completes
+**मिले** (*mile*). The *anusvāra* **ं** nasalises; **गे** (*ge*). Read the
+complete **मिलेंगे** → *milenge*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C04-MILENGE-01] -->
@@ -63,7 +64,7 @@ tense lives in the ending, the way Hindi's person lives in *hūṁ/hai/haiṁ*.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-मि (*mi*) + ले (*le*) + the *anusvāra* + गे
+मि (*mi*) + ल (*la*) with े makes मिले (*mile*); add the *anusvāra* + गे
 (*ge*) → मिलेंगे (*milenge*).
 
 ## Guided Practice

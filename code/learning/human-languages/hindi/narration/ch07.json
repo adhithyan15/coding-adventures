@@ -4,22 +4,22 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:513de09e728a0591",
+  "sourceHash": "fnv1a64:794ad2fffafb3b62",
   "lessons": [
     {
       "id": "HI-C07-haan",
       "sequence": 490,
-      "title": "हाँ (hāṃ) — yes",
-      "headword": "हाँ",
+      "title": "हाँ / जी हाँ / जी (hāṃ / jī hāṃ / jī) — yes / polite yes",
+      "headword": "हाँ / जी हाँ / जी",
       "romanization": "hāṃ",
-      "gloss": "yes (hāṃ)",
+      "gloss": "yes / polite yes (hāṃ / jī hāṃ / jī)",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0469ae861197bfaf",
+      "sourceHash": "fnv1a64:93ee7a8380b3a04c",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20c4bd049298d3e3",
+      "sourceHash": "fnv1a64:b93ae4839c8371ab",
       "notice": null,
       "blocks": [
         {
@@ -216,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "answer: आप आ रहे हैं? — नहीं (nahīṃ). (\"Are you coming?\" — \"No.\")"
+              "text": "answer: क्या आप ठीक हैं? — नहीं (nahīṃ). (\"Are you well?\" — \"No.\")"
             },
             {
               "kind": "speech",

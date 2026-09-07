@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased — COBOL INSPECT replacement proofs (VM-047b)
+
+Add five matching oracle and seven-backend observations for ALL, LEADING,
+CHARACTERS, first-match priority and non-rechaining replacement. Cover item
+operands, reassignment, absent matches and padded spaces in observable output.
+
+
+## Unreleased — COBOL INSPECT tallying proofs (VM-047a)
+
+Add matching oracle and seven-backend observations for ALL accumulation and
+zero matches, CHARACTERS including field padding, and LEADING stopping at the
+first mismatch. Reassigned source and delimiter items make later reads visible.
+
+
 All notable changes to `cobol-iir-compiler` are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/); this

@@ -1,0 +1,27 @@
+{
+  "glyph": "ஏ",
+  "sound": "ē",
+  "role": "independent-vowel",
+  "components": [
+    "an inner curl opening into the broad left loop",
+    "a flat top bar",
+    "a right upright",
+    "a hooked diagonal foot"
+  ],
+  "strokeOrder": [
+    "start inside the curl and sweep around the broad left loop",
+    "without lifting, climb the outer left side into the crown",
+    "without lifting, carry the top bar to the right",
+    "without lifting, retrace left to the right upright and draw it down",
+    "without lifting, continue down-left along the diagonal foot",
+    "without lifting, turn at the foot and finish back up-right"
+  ],
+  "strokeOrderNote": "one continuous stroke — six joined movements from the inner curl through the hooked diagonal foot; cited to Radhakrishnan, Tamil Script Learners Manual, Module 7 and Appendix I Frame 7, ஏ",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Module 7, ஏ, with Appendix I: Hand-movements, Frame 7 (University of Texas at Austin), p. 193",
+    "url": "https://sites.la.utexas.edu/tamilscript/category/3-moduals/module-07",
+    "variation": "Module 7 identifies ஏ as long e. Appendix I Frame 7 numbers six visibly connected movements: curl, outer loop, top bar, descending upright, and the down-and-back diagonal foot. This continuous learner order is fitted to the bundled Noto Sans Tamil outline; Tamil handwriting varies by school."
+  },
+  "notes": "Independent long ē appears in ஏன் (ēṉ, why) and ஏனென்றால் (ēṉeṉṟāl, because). The Frame 7 path stays on the page for all six movements, so learners can practise the whole letter slowly before using it in those words."
+}

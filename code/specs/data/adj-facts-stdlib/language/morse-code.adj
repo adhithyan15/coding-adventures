@@ -50,14 +50,26 @@
 % ABSTAINS rather than inventing a pattern: the table only ever asserts the codes
 % it can cite, and stays silent on everything else.
 %
-% Provenance — nothing here is from memory. The letter → dot/dash codes are the
-% International Morse code as reproduced in the Wikipedia "Morse code" article,
-% which states verbatim (see `source`) that the code is specified in the current
-% international standard, ITU-R Recommendation M.1677-1 (the "International Morse
-% Code Recommendation") — the authoritative document that fixes every letter's
-% dot/dash sequence. Each row below reads a letter's code off that standard chart
-% at the `locator`. `trust consensus` — an encyclopedia reproducing the ITU chart
-% is a secondary reference, not the primary ITU document itself. (See ../README.md;
+% Provenance — nothing here is from memory, and the `source` below does NOT
+% ground the rows. Read that twice, because it is the opposite of what a reader
+% expects from a citation sitting on a table.
+%
+% The `source` is the article's sentence naming the governing standard: the code
+% is "specified in the current international standard, International Morse Code
+% Recommendation, ITU-R M.1677-1". That establishes WHICH DOCUMENT fixes every
+% letter's dot/dash sequence, and it says nothing whatever about any particular
+% letter. The 26 rows are read off the article's CODE CHART at the same
+% `locator` — a different artifact on the same page.
+%
+% So a consumer asking `? morse_code(s, $P)` gets `dot_dot_dot` with a citation
+% that never mentions the letter s. That gap is disclosed rather than papered
+% over, and it is NOT repaired here: citing the chart means citing a TABLE, which
+% is the open question "is a table row a verbatim span?" that this package is
+% holding for its owner (#14111). Deciding it by shipping is the one move not
+% available. `facts_morse_code_e2e.rs` states the same gap beside its pin.
+%
+% `trust consensus` — an encyclopedia reproducing the ITU chart is a secondary
+% reference, not the primary ITU document itself. (See ../README.md;
 % feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
@@ -91,7 +103,7 @@ table morse_code {
     row (y, dash_dot_dash_dash)
     row (z, dash_dash_dot_dot)
 
-    source "The Morse code, as specified in the current international standard, International Morse Code Recommendation, ITU-R M.1677-1, was derived from a much-improved proposal by Friedrich Gerke in 1848."
+    source "The Morse code, as specified in the current international standard, International Morse Code Recommendation, ITU-R M.1677-1,[2] was derived from a much-improved proposal by Friedrich Gerke in 1848"
     locator "https://en.wikipedia.org/wiki/Morse_code"
     trust consensus
 }

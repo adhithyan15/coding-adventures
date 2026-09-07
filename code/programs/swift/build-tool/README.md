@@ -146,6 +146,15 @@ name, oversized inputs, and selector widening fail closed. Immediate directory
 entries are enumerated incrementally into the candidate ceiling before bounded
 sorting, so a single large directory cannot bypass the package-wide limit.
 
+Declared mode accepts at most 256 portable patterns and 64 KiB of pattern
+text. Matching charges `(pattern Unicode-scalar count + 1) * (candidate-path
+Unicode-scalar count + 1)` against an exact 50,000,000-unit package budget and
+uses dynamic programming for both path segments and segment scalars. Character
+classes follow the shared Python-compatible grammar: leading `!` negates,
+ascending ranges work, leading or trailing `-` and leading `]` are literal,
+and an unmatched `[` is literal. Descending ranges and ambiguous `--`, `&&`,
+`~~`, or `||` operators fail closed before source or diff matching.
+
 Package-tree traversal deliberately remains below the package root. A second
 generated, source-embedded projection consumes the complete checked repository-
 relative boundary registry: 18 reviewed boundaries, 21 registrations, and 19
@@ -189,7 +198,7 @@ escaped:
 HASH_PACKAGE_FAILED: package="swift/example"
 ```
 
-The test suite consumes both neutral source-collection fixtures and the shared
+The test suite consumes all 13 neutral source-collection cases and the shared
 hashing-v1 missing-cache oracle, then independently covers binary bytes, CRLF,
 Unicode path ordering, same-content renames, empty packages, every established
 language registry entry, declared root manifests, nested links, real Windows

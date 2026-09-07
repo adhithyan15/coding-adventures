@@ -281,3 +281,29 @@ fn literal_only_strings_still_fold_at_compile_time() {
         .expect("wasm run failed");
     assert_eq!(result, vec![1], "'H' ++ 'I' must still fold equal to 'HI'");
 }
+
+
+/// A concat destination may also be either (or both) input locals. Compare the
+/// complete result, including its length, so zero-filled corruption cannot pass.
+#[test]
+fn runtime_concat_preserves_aliased_operands() {
+    for (dest, right, expected) in [("a", "b", "ABxy"), ("b", "b", "ABxy"), ("a", "a", "ABAB")] {
+        let join = IIRFunction::new("join", vec![("a".into(), "str".into()), ("b".into(), "str".into())], "str", vec![
+            IIRInstr::new("str_concat", Some(dest.into()), vec![Operand::Var("a".into()), Operand::Var(right.into())], "str"),
+            IIRInstr::new("ret", None, vec![Operand::Var(dest.into())], "str"),
+        ]);
+        let main = IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("xy".into())], "str"),
+            IIRInstr::new("call", Some("joined".into()), vec![Operand::Var("join".into()), Operand::Var("a".into()), Operand::Var("b".into())], "str"),
+            IIRInstr::new("str_const", Some("expected".into()), vec![Operand::Str(expected.into())], "str"),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![Operand::Var("joined".into()), Operand::Var("expected".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ]);
+        let module = IIRModule { name: "concat_alias".into(), functions: vec![join, main], entry_point: Some("main".into()), language: "test".into(), exports: vec![], imports: vec![] };
+        let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).unwrap();
+        let bytes = encode_module(&wasm).unwrap();
+        let result = WasmRuntime::new().load_and_run(&bytes, "main", &[]).unwrap();
+        assert_eq!(result, vec![1], "destination={dest}, right={right}");
+    }
+}

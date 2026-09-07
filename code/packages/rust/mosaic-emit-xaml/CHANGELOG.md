@@ -1,5 +1,18 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — activate UI49 one-of slot states (#14359)
+
+Mosstyle states owned by `.mil` `one-of` slots now activate from the generated
+WinUI dependency properties. Property-scoped `VisualStateGroup`s compare each
+closed-set slot value through a generated ordinal string converter, preserve
+model slot order when multiple axes apply, and keep explicit structural and
+interaction predicates at higher precedence. The lowering covers native Host
+controls plus paint-bearing `Box`, `Row`, `Column`, and `Stack` containers,
+including state-only styles with no base paint.
+
+A generated two-axis WinUI project was compiled with .NET 9 and the pinned
+Windows App SDK after the emitter and package-builder suites passed.
+
 ## [Unreleased] — preserve dynamic HostButton accessible names (#13754)
 
 WinUI buttons now lower literal, slot-bound, keyword-bound, and bindable

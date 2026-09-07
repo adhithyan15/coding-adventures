@@ -1,5 +1,7 @@
 # Lessons Learned
 
+- **Removing a custom CRT entry point also requires rechecking its library workaround.** The Windows AOT link stopped overriding `/ENTRY:main` but retained `libvcruntime.lib` beside dynamic `vcruntime.lib`. A real Twig `42` execution attempt failed in `lld-link` with duplicate `__vcrt_InitializeCriticalSectionEx`; a unit test asserting the old library list had stayed green. Remove the obsolete static library and validate actual executable startup, output, and heap operations. Record the two existing precise-GC smoke-test early returns separately from executed passes.
+
 - **Fix backend-specific Mosaic measurement in the emitter, not with shared pixel widths.** Giving TaskApp's progress group a 90px Compose-safe bound kept its caption visible there but made Flutter's real widget test fail with a 58px `RenderFlex` overflow, and widening it still changed SwiftUI launch behavior. Preserve the cross-platform `.msl`; thread the host layout scope through the affected emitter instead (Compose Row children stay intrinsic, while `width: 100%`/`flex-grow` lower to `RowScope.weight`), then rerun every strict native lifecycle that consumes the shared source.
 - **Case-variant path tests need distinct parents on case-insensitive filesystems.** A Rust discovery regression initially created `_build` and `_Build` beneath the same parent; on Windows they named one directory, so the exact-name skip appeared to suppress the preserved case variant. Put exact, case-variant, and near-name fixtures beneath distinct parent components, then assert both the skipped decoy and the retained source packages. This tests the component rule instead of the host filesystem's casing semantics.
 - **A process-free adapter's public helpers must enforce the same closed bounds as its top-level evaluator, and closed enums must fail before shortcuts.** The Ruby toolchain snapshot evaluator correctly metered every BUILD front, but its public declaration parser could still split an oversized direct string; it also let an unknown platform fall back to generic `BUILD` when force-full or empty selections should have rejected the snapshot first. Put byte/line checks before allocation in every public parse boundary, validate closed platform names before scheduling or force-full branches, and add direct hostile probes instead of relying only on schema-valid fixtures.
@@ -6753,6 +6755,57 @@ Two notes on how it was handled:
   `-y` would fail a correct future edit, which is the same false-positive trap
   as the allowlist.
 
+## Main CI repair: diagnose every shard before changing capacity
+
+The September 3 full build combined npm 10.9.8 Arborist edgesOut crashes, missing Perl test prerequisites, stale generated Swift grammar, a private Flutter return type, repeated corpus generation, and oversized formula parsing. Reproduce installer failures with the runner's exact npm version; silent npm output can hide the root cause. Keep full-corpus test setup shared when assertions inspect an immutable checkout. Check formula input budgets before both dependency discovery and evaluation. Measure prerequisite-closed shard costs before changing the matrix.
+
+The first PR run exposed two repair omissions: the four independent conformance jobs also needed the npm pin, and a new human-language changelog shard lacked its mandatory heading digest. Validate actual document shards after adding one. Windows BUILD commands need an explicit Bash boundary for shell syntax. Preserve native startup errors at the FFI boundary; returning only null conceals the cause of a remote runtime failure.
+
+The next run identified EINTR from a native socket read inside Flutter. Retry Interrupted at the underlying Read boundary so both buffered header reads and direct body reads survive runtime signals; do not retry timeouts or resets. Audit every consumer of a broken BUILD idiom in the same repair: fixing only the first CAS package exposed identical Windows failures farther down the dependency graph.
+
+After native navigation worked, Venture exposed nested Expanded widgets around a styled HostInput. When a parent emitter owns an explicit flex wrapper, suppress the child's implicit wrapper; generated code can type-check while still violating Flutter's ParentDataWidget runtime contract.
+
+Hindi changelog fragments must begin with their level-2 entry heading. The document title belongs only in CHANGELOG.d/_meta.md; copying it into a numbered shard breaks the independent section-order test even when the heading digest and byte round trip pass.
+
+- **Scope workflow wiring tests to the owning job before matching step names.** CI repeats `Set up Rust` across contract and build jobs. VM-032 initially matched an unrelated contract setup step and falsely reported a missing runtime flag. Inspect the build job specifically, then assert its selection, toolchain, and execution guards together.
+
+- **Shared Cargo test helpers may assume workspace/target even when Cargo honors CARGO_TARGET_DIR.** VM-024 reused a target directory, but lang-aot tests/common built gc-core-capi there and looked only in the new workspace target/release. Validate with the default layout until archive discovery follows Cargo artifact metadata; a missing guessed archive is not a compiler semantic failure (VM-035).
+
+## 2026-09-05 — Computed substring bounds change string representation
+
+A literal source does not imply a literal substring: runtime indices produce
+a runtime handle. Propagate that fact to receiver copies and consumers before
+building a function-wide literal table, or stale initializers can silently
+replace live output. Keep actual cross-backend substring/MOVE programs with
+padding markers and invalid-bound traps; frontend oracle tests and validator
+acceptance did not expose native/LLVM missing routing or WASM stale facts.
+
+## 2026-09-05 — Literal facts need program-point validity
+
+A function-wide map keyed by mutable string register cannot represent two
+successive literal assignments, even without branches. Printing between writes
+must observe the earlier value. Treat multiply written variables as runtime
+handles and propagate their representation; retain a sequential output test,
+not only tests that inspect the final receiver value.
+
+## 2026-09-05 — Loop indices cannot inherit initializer facts
+
+A string-folding pass that sees `j = 0` before a back edge cannot substitute
+that zero into every `str_index(s, j)`. Exclude multiply defined integer
+registers from literal metadata and route unknown indices through the checked
+runtime helper. Run delimiter scans to validate loop-carried byte reads; a
+frontend oracle or literal-index test alone misses this native/LLVM gap.
+
+
+### WASM runtime string concatenation must preserve aliased operands (2026-09-05)
+
+INSPECT replacement exposed `str_concat result = result, character`: assigning
+the fresh handle to result before copying overwrote the input handle, producing
+NUL output or a trap. Preserve operand locals through all length and byte reads;
+write the destination last. Exercise left, right and double aliasing explicitly.
+
+Direct WASM IIR tests must give `str_eq` an i64/i32 result hint; `bool` is
+rejected by the backend validator before execution. Use the established test ABI.
 ## `to_value` builds one Value per element, and a `Vec<u8>` is a lot of elements
 
 `ok_with` in the wasm facade did `serde_json::to_value(value)` before rendering

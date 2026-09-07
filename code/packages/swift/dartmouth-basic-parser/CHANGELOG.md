@@ -1,5 +1,10 @@
 # Changelog -- DartmouthBasicParser (Swift)
 
+## [Unreleased]
+
+- Regenerate the embedded grammar from the canonical Dartmouth BASIC grammar,
+  restoring the repository-wide Swift grammar drift check.
+
 ## [0.2.0] -- 2026-07-13
 
 ### Changed

@@ -4,22 +4,22 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f203946ce0857d1c",
+  "sourceHash": "fnv1a64:738e09b1186fffbd",
   "lessons": [
     {
       "id": "HI-C18-ghanta",
       "sequence": 650,
-      "title": "घंटा — \"hour,\" literally \"bell\"",
-      "headword": "घंटा / बजना",
-      "romanization": "ghaṇṭā",
-      "gloss": "hour or bell, and बजना — to strike or toll, the verb Hindi uses to tell time",
+      "title": "घंटा / बजना — the bell and the hours that strike",
+      "headword": "घंटा / बजना / बज रहा है / बज रहे हैं",
+      "romanization": "ghaṇṭā / bajnā / baj rahā hai / baj rahe haiṁ",
+      "gloss": "hour or bell / to strike or toll / singular time frame / plural time frame",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5e62b473e8c98fd",
+      "sourceHash": "fnv1a64:e084194f435104b7",
       "notice": null,
       "blocks": [
         {

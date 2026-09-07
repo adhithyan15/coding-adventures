@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+### Fixed
+
+- Retry interrupted socket reads without dropping buffered response data. Runtime
+  signals no longer abort bounded HTTP header or body reads in native hosts.
+  Timeouts and connection errors still propagate immediately.
+
 ### Added
 
 - Added `TcpConnection::read_chunk` and `read_until_limit` for bounded

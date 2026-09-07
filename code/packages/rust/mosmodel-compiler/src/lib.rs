@@ -153,6 +153,17 @@ pub enum SlotType {
     Node,
     /// `list<T>` — homogeneous ordered list.
     List(Box<ListInnerType>),
+    /// `one-of a b c` — a closed set of legal values (UI49).
+    ///
+    /// Before this existed, a keyword axis was declared `slot variant : text`
+    /// with its legal values in a *comment*, so nothing could validate a value,
+    /// reject a typo, or enumerate the set to check that a story or a
+    /// stylesheet covered it. Six toolkit components shipped `variant`/`size`
+    /// slots whose values were accepted and silently discarded (#14036).
+    ///
+    /// Values are in declaration order, which is the order a consumer should
+    /// present them in.
+    OneOf(Vec<String>),
     /// Named component type resolved from the component library.
     Component(String),
 }
@@ -486,7 +497,7 @@ fn parse_slot_type(node: &GrammarASTNode) -> Result<SlotType, CompileError> {
     match node.rule_name.as_str() {
         "scalar_type" => parse_scalar_slot_type(node),
         "slot_type" => {
-            // slot_type = scalar_type | list_type | NAME
+            // slot_type = list_type | one_of_type | scalar_type | NAME
             for child in &node.children {
                 match child {
                     ASTNodeOrToken::Node(n) => return parse_slot_type(n),
@@ -502,6 +513,40 @@ fn parse_slot_type(node: &GrammarASTNode) -> Result<SlotType, CompileError> {
                 kind: ErrorKind::UnknownType,
                 message: "empty slot_type".to_string(),
             })
+        }
+        "one_of_type" => {
+            // one_of_type = KEYWORD("one-of") NAME { NAME }
+            //
+            // Every NAME after the keyword is a legal value. The grammar
+            // requires at least one, so an empty set cannot parse; the check
+            // below is a guard against a malformed tree rather than a
+            // reachable authoring error.
+            let mut values: Vec<String> = Vec::new();
+            for child in &node.children {
+                if let ASTNodeOrToken::Token(t) = child {
+                    if is_name_token(t) {
+                        values.push(t.value.clone());
+                    }
+                }
+            }
+            if values.is_empty() {
+                return Err(CompileError {
+                    kind: ErrorKind::UnknownType,
+                    message: "one-of needs at least one value".to_string(),
+                });
+            }
+            // A repeated value is almost certainly a typo, and it would make
+            // "does this cover every value?" ambiguous for anything consuming
+            // the set. Reject it rather than silently deduplicating.
+            for (i, v) in values.iter().enumerate() {
+                if values[..i].contains(v) {
+                    return Err(CompileError {
+                        kind: ErrorKind::UnknownType,
+                        message: format!("one-of lists '{}' more than once", v),
+                    });
+                }
+            }
+            Ok(SlotType::OneOf(values))
         }
         "list_type" => {
             // list_type = KEYWORD("list") LANGLE inner_type RANGLE
@@ -975,6 +1020,14 @@ fn slot_type_to_rust(ty: &SlotType) -> String {
         SlotType::Color => "[f32; 4]".to_string(),
         SlotType::Node => "Box<dyn AnyNode>".to_string(),
         SlotType::List(inner) => format!("Vec<{}>", list_inner_to_rust(inner)),
+        // A one-of value is one of a closed set of names, carried as a string.
+        // Lowering it to a real native enum (a Kotlin/Swift enum, a XAML
+        // VisualState group) is attractive for type-safety but widens UI49
+        // from a styling change into an interface-lowering change, so it is
+        // deliberately a later cycle -- UI49 section 8, open question 2. The
+        // closed set is still available on the SlotType for validation and for
+        // coverage checks; only the *host-facing Rust type* is a String.
+        SlotType::OneOf(_) => "String".to_string(),
         SlotType::Component(n) => n.clone(),
     }
 }
@@ -1628,3 +1681,75 @@ fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
         .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
 }
 
+// --- one-of slot type (UI49 / #14036) ------------------------------------
+
+#[cfg(test)]
+fn one_of_slot(src: &str) -> Result<SlotType, Vec<CompileError>> {
+    let out = compile(src)?;
+    Ok(out.component.slots[0].r#type.clone())
+}
+
+/// The motivating case: a keyword axis whose legal values used to live in a
+/// comment is now declared, in order.
+#[test]
+fn test_one_of_parses_its_values_in_order() {
+    let ty = one_of_slot("component Button {\n  slot variant : one-of primary secondary danger ;\n}\n")
+        .expect("one-of should compile");
+    assert_eq!(
+        ty,
+        SlotType::OneOf(vec![
+            "primary".to_string(),
+            "secondary".to_string(),
+            "danger".to_string()
+        ])
+    );
+}
+
+/// A single value is legal — a set of one is still a closed set.
+#[test]
+fn test_one_of_accepts_a_single_value() {
+    let ty = one_of_slot("component A {\n  slot mode : one-of only ;\n}\n").expect("compiles");
+    assert_eq!(ty, SlotType::OneOf(vec!["only".to_string()]));
+}
+
+/// A duplicate is a typo, and it would make "does this cover every value?"
+/// ambiguous for anything consuming the set. Rejected rather than deduplicated.
+#[test]
+fn test_one_of_rejects_a_duplicate_value() {
+    let err = one_of_slot("component A {\n  slot v : one-of a b a ;\n}\n")
+        .expect_err("a repeated value must not compile");
+    assert!(
+        err.iter().any(|e| e.message.contains("more than once")),
+        "expected a duplicate diagnostic, got {err:?}"
+    );
+}
+
+/// `one-of` must not disturb the existing types, and in particular must not
+/// shadow `list<T>`: both productions begin with KEYWORD, and getting that
+/// ordering wrong in `slot_type` is exactly the bug that would have broken all
+/// 72 `list<>` declarations in the repository (#14067).
+#[test]
+fn test_one_of_does_not_shadow_list_or_scalar() {
+    assert_eq!(
+        one_of_slot("component A {\n  slot xs : list<text> ;\n}\n").expect("list compiles"),
+        SlotType::List(Box::new(ListInnerType::Text))
+    );
+    assert_eq!(
+        one_of_slot("component A {\n  slot t : text ;\n}\n").expect("text compiles"),
+        SlotType::Text
+    );
+    assert_eq!(
+        one_of_slot("component A {\n  slot c : CellAddress ;\n}\n").expect("component compiles"),
+        SlotType::Component("CellAddress".to_string())
+    );
+}
+
+/// The host-facing Rust type is a String today; lowering to a native enum is
+/// UI49 open question 2. Pinned so that decision is changed deliberately.
+#[test]
+fn test_one_of_lowers_to_string_for_now() {
+    assert_eq!(
+        slot_type_to_rust(&SlotType::OneOf(vec!["a".to_string()])),
+        "String"
+    );
+}

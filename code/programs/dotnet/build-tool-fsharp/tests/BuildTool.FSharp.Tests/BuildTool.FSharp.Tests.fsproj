@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="HasherConformanceTests.fs" />
     <Compile Include="BuildToolTests.fs" />
   </ItemGroup>
 </Project>

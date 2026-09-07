@@ -2429,8 +2429,10 @@ language ports stay eligible for later dependency-shaped waves.
 The singleton inventory is led by 572 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-August 2 inventories added thirty-one Rust singleton identities that now
-have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
+The cohort frozen at inventory revision
+`d0cd8ba4c8ddc83f5312eaca16e7c5fdbfb7c6ea` contains exactly twenty-three
+Rust singleton identities that now have explicit classification work in the
+loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
 `venture-browser-core` needs a portable-core versus native-boundary review.
@@ -2505,7 +2507,7 @@ profiles despite concrete network calls, while `udp-client` and
 `smart-home-discovery` lack manifests. A separate high-leverage owner corrects
 those native boundaries before downstream approval.
 
-The twenty-fourth identity, `smart-home-wled-integration`, follows the same
+The later, separately owned `smart-home-wled-integration` identity follows the same
 mixed pattern. `/json/si` DTO validation, master and segment projection, stable
 identifiers, capability-bit interpretation, state normalization, brightness,
 RGB and mirek conversion, and JSON command planning form the portable candidate.
@@ -2520,8 +2522,9 @@ follow-up consolidates the duplicated Shelly/WLED DNS, TCP, request encoding,
 bounded response, chunked decoding, and error projection behind a native LAN-
 HTTP executor while keeping `smart-home-local-http` a pure request planner.
 
-The newest identity, `smart-home-nanoleaf-local-integration`, is another mixed
-split rather than a blind port. Credential syntax and credential-free origin
+The later, separately owned `smart-home-nanoleaf-local-integration` identity
+is another mixed split rather than a blind port. Credential syntax and
+credential-free origin
 configuration, bounded snapshot and state validation, stable identifiers,
 capability and state normalization, RGB/HSV and mirek conversion, command
 planning, verification, and hostile inputs are deterministic portable-core
@@ -12615,6 +12618,512 @@ vendor, or generated-directory authority. Reconciliation and selection leave
 646 unique owners and 1,008 dependency edges: 201 merged, 444 pending, and
 exactly this Swift repository-boundary owner in progress.
 
+### Post-PR #13841 refresh and CI gate conformance selection
+
+PR #13841 completed all final-head checks acceptably and GitHub merged the
+reviewed Swift repository-boundary implementation through guarded squash
+auto-merge as `0db71afde03b13bf3b3f5d1ef2dc18673a75fffc`; the parity loop issued
+no manual merge command.
+
+The collision-checked schema-3 inventory at exact current `origin/main`
+`8fe279a38603d7a53147624d65d6ecf288585199` now records 15 established
+lanes, 1,411 implementation identities, 4,627 implementation slots, and 1,450
+all-reported identities. Its bands are 175/265, 123/934, 172/2,165, and
+941/13,174; Rust has 752 singletons, OCaml remains emerging at zero packages,
+and canonical collisions and unknown language buckets remain zero.
+
+Seven new Rust-only identities are classified before selection. The owners for
+`diagram-layout-board`, `layout-generated`, and `layout-replaced` isolate
+deterministic board geometry, generated-content state, and intrinsic replaced-
+element sizing from parsers, DOM, paint, fonts, devices, and host authority.
+`glyph-parser` and `font-subset` own bounded TrueType outline and subsetting
+cores with external byte-oracle checks; `pdf` owns deterministic PDF 1.7 writing
+and depends on the merged raw-RFC1951 contract; `math-layout` owns TEX-1 atom
+lowering, binary demotion, style spacing, and depth limits. The existing FNT00
+font-parser identity is separately assigned a Java/Kotlin/Dart parity owner.
+`layout-replaced` is now an explicit prerequisite of the flexbox, grid, and
+table layout classifiers. No newly discovered package identity or applicable
+portable lane gap remains unowned.
+
+Merged PR #13854 also introduced a Go-only CI gate registry and evaluator after
+the prior inventory revision. Because this is a new build-tool behavior rather
+than a package identity, the inventory matrix alone could not own it. New item
+`build-tool-ci-gate-registry-conformance-corpus-and-engine-audit` closes that
+gap first: a process-free `ci_gate_selection` domain pins validated registry
+data, nullable change snapshots, force and machinery fail-open behavior, exact
+package intersection, portable globstar matching, complete sorted verdicts, and
+deterministic output names. Registry and Git I/O, graph construction,
+`$GITHUB_OUTPUT`, workflow scheduling, and policy authority stay outside the
+fixture boundary. A dependent aggregate owns rollout across all supported build-
+tool lanes and the future OCaml lane. The exact-front-door audit finds the Go
+engine as the sole current implementation. It therefore assigns explicit
+process-free leaves to shared C#/F#, Elixir, Haskell, Lua, Perl, Python, Ruby,
+Rust, Swift, and TypeScript; the aggregate also depends on the existing JVM,
+Dart, and OCaml build-tool owners.
+
+That neutral corpus is the highest-leverage unblocked delivery slice because it
+establishes the oracle required by all twelve current front doors plus future
+Java, Kotlin, Dart, and OCaml engines. The two-lane C#/F# source-hashing repair
+is next-best but does not close the newly unowned cross-engine behavior.
+Reconciliation and selection leave 666 unique owners and 1,037 dependency
+edges: 202 merged, 463 pending, and exactly the CI gate corpus/audit owner in
+progress.
+
+Before publication, `origin/main` advanced through four disjoint MOS model,
+human-language, TypeScript local-dependency, and SPICE parser commits. The
+implementation rebased cleanly onto
+`8fe279a38603d7a53147624d65d6ecf288585199`; the refreshed inventory retained
+the exact counts above, and five live open PRs have no exact path overlap with
+this tranche.
+
+Ready-for-review PR #14251 publishes the validated two-commit implementation.
+The lifecycle is now 202 merged, 463 pending, and exactly this CI gate corpus
+owner `pr-open`; initial CI and CodeQL detection checks are queued, so guarded
+auto-merge remains disabled until every required check is terminal and
+acceptable.
+
+### Post-PR #14251 refresh and shared .NET source-hashing selection
+
+PR #14251 completed every final-head check acceptably, including the final CI
+gate. GitHub reported no merge conflict and executed guarded squash auto-merge
+without a plain manual merge command as
+`7de0d5a974b66681ace92d794747d9070c8cce43`.
+
+The collision-checked schema-3 inventory at exact current `origin/main`
+`11c3e0c83f3187aba1e667558592d3f5efea4c96` remains unchanged at 15 established
+lanes, 1,411 implementation identities, 4,627 implementation slots, and 1,450
+all-reported identities. Its bands remain 175/265, 123/934, 172/2,165, and
+941/13,174; Rust has 752 singletons, OCaml remains emerging at zero packages,
+and canonical collisions and unknown language buckets remain zero. Intervening
+HTML-parser and Hindi curriculum merges changed existing identities or no
+package roots, so the identity and lane topology did not move.
+
+Parallel read-only inventory, graph, and build-tool audits found no newly
+unowned identity or lane gap. The reconciled graph has 666 unique owners and
+1,037 dependency edges, with zero duplicate IDs, missing dependencies, or
+cycles. Virtually merging the completed CI-gate corpus exposes 214
+dependency-ready pending items, 188 of which are not selection-blocked. The ten
+current-engine CI-gate leaves are now ready, but each advances only the shared
+aggregate and none completes it while JVM, Dart, and OCaml creation work remains.
+
+The bounded shared C#/F# source-hashing repair is the highest-leverage finite
+next slice. Its four prerequisites are merged; one shared .NET implementation
+covers two established front doors, advances the remaining-source-hashing
+aggregate, and immediately unlocks the C#/F# dependency-hashing child, which in
+turn advances the remaining dependency-hashing aggregate. This tranche owns
+exact C#, F#, and delegated .NET registry projection, generated-directory
+pruning, source selection, normalized repository-relative framing, file
+boundaries, and deterministic package digests. Dependency hashing stays in its
+existing serial child. The clean exact-main worktree and branch
+`codex/build-tool-csharp-fsharp-portable-source-hashing-conformance` were created
+only after confirming that no local branch, remote branch, or prior PR existed.
+Reconciliation and selection leave 203 merged, 462 pending, and exactly this
+owner in progress.
+
+Adversarial review of this shared source-hashing slice made the portable
+declared-glob character-class grammar and 50,000,000-unit match-work ceiling
+explicit. Swift is the only already-complete live registry adopter, so this
+owner also aligns its source and diff matching with that neutral contract;
+the remaining engines stay gated by their existing source-hashing owners.
+The same review removed stale public discovery helpers that bypassed secure
+reads, converted discovery to constant native-descriptor use, and made .NET
+changes select the Windows CI leg that exercises that native path.
+
+A parallel reference audit found one pre-existing Swift stability defect that
+does not widen this selected .NET tranche. Swift currently parses complete
+`git ls-files --stage` mode, object-ID, stage, and path evidence, but collapses
+accepted records to paths before comparing its pre-hash and post-hash index
+snapshots. The new pending
+`build-tool-swift-git-index-snapshot-stability-repair` owner preserves and
+compares the complete evidence and now gates the remaining-engine source-hash
+aggregate. The dependency graph therefore contains 667 owners and 1,038 edges:
+203 merged, 463 pending, and exactly the shared C#/F# owner in progress; package
+inventory metrics remain unchanged because this is a behavioral repair rather
+than a new identity or lane.
+
+### Post-PR #14291 inventory and parallel backlog reconciliation
+
+PR #14291 completed all 47 final-head checks with 40 successes and seven
+expected skips. GitHub reported no merge conflict and executed guarded squash
+auto-merge as `2096c95f20c157074dbb237171262ba451adf0d9`.
+
+The collision-checked schema-3 inventory at exact `origin/main`
+`4b1d12496e0c74d63a1a930d40934b2a22de81a6` now contains 15 established
+lanes, 1,412 implementation identities, 4,628 implementation slots, and 1,451
+all-reported identities. The four bands are 175/265, 123/934, 172/2,165, and
+942/13,188; Rust has 753 singletons, OCaml remains emerging at zero packages,
+and canonical collisions and unknown language buckets remain zero. The only
+identity addition is `rust/visicalc-mosaic-app`, now owned by an explicit
+native/generated-wrapper applicability review.
+
+Parallel read-only audits exposed work that the earlier broad umbrellas did not
+own precisely. A repository-boundary reverse-diff and digest corpus now gates
+nine current-engine behavior-adoption leaves plus shared .NET and Swift
+fixture-consumption leaves, covering all 12 current front doors. JVM, Dart, and
+OCaml each have a current-contract promotion owner wired into source hashing,
+dependency hashing, CI gate,
+extra toolchain, Dune discovery, CLI, Starlark, validation, atomic plan writing,
+orphan validation, and tracked-artifact closure. OCaml promotion additionally
+requires representative classical-cipher and ZIP-owned raw-RFC-1951 consumers.
+
+Strict singleton ownership found exact owners for 207 of 753 Rust-only
+identities and 546 without exact ownership: 170 have portable-core evidence, 58
+have native-host evidence, 89 have generated/applicability evidence, and 229
+remain unresolved. The first high-confidence dependency frontier is
+`constraint-core`, `smart-home-core`, then `matrix-ir`. Separate classification
+owners record 93 unowned Java/Kotlin/Dart and 50 unowned Swift high-consensus
+identities, 117 unowned identities in the five-to-nine-language band, and 157
+in the two-to-four-language band. These are discovery owners that must decompose
+into bounded children before implementation; they are not parity exemptions.
+
+The next dependency-shaped implementation candidate is
+`build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus`.
+Its prerequisites are merged, it is process-free, and it defines shared
+semantics before the behavior and fixture-consumption leaves can proceed. A live sweep of all
+seven open PRs found zero exact or semantic overlap across its 11 planned paths;
+the fresh unpublished branch is based exactly on current `origin/main`.
+
+After the reconciliation commit recorded every discovered owner as pending,
+that corpus owner transitioned to `in-progress` on
+`codex/build-tool-repository-boundary-reverse-diff-digest-conformance`. The
+resulting graph has 690 unique owners: 204 merged, 485 pending, and exactly this
+owner in progress. Its next change order is specification and schema, red
+fixtures/tests, reference-runner implementation, then changelog and final
+roadmap/state evidence.
+
+The implementation then rebased conflict-free onto exact `origin/main`
+`b4535bf5ab6e0d8f9c4e90f9836555875d00246a`. Merged PR #14304 added only
+`rust/mosaic-app-wasm` to the package topology; five later Hindi, Mosaic React,
+SPICE, HTML parser, and Windows language-VM CI commits changed no package
+identity or selected path.
+The refreshed collision-checked
+inventory now has 1,413 implementation identities, 4,629 slots, 1,452 all-
+reported identities, and bands 175/265, 123/934, 172/2,165, and 943/13,202.
+Rust has 754 singletons; OCaml remains emerging at zero packages; collisions
+and unknown buckets remain zero. The new identity is split between the eligible
+`mosaic-app-wasm-transport-portable-conformance` and selection-blocked
+`mosaic-app-wasm-rust-and-javascript-host-review`. The former owns the neutral
+pointer/length envelope, allocation ownership, lifecycle sequencing, and stable
+failures; the latter owns wasm32 compilation, JavaScript loading and memory
+views, traps, and target toolchains. Existing Mosaic conformance and VisiCalc
+adapter reviews depend on that host boundary. The consumer audit also
+registered shared .NET and Swift fixture-consumption leaves beside the nine
+behavior-adoption leaves. The graph therefore has 694 unique owners: 204
+merged, 489 pending, and exactly the repository-boundary corpus owner in
+progress.
+
+The final exact-base validation proves 141 process-free cases and 285 retained
+files with the unchanged 18-boundary/21-input digest. All 23 schema tests and
+78 semantic runner tests pass; the complete oracle reports 89% branch-aware
+coverage. The related execution-contract suites pass 121 tests with 23 expected
+platform skips. C# passes 80 tests and F# passes 17, with both front doors
+dynamically consuming all four hashing fixtures; the missing reverse-diff and
+Swift fixture consumption remain explicit pending leaves. The complete Go
+suite, vet, trimpath build, and a real affected dry-run pass. That dry-run
+evaluates 45 Starlark files, discovers 5,139 packages, preserves the five-entry
+orphan ledger, and selects exactly the two changed .NET build-tool programs.
+Package parity, capability, OCaml-lock, JSON, state-DAG, lint-baseline,
+security, vulnerability, and diff gates are acceptable without adding host or
+execution authority.
+
+### Post-PR #14316 inventory and Windows volume-identity selection
+
+PR #14316 completed all 43 final-head checks with 22 successes and 21 expected
+skips. GitHub reported no merge conflict and executed guarded squash auto-merge
+as `71cf85dfe414e43ee939b65f7f91401373f3158c`.
+
+The collision-checked schema-3 inventory at that exact `origin/main` remains
+identity-neutral: 15 established lanes, 1,413 implementation identities, 4,629
+implementation slots, and 1,452 all-reported identities. The four bands remain
+175/265, 123/934, 172/2,165, and 943/13,202; Rust has 754 singletons,
+OCaml remains emerging at zero packages, and canonical collisions and unknown
+language buckets remain zero. A tree-to-tree audit from the previous inventory
+base found no added or removed lane/package identity pair and no newly eligible
+unowned gap.
+
+Parallel read-only backlog audits prepared several valid successors. Haskell
+portable source hashing is ready and immediately unlocks its dependency-hashing
+and repository-boundary children. The July Rust singleton classifier has broad
+graph leverage but first needs its historical cohort frozen exactly. Java,
+Kotlin, and Dart font-parser parity is a coherent three-lane breadth tranche,
+but it has no declared dependent. The shared .NET and Swift boundary-fixture
+consumers are small ready leaves after #14316. Elixir source hashing has a
+complete implementation plan but retains a native no-follow filesystem design
+risk. OCaml's remaining implementation chain is fully owned and begins behind
+the cross-platform execution contract and Go oracle.
+
+The dependency audit found a more immediate correctness prerequisite on that
+OCaml path. `build-tool-windows-appcontainer-sandbox` and
+`build-tool-bootstrap-execution-fixture` both require the pending
+`build-tool-windows-python313-execution-snapshot-volume-identity` repair. On
+this host the unchanged execution family passes 72 tests with 13 expected
+skips under Python 3.10, but Python 3.13 reports one failure and four errors
+because `fstat().st_dev` uses the 64-bit `FILE_ID_INFO.VolumeSerialNumber`
+while the retained-root validator compares only the legacy 32-bit
+`dwVolumeSerialNumber`.
+
+The Windows volume-identity repair is therefore selected next from exact main.
+It will query both serial forms from the same retained root handle, accept only
+exact membership, retain legacy-only fallback when extended information is
+unavailable, and reject any different 64-bit value that merely shares the low
+DWORD. It will not version-sniff, mask `st_dev`, change policy availability, or
+grant process authority. The new dependency edges make the execution bootstrap
+and AppContainer owners wait for this invariant. No other open PR overlaps the
+six planned paths. The resulting 694-owner graph has 205 merged, 488 pending,
+and exactly this owner in progress on
+`codex/build-tool-windows-python313-volume-identity`.
+
+Before final validation, the branch rebased conflict-free onto exact
+`origin/main` `e1808c31903c1324fa242d48e43b7e9cfce9252d`. The intervening
+language-AOT CI, Hindi curriculum, Mosaic viewport-unit, and SPICE BJT commits
+changed no package identity or selected path. The inventory counts remain
+unchanged and collision-free, and all seven live open PRs have zero exact
+overlap with the seven changed paths.
+
+The implementation keeps the legacy `GetFileInformationByHandle` result and
+also queries `GetFileInformationByHandleEx(FileIdInfo)` from the same retained
+root. A pure exact-width helper admits those two native values and no low-DWORD
+alias. Tests first failed on the missing helper, then the complete execution,
+authority, and backend family passed 74 tests with 13 expected platform skips
+under both Python 3.10 and 3.13. The wider conformance family independently
+passes 224 tests with 23 expected skips under each interpreter; the execution
+module reaches 82% branch-aware coverage.
+
+Both process-free contract validators, all 78 semantic-runner tests, the full
+Go build-tool suite, vet, trimpath build, real 5,140-package no-change plan,
+package-parity, capability, OCaml-lock, formatting, lint-baseline, compile,
+Bandit, state-DAG, collision, diff, and secret gates are acceptable. Live SDK
+and handle probes confirm the exact 24-byte ABI, both interpreter projections,
+same-low-DWORD rejection, and no handle growth across 250 captures. Independent
+correctness, security, and bookkeeping reviews found no blocker and no added
+process, filesystem, network, environment, credential, dependency, or policy
+authority.
+
+### Post-PR #14329 reconciliation and Haskell SHA-256 prerequisite
+
+PR #14329 completed all 42 final-head checks with 11 successes and 31 expected
+skips. GitHub reported no merge conflict and executed guarded squash auto-merge
+as `327029a998efbb7e6ac964654838812692259d3b` without a plain manual merge
+command.
+
+The collision-checked schema-3 inventory at that exact `origin/main` remains
+identity-neutral: 15 established lanes, 1,413 implementation identities, 4,629
+implementation slots, and 1,452 all-reported identities. The four bands remain
+175/265, 123/934, 172/2,165, and 943/13,202; Rust has 754 singletons,
+OCaml remains emerging at zero packages, and canonical collisions and unknown
+language buckets remain zero.
+
+The parallel backlog audit froze the July classifier to the exact 23-identity
+cohort present at `d0cd8ba4c8ddc83f5312eaca16e7c5fdbfb7c6ea`, added fourteen
+bounded portable or native-boundary owners for previously umbrella-only
+members, and rewired seven broad classifier edges to their actual package
+prerequisites. WLED, Govee, LIFX, Kasa, Reolink, Roku, Wemo, Sonos, and
+Nanoleaf are nine later identities with separate existing owners and do not
+belong to the frozen cohort.
+
+Haskell portable source hashing remains the highest-leverage ready build-tool
+candidate, with three direct and four transitive descendants. Its implementation
+audit found one missing package-level prerequisite: the local Haskell SHA-256
+package exposes only whole-list one-shot hashing, so a secure file collector
+cannot stream bounded chunks without buffering complete source bytes. The next
+selected tranche therefore adds an opaque strict incremental SHA-256 context,
+exact chunk updates, repeatable finalization, lowercase hex output, and
+boundary-vector coverage while preserving the existing one-shot API and every
+HMAC, HKDF, and PBKDF2 consumer. This package-only pure-math prerequisite adds
+no filesystem, process, network, environment, credential, or native authority.
+
+Before publication, the branch rebased conflict-free onto exact `origin/main`
+`58dec49a6d92b4df1b6a11e83439b93066cc5595`. The intervening SPICE Rust ISC
+and NC model-card repairs, Hindi coming-forms curriculum tranche, SwiftUI
+one-of slot states, lang-aot Cargo artifact-path repair, Rust HTML parser fix,
+and VisiCalc shared workbook design change no package identity, established
+lane, selected path, or collision bucket, so all inventory counts above remain
+reporter-exact.
+
+The parallel security and performance review found no authority, secret
+retention, correctness, or bounded-residency blocker. It did measure
+932,085,064 bytes allocated for the optimized million-byte vector despite only
+606 KB maximum residency, because the existing compression core constructs and
+rotates list schedules for every 64-byte block. That concern is now the explicit
+pending `haskell-sha256-streaming-performance-hardening` owner, and Haskell
+portable source hashing depends on it. This keeps the current API tranche
+coherent while ensuring repository-scale hashing receives a measured allocation
+budget or optimization before adoption.
+
+The concurrent backlog pass also corrected a stale OCaml dependency placement:
+the representative process-free package chain now depends on the already merged
+process-free substrate and CI toolchain, while the execution-coupled substrate
+is explicitly required by the later native OCaml build tool. The representative
+chain is therefore dependency-ready without weakening the native execution
+gate. Its tranche will also correct OCAML04's stale in-progress label for merged
+PR #13366. Three non-implementation source-hashing, dependency-hashing, and CI-
+gate aggregates now carry explicit selection blocks so prioritizers cannot
+mistake their prose-only closure records for implementation work.
+
+The reconciled graph now contains 710 owners and 1,163 edges: 206 merged, 503
+pending, and exactly one in progress. If this SHA-256 API PR merges, the measured
+streaming performance-hardening owner is the recommended next serial tranche;
+it has five unfinished descendants and gates Haskell repository-scale hashing.
+
+### Post-PR #14339 reconciliation and parallel backlog findings
+
+PR #14339 completed every required final-head gate acceptably. GitHub reported
+no merge conflict, guarded squash auto-merge was enabled at
+`2026-09-05T16:52:30Z`, and GitHub merged the PR at
+`2026-09-05T17:11:55Z` as `29ab3c65ff705d1f78367c0c1468c9ea7e29dff2`
+without a plain manual merge command. One duplicate push-triggered workflow was
+still running after the merge and was not a required merge gate.
+
+The collision-checked schema-3 inventory at that exact `origin/main` remains
+identity-neutral: 15 established lanes, 1,413 implementation identities, 4,629
+implementation slots, and 1,452 all-reported identities. The four bands remain
+175/265, 123/934, 172/2,165, and 943/13,202; Rust has 754 singletons, OCaml
+remains emerging at zero packages, and canonical collisions and unknown
+language buckets remain zero.
+
+Three read-only backlog audits ran in parallel while the Haskell PR was in CI.
+The Rust audit found that the planned evaluator-safety tranche is not yet
+executable: the dormant Rust evaluator lacks a canonical lexer-to-parser-to-
+compiler-to-VM source pipeline and the value/language surface needed by the
+neutral metering corpus. The new
+`rust-starlark-executable-pipeline-foundation` owner captures that inert
+prerequisite, and the safety owner now depends on it before any production
+activation.
+
+The Perl audit found two separate ownership gaps. Production correctly prunes
+generated `blib`, but the canonical generated-directory registry omits it, so
+`build-tool-perl-blib-generated-directory-registry-repair` now owns the shared
+authority decision before exact Perl source-registry parity. The Perl build-tool
+front door also imports hashing and cache components without invoking them;
+`build-tool-perl-hashing-cache-front-door-integration` now owns the later real
+orchestrator and CLI adoption after source and dependency framing land. The
+Elixir audit found no missing owner or prerequisite and confirmed its source-
+hashing tranche is implementation-ready.
+
+The Haskell performance owner remains the next serial tranche because the
+million-byte baseline allocates approximately 932 MB despite bounded residency,
+and this repair gates five unfinished descendants including repository-scale
+source hashing. OCaml representative-core work is dependency-ready, and the
+Elixir and Perl implementation plans are prepared for later serial selection.
+With the three new owners and six new dependency edges, the reconciled graph
+contains 713 owners and 1,169 edges. The Haskell performance owner is now the
+sole in-progress item, leaving 207 merged and 505 pending owners. Its fresh
+branch starts from exact merged main and changes no public API or authority.
+
+The implementation replaces per-block boxed list expansion with one reusable
+16-word unboxed rolling schedule per strict input region and reads complete
+caller blocks directly by offset. Only a complete 64-byte bridge and the final
+sub-block remainder may be copied. A red-first standalone RTS-statistics gate
+reproduced 928,951,488 allocated bytes on the prior implementation; the final
+path uses 57,521,408 bytes for a one-chunk million-byte vector and 57,557,872
+bytes for 8 KiB streaming, with both canonical BUILD fronts pinning Cabal
+optimization level 2 and enforcing the 128 MiB ceiling.
+
+All 25 functional examples, both allocation scenarios, 96%/90%/99% functional
+HPC coverage, HMAC/HKDF/PBKDF2 downstream suites, Cabal package/distribution/
+documentation checks, both literal BUILD fronts, and the complete Go build-tool
+test, vet, build, discovery, and six-package affected-plan path are acceptable.
+The package-parity, capability, Haskell capability, and OCaml lock suites pass
+68 tests with two expected Windows symlink skips. Three parallel reviews found
+no correctness, retention, API, dependency, license, authority, credential, or
+publication-overlap blocker; their one optimization-profile finding was fixed
+before publication.
+
+Before final validation, the branch rebased conflict-free onto exact
+`origin/main` `827332dd63690c870599e193a973f4c0b19dc278`. The intervening
+curriculum, Rust, HTML, Qt/Mosaic, and VisiCalc changes are disjoint and add no
+package root, recognized manifest, language lane, identity, or collision, so
+the collision-checked inventory and 713-owner/1,169-edge graph remain unchanged.
+
+PR #14352 completed both final-head Ubuntu builds, both metadata jobs, both CI
+gates, CodeQL detection, and the human-language aggregate gate acceptably.
+GitHub reported the final head clean and mergeable before guarded squash
+auto-merge was enabled, and merged it as
+`120d018dc15cec32ea328e7b5471bf7fb3f2873a` without a plain manual merge
+command. The exact merged-main collision report remains schema 3 with 15
+established lanes, 1,413 implementation identities, 4,629 slots, 1,452
+all-reported identities, bands 175/265, 123/934, 172/2,165, and 943/13,202,
+754 Rust singletons, zero OCaml packages, zero collisions, and zero unknown
+buckets.
+
+Three bounded read-only audits ran concurrently with CI. The established-lane
+audit found no additional unowned package or build-tool denominator gap, but
+corrected stale umbrella metadata: the Dart 14-of-15 frontier is exactly
+binary-search-tree, fenwick-tree, and uuid; the JVM and Swift/Dart umbrellas
+must remain selection-blocked behind exact decomposition; and the measured
+classifier remains exact at 93 coarse-only Java/Kotlin/Dart identities and 50
+Swift identities.
+
+The all-language build-tool audit found two ownership gaps. The neutral corpus
+has only a graph diamond and successful diff cases despite the normative
+isolated, chain, multi-component, cycle, level, closure, failure-propagation,
+and unknown-path-error requirements. The new
+`build-tool-neutral-graph-diff-corpus-completion` owner closes the process-free
+portion. All 16 implementation-manifest adapters remain missing, no terminal
+owner requires native same-corpus CI, F# remains only an exception candidate,
+and C/C++ lack emerging manifest decisions. The selection-blocked
+`build-tool-all-language-adapter-ci-closure` gate now owns that final evidence
+after every implementation and corpus prerequisite. Existing C/C++ and OCaml
+owners now explicitly cover manifest applicability, the full capability
+taxonomy, independent enforcement, and real three-platform representative
+package execution.
+
+After these additions and dependency corrections, the reconciled state has
+715 owners and 1,179 edges: 208 merged and 507 pending. The graph is unique,
+dependency-complete, acyclic, and free of merged-to-unmerged edges. Raw global
+leverage still favors the portable smart-home command-effect lifecycle, but
+the current durable build-tool/OCaml front ranks OCaml representative core
+first and Perl registry repair second. Haskell portable source hashing is the
+best next serial continuity slice because #14352 has just satisfied its final
+performance prerequisite, its toolchain and SHA-256 dependency are already
+validated, and it unlocks three direct plus four transitive unfinished build-
+tool descendants without adding authority.
+
+The Haskell source-hashing owner is therefore the sole in-progress item in a
+fresh clean worktree based on exact `origin/main`
+`994e0555426b2330f33f45210fef6953607a67f6`; the intervening merged Hindi,
+FLOW-MATIC, McCarthy, Flutter, Mosaic, and Rust SPICE changes are disjoint and
+identity-neutral. Selection leaves 208 merged, 506
+pending, and one in-progress owner. The tranche is limited to the complete
+checked source registry, exact scoped projection, collision-safe portable path
+framing, incremental SHA-256 adoption, and its language-neutral fixtures and
+tests. It does not absorb graph/diff corpus expansion, execution authority, or
+another language's build-tool remediation.
+
+Implementation now embeds the complete checked 23-language registry and uses
+one production selector for the four package-local neutral fixtures, including
+portable character classes and the 50,000,000-unit declared-match ceiling. The
+collector counts every entry before pruning, rejects portable identity and
+topology collisions, applies all five BUILD fronts and all seven selector
+roles, sorts normalized repository-relative paths by raw UTF-8 bytes, and
+streams Hashing v1 frames through the optimized local SHA-256 package in 8 KiB
+chunks. The current focused warning-as-error run passes 77 examples, including
+the fixed single- and multi-file digest oracles, 8 KiB boundaries, rename
+sensitivity, OCaml discovery, generated-component pruning, hostile paths, and
+the complete fixture projection.
+
+Publication validation passes all four local Cabal packages: 77 build-tool,
+25 SHA-256, four graph, and three directed-graph examples, including bounded
+allocation measurements of 57,521,408 bytes for the million-byte vector and
+57,557,872 bytes for 8 KiB chunks. The warning-as-error optimized build, Cabal
+check, Haddock, source distribution, literal BUILD front, generator byte-sync,
+canonical Go test/vet/trimpath build, and a real 207-package Haskell dry plan
+also pass. The dry plan evaluates 45 Starlark files and selects exactly the
+changed build tool plus its three local prerequisites. The relevant neutral
+schema/runner/parity suite passes 111 tests and 269 subtests from a clean tree;
+the collision-checked inventory, 716-owner/1,180-edge state graph, diff hygiene,
+and changed-diff credential scan are clean.
+
+The parallel native-boundary review found one additional dependency-shaped
+gap. Pathname link checks, directory-entry snapshots, handle-size checks, and
+pre/post size and modification-time validation do not atomically bind the
+package root, ancestors, and file to retained no-follow identities. The new
+selection-blocked `build-tool-haskell-native-source-snapshot-stability-hardening`
+owner gates Haskell dependency hashing, repository-boundary adoption, and the
+remaining-engine aggregate until POSIX and Windows native identity, link,
+reparse, and replacement-race behavior is proven. The updated state contains
+716 owners and 1,180 edges: 208 merged, 507 pending, and one in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
@@ -12624,7 +13133,9 @@ Only one parity PR should be active at a time.
    local verification, and push to the same PR.
 3. If the branch conflicts with `main`, update it carefully and verify the full
    PR diff contains only intended work.
-4. If checks are pending, keep monitoring.
+4. If checks are pending, keep monitoring the active PR while parallel agents
+   perform bounded read-only inventory, ownership, dependency, fixture, and
+   validation audits. Do not open or mutate a second implementation PR.
 5. If the PR is merged, regenerate the report from the new `origin/main`, update
    priorities with any newly discovered work, and select the highest-impact
    unblocked item.

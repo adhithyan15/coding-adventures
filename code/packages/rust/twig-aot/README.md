@@ -1,7 +1,19 @@
 # twig-aot
 
+String folding excludes mutable integer indices, and runtime string indexing calls the existing bounds-checked helper instead of folding a loop to its first byte.
+
+Runtime string slices now call the existing checked helper when source or bounds cannot fold; reassignment invalidates stale literal lengths.
+
 Twig ahead-of-time compiler.  Reads a Twig source file, produces a native
 ARM64 Mach-O executable on macOS that you can run directly.
+
+On Windows x86-64, executable linking uses the dynamic MSVC CRT with normal
+startup. Do not mix in `libvcruntime.lib` or `libucrt.lib`: their static
+definitions conflict with the dynamic libraries. Run
+`cargo test -p twig-aot --test windows_x86_64_smoke -- --nocapture` on Windows
+to exercise compilation, linking, and actual executable results. That suite
+still explicitly skips two precise-GC frame-walk differentials; a green test
+summary does not prove those unfinished paths.
 
 ## Usage
 
@@ -108,3 +120,15 @@ environment loaded (`vcvars64.bat`, or the Developer Command Prompt) so `LIB`/
 `INCLUDE` point at the CRT and Windows SDK import libraries — `link.exe`
 resolves purely by name on `PATH` and doesn't auto-detect an unregistered MSVC
 install (no `vswhere` probing in V1).
+
+### Required Windows CI execution (VM-032)
+
+PR CI selects the native Windows smoke suite when the build plan's Windows
+closure contains `rust/twig-aot` or `rust/lang-aot`, including their affected
+dependencies. Edits to the gate or MSVC bootstrap also select it. The runner
+activates the MSVC developer environment and runs
+`cargo test -p twig-aot --test windows_x86_64_smoke -- --nocapture` with
+`LANG_REQUIRE_WINDOWS_AOT=1`; missing linkers fail instead of silently skipping.
+Without that flag, local hosts retain optional-toolchain skips. Of eight tests,
+five link and execute programs, one inspects the PE object, and two explicitly
+return early for the separately tracked precise-GC frame-walk gap (VM-031).

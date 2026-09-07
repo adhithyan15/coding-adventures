@@ -459,6 +459,31 @@ class ExecutionSchemaTests(unittest.TestCase):
             ["darwin", "linux", "windows"],
         )
 
+    def test_windows_volume_serial_candidates_preserve_exact_native_widths(
+        self,
+    ) -> None:
+        legacy = 0xC246C3DB
+        extended = 0x7AC24704C246C3DB
+
+        candidates = execution._windows_volume_serial_candidates(legacy, extended)
+
+        self.assertEqual(candidates, frozenset({legacy, extended}))
+        self.assertIn(legacy, candidates)
+        self.assertIn(extended, candidates)
+        self.assertNotIn(0xDEADBEEFC246C3DB, candidates)
+        self.assertNotIn(0xC246C3DC, candidates)
+
+    def test_windows_volume_serial_candidates_fall_back_to_exact_legacy(
+        self,
+    ) -> None:
+        legacy = 0xC246C3DB
+
+        candidates = execution._windows_volume_serial_candidates(legacy, None)
+
+        self.assertEqual(candidates, frozenset({legacy}))
+        self.assertNotIn(0x7AC24704C246C3DB, candidates)
+        self.assertNotIn(0xDEADBEEFC246C3DB, candidates)
+
     def test_corpus_digest_is_framed_and_detects_path_or_content_mutation(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

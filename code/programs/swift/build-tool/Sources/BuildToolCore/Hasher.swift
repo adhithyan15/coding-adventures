@@ -118,6 +118,7 @@ public enum Hasher {
     private static let maximumSelectedInputCount = 50_000
     private static let maximumFileBytes: UInt64 = 64 * 1024 * 1024
     private static let maximumPackageBytes: UInt64 = 1024 * 1024 * 1024
+    private static let maximumDeclaredSourceMatchWork: UInt64 = 50_000_000
     private static let windowsReservedBasenames: Set<String> = Set(
         ["CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "CLOCK$"] +
             ["COM", "LPT"].flatMap { prefix in
@@ -268,6 +269,7 @@ public enum Hasher {
         var files: [String] = []
         var directoryStates: [(String, SecureObjectState)] = []
         var candidateCount = 0
+        var declaredSourceMatchWork: UInt64 = 0
         var portableIdentities: [String: String] = [:]
 
         guard let languageInputs = languageSourceInputRegistry.inputs(
@@ -290,6 +292,15 @@ public enum Hasher {
                 .flatMap(\.paths)
         )
         let declaredMode = package.isStarlark && !package.declaredSrcs.isEmpty
+        if declaredMode {
+            guard package.declaredSrcs.count <= 256,
+                  package.declaredSrcs.reduce(0, { $0 + $1.utf8.count }) <= 64 * 1024 else {
+                throw SourceHashInputError.limitExceeded
+            }
+            for pattern in package.declaredSrcs {
+                try validatePortableGlob(pattern)
+            }
+        }
 
         guard try entryKind(root) == .directory else {
             throw SourceHashInputError.unavailable
@@ -358,10 +369,25 @@ public enum Hasher {
                         ) {
                         included = true
                     }
-                } else if !included && package.declaredSrcs.contains(
-                    where: { GlobMatch.matchPath($0, normalized) }
-                ) {
-                    included = true
+                } else if !included {
+                    for pattern in package.declaredSrcs {
+                        let patternScalars = UInt64(pattern.unicodeScalars.count) + 1
+                        let pathScalars = UInt64(normalized.unicodeScalars.count) + 1
+                        let (cost, multipliedOverflow) = patternScalars
+                            .multipliedReportingOverflow(by: pathScalars)
+                        let (next, addedOverflow) = declaredSourceMatchWork
+                            .addingReportingOverflow(cost)
+                        guard !multipliedOverflow,
+                              !addedOverflow,
+                              next <= maximumDeclaredSourceMatchWork else {
+                            throw SourceHashInputError.limitExceeded
+                        }
+                        declaredSourceMatchWork = next
+                        if GlobMatch.matchPath(pattern, normalized) {
+                            included = true
+                            break
+                        }
+                    }
                 }
 
                 if included {
@@ -694,6 +720,89 @@ public enum Hasher {
         }
     }
 
+    static func validatePortableGlob(_ pattern: String) throws {
+        guard !pattern.isEmpty,
+              pattern.unicodeScalars.count <= 512,
+              !pattern.hasPrefix("/"),
+              !pattern.contains("\\"),
+              !pattern.contains("//"),
+              unicodeScalarEqual(TrackedArtifactUnicode17.nfc(pattern), pattern),
+              !pattern.unicodeScalars.contains(where: unsafePortableGlobScalar),
+              !hasAmbiguousCharacterClass(pattern) else {
+            throw SourceHashInputError.unsafePath
+        }
+        let scalars = Array(pattern.unicodeScalars)
+        if scalars.count >= 2,
+           asciiAlpha(scalars[0].value),
+           scalars[1].value == 0x3A {
+            throw SourceHashInputError.unsafePath
+        }
+        for componentSlice in pattern.split(separator: "/", omittingEmptySubsequences: false) {
+            let component = String(componentSlice)
+            guard !component.isEmpty,
+                  component != ".",
+                  component != "..",
+                  component.last != ".",
+                  component.last != " " else {
+                throw SourceHashInputError.unsafePath
+            }
+            if !component.contains(where: { "*[]{}".contains($0) }) {
+                let basename = String(component.split(
+                    separator: ".",
+                    maxSplits: 1,
+                    omittingEmptySubsequences: false
+                )[0])
+                if windowsReservedBasenames.contains(
+                    TrackedArtifactUnicode17.fullUppercase(basename)
+                ) {
+                    throw SourceHashInputError.unsafePath
+                }
+            }
+        }
+    }
+
+    private static func hasAmbiguousCharacterClass(_ pattern: String) -> Bool {
+        let scalars = Array(pattern.unicodeScalars)
+        var index = 0
+        while index < scalars.count {
+            guard scalars[index].value == 0x5B else {
+                index += 1
+                continue
+            }
+            var cursor = index + 1
+            if cursor < scalars.count, scalars[cursor].value == 0x21 {
+                cursor += 1
+            }
+            var closing = cursor
+            if closing < scalars.count, scalars[closing].value == 0x5D {
+                closing += 1
+            }
+            while closing < scalars.count, scalars[closing].value != 0x5D {
+                closing += 1
+            }
+            guard closing < scalars.count else {
+                index += 1
+                continue
+            }
+            var member = cursor
+            while member < closing {
+                if member + 1 < closing,
+                   scalars[member].value == scalars[member + 1].value,
+                   [0x2D, 0x26, 0x7E, 0x7C].contains(scalars[member].value) {
+                    return true
+                }
+                if member + 2 < closing,
+                   scalars[member + 1].value == 0x2D,
+                   scalars[member].value > scalars[member + 2].value {
+                    return true
+                }
+                member += 1
+            }
+            index = closing + 1
+        }
+        return false
+    }
+
     static func registerPortableIdentity(
         _ normalizedPath: String,
         in identities: inout [String: String]
@@ -712,6 +821,19 @@ public enum Hasher {
     private static func unsafePortablePathScalar(_ scalar: Unicode.Scalar) -> Bool {
         if scalar.value < 0x20
             || [0x3C, 0x3E, 0x3A, 0x22, 0x7C, 0x3F, 0x2A].contains(scalar.value) {
+            return true
+        }
+        switch scalar.properties.generalCategory {
+        case .control, .format, .lineSeparator, .paragraphSeparator:
+            return true
+        default:
+            return false
+        }
+    }
+
+    private static func unsafePortableGlobScalar(_ scalar: Unicode.Scalar) -> Bool {
+        if scalar.value < 0x20
+            || [0x3C, 0x3E, 0x3A, 0x22, 0x7C, 0x3F].contains(scalar.value) {
             return true
         }
         switch scalar.properties.generalCategory {

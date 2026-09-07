@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Run POSIX dependency lock commands explicitly through Bash on Windows.
+
 - Route concrete numeric TypeScript matrix arithmetic through the shared
   `matrix` backend dispatch point while preserving symbolic and exact-rational
   fallback behavior.

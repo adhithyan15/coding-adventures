@@ -11,6 +11,10 @@ A default **Excel/CAS adapter** ships with the package, so it computes real
 spreadsheet formulas (`=SUM(A1:A5)`, `=A1+B2*3`, `=AVERAGE(A1:A3)/2`, …) out of
 the box.
 
+The default adapter accepts formulas up to 8,192 UTF-16 code units, including
+the leading `=`. Longer formulas return `#VALUE!` before parsing and register
+no dependency edges. Custom adapters define their own input limits.
+
 > This package is a TypeScript port of the model in
 > `code/specs/spreadsheet-core.md` (written in Rust-ish pseudocode). VisiCalc —
 > and any other spreadsheet UI — is meant to be built *on top* of this core in a

@@ -8,9 +8,9 @@ spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 900
 chapter: 35
 type: word
-headword: लेना / लाभ
-gloss: to take — worn down from Sanskrit labh-, which also sits, undisguised, in the noun लाभ
-romanization: "lenā"
+headword: लेना / ले / लेता / लेती / लेते / लाभ
+gloss: to take / take / profit or gain — infinitive / stem / masculine / feminine / respectful or plural / noun
+romanization: "lenā / le / letā / letī / lete / lābh"
 concept_tag: VERB-TAKE
 prerequisites: [HI-C34-likhna, HI-C15-paani-roti]
 sounds: [matra-e, dental-na]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-C34-likhna, HI-C15-paani-roti]
 ---
 
-# लेना (lenā) — "to take," a verb that lost a consonant
+# लेना / ले / लेता / लेती / लेते — "to take" and its present forms
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C34-LIKHNA-01] -->
@@ -46,6 +46,10 @@ back in the world — starting with the shortest verb in it.
 **लेना** (*lenā*) = "**to take**." Two syllables, and one of the most-used
 verbs in the language. Stem **ले-**: **मैं लेता हूँ** (m.) / **मैं लेती हूँ**
 (f.); **आप लेते हैं**.
+
+The pattern is regular: remove infinitive **-ना**, then add **-ता** for the
+masculine form, **-ती** for the feminine, or **-ते** for respectful **आप** and
+plural subjects. That gives **ले → लेता / लेती / लेते**.
 
 It reaches further than English "take". Offered a drink, a Hindi speaker
 answers **मैं पानी लेता हूँ** — "I'll have water," the same *lenā*. It pairs
@@ -76,6 +80,7 @@ is letters "taken together"; **epilepsy** is "a seizing upon"; so is
 
 [PAUSE 1s]
 - [YOU SAY (m.): *maiṁ letā hūṁ*  ·  (f.): *maiṁ letī hūṁ*]
+- [YOU SAY: "you (resp.) take" — **आप लेते हैं** (*āp lete haiṁ*)]
 - [YOU SAY: accept a drink — *maiṁ pānī letā hūṁ*; then a meal —
   *maiṁ roṭī letā hūṁ*. Object first, verb last, as always]
 - [YOU SAY: *pānī* and what it literally means (the drinkable thing), then
@@ -90,4 +95,6 @@ is letters "taken together"; **epilepsy** is "a seizing upon"; so is
 (**लभते** *labhate*; the **-bh-**.)
 Which Hindi noun still shows that consonant, and why? (**लाभ** — borrowed back
 from Sanskrit, so it never eroded.)
+Give the stem, then the masculine, feminine, and respectful or plural forms.
+(**ले; लेता / लेती / लेते**.)
 Say "I'll have water." (*Maiṁ pānī letā / letī hūṁ*.)

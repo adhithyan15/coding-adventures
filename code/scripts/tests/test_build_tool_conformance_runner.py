@@ -110,6 +110,24 @@ class StrictJsonTests(unittest.TestCase):
         self.assertIsNone(runner.portable_glob_error("src/*.*"))
         self.assertIsNotNone(runner.portable_glob_error("src/foo."))
 
+    def test_portable_glob_character_classes_match_neutral_semantics(self) -> None:
+        cases = (
+            ("src/[!a].cs", "src/b.cs", True),
+            ("src/[!a].cs", "src/a.cs", False),
+            ("src/[]].cs", "src/].cs", True),
+            ("src/[-a].cs", "src/-.cs", True),
+            ("src/[a-].cs", "src/-.cs", True),
+            ("src/[a-c].cs", "src/b.cs", True),
+            ("src/[.cs", "src/[.cs", True),
+            ("src/[^].cs", "src/^.cs", True),
+        )
+        for pattern, path, expected in cases:
+            with self.subTest(pattern=pattern, path=path):
+                self.assertEqual(
+                    expected,
+                    runner._portable_glob_matches(pattern, path),
+                )
+
     def test_schema_validation_never_retrieves_external_references(self) -> None:
         for keyword in ("$ref", "$dynamicRef"):
             schema = {
@@ -131,7 +149,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 132)
+        self.assertEqual(summary["case_count"], 141)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -147,6 +165,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(
             summary["domains"],
             [
+                "ci_gate_selection",
                 "cli",
                 "diff_selection",
                 "discovery",
@@ -1874,6 +1893,48 @@ class CorpusTests(unittest.TestCase):
             set(runner.DOMAIN_CAPABILITIES) - {"execution"},
         )
 
+    def test_ci_gate_selection_oracle_closes_fail_open_and_negative_cases(self) -> None:
+        expectations = {
+            "ci-gate-selection-force.json": [True, True],
+            "ci-gate-selection-null-affected.json": [True, True],
+            "ci-gate-selection-null-changed-files.json": [True, True],
+            "ci-gate-selection-machinery.json": [True, True],
+            "ci-gate-selection-package-and-path.json": [True, True],
+            "ci-gate-selection-recursive-glob.json": [False, True],
+            "ci-gate-selection-unrelated.json": [False, False],
+        }
+        for filename, required in expectations.items():
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                self.assertEqual(
+                    [gate["required"] for gate in case["expected"]["result"]["gates"]],
+                    required,
+                )
+                self.assertEqual(
+                    runner.assert_result_matches(case, copy.deepcopy(case["expected"])),
+                    case["expected"],
+                )
+
+    def test_ci_gate_selection_rejects_duplicate_ids_and_output_names(self) -> None:
+        schema_args = {
+            "case_schema": runner.load_document(FIXTURE_ROOT / "schema.json"),
+            "result_schema": runner.load_document(FIXTURE_ROOT / "result.schema.json"),
+            "plan_schema": runner.load_document(
+                runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
+            ),
+        }
+        mutations = (
+            ("alpha-job", "CASE_CI_GATE_DUPLICATE"),
+            ("alpha_job", "CASE_CI_GATE_OUTPUT_COLLISION"),
+        )
+        for gate_id, code in mutations:
+            with self.subTest(code=code):
+                case = load_case("ci-gate-selection-unrelated.json")
+                case["input"]["options"]["registry"]["gates"][1]["id"] = gate_id
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.validate_case_document(case, **schema_args)
+                self.assertEqual(raised.exception.code, code)
+
     def test_malformed_capabilities_fail_schema_validation_not_routing(self) -> None:
         case = load_case("discovery-simple.json")
         case["capabilities"] = [{"execution": False}]
@@ -3041,6 +3102,33 @@ class PureDomainValidationTests(unittest.TestCase):
             after["required_capabilities.json"],
         )
 
+    def test_declared_source_glob_work_is_bounded_across_candidates(self) -> None:
+        self.assertIsNotNone(runner.portable_glob_error("src/[a--!].cs"))
+        registry = runner.load_document(
+            FIXTURE_ROOT / "language-source-input-registry.json"
+        )
+        options = {
+            "language": "csharp",
+            "package_root": "code/packages/csharp/demo",
+            "mode": "declared_sources",
+            "registry_sha256": runner.source_input_registry_digest(registry),
+            "declared_srcs": [
+                f"unmatched/{'a' * 220}{index:03d}*.cs" for index in range(256)
+            ],
+            "candidates": [
+                {
+                    "path": f"src/file{index:03d}.cs",
+                    "kind": "file",
+                    "content_hex": "61",
+                }
+                for index in range(100)
+            ],
+        }
+
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner._expected_source_collection(options, registry)
+        self.assertEqual(raised.exception.code, "SOURCE_HASH_LIMIT_EXCEEDED")
+
     def test_repository_source_collection_closes_shared_and_pruned_boundaries(
         self,
     ) -> None:
@@ -3111,6 +3199,73 @@ class PureDomainValidationTests(unittest.TestCase):
             raised.exception.code,
             "CASE_REPOSITORY_SOURCE_ROOT_LANGUAGE_MISMATCH",
         )
+
+    def test_repository_boundary_reverse_diff_is_exact_and_digest_pinned(
+        self,
+    ) -> None:
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        case = load_case("diff-selection-repository-boundary.json")
+        options = case["input"]["options"]
+
+        self.assertEqual(
+            runner._expected_diff_selection(
+                options,
+                case["input"]["changed_paths"],
+                boundary,
+            ),
+            (
+                {"swift/conduit"},
+                {"swift/conduit", "swift/app"},
+                {"swift/base"},
+            ),
+        )
+        runner.validate_case_document(
+            case,
+            **self._schema_args(),
+            repository_source_input_boundary=boundary,
+        )
+
+        mismatched = copy.deepcopy(case)
+        mismatched["input"]["options"]["boundary_sha256"] = "0" * 64
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(
+                mismatched,
+                **self._schema_args(),
+                repository_source_input_boundary=boundary,
+            )
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_REPOSITORY_SOURCE_BOUNDARY_DIGEST_MISMATCH",
+        )
+
+        near_path = copy.deepcopy(case)
+        near_path["input"]["changed_paths"] = [
+            "code/packages/rust/Cargo.toml.backup"
+        ]
+        self.assertIsNone(
+            runner._expected_diff_selection(
+                near_path["input"]["options"],
+                near_path["input"]["changed_paths"],
+                boundary,
+            )
+        )
+
+    def test_hashing_cache_sorts_local_and_boundary_union_by_raw_utf8(self) -> None:
+        case = load_case("hashing-cache-local-boundary-union.json")
+        expected = case["expected"]["result"]
+        package_digest, dependencies_digest, combined_digest = (
+            runner._expected_hashes(
+                case["input"]["options"],
+                runner.preflight_workspace(case),
+            )
+        )
+
+        self.assertEqual(package_digest, expected["package_digest"])
+        self.assertEqual(dependencies_digest, expected["dependencies_digest"])
+        self.assertEqual(combined_digest, expected["combined_digest"])
+        runner.validate_case_document(case, **self._schema_args())
 
     def test_dependency_cycles_are_rejected_without_recursion(self) -> None:
         cyclic = load_case("diff-selection-transitive.json")
@@ -3396,7 +3551,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 132)
+        self.assertEqual(summary["case_count"], 141)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

@@ -79,6 +79,21 @@ println!("Written to ProfileCard.html");
 
 Slots absent from the fixture render as `[slot: name]` placeholders.
 
+### UI49 `one-of` style states
+
+The three-file pipeline treats HTML as a static snapshot. Call
+`pipeline::from_pipeline_with_slot_values` with authored `.mil` slot names and
+their snapshot values to bake matching slot-owned mosstyle states into the
+inline style. Missing values and values outside the slot's declared `one-of`
+set keep the base style. When several axes are present, their state properties
+compose in `.mil` declaration order.
+
+Package output and `--emit-project` use the first legal value of each `one-of`
+slot. That is the same deterministic sample written to the generated shell's
+fallback props, so its visible value and baked appearance cannot disagree.
+Built-in hover, pressed, focus, and structural states are not baked into a
+static snapshot.
+
 ## Example output
 
 ```html

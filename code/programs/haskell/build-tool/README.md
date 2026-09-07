@@ -173,12 +173,24 @@ case-insensitively against Swift directory aliases. The shared field-boundary
 fixture covers those exclusions, and the complete 164-package lane matches the
 Go resolver exactly at 179 edges.
 
-Package hashing reads included files as raw bytes. Repository-relative paths
-are normalized to `/`, encoded explicitly as UTF-8, and combined with those
-bytes using the existing boundary framing before `git hash-object` receives
-the payload through binary standard input. Source bytes therefore do not pass
-through the host locale: valid Unicode, NUL, and malformed text bytes hash
-deterministically on Windows, macOS, and Linux.
+Package hashing uses a source-embedded projection of the complete checked v1
+language registry and verifies its domain-separated SHA-256 digest in tests.
+The shared production selector covers extension and declared-source modes,
+all seven selector roles, all 23 registered languages including OCaml, the
+five BUILD fronts, and exact case-sensitive pruning of all 26 generated
+components. It validates portable NFC paths and full-casefold identities,
+sorts repository-relative paths by raw UTF-8 bytes, and streams exact file
+bytes in 8 KiB chunks through the local SHA-256 package using unsigned 64-bit
+big-endian path and content frames.
+
+Collection is bounded to 100,000 candidates, 50,000 selected inputs, 64 MiB
+per file, 1 GiB per package, and 50,000,000 declared-glob work units. Failures
+produce a stable root-redacted `HASH_PACKAGE_FAILED` diagnostic and exit 2.
+The current native collector rejects pathname links and checks directory
+entries plus file size and modification time around reads; descriptor-relative
+no-follow identity hardening remains a separate tracked tranche. Repository-
+boundary inputs, dependency hashing, and cache classification are likewise
+owned by later Haskell tranches.
 
 ## Development
 
@@ -187,7 +199,7 @@ deterministically on Windows, macOS, and Linux.
 bash BUILD
 
 # Windows: run the command recorded in BUILD_windows
-cabal test all
+cabal test all --enable-optimization=2
 ```
 
 ## Usage

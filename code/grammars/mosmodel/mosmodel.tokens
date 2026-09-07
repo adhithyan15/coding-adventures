@@ -33,6 +33,7 @@ keywords:
   slot
   emit
   list
+  one-of
   text
   number
   bool

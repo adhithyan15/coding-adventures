@@ -16,8 +16,8 @@
 %
 %   international_morse_code → friedrich_gerke, 1848
 %     "The Morse code, as specified in the current international standard,
-%      International Morse Code Recommendation, ITU-R M.1677-1, was derived
-%      from a much-improved proposal by Friedrich Gerke in 1848."
+%      International Morse Code Recommendation, ITU-R M.1677-1,[2] was
+%      derived from a much-improved proposal by Friedrich Gerke in 1848"
 %
 % Recall is a binding query:
 %
@@ -48,10 +48,11 @@
 % `morse-code.adj`'s own `source` field (and already reused, verbatim, by
 % the sibling `morse-code-standard.adj`), from the SAME Wikipedia "Morse
 % code" article that table already cites -- no new WebFetch, only a
-% different schema decoding a different part of that already-verified
-% quote. `trust consensus` -- the same tier both siblings already carry (an
-% encyclopedia reproducing the ITU chart is a secondary reference, not the
-% primary ITU document itself).
+% different schema decoding a different part of that quote -- verified against
+% the page byte-for-byte as of installment 4f, which restored an NBSP earlier
+% sweeps could not see. `trust consensus` -- the same tier both siblings
+% already carry (an encyclopedia reproducing the ITU chart is a secondary
+% reference, not the primary ITU document itself).
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -61,7 +62,7 @@ table morse_code_origin {
 
     row (international_morse_code, friedrich_gerke, 1848)
 
-    source "The Morse code, as specified in the current international standard, International Morse Code Recommendation, ITU-R M.1677-1, was derived from a much-improved proposal by Friedrich Gerke in 1848."
+    source "The Morse code, as specified in the current international standard, International Morse Code Recommendation, ITU-R M.1677-1,[2] was derived from a much-improved proposal by Friedrich Gerke in 1848"
     locator "https://en.wikipedia.org/wiki/Morse_code"
     trust consensus
 }

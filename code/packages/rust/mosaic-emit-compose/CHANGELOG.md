@@ -5,6 +5,23 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — state-dependent dimensions keep their Compose units
+
+Numeric state expressions are now parenthesized before applying `.dp` or
+`.sp`. This keeps every branch typed as `Dp` or `TextUnit` instead of letting
+Kotlin infer `Comparable<*>` / `Any`, which prevented toolkit Button packages
+with UI49 size states from compiling (#14383).
+
+### Added — UI49 slot-owned style states
+
+`one-of` slot values now activate their matching `.msl` state blocks in
+generated Compose code. The owning composable parameter drives the Kotlin
+conditional style expression for generic layout nodes and specialized host
+controls alike. Multiple enum axes follow `.mil` slot declaration order, while
+existing `state-when-*` structural and interaction layers remain more specific.
+
+Tracked by [#14320](https://github.com/adhithyan15/coding-adventures/issues/14320).
+
 ### Fixed — components over ~229 slots could not be loaded by the JVM
 
 The emitter gave every slot its own Kotlin parameter. Engram's `EngramApp` has

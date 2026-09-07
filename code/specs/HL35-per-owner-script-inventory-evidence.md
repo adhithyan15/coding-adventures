@@ -82,7 +82,7 @@ the HL34 boundary:
 |---|---:|---:|---:|
 | Japanese | 49 | 3 | 52 |
 | Perso-Arabic | 24 | 1 | 25 |
-| Tamil | 27 | 9 | 36 |
+| Tamil | 29 | 9 | 38 |
 | Urdu-Nastaliq | 31 | 2 | 33 |
 
 ## 6. Acceptance

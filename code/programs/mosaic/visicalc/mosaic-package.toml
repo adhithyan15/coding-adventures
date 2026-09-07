@@ -1,0 +1,14 @@
+[package]
+name = "visicalc"
+version = "0.1.0"
+description = "A Mosaic spreadsheet powered by the shared Rust VisiCalc application."
+license = "MIT"
+
+[components]
+exports = ["VisiCalc"]
+
+[dependencies]
+mosaic-pkg-grid = "0.2.0"
+
+[kernel]
+version = "1"

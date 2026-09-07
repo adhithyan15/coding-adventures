@@ -5098,12 +5098,180 @@ the Rust, Python, and TypeScript surfaces together.
      Rust now does the same and rejects invalid input before element lowering.
 
 28. Rust BJT flicker-noise-coefficient parser parity.
-   - Status: prioritized next after the BJT nominal-temperature slice.
+   - Status: completed by the Rust BJT flicker-noise-coefficient slice.
    - The engine and Python/TypeScript facades lower finite non-negative BJT
-     `KF` values into the flicker-noise-coefficient field; the Rust element
-     lowerer still leaves the engine default in place.
+     `KF` values into the flicker-noise-coefficient field; Rust now does the
+     same and rejects invalid input before element lowering.
 
-29. Grammar-backed parser and app facade.
+29. Rust BJT flicker-noise-exponent parser parity.
+   - Status: completed by the Rust BJT flicker-noise-exponent slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `AF` values into the flicker-noise-exponent field; Rust now does the
+     same and rejects invalid input before element lowering.
+
+30. Rust BJT forward-excess-phase parser parity.
+   - Status: completed by the Rust BJT forward-excess-phase slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `PTF` values into the forward-excess-phase field; Rust now does the
+     same and rejects invalid input before element lowering.
+
+31. Rust BJT forward-transit-time-bias-coefficient parser parity.
+   - Status: completed by the Rust BJT forward-transit-time-bias-coefficient
+     slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `XTF` values into the forward-transit-time-bias-coefficient field; Rust
+     now does the same and rejects invalid input before element lowering.
+
+32. Rust BJT forward-transit-time-current parser parity.
+   - Status: completed by the Rust BJT forward-transit-time-current slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `ITF` values into the forward-transit-time-current field; Rust now does
+     the same and rejects invalid input before element lowering.
+
+33. Rust BJT forward-transit-time-voltage parser parity.
+   - Status: completed by the Rust BJT forward-transit-time-voltage slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `VTF` values into the forward-transit-time-voltage field; Rust now does
+     the same and rejects invalid input before element lowering.
+
+34. Rust BJT emitter-resistance parser parity.
+   - Status: completed by the Rust BJT emitter-resistance slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `RE` values into the emitter-resistance field; Rust now does the same and
+     rejects invalid input before element lowering.
+
+35. Rust BJT collector-resistance parser parity.
+   - Status: completed by the Rust BJT collector-resistance slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `RC` values into the collector-resistance field; Rust now does the same
+     and rejects invalid input before element lowering.
+
+36. Rust BJT base-resistance parser parity.
+   - Status: completed by the Rust BJT base-resistance slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `RB` values into the base-resistance field; Rust now does the same and
+     rejects invalid input before element lowering.
+
+37. Rust BJT minimum-base-resistance parser parity.
+   - Status: completed by the Rust BJT minimum-base-resistance slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `RBM` values into the optional minimum-base-resistance field; Rust now
+     does the same and rejects invalid input before element lowering.
+
+38. Rust BJT base-resistance-half-current parser parity.
+   - Status: completed by the Rust BJT base-resistance-half-current slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `IRB` values into the base-resistance-half-current field; Rust now does
+     the same and rejects invalid input before element lowering.
+
+39. Rust BJT base-collector-capacitance-fraction parser parity.
+   - Status: completed by the Rust BJT base-collector-capacitance-fraction
+     slice.
+   - The engine and Python/TypeScript facades lower finite BJT `XCJC` values
+     in the inclusive range `[0, 1]` into the base-collector-capacitance
+     fraction field; Rust now does the same and rejects invalid input before
+     element lowering.
+
+40. Rust BJT emitter-leakage-current parser parity.
+   - Status: completed by the Rust BJT emitter-leakage-current slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `ISE` values into the emitter-leakage-current field and use `C2 * IS`
+     when `ISE` is absent; Rust now does the same and rejects invalid active
+     inputs before element lowering.
+
+41. Rust BJT emitter-leakage-emission-coefficient parser parity.
+   - Status: completed by the Rust BJT emitter-leakage-emission-coefficient
+     slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `NE`
+     values into the emitter-leakage-emission-coefficient field; Rust now does
+     the same and rejects invalid input before element lowering.
+
+42. Rust BJT collector-leakage-current parser parity.
+   - Status: completed by the Rust BJT collector-leakage-current slice.
+   - The engine and Python/TypeScript facades lower finite non-negative BJT
+     `ISC` values into the collector-leakage-current field and use `C4 * IS`
+     when `ISC` is absent; Rust now does the same and rejects invalid active
+     inputs before element lowering.
+
+43. Rust BJT collector-leakage-emission-coefficient parser parity.
+   - Status: completed by the Rust BJT collector-leakage-emission-coefficient
+     slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `NC`
+     values into the collector-leakage-emission-coefficient field; Rust now
+     does the same and rejects invalid input before element lowering.
+
+44. Rust BJT forward-beta-temperature-exponent parser parity.
+   - Status: completed by the Rust BJT forward-beta-temperature-exponent
+     slice.
+   - The engine and Python/TypeScript facades lower finite BJT `XTB` values
+     into the forward-beta-temperature-exponent field; Rust now does the same
+     and rejects non-finite input before element lowering.
+
+45. Rust BJT reverse-beta parser parity.
+   - Status: completed by the Rust BJT reverse-beta slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `BR`
+     values, with `BETA_R` as an alias, into the reverse-beta field; Rust now
+     does the same with canonical `BR` precedence and rejects invalid input
+     before element lowering.
+
+46. Rust BJT reverse-emission-coefficient parser parity.
+   - Status: completed by the Rust BJT reverse-emission-coefficient slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `NR`
+     values into the reverse-emission-coefficient field; Rust now does the
+     same and rejects invalid input before element lowering.
+
+47. Rust BJT forward-emission-coefficient parser parity.
+   - Status: completed by the Rust BJT forward-emission-coefficient slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `NF`
+     values into the forward-emission-coefficient field; Rust now does the
+     same and rejects invalid input before element lowering.
+
+48. Rust BJT base-emitter-junction-potential parser parity.
+   - Status: completed by the Rust BJT base-emitter-junction-potential slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `VJE`
+    values, with `PE` as an alias, into the base-emitter-junction-potential
+     field; Rust now does the same with canonical `VJE` precedence and rejects
+     invalid input before element lowering.
+
+49. Rust BJT base-emitter-grading-coefficient parser parity.
+   - Status: completed by the Rust BJT base-emitter-grading-coefficient slice.
+   - The engine and Python/TypeScript facades lower finite BJT `MJE` values in
+    `[0, 1)`, with `ME` as an alias, into the base-emitter-grading-coefficient
+     field; Rust now does the same with canonical `MJE` precedence and rejects
+     invalid input before element lowering.
+
+50. Rust BJT base-collector-junction-potential parser parity.
+   - Status: completed by the Rust BJT base-collector-junction-potential
+     slice.
+   - The engine and Python/TypeScript facades lower finite positive BJT `VJC`
+     values, with `PC` as an alias, into the base-collector-junction-potential
+     field; Rust now does the same with canonical `VJC` precedence and rejects
+     invalid input before element lowering.
+
+50.1. Rust BJT base-collector-grading-coefficient parser parity.
+   - Status: completed by the Rust BJT base-collector-grading-coefficient
+     slice.
+   - The engine and Python/TypeScript facades lower finite BJT `MJC` values in
+    `[0, 1)`, with `MC` as an alias, into the base-collector-grading-coefficient
+     field; Rust now does the same with canonical `MJC` precedence and rejects
+     invalid input before element lowering.
+
+50.2. Rust BJT forward-bias-depletion-coefficient parser parity.
+   - Status: completed by the Rust BJT forward-bias-depletion-coefficient
+     slice.
+   - The engine and Python/TypeScript facades lower finite BJT `FC` values in
+     `[0, 1)` into the forward-bias-depletion-coefficient field; Rust now does
+     the same and rejects invalid input before element lowering.
+
+50.3. Rust BJT parser parity inventory refresh.
+   - Status: completed after the BJT forward-bias-depletion-coefficient slice.
+   - Re-audit the engine BJT field contract against Rust lowering and the
+     Python/TypeScript facades to identify the next smallest independent parity
+     gap before opening another implementation slice. Every engine BJT field is
+     now assigned by Rust lowering; no additional independent BJT field gap was
+     found.
+
+51. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5111,7 +5279,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-30. Deck compatibility follow-up.
+52. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

@@ -8,9 +8,9 @@ spine_node: SPINE-TIME-OF-DAY
 sequence: 820
 chapter: 31
 type: phrase
-headword: सुप्रभात
-gloss: "good morning" (suprabhat) — सु ("good") + प्रभात (prabhāt, native Sanskrit "dawn," from prabhā, "light, splendour," itself from bhā, "to shine") — a completely different word from सुबह, the Persian-loan everyday noun; skews formal/written (radio, greeting cards) rather than casual spoken Hindi, where नमस्ते covers mornings too — but there's no strong evidence it's being displaced by English the way some other languages' night greetings were found to be
-romanization: "suprabhāt"
+headword: सुप्रभात / प्रभात
+gloss: "good morning / dawn or daybreak — formal greeting / Sanskrit-derived noun; सुप्रभात is completely different from सुबह, the Persian-loan everyday noun, and skews formal or written rather than casual spoken Hindi"
+romanization: "suprabhāt / prabhāt"
 concept_tag: GREETING-MORNING
 prerequisites: [HI-C28-subah]
 sounds: [devanagari-conjunct-pra, devanagari-bha]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-C28-subah]
 ---
 
-# सुप्रभात (suprabhāt) — "good morning," a different root than the noun
+# सुप्रभात / प्रभात — "good morning," built from "dawn"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -75,6 +75,7 @@ each one on its own, and don't flatten a hedge into a fact either way.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C31-SUPRABHAT-01, HI-CONCEPT-C31-SUPRABHAT-02] -->
 
 [PAUSE 1s]
+- [YOU SAY: **प्रभात** (*prabhāt*) — "dawn, daybreak"]
 - [YOU SAY: "suprabhāt" — "good morning," su + prabhāt]
 - [YOU SAY: the root contrast — subah is Persian, prabhāt is native
   Sanskrit — completely different words]
@@ -86,7 +87,8 @@ each one on its own, and don't flatten a hedge into a fact either way.
 
 [PAUSE 3s] Does सुप्रभात share a root with सुबह? (**No** — सुबह is
 Persian/Arabic; प्रभात, inside suprabhāt, is native Sanskrit, ultimately
-from भा, "to shine.") Is सुप्रभात commonly used in casual spoken Hindi?
+from भा, "to shine.") What does **प्रभात** mean by itself? (**Dawn,
+daybreak.**) Is सुप्रभात commonly used in casual spoken Hindi?
 (**Not especially** — it skews formal/written, with नमस्ते commonly
 covering mornings in everyday speech.) Is it being displaced by English
 "good morning," the way some sources (thinly) suggested for other languages'

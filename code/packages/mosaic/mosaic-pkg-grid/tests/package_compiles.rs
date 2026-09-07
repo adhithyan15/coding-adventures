@@ -39,7 +39,7 @@ use std::path::PathBuf;
 
 /// The list of exported components, in the order they appear in the
 /// manifest.  Used to drive the per-component compile loop.
-const COMPONENTS: &[&str] = &["Grid", "Cell", "Column"];
+const COMPONENTS: &[&str] = &["Grid", "Cell", "Column", "RowHeaderGrid"];
 
 /// Path helpers — anchor everything to the package root (the directory
 /// containing this crate's Cargo.toml).  CARGO_MANIFEST_DIR is set by
@@ -103,8 +103,8 @@ fn manifest_declares_expected_exports() {
     let export_names: Vec<&str> = exports.iter().filter_map(|v| v.as_str()).collect();
     assert_eq!(
         export_names,
-        vec!["Grid", "Cell", "Column"],
-        "[components].exports must list exactly Grid, Cell, Column in that order"
+        vec!["Grid", "Cell", "Column", "RowHeaderGrid"],
+        "[components].exports must list Grid, Cell, Column and RowHeaderGrid in that order"
     );
 
     // [kernel].version
@@ -444,7 +444,7 @@ fn ui28_1_no_new_kernel_primitive_was_added() {
     .copied()
     .collect();
 
-    for component in ["Grid", "Cell", "Column"] {
+    for component in ["Grid", "Cell", "Column", "RowHeaderGrid"] {
         let src = read_source(&format!("{}.mll", component));
         // Naive tag-extraction: any PascalCase identifier at the start of
         // a line (possibly preceded by whitespace) is a tag candidate.

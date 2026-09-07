@@ -43,7 +43,19 @@ MosaicVM  (drives MosaicRenderer callbacks)
 - `bool` slots → `boolean` props
 - `image` slots → `string` props (URL)
 - `list<T>` slots → `Array<T>` props → rendered via `.map()`
+- `one-of a b c` slots → string-literal union props
 - `node` slots → `React.ReactNode` props
+
+## Slot-owned style states
+
+UI49 model-owned mosstyle states become conditional inline-style spreads. For
+`slot variant : one-of primary danger ;`, an authored `state danger` on a part
+is applied when the generated React prop satisfies `variant === "danger"`.
+These state spreads are part of the shared part-style path, so they work on
+both generic layout nodes and specialized host primitives such as
+`HostButton`. Multiple enum axes follow model slot declaration order; existing
+structural and interaction state activation remains later and therefore more
+specific.
 
 ## Control flow
 

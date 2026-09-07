@@ -8,9 +8,9 @@ spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 860
 chapter: 34
 type: word
-headword: सोचना / सोच
-gloss: to think — a verb that began life meaning "to grieve," and still keeps the worry inside the noun सोच
-romanization: "sochnā / soch"
+headword: सोचना / सोच / सोचता / सोचती / सोचते
+gloss: to think / thought or worry / think — infinitive / noun / masculine / feminine / respectful or plural
+romanization: "sochnā / soch / sochtā / sochtī / sochte"
 concept_tag: VERB-THINK
 prerequisites: [HI-C05-bolta-hun, HI-C07-nahin]
 sounds: [matra-o, dental-na]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-C05-bolta-hun, HI-C05-bolna, HI-C07-nahin]
 ---
 
-# सोचना (sochnā) — "to think," and it used to mean "to grieve"
+# सोचना — "to think," its present forms, and an older grief
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -76,10 +76,10 @@ meaning "to think."
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C34-SOCHNA-01, HI-CONCEPT-C34-SOCHNA-02, HI-CONCEPT-C07-NAHIN-01] -->
 
 [PAUSE 1s]
-- [YOU SAY (m.): *maiṁ sochtā hūṁ*  ·  (f.): *maiṁ sochtī hūṁ*]
-- [YOU SAY: "you (resp.) think" — *āp sochte haiṁ*]
+- [YOU SAY (m.): **मैं सोचता हूँ** (*maiṁ sochtā hūṁ*)  ·  (f.): **मैं सोचती हूँ** (*maiṁ sochtī hūṁ*)]
+- [YOU SAY: "you (resp.) think" — **आप सोचते हैं** (*āp sochte haiṁ*)]
 - [YOU SAY: *nahīṁ* on its own, then slide it in front of the verb —
-  *maiṁ nahīṁ sochtā / sochtī*, "I don't think so." Hindi's negator sits
+  **मैं नहीं सोचता / सोचती** (*maiṁ nahīṁ sochtā / sochtī*), "I don't think so." Hindi's negator sits
   **before** the verb, never after it]
 - [YOU SAY: the noun *soch*, and both things it means — a thought, and a worry]
 

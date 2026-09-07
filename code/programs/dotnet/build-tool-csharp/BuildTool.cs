@@ -28,7 +28,11 @@ public sealed record PackageSpec(
     string Path,
     IReadOnlyList<string> BuildCommands,
     string Language,
-    IReadOnlyList<string> ExtraToolchains);
+    IReadOnlyList<string> ExtraToolchains,
+    bool IsStarlark = false,
+    IReadOnlyList<string>? DeclaredSources = null,
+    string? BuildFileName = null,
+    string? BuildFileSha256 = null);
 
 public sealed record ToolchainPackageSnapshot(
     string Name,
@@ -597,6 +601,33 @@ public static class ToolchainDetection
 
 public static class Discovery
 {
+    private const int MaximumBuildFileBytes = 1024 * 1024;
+    private const int MaximumDiscoveryEntries = 1_000_000;
+    private static readonly Regex StarlarkMarker = new(
+        @"(?m)^\s*(?:load\s*\(|_targets\s*=)",
+        RegexOptions.CultureInvariant | RegexOptions.NonBacktracking);
+    private static readonly Regex StarlarkLoad = new(
+        @"(?m)^\s*load\s*\(",
+        RegexOptions.CultureInvariant | RegexOptions.NonBacktracking);
+    private static readonly Regex CanonicalRuleLoad = new(
+        @"(?m)^\s*load\(""code/packages/starlark/library-rules/(?<file>[a-z_]+_library)\.star"",\s*""(?<symbol>[a-z_]+_library)""\)\s*$",
+        RegexOptions.CultureInvariant | RegexOptions.NonBacktracking);
+    private static readonly IReadOnlyDictionary<string, string> CanonicalRuleSymbols =
+        new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["elixir_library"] = "elixir_library",
+            ["go_library"] = "go_library",
+            ["java_library"] = "java_library",
+            ["kotlin_library"] = "kotlin_library",
+            ["python_library"] = "python_library",
+            ["ruby_library"] = "ruby_library",
+            ["rust_library"] = "rust_library",
+            ["typescript_library"] = "ts_library",
+        };
+    private static readonly UTF8Encoding StrictUtf8 = new(
+        encoderShouldEmitUTF8Identifier: false,
+        throwOnInvalidBytes: true);
+
     public static readonly HashSet<string> SkipDirs = new(StringComparer.Ordinal)
     {
         ".git",
@@ -632,19 +663,14 @@ public static class Discovery
         "csharp", "fsharp", "dotnet", "ocaml", "starlark", "mosaic", "twig",
     };
 
-    public static IReadOnlyList<string> ReadLines(string filePath)
-    {
-        if (!File.Exists(filePath))
-        {
-            return [];
-        }
-
-        return File
-            .ReadAllLines(filePath)
+    private static IReadOnlyList<string> ReadLinesFromContent(string content) =>
+        content
+            .Replace("\r\n", "\n", StringComparison.Ordinal)
+            .Replace('\r', '\n')
+            .Split('\n')
             .Select(line => line.Trim())
             .Where(line => line.Length > 0 && !line.StartsWith('#'))
             .ToArray();
-    }
 
     public static string InferLanguage(string directoryPath)
     {
@@ -686,44 +712,26 @@ public static class Discovery
             : $"{language}/{baseName}";
     }
 
-    public static string? GetBuildFile(string directory, string? platformOverride = null)
-    {
-        var platform = platformOverride ?? PlatformName();
-
-        static string Combine(string directory, string file) => Path.Combine(directory, file);
-
-        if (platform == "darwin" && File.Exists(Combine(directory, "BUILD_mac")))
-        {
-            return Combine(directory, "BUILD_mac");
-        }
-
-        if (platform == "linux" && File.Exists(Combine(directory, "BUILD_linux")))
-        {
-            return Combine(directory, "BUILD_linux");
-        }
-
-        if ((platform == "win32" || platform == "windows") && File.Exists(Combine(directory, "BUILD_windows")))
-        {
-            return Combine(directory, "BUILD_windows");
-        }
-
-        if ((platform == "darwin" || platform == "linux") && File.Exists(Combine(directory, "BUILD_mac_and_linux")))
-        {
-            return Combine(directory, "BUILD_mac_and_linux");
-        }
-
-        return File.Exists(Combine(directory, "BUILD")) ? Combine(directory, "BUILD") : null;
-    }
-
     public static IReadOnlyList<PackageSpec> DiscoverPackages(string codeRoot, string? platformOverride = null)
     {
         var packages = new List<PackageSpec>();
-        Walk(codeRoot, packages, platformOverride);
+        var fullCodeRoot = Path.GetFullPath(codeRoot);
+        var repositoryRoot = Path.GetDirectoryName(fullCodeRoot)
+            ?? throw new InvalidDataException("code root has no repository parent");
+        using var secureScope = SecureSourceFileReader.RetainRepositoryRoot(repositoryRoot);
+        var discoveryEntries = 0;
+        Walk(fullCodeRoot, packages, platformOverride, secureScope, ref discoveryEntries);
+        secureScope.Validate();
         packages.Sort((left, right) => StringComparer.Ordinal.Compare(left.Name, right.Name));
         return packages;
     }
 
-    private static void Walk(string directory, List<PackageSpec> packages, string? platformOverride)
+    private static void Walk(
+        string directory,
+        List<PackageSpec> packages,
+        string? platformOverride,
+        SecureSourceFileReader.Scope secureScope,
+        ref int discoveryEntries)
     {
         var directoryName = Path.GetFileName(directory);
         if (SkipDirs.Contains(directoryName))
@@ -731,25 +739,649 @@ public static class Discovery
             return;
         }
 
-        var buildFile = GetBuildFile(directory, platformOverride);
-        if (buildFile is not null && TryGetDiscoveryBucket(directory, out _, out _))
+        var remainingEntries = MaximumDiscoveryEntries - discoveryEntries;
+        var entries = secureScope.EnumerateDirectory(directory, remainingEntries);
+        discoveryEntries = checked(discoveryEntries + entries.Count);
+        var buildFileName = GetBuildFileName(entries, platformOverride);
+        if (buildFileName is not null && TryGetDiscoveryBucket(directory, out _, out _))
         {
             var language = InferLanguage(directory);
-            var rawContent = File.ReadAllText(buildFile);
+            var buildFile = Path.Combine(directory, buildFileName);
+            var rawBytes = secureScope.ReadFile(
+                buildFile,
+                MaximumBuildFileBytes,
+                MaximumBuildFileBytes).Content;
+            var rawContent = StrictUtf8.GetString(rawBytes);
+            var sourceDeclaration = ReadSourceDeclaration(rawContent);
             packages.Add(new PackageSpec(
                 InferPackageName(directory, language),
                 Path.GetFullPath(directory),
-                ReadLines(buildFile),
+                ReadLinesFromContent(rawContent),
                 language,
-                ToolchainDetection.ParseExtraToolchains(rawContent)));
+                ToolchainDetection.ParseExtraToolchains(rawContent),
+                sourceDeclaration.IsStarlark,
+                sourceDeclaration.DeclaredSources,
+                buildFileName,
+                Convert.ToHexString(SHA256.HashData(rawBytes)).ToLowerInvariant()));
             return;
         }
 
-        foreach (var child in Directory.EnumerateDirectories(directory).OrderBy(path => path, StringComparer.Ordinal))
+        foreach (var child in entries
+                     .Where(entry => entry.Kind == SecureDirectoryEntryKind.Directory)
+                     .OrderBy(entry => entry.Name, StringComparer.Ordinal))
         {
-            Walk(child, packages, platformOverride);
+            Walk(
+                Path.Combine(directory, child.Name),
+                packages,
+                platformOverride,
+                secureScope,
+                ref discoveryEntries);
         }
     }
+
+    private static string? GetBuildFileName(
+        IReadOnlyList<SecureDirectoryEntry> entries,
+        string? platformOverride)
+    {
+        var platform = platformOverride ?? PlatformName();
+        var regularNames = entries
+            .Where(entry => entry.Kind == SecureDirectoryEntryKind.Regular)
+            .Select(entry => entry.Name)
+            .ToHashSet(StringComparer.Ordinal);
+        if (platform == "darwin" && regularNames.Contains("BUILD_mac"))
+        {
+            return "BUILD_mac";
+        }
+        if (platform == "linux" && regularNames.Contains("BUILD_linux"))
+        {
+            return "BUILD_linux";
+        }
+        if (platform is "win32" or "windows" && regularNames.Contains("BUILD_windows"))
+        {
+            return "BUILD_windows";
+        }
+        if (platform is "darwin" or "linux" && regularNames.Contains("BUILD_mac_and_linux"))
+        {
+            return "BUILD_mac_and_linux";
+        }
+        return regularNames.Contains("BUILD") ? "BUILD" : null;
+    }
+
+    internal static (bool IsStarlark, IReadOnlyList<string> DeclaredSources) ReadSourceDeclaration(
+        string source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        if (Encoding.UTF8.GetByteCount(source) > MaximumBuildFileBytes)
+        {
+            throw new InvalidDataException("BUILD source exceeds the bounded discovery limit");
+        }
+        var isStarlark = StarlarkMarker.IsMatch(source);
+        if (!isStarlark)
+        {
+            return (false, []);
+        }
+
+        var parsed = ParseDeclaredSources(source);
+        ValidateCanonicalStarlarkSource(source, parsed.AssignmentPositions);
+        return (true, parsed.Sources.OrderBy(value => value, StringComparer.Ordinal).ToArray());
+    }
+
+    private static (HashSet<string> Sources, List<int> AssignmentPositions) ParseDeclaredSources(string source)
+    {
+        var sources = new HashSet<string>(StringComparer.Ordinal);
+        var assignmentPositions = new List<int>();
+        var index = 0;
+        while (index < source.Length)
+        {
+            if (source[index] == '#')
+            {
+                SkipComment(source, ref index);
+                continue;
+            }
+            if (source[index] is '\'' or '"')
+            {
+                SkipStringLiteral(source, ref index);
+                continue;
+            }
+            if (!IsIdentifierStart(source[index]))
+            {
+                index++;
+                continue;
+            }
+
+            var start = index++;
+            while (index < source.Length && IsIdentifierPart(source[index]))
+            {
+                index++;
+            }
+            if (!source.AsSpan(start, index - start).SequenceEqual("srcs"))
+            {
+                continue;
+            }
+
+            var expressionIndex = index;
+            SkipTrivia(source, ref expressionIndex);
+            if (expressionIndex >= source.Length || source[expressionIndex] != '=')
+            {
+                continue;
+            }
+            expressionIndex++;
+            assignmentPositions.Add(start);
+            ParseSourceListExpression(source, ref expressionIndex, sources);
+            index = expressionIndex;
+        }
+        return (sources, assignmentPositions);
+    }
+
+    private static void ValidateCanonicalStarlarkSource(
+        string source,
+        IReadOnlyList<int> sourceAssignmentPositions)
+    {
+        var loadCalls = FindTopLevelCalls(source, "load");
+        if (loadCalls.Count != 1)
+        {
+            throw new InvalidDataException("BUILD must load exactly one canonical library rule");
+        }
+        var loadSource = source[loadCalls[0].Start..(loadCalls[0].Close + 1)];
+        var load = CanonicalRuleLoad.Match(loadSource);
+        if (!load.Success || load.Index != 0 || load.Length != loadSource.Length)
+        {
+            throw new InvalidDataException("BUILD must load exactly one canonical library rule");
+        }
+        var file = load.Groups["file"].Value;
+        var symbol = load.Groups["symbol"].Value;
+        if (!CanonicalRuleSymbols.TryGetValue(file, out var expectedSymbol) || symbol != expectedSymbol)
+        {
+            throw new InvalidDataException("BUILD loads an unsupported Starlark rule");
+        }
+
+        var targets = FindTargetsList(source);
+        var calls = FindDirectTargetCalls(source, targets, symbol);
+        if (calls.Count == 0 || sourceAssignmentPositions.Count != calls.Count)
+        {
+            throw new InvalidDataException("every Starlark target must declare srcs directly");
+        }
+        foreach (var call in calls)
+        {
+            var directAssignments = FindDirectArgumentAssignments(source, call, "srcs");
+            if (directAssignments.Count != 1 ||
+                !sourceAssignmentPositions.Contains(directAssignments[0]) ||
+                ContainsDoubleStar(source, call.Open + 1, call.Close))
+            {
+                throw new InvalidDataException("Starlark target source declarations must use the direct strict form");
+            }
+        }
+    }
+
+    private static List<(int Start, int Open, int Close)> FindTopLevelCalls(
+        string source,
+        string identifier)
+    {
+        var calls = new List<(int Start, int Open, int Close)>();
+        var delimiterDepth = 0;
+        var index = 0;
+        while (index < source.Length)
+        {
+            if (source[index] == '#')
+            {
+                SkipComment(source, ref index);
+                continue;
+            }
+            if (source[index] is '\'' or '"')
+            {
+                SkipStringLiteral(source, ref index);
+                continue;
+            }
+            if (source[index] is '(' or '[' or '{')
+            {
+                delimiterDepth++;
+                index++;
+                continue;
+            }
+            if (source[index] is ')' or ']' or '}')
+            {
+                if (delimiterDepth == 0)
+                {
+                    throw new InvalidDataException("BUILD delimiters are malformed");
+                }
+                delimiterDepth--;
+                index++;
+                continue;
+            }
+            if (!IsIdentifierStart(source[index]))
+            {
+                index++;
+                continue;
+            }
+
+            var start = index++;
+            while (index < source.Length && IsIdentifierPart(source[index]))
+            {
+                index++;
+            }
+            if (delimiterDepth != 0 ||
+                !IsModuleStatementStart(source, start) ||
+                !source.AsSpan(start, index - start).SequenceEqual(identifier))
+            {
+                continue;
+            }
+            var open = index;
+            SkipTrivia(source, ref open);
+            if (open >= source.Length || source[open] != '(')
+            {
+                continue;
+            }
+            var close = FindMatchingDelimiter(source, open, '(', ')');
+            calls.Add((start, open, close));
+            index = close + 1;
+        }
+        if (delimiterDepth != 0)
+        {
+            throw new InvalidDataException("BUILD delimiters are malformed");
+        }
+        return calls;
+    }
+
+    private static List<int> FindDirectArgumentAssignments(
+        string source,
+        (int Open, int Close) call,
+        string identifier)
+    {
+        var assignments = new List<int>();
+        var nestedDepth = 0;
+        var index = call.Open + 1;
+        while (index < call.Close)
+        {
+            if (source[index] == '#')
+            {
+                SkipComment(source, ref index);
+                continue;
+            }
+            if (source[index] is '\'' or '"')
+            {
+                SkipStringLiteral(source, ref index);
+                continue;
+            }
+            if (source[index] is '(' or '[' or '{')
+            {
+                nestedDepth++;
+                index++;
+                continue;
+            }
+            if (source[index] is ')' or ']' or '}')
+            {
+                if (nestedDepth == 0)
+                {
+                    throw new InvalidDataException("Starlark target arguments are malformed");
+                }
+                nestedDepth--;
+                index++;
+                continue;
+            }
+            if (!IsIdentifierStart(source[index]))
+            {
+                index++;
+                continue;
+            }
+
+            var start = index++;
+            while (index < call.Close && IsIdentifierPart(source[index]))
+            {
+                index++;
+            }
+            if (nestedDepth != 0 ||
+                !source.AsSpan(start, index - start).SequenceEqual(identifier))
+            {
+                continue;
+            }
+            var equals = index;
+            SkipTrivia(source, ref equals);
+            if (equals < call.Close && source[equals] == '=')
+            {
+                assignments.Add(start);
+            }
+        }
+        if (nestedDepth != 0)
+        {
+            throw new InvalidDataException("Starlark target arguments are malformed");
+        }
+        return assignments;
+    }
+
+    private static (int Open, int Close) FindTargetsList(string source)
+    {
+        (int Open, int Close)? result = null;
+        var index = 0;
+        while (index < source.Length)
+        {
+            if (source[index] == '#')
+            {
+                SkipComment(source, ref index);
+                continue;
+            }
+            if (source[index] is '\'' or '"')
+            {
+                SkipStringLiteral(source, ref index);
+                continue;
+            }
+            if (!IsIdentifierStart(source[index]))
+            {
+                index++;
+                continue;
+            }
+            var start = index++;
+            while (index < source.Length && IsIdentifierPart(source[index]))
+            {
+                index++;
+            }
+            if (!source.AsSpan(start, index - start).SequenceEqual("_targets"))
+            {
+                continue;
+            }
+            if (!IsModuleStatementStart(source, start))
+            {
+                continue;
+            }
+            var cursor = index;
+            SkipTrivia(source, ref cursor);
+            if (cursor >= source.Length || source[cursor++] != '=')
+            {
+                continue;
+            }
+            SkipTrivia(source, ref cursor);
+            if (cursor >= source.Length || source[cursor] != '[' || result is not null)
+            {
+                throw new InvalidDataException("BUILD must contain one literal _targets list");
+            }
+            result = (cursor, FindMatchingDelimiter(source, cursor, '[', ']'));
+            index = result.Value.Close + 1;
+        }
+        return result ?? throw new InvalidDataException("BUILD does not declare _targets");
+    }
+
+    private static List<(int Open, int Close)> FindDirectTargetCalls(
+        string source,
+        (int Open, int Close) targets,
+        string symbol)
+    {
+        var calls = new List<(int Open, int Close)>();
+        var index = targets.Open + 1;
+        while (index < targets.Close)
+        {
+            SkipTrivia(source, ref index);
+            if (index >= targets.Close)
+            {
+                break;
+            }
+            if (!IsIdentifierStart(source[index]))
+            {
+                throw new InvalidDataException("_targets entries must be direct canonical rule calls");
+            }
+            var start = index++;
+            while (index < targets.Close && IsIdentifierPart(source[index]))
+            {
+                index++;
+            }
+            if (!source.AsSpan(start, index - start).SequenceEqual(symbol))
+            {
+                throw new InvalidDataException("_targets contains a noncanonical target call");
+            }
+            SkipTrivia(source, ref index);
+            if (index >= targets.Close || source[index] != '(')
+            {
+                throw new InvalidDataException("_targets entry is not a direct call");
+            }
+            var close = FindMatchingDelimiter(source, index, '(', ')');
+            calls.Add((index, close));
+            index = close + 1;
+            SkipTrivia(source, ref index);
+            if (index < targets.Close)
+            {
+                if (source[index] != ',')
+                {
+                    throw new InvalidDataException("_targets entries must be comma-separated");
+                }
+                index++;
+            }
+        }
+        return calls;
+    }
+
+    private static int FindMatchingDelimiter(
+        string source,
+        int openingIndex,
+        char opening,
+        char closing)
+    {
+        var depth = 0;
+        var index = openingIndex;
+        while (index < source.Length)
+        {
+            if (source[index] == '#')
+            {
+                SkipComment(source, ref index);
+                continue;
+            }
+            if (source[index] is '\'' or '"')
+            {
+                SkipStringLiteral(source, ref index);
+                continue;
+            }
+            if (source[index] == opening)
+            {
+                depth++;
+            }
+            else if (source[index] == closing && --depth == 0)
+            {
+                return index;
+            }
+            index++;
+        }
+        throw new InvalidDataException("BUILD delimiter is unterminated");
+    }
+
+    private static bool ContainsDoubleStar(string source, int start, int end)
+    {
+        var index = start;
+        while (index < end)
+        {
+            if (source[index] == '#')
+            {
+                SkipComment(source, ref index);
+                continue;
+            }
+            if (source[index] is '\'' or '"')
+            {
+                SkipStringLiteral(source, ref index);
+                continue;
+            }
+            if (source[index] == '*' && index + 1 < end && source[index + 1] == '*')
+            {
+                return true;
+            }
+            index++;
+        }
+        return false;
+    }
+
+    private static void ParseSourceListExpression(
+        string source,
+        ref int index,
+        HashSet<string> sources)
+    {
+        while (true)
+        {
+            SkipTrivia(source, ref index);
+            if (index >= source.Length || source[index] != '[')
+            {
+                throw new InvalidDataException("BUILD srcs must be a literal string list");
+            }
+            index++;
+            ParseSourceList(source, ref index, sources);
+            SkipTrivia(source, ref index);
+            if (index >= source.Length || source[index] != '+')
+            {
+                if (index < source.Length && source[index] is not (',' or ')' or ']'))
+                {
+                    throw new InvalidDataException("BUILD srcs expression is unsupported");
+                }
+                return;
+            }
+            index++;
+        }
+    }
+
+    private static void ParseSourceList(
+        string source,
+        ref int index,
+        HashSet<string> sources)
+    {
+        var expectValue = true;
+        while (true)
+        {
+            SkipTrivia(source, ref index);
+            if (index >= source.Length)
+            {
+                throw new InvalidDataException("BUILD srcs list is unterminated");
+            }
+            if (source[index] == ']')
+            {
+                index++;
+                return;
+            }
+            if (!expectValue || source[index] is not ('\'' or '"'))
+            {
+                throw new InvalidDataException("BUILD srcs must contain only string literals");
+            }
+            sources.Add(ReadStringLiteral(source, ref index));
+            SkipTrivia(source, ref index);
+            if (index >= source.Length)
+            {
+                throw new InvalidDataException("BUILD srcs list is unterminated");
+            }
+            if (source[index] == ']')
+            {
+                index++;
+                return;
+            }
+            if (source[index] != ',')
+            {
+                throw new InvalidDataException("BUILD srcs list is malformed");
+            }
+            index++;
+            expectValue = true;
+        }
+    }
+
+    private static string ReadStringLiteral(string source, ref int index)
+    {
+        var quote = source[index++];
+        if (index + 1 < source.Length && source[index] == quote && source[index + 1] == quote)
+        {
+            throw new InvalidDataException("triple-quoted BUILD srcs strings are unsupported");
+        }
+        var value = new StringBuilder();
+        while (index < source.Length)
+        {
+            var character = source[index++];
+            if (character == quote)
+            {
+                return value.ToString();
+            }
+            if (character is '\r' or '\n')
+            {
+                throw new InvalidDataException("BUILD string literal is unterminated");
+            }
+            if (character != '\\')
+            {
+                value.Append(character);
+                continue;
+            }
+            if (index >= source.Length)
+            {
+                throw new InvalidDataException("BUILD string escape is unterminated");
+            }
+            var escaped = source[index++];
+            value.Append(escaped switch
+            {
+                '\\' => '\\',
+                '\'' => '\'',
+                '"' => '"',
+                'n' => '\n',
+                'r' => '\r',
+                't' => '\t',
+                'b' => '\b',
+                'f' => '\f',
+                _ => throw new InvalidDataException("BUILD string escape is unsupported"),
+            });
+        }
+        throw new InvalidDataException("BUILD string literal is unterminated");
+    }
+
+    private static void SkipStringLiteral(string source, ref int index)
+    {
+        var quote = source[index++];
+        var triple = index + 1 < source.Length && source[index] == quote && source[index + 1] == quote;
+        if (triple)
+        {
+            index += 2;
+        }
+        while (index < source.Length)
+        {
+            if (source[index] == '\\')
+            {
+                index += Math.Min(2, source.Length - index);
+                continue;
+            }
+            if (!triple && source[index] == quote)
+            {
+                index++;
+                return;
+            }
+            if (triple && index + 2 < source.Length &&
+                source[index] == quote && source[index + 1] == quote && source[index + 2] == quote)
+            {
+                index += 3;
+                return;
+            }
+            index++;
+        }
+        throw new InvalidDataException("BUILD string literal is unterminated");
+    }
+
+    private static void SkipTrivia(string source, ref int index)
+    {
+        while (index < source.Length)
+        {
+            if (char.IsWhiteSpace(source[index]))
+            {
+                index++;
+                continue;
+            }
+            if (source[index] != '#')
+            {
+                return;
+            }
+            SkipComment(source, ref index);
+        }
+    }
+
+    private static void SkipComment(string source, ref int index)
+    {
+        while (index < source.Length && source[index] != '\n')
+        {
+            index++;
+        }
+    }
+
+    private static bool IsIdentifierStart(char character) =>
+        character == '_' || char.IsLetter(character);
+
+    private static bool IsIdentifierPart(char character) =>
+        character == '_' || char.IsLetterOrDigit(character);
+
+    private static bool IsModuleStatementStart(string source, int index) =>
+        index == 0 || source[index - 1] is '\n' or '\r';
 
     private static string PlatformName()
     {
@@ -1572,6 +2204,13 @@ public static class GitDiff
             var normalizedFile = file.Replace('\\', '/');
             foreach (var entry in packagePaths)
             {
+                if (Hasher.BoundaryInputAppliesTo(normalizedFile, entry.RelativePath))
+                {
+                    changed.Add(entry.Package.Name);
+                }
+            }
+            foreach (var entry in packagePaths)
+            {
                 if (normalizedFile == entry.RelativePath ||
                     normalizedFile.StartsWith(entry.RelativePath + "/", StringComparison.Ordinal))
                 {
@@ -1673,94 +2312,8 @@ public sealed class BuildCache
     }
 }
 
-public static class Hasher
+public static partial class Hasher
 {
-    private static readonly Dictionary<string, HashSet<string>> SourceExtensions = new(StringComparer.Ordinal)
-    {
-        ["python"] = [".py", ".toml", ".cfg"],
-        ["ruby"] = [".rb", ".gemspec"],
-        ["go"] = [".go"],
-        ["typescript"] = [".ts", ".json"],
-        ["rust"] = [".rs", ".toml"],
-        ["wasm"] = [".rs", ".toml"],
-        ["elixir"] = [".ex", ".exs"],
-        ["lua"] = [".lua", ".rockspec"],
-        ["perl"] = [".pl", ".pm", ".t", ".xs"],
-        ["swift"] = [".swift"],
-        ["dart"] = [".dart", ".yaml"],
-        ["haskell"] = [".hs", ".cabal"],
-        ["java"] = [".java", ".kts"],
-        ["kotlin"] = [".kt", ".kts"],
-        ["csharp"] = [".cs", ".csproj", ".json", ".md"],
-        ["fsharp"] = [".fs", ".fsproj", ".json", ".md"],
-        ["dotnet"] = [".cs", ".fs", ".csproj", ".fsproj", ".json", ".md"],
-    };
-
-    private static readonly Dictionary<string, HashSet<string>> SpecialNames = new(StringComparer.Ordinal)
-    {
-        ["ruby"] = ["Gemfile", "Rakefile"],
-        ["go"] = ["go.mod", "go.sum"],
-        ["rust"] = ["Cargo.lock"],
-        ["typescript"] = ["package-lock.json"],
-        ["elixir"] = ["mix.lock"],
-        ["perl"] = ["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"],
-        ["swift"] = ["Package.swift"],
-        ["dart"] = ["pubspec.yaml"],
-        ["java"] = ["build.gradle.kts", "settings.gradle.kts", "gradle.properties"],
-        ["kotlin"] = ["build.gradle.kts", "settings.gradle.kts", "gradle.properties"],
-    };
-
-    public static IReadOnlyList<string> CollectSourceFiles(PackageSpec package)
-    {
-        var extensions = SourceExtensions.GetValueOrDefault(package.Language, new HashSet<string>(StringComparer.Ordinal));
-        var specialNames = SpecialNames.GetValueOrDefault(package.Language, new HashSet<string>(StringComparer.Ordinal));
-
-        var files = new List<string>();
-        foreach (var filePath in WalkFiles(package.Path))
-        {
-            var fileName = Path.GetFileName(filePath);
-            if (fileName is "BUILD" or "BUILD_mac" or "BUILD_linux" or "BUILD_windows" or "BUILD_mac_and_linux")
-            {
-                files.Add(filePath);
-                continue;
-            }
-
-            if (extensions.Contains(Path.GetExtension(filePath)))
-            {
-                files.Add(filePath);
-                continue;
-            }
-
-            if (specialNames.Contains(fileName))
-            {
-                files.Add(filePath);
-            }
-        }
-
-        return files
-            .OrderBy(filePath => Path.GetRelativePath(package.Path, filePath), StringComparer.Ordinal)
-            .ToArray();
-    }
-
-    public static string HashFile(string filePath)
-    {
-        using var sha256 = SHA256.Create();
-        return Convert.ToHexString(sha256.ComputeHash(File.ReadAllBytes(filePath))).ToLowerInvariant();
-    }
-
-    public static string HashPackage(PackageSpec package)
-    {
-        var combined = new StringBuilder();
-        foreach (var file in CollectSourceFiles(package))
-        {
-            combined.Append(HashFile(file));
-            combined.Append('\n');
-        }
-
-        using var sha256 = SHA256.Create();
-        return Convert.ToHexString(sha256.ComputeHash(Encoding.UTF8.GetBytes(combined.ToString()))).ToLowerInvariant();
-    }
-
     public static string HashDependencies(
         string packageName,
         DirectedGraph graph,
@@ -1772,28 +2325,6 @@ public static class Hasher
         var combined = string.Join('\n', parts);
         using var sha256 = SHA256.Create();
         return Convert.ToHexString(sha256.ComputeHash(Encoding.UTF8.GetBytes(combined))).ToLowerInvariant();
-    }
-
-    private static IEnumerable<string> WalkFiles(string directory)
-    {
-        foreach (var childDirectory in Directory.EnumerateDirectories(directory).OrderBy(path => path, StringComparer.Ordinal))
-        {
-            var name = Path.GetFileName(childDirectory);
-            if (Discovery.SkipDirs.Contains(name))
-            {
-                continue;
-            }
-
-            foreach (var file in WalkFiles(childDirectory))
-            {
-                yield return file;
-            }
-        }
-
-        foreach (var file in Directory.EnumerateFiles(directory).OrderBy(path => path, StringComparer.Ordinal))
-        {
-            yield return file;
-        }
     }
 }
 
@@ -3056,7 +3587,25 @@ public static class BuildToolApp
             return 0;
         }
 
-        var packageHashes = packages.ToDictionary(package => package.Name, Hasher.HashPackage, StringComparer.Ordinal);
+        Dictionary<string, string> packageHashes;
+        try
+        {
+            var trackedBefore = Hasher.CaptureTrackedBoundarySnapshot(repoRoot, packages);
+            packageHashes = packages.ToDictionary(
+                package => package.Name,
+                package => Hasher.HashPackage(package, repoRoot, trackedBefore),
+                StringComparer.Ordinal);
+            var trackedAfter = Hasher.CaptureTrackedBoundarySnapshot(repoRoot, packages);
+            if (!Hasher.TrackedSnapshotsEqual(trackedBefore, trackedAfter))
+            {
+                throw new SourceHashException("SOURCE_HASH_TRACKED_SNAPSHOT_UNSTABLE");
+            }
+        }
+        catch (SourceHashException error)
+        {
+            Console.Error.WriteLine(error.Message);
+            return 1;
+        }
         var dependencyHashes = packages.ToDictionary(
             package => package.Name,
             package => Hasher.HashDependencies(package.Name, graph, packageHashes),

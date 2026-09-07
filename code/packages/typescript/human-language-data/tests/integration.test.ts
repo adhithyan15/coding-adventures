@@ -14,6 +14,7 @@ import {
   measureGlyphGaps,
   type ScriptInventoryEvidenceModule,
 } from "./script-inventories/helpers.js";
+import { assertCorpusGlyphGapQueue } from "./script-inventory-queue.js";
 
 const scriptInventoryModules = import.meta.glob<ScriptInventoryEvidenceModule>(
   "./script-inventories/**/*.evidence.ts",
@@ -59,6 +60,7 @@ describe("real curriculum", () => {
     )) {
       module.scriptInventoryEvidence.assert(context);
     }
+    assertCorpusGlyphGapQueue(context);
   });
 
   it("loaded every track (17+ and growing)", () => {

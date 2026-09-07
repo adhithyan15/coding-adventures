@@ -25,8 +25,16 @@ All notable changes to this package will be documented in this file.
 - Shared valid and invalid Lua rockspec fixture coverage, typed
   `METADATA_INVALID_UTF8` diagnostics, representative malformed-sequence
   checks, literal U+FFFD coverage, and front-door exit-code validation.
-- An exact package-hash regression covering non-ASCII UTF-8, NUL, and malformed
-  source bytes against a fixed Git blob digest.
+- A generated source-embedded projection of the complete checked language
+  source-input registry, with independent full-value and canonical-digest
+  verification plus production-selector coverage for every package-local
+  neutral fixture, both collection modes, all selector roles, and OCaml.
+- Portable Hashing v1 package digests over raw bytes and repository-relative
+  UTF-8 paths, including fixed single- and multi-file oracles, rename
+  sensitivity, empty-package behavior, binary input, and 8 KiB boundaries.
+- Closed portable path, character-class glob, topology, registry, language,
+  candidate, selected-input, per-file, package-byte, and declared-match-work
+  validation with stable redacted front-door failures.
 - Shared Lua resolution fixtures for authoritative dependency tables, genuine
   cycles, selected BUILD dependency metadata, qualified program identities,
   and package/program alias precedence.
@@ -72,11 +80,12 @@ All notable changes to this package will be documented in this file.
   resolution, with repository-relative diagnostics and no checkout-root leak.
 - Force existing lazy text reads to EOF before parsing so Windows file handles
   close deterministically after discovery and validation.
-- Hash source and manifest contents as raw bytes, normalize relative paths to
-  portable UTF-8, and feed `git hash-object` through binary pipes instead of
-  locale-sensitive text handles.
+- Replace Git SHA-1 and the non-cryptographic fallback with the local
+  `sha256 ==0.2.*` incremental API, exact uint64-BE Hashing v1 frames, and
+  bounded 8 KiB reads while preserving raw source bytes.
 - Exercise the Haskell build tool from `BUILD_windows` whenever Cabal is
-  available instead of unconditionally skipping the package.
+  available instead of unconditionally skipping the package, and run both
+  BUILD fronts with optimization so the SHA-256 allocation gate executes.
 - Resolve Elixir dependencies only from local `path:` tuples in authoritative
   `deps:` lists instead of tokenizing the complete `mix.exs` and `mix.lock`.
 - Discover Dart packages and programs, hash `pubspec.yaml` and `.dart` inputs,

@@ -58,10 +58,10 @@ struct ForPayloadScope<'a> {
 /// The `style` argument's `part` blocks are inlined as Jetpack Compose
 /// `Modifier` chains attached to layout nodes whose `part_name`
 /// matches.  See [`compose_box_style`] for the property→Modifier
-/// table.  State blocks (`state X { ... }`) are folded into the chain
-/// as nested `if/else` expressions when the matching node carries a
-/// `state-when-X: ( expr )` prop — see [`collect_state_layers`] for the
-/// predicate-extraction rules.  HostTable column-widths thread into
+/// table.  Slot-owned enum states and `state-when-X: ( expr )` node
+/// predicates are folded into the chain as nested `if/else` expressions;
+/// see [`collect_state_layers`] for the ordering and predicate-extraction
+/// rules.  HostTable column-widths thread into
 /// each cell's `.width(columnWidths[_kotlinIdx<idx>].dp)` via
 /// [`TableContext`].
 pub fn from_pipeline(
@@ -105,7 +105,7 @@ pub fn from_pipeline(
     // the layout walker.  Empty when the `.msl` declares no parts — the
     // no-op path, where every Modifier-chain lookup returns nothing and
     // emission proceeds identically to a styleless pipeline.
-    let part_styles = build_part_style_map(style);
+    let part_styles = build_part_style_map(style, &component.slots);
     let uses_host_link = layout_contains_tag(&layout.root, "HostLink");
     let uses_host_dialog = layout_contains_tag(&layout.root, "HostDialog");
     let uses_host_slider = layout_contains_tag(&layout.root, "HostSlider");
@@ -1617,37 +1617,43 @@ fn write_section_call(
 // Part-style lowering — `.msl` `part` blocks → Compose `Modifier`.
 //
 // Covers BASE styles AND state-block lowering (`state selected {...}`,
-// `state editing {...}`).  When a layout node carries one or more
-// `state-when-<name>: ( expr )` props (UI28-1 / Task #35), each state
-// block's overriding properties fold into the Modifier chain as nested
-// `if (cond) ... else ...` expressions.  Author surface mirrors the
-// React + SwiftUI emitters' `state-when-X` mechanism.
-//
-// The map shape is identical to the SwiftUI emitter's
-// `build_part_style_map` (`HashMap<String, Vec<StyleProp>>` keyed by
-// part name OR a composite `{part}:{state}` key) so the backends can
-// share downstream tooling that walks "which parts have author-declared
-// styles?".
+// `state editing {...}`). Slot-owned enum states are activated from
+// composable parameters; layout `state-when-<name>: ( expr )` props
+// (UI28-1 / Task #35) activate the existing structural/interaction path.
+// Each state's overriding properties fold into the Modifier chain as
+// nested `if (cond) ... else ...` expressions.
 // =====================================================================
 
-/// Map from `part` name (or composite `{part}:{state}` key) to its
-/// style props.  Built once in [`from_pipeline`] and threaded through
-/// the walker.  Base-state entries are keyed by the part name verbatim
-/// (`cell`, `header-cell`, `sheet`).  State-block entries are keyed
-/// under a composite `{part}:{state}` key (`cell:selected`,
-/// `cell:editing`).  Empty when the `.msl` declares no parts — every
-/// lookup returns `None` and emission proceeds unchanged.
-type PartStyleMap = HashMap<String, Vec<StyleProp>>;
+/// Style props and ordered slot-owned state metadata, built once in
+/// [`from_pipeline`] and threaded through the walker. Base entries are keyed
+/// by part name; state blocks retain composite `{part}:{state}` keys for the
+/// structural/interaction path. Slot-owned states are grouped by part in
+/// `.mil` slot declaration order.
+struct SlotStateStyle {
+    cond_expr: String,
+    props: Vec<StyleProp>,
+}
 
-/// Build a `part_name → props` map from a [`StyleDef`].  Mirrors the
-/// SwiftUI emitter's `build_part_style_map` — keeps props as
-/// `Vec<StyleProp>` (not a pre-rendered string) so we can re-lower per
-/// node with the right indentation.
-fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
-    let mut out = PartStyleMap::with_capacity(style.parts.len());
+struct PartStyleMap {
+    props: HashMap<String, Vec<StyleProp>>,
+    slot_states: HashMap<String, Vec<SlotStateStyle>>,
+}
+
+impl PartStyleMap {
+    fn get(&self, key: &str) -> Option<&Vec<StyleProp>> {
+        self.props.get(key)
+    }
+}
+
+/// Build the part-style indexes from a [`StyleDef`]. Props remain
+/// `Vec<StyleProp>` rather than pre-rendered strings so each node can lower
+/// them with the correct indentation and active condition layers.
+fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> PartStyleMap {
+    let mut props = HashMap::with_capacity(style.parts.len());
+    let mut slot_states = HashMap::new();
     for part in &style.parts {
         if !part.base.is_empty() {
-            out.insert(part.name.clone(), part.base.clone());
+            props.insert(part.name.clone(), part.base.clone());
         }
         // State blocks surface under a composite `{part}:{state}` key so
         // [`collect_state_layers`] can look up the matching state-when
@@ -1655,11 +1661,40 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
         for state in &part.states {
             if !state.props.is_empty() {
                 let key = format!("{}:{}", part.name, state.state);
-                out.insert(key, state.props.clone());
+                props.insert(key, state.props.clone());
             }
         }
+
+        // UI49 — model-owned enum states become ordinary conditional
+        // style layers. Walk the slots first so simultaneous axes retain
+        // their .mil declaration order; collect_state_layers appends the
+        // existing state-when layers afterward so interaction/structural
+        // predicates remain more specific.
+        let mut owned = Vec::new();
+        for slot in slots {
+            let slot_ident = to_camel_case_first_lower(&slot.name);
+            for state in part
+                .states
+                .iter()
+                .filter(|state| state.slot.as_deref() == Some(slot.name.as_str()))
+            {
+                if state.props.is_empty() {
+                    continue;
+                }
+                owned.push(SlotStateStyle {
+                    cond_expr: format!(
+                        "({slot_ident} == \"{}\")",
+                        escape_kotlin_string(&state.state)
+                    ),
+                    props: state.props.clone(),
+                });
+            }
+        }
+        if !owned.is_empty() {
+            slot_states.insert(part.name.clone(), owned);
+        }
     }
-    out
+    PartStyleMap { props, slot_states }
 }
 
 // =====================================================================
@@ -1977,6 +2012,12 @@ fn collect_state_layers<'a>(
     part_styles: &'a PartStyleMap,
 ) -> Vec<StateLayer<'a>> {
     let mut layers = Vec::new();
+    if let Some(owned) = part_styles.slot_states.get(part_name) {
+        layers.extend(owned.iter().map(|state| StateLayer {
+            cond_expr: state.cond_expr.clone(),
+            props: state.props.as_slice(),
+        }));
+    }
     for prop in &node.props {
         let Some(state_name) = prop.name.strip_prefix("state-when-") else {
             continue;
@@ -2351,6 +2392,25 @@ fn layer_value(
     inner
 }
 
+/// Fold a numeric CSS value and parenthesize layered expressions before the
+/// Compose unit extension is appended.
+///
+/// Without the parentheses, `if (size == "lg") 12 else 8.dp` gives only the
+/// fallback arm a `Dp` type. Kotlin then infers `Comparable<*>`, which cannot
+/// be passed to `padding`, `width`, or the other unit-typed APIs.
+fn numeric_layer_value(
+    bucket: &PropBucket,
+    state_layers: &[StateLayer],
+    default_when_unset: &str,
+) -> String {
+    let value = layer_value(bucket, state_layers, default_when_unset);
+    if bucket.any_state_set {
+        format!("({value})")
+    } else {
+        value
+    }
+}
+
 /// The two `elevation` tiers (UI41, issue #12028 item 1), mapped to a
 /// Compose `Modifier.shadow` elevation. `androidx.compose.ui.draw.shadow`
 /// takes a `Dp` directly (not a CSS-shaped blur/spread/color/opacity
@@ -2572,13 +2632,13 @@ fn compose_box_style(
     if let Some(iw) = injected_width {
         modifier.push_str(&format!("\n{cpad}.width({iw}.dp)"));
     } else if !width.empty() {
-        let expr = layer_value(&width, state_layers, "0");
+        let expr = numeric_layer_value(&width, state_layers, "0");
         modifier.push_str(&format!("\n{cpad}.width({expr}.dp)"));
     }
 
     // .height
     if !height.empty() {
-        let expr = layer_value(&height, state_layers, "0");
+        let expr = numeric_layer_value(&height, state_layers, "0");
         modifier.push_str(&format!("\n{cpad}.height({expr}.dp)"));
     }
 
@@ -2600,7 +2660,7 @@ fn compose_box_style(
     // .border — needs at least the width.  Default color `Color.Gray`
     // when only the width is set.
     if !border_width.empty() {
-        let w_expr = layer_value(&border_width, state_layers, "0");
+        let w_expr = numeric_layer_value(&border_width, state_layers, "0");
         let c_expr = if border_color.empty() {
             "Color.Gray".to_string()
         } else {
@@ -2611,7 +2671,7 @@ fn compose_box_style(
 
     // .padding — LAST so content insets inside the bordered box.
     if !padding.empty() {
-        let expr = layer_value(&padding, state_layers, "0");
+        let expr = numeric_layer_value(&padding, state_layers, "0");
         modifier.push_str(&format!("\n{cpad}.padding({expr}.dp)"));
     }
 
@@ -2627,7 +2687,7 @@ fn compose_box_style(
     let font_size_out = if font_size.empty() {
         None
     } else {
-        Some(layer_value(&font_size, state_layers, "0"))
+        Some(numeric_layer_value(&font_size, state_layers, "0"))
     };
 
     ComposeStyle {
@@ -5439,6 +5499,9 @@ fn emit_host_tooltip(
 fn slot_type_to_kotlin(t: &SlotType) -> String {
     match t {
         SlotType::Text => "String".to_string(),
+        // A one-of value is a name from a closed set, carried as a string.
+        // Lowering it to a native enum is UI49 open question 2.
+        SlotType::OneOf(_) => "String".to_string(),
         SlotType::Number => "Double".to_string(),
         SlotType::Bool => "Boolean".to_string(),
         SlotType::Image => "String".to_string(),
@@ -5739,6 +5802,7 @@ mod tests {
 
     fn state(name: &str, props: Vec<StyleProp>) -> StateStyle {
         StateStyle {
+            slot: None,
             state: name.to_string(),
             transitions: vec![],
             props,
@@ -7077,6 +7141,127 @@ mod tests {
         assert!(
             out.contains("Text(againLabel, color = Color(0xFF1A1A2E))"),
             "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn ui49_slot_states_follow_model_order_and_reach_host_button() {
+        let m = component(
+            "VariantButton",
+            vec![
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                    true,
+                ),
+                slot(
+                    "size",
+                    SlotType::OneOf(vec!["regular".to_string(), "compact".to_string()]),
+                    true,
+                ),
+                slot("selected", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "VariantButton",
+            styled_node(
+                "Column",
+                "shell",
+                vec![],
+                vec![styled_node(
+                    "HostButton",
+                    "button",
+                    vec![
+                        LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::String("Delete".to_string()),
+                        },
+                        expr_prop("state-when-selected", "( selected )"),
+                    ],
+                    vec![],
+                )],
+            ),
+        );
+        let s = style_def(
+            "VariantButton",
+            vec![
+                part(
+                    "shell",
+                    vec![sprop("background", "#222222")],
+                    vec![StateStyle {
+                        slot: Some("variant".to_string()),
+                        state: "danger".to_string(),
+                        transitions: vec![],
+                        props: vec![sprop("background", "#333333")],
+                    }],
+                ),
+                part(
+                    "button",
+                    vec![
+                        sprop("background", "#111111"),
+                        sprop("padding", "8px"),
+                        sprop("font-size", "14px"),
+                    ],
+                    // Reverse authored state order deliberately. UI49 ordering
+                    // comes from the model slots: variant, then size.
+                    vec![
+                        StateStyle {
+                            slot: Some("size".to_string()),
+                            state: "compact".to_string(),
+                            transitions: vec![],
+                            props: vec![
+                                sprop("background", "#ffaa00"),
+                                sprop("padding", "6px"),
+                                sprop("font-size", "13px"),
+                            ],
+                        },
+                        StateStyle {
+                            slot: Some("variant".to_string()),
+                            state: "danger".to_string(),
+                            transitions: vec![],
+                            props: vec![sprop("background", "#dc3545")],
+                        },
+                        StateStyle {
+                            slot: None,
+                            state: "selected".to_string(),
+                            transitions: vec![],
+                            props: vec![sprop("background", "#ffffff")],
+                        },
+                    ],
+                ),
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            out.contains("variant: String"),
+            "style-only variant missing:\n{out}"
+        );
+        assert!(
+            out.contains("size: String"),
+            "style-only size missing:\n{out}"
+        );
+        assert!(out.contains(
+            ".background(if (_mosaicTruthy(( selected ))) Color(0xFFFFFFFF) else if (size == \"compact\") Color(0xFFFFAA00) else if (variant == \"danger\") Color(0xFFDC3545) else Color(0xFF111111))"
+        ), "model slot order or conditional style is wrong:\n{out}");
+        assert!(
+            out.contains(".padding((if (size == \"compact\") 6 else 8).dp)"),
+            "layered padding did not retain a Dp type:\n{out}"
+        );
+        assert!(
+            out.contains("fontSize = (if (size == \"compact\") 13 else 14).sp"),
+            "layered font size did not retain a TextUnit type:\n{out}"
+        );
+        assert!(
+            out.contains(
+                ".background(if (variant == \"danger\") Color(0xFF333333) else Color(0xFF222222))"
+            ),
+            "generic container did not receive its slot-owned state:\n{out}"
+        );
+        assert!(
+            out.contains(".testTag(\"button\")"),
+            "specialized HostButton lost its part marker:\n{out}"
         );
     }
 

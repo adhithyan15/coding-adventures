@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — UI49 slot-owned style states
+
+`one-of` slot values now activate their matching `.msl` state blocks in
+generated SwiftUI. Enum axes follow `.mil` slot declaration order, then
+existing automatic and explicit structural/interaction states take
+precedence. Generic views and specialized host controls use the same modifier
+lowering.
+
+Tracked by [#14330](https://github.com/adhithyan15/coding-adventures/issues/14330).
+
 ### Fixed — radio groups now get real mutual exclusion (#13007)
 
 A `HostRadio` lowered to a `Toggle`, and N independent Toggles have no mutual

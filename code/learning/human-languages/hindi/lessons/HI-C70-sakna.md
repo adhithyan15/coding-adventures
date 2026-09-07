@@ -8,9 +8,9 @@ spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
 sequence: 2680
 chapter: 70
 type: word
-headword: सकना
-romanization: "saknā"
-gloss: to be able to — the verb that never stands alone, and the one Hindi routes every kind of can and may through
+headword: सकना / सकता
+romanization: "saknā / saktā"
+gloss: to be able to / can — infinitive / masculine singular
 concept_tag: VERB-CAN
 prerequisites: [HI-R69-reported, HI-C42-come, HI-C05-bolna, HI-C68-aur, HI-C68-ya]
 sounds: [dental-na, matra-aa]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-R69-reported, HI-C42-come, HI-C05-bolna]
 ---
 
-# सकना (*saknā*) — to be able to
+# सकना / सकता (*saknā / saktā*) — to be able to / can
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-COME, HI-CONCEPT-C05-BOLNA-01] -->
@@ -74,8 +74,8 @@ Negate it and you have the most useful excuse in the language:
 <!-- hl-activity: {"id":"HI-C70-sakna-r1","kind":"text","assesses":["HI-LEX-SAKNA-01","HI-GRAMMAR-SAKNA-STEM-01"],"prompt":"Say that you can speak Hindi, then that you cannot come tomorrow.","answer":"maiṁ hindī bol saktā hūṁ; maiṁ kal nahīṁ ā saktā","accepted":["मैं हिंदी बोल सकता हूँ मैं कल नहीं आ सकता"],"feedback":{"correct":"Bare stem, then saknā, and saknā takes the ending.","incorrect":"Strip -nā off the first verb and put saknā behind it."},"response_seconds":30} -->
 
 [PAUSE 1s]
-- [YOU SAY: *bolnā* → *bol saktā hūṁ*, then *ānā* → *ā saktā hūṁ*]
-- [YOU SAY: *maiṁ kal nahīṁ ā saktā*]
+- [YOU SAY: **बोलना** (*bolnā*) → **बोल सकता हूँ** (*bol saktā hūṁ*), then **आना** (*ānā*) → **आ सकता हूँ** (*ā saktā hūṁ*)]
+- [YOU SAY: **मैं कल नहीं आ सकता** (*maiṁ kal nahīṁ ā saktā*)]
 - [YOU SAY: which of the two verbs takes the ending — **सकना, and it goes last**]
 - [YOU RECALL: say *aur*, then read **… या …**]
 

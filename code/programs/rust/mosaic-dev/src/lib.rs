@@ -111,6 +111,7 @@ impl DummyProps {
     /// | mosmodel slot type   | dummy value                              |
     /// |----------------------|------------------------------------------|
     /// | `text`               | the slot name itself, as a string        |
+    /// | `one-of ...`         | the first declared value, as a string   |
     /// | `number`             | `0`                                      |
     /// | `bool`               | `false`                                  |
     /// | `image`              | `""` (empty URL string)                  |
@@ -157,6 +158,8 @@ fn dummy_for_slot(slot: &SlotDecl) -> Value {
 
     match &slot.r#type {
         SlotType::Text => Value::String(slot.name.clone()),
+        // Closed-set previews need a legal member, not the slot name.
+        SlotType::OneOf(values) => Value::String(values.first().cloned().unwrap_or_default()),
         SlotType::Number => json!(0),
         SlotType::Bool => Value::Bool(false),
         SlotType::Image => Value::String(String::new()),
@@ -631,6 +634,24 @@ mod tests {
         c.slots[0].default = Some(MosmodelSlotDefault::Text("Hello".to_string()));
         let dummy = DummyProps::from_component(&c);
         assert_eq!(dummy.values["title"], Value::String("Hello".to_string()));
+    }
+
+    #[test]
+    fn one_of_preview_uses_first_declared_member() {
+        let output = mosmodel_compiler::compile(
+            "component Button {\n\
+             slot variant : one-of secondary primary danger ;\n\
+             slot size : one-of compact ;\n\
+             }\n",
+        )
+        .expect("one-of interface compiles");
+        let dummy = DummyProps::from_component(&output.component);
+        assert_eq!(dummy.values["variant"], json!("secondary"));
+        assert_eq!(dummy.values["size"], json!("compact"));
+
+        let html = wrappers::webcomponent_index("Button", &dummy);
+        assert!(html.contains(" variant=\"secondary\""));
+        assert!(html.contains(" size=\"compact\""));
     }
 
     // ---- React wrapper ---------------------------------------------------

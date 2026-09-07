@@ -2,6 +2,50 @@
 
 ## Unreleased
 
+- Diagnose unsupported measured table wheel routing on non-React backends.
+
+### Fixed — XAML layout variants have distinct generated types
+
+Named layouts now suffix their generated XAML partial class, code-behind,
+row-view-model helpers, and event union (for example `EngramAppTouch`). This
+lets the emitted WinUI project compile every variant side by side without C#
+merging two generated files into one type and rejecting hundreds of duplicate
+properties and handlers (#14234).
+
+### Added — authored table-cell degradation reporting
+
+- Report unimplemented authored table-cell roles on non-React backends, so
+  strict native-complete builds reject unsupported row-header semantics.
+
+### Added — HTML package snapshots activate model-declared slot states
+
+HTML package components now bake each `one-of` slot's deterministic first
+member into its owning mosstyle state instead of silently dropping all state
+blocks. This matches the generated standalone shell's fallback props and gives
+UI49 a package-level regression for the static backend (#14368).
+
+### Added — package styles understand model-declared slot states
+
+Package composition now passes every component's `one-of` slot values into
+mosstyle compilation. This applies independently to the parent and each
+dependency component, so merged backend-neutral style IR preserves the owning
+slot for model-declared states without confusing same-named slots across
+package boundaries (UI49, #14299).
+
+### Fixed — Flutter runtimes are staged through the build-hook output
+
+Generated Flutter build hooks now copy the selected prebuilt Mosaic runtime
+from the package's `runtime/` directory into `input.outputDirectory` before
+registering it as a `DynamicLoadingBundled` code asset. This follows Flutter's
+code-asset contract. TaskApp's CI and release workflows also move from Flutter
+3.44.0 to the locally verified 3.47.0 toolchain and explicitly enable native
+assets, instead of inheriting machine-global Flutter configuration. When
+Flutter leaves the registered runtime in its native-assets staging tree, the
+TaskApp CI and release lanes now finish installing that exact staged file into
+the application bundle before byte and launch validation. This restores
+`libmosaic_app.so` in Linux application bundles on fresh hosted runner images
+(#14249).
+
 ### Changed — SwiftUI radio groups are no longer unconditionally degraded
 
 `property.radio-group-ignored` now consults

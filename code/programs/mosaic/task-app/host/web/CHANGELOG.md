@@ -6,6 +6,10 @@ All notable changes to the `task-app-web` host are documented here.
 
 ### Fixed
 
+- `vitest.config.ts` now resolves aliases from the ESM-native
+  `import.meta.dirname`, so Vite's native config loader no longer warns about
+  the unsupported CommonJS `__dirname` global.
+
 - Startup no longer fails to a blank page. The host paints a loading state
   before the first `await` and replaces it with a failure state carrying the
   error detail and an in-place **Try again**, instead of leaving `#root` empty

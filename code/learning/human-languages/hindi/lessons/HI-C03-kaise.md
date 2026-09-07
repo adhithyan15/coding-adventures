@@ -8,9 +8,9 @@ sequence: 270
 spine_node: SPINE-CHECK-WELLBEING
 chapter: 3
 type: word
-headword: कैसे
-gloss: how (also कैसा/कैसी, agreeing)
-romanization: "kaise"
+headword: कैसा / कैसी / कैसे
+gloss: what kind / how — masculine / feminine / respectful or masculine plural
+romanization: "kaisā / kaisī / kaise"
 concept_tag: QUESTION-HOW
 prerequisites: [HI-C02-kya]
 sounds: [matra-ai, matra-e]
@@ -31,7 +31,7 @@ variety: standard-hindi
 reviews_of: [HI-C02-kya]
 ---
 
-# कैसे (kaise) — "how," another of the k- questions
+# कैसा / कैसी / कैसे — agreeing forms of "what kind?" and "how?"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-KYA-01] -->
@@ -76,6 +76,7 @@ Read कै·से → *kaise*.
 
 [PAUSE 1s]
 - [YOU SAY: "kaise"]
+- [YOU SAY: the agreeing set — **कैसा, कैसी, कैसे** (*kaisā, kaisī, kaise*)]
 - [YOU SAY: the k- question family — *kyā, kaun, kab, kahāṁ, kaise*]
 - [YOU SAY: which English question-words share the root (what, who, how)]
 
@@ -85,3 +86,5 @@ Read कै·से → *kaise*.
 [PAUSE 3s] What root do all of Hindi's question-words share, and what English
 family is it cousin to? (The interrogative *k-*, PIE *\*kʷo-*; the English *wh-*
 words.)
+Which form is masculine singular, which is feminine, and which is respectful or
+masculine plural? (**कैसा, कैसी, कैसे**.)

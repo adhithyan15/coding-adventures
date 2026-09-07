@@ -1,6 +1,7 @@
 package cigates
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"sort"
@@ -11,6 +12,7 @@ import (
 // realRegistryPath locates the checked-in registry from this package's
 // directory: internal/cigates → internal → build-tool → go → programs → code.
 const realRegistryPath = "../../../../../specs/data/ci-gates.json"
+const neutralFixtureGlob = "../../../../../specs/fixtures/build-tool-v1/cases/ci-gate-selection-*.json"
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -53,6 +55,95 @@ func assertAll(t *testing.T, got map[string]bool, want bool, context string) {
 		if v != want {
 			t.Errorf("%s: gate %q = %t, want %t", context, id, v, want)
 		}
+	}
+}
+
+type neutralGateCase struct {
+	ID    string `json:"id"`
+	Input struct {
+		Options struct {
+			Registry struct {
+				Gates []struct {
+					ID          string   `json:"id"`
+					Scope       string   `json:"scope"`
+					Description string   `json:"description"`
+					Packages    []string `json:"packages"`
+					Paths       []string `json:"paths"`
+				} `json:"gates"`
+			} `json:"registry"`
+			AffectedPackages *[]string `json:"affected_packages"`
+			ChangedFiles     *[]string `json:"changed_files"`
+			Force            bool      `json:"force"`
+		} `json:"options"`
+	} `json:"input"`
+	Expected struct {
+		Result struct {
+			Gates []struct {
+				ID         string `json:"id"`
+				Required   bool   `json:"required"`
+				OutputName string `json:"output_name"`
+			} `json:"gates"`
+		} `json:"result"`
+	} `json:"expected"`
+}
+
+// TestLanguageNeutralFixtures makes the production Go evaluator consume the
+// same process-free oracle future build-tool lanes must implement. The fixture
+// boundary intentionally supplies already validated registry data: file I/O,
+// Git discovery, graph construction and Actions output remain outside Evaluate.
+func TestLanguageNeutralFixtures(t *testing.T) {
+	paths, err := filepath.Glob(neutralFixtureGlob)
+	if err != nil {
+		t.Fatalf("glob neutral fixtures: %v", err)
+	}
+	if len(paths) == 0 {
+		t.Fatal("no language-neutral CI gate fixtures found")
+	}
+	sort.Strings(paths)
+	for _, path := range paths {
+		raw, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatalf("read %s: %v", path, err)
+		}
+		var fixture neutralGateCase
+		if err := json.Unmarshal(raw, &fixture); err != nil {
+			t.Fatalf("decode %s: %v", path, err)
+		}
+		t.Run(fixture.ID, func(t *testing.T) {
+			registry := &Registry{SchemaVersion: 1, Gates: map[string]Gate{}}
+			for _, gate := range fixture.Input.Options.Registry.Gates {
+				registry.Gates[gate.ID] = Gate{
+					Scope: gate.Scope, Description: gate.Description,
+					Packages: gate.Packages, Paths: gate.Paths,
+				}
+			}
+			var affected map[string]bool
+			if fixture.Input.Options.AffectedPackages != nil {
+				affected = map[string]bool{}
+				for _, name := range *fixture.Input.Options.AffectedPackages {
+					affected[name] = true
+				}
+			}
+			var changed []string
+			if fixture.Input.Options.ChangedFiles != nil {
+				changed = append([]string(nil), (*fixture.Input.Options.ChangedFiles)...)
+				if len(changed) == 0 {
+					changed = []string{}
+				}
+			}
+			got := Evaluate(registry, affected, changed, fixture.Input.Options.Force)
+			if len(got) != len(fixture.Expected.Result.Gates) {
+				t.Fatalf("verdict count = %d, want %d", len(got), len(fixture.Expected.Result.Gates))
+			}
+			for _, want := range fixture.Expected.Result.Gates {
+				if got[want.ID] != want.Required {
+					t.Errorf("gate %q = %t, want %t", want.ID, got[want.ID], want.Required)
+				}
+				if name := OutputName(want.ID); name != want.OutputName {
+					t.Errorf("OutputName(%q) = %q, want %q", want.ID, name, want.OutputName)
+				}
+			}
+		})
 	}
 }
 
@@ -273,6 +364,13 @@ func TestLoadRejectsUppercaseGateID(t *testing.T) {
 	path := writeRegistry(t, `{"schema_version": 1, "gates": {"Alpha": {"description": "d", "paths": ["x"]}}}`)
 	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "lowercase") {
 		t.Fatalf("want gate-id rejection, got %v", err)
+	}
+}
+
+func TestLoadRejectsCollidingOutputNames(t *testing.T) {
+	path := writeRegistry(t, `{"schema_version": 1, "gates": {"alpha-job": {"description": "d", "paths": ["x"]}, "alpha_job": {"description": "d", "paths": ["y"]}}}`)
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "same output name") {
+		t.Fatalf("want output-name collision rejection, got %v", err)
 	}
 }
 

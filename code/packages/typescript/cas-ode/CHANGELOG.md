@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Run POSIX dependency lock commands explicitly through Bash on Windows.
+
 ## 0.4.0 — 2026-05-29
 
 ### Added

@@ -8,9 +8,9 @@ spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 2780
 chapter: 73
 type: grammar
-headword: -कर
-romanization: "-kar"
-gloss: having done — one ending that chains two actions into one clause, and the way Hindi actually tells a sequence
+headword: -कर / देखकर / करके
+romanization: "-kar / dekhkar / karke"
+gloss: having done / having looked / having done — suffix / regular example / irregular example
 concept_tag: HI-GRAMMAR-KAR
 prerequisites: [HI-R72-when, HI-C43-look, HI-C42-come]
 sounds: [retroflex-ra]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-R72-when, HI-C43-look, HI-C05-karna]
 ---
 
-# -कर (*-kar*) — having done it
+# -कर / देखकर / करके — chaining actions in sequence
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-JAB-TAB-01, HI-GRAMMAR-SAKNA-STEM-01] -->
@@ -72,8 +72,8 @@ construction from Sanskrit and each reinforced it with its own material.
 <!-- hl-activity: {"id":"HI-C73-kar-r1","kind":"text","assesses":["HI-GRAMMAR-KAR-01"],"prompt":"Chain two actions: look at the book, then come.","answer":"maiṁ kitāb dekhkar ātā hūṁ","accepted":["मैं किताब देखकर आता हूँ"],"feedback":{"correct":"Stem plus -kar, and only the last verb takes the ending.","incorrect":"Strip -nā off dekhnā and add -kar; leave ātā hūṁ to carry the person."},"response_seconds":25} -->
 
 [PAUSE 1s]
-- [YOU SAY: *dekhnā* → *dekhkar*, then *karnā* → *karke*]
-- [YOU SAY: *maiṁ kitāb dekhkar ātā hūṁ*]
+- [YOU SAY: **देखना** (*dekhnā*) → **देखकर** (*dekhkar*), then **करना** (*karnā*) → **करके** (*karke*)]
+- [YOU SAY: **मैं किताब देखकर आता हूँ** (*maiṁ kitāb dekhkar ātā hūṁ*)]
 - [YOU SAY: which of the two verbs carries the person ending — **the last one**]
 
 ## Wrap-up Recall

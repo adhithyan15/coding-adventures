@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "id": "ci-gate-selection/force",
+  "domain": "ci_gate_selection",
+  "summary": "Force mode fails open and requires every registered gate.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["ci_gate_selection"],
+  "workspace": {"files": []},
+  "input": {"operation": "ci_gate_selection", "options": {
+    "registry": {"schema_version": 1, "gates": [
+      {"id": "alpha-job", "scope": "job", "description": "Package gate.", "packages": ["rust/alpha"], "paths": []},
+      {"id": "beta-job", "scope": "step", "description": "Path gate.", "packages": [], "paths": ["code/grammars/beta/**"]}
+    ]},
+    "affected_packages": [], "changed_files": [], "force": true
+  }},
+  "expected": {"schema_version": 1, "case_id": "ci-gate-selection/force", "domain": "ci_gate_selection", "outcome": "ok", "result": {"gates": [
+    {"id": "alpha-job", "required": true, "output_name": "run_alpha_job"},
+    {"id": "beta-job", "required": true, "output_name": "run_beta_job"}
+  ]}, "diagnostics": []},
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

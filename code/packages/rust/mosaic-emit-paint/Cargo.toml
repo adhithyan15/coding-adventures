@@ -6,6 +6,9 @@ description = "Paint VM backend for the Mosaic compiler: Mosaic source → Paint
 
 [dependencies]
 mosaic-analyzer = { path = "../mosaic-analyzer" }
+mosmodel-compiler = { path = "../mosmodel-compiler" }
+moslayout-compiler = { path = "../moslayout-compiler" }
+mosstyle-compiler = { path = "../mosstyle-compiler" }
 mosaic-lexer = { path = "../mosaic-lexer" }
 mosaic-parser = { path = "../mosaic-parser" }
 grammar-tools = { path = "../grammar-tools" }

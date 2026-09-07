@@ -111,10 +111,10 @@ export function defaultRepoRoot(): string {
  * human-languages commits on `main`, `BACKLOG.md` was touched by 100 and this
  * package's `CHANGELOG.md` by 75, while the per-language `<track>/CHANGELOG.md`
  * files were touched 4-11 times each. A later post-#12968 measurement found 34
- * touches to Language Ladder's changelog, so #13211 added that third plan. The
- * per-language changelogs are already partitioned by track and are deliberately
- * left alone: sharding a file that does not conflict buys nothing and costs a
- * directory.
+ * touches to Language Ladder's changelog, so #13211 added that third plan.
+ * Per-language changelogs remain separate by default. Hindi became the measured
+ * exception: 23 same-track commits touched its monolith in the window recorded
+ * by #14245, so independently authored Hindi tranches were still serialized.
  */
 export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
   {
@@ -141,6 +141,15 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     // level-2 entry/version headings; historical level-3 subsections remain
     // attached to their owning version shard.
     path: "code/programs/typescript/language-ladder/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // Hindi is the first per-track changelog whose same-language contention
+    // crossed the migration threshold: a 24-section measurement baseline plus
+    // one concurrently landed entry, newest first, with future entries owned
+    // by independent fragments.
+    path: "code/learning/human-languages/hindi/CHANGELOG.md",
     headingLevel: 2,
     newestFirst: true,
   },

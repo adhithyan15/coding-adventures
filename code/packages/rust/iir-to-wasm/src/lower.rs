@@ -281,6 +281,19 @@ type ModuleRuntimeStrBlocks = HashMap<String, FunctionRuntimeStrBlocks>;
 /// draining a worklist visits every variable at most once, so the pass stays
 /// linear in the number of instructions even for a large or adversarial module.
 fn collect_runtime_valued_str_vars(fn_: &IIRFunction) -> HashSet<String> {
+    // A slice of literal text still produces a runtime handle when its bounds
+    // are computed. Only a uniquely written integer constant is safe here;
+    // reassigned indices cannot supply a function-wide literal fact.
+    let mut index_writes: HashMap<&str, Option<i64>> = HashMap::new();
+    for instr in &fn_.instructions {
+        if let Some(dest) = instr.dest.as_deref() {
+            let constant = match (instr.op.as_str(), instr.srcs.first()) {
+                ("const", Some(Operand::Int(value))) => Some(*value),
+                _ => None,
+            };
+            index_writes.entry(dest).and_modify(|value| *value = None).or_insert(constant);
+        }
+    }
     // operand variable → destinations that inherit its runtime-ness.
     let mut edges: HashMap<&str, Vec<&str>> = HashMap::new();
     // Seeds: `str` parameters, plus every `str` destination no fold can reach.
@@ -290,12 +303,20 @@ fn collect_runtime_valued_str_vars(fn_: &IIRFunction) -> HashSet<String> {
         .filter(|(_, ty)| ty == "str")
         .map(|(name, _)| name.as_str())
         .collect();
+    let mut written_strings = HashSet::new();
     for instr in &fn_.instructions {
         let Some(dest) = instr.dest.as_deref() else {
             continue;
         };
         if instr.type_hint != "str" {
             continue;
+        }
+        // The literal table is keyed by variable, not instruction position.
+        // Two writes in the SAME block are already enough to make its final
+        // literal wrong for an earlier read. Use live handles for every write
+        // and propagate that representation to downstream consumers.
+        if !written_strings.insert(dest) {
+            worklist.push(dest);
         }
         // How many leading `srcs` carry the string(s) this op derives its result
         // from — `str_concat` joins two, `str_slice`/`mov` read one (a `str_slice`'s
@@ -307,7 +328,16 @@ fn collect_runtime_valued_str_vars(fn_: &IIRFunction) -> HashSet<String> {
             // exactly the granularity the by-dest literal table works at.)
             "str_const" => continue,
             "str_concat" => 2,
-            "str_slice" | "mov" => 1,
+            "str_slice" => {
+                if instr.srcs.iter().skip(1).any(|operand| {
+                    !matches!(operand, Operand::Var(name)
+                        if index_writes.get(name.as_str()).is_some_and(Option::is_some))
+                }) {
+                    worklist.push(dest);
+                }
+                1
+            }
+            "mov" => 1,
             // Every other `str`-typed producer yields a live handle: a `call`
             // result, `call_builtin "input_str"`, a `global_load`, an `array_get`.
             // None of them has a compile-time value.
@@ -1544,11 +1574,51 @@ fn emit_instr(
                 code.push(I64_ADD);
                 code.extend(encode_call(ensure_capacity));
 
-                // rd = new = i32.wrap(bump)  — the fresh block's base handle.
+                // Keep operand locals intact: rd may equal ra, rb, or both.
+                // The unchanged bump pointer addresses the fresh block while we
+                // write its header and copy bytes from the original handles.
+                // mem[new] = la + lb  — write the i32 length header.
                 code.extend(encode_global_get(bump));
                 code.extend(encode_i32_wrap_i64());
-                code.extend(encode_local_set(rd));
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_i32_store(0));
 
+                // memory.copy(new+4, a+4, la)  — splice operand a's bytes.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_wrap_i64());
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_memory_copy());
+
+                // memory.copy(new+4+la, b+4, lb)  — then operand b's bytes.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_wrap_i64());
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_const(4));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_memory_copy());
+
+                // Save the new handle on the stack, then reserve the allocation
+                // using the original operand lengths. Assign rd only after the
+                // final operand read, so in-place concatenation is safe.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_wrap_i64());
                 // bump = bump + i64(4 + la + lb)  — reserve header + both byte runs.
                 code.extend(encode_global_get(bump));
                 code.extend(encode_i32_const(4));
@@ -1562,39 +1632,7 @@ fn emit_instr(
                 code.push(I64_ADD);
                 code.extend(encode_global_set(bump));
 
-                // mem[new] = la + lb  — write the i32 length header.
-                code.extend(encode_local_get(rd));
-                code.extend(encode_local_get(ra));
-                code.extend(encode_i32_load(0));
-                code.extend(encode_local_get(rb));
-                code.extend(encode_i32_load(0));
-                code.push(I32_ADD);
-                code.extend(encode_i32_store(0));
-
-                // memory.copy(new+4, a+4, la)  — splice operand a's bytes.
-                code.extend(encode_local_get(rd));
-                code.extend(encode_i32_const(4));
-                code.push(I32_ADD);
-                code.extend(encode_local_get(ra));
-                code.extend(encode_i32_const(4));
-                code.push(I32_ADD);
-                code.extend(encode_local_get(ra));
-                code.extend(encode_i32_load(0));
-                code.extend(encode_memory_copy());
-
-                // memory.copy(new+4+la, b+4, lb)  — then operand b's bytes.
-                code.extend(encode_local_get(rd));
-                code.extend(encode_i32_const(4));
-                code.push(I32_ADD);
-                code.extend(encode_local_get(ra));
-                code.extend(encode_i32_load(0));
-                code.push(I32_ADD);
-                code.extend(encode_local_get(rb));
-                code.extend(encode_i32_const(4));
-                code.push(I32_ADD);
-                code.extend(encode_local_get(rb));
-                code.extend(encode_i32_load(0));
-                code.extend(encode_memory_copy());
+                code.extend(encode_local_set(rd));
             }
         }
 
@@ -5955,6 +5993,22 @@ mod tests {
             exports: vec![],
             imports: vec![],
         }
+    }
+
+    #[test]
+    fn repeated_literal_writes_are_runtime_even_in_one_block() {
+        let f = IIRFunction::new("main", vec![], "void", vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("old".into())], "str"),
+            IIRInstr::new("str_const", Some("suffix".into()), vec![Operand::Str("!".into())], "str"),
+            IIRInstr::new("str_concat", Some("copy".into()), vec![Operand::Var("s".into()),
+                Operand::Var("suffix".into())], "str"),
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("new".into())], "str"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+        let runtime = collect_runtime_valued_str_vars(&f);
+        assert!(runtime.contains("s"));
+        assert!(runtime.contains("copy"), "an earlier consumer needs the live source");
+        assert!(!runtime.contains("suffix"), "one literal definition can still fold");
     }
 
     #[test]

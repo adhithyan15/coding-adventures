@@ -5,7 +5,7 @@
 //! runs it, and asserts the exit code.
 //!
 //! The entire file is gated to `#[cfg(target_os = "windows")]` so it
-//! only compiles + runs on Windows CI runners (`windows-latest`).  On
+//! only compiles + runs on Windows CI runners (`windows-2025`).  On
 //! Linux and macOS the file is a no-op.
 //!
 //! ## Pipeline exercised
@@ -26,8 +26,10 @@
 //!
 //! Each test probes for a Windows linker on `PATH`.  If none is found
 //! (e.g. MSVC environment not activated, no MinGW), the test prints a
-//! skip message and exits cleanly — CI runners normally have the
-//! Visual Studio Build Tools installed which provides `link.exe`.
+//! skip message and exits cleanly for optional local runs. The dedicated CI
+//! step sets `LANG_REQUIRE_WINDOWS_AOT=1`: a missing linker then fails instead
+//! of claiming execution. The two known precise-GC early returns remain
+//! separately tracked; this flag only forbids missing-toolchain skips.
 
 #![cfg(target_os = "windows")]
 
@@ -59,6 +61,10 @@ fn linker_available() -> bool {
             return true;
         }
     }
+    assert!(
+        std::env::var("LANG_REQUIRE_WINDOWS_AOT").as_deref() != Ok("1"),
+        "LANG_REQUIRE_WINDOWS_AOT=1 requires a real Windows linker on PATH; no native execution occurred",
+    );
     false
 }
 

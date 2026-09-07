@@ -42,7 +42,7 @@ Warm-up.
 Your first future-tense verb — and the other half of "see you again."
 
 The letters in this word.
-म (ma) + ि becomes मि (mi); ल (la) + े becomes ले (le); the anusvāra ं nasalises; गे (ge). Read मि, ले, ं, गे becomes milenge.
+म (ma) + ि becomes मि (mi); adding ल (la) + े completes मिले (mile). The anusvāra ं nasalises; गे (ge). Read the complete मिलेंगे becomes milenge.
 
 The word, taken apart.
 मिलेंगे (milenge, "we/they will meet") is the future of the verb मिलना (milnā, "to meet, to be found, to get"), from Sanskrit मिल् (mil-, "to join, unite") — the root behind milan ("a union, a meeting"), a common word and name. The ending -एंगे (-enge) is the plural future: milenge = "(we) will meet."
@@ -51,7 +51,7 @@ Grammar Lens: how Hindi builds the future.
 Hindi marks the future with an ending on the verb stem: mil- ("meet") + -enge ("we/they will") becomes milenge. No helper-word like English "will" — the tense lives in the ending, the way Hindi's person lives in hūṁ/hai/haiṁ.
 
 Sounds you'll need.
-मि (mi) + ले (le) + the anusvāra + गे (ge) becomes मिलेंगे (milenge).
+मि (mi) + ल (la) with े makes मिले (mile); add the anusvāra + गे (ge) becomes मिलेंगे (milenge).
 
 Guided Practice.
 [pause 1 second]

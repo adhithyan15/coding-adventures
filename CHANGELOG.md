@@ -6,6 +6,89 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Haskell build-tool portable source hashing
+
+- Embedded the complete checked 23-language source-input registry, including
+  OCaml and all seven selector roles, and exercised both neutral package-local
+  collection modes through the production selector.
+- Replaced Git SHA-1 and fallback package hashes with local incremental SHA-256
+  over Hashing v1 path/content frames, raw UTF-8 ordering, 8 KiB reads, closed
+  portable path and glob grammar, and explicit candidate, input, byte, and
+  match-work ceilings.
+- Added stable root-redacted package-hash failures while keeping repository-
+  boundary inputs, dependency/cache hashing, and descriptor-relative native
+  snapshot hardening in explicit dependent owners.
+
+### Haskell SHA-256 incremental streaming and bounded allocation
+
+- Added a strict immutable streaming context to the Haskell SHA-256 package so
+  future build-tool source hashing can process bounded byte chunks without
+  retaining complete files. Existing list-based SHA-256, HMAC, HKDF, and
+  PBKDF2 consumers remain compatible.
+- Added independent FIPS and binary vectors across SHA-256 padding and 8 KiB
+  file-chunk boundaries, repeatable finalization, immutable branching, a real
+  Windows BUILD test front door, and the missing Haskell HF03 package-matrix
+  entry.
+- Enforced the `< 2^64`-bit FIPS message domain with checked counter arithmetic
+  and made the Windows front skip cleanly when Cabal is genuinely absent while
+  still propagating real test failures.
+- Replaced per-block boxed list expansion with a reusable 16-word unboxed
+  rolling schedule and bounded bridge/remainder copying. The optimized
+  million-byte allocation gate covers one-chunk and 8 KiB streaming modes with
+  a 128 MiB ceiling, reducing the measured local allocation from approximately
+  929 MB to 58 MB while preserving every digest vector and public API.
+
+### Windows execution-corpus volume identity
+
+- Reconciled Python 3.10 and 3.13 Windows `st_dev` projections by retaining the
+  exact legacy and extended volume serials from the same open corpus-root
+  handle. The snapshot still rejects truncation, aliases, reparse traversal,
+  mutation, and every serial not supplied by that retained root.
+- Added cross-version regressions for exact legacy fallback, full-width serial
+  matching, and rejection of a different 64-bit serial sharing the same low
+  DWORD. Execution policy remains disabled and gains no process authority.
+
+### Repository-boundary diff and hashing conformance
+
+- Defined process-free language-neutral behavior for exact reverse diff
+  selection from the digest-pinned repository source-input boundary and for
+  package hashing over the caller-supplied local-plus-boundary input union.
+- Added two closed fixtures and semantic runner coverage for exact consumers,
+  dependent and prerequisite closure, near-path rejection, digest mismatch,
+  raw-UTF8 ordering, and deterministic cache digests without granting host
+  authority.
+
+### Shared .NET build-tool portable source hashing
+
+- Embedded the complete checked package-local and repository-boundary source-
+  input registries in the shared C# engine, exposed independent no-inline F#
+  facades, and consumed all 13 neutral selection cases plus all three portable
+  package-digest cases through both .NET front doors.
+- Added exact generated-component and repository-boundary selection, direct
+  Starlark declared-source capture, reverse boundary-diff mapping, canonical
+  registry digests, and repository-relative Hashing-v1 raw-byte frames.
+- Hardened live reads with incremental resource ceilings, native no-follow and
+  single-link regular-file checks, constant-descriptor file/directory identity
+  revalidation, and a scrubbed bounded Git-index query whose complete
+  mode/OID/stage/path evidence must remain stable across the package batch.
+  Removed stale discovery helpers that bypassed the secure path and made .NET
+  changes select the Windows CI leg. Dependency and combined-digest conformance
+  remain in the separate dependency-hashing tranche.
+- Made the shared portable-glob class grammar and exact 50,000,000-unit match
+  budget normative, then aligned Swift—the only already-complete registry
+  adopter—with Python-compatible class semantics and bounded dynamic
+  programming for source and diff selection.
+
+### Language-neutral CI gate selection
+
+- Added a closed process-free build-tool fixture domain for deterministic CI
+  gate verdicts, including exact package and path matching, portable globstar
+  behavior, null-versus-empty snapshots, fail-open machinery sentinels, and
+  stable Actions output names.
+- Made the production Go evaluator consume all seven shared cases while
+  keeping Git discovery, registry I/O, graph construction, workflow output,
+  and scheduling outside the fixture authority boundary.
+
 ### Source-verified Devanagari ऋ stroke order
 
 - Read the four buildup panels of the Commons file `data/scripts/devanagari.json`

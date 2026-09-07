@@ -9,8 +9,8 @@
 //! `Language::McCarthyLisp` → `Language::Macsyma`, `mccarthy_lisp_vm::run` →
 //! `macsyma_vm::run` — scoped to the five backends `macsyma-iir-vm.md` §6 Wave 4
 //! names (NativeAOT arm64/x86_64, LLVM, WASM, JVM, CLR), plus the universal JIT.
-//! BEAM remains scoped out repo-wide for non-McCarthy languages
-//! (`code/specs/LANG-PLATFORM-MATRIX.md`).
+//! This suite does not yet exercise Macsyma on BEAM. Other frontends have
+//! selected BEAM proofs; this omission is a Macsyma coverage gap (VM-038).
 //!
 //! ## The one genuine risk this suite is built to catch
 //!
@@ -26,13 +26,10 @@
 //! over two already-concrete operands purely to produce a boxed, exit-unboxed
 //! result — had never been run end-to-end on any backend before this suite.
 //!
-//! ## Native-AOT is cross-platform here (unlike the McCarthy W16 capstone)
+//! ## Native-AOT host execution
 //!
-//! `conformance.rs`'s own `run_native` is `#[cfg(target_os = "macos")]`-only.
-//! This suite instead mirrors `lang_matrix.rs`'s `compile_native` — Linux/macOS/
-//! Windows all route through the matching `lang_aot::compile_file_to_*_executable`
-//! — so native-AOT actually runs (and is asserted, not just attempted) on
-//! whichever of the three this suite executes on, including this Windows box.
+//! Linux/macOS/Windows route through the matching executable compiler. McCarthy's
+//! conformance suite now uses the same host coverage (VM-036).
 
 use lang_aot::{
     compile_source_to_cil_artifact, compile_source_to_iir, compile_source_to_jvm_class,

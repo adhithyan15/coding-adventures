@@ -160,6 +160,33 @@ function alreadyLinked(packageDir) {
   );
 }
 
+/**
+ * Return the executable and fixed argv for one reproducible npm install.
+ *
+ * Windows cannot execute the `npm.cmd` shim through `execFileSync` without a
+ * shell (`spawnSync npm.cmd EINVAL`). npm exposes the JavaScript CLI that is
+ * running the lifecycle as `npm_execpath`, so invoking that file with the
+ * current Node executable keeps the shell out of the boundary entirely.
+ */
+export function npmCiInvocation({
+  platform = process.platform,
+  nodeExecutable = process.execPath,
+  npmExecutable = process.env.npm_execpath,
+} = {}) {
+  if (platform !== "win32") {
+    return { executable: "npm", args: ["ci", "--silent"] };
+  }
+  if (!npmExecutable) {
+    throw new Error(
+      "local-deps: npm_execpath is required to run npm without a shell on Windows.",
+    );
+  }
+  return {
+    executable: nodeExecutable,
+    args: [npmExecutable, "ci", "--silent"],
+  };
+}
+
 function install(packageDir) {
   // `npm install` here would resolve versions fresh from the registry during
   // what the caller invoked as `npm ci`, silently dropping the pinning `npm ci`
@@ -172,10 +199,9 @@ function install(packageDir) {
     );
   }
   // `execFileSync`, not a shell: the argv is fixed and nothing here is
-  // interpolated into a command line, so there is no argument-injection surface
-  // to begin with. Do not "fix" a Windows spawn failure by adding `shell: true`
-  // — that reintroduces exactly the surface this avoids.
-  execFileSync(process.platform === "win32" ? "npm.cmd" : "npm", ["ci", "--silent"], {
+  // interpolated into a command line, so there is no argument-injection surface.
+  const invocation = npmCiInvocation();
+  execFileSync(invocation.executable, invocation.args, {
     cwd: packageDir,
     stdio: "inherit",
     env: { ...process.env, [GUARD]: "running" },
@@ -191,4 +217,10 @@ function main() {
   }
 }
 
-main();
+const entrypoint = process.argv[1];
+if (
+  entrypoint &&
+  realpathSync(entrypoint) === realpathSync(fileURLToPath(import.meta.url))
+) {
+  main();
+}

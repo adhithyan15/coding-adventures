@@ -393,7 +393,7 @@ struct HasherTests {
     }
 
     @Test
-    func boundaryOnlyDiffSelectsEveryExactSwiftConsumer() {
+    func boundaryOnlyDiffSelectsEveryExactSwiftConsumer() throws {
         let root = "/repo"
         let roots = [
             "code/packages/swift/Barcode1D",
@@ -417,7 +417,7 @@ struct HasherTests {
             uniqueKeysWithValues: packages.map { ($0.name, $0.path) }
         )
 
-        let selected = GitDiff.mapFilesToPackages(
+        let selected = try GitDiff.mapFilesToPackages(
             changedFiles: ["code/packages/rust/Cargo.toml"],
             packagePaths: packagePaths,
             repoRoot: root,
@@ -425,7 +425,7 @@ struct HasherTests {
         )
         #expect(selected == Set(packages.map(\.name)))
 
-        let nearPath = GitDiff.mapFilesToPackages(
+        let nearPath = try GitDiff.mapFilesToPackages(
             changedFiles: ["code/packages/rust/Cargo.toml.copy"],
             packagePaths: packagePaths,
             repoRoot: root,
@@ -823,6 +823,75 @@ struct HasherTests {
             try Hasher.hashPackage(package, repositoryRoot: root)
                 == fixture.expected.result.packageDigest
         )
+    }
+
+    @Test
+    func declaredSourceGlobWorkIsBoundedAcrossCandidates() throws {
+        let root = try makeTempDirectory(label: "hasher_declared_glob_work")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+        let packageRoot = (root as NSString).appendingPathComponent(
+            "code/packages/swift/demo"
+        )
+        for index in 0 ..< 100 {
+            try writeFile(
+                (packageRoot as NSString).appendingPathComponent(
+                    String(format: "src/file%03d.cs", index)
+                ),
+                "a"
+            )
+        }
+        let patterns = (0 ..< 256).map { index in
+            "unmatched/\(String(repeating: "a", count: 220))\(String(format: "%03d", index))*.cs"
+        }
+        let package = BuildPackage(
+            name: "swift/demo",
+            path: packageRoot,
+            language: "swift",
+            isStarlark: true,
+            declaredSrcs: patterns
+        )
+
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.collectSourceFiles(package, repositoryRoot: root)
+        }
+
+        let ambiguousClass = BuildPackage(
+            name: "swift/demo",
+            path: packageRoot,
+            language: "swift",
+            isStarlark: true,
+            declaredSrcs: ["src/[a--!].cs"]
+        )
+        #expect(throws: (any Error).self) {
+            _ = try Hasher.collectSourceFiles(ambiguousClass, repositoryRoot: root)
+        }
+
+        let negatedClass = BuildPackage(
+            name: "swift/demo",
+            path: packageRoot,
+            language: "swift",
+            isStarlark: true,
+            declaredSrcs: ["src/[!a]*.cs"]
+        )
+        #expect(
+            try Hasher.collectSourceFiles(negatedClass, repositoryRoot: root).count == 100
+        )
+
+        let descendingClass = BuildPackage(
+            name: "swift/demo",
+            path: packageRoot,
+            language: "swift",
+            isStarlark: true,
+            declaredSrcs: ["src/[z-a].cs"]
+        )
+        #expect(throws: (any Error).self) {
+            _ = try GitDiff.mapFilesToPackages(
+                changedFiles: ["code/packages/swift/demo/src/file000.cs"],
+                packagePaths: ["swift/demo": packageRoot],
+                repoRoot: root,
+                packages: [descendingClass]
+            )
+        }
     }
 
     @Test

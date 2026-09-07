@@ -198,7 +198,7 @@ Every toolkit component that has variants declares:
 
 ```moslayout
 component Alert {
-  slot variant : text ;  // one of: primary, secondary, success, danger, warning, info, light, dark
+  slot variant : one-of primary secondary success danger warning info light dark ;
   slot message : text ;
 }
 ```
@@ -210,28 +210,22 @@ to the outer Box. The `.msl` defines the variant-specific colors:
 part alert {
   padding : 12 ;
   border-radius : 4 ;
+  state primary {
+    background : "#cfe2ff" ;
+    color : "#084298" ;
+  }
+  state danger {
+    background : "#f8d7da" ;
+    color : "#842029" ;
+  }
 }
-part alert/primary {  // sub-part for the variant
-  background : "#cfe2ff" ;
-  color : "#084298" ;
-}
-part alert/danger {
-  background : "#f8d7da" ;
-  color : "#842029" ;
-}
-// ... etc.
 ```
 
-The XAML / React / SwiftUI / Qt emitters lower the sub-part
-references to whatever styling mechanism they support (CSS class,
-SwiftUI modifier, QML state).
-
-**Open question** (§10): the `part/variant` sub-part syntax. Existing
-mosstyle has `part X { state Y { ... } }` for hover/focus states.
-Variants are conceptually similar — a sub-key into the same part.
-Either reuse `state` semantically, add a new `variant` block, or
-treat variants as straight conditional styling via `If` blocks in the
-.mll. Pick when implementing the first variant'd component.
+UI49 settles the language-level design: a closed `one-of` slot owns each of
+its values, and those values become legal `state` names. The emitters select a
+state when the owning slot equals that value and lower it through their existing
+state mechanism. See `UI49-mosstyle-slot-states.md`; implementation and toolkit
+retrofit are tracked by #14036.
 
 ### 4.2 Sizes
 
@@ -472,22 +466,19 @@ the kernel and lowers through every backend.
 
 1. **Package name** — `mosaic-pkg-toolkit`, `-kit`, `-ui`, or
    something else? Picked at v0.1 commit time.
-2. **Variant syntax in mosstyle** — `part/variant` sub-part, a new
-   `variant` block, or `If`-driven? Picked when the first
-   variant'd component lands.
-3. **Responsive grid** — slot-driven (Option A), mosstyle
+2. **Responsive grid** — slot-driven (Option A), mosstyle
    breakpoints (Option B), or both? v0.1 ships A; B is a kernel-spec
    follow-up.
-4. **Default theme aesthetic** — does the package ship the
+3. **Default theme aesthetic** — does the package ship the
    Bootstrap-classic look or a fresh Mosaic look as the default? The
    spec recommends fresh-Mosaic default + bootstrap-classic as an
    overlay. Lock that decision at design-mockup time.
-5. **Icon system** — curated set in `mosaic-pkg-toolkit-icons`, or
+4. **Icon system** — curated set in `mosaic-pkg-toolkit-icons`, or
    defer entirely? Recommend defer for v0.1.
-6. **Component-references-component** — at what point does a
+5. **Component-references-component** — at what point does a
    toolkit component reference another? `Pagination → Button` is the
    first natural one. Defer to Tier 2 / v0.2.
-7. **Test strategy** — `package_compiles.rs` (frontend round-trip)
+6. **Test strategy** — `package_compiles.rs` (frontend round-trip)
    for v0.1; visual regression tests (per-backend rendering
    screenshots) for v0.3+ when there's something visual to compare.
 
@@ -503,7 +494,7 @@ the kernel and lowers through every backend.
   error text; how the host computes "valid" is its problem.
 - **Internationalisation** — strings are passed as slots; no
   i18n framework in the toolkit.
-- **Icon library** — see §10.5.
+- **Icon library** — see §10.4.
 - **A bespoke design language** — the default look is utilitarian.
   Brand-specific overlays live in host projects, not the toolkit.
 

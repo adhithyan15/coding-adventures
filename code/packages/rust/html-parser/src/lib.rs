@@ -4403,6 +4403,7 @@ pub struct HtmlParser {
     document: Document,
     open_elements: Vec<Vec<usize>>,
     pending_formatting_reconstruction: Vec<(String, Vec<Attribute>)>,
+    anchors_below_closed_formatting_markers: Vec<Vec<usize>>,
     stack_displaced_formatting_paths: Vec<Vec<usize>>,
     prunable_empty_reconstructed_formatting_paths: Vec<Vec<usize>>,
     diagnostics: Vec<ParserDiagnostic>,
@@ -4434,6 +4435,7 @@ impl Default for HtmlParser {
             document: Document::new(),
             open_elements: Vec::new(),
             pending_formatting_reconstruction: Vec::new(),
+            anchors_below_closed_formatting_markers: Vec::new(),
             stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
@@ -4495,6 +4497,7 @@ impl HtmlParser {
             document,
             open_elements: vec![vec![0], vec![0, 1]],
             pending_formatting_reconstruction: Vec::new(),
+            anchors_below_closed_formatting_markers: Vec::new(),
             stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
@@ -4528,6 +4531,7 @@ impl HtmlParser {
             document,
             open_elements,
             pending_formatting_reconstruction: Vec::new(),
+            anchors_below_closed_formatting_markers: Vec::new(),
             stack_displaced_formatting_paths: Vec::new(),
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
@@ -5371,9 +5375,7 @@ impl HtmlParser {
         }
 
         if !in_foreign_content
-            && self.has_open_element("template")
-            && !self.has_open_element("table")
-            && self.current_last_child_element_is("col")
+            && self.at_authored_template_column_group_boundary()
             && name != "col"
             && name != "template"
         {
@@ -6150,10 +6152,7 @@ impl HtmlParser {
             }
         }
 
-        if self.first_authored_open_template_index().is_some()
-            && !self.has_open_element("table")
-            && self.current_last_child_element_is("col")
-        {
+        if self.at_authored_template_column_group_boundary() {
             if !is_html_whitespace_text(&text) {
                 self.diagnostics.push(
                     ParserDiagnostic::new(
@@ -7802,12 +7801,7 @@ impl HtmlParser {
         } else if self.current_namespace().is_some() && !self.current_element_is(name) {
             return;
         }
-        if self.first_authored_open_template_index().is_some()
-            && self.current_namespace().is_none()
-            && self.current_element_is("template")
-            && self.current_last_child_element_is("col")
-            && name != "template"
-        {
+        if self.at_authored_template_column_group_boundary() && name != "template" {
             self.diagnostics.push(
                 ParserDiagnostic::new(
                     "unexpected-end-tag-in-template-column-group",
@@ -8173,8 +8167,12 @@ impl HtmlParser {
             "table" => {
                 self.report_non_current_caption_recovery("end tag `</table>`");
                 self.close_open_table_context_element_if(|name| name == "caption");
+                let anchor_below_marker = self.open_anchor_below_active_formatting_marker();
                 self.close_element(name);
-                if self
+                if let Some(path) = anchor_below_marker {
+                    self.remove_pending_formatting_reconstruction("a");
+                    self.anchors_below_closed_formatting_markers.push(path);
+                } else if self
                     .pending_formatting_reconstruction
                     .iter()
                     .any(|(name, _)| name == "a")
@@ -8300,6 +8298,29 @@ impl HtmlParser {
             })
         }) {
             let index = lower_bound + relative_index;
+            let foreign_target_blocked_by_integration_point = element_ref_at_path(
+                &self.document,
+                &self.open_elements[index],
+            )
+            .is_some_and(|element| element.namespace.is_some())
+                && self.current_namespace().is_none()
+                && self.open_elements.iter().skip(index + 1).any(|path| {
+                    element_ref_at_path(&self.document, path).is_some_and(|element| {
+                        element.namespace.is_some() && is_ordinary_scope_boundary(element)
+                    })
+                });
+            if foreign_target_blocked_by_integration_point {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-non-current-end-tag",
+                        format!(
+                            "end tag `</{name}>` was seen before its open element was current"
+                        ),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+                return;
+            }
             if name == "span" && self.has_special_element_above(index) {
                 return;
             }
@@ -8791,7 +8812,8 @@ impl HtmlParser {
             }
         } else if incoming_name == "optgroup" {
             let closed_option = self.close_open_element_if(|name| name == "option");
-            let closed_optgroup = self.close_open_element_if(|name| name == "optgroup");
+            let closed_optgroup = self.current_element_is("optgroup")
+                && self.close_open_element_if(|name| name == "optgroup");
             if (closed_option || closed_optgroup) && self.has_open_element("select") {
                 self.diagnostics.push(
                     ParserDiagnostic::new(
@@ -8836,7 +8858,8 @@ impl HtmlParser {
     fn apply_interactive_implied_contexts(&mut self, incoming_name: &str) -> bool {
         match incoming_name {
             "a" => {
-                if self.has_active_html_anchor() {
+                let has_active_anchor = self.has_active_html_anchor();
+                if has_active_anchor {
                     self.diagnostics.push(
                         ParserDiagnostic::new(
                             "nested-anchor-start-tag",
@@ -8854,8 +8877,9 @@ impl HtmlParser {
                     .current_element_is("p")
                     .then(|| self.open_formatting_element_before_current("a"))
                     .flatten();
-                let closed_existing_anchor = self.close_open_formatting_element_silently("a")
-                    || self.adopt_open_formatting_element_silently("a");
+                let closed_existing_anchor = has_active_anchor
+                    && (self.close_open_formatting_element_silently("a")
+                        || self.adopt_open_formatting_element_silently("a"));
                 if closed_existing_anchor && consumes_pending_anchor {
                     self.remove_pending_formatting_reconstruction("a");
                 }
@@ -8918,9 +8942,25 @@ impl HtmlParser {
             .iter()
             .any(|(name, _)| name == "a")
             || self.open_elements.iter().any(|path| {
+                if self
+                    .anchors_below_closed_formatting_markers
+                    .iter()
+                    .any(|inactive| inactive == path)
+                {
+                    return false;
+                }
                 element_ref_at_path(&self.document, path)
                     .is_some_and(|element| element.namespace.is_none() && element.name == "a")
             })
+    }
+
+    fn open_anchor_below_active_formatting_marker(&self) -> Option<Vec<usize>> {
+        let (index, path) = self.open_elements.iter().enumerate().rfind(|(_, path)| {
+            element_ref_at_path(&self.document, path)
+                .is_some_and(|element| element.namespace.is_none() && element.name == "a")
+        })?;
+        self.has_active_formatting_marker_above(index)
+            .then(|| path.clone())
     }
 
     fn apply_select_implied_contexts(&mut self, incoming_name: &str) -> bool {
@@ -9352,6 +9392,14 @@ impl HtmlParser {
 
     fn current_template_insertion_mode(&self) -> Option<TemplateInsertionMode> {
         self.template_insertion_modes.last().copied()
+    }
+
+    fn at_authored_template_column_group_boundary(&self) -> bool {
+        self.first_authored_open_template_index().is_some()
+            && self.current_template_insertion_mode() == Some(TemplateInsertionMode::ColumnGroup)
+            && self.current_namespace().is_none()
+            && self.current_element_is("template")
+            && self.current_last_child_element_is("col")
     }
 
     fn apply_ruby_implied_end_tags(&mut self, incoming_name: &str) {
@@ -11064,25 +11112,48 @@ fn populate_select_selectedcontent(select: &mut Element) {
         nodes: &[Node],
         first: &mut Option<Vec<Node>>,
         selected: &mut Option<Vec<Node>>,
+        disabled_by_optgroup: bool,
+        inside_optgroup: bool,
     ) {
         for node in nodes {
             let Node::Element(element) = node else {
                 continue;
             };
-            if element.name == "option" {
-                first.get_or_insert_with(|| element.children.clone());
+            let is_html_element = element.namespace.is_none();
+            if is_html_element && element.name == "option" {
+                let disabled = element.attribute("disabled").is_some() || disabled_by_optgroup;
+                if !disabled {
+                    first.get_or_insert_with(|| element.children.clone());
+                }
                 if element.attribute("selected").is_some() {
                     *selected = Some(element.children.clone());
                 }
-            } else if element.name != "button" {
-                collect_option_children(&element.children, first, selected);
+            } else if !(is_html_element
+                && matches!(element.name.as_str(), "datalist" | "template"))
+            {
+                if is_html_element && element.name == "optgroup" && inside_optgroup {
+                    continue;
+                }
+                let entering_optgroup = is_html_element && element.name == "optgroup";
+                let disabled_by_optgroup = if entering_optgroup {
+                    element.attribute("disabled").is_some()
+                } else {
+                    disabled_by_optgroup
+                };
+                collect_option_children(
+                    &element.children,
+                    first,
+                    selected,
+                    disabled_by_optgroup,
+                    inside_optgroup || entering_optgroup,
+                );
             }
         }
     }
 
     let mut first = None;
     let mut selected = None;
-    collect_option_children(&select.children, &mut first, &mut selected);
+    collect_option_children(&select.children, &mut first, &mut selected, false, false);
     let option_children = selected.or_else(|| {
         if select_display_size(select) == 1 {
             first
@@ -11090,23 +11161,26 @@ fn populate_select_selectedcontent(select: &mut Element) {
             None
         }
     });
-    let Some(option_children) = option_children else {
-        return;
-    };
-    for child in &mut select.children {
-        let Node::Element(button) = child else {
-            continue;
-        };
-        if button.name != "button" {
-            continue;
+    let option_children = option_children.unwrap_or_default();
+    fn populate_enabled_selectedcontent(nodes: &mut [Node], option_children: &[Node]) {
+        for node in nodes {
+            let Node::Element(element) = node else {
+                continue;
+            };
+            if element.namespace.is_none() && element.name == "selectedcontent" {
+                element.children = option_children.to_vec();
+                continue;
+            }
+            if element.namespace.is_none()
+                && matches!(element.name.as_str(), "option" | "select" | "template")
+            {
+                continue;
+            }
+            populate_enabled_selectedcontent(&mut element.children, option_children);
         }
-        let Some(Node::Element(selectedcontent)) = button.children.iter_mut().find(
-            |child| matches!(child, Node::Element(element) if element.name == "selectedcontent"),
-        ) else {
-            continue;
-        };
-        selectedcontent.children = option_children.clone();
     }
+
+    populate_enabled_selectedcontent(&mut select.children, &option_children);
 }
 
 fn select_display_size(select: &Element) -> usize {
@@ -11120,13 +11194,12 @@ fn select_display_size(select: &Element) -> usize {
     let mut saw_digit = false;
     let mut parsed = 0usize;
     for character in characters {
-        let Some(digit) = character.to_digit(10) else {
+        if !character.is_ascii_digit() {
             break;
-        };
+        }
+        let digit = character as usize - '0' as usize;
         saw_digit = true;
-        parsed = parsed
-            .saturating_mul(10)
-            .saturating_add(digit as usize);
+        parsed = parsed.saturating_mul(10).saturating_add(digit);
     }
     if saw_digit && parsed > 0 {
         parsed
@@ -36273,6 +36346,103 @@ mod tests {
     }
 
     #[test]
+    fn foreign_ancestor_end_tags_stop_at_html_integration_boundaries() {
+        for source in [
+            "<!doctype html><!--é-->\r\n<math><mtext><p>A</math>B",
+            "<!doctype html><math><mi><span>A</math>B",
+            "<!doctype html><math><annotation-xml encoding=text/html><h1>A</math>B",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let math = body(&output.document)
+                .children
+                .iter()
+                .find_map(|node| match node {
+                    Node::Element(element) if element.name == "math" => Some(element),
+                    _ => None,
+                })
+                .unwrap();
+            let html_child = find_first_element_in_nodes(
+                &math.children,
+                if source.contains("<p>") {
+                    "p"
+                } else if source.contains("<h1>") {
+                    "h1"
+                } else {
+                    "span"
+                },
+            )
+            .unwrap();
+            assert_eq!(
+                html_child.children,
+                vec![Node::text("AB")],
+                "source {source:?}"
+            );
+
+            let diagnostic = output
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-non-current-end-tag")
+                .unwrap();
+            assert_eq!(diagnostic.position, Some(end_tag_position(source, "math")));
+        }
+
+        let direct_close = parse_html("<!doctype html><math><mtext>A</math>B").unwrap();
+        assert_eq!(body(&direct_close).children.last(), Some(&Node::text("B")));
+
+        let integration_close =
+            parse_html("<!doctype html><math><mtext><span>A</mtext>B").unwrap();
+        let math = element(&body(&integration_close).children[0]);
+        assert_eq!(math.children.last(), Some(&Node::text("B")));
+
+        let fragment_source = "<math><mtext><span>A</math>B";
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            fragment_source,
+            "html body",
+        )
+        .unwrap();
+        let span = find_first_element_in_nodes(&fragment.nodes, "span").unwrap();
+        assert_eq!(span.children, vec![Node::text("AB")]);
+        assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-non-current-end-tag"
+                && diagnostic.position == Some(end_tag_position(fragment_source, "math"))
+        }));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "mtext".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "span".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "math".to_string(),
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let span = find_first_element_in_nodes(&body(&unpositioned.document).children, "span")
+            .unwrap();
+        assert_eq!(span.children, vec![Node::text("AB")]);
+        assert!(unpositioned
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
     fn positions_generic_foreign_and_non_current_end_tags_at_token_emission() {
         let source = "<!doctype html><!--é-->\r\n<x-box><svg><foreignObject></x-box>";
         let output = parse_html_with_diagnostics(source).unwrap();
@@ -39542,6 +39712,78 @@ mod tests {
         assert_eq!(inner_anchor.children, vec![Node::text("bb")]);
 
         assert_eq!(outer_anchor.children[2], Node::text("aa"));
+    }
+
+    #[test]
+    fn keeps_outer_anchor_current_after_table_closes_across_fostered_marker() {
+        for source in [
+            "<!doctype html><a><table><marquee></table><a>",
+            "<!doctype html><a><table><marquee><!--e\u{301}-->\r\n</table><a>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let outer_anchor = element(&body(&output.document).children[0]);
+            assert_eq!(outer_anchor.name, "a", "source {source:?}");
+            assert_eq!(
+                outer_anchor
+                    .children
+                    .iter()
+                    .filter_map(|child| match child {
+                        Node::Element(element) => Some(element.name.as_str()),
+                        _ => None,
+                    })
+                    .collect::<Vec<_>>(),
+                vec!["marquee", "table", "a"],
+                "source {source:?}"
+            );
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "nested-anchor-start-tag"));
+        }
+
+        let fragment =
+            parse_html_fragment_for_context("<a><table><marquee></table><a>", "body").unwrap();
+        let fragment_anchor = element(&fragment[0]);
+        assert_eq!(element(fragment_anchor.children.last().unwrap()).name, "a");
+
+        let ordinary = parse_html("<!doctype html><a><table></table><a>").unwrap();
+        assert_eq!(body(&ordinary).children.len(), 2);
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "marquee".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "table".to_string(),
+            },
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            direct.process_token(token);
+        }
+        let direct_anchor = element(&body(&direct.document).children[0]);
+        assert_eq!(element(direct_anchor.children.last().unwrap()).name, "a");
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
@@ -46685,6 +46927,90 @@ mod tests {
     }
 
     #[test]
+    fn selected_content_syncs_enabled_descendants_outside_buttons() {
+        let source = "<!doctype html><select><selectedcontent id=direct>old é\r\n</selectedcontent><div><selectedcontent id=wrapped>old</selectedcontent></div><option selected><b>new</b></option></select>";
+        let document = parse_html(source).unwrap();
+        for id in ["direct", "wrapped"] {
+            let selectedcontent = find_element_by_id(&document.children, id).unwrap();
+            assert_eq!(selectedcontent.children.len(), 1, "id {id}");
+            assert_eq!(element(&selectedcontent.children[0]).name, "b", "id {id}");
+            assert_eq!(element_text_content(selectedcontent), "new", "id {id}");
+        }
+        assert!(source.len() > source.chars().count());
+
+        let option_owned = parse_html(
+            "<!doctype html><select><option selected><selectedcontent id=owned>kept</selectedcontent></option></select>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(find_element_by_id(&option_owned.children, "owned").unwrap()),
+            "kept"
+        );
+
+        let foreign = parse_html(
+            "<!doctype html><select><svg><selectedcontent id=foreign>kept</selectedcontent></svg><option>new</option></select>",
+        )
+        .unwrap();
+        let foreign_selectedcontent =
+            find_element_by_id(&foreign.children, "foreign").unwrap();
+        assert_eq!(foreign_selectedcontent.namespace.as_deref(), Some("svg"));
+        assert_eq!(element_text_content(foreign_selectedcontent), "kept");
+
+        for nodes in [
+            parse_html_fragment_for_context(
+                "<select><selectedcontent id=target>old</selectedcontent><option>new</option></select>",
+                "body",
+            )
+            .unwrap(),
+            parse_html(
+                "<!doctype html><svg><foreignObject><select><selectedcontent id=target>old</selectedcontent><option>new</option></select></foreignObject></svg>",
+            )
+            .unwrap()
+            .children,
+        ] {
+            assert_eq!(
+                element_text_content(find_element_by_id(&nodes, "target").unwrap()),
+                "new"
+            );
+        }
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("new".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "new"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
     fn selected_content_uses_dropdown_option_selection_semantics() {
         let selectedcontent_text = |source: &str| {
             let document = parse_html(source).unwrap();
@@ -46721,7 +47047,7 @@ mod tests {
             selectedcontent_text(
                 "<!doctype html><select><button><selectedcontent>old</selectedcontent></button></select>"
             ),
-            "old"
+            ""
         );
         assert_eq!(
             selectedcontent_text(
@@ -46819,6 +47145,586 @@ mod tests {
     }
 
     #[test]
+    fn selected_content_includes_options_inside_select_buttons() {
+        let source = "<!doctype html><!--é-->\r\n<select id=select><button id=button><selectedcontent id=target>old</selectedcontent><span><option id=inside selected><b>inside</b></option></span></button><option id=fallback>fallback</option></select>";
+        let document = parse_html(source).unwrap();
+        let selectedcontent = find_element_by_id(&document.children, "target").unwrap();
+        assert_eq!(selectedcontent.children.len(), 1);
+        assert_eq!(element(&selectedcontent.children[0]).name, "b");
+        assert_eq!(element_text_content(selectedcontent), "inside");
+        let button = find_element_by_id(&document.children, "button").unwrap();
+        assert!(find_element_by_id(&button.children, "inside").is_some());
+        assert!(source.len() > source.chars().count());
+
+        for nodes in [
+            parse_html_fragment_for_context(
+                "<select><button><selectedcontent id=target>old</selectedcontent><option selected>inside</option></button><option>fallback</option></select>",
+                "body",
+            )
+            .unwrap(),
+            parse_html(
+                "<!doctype html><svg><foreignObject><select><button><selectedcontent id=target>old</selectedcontent><option selected>inside</option></button><option>fallback</option></select></foreignObject></svg>",
+            )
+            .unwrap()
+            .children,
+        ] {
+            assert_eq!(
+                element_text_content(find_element_by_id(&nodes, "target").unwrap()),
+                "inside"
+            );
+        }
+
+        let datalist = parse_html(
+            "<!doctype html><select><button><selectedcontent id=target>old</selectedcontent><datalist><option selected>excluded</option></datalist></button><option>fallback</option></select>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(find_element_by_id(&datalist.children, "target").unwrap()),
+            "fallback"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "button".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "selected".to_string(),
+                    value: String::new(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("inside".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "inside"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_excludes_options_in_nested_optgroups() {
+        let source = "<!doctype html><!--é-->\r\n<select><button><selectedcontent>old</selectedcontent></button><optgroup id=outer><div><optgroup id=nested><option selected>excluded</option></optgroup></div><option><b>fallback</b></option></optgroup></select>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let selectedcontent =
+            find_first_element_in_nodes(&output.document.children, "selectedcontent").unwrap();
+        assert_eq!(element_text_content(selectedcontent), "fallback");
+        let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+        let wrapper = element(&outer.children[0]);
+        assert_eq!(wrapper.name, "div");
+        assert_eq!(element(&wrapper.children[0]).attribute("id"), Some("nested"));
+        assert!(source.len() > source.chars().count());
+        assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-optgroup-start-tag-in-select"
+        }));
+
+        let fragment = parse_html_fragment_for_context(
+            "<select><selectedcontent>old</selectedcontent><optgroup><div><optgroup><option selected>excluded</option></optgroup></div><option>fallback</option></optgroup></select>",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&fragment, "selectedcontent").unwrap()
+            ),
+            "fallback"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "optgroup".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "optgroup".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "selected".to_string(),
+                    value: String::new(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("excluded".to_string()),
+            Token::EndTag {
+                name: "option".to_string(),
+            },
+            Token::EndTag {
+                name: "optgroup".to_string(),
+            },
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("fallback".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "fallback"
+        );
+        assert!(direct.diagnostics().iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-optgroup-start-tag-in-select"
+        }));
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_excludes_options_in_datalists() {
+        let selectedcontent_text = |source: &str| {
+            let document = parse_html(source).unwrap();
+            element_text_content(
+                find_first_element_in_nodes(&document.children, "selectedcontent").unwrap(),
+            )
+        };
+
+        let source = "<!doctype html><!--é-->\r\n<select><button><selectedcontent>old</selectedcontent></button><div><datalist><option selected>excluded</option></datalist></div><option><b>real</b></option></select>";
+        let document = parse_html(source).unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&document.children, "selectedcontent").unwrap()
+            ),
+            "real"
+        );
+        assert!(find_first_element_in_nodes(&document.children, "datalist").is_some());
+        assert!(source.len() > source.chars().count());
+
+        let fragment = parse_html_fragment_for_context(
+            "<select><selectedcontent>old</selectedcontent><div><datalist><option selected>excluded</option></datalist></div><option>real</option></select>",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&fragment, "selectedcontent").unwrap()
+            ),
+            "real"
+        );
+        assert_eq!(
+            selectedcontent_text(
+                "<!doctype html><svg><foreignObject><select><selectedcontent>old</selectedcontent><datalist><option selected>excluded</option></datalist><option>real</option></select></foreignObject></svg>"
+            ),
+            "real"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "datalist".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "selected".to_string(),
+                    value: String::new(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("excluded".to_string()),
+            Token::EndTag {
+                name: "option".to_string(),
+            },
+            Token::EndTag {
+                name: "datalist".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("real".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "real"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_excludes_template_contents() {
+        let assert_selection = |nodes: &[Node]| {
+            assert_eq!(
+                element_text_content(find_element_by_id(nodes, "target").unwrap()),
+                "real"
+            );
+            assert_eq!(
+                element_text_content(find_element_by_id(nodes, "inert").unwrap()),
+                "kept"
+            );
+            assert_eq!(
+                element_text_content(find_element_by_id(nodes, "excluded").unwrap()),
+                "excluded"
+            );
+        };
+
+        let source = "<!doctype html><!--é-->\r\n<select><button><selectedcontent id=target>old</selectedcontent></button><template><selectedcontent id=inert>kept</selectedcontent><option id=excluded selected>excluded</option></template><option><b>real</b></option></select>";
+        let document = parse_html(source).unwrap();
+        assert_selection(&document.children);
+        assert!(source.len() > source.chars().count());
+
+        let fragment = parse_html_fragment_for_context(
+            "<select><selectedcontent id=target>old</selectedcontent><template><selectedcontent id=inert>kept</selectedcontent><option id=excluded selected>excluded</option></template><option>real</option></select>",
+            "body",
+        )
+        .unwrap();
+        assert_selection(&fragment);
+
+        let integration = parse_html(
+            "<!doctype html><svg><foreignObject><select><selectedcontent id=target>old</selectedcontent><template><selectedcontent id=inert>kept</selectedcontent><option id=excluded selected>excluded</option></template><option>real</option></select></foreignObject></svg>",
+        )
+        .unwrap();
+        assert_selection(&integration.children);
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "id".to_string(),
+                    value: "target".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "id".to_string(),
+                    value: "inert".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("kept".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![
+                    LexerAttribute {
+                        name: "id".to_string(),
+                        value: "excluded".to_string(),
+                    },
+                    LexerAttribute {
+                        name: "selected".to_string(),
+                        value: String::new(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Text("excluded".to_string()),
+            Token::EndTag {
+                name: "option".to_string(),
+            },
+            Token::EndTag {
+                name: "template".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("real".to_string()),
+            Token::Eof,
+        ]);
+        assert_selection(&direct_document.children);
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_option_ownership_is_namespace_aware() {
+        let source = "<!doctype html><!--é-->\r\n<select><button><selectedcontent>old</selectedcontent></button><svg><option selected>foreign</option></svg><option><b>real</b></option></select>";
+        let document = parse_html(source).unwrap();
+        let selectedcontent =
+            find_first_element_in_nodes(&document.children, "selectedcontent").unwrap();
+        assert_eq!(selectedcontent.children.len(), 1);
+        assert_eq!(element(&selectedcontent.children[0]).name, "b");
+        assert_eq!(element_text_content(selectedcontent), "real");
+        let foreign_option = find_first_element_in_nodes(&document.children, "option").unwrap();
+        assert_eq!(foreign_option.namespace.as_deref(), Some("svg"));
+        assert!(source.len() > source.chars().count());
+
+        for nodes in [
+            parse_html_fragment_for_context(
+                "<select><selectedcontent>old</selectedcontent><svg><option selected>foreign</option></svg><option>real</option></select>",
+                "body",
+            )
+            .unwrap(),
+            parse_html(
+                "<!doctype html><svg><foreignObject><select><selectedcontent>old</selectedcontent><svg><option selected>foreign</option></svg><option>real</option></select></foreignObject></svg>",
+            )
+            .unwrap()
+            .children,
+        ] {
+            assert_eq!(
+                element_text_content(
+                    find_first_element_in_nodes(&nodes, "selectedcontent").unwrap()
+                ),
+                "real"
+            );
+        }
+
+        let foreign_boundary = parse_html(
+            "<!doctype html><select><selectedcontent>old</selectedcontent><svg><datalist><foreignObject><option selected>included</option></foreignObject></datalist></svg><option>fallback</option></select>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&foreign_boundary.children, "selectedcontent").unwrap()
+            ),
+            "included"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "selected".to_string(),
+                    value: String::new(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("foreign".to_string()),
+            Token::EndTag {
+                name: "option".to_string(),
+            },
+            Token::EndTag {
+                name: "svg".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("real".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "real"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_skips_disabled_fallback_options() {
+        let selectedcontent_text = |source: &str| {
+            let document = parse_html(source).unwrap();
+            element_text_content(
+                find_first_element_in_nodes(&document.children, "selectedcontent").unwrap(),
+            )
+        };
+
+        let source = "<!doctype html><select><button><selectedcontent>old é\r\n</selectedcontent></button><option disabled>disabled</option><option><b>enabled</b></option></select>";
+        assert_eq!(selectedcontent_text(source), "enabled");
+        assert!(source.len() > source.chars().count());
+        assert_eq!(
+            selectedcontent_text(
+                "<!doctype html><select><button><selectedcontent>old</selectedcontent></button><optgroup disabled><option>disabled</option></optgroup><option>enabled</option></select>"
+            ),
+            "enabled"
+        );
+        assert_eq!(
+            selectedcontent_text(
+                "<!doctype html><select><button><selectedcontent>old</selectedcontent></button><option disabled selected>explicit</option><option>fallback</option></select>"
+            ),
+            "explicit"
+        );
+
+        let fragment = parse_html_fragment_for_context(
+            "<select><button><selectedcontent>old</selectedcontent></button><option disabled>disabled</option><option>enabled</option></select>",
+            "body",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&fragment, "selectedcontent").unwrap()
+            ),
+            "enabled"
+        );
+
+        let integration = parse_html(
+            "<!doctype html><svg><foreignObject><select><button><selectedcontent>old</selectedcontent></button><optgroup disabled><option>disabled</option></optgroup><option>enabled</option></select></foreignObject></svg>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&integration.children, "selectedcontent").unwrap()
+            ),
+            "enabled"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "disabled".to_string(),
+                    value: String::new(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("disabled".to_string()),
+            Token::EndTag {
+                name: "option".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("enabled".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "enabled"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
     fn selected_content_honors_explicit_listbox_selection() {
         let selectedcontent_text = |source: &str| {
             let document = parse_html(source).unwrap();
@@ -46838,7 +47744,7 @@ mod tests {
                 selectedcontent_text(&format!(
                     "<!doctype html><select size=\"{size}\"><button><selectedcontent>old</selectedcontent></button><option>new</option></select>"
                 )),
-                "old"
+                ""
             );
         }
 
@@ -46908,6 +47814,173 @@ mod tests {
                 find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
             ),
             "new"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_display_size_uses_ascii_digits() {
+        let selectedcontent_text = |size: &str| {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<select size=\"{size}\"><button><selectedcontent>old</selectedcontent></button><option><b>fallback</b></option></select>"
+            );
+            let document = parse_html(&source).unwrap();
+            element_text_content(
+                find_first_element_in_nodes(&document.children, "selectedcontent").unwrap(),
+            )
+        };
+
+        for invalid_unicode_size in ["٢", "۲", "２", "\u{1d7d0}"] {
+            assert_eq!(selectedcontent_text(invalid_unicode_size), "fallback");
+        }
+        assert_eq!(selectedcontent_text("\u{a0}2"), "fallback");
+        assert_eq!(selectedcontent_text("1٢"), "fallback");
+        assert_eq!(selectedcontent_text("2"), "");
+        assert_eq!(selectedcontent_text("\t+2tail"), "");
+
+        for nodes in [
+            parse_html_fragment_for_context(
+                "<select size=٢><selectedcontent>old</selectedcontent><option>fallback</option></select>",
+                "body",
+            )
+            .unwrap(),
+            parse_html(
+                "<!doctype html><svg><foreignObject><select size=٢><selectedcontent>old</selectedcontent><option>fallback</option></select></foreignObject></svg>",
+            )
+            .unwrap()
+            .children,
+        ] {
+            assert_eq!(
+                element_text_content(
+                    find_first_element_in_nodes(&nodes, "selectedcontent").unwrap()
+                ),
+                "fallback"
+            );
+        }
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: vec![LexerAttribute {
+                    name: "size".to_string(),
+                    value: "٢".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("fallback".to_string()),
+            Token::Eof,
+        ]);
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&direct_document.children, "selectedcontent").unwrap()
+            ),
+            "fallback"
+        );
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn selected_content_clears_when_no_option_is_selected() {
+        let selectedcontent_text = |source: &str| {
+            let document = parse_html(source).unwrap();
+            element_text_content(
+                find_first_element_in_nodes(&document.children, "selectedcontent").unwrap(),
+            )
+        };
+
+        for source in [
+            "<!doctype html><!--é-->\r\n<select><button><selectedcontent>old</selectedcontent></button></select>",
+            "<!doctype html><select><button><selectedcontent>old</selectedcontent></button><option disabled>disabled</option></select>",
+            "<!doctype html><select size=2><button><selectedcontent>old</selectedcontent></button><option>unselected</option></select>",
+        ] {
+            assert_eq!(selectedcontent_text(source), "", "source {source:?}");
+        }
+
+        assert_eq!(
+            selectedcontent_text(
+                "<!doctype html><select multiple><button><selectedcontent>old</selectedcontent></button></select>"
+            ),
+            "old"
+        );
+
+        let fragment = parse_html_fragment_for_context(
+            "<select><button><selectedcontent>old</selectedcontent></button></select>",
+            "body",
+        )
+        .unwrap();
+        assert!(
+            find_first_element_in_nodes(&fragment, "selectedcontent")
+                .unwrap()
+                .children
+                .is_empty()
+        );
+
+        let integration = parse_html(
+            "<!doctype html><svg><foreignObject><select><button><selectedcontent>old</selectedcontent></button></select></foreignObject></svg>",
+        )
+        .unwrap();
+        assert!(
+            find_first_element_in_nodes(&integration.children, "selectedcontent")
+                .unwrap()
+                .children
+                .is_empty()
+        );
+
+        let foreign = parse_html(
+            "<!doctype html><svg><select><selectedcontent>old</selectedcontent></select></svg>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(
+                find_first_element_in_nodes(&foreign.children, "selectedcontent").unwrap()
+            ),
+            "old"
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        let direct_document = direct.parse_tokens([
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "selectedcontent".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("old".to_string()),
+            Token::EndTag {
+                name: "selectedcontent".to_string(),
+            },
+            Token::Eof,
+        ]);
+        assert!(
+            find_first_element_in_nodes(&direct_document.children, "selectedcontent")
+                .unwrap()
+                .children
+                .is_empty()
         );
         assert!(direct
             .diagnostics()
@@ -48766,6 +49839,124 @@ mod tests {
             .collect::<Vec<_>>();
         assert_eq!(diagnostics.len(), 1);
         assert_eq!(diagnostics[0].position, None);
+    }
+
+    #[test]
+    fn template_column_group_recovery_ignores_an_outer_table_scope() {
+        let source =
+            "<!doctype html><!--é-->\r\n<table><template><col><div>A</template>B";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let control = parse_html(
+            "<!doctype html><!--é-->\r\n<table><template><col></template>B",
+        )
+        .unwrap();
+        assert_eq!(output.document, control);
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    matches!(
+                        diagnostic.code.as_str(),
+                        "unexpected-start-tag-in-template-column-group"
+                            | "unexpected-character-in-template-column-group"
+                    )
+                })
+                .collect::<Vec<_>>(),
+            vec![
+                &start_tag_in_template_column_group_recovery(source, "div"),
+                &character_in_template_column_group_recovery(source, "</template>"),
+            ]
+        );
+        assert!(source.len() > source.chars().count());
+
+        let fragment_source = "<table><template><col><div>A</template>B";
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            fragment_source,
+            "html body",
+        )
+        .unwrap();
+        let template = find_first_element_in_nodes(&fragment.nodes, "template").unwrap();
+        assert_eq!(
+            template.children,
+            vec![Node::element("col".to_string(), Vec::new())]
+        );
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    matches!(
+                        diagnostic.code.as_str(),
+                        "unexpected-start-tag-in-template-column-group"
+                            | "unexpected-character-in-template-column-group"
+                    )
+                })
+                .collect::<Vec<_>>(),
+            vec![
+                &start_tag_in_template_column_group_recovery(fragment_source, "div"),
+                &character_in_template_column_group_recovery(
+                    fragment_source,
+                    "</template>"
+                ),
+            ]
+        );
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "col".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("A".to_string()),
+            Token::EndTag {
+                name: "template".to_string(),
+            },
+            Token::Text("B".to_string()),
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let template = find_first_element_in_nodes(&unpositioned.document.children, "template")
+            .unwrap();
+        assert_eq!(
+            template.children,
+            vec![Node::element("col".to_string(), Vec::new())]
+        );
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .filter(|diagnostic| {
+                    matches!(
+                        diagnostic.code.as_str(),
+                        "unexpected-start-tag-in-template-column-group"
+                            | "unexpected-character-in-template-column-group"
+                    )
+                })
+                .count(),
+            2
+        );
+        assert!(unpositioned
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]

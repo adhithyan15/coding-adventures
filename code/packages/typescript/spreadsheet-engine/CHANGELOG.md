@@ -6,6 +6,10 @@ this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- Reject formulas longer than 8,192 UTF-16 code units before parsing in both
+  dependency discovery and evaluation. They produce `#VALUE!` without spending
+  seconds parsing pathological input; custom formula adapters are unaffected.
+
 ### Security / resilience
 
 Cell content is **untrusted host input**, so a malicious or accidental formula

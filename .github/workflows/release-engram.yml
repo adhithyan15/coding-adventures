@@ -644,11 +644,11 @@ jobs:
           retention-days: 7
 
   # NOT in the publish job's `needs`, and the payload is not declared in
-  # `artifact_names`. This job exists to prove the XAML backend compiles at all:
-  # until #14230 it could not, because the emitter wrote an event type per
-  # layout variant and C# rejected the duplicate. That failure only appears on
-  # Windows, so it went unnoticed while every other backend was verified
-  # locally.
+  # `artifact_names`. This job proves the XAML backend compiles and exercises
+  # the archiver against a real Windows publish without claiming that payload
+  # as a released platform artifact. The validation runs on Windows because
+  # duplicate generated CLR types and WinUI packaging failures do not appear
+  # in the other backend jobs.
   #
   # Wiring it into `publish` is deliberately a SEPARATE step. A job in
   # `publish.needs` that cannot pass blocks every release, so the job earns its
@@ -657,12 +657,9 @@ jobs:
     name: Build the XAML app (windows)
     needs: validate
     runs-on: windows-latest
-    # Expected to fail until #14234: both layout variants emit the same
-    # `partial class EngramApp` with the same 260 members, so C# cannot compile
-    # the package. Kept red-but-not-blocking rather than deleted, because it is
-    # the only signal that will tell us when the emitter grows a multi-variant
-    # story -- and a job that hard-fails every run trains people to ignore a
-    # red X, which is worse than either.
+    # Keep validation non-blocking until the XAML artifact is explicitly added
+    # to the release contract and `publish.needs`. A green result proves the
+    # generated project and archive shape; it does not publish Windows support.
     continue-on-error: true
     steps:
       - name: Checkout the validated release commit

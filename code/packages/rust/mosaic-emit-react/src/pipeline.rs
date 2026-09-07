@@ -468,6 +468,12 @@ fn sample_ts_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> Strin
         SlotType::Color => "\"#808080\"".to_string(),
         SlotType::Node | SlotType::Component(_) => "null".to_string(),
         SlotType::List(_) => "[]".to_string(),
+        // The first declared value, not a generic placeholder: a one-of slot
+        // has a closed set, so a sample can be a real member of it.
+        SlotType::OneOf(values) => values
+            .first()
+            .map(|v| format!("\"{v}\""))
+            .unwrap_or_else(|| "\"\"".to_string()),
     }
 }
 
@@ -603,6 +609,15 @@ pub fn from_pipeline(
         writeln!(out).unwrap();
     }
 
+    if layout_has_table_selection(&layout.root) {
+        out.push_str(include_str!("table_selection.ts"));
+        writeln!(out).unwrap();
+    }
+    if layout_has_table_capacity(&layout.root, &interface.emits) {
+        out.push_str(include_str!("table_capacity.ts"));
+        writeln!(out).unwrap();
+    }
+
     // 3. Event union (UI24 §3.1).
     out.push_str(&emit_event_union(name, &interface.emits)?);
     writeln!(out).unwrap();
@@ -613,7 +628,7 @@ pub fn from_pipeline(
 
     // 5. Precompute the per-part inline style strings from the mosstyle IR
     //    so the JSX walker can look up the right styles in O(1) per node.
-    let part_styles = build_part_style_map(style);
+    let part_styles = build_part_style_map(style, &interface.slots);
 
     // 6. Function declaration (UI24 §3.3).
     out.push_str(&emit_function(
@@ -3672,6 +3687,55 @@ fn emit_host_table_jsx(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
+    let mut selection_ref = if let (Some(row), Some(col)) = (
+        find_slot_ref_prop(node, "selected-row"),
+        find_slot_ref_prop(node, "selected-col"),
+    ) {
+        let row = to_camel_case_first_lower(row);
+        let col = to_camel_case_first_lower(col);
+        validate_slot_or_field_name(&row).map_err(PipelineEmitError::UnsafeSlotName)?;
+        validate_slot_or_field_name(&col).map_err(PipelineEmitError::UnsafeSlotName)?;
+        format!(" ref={{table => {{ mosaic$revealTableCell(table, {row}, {col}); }}}}")
+    } else {
+        String::new()
+    };
+
+    if find_emit_ref_prop(node, "onViewportShift").is_some_and(|name| emits.iter().any(|emit| emit.name == name))
+        && !find_emit_ref_prop(node, "onViewportRows").is_some_and(|name| emits.iter().any(|emit| emit.name == name)) {
+        return Err(PipelineEmitError::UnsafeSlotName("onViewportShift requires measured onViewportRows".into()));
+    }
+    if let Some(name) = find_emit_ref_prop(node, "onViewportRows") {
+        if let Some(declaration) = emits.iter().find(|emit| emit.name == name) {
+            if declaration.params.len() != 1 || declaration.params[0].name != "rows" || declaration.params[0].r#type != EmitPayloadType::Number {
+                return Err(PipelineEmitError::UnsafeSlotName("onViewportRows requires one numeric rows parameter".into()));
+            }
+            let event = to_camel_case_first_lower(&strip_on_prefix(name));
+            validate_emit_name(&event)?;
+            let mut reveal = if let (Some(row), Some(col)) = (find_slot_ref_prop(node, "selected-row"), find_slot_ref_prop(node, "selected-col")) {
+                format!(", table => mosaic$revealTableCell(table, {}, {})", to_camel_case_first_lower(row), to_camel_case_first_lower(col))
+            } else { String::new() };
+            let mut wheel = String::new();
+            if let Some(shift_name) = find_emit_ref_prop(node, "onViewportShift") {
+                if let Some(shift) = emits.iter().find(|emit| emit.name == shift_name) {
+                    if shift.params.len() != 1 || shift.params[0].name != "rows" || shift.params[0].r#type != EmitPayloadType::Number {
+                        return Err(PipelineEmitError::UnsafeSlotName("onViewportShift requires one numeric rows parameter".into()));
+                    }
+                    let offset = find_slot_ref_prop(node, "viewport-offset").ok_or_else(|| PipelineEmitError::UnsafeSlotName("onViewportShift requires viewport-offset".into()))?;
+                    let total = find_slot_ref_prop(node, "total-rows").ok_or_else(|| PipelineEmitError::UnsafeSlotName("onViewportShift requires total-rows".into()))?;
+                    let offset = to_camel_case_first_lower(offset);
+                    let total = to_camel_case_first_lower(total);
+                    validate_slot_or_field_name(&offset).map_err(PipelineEmitError::UnsafeSlotName)?;
+                    validate_slot_or_field_name(&total).map_err(PipelineEmitError::UnsafeSlotName)?;
+                    let shift_event = to_camel_case_first_lower(&strip_on_prefix(shift_name));
+                    validate_emit_name(&shift_event)?;
+                    if reveal.is_empty() { reveal = ", undefined".into(); }
+                    wheel = format!(", {{ offset: {offset}, total: {total}, shift: rows => dispatch({{ type: \"{shift_event}\", rows }}) }}");
+                }
+            }
+            selection_ref = format!(" ref={{mosaic$tableCapacityRef(rows => dispatch({{ type: \"{event}\", rows }} ){reveal}{wheel})}}");
+        }
+    }
+
     // Style attr (same part-name lookup as the rest of the tree).
     let part_style_str = node
         .part_name
@@ -3735,10 +3799,10 @@ fn emit_host_table_jsx(
     // Empty table — no sections present. Emit a single-line
     // `<table></table>` (still respecting any part-style attribute).
     if colgroup.is_none() && thead.is_none() && tbody.is_none() && tfoot.is_none() {
-        return Ok(format!("{pad}<table{style_attr}{dir_attr}></table>\n"));
+        return Ok(format!("{pad}<table{style_attr}{dir_attr}{selection_ref}></table>\n"));
     }
 
-    let mut out = format!("{pad}<table{style_attr}{dir_attr}>\n");
+    let mut out = format!("{pad}<table{style_attr}{dir_attr}{selection_ref}>\n");
 
     if let Some(cg) = colgroup {
         out.push_str(&emit_host_table_colgroup_jsx(cg, indent + 2, part_styles)?);
@@ -3815,15 +3879,21 @@ fn emit_host_table_section_jsx(
     let row_pad = " ".repeat(indent + 2);
     let cell_pad = " ".repeat(indent + 4);
 
+    let style_attr = section_node.part_name.as_deref()
+        .and_then(|name| part_styles.get(name))
+        .filter(|style| !style.is_empty())
+        .map(|style| format!(" style={{{{ {style} }}}}"))
+        .unwrap_or_default();
+
     // An empty section still emits its wrapper so the table structure is
     // recognisable — `<thead></thead>` is valid HTML and helps screen
     // readers understand the row that follows is a header even when no
     // rows were authored yet.
     if section_node.children.is_empty() {
-        return Ok(format!("{pad}<{html_tag}></{html_tag}>\n"));
+        return Ok(format!("{pad}<{html_tag}{style_attr}></{html_tag}>\n"));
     }
 
-    let mut out = format!("{pad}<{html_tag}>\n");
+    let mut out = format!("{pad}<{html_tag}{style_attr}>\n");
     let _ = row_pad; // factored into emit_table_row_jsx; left as a sentinel.
     let _ = cell_pad;
     for child in &section_node.children {
@@ -3940,7 +4010,8 @@ fn emit_table_row_jsx(
             }
         }
 
-        let inner = emit_jsx_tree(
+        let (cell_tag, cell_attrs) = table_cell_wrapper(cell, cell_tag, part_styles)?;
+        let inner = emit_table_cell_content(
             cell,
             indent + 4,
             part_styles,
@@ -3951,17 +4022,53 @@ fn emit_table_row_jsx(
         )?;
         let inner_trimmed = inner.trim_end_matches('\n');
         if inner_trimmed.contains('\n') {
-            out.push_str(&format!("{cell_pad}<{cell_tag}>\n"));
+            out.push_str(&format!("{cell_pad}<{cell_tag}{cell_attrs}>\n"));
             out.push_str(inner_trimmed);
             out.push('\n');
             out.push_str(&format!("{cell_pad}</{cell_tag}>\n"));
         } else {
             let single = inner_trimmed.trim_start();
-            out.push_str(&format!("{cell_pad}<{cell_tag}>{single}</{cell_tag}>\n"));
+            out.push_str(&format!("{cell_pad}<{cell_tag}{cell_attrs}>{single}</{cell_tag}>\n"));
         }
     }
     out.push_str(&format!("{row_pad}</tr>\n"));
     Ok(out)
+}
+
+// UI31 §9: an explicit role moves authored geometry onto the semantic cell.
+// Unannotated cells retain the original section-inferred wrapper and content.
+fn table_cell_wrapper<'a>(node: &LayoutNode, default_tag: &'a str, styles: &HashMap<String, String>) -> Result<(&'a str, String), PipelineEmitError> {
+    if !node.props.iter().any(|prop| prop.name == "table-cell-role") { return Ok((default_tag, String::new())); }
+    let role = find_keyword_prop(node, "table-cell-role").ok_or_else(|| PipelineEmitError::UnsafeSlotName("table-cell-role must be a literal keyword".into()))?;
+    if !matches!(node.tag.as_str(), "Box" | "Text") || (node.tag == "Box" && node.props.iter().any(|prop| prop.name != "table-cell-role")) {
+        return Err(PipelineEmitError::UnsafeSlotName("table-cell-role requires Text or a structural Box without other props".into()));
+    }
+    let (tag, semantics) = match role {
+        "row-header" => ("th", " scope=\"row\""),
+        "column-header" => ("th", " scope=\"col\""),
+        "corner" => ("td", " aria-hidden=\"true\""),
+        "data" => ("td", ""),
+        _ => return Err(PipelineEmitError::UnsafeSlotName("invalid table-cell-role".into())),
+    };
+    let authored = node.part_name.as_ref().and_then(|part| styles.get(part)).cloned().unwrap_or_default();
+    let style = merge_styles("padding: 0", &authored);
+    Ok((tag, format!("{semantics} style={{{{ {style} }}}}")))
+}
+
+#[allow(clippy::too_many_arguments)]
+fn emit_table_cell_content(node: &LayoutNode, indent: usize, styles: &HashMap<String, String>, dialogs: &[*const LayoutNode], checkboxes: &[*const LayoutNode], emits: &[EmitDecl], payload: Option<ForPayloadScope<'_>>) -> Result<String, PipelineEmitError> {
+    if find_keyword_prop(node, "table-cell-role").is_none() {
+        return emit_jsx_tree(node, indent, styles, dialogs, checkboxes, emits, payload);
+    }
+    if node.tag == "Box" {
+        // The Box is the cell itself; keep its children, not a second styled box.
+        let mut out = String::new();
+        for child in &node.children { out.push_str(&emit_jsx_tree(child, indent, styles, dialogs, checkboxes, emits, payload)?); }
+        return Ok(out);
+    }
+    let mut content = node.clone();
+    content.part_name = None;
+    emit_jsx_tree(&content, indent, styles, dialogs, checkboxes, emits, payload)
 }
 
 /// Try to lower `For (each: …, as: c [, index: i]) { <leaf> }` to
@@ -4089,7 +4196,8 @@ fn try_emit_table_for_cell_jsx(
     // a known For-binding in addition to SlotRef).
     let pad = " ".repeat(indent);
     let body_indent = indent + 2;
-    let inner = emit_jsx_tree(
+    let (cell_tag, cell_attrs) = table_cell_wrapper(leaf, cell_tag, part_styles)?;
+    let inner = emit_table_cell_content(
         leaf,
         body_indent + 2,
         part_styles,
@@ -4103,14 +4211,14 @@ fn try_emit_table_for_cell_jsx(
 
     let mut cell_block = String::new();
     if inner_trimmed.contains('\n') {
-        cell_block.push_str(&format!("{cell_pad}<{cell_tag} key={{{key_source}}}>\n"));
+        cell_block.push_str(&format!("{cell_pad}<{cell_tag} key={{{key_source}}}{cell_attrs}>\n"));
         cell_block.push_str(inner_trimmed);
         cell_block.push('\n');
         cell_block.push_str(&format!("{cell_pad}</{cell_tag}>\n"));
     } else {
         let single = inner_trimmed.trim_start();
         cell_block.push_str(&format!(
-            "{cell_pad}<{cell_tag} key={{{key_source}}}>{single}</{cell_tag}>\n"
+            "{cell_pad}<{cell_tag} key={{{key_source}}}{cell_attrs}>{single}</{cell_tag}>\n"
         ));
     }
 
@@ -4440,6 +4548,19 @@ fn try_emit_colgroup_for_col_jsx(
 
 /// Find the *first* immediate child of `node` whose tag matches
 /// `section_tag`. Returns `None` if no such child exists.
+fn layout_has_table_selection(node: &LayoutNode) -> bool {
+    (node.tag == "HostTable"
+        && find_slot_ref_prop(node, "selected-row").is_some()
+        && find_slot_ref_prop(node, "selected-col").is_some())
+        || node.children.iter().any(layout_has_table_selection)
+}
+
+fn layout_has_table_capacity(node: &LayoutNode, emits: &[EmitDecl]) -> bool {
+    (node.tag == "HostTable" && find_emit_ref_prop(node, "onViewportRows")
+        .is_some_and(|name| emits.iter().any(|emit| emit.name == name)))
+        || node.children.iter().any(|child| layout_has_table_capacity(child, emits))
+}
+
 fn find_section_child<'a>(node: &'a LayoutNode, section_tag: &str) -> Option<&'a LayoutNode> {
     node.children.iter().find(|c| c.tag == section_tag)
 }
@@ -4892,21 +5013,51 @@ fn primitive_to_jsx_tag(tag: &str) -> Result<JsxTag, PipelineEmitError> {
 /// CSS-in-JS fragment ready to drop inside a `style={{ ... }}` literal —
 /// e.g. `backgroundColor: "#1e1e1e", color: "#cccccc"`.
 ///
+/// Model-owned state blocks are appended to the base entry as conditional
+/// object spreads. Because every part-bearing primitive consumes that same
+/// entry, slot-driven states work for specialized host primitives as well as
+/// the generic tree walker. Built-in states retain their existing activation
+/// paths and their standalone composite entries.
+///
 /// ### What this function does NOT yet do
 ///
-/// - **State blocks** (`state hover { ... }`, `state focused { ... }`)
-///   are ignored. They need either CSS-class plumbing or a runtime
-///   pseudo-class observer; both are out of scope for this first cut.
-///   TODO: emit a `:hover` selector via a small inline `<style>` element,
-///   or hand the resolved CSS off to mosstyle's `emit_css` and surface it
-///   as a sibling artifact.
+/// - **Unwired built-in state blocks** (`state hover { ... }`, `state focused
+///   { ... }`) still need CSS-class plumbing or a runtime pseudo-class observer.
 /// - **CSS shorthand / shorthand expansion** — e.g. `border: 1px solid #ccc`
 ///   passes through verbatim, which works in React inline styles for most
 ///   shorthands but not all. We don't validate or expand.
-fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
+fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> HashMap<String, String> {
     let mut out = HashMap::with_capacity(style.parts.len());
     for part in &style.parts {
-        let fragment = build_inline_style_fragment(&part.base);
+        let mut fragments = Vec::new();
+        let base = build_inline_style_fragment(&part.base);
+        if !base.is_empty() {
+            fragments.push(base);
+        }
+
+        // UI49 — enum states are activated directly from their owning slot;
+        // they intentionally require no `state-when-*` layout property. Walk
+        // slots first so simultaneous variant axes follow .mil declaration
+        // order, then retain authored state order within each axis.
+        for slot in slots {
+            let slot_ident = to_camel_case_first_lower(&slot.name);
+            for state in part
+                .states
+                .iter()
+                .filter(|state| state.slot.as_deref() == Some(slot.name.as_str()))
+            {
+                let state_fragment = build_inline_style_fragment(&state.props);
+                if state_fragment.is_empty() {
+                    continue;
+                }
+                fragments.push(format!(
+                    "...(({slot_ident} === {}) ? {{ {state_fragment} }} : {{}})",
+                    js_string_literal(&state.state)
+                ));
+            }
+        }
+
+        let fragment = fragments.join(", ");
         if !fragment.is_empty() {
             out.insert(part.name.clone(), fragment);
         }
@@ -5011,16 +5162,16 @@ fn css_property_to_camel(name: &str) -> String {
     to_camel_case_first_lower(name)
 }
 
-/// Concatenate two inline-style fragments, comma-separated, dropping empty
-/// inputs. The first argument is the primitive's built-in style; the second
-/// is the author-declared part style. The author wins on collisions because
-/// React style objects use last-property-wins semantics.
+/// Merge inline-style fragments with author precedence. A spread preserves
+/// last-property-wins semantics without duplicate literal keys (TS1117).
+/// Do not split serialized values: CSS strings and state expressions can
+/// contain commas, quotes and nested object literals.
 fn merge_styles(builtin: &str, author: &str) -> String {
     match (builtin.is_empty(), author.is_empty()) {
         (true, true) => String::new(),
         (false, true) => builtin.to_string(),
         (true, false) => author.to_string(),
-        (false, false) => format!("{builtin}, {author}"),
+        (false, false) => format!("...{{ {builtin} }}, ...{{ {author} }}"),
     }
 }
 
@@ -5145,6 +5296,21 @@ fn slot_type_to_ts(t: &SlotType) -> String {
         SlotType::Node => "React.ReactNode".to_string(),
         SlotType::List(inner) => format!("Array<{}>", list_inner_to_ts(inner)),
         SlotType::Component(name) => format!("React.ReactNode /* {name} */"),
+        // A closed set lowers to a TypeScript union, so passing a variant the
+        // component does not declare is a compile error in the generated host
+        // rather than a value silently ignored at runtime -- which is exactly
+        // what `slot variant : text` allowed (#14036).
+        SlotType::OneOf(values) => {
+            if values.is_empty() {
+                "string".to_string()
+            } else {
+                values
+                    .iter()
+                    .map(|v| format!("\"{v}\""))
+                    .collect::<Vec<_>>()
+                    .join(" | ")
+            }
+        }
     }
 }
 
@@ -6218,7 +6384,7 @@ mod tests {
         let result = from_pipeline(&m, &l, &s).unwrap();
         // Built-in style appears first; author style appears after.
         let expected =
-            "style={{ display: \"flex\", flexDirection: \"row\", background: \"#222\" }}";
+            "style={{ ...{ display: \"flex\", flexDirection: \"row\" }, ...{ background: \"#222\" } }}";
         assert!(
             result.output.contains(expected),
             "expected merged style, got:\n{}",
@@ -6227,10 +6393,24 @@ mod tests {
     }
 
     #[test]
-    fn state_blocks_are_ignored_in_first_cut() {
-        // A part with a `:hover` state block. The base style should still
-        // be emitted; the state block is silently dropped (with a TODO in
-        // the implementation).
+    fn authored_overflow_uses_a_type_safe_override() {
+        for overflow in ["auto", "hidden"] {
+            let model = component("X", vec![], vec![]);
+            let layout = LayoutDef {
+                component_name: "X".into(),
+                root: LayoutNode { tag: "HostScroll".into(), part_name: Some("frame".into()), props: vec![], children: vec![] },
+            };
+            let style = style_with_part("X", "frame", &[("overflow", overflow)]);
+            let out = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert!(out.contains(&format!("...{{ overflow: \"auto\" }}, ...{{ overflow: \"{overflow}\" }}")), "{out}");
+        }
+    }
+
+    #[test]
+    fn unwired_builtin_state_blocks_are_ignored() {
+        // A part with a built-in `hover` state block. The base style should
+        // still be emitted; without state-when-hover or future pseudo-class
+        // plumbing, this interaction state remains dormant.
         let m = component("X", vec![], vec![]);
         let s = StyleDef {
             component_name: "X".to_string(),
@@ -6242,6 +6422,7 @@ mod tests {
                 }],
                 transitions: vec![],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "hover".to_string(),
                     transitions: vec![],
                     props: vec![StyleProp {
@@ -6261,6 +6442,124 @@ mod tests {
             "state blocks must not leak into the inline style, got:\n{}",
             result.output
         );
+    }
+
+    #[test]
+    fn ui49_slot_states_emit_in_model_slot_order_and_bind_style_only_slots() {
+        let m = component(
+            "X",
+            vec![
+                slot(
+                    "variant",
+                    SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                    true,
+                ),
+                slot(
+                    "size",
+                    SlotType::OneOf(vec!["regular".to_string(), "compact".to_string()]),
+                    true,
+                ),
+                slot("unused", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![StyleProp {
+                    name: "color".to_string(),
+                    value: "#111111".to_string(),
+                }],
+                transitions: vec![],
+                // Reverse the authored state order deliberately. UI49
+                // precedence is the model's slot order, not this Vec's order.
+                states: vec![
+                    StateStyle {
+                        state: "compact".to_string(),
+                        slot: Some("size".to_string()),
+                        props: vec![StyleProp {
+                            name: "padding".to_string(),
+                            value: "4px".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                    StateStyle {
+                        state: "danger".to_string(),
+                        slot: Some("variant".to_string()),
+                        props: vec![StyleProp {
+                            name: "background".to_string(),
+                            value: "#dc3545".to_string(),
+                        }],
+                        transitions: vec![],
+                    },
+                ],
+            }],
+        };
+        let result = from_pipeline(&m, &box_root(Some("panel")), &s).expect("emit ok");
+        let output = &result.output;
+
+        let variant_pos = output
+            .find("variant === \"danger\"")
+            .expect("variant condition should be emitted");
+        let size_pos = output
+            .find("size === \"compact\"")
+            .expect("size condition should be emitted");
+        assert!(
+            variant_pos < size_pos,
+            "model slot order must set precedence"
+        );
+        assert!(output.contains("  variant,\n  size,\n  dispatch,"));
+        assert!(!output.contains("  unused,"));
+        assert!(output.contains("color: \"#111111\", ...((variant"));
+    }
+
+    #[test]
+    fn ui49_slot_state_reaches_specialized_host_button_style() {
+        let m = component(
+            "X",
+            vec![slot(
+                "variant",
+                SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                true,
+            )],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Delete".to_string()),
+                }],
+                children: vec![],
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    state: "danger".to_string(),
+                    slot: Some("variant".to_string()),
+                    props: vec![StyleProp {
+                        name: "background".to_string(),
+                        value: "#dc3545".to_string(),
+                    }],
+                    transitions: vec![],
+                }],
+            }],
+        };
+        let result = from_pipeline(&m, &l, &s).expect("emit ok");
+
+        assert!(result.output.contains(
+            "<button style={{ ...((variant === \"danger\") ? { background: \"#dc3545\" } : {}) }}"
+        ));
+        assert!(result.output.contains("  variant,\n  dispatch,"));
     }
 
     #[test]
@@ -6700,6 +6999,7 @@ mod tests {
         let mut states: Vec<StateStyle> = Vec::new();
         if !even.is_empty() {
             states.push(StateStyle {
+                slot: None,
                 state: "even".to_string(),
                 transitions: vec![],
                 props: even
@@ -6713,6 +7013,7 @@ mod tests {
         }
         if !odd.is_empty() {
             states.push(StateStyle {
+                slot: None,
                 state: "odd".to_string(),
                 transitions: vec![],
                 props: odd
@@ -8650,6 +8951,7 @@ mod tests {
                 base: vec![],
                 transitions: vec![],
                 states: vec![StateStyle {
+                    slot: None,
                     state: "hover".to_string(),
                     transitions: vec![],
                     props: vec![StyleProp {
@@ -9663,6 +9965,95 @@ mod tests {
             !out.contains("<colgroup"),
             "empty HostTable must not emit <colgroup>"
         );
+    }
+
+    #[test]
+    fn host_table_sections_preserve_authored_styles() {
+        for (tag, html) in [("HostTableHead", "thead"), ("HostTableBody", "tbody"), ("HostTableFoot", "tfoot")] {
+            for populated in [false, true] {
+                let mut section = section_node(tag, if populated { vec![row_node(vec![])] } else { vec![] });
+                section.part_name = Some("section".into());
+                let style = mosstyle_compiler::StyleDef {
+                    component_name: "X".into(),
+                    parts: vec![mosstyle_compiler::PartStyle {
+                        name: "section".into(),
+                        base: vec![mosstyle_compiler::StyleProp { name: "position".into(), value: "sticky".into() }],
+                        transitions: vec![], states: vec![],
+                    }],
+                };
+                let out = from_pipeline(&component("X", vec![], vec![]), &host_table_layout(vec![section]), &style).unwrap().output;
+                assert!(out.contains(&format!("<{html} style={{{{ position: \"sticky\" }}}}>")), "{out}");
+            }
+        }
+    }
+
+    #[test]
+    fn authored_table_cells_preserve_semantics_and_wrapper_styles() {
+        let mut header = text_slot_node("label");
+        header.part_name = Some("heading".into());
+        header.props.push(keyword_prop("table-cell-role", "row-header"));
+        let styles = HashMap::from([("heading".into(), "position: \"sticky\"".into())]);
+        let (tag, attrs) = table_cell_wrapper(&header, "td", &styles).unwrap();
+        assert_eq!(tag, "th");
+        assert!(attrs.contains("scope=\"row\""));
+        assert!(attrs.contains("position: \"sticky\""));
+        let inner = emit_table_cell_content(&header, 0, &styles, &[], &[], &[], None).unwrap();
+        assert_eq!(inner.trim(), "<span>{label}</span>");
+        header.props.retain(|prop| prop.name != "table-cell-role");
+        assert_eq!(table_cell_wrapper(&header, "td", &styles).unwrap(), ("td", String::new()));
+        header.props.push(keyword_prop("table-cell-role", "button"));
+        assert!(table_cell_wrapper(&header, "td", &styles).is_err());
+    }
+
+    #[test]
+    fn wheel_shift_requires_measured_capacity_and_window_metadata() {
+        let model = component("X", vec![slot("offset", SlotType::Number, true), slot("total", SlotType::Number, true)], vec![
+            emit("onRows", vec![param("rows", EmitPayloadType::Number)]),
+            emit("onShift", vec![param("rows", EmitPayloadType::Number)]),
+        ]);
+        let mut layout = host_table_layout(vec![]);
+        layout.root.props.push(emit_ref_prop("onViewportShift", "onShift"));
+        assert!(from_pipeline(&model, &layout, &empty_style("X")).is_err());
+        layout.root.props.push(emit_ref_prop("onViewportRows", "onRows"));
+        assert!(from_pipeline(&model, &layout, &empty_style("X")).is_err());
+        layout.root.props.extend([slot_ref_prop("viewport-offset", "offset"), slot_ref_prop("total-rows", "total")]);
+        let out = from_pipeline(&model, &layout, &empty_style("X")).unwrap().output;
+        assert!(out.contains("undefined, { offset: offset, total: total, shift: rows => dispatch({ type: \"shift\", rows }) }"));
+    }
+
+    #[test]
+    fn host_table_capacity_is_opt_in_and_validates_payload() {
+        let mut layout = host_table_layout(vec![]);
+        layout.root.props = vec![emit_ref_prop("onViewportRows", "onCapacity")];
+        let model = component("X", vec![], vec![emit("onCapacity", vec![param("rows", EmitPayloadType::Number)])]);
+        let out = from_pipeline(&model, &layout, &empty_style("X")).unwrap().output;
+        assert!(out.contains("mosaic$tableCapacityRef(rows => dispatch({ type: \"capacity\", rows }"));
+        assert_eq!(out.matches("function mosaic$tableCapacityRef").count(), 1);
+
+        // A composed Grid whose consumer does not forward this emit stays inert.
+        let unbound = from_pipeline(&component("X", vec![], vec![]), &layout, &empty_style("X")).unwrap().output;
+        assert!(!unbound.contains("ResizeObserver"));
+        assert!(!unbound.contains("mosaic$tableCapacityRef"));
+        let wrong = component("X", vec![], vec![emit("onCapacity", vec![param("rows", EmitPayloadType::Text)])]);
+        assert!(from_pipeline(&wrong, &layout, &empty_style("X")).is_err());
+    }
+
+    #[test]
+    fn host_table_bound_selection_emits_scoped_reveal() {
+        let model = component("X", vec![
+            slot("active-row", SlotType::Number, true),
+            slot("active-col", SlotType::Number, true),
+        ], vec![]);
+        let mut layout = host_table_layout(vec![]);
+        layout.root.props = vec![
+            slot_ref_prop("selected-row", "active-row"),
+            slot_ref_prop("selected-col", "active-col"),
+        ];
+        let out = from_pipeline(&model, &layout, &empty_style("X")).unwrap().output;
+        assert!(out.contains("mosaic$revealTableCell(table, activeRow, activeCol)"));
+        assert_eq!(out.matches("function mosaic$revealTableCell").count(), 1);
+        let plain = from_pipeline(&component("X", vec![], vec![]), &host_table_layout(vec![]), &empty_style("X")).unwrap().output;
+        assert!(!plain.contains("mosaic$revealTableCell"));
     }
 
     /// UI29 §2.1 HostTable test 2 — a `HostTableHead` with one `Row` of

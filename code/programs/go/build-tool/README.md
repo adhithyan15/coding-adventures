@@ -116,6 +116,9 @@ Evaluation fails open. Force mode, an unavailable git diff, or a change to
 `ci.yml` or the registry itself runs every gate; main-branch pushes already pass
 `-force`. A gate declaring neither packages nor paths is rejected at load time,
 because a gate that can never fire looks exactly like one that always passes.
+The package-local suite also consumes every process-free
+`ci-gate-selection-*.json` fixture from the shared build-tool v1 corpus, which
+is the portable oracle for other implementation lanes.
 
 Every gate needs both clauses. Files under `code/specs`, `code/fixtures`,
 `code/grammars`, and `code/scripts` map to no package at all, so the path clause

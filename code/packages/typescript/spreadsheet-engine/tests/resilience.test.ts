@@ -115,6 +115,20 @@ describe("Fix A — range expansion is capped (no OOM)", () => {
 // ===========================================================================
 
 describe("Fix B — deep nesting degrades to an error, never throws", () => {
+  it("accepts the formula length boundary and rejects the next code unit", () => {
+    const atLimit = '="' + "x".repeat(8189) + '"';
+    expect(atLimit.length).toBe(8192);
+    expect(excelCasAdapter.evaluate(atLimit, emptyResolver)).toMatchObject({
+      kind: "text", value: "x".repeat(8189),
+    });
+    const tooLong = '=A1&"' + "x".repeat(8187) + '"';
+    expect(tooLong.length).toBe(8193);
+    expect(excelCasAdapter.dependencies(tooLong)).toEqual([]);
+    expect(excelCasAdapter.evaluate(tooLong, emptyResolver)).toMatchObject({
+      kind: "error", code: "#VALUE!",
+    });
+  });
+
   /** `=1+1+1+…` with `n` terms. Deep enough (thousands) to overflow the
    *  recursive evaluator's call stack with a RangeError. */
   const deepFormula = (n: number) => "=" + Array(n).fill("1").join("+");

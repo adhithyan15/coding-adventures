@@ -1,5 +1,33 @@
 # Changelog — `twig-aot`
 
+## Unreleased — runtime string indexing
+
+String folding excludes mutable integer indices, and runtime string indexing calls the existing bounds-checked helper instead of folding a loop to its first byte.
+
+## Unreleased — runtime substring parity
+
+Runtime string slices now call the existing checked helper when source or bounds cannot fold; reassignment invalidates stale literal lengths.
+
+## Unreleased — required Windows runtime CI (VM-032)
+
+Select a dedicated Windows executable smoke step from the Windows build-plan
+closure for affected Twig/LANG AOT changes. Bootstrap MSVC even for Rust-only
+changes and require a real linker with `LANG_REQUIRE_WINDOWS_AOT=1`, preventing
+an all-skipped green result. Local optional-linker behavior and the two known
+precise-GC early returns remain explicit. The selector validates plan shapes,
+respects platform overrides, and self-selects when its wiring changes.
+
+## Unreleased — Windows dynamic CRT link repair (VM-030)
+
+Remove `libvcruntime.lib` from the Windows executable link. Normal CRT startup
+was restored earlier by removing `/ENTRY:main`, but its obsolete static-runtime
+dependency remained beside `vcruntime.lib`. LLVM's Windows linker rejected even
+Twig `42` with duplicate `__vcrt_InitializeCriticalSectionEx` definitions.
+The link now uses the dynamic CRT libraries consistently and retains normal
+startup. Validation uses the Windows executable smoke suite, including scalar
+results, arithmetic, output, heap byte I/O, and stackmap registration. The two
+existing precise-GC frame-walk skips remain separate open work.
+
 
 
 

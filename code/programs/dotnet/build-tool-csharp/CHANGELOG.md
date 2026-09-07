@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Adopted the complete typed language and repository-boundary source-input
+  registries, including deterministic generation, canonical digest checks,
+  direct Starlark declared sources, exact pruning, and reverse boundary-diff
+  selection.
+- Replaced ambiguous source concatenation with repository-relative Hashing-v1
+  path/content frames and exact raw-byte SHA-256 package digests while leaving
+  dependency hashing to its separately owned contract.
+- Added bounded native no-follow source reads, hardlink/non-regular rejection,
+  constant-descriptor file and directory identity rechecks, scrubbed and
+  bounded Git-index capture, complete mode/OID/stage/path stability comparison,
+  redacted failures, all 13 source fixtures, all three package-digest fixtures,
+  and live security tests. Removed unused public discovery helpers that bypassed
+  the secure reader and made .NET changes select the native Windows CI leg.
 - Consumed the complete shared discovery-language registry, restricted language
   inference to the exact bucket immediately below `packages` or `programs`,
   classified Mosaic and Twig, ignored BUILD roots outside those containers,

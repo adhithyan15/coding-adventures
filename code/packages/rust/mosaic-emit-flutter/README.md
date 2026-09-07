@@ -136,6 +136,13 @@ Mosaic app smoke test that imports the actual generated pub package instead of
 installing Flutter's stock `MyApp` counter test. `flutter analyze` checks the
 complete shell, test, host binding, and every package export.
 
+Mosstyle states owned by `one-of` slots lower to Dart property comparisons
+such as `variant == "danger"`. Simultaneous enum axes follow model slot
+declaration order, while explicit structural and interaction predicates apply
+after them. Generic styled containers and native `HostButton` controls share
+the same conditional paint cascade for backgrounds, foregrounds, borders, and
+padding.
+
 Mosaic conditions pass through a generated value-truthiness helper before they
 enter Dart's statically typed boolean positions. Text-input change and commit
 handlers synthesize their declared zero- or one-value event constructors, so a

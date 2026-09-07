@@ -243,12 +243,13 @@ pub fn connect(host: &str, port: u16, options: ConnectOptions) -> Result<TcpConn
     // of SocketAddr values — one per resolved IP address. A single hostname
     // can resolve to multiple addresses (IPv4 + IPv6, or multiple A records).
     let addr_string = format!("{}:{}", host, port);
-    let addrs: Vec<SocketAddr> = addr_string.to_socket_addrs().map_err(|e| {
-        TcpError::DnsResolutionFailed {
+    let addrs: Vec<SocketAddr> = addr_string
+        .to_socket_addrs()
+        .map_err(|e| TcpError::DnsResolutionFailed {
             host: host.to_string(),
             message: e.to_string(),
-        }
-    })?.collect();
+        })?
+        .collect();
 
     if addrs.is_empty() {
         return Err(TcpError::DnsResolutionFailed {
@@ -280,7 +281,8 @@ pub fn connect(host: &str, port: u16, options: ConnectOptions) -> Result<TcpConn
                 // one for reading, one for writing. `try_clone()` creates
                 // a second file descriptor pointing to the same socket.
                 let reader_stream = stream.try_clone().map_err(TcpError::IoError)?;
-                let reader = BufReader::with_capacity(options.buffer_size, reader_stream);
+                let reader =
+                    BufReader::with_capacity(options.buffer_size, RetryInterrupted(reader_stream));
                 let writer = BufWriter::with_capacity(options.buffer_size, stream);
 
                 return Ok(TcpConnection { reader, writer });
@@ -333,7 +335,7 @@ pub fn connect(host: &str, port: u16, options: ConnectOptions) -> Result<TcpConn
 /// The connection is automatically closed when dropped.
 pub struct TcpConnection {
     /// Buffered reader wrapping the read half of the TCP stream.
-    reader: BufReader<TcpStream>,
+    reader: BufReader<RetryInterrupted<TcpStream>>,
     /// Buffered writer wrapping the write half of the TCP stream.
     writer: BufWriter<TcpStream>,
 }
@@ -344,6 +346,22 @@ impl fmt::Debug for TcpConnection {
             .field("peer_addr", &self.writer.get_ref().peer_addr().ok())
             .field("local_addr", &self.writer.get_ref().local_addr().ok())
             .finish()
+    }
+}
+
+// A runtime signal (for example Dart's profiler) can interrupt a blocking
+// socket read. Retry that syscall without losing buffered bytes. EOF, timeout,
+// reset, and all other errors retain their normal meaning.
+struct RetryInterrupted<R>(R);
+
+impl<R: Read> Read for RetryInterrupted<R> {
+    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+        loop {
+            match self.0.read(buf) {
+                Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
+                result => return result,
+            }
+        }
     }
 }
 
@@ -732,10 +750,7 @@ mod tests {
         let mut conn = connect("127.0.0.1", port, test_options()).unwrap();
 
         let error = conn.read_until_limit(b'\n', 4).unwrap_err();
-        assert!(matches!(
-            error,
-            TcpError::ReadLimitExceeded { limit: 4 }
-        ));
+        assert!(matches!(error, TcpError::ReadLimitExceeded { limit: 4 }));
     }
 
     #[test]
@@ -1029,5 +1044,57 @@ mod tests {
 
         let body = conn.read_exact(5).unwrap();
         assert_eq!(body, b"hello");
+    }
+}
+
+#[cfg(test)]
+mod interrupted_read_tests {
+    use super::*;
+    use std::collections::VecDeque;
+
+    struct ScriptedReader(VecDeque<io::Result<Vec<u8>>>);
+    impl Read for ScriptedReader {
+        fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+            let bytes = self.0.pop_front().unwrap_or(Ok(Vec::new()))?;
+            assert!(bytes.len() <= buf.len());
+            buf[..bytes.len()].copy_from_slice(&bytes);
+            Ok(bytes.len())
+        }
+    }
+
+    #[test]
+    fn interrupted_reads_preserve_partial_headers_and_body() {
+        let interrupted = || Err(io::Error::from(io::ErrorKind::Interrupted));
+        let source = ScriptedReader(VecDeque::from([
+            interrupted(),
+            Ok(b"HTTP/1.0 ".to_vec()),
+            interrupted(),
+            interrupted(),
+            Ok(b"200 OK\r\n".to_vec()),
+            interrupted(),
+            Ok(b"body".to_vec()),
+            Ok(Vec::new()),
+        ]));
+        let mut reader = BufReader::new(RetryInterrupted(source));
+        let mut header = Vec::new();
+        reader.read_until(b'\n', &mut header).unwrap();
+        assert_eq!(header, b"HTTP/1.0 200 OK\r\n");
+        let mut body = [0; 4];
+        assert_eq!(reader.read(&mut body).unwrap(), 4);
+        assert_eq!(&body, b"body");
+        assert_eq!(reader.read(&mut body).unwrap(), 0);
+    }
+
+    #[test]
+    fn non_interrupt_errors_are_not_retried() {
+        for kind in [io::ErrorKind::TimedOut, io::ErrorKind::ConnectionReset] {
+            let source = ScriptedReader(VecDeque::from([
+                Err(io::Error::from(kind)),
+                Ok(b"later".to_vec()),
+            ]));
+            let mut reader = RetryInterrupted(source);
+            assert_eq!(reader.read(&mut [0; 8]).unwrap_err().kind(), kind);
+            assert_eq!(reader.0 .0.len(), 1);
+        }
     }
 }

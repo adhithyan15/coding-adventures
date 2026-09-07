@@ -11,6 +11,17 @@
 > none of the nine backends (#14003), and specifying that surfaced a missing
 > adaptive container primitive.
 >
+> The native release P0 (#14249) is now closed and the product-scoped SemVer
+> lane (#13543) has published `task-app-v0.1.0`. The UI49 model/compiler bridge
+> is complete through #14300, and the React reference lowering landed in
+> #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
+> SwiftUI in #14331, Qt in #14344, Flutter in #14353, and XAML in #14362. The
+> static HTML snapshot lowering landed in #14369, Paint fixture-driven
+> resolution landed in #14378, Button's first focused toolkit retrofit landed
+> in #14385, and Alert followed in #14399. The current dependency is #14402:
+> make Badge's variant contract real through the same UI49 path. Toolkit
+> retrofits still precede stories or trustworthy TaskApp composition coverage.
+>
 > The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
 > Phase 5, on components that are already proven in isolation. Until then the
 > app may be an empty screen, which is the intended trade.
@@ -105,7 +116,8 @@ links existing Mosaic work instead of duplicating it.
 25. **P1 — [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
    make the List-first shell usable in compact windows.
 26. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
-   move the Vitest config to Vite's native ESM loading contract.
+   move the Vitest config to Vite's native ESM loading contract. **Done in
+   [#14242](https://github.com/adhithyan15/coding-adventures/pull/14242).**
 27. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
    roll the TaskApp changelog forward after each published product release and
    gate against already-published versions remaining marked Unreleased.
@@ -128,7 +140,17 @@ step, no artifact. The ordered queue below comes from that spec.
 
 **Tier A — finish the platforms TaskApp already claims.**
 
-1. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
+1. **P0 [#14249](https://github.com/adhithyan15/coding-adventures/issues/14249):**
+   restore Flutter's bundled Rust runtime after the current Linux runner image
+   exposed a broken 3.44.0 native-asset bundle. The repair stages the runtime
+   through the hook-owned output directory while keeping the pinned 3.44.0
+   toolchain, with native assets enabled explicitly on every fresh runner. The
+   validation lanes now select Flutter's install-generated bundle explicitly,
+   rather than whichever same-named executable filesystem traversal returns
+   first. **Done in #14252.**
+   This blocks validated Flutter/Linux release payloads, so it precedes the
+   remaining native-host and release-polish work.
+2. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
    replace blank startup with loading and failure states. **Done for the web
    host.** Split out while implementing it:
    [#13984](https://github.com/adhithyan15/coding-adventures/issues/13984) —
@@ -136,7 +158,7 @@ step, no artifact. The ordered queue below comes from that spec.
    log evidence, which needs a distinct surface in five backends and its own
    emitted-control coverage. The host-neutral contract both share is
    `code/specs/task-app-startup-states-v1.md`.
-2. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
+3. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
    make the List-first shell usable in compact windows. **Blocked on
    [#14003](https://github.com/adhithyan15/coding-adventures/issues/14003)
    (UI48).** Picking this up revealed it was mis-scoped as a TaskApp change.
@@ -150,11 +172,11 @@ step, no artifact. The ordered queue below comes from that spec.
    so touch-sized tap targets would stay unexpressible. Specified generically as
    `code/specs/UI48-host-environment.md`; TaskApp then becomes
    `TaskApp.compact.mll` and nothing else.
-   Next Tier A item to pick up is therefore #13526, while UI48's ENV slices run
-   in parallel as kernel work.
-3. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
-   move the Vitest config to Vite's native ESM loading contract.
-4. **P2 [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
+   UI48's ENV slices continue as separate kernel work.
+4. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
+   move the Vitest config to Vite's native ESM loading contract. **Done in
+   [#14242](https://github.com/adhithyan15/coding-adventures/pull/14242).**
+5. **P2 [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
    roll the changelog forward after each published release and gate against a
    published version still marked Unreleased. `0.1.0` is in exactly that state
    today.
@@ -172,13 +194,18 @@ step, no artifact. The ordered queue below comes from that spec.
 - **P2 [#13977](https://github.com/adhithyan15/coding-adventures/issues/13977):**
   signing/notarization/installers, filed when #13522 closed while the README
   still pointed at it.
+- **P2 [#14360](https://github.com/adhithyan15/coding-adventures/issues/14360):**
+  a generated permissive XAML project for a component with zero events reads
+  `MosaicName` from an empty event union that does not declare it. Discovered by
+  the #14359 WinUI build probe; adding one fixture event allowed UI49's exact
+  generated project to compile while this separate shell bug remains queued.
 
 **Tier B — close the three unexercised backends.** Filed as work is picked up;
 see the spec for the completion bar each one has to clear.
 
-5. Static HTML snapshot gate (cheapest — no runtime, no interaction claim).
-6. Web Components host — the last *interactive* backend with no TaskApp presence.
-7. Paint visual-regression gate — the only mechanism that would catch a purely
+6. Static HTML snapshot gate (cheapest — no runtime, no interaction claim).
+7. Web Components host — the last *interactive* backend with no TaskApp presence.
+8. Paint visual-regression gate — the only mechanism that would catch a purely
    visual regression.
 
 **Tier C — reach, stated rather than silently missing.** iOS compiles but does

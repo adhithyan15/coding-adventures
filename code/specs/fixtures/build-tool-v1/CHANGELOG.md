@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-09-05
+
+- Defined exact Windows corpus-root volume matching across legacy DWORD and
+  `FILE_ID_INFO` serial widths. The retained-root validator now supports both
+  Python 3.10 and 3.13 projections without masking `st_dev`, version sniffing,
+  changing policy availability, or weakening link and mutation defenses.
+- Added two process-free cases for exact reverse diff selection through the
+  digest-pinned repository source-input boundary and deterministic package
+  hashing over the caller-supplied union of package-local and boundary inputs.
+  Near-path changes remain unknown, and the fixture oracle gains no Git,
+  filesystem, process, environment, network, credential, or native-link
+  authority.
+- Added seven process-free `ci_gate_selection` cases covering exact affected-
+  package and non-package path matches, recursive globstar behavior, explicit
+  negative verdicts, deterministic output names, force mode, unavailable
+  affected/file snapshots, and fixed gating-machinery sentinels. The validated
+  registry and change snapshots remain inert data and grant no Git, graph,
+  filesystem, workflow-output, scheduling, or policy authority.
+
 ## 2026-08-31
 
 - Registered the three exact Rust Engram WASM BUILD inputs for that package

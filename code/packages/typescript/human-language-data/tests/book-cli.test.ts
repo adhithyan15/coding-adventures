@@ -11,7 +11,7 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import {
   assertHandwrittenLessonCoverage as assertHandwrittenLessonCoverageImpl,
   generatedBookOutputs as generatedBookOutputsImpl,
@@ -21,6 +21,14 @@ import {
   runBookGeneration as runBookGenerationImpl,
 } from "../src/book-cli.js";
 import { defaultCurriculumRoot, loadTrackChapters } from "../src/loader.js";
+
+// These assertions inspect the same immutable checkout. Render its complete
+// book projection once, rather than repeating the corpus-wide work nine times.
+// Fixture tests below still regenerate after each mutation and never use this map.
+let realBookOutputs: ReadonlyMap<string, string>;
+beforeAll(() => {
+  realBookOutputs = generatedBookOutputsImpl(defaultCurriculumRoot());
+}, 60_000);
 
 const roots: string[] = [];
 const legacyFixture = { allowLegacyMonolith: true } as const;
@@ -844,7 +852,7 @@ describe("hand-written chapters", () => {
     // hand-written path appearing in it means that chapter is one command away from being
     // replaced by generated text. Adding these chapters to `targets[]` instead of
     // `handwritten[]` would fail exactly here.
-    const generated = generatedBookOutputs(root);
+    const generated = realBookOutputs;
     for (const entry of handwritten) {
       expect(
         generated.has(entry.output),
@@ -869,7 +877,7 @@ describe("hand-written chapters", () => {
     // with a "% GENERATED FILE." banner, and no hand-authored chapter does. A committed
     // .tex without that banner appearing in `targets[]` therefore means the generator has
     // laid claim to prose a human wrote — regardless of what either list says.
-    const generated = generatedBookOutputs(root);
+    const generated = realBookOutputs;
     for (const [relative] of generated) {
       if (!relative.endsWith(".tex")) continue;
       // `book.tex` is the one generated .tex that is a COMPOSITE rather than a
@@ -983,7 +991,7 @@ describe("pronunciation reference coverage", () => {
     const registry = JSON.parse(
       readFileSync(join(root, "core", "languages.json"), "utf8"),
     ) as { languages: Array<{ id: string }> };
-    const outputs = generatedBookOutputs(root);
+    const outputs = realBookOutputs;
     expect(registry.languages.length).toBeGreaterThan(0);
     for (const { id } of registry.languages) {
       const relativeBook = `${id}/book/book.tex`;
@@ -1005,7 +1013,7 @@ describe("pronunciation reference coverage", () => {
   });
 
   it("generates and byte-gates the five references that were missing", () => {
-    const outputs = generatedBookOutputs(root);
+    const outputs = realBookOutputs;
     for (const language of [
       "chinese",
       "japanese",
@@ -1026,7 +1034,7 @@ describe("glossary coverage", () => {
     const registry = JSON.parse(
       readFileSync(join(root, "core", "languages.json"), "utf8"),
     ) as { languages: Array<{ id: string }> };
-    const outputs = generatedBookOutputs(root);
+    const outputs = realBookOutputs;
     expect(registry.languages.length).toBeGreaterThan(0);
     for (const { id } of registry.languages) {
       const relative = `${id}/book/chapters/appendix-glossary.tex`;
@@ -1047,7 +1055,7 @@ describe("answer-key coverage", () => {
     const registry = JSON.parse(
       readFileSync(join(root, "core", "languages.json"), "utf8"),
     ) as { languages: Array<{ id: string }> };
-    const outputs = generatedBookOutputs(root);
+    const outputs = realBookOutputs;
     expect(registry.languages.length).toBeGreaterThan(0);
     for (const { id } of registry.languages) {
       const relative = `${id}/book/chapters/appendix-answer-key.tex`;
@@ -1071,7 +1079,7 @@ describe("subject-index coverage", () => {
     const registry = JSON.parse(
       readFileSync(join(root, "core", "languages.json"), "utf8"),
     ) as { languages: Array<{ id: string }> };
-    const outputs = generatedBookOutputs(root);
+    const outputs = realBookOutputs;
     expect(registry.languages.length).toBeGreaterThan(0);
     for (const { id } of registry.languages) {
       const relative = `${id}/book/chapters/appendix-index.tex`;
@@ -1188,7 +1196,7 @@ describe("the manifest covers the corpus", () => {
       byLanguage.set(entry.language, set);
     }
     const inputs = new Map<string, string>();
-    const outputs = generatedBookOutputs(root);
+    const outputs = realBookOutputs;
     const offenders: string[] = [];
     for (const track of loadTrackChapters()) {
       const language = track.language;
@@ -1241,7 +1249,7 @@ describe("chapter order against the back matter", () => {
       readFileSync(join(root, "core", "languages.json"), "utf8"),
     ) as { languages: Array<{ id: string }> };
     expect(registry.languages.length).toBeGreaterThan(0);
-    const outputs = generatedBookOutputs(root);
+    const outputs = realBookOutputs;
     for (const { id } of registry.languages) {
       const book = outputs.get(`${id}/book/book.tex`);
       expect(book, `${id} projected book root`).toBeDefined();

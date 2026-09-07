@@ -1,6 +1,5 @@
 # Node / npm
 node_modules/
-package-lock.json
 
 # Vite / TS build artifacts
 dist/
@@ -14,3 +13,4 @@ src/components/
 
 # Vendored engine bundle — copied from visicalc-html/vendor by scripts/build.sh
 public/spreadsheet-engine-wasm.js
+public/visicalc_mosaic_app.wasm

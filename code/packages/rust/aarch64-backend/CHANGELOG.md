@@ -1,5 +1,13 @@
 # Changelog — `aarch64-backend`
 
+## Unreleased — runtime string indexing
+
+Register the two-argument str_index checked runtime builtin in the generic ABI table.
+
+## Unreleased — runtime substring parity
+
+Register the three-argument str_slice runtime builtin for generic ABI marshalling.
+
 ## 0.38.0 - 2026-08-10 - `array_set` also calls the generational write barrier (AOT00-T8 follow-up)
 
 - **`array_set` now also emits `BL __twig_gc_write_barrier`** after its store,

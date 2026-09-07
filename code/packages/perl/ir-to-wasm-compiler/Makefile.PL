@@ -16,6 +16,9 @@ WriteMakefile(
         'CodingAdventures::WasmTypes'  => 0,
     },
     TEST_REQUIRES    => {
+        'CodingAdventures::GrammarTools' => 0,
+        'CodingAdventures::Lexer' => 0,
+        'CodingAdventures::VirtualMachine' => 0,
         'CodingAdventures::Brainfuck::Parser' => 0,
         'CodingAdventures::BrainfuckIrCompiler' => 0,
         'CodingAdventures::WasmModuleEncoder' => 0,

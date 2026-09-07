@@ -4,6 +4,20 @@ All notable changes to `mosaic-pkg-grid` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.
 
+## Unreleased
+
+- Forward optional measured viewport-shift requests through RowHeaderGrid.
+
+- Add opt-in RowHeaderGrid with parallel row labels, semantic cell roles and
+  the existing Cell event contract. Existing Grid consumers remain compatible.
+
+- Expose opt-in onViewportRows(rows: number) for measured uniform table capacity.
+
+- Forward rendered selection coordinates to HostTable so React can keep the
+  active cell visible inside a composed scroll frame.
+
+- Expose the `column-headings` part on HostTableHead for authored section styles.
+
 ## 0.2.3 — 2026-08-06 — Cell's click now carries its coordinate
 
 ### Fixed

@@ -84,6 +84,37 @@ public sealed class BuildToolTests : IDisposable
     }
 
     [Fact]
+    public void DiscoveryDoesNotFollowLinkedPackageDirectoriesOrBuildFiles()
+    {
+        WriteFile("outside/linked-package/BUILD", "echo outside\n");
+        WriteFile("outside/linked-build", "echo outside\n");
+        var laneRoot = Path.Combine(_tempRoot, "code", "packages", "csharp");
+        var packageRoot = Path.Combine(laneRoot, "linked-build");
+        Directory.CreateDirectory(packageRoot);
+        try
+        {
+            Directory.CreateSymbolicLink(
+                Path.Combine(laneRoot, "linked-package"),
+                Path.Combine(_tempRoot, "outside", "linked-package"));
+            File.CreateSymbolicLink(
+                Path.Combine(packageRoot, "BUILD"),
+                Path.Combine(_tempRoot, "outside", "linked-build"));
+        }
+        catch (Exception error) when (error is UnauthorizedAccessException or IOException)
+        {
+            return;
+        }
+
+        var names = Discovery
+            .DiscoverPackages(Path.Combine(_tempRoot, "code"))
+            .Select(package => package.Name)
+            .ToArray();
+
+        Assert.DoesNotContain("csharp/linked-package", names);
+        Assert.DoesNotContain("csharp/linked-build", names);
+    }
+
+    [Fact]
     public void ResolverReadsDotnetProjectReferences()
     {
         WriteFile("code/packages/csharp/hash-map/BUILD", "dotnet test\n");

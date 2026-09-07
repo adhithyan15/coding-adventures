@@ -296,6 +296,7 @@
     },
     "domain": {
       "enum": [
+        "ci_gate_selection",
         "discovery",
         "resolution",
         "graph",

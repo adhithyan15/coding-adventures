@@ -1,6 +1,6 @@
 // Button.dark.msl — dark-theme styling for Button.
 //
-// Same shape, darker palette tuned for dark backgrounds.
+// Same typed variant/size axes, with a palette tuned for dark surfaces.
 
 style Button {
   part button {
@@ -11,5 +11,63 @@ style Button {
     color         : "#0f172a" ;
     border-width  : 1 ;
     border-color  : "#1e40af" ;
+    font-size     : 14 ;
+
+    state primary {
+      background   : "#3b82f6" ;
+      color        : "#0f172a" ;
+      border-color : "#1e40af" ;
+    }
+    state secondary {
+      background   : "#64748b" ;
+      color        : "#ffffff" ;
+      border-color : "#94a3b8" ;
+    }
+    state success {
+      background   : "#22c55e" ;
+      color        : "#052e16" ;
+      border-color : "#16a34a" ;
+    }
+    state danger {
+      background   : "#ef4444" ;
+      color        : "#ffffff" ;
+      border-color : "#dc2626" ;
+    }
+    state warning {
+      background   : "#f59e0b" ;
+      color        : "#1c1917" ;
+      border-color : "#d97706" ;
+    }
+    state info {
+      background   : "#22d3ee" ;
+      color        : "#083344" ;
+      border-color : "#0891b2" ;
+    }
+    state light {
+      background   : "#e2e8f0" ;
+      color        : "#0f172a" ;
+      border-color : "#cbd5e1" ;
+    }
+    state dark {
+      background   : "#1e293b" ;
+      color        : "#f8fafc" ;
+      border-color : "#475569" ;
+    }
+
+    state sm {
+      padding       : 6 ;
+      border-radius : 3 ;
+      font-size     : 13 ;
+    }
+    state md {
+      padding       : 8 ;
+      border-radius : 4 ;
+      font-size     : 14 ;
+    }
+    state lg {
+      padding       : 12 ;
+      border-radius : 6 ;
+      font-size     : 18 ;
+    }
   }
 }

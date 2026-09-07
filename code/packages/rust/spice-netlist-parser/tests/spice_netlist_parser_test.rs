@@ -1369,7 +1369,7 @@ Rload out 0 1k
 fn parses_bjt_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05 VAF=75 VA=120 VAR=60 VB=90 IKF=3m IK=5m IKR=4m TNOM=27 T_NOM=35)
+.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05 VAF=75 VA=120 VAR=60 VB=90 IKF=3m IK=5m IKR=4m TNOM=27 T_NOM=35 KF=2p AF=1.3 PTF=30 XTF=0.4 ITF=2m VTF=0.6 RE=5 RC=7 RB=9 RBM=4 IRB=2m XCJC=0.6 ISE=2p NE=1.5 ISC=3p NC=2.5 XTB=-0.3 BR=2 BETA_R=-1 NR=1.4 NF=1.2 VJE=0.8 PE=-1 VJC=0.9 PC=-1 MJC=0.45 MC=1 FC=0.4 MJE=0.4 ME=1)
 Vcc vcc 0 DC 5
 Vbase base 0 DC 0.7
 Q1 vcc base out fast
@@ -1412,6 +1412,31 @@ Rload out 0 1k
     assert_close(bjt.forward_beta_rolloff_current, 3.0e-3);
     assert_close(bjt.reverse_beta_rolloff_current, 4.0e-3);
     assert_close(bjt.nominal_temperature_kelvin.unwrap(), 300.15);
+    assert_close(bjt.flicker_noise_coefficient, 2.0e-12);
+    assert_close(bjt.flicker_noise_exponent, 1.3);
+    assert_close(bjt.forward_excess_phase_degrees, 30.0);
+    assert_close(bjt.forward_transit_time_bias_coefficient, 0.4);
+    assert_close(bjt.forward_transit_time_current, 2.0e-3);
+    assert_close(bjt.forward_transit_time_voltage, 0.6);
+    assert_close(bjt.emitter_resistance, 5.0);
+    assert_close(bjt.collector_resistance, 7.0);
+    assert_close(bjt.base_resistance, 9.0);
+    assert_close(bjt.minimum_base_resistance.unwrap(), 4.0);
+    assert_close(bjt.base_resistance_half_current, 2.0e-3);
+    assert_close(bjt.base_collector_capacitance_fraction, 0.6);
+    assert_close(bjt.base_emitter_leakage_saturation_current, 2.0e-12);
+    assert_close(bjt.base_emitter_leakage_emission_coefficient, 1.5);
+    assert_close(bjt.base_collector_leakage_saturation_current, 3.0e-12);
+    assert_close(bjt.base_collector_leakage_emission_coefficient, 2.5);
+    assert_close(bjt.forward_beta_temperature_exponent, -0.3);
+    assert_close(bjt.reverse_beta, 2.0);
+    assert_close(bjt.reverse_emission_coefficient, 1.4);
+    assert_close(bjt.forward_emission_coefficient, 1.2);
+    assert_close(bjt.base_emitter_junction_potential, 0.8);
+    assert_close(bjt.base_collector_junction_potential, 0.9);
+    assert_close(bjt.base_collector_grading_coefficient, 0.45);
+    assert_close(bjt.forward_bias_depletion_coefficient, 0.4);
+    assert_close(bjt.base_emitter_grading_coefficient, 0.4);
 
     let result = dc_op(&parsed.circuit).unwrap();
     let out = result.voltage("out").unwrap();
@@ -1561,6 +1586,601 @@ fn rejects_invalid_bjt_nominal_temperature() {
         assert!(error
             .to_string()
             .contains("BJT TNOM must be finite and positive"));
+    }
+}
+
+#[test]
+fn parses_bjt_flicker_noise_coefficient() {
+    let parsed = parse_netlist(".model shaped NPN(KF=2p)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.flicker_noise_coefficient, 2.0e-12);
+}
+
+#[test]
+fn rejects_invalid_bjt_flicker_noise_coefficient() {
+    for value in ["-1p", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(KF={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT KF must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_flicker_noise_exponent() {
+    let parsed = parse_netlist(".model shaped NPN(AF=1.3)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.flicker_noise_exponent, 1.3);
+}
+
+#[test]
+fn rejects_invalid_bjt_flicker_noise_exponent() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(AF={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT AF must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_forward_excess_phase() {
+    let parsed = parse_netlist(".model shaped NPN(PTF=30)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.forward_excess_phase_degrees, 30.0);
+}
+
+#[test]
+fn rejects_invalid_bjt_forward_excess_phase() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(PTF={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT PTF must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_forward_transit_time_bias_coefficient() {
+    let parsed = parse_netlist(".model shaped NPN(XTF=0.4)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.forward_transit_time_bias_coefficient, 0.4);
+}
+
+#[test]
+fn rejects_invalid_bjt_forward_transit_time_bias_coefficient() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(XTF={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT XTF must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_forward_transit_time_current() {
+    let parsed = parse_netlist(".model shaped NPN(ITF=2m)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.forward_transit_time_current, 2.0e-3);
+}
+
+#[test]
+fn rejects_invalid_bjt_forward_transit_time_current() {
+    for value in ["-1m", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(ITF={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT ITF must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_forward_transit_time_voltage() {
+    let parsed = parse_netlist(".model shaped NPN(VTF=0.6)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.forward_transit_time_voltage, 0.6);
+}
+
+#[test]
+fn rejects_invalid_bjt_forward_transit_time_voltage() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(VTF={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT VTF must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_emitter_resistance() {
+    let parsed = parse_netlist(".model shaped NPN(RE=5)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.emitter_resistance, 5.0);
+}
+
+#[test]
+fn rejects_invalid_bjt_emitter_resistance() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(RE={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT RE must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_collector_resistance() {
+    let parsed = parse_netlist(".model shaped NPN(RC=7)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.collector_resistance, 7.0);
+}
+
+#[test]
+fn rejects_invalid_bjt_collector_resistance() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(RC={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT RC must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_base_resistance() {
+    let parsed = parse_netlist(".model shaped NPN(RB=9)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_resistance, 9.0);
+}
+
+#[test]
+fn rejects_invalid_bjt_base_resistance() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(RB={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT RB must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_minimum_base_resistance() {
+    let parsed = parse_netlist(".model shaped NPN(RBM=4)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.minimum_base_resistance.unwrap(), 4.0);
+}
+
+#[test]
+fn rejects_invalid_bjt_minimum_base_resistance() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(RBM={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT RBM must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_base_resistance_half_current() {
+    let parsed = parse_netlist(".model shaped NPN(IRB=2m)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_resistance_half_current, 2.0e-3);
+}
+
+#[test]
+fn rejects_invalid_bjt_base_resistance_half_current() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(IRB={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT IRB must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn parses_bjt_base_collector_capacitance_fraction() {
+    let parsed = parse_netlist(".model shaped NPN(XCJC=0.6)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_collector_capacitance_fraction, 0.6);
+}
+
+#[test]
+fn rejects_invalid_bjt_base_collector_capacitance_fraction() {
+    for value in ["-1", "1.1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(XCJC={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT XCJC must be finite and between zero and one"));
+    }
+}
+
+#[test]
+fn parses_bjt_emitter_leakage_current_with_c2_fallback() {
+    let parsed = parse_netlist(".model shaped NPN(IS=4p C2=0.5)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_emitter_leakage_saturation_current, 2.0e-12);
+}
+
+#[test]
+fn explicit_bjt_emitter_leakage_current_overrides_c2() {
+    let parsed = parse_netlist(".model shaped NPN(ISE=2p C2=-1)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_emitter_leakage_saturation_current, 2.0e-12);
+}
+
+#[test]
+fn rejects_invalid_bjt_emitter_leakage_current() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(ISE={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT ISE must be finite and non-negative"));
+    }
+
+    let error = parse_netlist(".model bad NPN(C2=-1)\nQ1 c b e bad").unwrap_err();
+    assert!(error
+        .to_string()
+        .contains("BJT C2 must be finite and non-negative"));
+}
+
+#[test]
+fn parses_bjt_emitter_leakage_emission_coefficient() {
+    let parsed = parse_netlist(".model shaped NPN(NE=1.5)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_emitter_leakage_emission_coefficient, 1.5);
+}
+
+#[test]
+fn rejects_invalid_bjt_emitter_leakage_emission_coefficient() {
+    for value in ["0", "-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(NE={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT NE must be finite and positive"));
+    }
+}
+
+#[test]
+fn parses_bjt_collector_leakage_current_with_c4_fallback() {
+    let parsed = parse_netlist(".model shaped NPN(IS=4p C4=0.5)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_collector_leakage_saturation_current, 2.0e-12);
+}
+
+#[test]
+fn explicit_bjt_collector_leakage_current_overrides_c4() {
+    let parsed = parse_netlist(".model shaped NPN(ISC=2p C4=-1)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_collector_leakage_saturation_current, 2.0e-12);
+}
+
+#[test]
+fn rejects_invalid_bjt_collector_leakage_current() {
+    for value in ["-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(ISC={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT ISC must be finite and non-negative"));
+    }
+
+    let error = parse_netlist(".model bad NPN(C4=-1)\nQ1 c b e bad").unwrap_err();
+    assert!(error
+        .to_string()
+        .contains("BJT C4 must be finite and non-negative"));
+}
+
+#[test]
+fn parses_bjt_collector_leakage_emission_coefficient() {
+    let parsed = parse_netlist(".model shaped NPN(NC=2.5)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_collector_leakage_emission_coefficient, 2.5);
+}
+
+#[test]
+fn rejects_invalid_bjt_collector_leakage_emission_coefficient() {
+    for value in ["0", "-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(NC={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT NC must be finite and positive"));
+    }
+}
+
+#[test]
+fn parses_bjt_forward_beta_temperature_exponent() {
+    let parsed = parse_netlist(".model shaped NPN(XTB=-0.3)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.forward_beta_temperature_exponent, -0.3);
+}
+
+#[test]
+fn rejects_non_finite_bjt_forward_beta_temperature_exponent() {
+    let error = parse_netlist(".model bad NPN(XTB=1e999)\nQ1 c b e bad").unwrap_err();
+
+    assert!(error.to_string().contains("BJT XTB must be finite"));
+}
+
+#[test]
+fn parses_bjt_reverse_beta_alias() {
+    let parsed = parse_netlist(".model shaped NPN(BETA_R=3)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.reverse_beta, 3.0);
+}
+
+#[test]
+fn rejects_invalid_bjt_reverse_beta_aliases() {
+    for parameter in ["BR", "BETA_R"] {
+        for value in ["0", "-1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model bad NPN({parameter}={value})\nQ1 c b e bad"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("BJT BR must be finite and positive"));
+        }
+    }
+}
+
+#[test]
+fn parses_bjt_reverse_emission_coefficient() {
+    let parsed = parse_netlist(".model shaped NPN(NR=1.4)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.reverse_emission_coefficient, 1.4);
+}
+
+#[test]
+fn rejects_invalid_bjt_reverse_emission_coefficient() {
+    for value in ["0", "-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(NR={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT NR must be finite and positive"));
+    }
+}
+
+#[test]
+fn parses_bjt_forward_emission_coefficient() {
+    let parsed = parse_netlist(".model shaped NPN(NF=1.2)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.forward_emission_coefficient, 1.2);
+}
+
+#[test]
+fn rejects_invalid_bjt_forward_emission_coefficient() {
+    for value in ["0", "-1", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model bad NPN(NF={value})\nQ1 c b e bad")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT NF must be finite and positive"));
+    }
+}
+
+#[test]
+fn parses_bjt_base_emitter_junction_potential_alias() {
+    let parsed = parse_netlist(".model shaped NPN(PE=0.8)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_emitter_junction_potential, 0.8);
+}
+
+#[test]
+fn rejects_invalid_bjt_base_emitter_junction_potential_aliases() {
+    for parameter in ["VJE", "PE"] {
+        for value in ["0", "-1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model bad NPN({parameter}={value})\nQ1 c b e bad"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("BJT VJE must be finite and positive"));
+        }
+    }
+}
+
+#[test]
+fn parses_bjt_base_collector_junction_potential_alias() {
+    let parsed = parse_netlist(".model shaped NPN(PC=0.8)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_collector_junction_potential, 0.8);
+}
+
+#[test]
+fn rejects_invalid_bjt_base_collector_junction_potential_aliases() {
+    for parameter in ["VJC", "PC"] {
+        for value in ["0", "-1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model bad NPN({parameter}={value})\nQ1 c b e bad"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("BJT VJC must be finite and positive"));
+        }
+    }
+}
+
+#[test]
+fn parses_bjt_base_collector_grading_coefficient_alias() {
+    let parsed = parse_netlist(".model shaped NPN(MC=0.45)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_collector_grading_coefficient, 0.45);
+}
+
+#[test]
+fn rejects_invalid_bjt_base_collector_grading_coefficient_aliases() {
+    for parameter in ["MJC", "MC"] {
+        for value in ["-1", "1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model bad NPN({parameter}={value})\nQ1 c b e bad"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("BJT MJC must be finite and in [0, 1)"));
+        }
+    }
+}
+
+#[test]
+fn parses_bjt_forward_bias_depletion_coefficient() {
+    let parsed = parse_netlist(".model shaped NPN(FC=0.4)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.forward_bias_depletion_coefficient, 0.4);
+}
+
+#[test]
+fn rejects_invalid_bjt_forward_bias_depletion_coefficient() {
+    for value in ["-1", "1", "1e999"] {
+        let error = parse_netlist(&format!(".model bad NPN(FC={value})\nQ1 c b e bad"))
+            .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT FC must be finite and in [0, 1)"));
+    }
+}
+
+#[test]
+fn parses_bjt_base_emitter_grading_coefficient_alias() {
+    let parsed = parse_netlist(".model shaped NPN(ME=0.4)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.base_emitter_grading_coefficient, 0.4);
+}
+
+#[test]
+fn rejects_invalid_bjt_base_emitter_grading_coefficient_aliases() {
+    for parameter in ["MJE", "ME"] {
+        for value in ["-1", "1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model bad NPN({parameter}={value})\nQ1 c b e bad"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("BJT MJE must be finite and in [0, 1)"));
+        }
     }
 }
 

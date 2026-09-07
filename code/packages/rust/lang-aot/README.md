@@ -1,8 +1,64 @@
 # lang-aot
 
+COBOL STRING/UNSTRING pointer rows compare receiver text, pointer writeback and
+overflow/success markers together, including exact fit, partial transfer,
+invalid starts and a trailing delimiter. They declare all seven standard backends.
+
+COBOL delimiter rows cover STRING first-delimiter behavior and UNSTRING field
+fitting, empty fields and exhausted-source receiver preservation. Bracketed
+outputs keep all padding visible across the seven standard backends.
+
+COBOL STRING SIZE rows prove full-width source copying, receiver truncation and
+untouched tail preservation, including a second write after changing a source.
+Visible markers retain spaces in the seven-backend output comparisons.
+
+COBOL reference-modification rows cover ASCII slices with literal/computed
+bounds, comparisons, MOVE padding/truncation and invalid-bound traps on the
+seven standard backends. Existing byte/character and category limits remain.
+
+Oct's matrix includes while-loop byte wrapping returned through a function call,
+conditional loop exit, and nested break targets on the seven standard backends.
+
+
+FLOW-MATIC's canonical matrix now includes scalar output, equal/otherwise
+branches and a jump chain on all seven standard backends. Nonzero input and
+EOF-aware record-stream parity remain tracked separately under VM-039.
+
+
+McCarthy's native corpus runs on Linux, macOS and Windows. Execute it with
+`cargo test -p lang-aot --test conformance mccarthy_native_corpus_executes -- --exact --nocapture`.
+Windows CI sets `LANG_REQUIRE_WINDOWS_AOT=1` so an absent linker fails the gate.
+
+
+See the [feature/backend coverage audit](../../../specs/LANG-VM-FEATURE-COVERAGE.md)
+for all ten frontends, executable proofs, host gates and remaining work.
+
+GC-linked integration tests use the static archive path reported by Cargo, so
+`CARGO_TARGET_DIR` and Cargo-configured artifact directories are respected.
+`cargo test -p lang-aot --test cargo_archive_path` checks artifact selection and
+builds the archive in an isolated temporary target directory containing spaces.
+
 Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, and Macsyma** to
 native executables through the shared LANG VM chain.
+
+The language matrix compares text output using LF line endings, accepting the
+equivalent CRLF produced by Windows text runtimes. It preserves lone carriage
+returns and other content; Brainfuck retains its exact comparison. Compiler and
+runtime output are unchanged. Normal BUILD protects the comparison boundary and
+three multi-line BASIC cases (real numbers, mixed DATA, and RND):
+
+```sh
+cargo test -p lang-aot --test lang_matrix portable_text_stdout_ -- --nocapture
+```
+
+Missing external tools are reported as skips; available backends must execute
+and match. This focused command does not replace full-matrix validation.
+
+The JVM path preserves integer widths in modules that use floating-point values.
+This matters for BASIC's RND helper: two small i64 operands can multiply to a
+value beyond i32 before modulo reduces it. The integer-only simulator's
+compatibility path is kept for modules within its existing scope.
 
 > **macsyma-iir-vm.md Wave 4 + VM-021 — Macsyma runs on NativeAOT + LLVM + WASM + JVM + CLR + JIT (v0.280.0):**
 > `tests/macsyma_conformance.rs` proves 21 v0 arithmetic/assignment Macsyma
@@ -390,3 +446,31 @@ Windows, and ARM64 macOS for free.
   intentionally minimal in V1.  Cross-OS support will land alongside
   multi-language `--emit-object` once we have a story for cross-host
   runtime archives.
+
+### Non-ALGOL matrix CI coverage (VM-024)
+
+Normal BUILD runs every non-ALGOL row of the canonical LANG matrix alongside
+the dedicated integration suites and focused BASIC regressions:
+
+```sh
+cargo test -p lang-aot --test lang_matrix non_algol_matrix_every_proven_cell_agrees -- --exact --nocapture
+```
+
+Each row executes its declared backends, with counts of programs, executed cells,
+and absent-tool skips. Compilation, linking, runtime and result errors fail;
+a detected toolchain cannot silently skip. The unfiltered matrix and its
+single-cell diagnostics remain available. Full ALGOL matrix CI is tracked as
+VM-025 in `LANG-VM-NON-ALGOL-BACKLOG.md`. The Windows Rust-only CI leg retains
+its dedicated native smoke gate; this BUILD command runs on Linux/macOS CI.
+
+
+The VM-047a INSPECT tallying corpus compares ALL, CHARACTERS and LEADING with
+frontend oracle output and the seven standard LANG matrix backends. It observes
+nonzero counters, zero matches, padded field widths and reassigned items.
+These ASCII proofs do not establish replacement or BEFORE/AFTER region parity.
+
+
+VM-047b extends the ASCII INSPECT corpus to replacement: ALL, LEADING,
+CHARACTERS, first-match priority and non-rechaining multi-item rules. Five
+programs compare complete output with the oracle and seven standard backends;
+BEFORE/AFTER regions remain a separate proof slice.

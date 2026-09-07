@@ -1,7 +1,13 @@
 # mosstyle slot variants, isolation, and style extension
 
-**Status:** Specification
+**Status:** Superseded design exploration
 **Scope:** `mosstyle-compiler`, every `mosaic-emit-*` backend, `mosaic-pkg-toolkit`
+
+> **Superseded by [UI49](UI49-mosstyle-slot-states.md).** UI49 is the normative
+> slot-variant design: `one-of` values become flat `state` names owned by their
+> declaring slot. The `switch` syntax, per-variant files, and style `extends`
+> proposal below were exploratory alternatives and must not guide
+> implementation. This document remains for decision history.
 
 ---
 

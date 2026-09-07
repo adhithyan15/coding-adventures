@@ -79,6 +79,14 @@ durations and easing curves. The groups live on a transparent first-child
 Part-level transitions animate entry and exit; state-local transitions
 override entry.
 
+UI49 states owned by a `.mil` `one-of` slot bind to that slot's generated
+dependency property and compare it with the closed-set state name through a
+generated ordinal string converter. Multiple enum axes compose in model slot
+order, while explicit structural and interaction predicates retain higher
+precedence. Native Host controls receive the supported control setters; paint
+states also reach `Box`, `Row`, `Column`, and `Stack` through their native
+`Border` target, even when the part has no base style.
+
 UI15's built-in `state hover` needs no matching layout predicate on controls
 that lower to WinUI's native ButtonBase family (`HostButton`, `HostCheckbox`,
 `HostRadio`, and `HostLink`). Its trigger binds directly to `IsPointerOver`.

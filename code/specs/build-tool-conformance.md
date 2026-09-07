@@ -687,6 +687,12 @@ extension mode; declared-source mode instead uses the target's explicit
 portable globs. Generated-component pruning and inert link/reparse boundaries
 run before either mode and cannot be undone by any selector.
 
+Portable character classes retain Python `fnmatchcase` literals, negation by
+leading `!`, ascending `x-y` ranges, literal leading or trailing `-`, literal
+leading `]`, and unmatched `[` as a literal. They reject descending ranges and
+the ambiguous class operators `--`, `&&`, `~~`, and `||`; implementations MUST
+reject such a glob before matching rather than inherit host-regex behavior.
+
 Registry selectors are exact, case-sensitive, NFC strings sorted by raw UTF-8
 bytes. The closed schema rejects unknown fields, unsupported versions,
 unbounded arrays, unsafe suffixes, basenames with separators, unsafe relative
@@ -739,11 +745,13 @@ to the selected language, requires a package-name component, and applies the
 candidate ceiling during incremental immediate-child enumeration before
 bounded sorting.
 
-That package-local projection does not by itself complete Swift's native
-source-input adoption. A separate dependent Swift owner integrates the
-repository-relative boundary registry, tracked-regular-file evidence, and its
-reverse diff index. Until that owner lands, the Swift engine makes no claim to
-hash shared or generated-pruning-exception inputs outside a package root.
+Swift and the shared C#/F# engine complete this package-local projection with
+the repository-relative boundary registry, tracked-regular-file evidence, and
+an exact reverse diff index. Their native readers remain responsible for
+proving stable tracked bytes; the process-free oracle below receives only the
+validated boundary and caller-supplied bytes. Other engines must not claim
+shared or generated-pruning-exception inputs until their dependent adoption
+owners implement the same boundary.
 
 For the exact Rust `code/packages/rust/engram-wasm` package root, one
 `package_exact_inputs` rule includes the BUILD-executed `js/smoke.mjs`, its
@@ -858,6 +866,65 @@ projection supplies an exact boundary-input reverse index for Git diffs, so a
 boundary-only modification, deletion, or rename selects every registered
 consumer before ordinary dependent and prerequisite closure. Swift never
 widens traversal into a generated directory to reach an exception.
+
+The shared C#/F# v1 adopter keeps one immutable typed projection of both
+registries in the C# engine used by both front doors. Native adoption tests for
+each front door decode the checked registries, compare the complete projections
+field for field, recompute both domain-separated digests, and exercise the same
+production selectors against every package-local and repository-boundary
+`source_collection` case. The F# front door exposes explicit process-free
+source-selection and package-digest facade symbols rather than treating a C#
+test as sufficient evidence for the delegated lane. Neither executable locates
+or decodes the repository fixtures at runtime.
+
+The shared engine applies the language registry's exact generated-component
+pruning before extension or declared-source selection, rejects unknown
+languages before enumeration, and retains the repository root while collecting
+and hashing. Repository-boundary inputs require a pinned-registry match and a
+stable bounded Git-index projection proving tracked regular mode before and
+after the batch read. Package-local and boundary inputs are deduplicated by
+canonical repository-relative path, checked for NFC and portable-identity
+aliases, sorted by raw UTF-8 path bytes, and hashed as exact raw bytes with the
+Hashing v1 length frames. Collection is bounded to 100,000 candidates, 50,000
+selected inputs, 64 MiB per file, and 1 GiB per package. Declared-source
+matching is additionally bounded to 50,000,000 work units per package. Before
+each attempted glob match, implementations add
+`(pattern Unicode-scalar count + 1) * (candidate-path Unicode-scalar count + 1)`
+to one checked unsigned counter, fail with `SOURCE_HASH_LIMIT_EXCEEDED` on
+overflow or when the total exceeds the ceiling, and stop charging later
+patterns for a candidate after its first match. Symbolic links,
+reparse points, non-regular files, containment escapes, directory or file
+mutation, index mutation, and limit overflow fail closed with one stable
+redacted package-hash diagnostic.
+
+This adoption owner covers source selection, boundary integration, reverse
+boundary-diff selection, and `package_digest` only. Dependency-name framing,
+decoded dependency digests, `dependencies_digest`, `combined_digest`, cache
+hit/miss/recovery classification, corrupt-cache diagnostics, and dependent
+invalidation remain the separate portable dependency-hashing contract.
+
+The Haskell package-local v1 adopter keeps one immutable native projection of
+the complete language registry beside the production collector. Its package-
+local tests decode the checked JSON registry, compare every field with that
+production projection, recompute the domain-separated digest, and exercise the
+same production selector against every package-local `source_collection` case.
+The executable does not locate or decode a repository fixture at runtime. It
+rejects unknown languages before enumeration, prunes exact generated components
+before applying selectors, and resolves all seven language-registry roles with
+their declared root, recursive, package, or scoped precedence.
+
+The Haskell collector retains one canonical package root, includes only stable
+regular descendants, and verifies link, containment, file, and directory state
+around bounded reads. Selected inputs are deduplicated by canonical repository-
+relative path, checked for portable NFC and platform-identity collisions,
+sorted by raw UTF-8 bytes, and fed in 8-KiB chunks to the repository SHA-256
+package using the Hashing v1 unsigned 64-bit big-endian path/content frames.
+Selection retains the shared candidate, selected-input, file-byte, package-byte,
+and declared-match-work ceilings and reports one stable redacted package-hash
+diagnostic on failure. Repository-boundary union, tracked-index proof, and exact
+reverse diff selection remain owned by the separate Haskell repository-boundary
+adoption child. Dependency hashing and cache classification remain owned by the
+separate Haskell dependency-hashing child.
 
 ### 6. Starlark
 
@@ -1056,7 +1123,8 @@ structured command fields use the shared definitions in the corpus schema.
 
 | Domain | `input.options` | Successful `result` |
 |---|---|---|
-| `diff_selection` | packages with repository-relative roots and an explicit `package_prefix` or `strict_globs` source mode, dependency edges, forced packages, and an `all` or `error` unknown-path policy | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
+| `ci_gate_selection` | a validated closed registry, nullable affected-package and changed-file snapshots, and `force` | every gate sorted by id with its required verdict and deterministic `run_` output name |
+| `diff_selection` | packages with repository-relative roots and an explicit `package_prefix` or `strict_globs` source mode, dependency edges, forced packages, an `all` or `error` unknown-path policy, and an optional pinned repository source-input boundary digest | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
 | `source_collection` | an `extension` or `declared_sources` mode, exact extensions, special filenames, portable globs, and bounded inert file/symlink/reparse candidate records | sorted normalized included file paths with lowercase SHA-256 content digests |
 | `hashing_cache` | SHA-256 mode, package, included paths, dependency digests, dependents, and a closed missing, corrupt, or typed prior-cache record | lowercase `package_digest`, `dependencies_digest`, `combined_digest`, cache status, and sorted invalidated packages |
 | `starlark` | repository-contained entrypoint, v1 `_ctx`, and declared legacy fallback policy | sorted targets containing rule metadata, structured commands, deterministic display rendering, and the per-target command source |
@@ -1067,7 +1135,12 @@ structured command fields use the shared definitions in the corpus schema.
 
 These records intentionally model decisions, not host operations:
 
-- diff selection receives `changed_paths`; it never invokes Git;
+- CI gate selection receives a validated registry and inert change snapshots;
+  it never reads the registry, invokes Git, constructs the graph, writes
+  `$GITHUB_OUTPUT`, or schedules a workflow;
+- diff selection receives `changed_paths` and, when boundary selection is
+  requested, the already validated repository source-input boundary; it never
+  invokes Git or reads the checkout;
 - source collection receives inert candidate records; it never enumerates or
   opens a checkout and never follows a linked component;
 - hashing receives inline bytes; it never reads host metadata;
@@ -1078,8 +1151,21 @@ These records intentionally model decisions, not host operations:
   typed record and then classify an explicitly supplied post-parse outcome.
   They never invoke a front door or launch a build.
 
-Hashing v1 uses SHA-256 over an unambiguous byte stream. Included files are
-sorted by normalized forward-slash path. For each file, append the unsigned
+When `diff_selection.options.boundary_sha256` is present, it MUST equal the
+digest of the validated repository source-input boundary before any package is
+selected. Each changed path is matched exactly against that boundary's input
+paths. An exact match selects every declared package whose `rel_path` is in the
+input's applicability projection before dependent and prerequisite closure.
+There is no case folding, prefix, ancestor, basename, glob, or near-path match.
+A boundary path with no applicable declared consumer remains unknown and follows
+`unknown_path_policy`. The boundary object is inert validated input; this pure
+operation does not inspect Git modes, object ids, stages, links, or host files.
+
+Hashing v1 uses SHA-256 over an unambiguous byte stream. The caller supplies the
+deduplicated union of package-local and applicable repository-boundary paths in
+`include_paths`; the oracle sorts that union by raw UTF-8 bytes of each
+normalized forward-slash path, independent of input-array order. For each file,
+append the unsigned
 64-bit big-endian path-byte length, UTF-8 path bytes, unsigned 64-bit
 big-endian content length, and exact content bytes. Dependency digests are
 sorted by package name and encoded the same way, using the package name as the
@@ -1944,6 +2030,7 @@ V1 capabilities are:
 
 | Capability | Final parity |
 |---|---:|
+| `ci_gate_selection` | required |
 | `discovery` | required |
 | `resolution` | required |
 | `graph` | required |

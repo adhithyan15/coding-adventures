@@ -70,7 +70,7 @@ stubbornly unchanged things human languages have.
 
 Like Spanish *no*, **nahīṃ** is both the **answer** and the **sentence-negator**:
 
-- **answer**: *आप आ रहे हैं?* — **नहीं.** ("Are you coming?" — "No.")
+- **answer**: *क्या आप ठीक हैं?* — **नहीं.** ("Are you well?" — "No.")
 - **negator**: *मैं **नहीं** जानता* — "I do **not** know."
 
 So this single word gives you both "no" and how to make a sentence negative.

@@ -1,0 +1,40 @@
+// Grid.dark.msl — dark theme style for the Grid component.
+//
+// Targets two parts:
+//   sheet      — the HostTable element wrapping the whole grid
+//   data-row   — each body row.  State `selected` raises the row when
+//                the host's selected-row index points at it; state
+//                `hover` lifts the row under the pointer.
+//
+// Why not zebra striping?  mosstyle's v1 state vocabulary is the fixed
+// set { hover, pressed, focused, disabled, selected, editing, error }
+// (mosstyle-compiler's `validate_state_name`).  "even" / "odd" are not
+// in that set, so per-row alternation must be done at the colour-token
+// layer (a future $color-row-alt token) or by the backend emitter
+// generating `:nth-child(even)` rules — out of scope for v0.1.0.
+//
+// Colour palette mirrors Cell.dark.msl:
+//   #1e1e1e   — VS Code dark surface (matches Cell background)
+//   #2a2d2e   — VS Code hover surface
+//   #094771   — VS Code selection blue (matches active-row highlight)
+//   #3f3f46   — subtle border colour between cells
+
+style RowHeaderGrid {
+  part sheet {
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: #3f3f46 ;
+    background:   #1e1e1e ;
+  }
+
+  part data-row {
+    background: #1e1e1e ;
+
+    state hover {
+      background: #2a2d2e ;
+    }
+    state selected {
+      background: #094771 ;
+    }
+  }
+}

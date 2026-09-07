@@ -16,15 +16,22 @@
 //!
 //! ## Supported languages today
 //!
-//! | Language | Status | Frontend crate |
-//! |---|---|---|
-//! | Twig            | full | `twig-ir-compiler` |
-//! | Nib             | full | `nib-iir-compiler` |
-//! | Brainfuck       | full | `brainfuck-iir-compiler` |
-//! | Dartmouth BASIC | full (integer subset) | `dartmouth-basic-iir-compiler` |
-//! | Oct             | full (integer subset; 8008 intrinsics rejected) | `oct-iir-compiler` |
-//! | ALGOL 60        | scalar integer/boolean subset | `algol-iir-compiler` |
-//! | Macsyma          | v0: integer arithmetic/assignment/unevaluated symbolic `Apply` | `macsyma-iir-compiler` |
+//! All ten variants below are wired through the shared IIR driver. Coverage is
+//! feature-specific; see `code/specs/LANG-VM-FEATURE-COVERAGE.md` for executable
+//! proofs, backend exclusions and follow-up work.
+//!
+//! | Language | Frontend crate |
+//! |---|---|
+//! | Twig | `twig-ir-compiler` |
+//! | Nib | `nib-iir-compiler` |
+//! | Brainfuck | `brainfuck-iir-compiler` |
+//! | Dartmouth BASIC | `dartmouth-basic-iir-compiler` |
+//! | Oct | `oct-iir-compiler` |
+//! | McCarthy Lisp | `mccarthy-lisp-iir-compiler` |
+//! | ALGOL 60 | `algol-iir-compiler` |
+//! | FLOW-MATIC | `flow-matic-iir-compiler` |
+//! | COBOL-60 | `cobol-iir-compiler` |
+//! | Macsyma | `macsyma-iir-compiler` |
 //!
 //! ## How to add a language
 //!
@@ -37,8 +44,8 @@
 //! 3. Add a file extension to [`detect_language_from_path`].
 //! 4. Add a smoke test.
 //!
-//! No backend changes required — every frontend gets x86-64 Linux,
-//! x86-64 Windows, and ARM64 macOS for free via the shared chain.
+//! Shared backend entry points are available to every frontend. New features
+//! still need lowering support and executed conformance on each target.
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
@@ -63,7 +70,7 @@ pub enum Language {
     /// Brainfuck — minimalist tape language; `brainfuck-iir-compiler` frontend
     /// lowered for AOT by `lower_brainfuck_for_aot`.
     Brainfuck,
-    /// Dartmouth BASIC — integer subset (PRINT/LET/FOR/GOTO/IF) via the
+    /// Dartmouth BASIC — real arithmetic, control flow, arrays, strings and I/O via the
     /// `dartmouth-basic-iir-compiler` Rust frontend over the shared IIR.
     DartmouthBasic,
     /// Oct — integer subset (let/if/while/calls) via the `oct-iir-compiler`
@@ -72,12 +79,13 @@ pub enum Language {
     /// McCarthy Lisp — the 1960 Lisp 1.0, compiled via
     /// `mccarthy-lisp-iir-compiler` over the `lispy-runtime` value model.
     McCarthyLisp,
-    /// ALGOL 60 — scalar integer/boolean subset over the shared IIR.
+    /// ALGOL 60 — scalars, arrays, procedures and control flow over shared IIR;
+    /// full matrix coverage is tracked by the separate ALGOL campaign.
     Algol60,
     /// FLOW-MATIC (B-0) — the control-flow + scalar-field slice via the
     /// `flow-matic-iir-compiler` frontend; `main` returns an i64 exit code.
     FlowMatic,
-    /// COBOL-60 — the `DISPLAY`/`MOVE`/`STOP RUN` slice over PICTURE-typed
+    /// COBOL-60 — arithmetic, control flow and string operations over PICTURE-typed
     /// WORKING-STORAGE via the `cobol-iir-compiler` frontend; `main` returns an
     /// i64 exit code.
     Cobol60,
@@ -872,6 +880,18 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
                 })
         })
     });
+    // The i32 rewrite exists only for the legacy integer-only simulator.
+    // Mixed real/integer modules already require real Java, so preserve their
+    // declared integer widths too. Small literals do not imply small results:
+    // BASIC RND's 48271 * 48271 overflows i32 before its modulo, even though
+    // neither operand nor modulus needs a wide literal. Retain the decision
+    // module-wide so helper signatures and global accesses stay consistent.
+    let is_real = |ty: &str| matches!(ty, "f32" | "f64");
+    let module_uses_real_values = module.functions.iter().any(|func| {
+        is_real(&func.return_type)
+            || func.params.iter().any(|(_, ty)| is_real(ty))
+            || func.instructions.iter().any(|instr| is_real(&instr.type_hint))
+    });
     // Whole-module, not per-function: a `call` couples a caller's and callee's
     // value models. Narrowing `main` while its callee `lambda_0` keeps a tagged
     // `object` boundary produced a caller that stores the call's `object` result
@@ -909,10 +929,11 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
                 && matches!(i.srcs.first(),
                     Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str()))
         });
-        if uses_wide_builtin || module_prints || module_has_wide_i64_constant {
+        if uses_wide_builtin || module_prints || module_has_wide_i64_constant || module_uses_real_values {
             // Wide i64 value model: this function uses a wide builtin directly
             // or shares a module with one, or the module contains an explicit
-            // i64 constant that cannot be represented by i32. It must keep i64
+            // i64 constant that cannot be represented by i32, or uses mixed
+            // real/integer values outside the integer-only simulator. Keep i64
             // to preserve values and stay call-signature-consistent with its
             // callers/callees.
             continue;
@@ -2874,6 +2895,21 @@ mod tests {
             }),
             "the allocation must narrow to the same int[] descriptor"
         );
+    }
+
+    #[test]
+    fn jvm_concretization_preserves_mixed_real_integer_intermediates() {
+        let mut module = compile_source_to_iir(
+            Language::DartmouthBasic,
+            "10 PRINT RND(1)\n20 END\n",
+            "mixed_numeric_widths",
+        ).expect("BASIC RND must compile");
+        concretize_scalar_any_for_jvm(&mut module);
+        let helper = module.get_function("__basic_rnd").expect("RND helper exists");
+        let product = helper.instructions.iter().find(|instr| {
+            instr.op == "mul" && instr.dest.as_deref() == Some("product")
+        }).expect("the RNG multiplies its state before modulo");
+        assert_eq!(product.type_hint, "i64", "small RNG operands can produce a wide product");
     }
 
     #[test]

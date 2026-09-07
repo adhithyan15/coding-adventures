@@ -1,8 +1,9 @@
 // Alert.light.msl — default light-theme styling for Alert.
 //
-// Same caveat as Button.light.msl: variant sub-parts (alert/info,
-// alert/danger, etc.) defer to the spec §4.1 syntax decision. v0.1
-// PR-1 uses the info-variant colors as the base.
+// The base is the documented info fallback for an omitted slot. UI49
+// states are owned by Alert.mil's closed `variant` axis. The close
+// button repeats the foreground state because it is a native control
+// and does not inherit the wrapping alert's text color.
 
 style Alert {
   part alert {
@@ -12,6 +13,47 @@ style Alert {
     color         : "#055160" ;
     border-width  : 1 ;
     border-color  : "#b6effb" ;
+
+    state primary {
+      background   : "#cfe2ff" ;
+      color        : "#084298" ;
+      border-color : "#b6d4fe" ;
+    }
+    state secondary {
+      background   : "#e2e3e5" ;
+      color        : "#41464b" ;
+      border-color : "#d3d6d8" ;
+    }
+    state success {
+      background   : "#d1e7dd" ;
+      color        : "#0f5132" ;
+      border-color : "#badbcc" ;
+    }
+    state danger {
+      background   : "#f8d7da" ;
+      color        : "#842029" ;
+      border-color : "#f5c2c7" ;
+    }
+    state warning {
+      background   : "#fff3cd" ;
+      color        : "#664d03" ;
+      border-color : "#ffecb5" ;
+    }
+    state info {
+      background   : "#cff4fc" ;
+      color        : "#055160" ;
+      border-color : "#b6effb" ;
+    }
+    state light {
+      background   : "#fefefe" ;
+      color        : "#636464" ;
+      border-color : "#fdfdfe" ;
+    }
+    state dark {
+      background   : "#d3d3d4" ;
+      color        : "#141619" ;
+      border-color : "#bcbebf" ;
+    }
   }
   part alert-row {
     padding : 0 ;
@@ -23,5 +65,14 @@ style Alert {
     background : "transparent" ;
     border-width : 0 ;
     color : "#055160" ;
+
+    state primary { color : "#084298" ; }
+    state secondary { color : "#41464b" ; }
+    state success { color : "#0f5132" ; }
+    state danger { color : "#842029" ; }
+    state warning { color : "#664d03" ; }
+    state info { color : "#055160" ; }
+    state light { color : "#636464" ; }
+    state dark { color : "#141619" ; }
   }
 }

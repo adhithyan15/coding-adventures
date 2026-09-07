@@ -1,0 +1,75 @@
+name: VisiCalc interactions
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/visicalc.yml'
+      - 'code/programs/typescript/visicalc/**'
+      - 'code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js'
+      - 'code/programs/mosaic/visicalc/**'
+      - 'code/packages/mosaic/mosaic-pkg-grid/**'
+      - 'code/packages/rust/mosaic-*/**'
+      - 'code/packages/rust/visicalc-mosaic-app/**'
+      - 'code/packages/rust/spreadsheet-core/**'
+      - 'code/packages/rust/mosmodel-compiler/**'
+      - 'code/packages/rust/moslayout-compiler/**'
+      - 'code/packages/rust/mosstyle-compiler/**'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/visicalc.yml'
+      - 'code/programs/typescript/visicalc/**'
+      - 'code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js'
+      - 'code/programs/mosaic/visicalc/**'
+      - 'code/packages/mosaic/mosaic-pkg-grid/**'
+      - 'code/packages/rust/mosaic-*/**'
+      - 'code/packages/rust/visicalc-mosaic-app/**'
+      - 'code/packages/rust/spreadsheet-core/**'
+      - 'code/packages/rust/mosmodel-compiler/**'
+      - 'code/packages/rust/moslayout-compiler/**'
+      - 'code/packages/rust/mosstyle-compiler/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: visicalc-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  formula-edit:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+        working-directory: code/programs/typescript/visicalc
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Linux compiler dependencies
+        if: runner.os == 'Linux'
+        run: bash ../../../scripts/ci/apt-install.sh libcairo2-dev
+      - name: Install web dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Check the root Mosaic package
+        run: cargo test --manifest-path ../../mosaic/visicalc/Cargo.toml
+      - name: Test the standard Rust application and native ABI
+        run: cargo test --manifest-path ../../../packages/rust/Cargo.toml -p visicalc-mosaic-app
+      - name: Build and exercise the standard WASM lifecycle bridge
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo build --manifest-path ../../../packages/rust/Cargo.toml -p mosaic-app-conformance -p visicalc-mosaic-app --target wasm32-unknown-unknown
+          node --test ../../../packages/rust/mosaic-app-wasm/js/conformance.test.mjs
+      - name: Regenerate Mosaic controls and test the real WASM engine
+        run: npm test
+      - name: Check the production build
+        run: npm run build

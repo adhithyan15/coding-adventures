@@ -10,11 +10,11 @@
     "upstream_source": "html5lib-tests/tokenizer"
   },
   "tree_construction": {
-    "local_cases": 2640,
+    "local_cases": 2641,
     "missing": 0,
     "missing_sources": [],
-    "upstream_cases": 1937,
-    "upstream_revision": "5ce815a83b2601ce920e39f001cd7e77642ea860",
+    "upstream_cases": 1938,
+    "upstream_revision": "b89af32bc8f42d678f444eb0703bca015ddcf240",
     "upstream_source": "wpt/html/syntax/parsing/resources"
   }
 }

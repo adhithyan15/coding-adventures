@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "ci-gate-selection/package-and-path",
+  "domain": "ci_gate_selection",
+  "summary": "Exact affected packages and non-package path globs independently require their gates.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["ci_gate_selection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "ci_gate_selection",
+    "options": {
+      "registry": {
+        "schema_version": 1,
+        "gates": [
+          {"id": "alpha-job", "scope": "job", "description": "Package gate.", "packages": ["rust/alpha"], "paths": ["code/fixtures/alpha/**"]},
+          {"id": "beta-job", "scope": "job", "description": "Path gate.", "packages": ["ruby/beta"], "paths": ["code/grammars/beta/**", "code/scripts/beta.py"]}
+        ]
+      },
+      "affected_packages": ["rust/alpha"],
+      "changed_files": ["code/grammars/beta/beta.tokens"],
+      "force": false
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "ci-gate-selection/package-and-path",
+    "domain": "ci_gate_selection",
+    "outcome": "ok",
+    "result": {"gates": [
+      {"id": "alpha-job", "required": true, "output_name": "run_alpha_job"},
+      {"id": "beta-job", "required": true, "output_name": "run_beta_job"}
+    ]},
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

@@ -2482,13 +2482,212 @@ fn parse_element(
                     "BJT TNOM must be finite and positive",
                 ));
             }
+            let flicker_noise_coefficient = *model.params.get("KF").unwrap_or(&0.0);
+            if !flicker_noise_coefficient.is_finite() || flicker_noise_coefficient < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT KF must be finite and non-negative",
+                ));
+            }
+            let flicker_noise_exponent = *model.params.get("AF").unwrap_or(&1.0);
+            if !flicker_noise_exponent.is_finite() || flicker_noise_exponent < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT AF must be finite and non-negative",
+                ));
+            }
+            let forward_excess_phase_degrees = *model.params.get("PTF").unwrap_or(&0.0);
+            if !forward_excess_phase_degrees.is_finite() || forward_excess_phase_degrees < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT PTF must be finite and non-negative",
+                ));
+            }
+            let forward_transit_time_bias_coefficient = *model.params.get("XTF").unwrap_or(&0.0);
+            if !forward_transit_time_bias_coefficient.is_finite()
+                || forward_transit_time_bias_coefficient < 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "BJT XTF must be finite and non-negative",
+                ));
+            }
+            let forward_transit_time_current = *model.params.get("ITF").unwrap_or(&0.0);
+            if !forward_transit_time_current.is_finite() || forward_transit_time_current < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT ITF must be finite and non-negative",
+                ));
+            }
+            let forward_transit_time_voltage = *model.params.get("VTF").unwrap_or(&0.0);
+            if !forward_transit_time_voltage.is_finite() || forward_transit_time_voltage < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT VTF must be finite and non-negative",
+                ));
+            }
+            let emitter_resistance = *model.params.get("RE").unwrap_or(&0.0);
+            if !emitter_resistance.is_finite() || emitter_resistance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT RE must be finite and non-negative",
+                ));
+            }
+            let collector_resistance = *model.params.get("RC").unwrap_or(&0.0);
+            if !collector_resistance.is_finite() || collector_resistance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT RC must be finite and non-negative",
+                ));
+            }
+            let base_resistance = *model.params.get("RB").unwrap_or(&0.0);
+            if !base_resistance.is_finite() || base_resistance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT RB must be finite and non-negative",
+                ));
+            }
+            let minimum_base_resistance = model.params.get("RBM").copied();
+            if minimum_base_resistance
+                .is_some_and(|resistance| !resistance.is_finite() || resistance < 0.0)
+            {
+                return Err(NetlistParseError::new(
+                    "BJT RBM must be finite and non-negative",
+                ));
+            }
+            let base_resistance_half_current = *model.params.get("IRB").unwrap_or(&0.0);
+            if !base_resistance_half_current.is_finite() || base_resistance_half_current < 0.0 {
+                return Err(NetlistParseError::new(
+                    "BJT IRB must be finite and non-negative",
+                ));
+            }
+            let base_collector_capacitance_fraction = *model.params.get("XCJC").unwrap_or(&1.0);
+            if !base_collector_capacitance_fraction.is_finite()
+                || !(0.0..=1.0).contains(&base_collector_capacitance_fraction)
+            {
+                return Err(NetlistParseError::new(
+                    "BJT XCJC must be finite and between zero and one",
+                ));
+            }
+            let saturation_current = *model.params.get("IS").unwrap_or(&1.0e-14);
+            let base_emitter_leakage_saturation_current = match model.params.get("ISE") {
+                Some(&current) => current,
+                None => {
+                    let ratio = *model.params.get("C2").unwrap_or(&0.0);
+                    if !ratio.is_finite() || ratio < 0.0 {
+                        return Err(NetlistParseError::new(
+                            "BJT C2 must be finite and non-negative",
+                        ));
+                    }
+                    ratio * saturation_current
+                }
+            };
+            if !base_emitter_leakage_saturation_current.is_finite()
+                || base_emitter_leakage_saturation_current < 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "BJT ISE must be finite and non-negative",
+                ));
+            }
+            let base_emitter_leakage_emission_coefficient = *model.params.get("NE").unwrap_or(&1.0);
+            if !base_emitter_leakage_emission_coefficient.is_finite()
+                || base_emitter_leakage_emission_coefficient <= 0.0
+            {
+                return Err(NetlistParseError::new("BJT NE must be finite and positive"));
+            }
+            let base_collector_leakage_saturation_current = match model.params.get("ISC") {
+                Some(&current) => current,
+                None => {
+                    let ratio = *model.params.get("C4").unwrap_or(&0.0);
+                    if !ratio.is_finite() || ratio < 0.0 {
+                        return Err(NetlistParseError::new(
+                            "BJT C4 must be finite and non-negative",
+                        ));
+                    }
+                    ratio * saturation_current
+                }
+            };
+            if !base_collector_leakage_saturation_current.is_finite()
+                || base_collector_leakage_saturation_current < 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "BJT ISC must be finite and non-negative",
+                ));
+            }
+            let base_collector_leakage_emission_coefficient = *model.params.get("NC").unwrap_or(&2.0);
+            if !base_collector_leakage_emission_coefficient.is_finite()
+                || base_collector_leakage_emission_coefficient <= 0.0
+            {
+                return Err(NetlistParseError::new("BJT NC must be finite and positive"));
+            }
+            let forward_beta_temperature_exponent = *model.params.get("XTB").unwrap_or(&0.0);
+            if !forward_beta_temperature_exponent.is_finite() {
+                return Err(NetlistParseError::new("BJT XTB must be finite"));
+            }
+            let reverse_beta = *model
+                .params
+                .get("BR")
+                .or_else(|| model.params.get("BETA_R"))
+                .unwrap_or(&1.0);
+            if !reverse_beta.is_finite() || reverse_beta <= 0.0 {
+                return Err(NetlistParseError::new("BJT BR must be finite and positive"));
+            }
+            let reverse_emission_coefficient = *model.params.get("NR").unwrap_or(&1.0);
+            if !reverse_emission_coefficient.is_finite() || reverse_emission_coefficient <= 0.0 {
+                return Err(NetlistParseError::new("BJT NR must be finite and positive"));
+            }
+            let forward_emission_coefficient = *model.params.get("NF").unwrap_or(&1.0);
+            if !forward_emission_coefficient.is_finite() || forward_emission_coefficient <= 0.0 {
+                return Err(NetlistParseError::new("BJT NF must be finite and positive"));
+            }
+            let base_emitter_junction_potential = *model
+                .params
+                .get("VJE")
+                .or_else(|| model.params.get("PE"))
+                .unwrap_or(&0.75);
+            if !base_emitter_junction_potential.is_finite() || base_emitter_junction_potential <= 0.0 {
+                return Err(NetlistParseError::new("BJT VJE must be finite and positive"));
+            }
+            let base_collector_junction_potential = *model
+                .params
+                .get("VJC")
+                .or_else(|| model.params.get("PC"))
+                .unwrap_or(&0.75);
+            if !base_collector_junction_potential.is_finite()
+                || base_collector_junction_potential <= 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "BJT VJC must be finite and positive",
+                ));
+            }
+            let base_collector_grading_coefficient = *model
+                .params
+                .get("MJC")
+                .or_else(|| model.params.get("MC"))
+                .unwrap_or(&0.33);
+            if !base_collector_grading_coefficient.is_finite()
+                || !(0.0..1.0).contains(&base_collector_grading_coefficient)
+            {
+                return Err(NetlistParseError::new(
+                    "BJT MJC must be finite and in [0, 1)",
+                ));
+            }
+            let forward_bias_depletion_coefficient = *model.params.get("FC").unwrap_or(&0.5);
+            if !forward_bias_depletion_coefficient.is_finite()
+                || !(0.0..1.0).contains(&forward_bias_depletion_coefficient)
+            {
+                return Err(NetlistParseError::new(
+                    "BJT FC must be finite and in [0, 1)",
+                ));
+            }
+            let base_emitter_grading_coefficient = *model
+                .params
+                .get("MJE")
+                .or_else(|| model.params.get("ME"))
+                .unwrap_or(&0.33);
+            if !base_emitter_grading_coefficient.is_finite()
+                || !(0.0..1.0).contains(&base_emitter_grading_coefficient)
+            {
+                return Err(NetlistParseError::new("BJT MJE must be finite and in [0, 1)"));
+            }
             let mut bjt = Bjt::with_model(
                 name,
                 &fields[1],
                 &fields[2],
                 &fields[3],
                 polarity,
-                *model.params.get("IS").unwrap_or(&1.0e-14),
+                saturation_current,
                 forward_beta,
                 *model.params.get("VT").unwrap_or(&0.02585),
                 *model
@@ -2512,6 +2711,34 @@ fn parse_element(
             bjt.reverse_beta_rolloff_current = reverse_beta_rolloff_current;
             bjt.nominal_temperature_kelvin = nominal_temperature_kelvin
                 .map(|temperature_celsius| temperature_celsius + 273.15);
+            bjt.flicker_noise_coefficient = flicker_noise_coefficient;
+            bjt.flicker_noise_exponent = flicker_noise_exponent;
+            bjt.forward_excess_phase_degrees = forward_excess_phase_degrees;
+            bjt.forward_transit_time_bias_coefficient = forward_transit_time_bias_coefficient;
+            bjt.forward_transit_time_current = forward_transit_time_current;
+            bjt.forward_transit_time_voltage = forward_transit_time_voltage;
+            bjt.emitter_resistance = emitter_resistance;
+            bjt.collector_resistance = collector_resistance;
+            bjt.base_resistance = base_resistance;
+            bjt.minimum_base_resistance = minimum_base_resistance;
+            bjt.base_resistance_half_current = base_resistance_half_current;
+            bjt.base_collector_capacitance_fraction = base_collector_capacitance_fraction;
+            bjt.base_emitter_leakage_saturation_current = base_emitter_leakage_saturation_current;
+            bjt.base_emitter_leakage_emission_coefficient =
+                base_emitter_leakage_emission_coefficient;
+            bjt.base_collector_leakage_saturation_current =
+                base_collector_leakage_saturation_current;
+            bjt.base_collector_leakage_emission_coefficient =
+                base_collector_leakage_emission_coefficient;
+            bjt.forward_beta_temperature_exponent = forward_beta_temperature_exponent;
+            bjt.reverse_beta = reverse_beta;
+            bjt.reverse_emission_coefficient = reverse_emission_coefficient;
+            bjt.forward_emission_coefficient = forward_emission_coefficient;
+            bjt.base_emitter_junction_potential = base_emitter_junction_potential;
+            bjt.base_collector_junction_potential = base_collector_junction_potential;
+            bjt.base_collector_grading_coefficient = base_collector_grading_coefficient;
+            bjt.forward_bias_depletion_coefficient = forward_bias_depletion_coefficient;
+            bjt.base_emitter_grading_coefficient = base_emitter_grading_coefficient;
             Ok(Element::Bjt(bjt))
         }
         'J' => {

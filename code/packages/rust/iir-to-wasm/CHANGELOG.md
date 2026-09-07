@@ -1,5 +1,24 @@
 # Changelog — iir-to-wasm
 
+## Runtime concatenation operand aliasing (VM-056)
+
+Runtime string concatenation preserves both source handles until all lengths
+and bytes have been read, then assigns the destination. This supports a
+result local that is also the left operand, right operand or both. Executable
+regressions compare complete output for all three cases; COBOL INSPECT
+replacement adds five seven-backend conformance programs.
+
+
+## Unreleased — repeated string assignment
+
+String variables written more than once use runtime handles even within one
+basic block, so a later literal cannot replace an earlier read. Single-write
+literals retain their folding path.
+
+## Unreleased — runtime substring parity
+
+Computed substring bounds mark the result and downstream copies as runtime strings, preventing stale receiver literals from replacing live MOVE output.
+
 ## [0.48.6] — 2026-09-01 (W33 fourth slice — `FieldType` rename fallout)
 
 No functional change — `wasm-types` 0.1.17 renamed `FieldType.val_type:

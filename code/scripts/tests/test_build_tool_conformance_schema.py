@@ -24,6 +24,7 @@ EXAMPLE_ROOT = FIXTURE_ROOT / "cases"
 MAX_SAFE_INTEGER = 9_007_199_254_740_991
 RESERVED_ADAPTER_FLAGS = ("--conformance", "--workspace-root", "--output")
 DOMAIN_CAPABILITIES = {
+    "ci_gate_selection": {"ci_gate_selection"},
     "discovery": {"discovery"},
     "resolution": {"resolution"},
     "graph": {"graph"},
@@ -299,6 +300,28 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
             seen.add(example["domain"])
 
         self.assertEqual(seen, pure_domains)
+
+    def test_ci_gate_selection_schema_preserves_null_vs_empty_snapshots(self) -> None:
+        import jsonschema
+
+        validator = jsonschema.Draft202012Validator(self.pure_schema)
+        example = next(
+            example
+            for example in self.examples
+            if example["id"] == "ci-gate-selection/unrelated-change"
+        )
+        for field in ("affected_packages", "changed_files"):
+            with self.subTest(field=field):
+                record = {
+                    "domain": example["domain"],
+                    "outcome": example["expected"]["outcome"],
+                    "input": copy.deepcopy(example["input"]),
+                    "result": example["expected"]["result"],
+                }
+                record["input"]["options"][field] = None
+                self.assertEqual(list(validator.iter_errors(record)), [])
+                record["input"]["options"][field] = []
+                self.assertEqual(list(validator.iter_errors(record)), [])
 
     def test_every_pure_domain_rejects_unknown_input_fields(self) -> None:
         import jsonschema

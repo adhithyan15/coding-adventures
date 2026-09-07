@@ -8,6 +8,7 @@
     "components": "bash scripts/build.sh",
     "dev": "npm run components && vite",
     "build": "npm run components && tsc -b && vite build",
+    "test": "npm run components && vitest run",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -15,10 +16,13 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^26.1.0",
     "typescript": "^5.6.3",
-    "vite": "^6.0.1"
+    "vite": "^6.0.1",
+    "vitest": "^3.2.4"
   }
 }

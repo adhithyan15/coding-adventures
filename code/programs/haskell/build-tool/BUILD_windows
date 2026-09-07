@@ -1,1 +1,1 @@
-cabal test all
+cabal test all --enable-optimization=2

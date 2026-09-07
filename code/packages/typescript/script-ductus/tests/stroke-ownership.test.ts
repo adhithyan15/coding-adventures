@@ -159,13 +159,13 @@ describe("stroke ownership migration baseline", () => {
       counts: Object.fromEntries(
         Object.entries(counts).sort(([a], [b]) => a.localeCompare(b)),
       ),
-    // Measured, not reasoned: ऋ (DEVANAGARI LETTER VOCALIC R) is the only glyph
-    // added since the previous pin, so it alone moved keys 349 -> 350, both
-    // hashes, and devanagari 43 -> 44.
+      // Measured, not reasoned: source-verified Tamil ஏ and ஓ are the only
+      // glyphs added since the previous pin, so they move keys 350 -> 352,
+      // the ordered key hash, and Tamil 27 -> 29.
     }).toEqual({
-      keys: 350,
+      keys: 352,
       keyHash:
-        "df4fc24ab73cf07e94654833bcbfecc534b9bccdef6a3daee7766c02ac1318be",
+        "5e1b3368caf8d6ee05e8aa5e25e1f63b8d17d3c1534726cc425fcc05494a88de",
       nonTamilDataHash:
         "abd6661160d94d9f0eca0f24820fe9e9d8ce567c45ee23cdd37af8f9a21480ff",
       sharedIdentityGroups: 17,
@@ -182,7 +182,7 @@ describe("stroke ownership migration baseline", () => {
         kannada: 13,
         malayalam: 13,
         "perso-arabic": 24,
-        tamil: 27,
+        tamil: 29,
         telugu: 9,
         "urdu-nastaliq": 31,
       },

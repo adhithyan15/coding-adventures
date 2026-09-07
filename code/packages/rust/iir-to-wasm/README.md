@@ -1,5 +1,11 @@
 # iir-to-wasm
 
+String variables written more than once use runtime handles even within one
+basic block, so a later literal cannot replace an earlier read. Single-write
+literals retain their folding path.
+
+Computed substring bounds mark the result and downstream copies as runtime strings, preventing stale receiver literals from replacing live MOVE output.
+
 Lowers an [`IIRModule`](../interpreter-ir/) directly to a
 [`WasmModule`](../wasm-types/) **without going through the deprecated
 `compiler-ir` layer**.
@@ -220,3 +226,12 @@ tests/
 | `wasm-module-encoder` | Serialises `WasmModule` to raw `.wasm` bytes |
 | `wasm-leb128` | Unsigned LEB128 encoding for WASM integer immediates |
 | `codegen-core` | Shared code-generation infrastructure (optional in v1) |
+
+
+## Runtime concatenation operand aliasing (VM-056)
+
+Runtime string concatenation preserves both source handles until all lengths
+and bytes have been read, then assigns the destination. This supports a
+result local that is also the left operand, right operand or both. Executable
+regressions compare complete output for all three cases; COBOL INSPECT
+replacement adds five seven-backend conformance programs.

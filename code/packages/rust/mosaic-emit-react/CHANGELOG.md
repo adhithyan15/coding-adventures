@@ -4,6 +4,46 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- Route opt-in table wheel input through measured signed row shifts, retaining
+  fractional motion across renders and releasing horizontal/zoom/boundary input.
+
+- Lower authored table-cell roles to semantic row/column headers or data cells,
+  putting authored geometry on the actual wrapper. Preserve unannotated cells.
+- Reveal logical data columns past pinned row headers in either layout direction.
+
+### Added - measured table capacity
+
+- Opt-in HostTable onViewportRows observes its scroll frame and measured rows,
+  subtracts sticky sections, and dispatches changed uniform row capacity.
+- Coalesce observations, retain deduplication across renders, and disconnect and
+  cancel queued callbacks on ref cleanup for React 18 and React 19.
+- Diagnose unavailable observation, missing scroll frames and nonuniform rows.
+
+### Fixed - authored overrides of primitive defaults
+
+- Merge nonempty style fragments with an object spread so repeated or overridden
+  default properties retain author precedence without TypeScript TS1117 errors.
+
+### Added - table selection reveal
+
+- Tables with bound selected-row/selected-col slots reveal the rendered body
+  cell within the nearest scroll frame, accounting for sticky header height.
+  Invalid or absent coordinates do nothing; focus is not moved.
+
+### Fixed - authored table section styles
+
+- Preserve named part styles on HostTableHead, HostTableBody and HostTableFoot,
+  including empty sections. This enables composed sticky headers in HostScroll.
+
+### Added - UI49 slot-owned style-state activation
+
+The pipeline emitter now lowers model-owned mosstyle states to conditional
+inline-style spreads driven by their owning `one-of` slot. The shared part
+style entry carries those spreads into generic nodes and specialized host
+primitives alike, orders simultaneous axes by `.mil` slot declaration order,
+and keeps existing built-in-state and UI36 bound-style precedence intact
+(#14305).
+
 ### Fixed - emitted projects are relocatable
 
 `vite.config.ts` now sets `base: "./"`. Vite defaults to `"/"`, so an emitted

@@ -10,6 +10,12 @@ Dynamic scalar and loop values are encoded for their text or quoted-attribute
 context before the generated component assigns `shadowRoot.innerHTML`; link
 schemes and numeric style interpolation receive additional runtime guards.
 
+`one-of` slots also drive UI49 mosstyle states at runtime. A declaration such
+as `state danger` owned by the `variant` slot becomes a conditional CSS layer
+based on the generated `variant` attribute local. Base declarations apply
+first, enum axes follow model slot order, and existing structural or
+interaction `state-when-*` layers remain more specific.
+
 ## Dependencies
 
 - mosaic-vm

@@ -248,6 +248,11 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Enable Flutter native assets
+        if: matrix.backend == 'flutter'
+        shell: bash
+        run: flutter config --enable-native-assets
+
       - name: Set up Java
         if: matrix.backend == 'compose'
         uses: actions/setup-java@v6
@@ -380,11 +385,13 @@ jobs:
             flutter analyze
             flutter build linux --release
           )
-          executable="$(find "$generated/build/linux" -type f -name trestle -perm -111 -print -quit)"
+          executable="$(find "$generated/build/linux" -type f -path '*/bundle/trestle' -perm -111 -print -quit)"
           bundle="$(dirname "$executable")"
           runtime="$(find "$bundle" -type f -name libmosaic_app.so -print -quit)"
           test -x "$executable"
+          test -n "$runtime"
           cmp "$expected" "$runtime"
+          test -s "$bundle/lib/libapp.so"
           python code/scripts/taskapp_release.py archive-linux-bundle \
             --version "$RELEASE_VERSION" \
             --commit "$RELEASE_COMMIT" \

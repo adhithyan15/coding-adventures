@@ -8,9 +8,9 @@ spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 880
 chapter: 34
 type: word
-headword: पढ़ना
-gloss: to read — and equally "to study", because the Sanskrit verb underneath it meant "to recite aloud"
-romanization: "paṛhnā"
+headword: पढ़ना / पढ़ / पढ़ता / पढ़ती / पढ़ते / पढ़ाई / पढ़ाना
+gloss: to read or study / stem / masculine, feminine, and respectful-plural present forms / studies / to teach
+romanization: "paṛhnā / paṛh / paṛhtā / paṛhtī / paṛhte / paṛhāī / paṛhānā"
 concept_tag: VERB-READ
 prerequisites: [HI-C34-samajhna, HI-C06-numbers-1-5, HI-C21-numbers-6-10]
 sounds: [retroflex-flap-rha, nuqta]
