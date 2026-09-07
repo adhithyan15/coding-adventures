@@ -7035,3 +7035,39 @@ Two things worth keeping:
 
 Verified by compiling and running the org.json call rather than reasoning from
 the docs, which is what turned "I think this coerces" into a fact.
+
+## A second copy of the response builder had both bugs I had already fixed
+
+#14411 fixed two things in `engram-core-wasm::ok_with`: `serde_json::to_value`
+built one `Value` per array element, and `unwrap_or(Value::Null)` turned a
+serialisation failure into `{"ok":true,"state":null}`.
+
+`engram-capi` has its own `ok_json_with`, and it carried **both**:
+
+```rust
+Ok(apkg) => ok_json_with("apkg", serde_json::to_value(apkg).unwrap_or(Value::Null)),
+```
+
+Seven call sites. And this is the file every *native* host reaches the engine
+through — SwiftUI, Compose, Qt, XAML, Flutter all bind `engram-capi`, not
+`engram-core-wasm`. So the fix that mattered for the browser had never applied
+to any desktop app, and I had spent three PRs believing the amplification was
+handled.
+
+How it stayed hidden: nothing about the call sites looked wrong, the tests
+passed, and the two crates' builders have different names. I found it only by
+chasing a CI failure into `eg_export_anki_package` and asking why a test
+asserting `as_array()` still passed after I had switched that payload to
+base64. **The answer to "why did that test not fail?" was the whole finding.**
+
+Worth generalising: after fixing a shape in one place, search for the *shape*,
+not the name. `to_value(...).unwrap_or(Value::Null)` is greppable across a
+workspace and would have found this on day one. A function called `ok_with` in
+one crate and `ok_json_with` in another is invisible to a search for either.
+
+Also: CI caught two consumers my grep missed — `engram-wasm/js/smoke.mjs` and
+`host/web/engram-host.ts`, a TypeScript twin of the `.mjs` I had updated. I had
+searched `host/*/*`, which is the directory I was thinking about rather than
+the set of files that read the field. The smoke test's own check,
+`exportedApkg.apkg.length > 0`, passed on a base64 *string* — a check that is
+true for the wrong type is not checking the type.
