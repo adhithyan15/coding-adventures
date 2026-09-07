@@ -1,0 +1,22 @@
+{
+  "chapter": 21,
+  "title": "Why, and What For",
+  "label": "ch:ur-why-and-what-for",
+  "canDo": "I can ask why and who, answer why with a cause using کیونکہ or with a purpose using کے لیے, and report what I think with کہ.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "UR-R21-why-and-what-for",
+    "kind": "speaking",
+    "summary": "Urdu's k- question family is completed -- کیا, کہاں, کیوں, کون -- and the reader answers کیوں two different ways, with a cause and with a purpose, then reports an opinion over سوچنا from chapter seven.",
+    "assesses": [
+      "UR-LEX-KYUN",
+      "UR-LEX-KAUN",
+      "UR-LEX-KYUNKI",
+      "UR-GRAMMAR-KI-COMPLEMENTISER",
+      "UR-GRAMMAR-KE-LIYE"
+    ],
+    "note": "کیونکہ is built from this chapter's own کیوں and کہ, so the payoff is the chapter taking itself apart."
+  }
+}

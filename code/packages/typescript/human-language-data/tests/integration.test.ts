@@ -230,7 +230,14 @@ describe("real curriculum", () => {
       // letter with glossed vocabulary and review, so a word is met by ear two or
       // more lessons before the glyph that spells it arrives. Both stay inside the
       // 12-atom chapter budget (eleven each) and both file under SPINE-RESPOND-BASIC.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+      // 18 -> 22: the negation-and-joining tranche. Chapter 19 redeems the deferral
+      // chapter 1 made in as many words and files under SPINE-NEGATE-AND-ASK, emptying
+      // that node's omission ledger; 20 is the joiners under SPINE-RESPOND-BASIC; 21
+      // completes the k- question family and empties SPINE-SAY-WHY; 22 is the repair
+      // kit under SPINE-POLITE-REQUEST-REPAIR. Atom counts are 3 / 4 / 5 / 3, all well
+      // inside the 12-atom chapter budget, and every headword was chosen from the
+      // fifteen letters the script ladder has actually taught.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
     expect(
       books.books
         .find((book) => book.language === "russian")

@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:c02822f6c74084e0",
+  "lessonIds": [
+    "UR-C21-kyun",
+    "UR-C21-kaun",
+    "UR-C21-kyunki",
+    "UR-C21-ki",
+    "UR-C21-ke-liye",
+    "UR-R21-why-and-what-for"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "urdu/narration/ch21.txt",
+  "json": "urdu/narration/ch21.json",
+  "textHash": "fnv1a64:0411a5cd1b78ed68",
+  "jsonHash": "fnv1a64:27284bc9d5a9685a",
+  "findings": []
+}

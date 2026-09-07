@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The Heart",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:914a1ca9b4ad9093",
+  "sourceHash": "fnv1a64:2d38a805191ad5da",
   "lessons": [
     {
       "id": "UR-C11-dil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8cee9713ca84984",
+      "sourceHash": "fnv1a64:75e23097cd07f810",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,7 @@
             },
             {
               "kind": "speech",
-              "text": "So دل and Sanskrit's word for heart are not opposites, and they did not arrive by accident on the same idea. They are the same PIE root, split at the Indo-Iranian fork: one branch went east into Sanskrit and became hṛdaya; the other went west into Iranian and became dil, then travelled back into Urdu as a loan. Persian and Sanskrit both keep the family's heart-word — Urdu just happens to have taken the Iranian branch's copy."
+              "text": "So دل and Sanskrit's word for heart are not opposites, and they did not arrive by accident on the same idea. They are the same PIE root, split at the Indo-Iranian fork: one branch went east into Sanskrit and became hṛdaya; the other went west into Iranian and became dil, then travelled back into Urdu as a loan. Persian and Sanskrit both keep the family's heart-word — Urdu happens to have taken the Iranian branch's copy."
             }
           ]
         },

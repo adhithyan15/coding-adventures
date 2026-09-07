@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Eight Words, Read Rather Than Recognised",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8b5c738093a6f7c4",
+  "sourceHash": "fnv1a64:16316bb7b9e903c0",
   "lessons": [
     {
       "id": "UR-C16-practice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9128a64bde21fd9e",
+      "sourceHash": "fnv1a64:f76139df5fed18b6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -118,7 +118,7 @@
             },
             {
               "kind": "speech",
-              "text": "Seven of Urdu's letters. The rest are mostly more of what you just did."
+              "text": "Seven of Urdu's letters. The rest are mostly more of what you did here."
             }
           ]
         },

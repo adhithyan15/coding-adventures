@@ -157,3 +157,27 @@ rather than only in this table: every lesson from S26 on names the preceding
 one to three lessons' atoms in its own `practises.knowledge`, and the two
 chapter payoffs reach back across chapters 3 to 6. That is what moved the
 track's never-revisited atoms from 24 of 59 to 12 of 81.
+
+## Chapters 19–22 — negation, joining, and repair
+
+| # | Slug | Item | What it turns on |
+|---|---|---|---|
+| 90 | nahin-verb | میں نہیں سمجھتا | the promise chapter 1 made and never kept |
+| 91 | kya-polar | کیا آپ ٹھیک ہیں؟ | one word, two jobs, told apart by position |
+| 92 | na-na | نہ … نہ | the only negator that goes in front |
+| 93 | R — three refusals | | the book can ask a question at last |
+| 94 | aur | اور | inherited *aparam*, "one more" — and the chapter-15 line paid back |
+| 95 | ya | یا | Persian, and hidden in the tail of کیا all along |
+| 96 | lekin | لیکن | Arabic *lā* buried inside, as *not* is inside English *but* |
+| 97 | thik-hai | ٹھیک ہے | chapter 4's adjective plus chapter 2's copula |
+| 98 | R — joined and turned | | thirty nouns from chapters 8–18, two at a time |
+| 99 | kyun | کیوں | the k- family member chapter 17 left out |
+| 100 | kaun | کون | shown twice as a writing exercise, taught never |
+| 101 | kyunki | کیونکہ | the chapter answering its own question, in one word |
+| 102 | ki | کہ | Persian, obligatory where English drops *that* |
+| 103 | ke-liye | کے لیے | "having taken" — a purpose is what an act is taken for |
+| 104 | R — why and what for | | two different answers to *kyūṅ?* |
+| 105 | kahna | کہنا | the act against the words, and کہانی on the same root |
+| 106 | kya-kaha | کیا کہا؟ | کیا back in the middle, where it means *what* |
+| 107 | aram-se | آرام سے | asking for ease, not for slowness |
+| 108 | R — when you are lost | | the first conversation, ninety lessons back, rescued |

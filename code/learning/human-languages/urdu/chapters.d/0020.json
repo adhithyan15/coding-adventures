@@ -1,0 +1,21 @@
+{
+  "chapter": 20,
+  "title": "Two Things at Once",
+  "label": "ch:ur-two-things-at-once",
+  "canDo": "I can put two nouns in one sentence with اور, offer a choice with یا, turn a clause against the one before it with لیکن, and agree with somebody using ٹھیک ہے.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-R20-joined-and-turned",
+    "kind": "production",
+    "summary": "The chapter-15 practice line bārish, dhūp, aur hawā -- which asked the learner to say a word the book had never taught -- is said with every word owned, then re-joined as a choice and refused twice over.",
+    "assesses": [
+      "UR-LEX-AUR",
+      "UR-LEX-YA",
+      "UR-LEX-LEKIN",
+      "UR-FUNC-THIK-HAI"
+    ],
+    "note": "The three joiners come from three sources -- اور inherited, یا from Persian, لیکن from Arabic -- which is the whole shape of Urdu's vocabulary in one chapter."
+  }
+}

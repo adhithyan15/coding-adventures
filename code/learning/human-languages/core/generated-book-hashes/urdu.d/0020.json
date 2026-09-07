@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:3d1b0d39597e74e7",
+  "lessonIds": [
+    "UR-C20-aur",
+    "UR-C20-ya",
+    "UR-C20-lekin",
+    "UR-C20-thik-hai",
+    "UR-R20-joined-and-turned"
+  ],
+  "tex": "urdu/book/chapters/ch20-two-things-at-once.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C21-kyunki",
+    "language": "urdu",
+    "chapter": 21,
+    "sequence": 1130,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ec5bbfa5c859ca5c"
+  },
+  "findings": []
+}

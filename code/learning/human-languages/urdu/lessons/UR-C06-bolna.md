@@ -66,7 +66,7 @@ The stem takes the same two-agreement frame as before:
 > *maiṅ boltī hūṅ* — **I speak** (woman speaking)
 
 Nothing new is being learned there. That is the point of a stem: the machine
-is already built, and each verb just walks into it.
+is already built, and each verb walks into it.
 
 ## The word, taken apart — where the trail goes cold
 <!-- hl-knowledge: introduces=[UR-REGISTER-INDO-ARYAN-CORE]; assesses=[] -->

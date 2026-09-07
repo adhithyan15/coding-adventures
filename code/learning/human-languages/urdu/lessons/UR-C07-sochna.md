@@ -47,7 +47,7 @@ the work it does on the way.
 > **سوچنا** — *sochnā* — **to think**
 
 Strip the **-nā** and the stem is **soch-**. That stem is also a noun: **سوچ**
-*soch*, “**a thought**” — and, just as ordinarily, “**a worry**.” Both meanings
+*soch*, “**a thought**” — and, no less ordinarily, “**a worry**.” Both meanings
 matter; the history explains them.
 
 ## The letters in this word

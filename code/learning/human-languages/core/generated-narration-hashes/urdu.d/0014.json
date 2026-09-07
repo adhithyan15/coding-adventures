@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 14,
-  "sourceHash": "fnv1a64:cf499bace00f79c1",
+  "sourceHash": "fnv1a64:8df88f1dc1538204",
   "lessonIds": [
     "UR-C14-qamiz",
     "UR-C14-juta",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "urdu/narration/ch14.txt",
   "json": "urdu/narration/ch14.json",
-  "textHash": "fnv1a64:bc5ab5cef31e2ccf",
-  "jsonHash": "fnv1a64:792fcaf52e3ba429",
+  "textHash": "fnv1a64:5339a8eddb417c6b",
+  "jsonHash": "fnv1a64:1b8b5c6b5bff2f01",
   "findings": []
 }

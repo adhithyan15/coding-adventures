@@ -69,6 +69,6 @@ shape.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-KAF-01] -->
-<!-- hl-activity: {"id":"UR-W04-kaf-lifts","kind":"text","assesses":["UR-SCRIPT-KAF-01"],"prompt":"How many times do you lift the pen when writing kāf?","answer":"1","accepted":["once","one","one lift","1 time"],"feedback":{"correct":"Once -- before the long slash.","incorrect":"ONCE, just before the slash."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"UR-W04-kaf-lifts","kind":"text","assesses":["UR-SCRIPT-KAF-01"],"prompt":"How many times do you lift the pen when writing kāf?","answer":"1","accepted":["once","one","one lift","1 time"],"feedback":{"correct":"Once -- before the long slash.","incorrect":"ONCE, immediately before the slash."},"response_seconds":8} -->
 
 Is the slash optional? (**No** — without it the letter is not written.)

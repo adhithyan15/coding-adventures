@@ -1,0 +1,16 @@
+{
+  "id": "UR-EXT-033-REPAIR-KIT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say I have not understood, ask what somebody said, and ask them to say it again gently.",
+  "prerequisites": [
+    "UR-EXT-032-WHY-AND-WHAT-FOR"
+  ],
+  "lessons": [
+    "UR-C22-kahna",
+    "UR-C22-kya-kaha",
+    "UR-C22-aram-se",
+    "UR-R22-when-you-are-lost"
+  ]
+}

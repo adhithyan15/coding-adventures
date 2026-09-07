@@ -94,7 +94,7 @@ of them is a **dilemma**.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-LENA, UR-SCRIPT-YE-THIRD-VALUE, UR-ETYMON-LENA-TAKE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-LIKHNA] -->
 
-- [YOU SAY: **lenā** — to take; then the stem, which is just **le-**]
+- [YOU SAY: **lenā** — to take; then the stem, which is **le-** alone]
 - [YOU NAME: **ی** three ways — *y* in *kyā*, *ī* in *jī*, *e* in *lenā*]
 - [YOU SAY: **maiṅ letā hūṅ**, then **maiṅ letī hūṅ**]
 - [YOU SAY: **maiṅ likhtā hūṅ**, then **maiṅ letā hūṅ** — I write, I take]

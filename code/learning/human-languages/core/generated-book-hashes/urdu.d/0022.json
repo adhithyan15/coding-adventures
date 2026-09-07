@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:b91650ffa67ce362",
+  "lessonIds": [
+    "UR-C22-kahna",
+    "UR-C22-kya-kaha",
+    "UR-C22-aram-se",
+    "UR-R22-when-you-are-lost"
+  ],
+  "tex": "urdu/book/chapters/ch22-when-you-are-lost.tex"
+}
