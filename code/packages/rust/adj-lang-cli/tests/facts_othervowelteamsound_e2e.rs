@@ -12,7 +12,8 @@
 //! (lesson 93); and lesson 94 gives two short-vowel exceptions, `ea /ĕ/`
 //! and `a /ŏ/`. The lesson-94 "ea" row ships as the disambiguated atom
 //! `ea_short_e`, NOT a bare `ea`, because the bare spelling "ea" already
-//! carries a DIFFERENT, genuinely distinct source-cited sound in the
+//! carries a DIFFERENT, genuinely distinct sound, tabled by UFLI on its own
+//! unit page, in the
 //! sibling `long-vowel-team-sound.adj` library (the steady long-E reading
 //! in "team"/"rain", vs. this table's short-E reading in "bread"/"head") --
 //! a real heteronym-in-spelling the header's own design note documents in
@@ -87,8 +88,8 @@ fn other_vowel_team_sound_recall_binds_the_sound_with_citation() {
     // closing on the terminating quote pins head, tail, punctuation and
     // length at once. See issues #13916 and #13918.
     assert!(
-        out.contains("\"source\":\"A vowel team is a combination of letters that represents a vowel sound. These lessons focus on vowel teams that represent a new sound (e.g., draw, book) and vowel teams that include letters that aren't vowels (e.g., dew, high). Other Vowel Teams Unit Resources (Lessons 89-94): 89 u /oo/, oo /oo/, 90 oo /ū/, 91 ew /ū/, ui /ū/, ue /ū/, 93 au /aw/, aw /aw/, augh /aw/, 94 ea /ĕ/, a /ŏ/.\""),
-        "the citation is the whole source sentence, exactly: {out}"
+        out.contains("\"source\":\"A vowel team is a combination of letters that represents a vowel sound. These lessons focus on vowel teams that represent a new sound (e.g., draw, book) and vowel teams that include letters that aren\u{2019}t vowels (e.g., dew, high). These lessons are designed to build students\u{2019} accuracy and automaticity in connecting these vowel teams with the sounds associated with them. The lessons also build students\u{2019} proficiency in reading and spelling words that contain these vowel teams.\""),
+        "the citation is the page's paragraph, exactly: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
@@ -115,7 +116,7 @@ fn other_vowel_team_sound_reverse_binds_all_four_spellings_of_long_u_sound() {
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
     // Lesson 90 ("oo") and lesson 91 ("ew", "ui", "ue") pair FOUR spellings
-    // with the same source-notated long-U sound.
+    // with the same long-U sound, in the lesson table's own notation.
     assert!(out.contains("\"Sp\":\"oo\""), "oo carries long_u_sound: {out}");
     assert!(out.contains("\"Sp\":\"ew\""), "ew carries long_u_sound too: {out}");
     assert!(out.contains("\"Sp\":\"ui\""), "ui carries long_u_sound too: {out}");
@@ -137,8 +138,8 @@ fn other_vowel_team_sound_oo_carries_both_lesson89_and_lesson90_sounds() {
     assert!(ok, "cli should succeed: {out}");
     // The SAME one-key/many-values shape digraph-sound.adj's own "th" row
     // established: "oo" forward-recalls BOTH lesson 89's short sound and
-    // lesson 90's long sound, an honest reflection of the source's own
-    // two-lesson split.
+    // lesson 90's long sound, an honest reflection of the cited page's
+    // own two-lesson split.
     assert!(
         out.contains("\"Sound\":\"short_oo_sound\""),
         "oo carries short_oo_sound (lesson 89): {out}"
@@ -221,5 +222,74 @@ fn other_vowel_team_sound_abstains_honestly_on_a_different_ufli_unit() {
         "ey is tabled by UFLI under a DIFFERENT unit (Long Vowel Teams, \
          lesson 85), not this cited Other Vowel Teams page -- honest \
          abstention, never invented: {out}"
+    );
+}
+
+/// Installment 4g (#13934): the `source` is the cited page's definition
+/// PARAGRAPH, not that paragraph with the unit's lesson table stitched
+/// onto it.
+///
+/// Until 4g the field read "...(e.g., dew, high). Other Vowel Teams Unit Resources (Lessons 89-94): 89 u /oo/, oo /oo/, ..." -- a string that
+/// appears nowhere on the page. It invented a colon after the unit
+/// heading, invented separators between each lesson number and the cell
+/// before it, dropped the paragraph's two closing sentences, and flattened
+/// the page's U+2019 apostrophe in "aren't" to an ASCII one.
+///
+/// The POSITIVE needle is one of the two closing sentences the stitch
+/// dropped, plus the page's U+2019 apostrophe in "aren't" inside the
+/// sentence the stitch DID carry -- two independent discriminating needles.
+/// The FIRST negative needle SPANS THE SEAM, joining the last words the
+/// stitch DID carry to the heading welded after them — mid-paragraph, since
+/// this file's stitch dropped the closing sentences, so it matches only if
+/// the weld is back; a needle wholly inside either side would not
+/// discriminate. The other two are artifacts the stitch invented outright,
+/// and they are not the same kind of artifact. The colon after the unit
+/// heading occurs nowhere on the page under any normalisation. The lesson
+/// number welded to the Concept cell after it is subtler, and worth being
+/// exact about: it is NOT absent from the page. Normalise the page's
+/// whitespace and "89 u /oo/" appears, because the lesson cell and the
+/// Concept cell are adjacent. What the old value invented was that string
+/// as a CONTIGUOUS span with the cell boundary erased, in a field whose
+/// whole contract is that it holds one. (Checking an ABSENCE against
+/// tag-bearing raw HTML would be the WEAKER test, not the stronger one:
+/// embedded markup guarantees a non-match. Raw HTML is the right tool for a
+/// PRESENCE claim, which is the opposite direction.)
+///
+/// This pin does NOT assert that the rows are cited by that span. They
+/// are not: the rows read the page's lesson-table Concept cells, whose
+/// status as verbatim spans is the question held open on #14111, and the
+/// library's Provenance block says so.
+#[test]
+fn other_vowel_team_sound_source_is_the_page_paragraph_not_a_stitched_lesson_table() {
+    let dir = scratch("span_not_stitch");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"other-vowel-team-sound.adj\"\n\
+         ? other_vowel_team_sound(au, $Sound)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("These lessons are designed to build students\u{2019} accuracy and automaticity in connecting these vowel teams with the sounds associated with them."),
+        "the citation carries the page paragraph whole: {out}"
+    );
+    assert!(
+        out.contains("letters that aren\u{2019}t vowels"),
+        "the citation carries the page paragraph whole: {out}"
+    );
+    assert!(
+        !out.contains("high). Other Vowel Teams"),
+        "the seam itself: the last words the stitch carried, welded to the unit heading: {out}"
+    );
+    assert!(
+        !out.contains("(Lessons 89-94):"),
+        "the colon after the heading, which no cell on the page contains: {out}"
+    );
+    assert!(
+        !out.contains("89 u /oo/"),
+        "a lesson number stitched to the Concept cell that follows it: {out}"
     );
 }
