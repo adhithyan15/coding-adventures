@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-051-CITY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can name a friend, money, a doctor, a soldier and a letter — five words a Roman town could not be described without.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C51-amicus",
+    "LA-C51-pecunia",
+    "LA-C51-medicus",
+    "LA-C51-miles",
+    "LA-C51-epistula"
+  ]
+}

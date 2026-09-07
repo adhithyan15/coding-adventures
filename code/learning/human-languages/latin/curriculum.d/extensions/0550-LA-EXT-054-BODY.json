@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-054-BODY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can say that I eat and drink, and name the eye, the ear and the foot beside the head and hand I already had.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C54-edo",
+    "LA-C54-bibo",
+    "LA-C54-oculus",
+    "LA-C54-auris",
+    "LA-C54-pes"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:14582c42148f5c0f",
+  "lessonIds": [
+    "LA-C53-iterum",
+    "LA-C53-magister",
+    "LA-C53-discipulus",
+    "LA-C53-schola",
+    "LA-C53-liber"
+  ],
+  "tex": "latin/book/chapters/ch53-schola.tex"
+}

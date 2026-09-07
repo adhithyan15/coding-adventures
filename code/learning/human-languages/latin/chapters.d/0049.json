@@ -1,0 +1,21 @@
+{
+  "chapter": 49,
+  "title": "Possum, Volo, Qui, Et, Quando",
+  "label": "ch:la-formae",
+  "canDo": "I can say what I can do and what I want, join two statements, and put a when-clause or a who-clause after a noun.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "LA-C49-quando",
+    "kind": "task",
+    "summary": "The fifth word of the group, taken apart against the four before it.",
+    "assesses": [
+      "LA-LEX-C49-FRAME-01",
+      "LA-LEX-C49-FRAME-02",
+      "LA-LEX-C49-FRAME-03",
+      "LA-LEX-C49-FRAME-04",
+      "LA-LEX-C49-FRAME-05"
+    ]
+  }
+}

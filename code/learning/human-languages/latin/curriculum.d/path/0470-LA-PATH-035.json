@@ -1,0 +1,16 @@
+{
+  "id": "LA-PATH-035",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "LA-C51-amicus",
+    "LA-C51-pecunia",
+    "LA-C51-medicus",
+    "LA-C51-miles",
+    "LA-C51-epistula"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "LA-EXT-051-CITY"
+  ]
+}
