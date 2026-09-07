@@ -6,7 +6,22 @@ use crate::model::{
 use serde::{Deserialize, Serialize};
 
 pub const ENGRAM_SNAPSHOT_APP: &str = "engram";
-pub const ENGRAM_SNAPSHOT_VERSION: u32 = 1;
+pub const ENGRAM_SNAPSHOT_VERSION: u32 = 2;
+
+/// The oldest snapshot this build can read.
+///
+/// Version 2 is the base64 media encoding (#13671). Version 1 spelled media as
+/// a JSON array of decimal numbers, and both are still accepted on read --
+/// snapshots exist on users' machines and a build that could not read them
+/// would look like it had lost their collection.
+///
+/// Note what bumping this does NOT fix: an OLDER build reading a version 2
+/// snapshot fails inside `serde_json::from_str` on the base64 string, before
+/// `validate` ever runs, so it still reports a type error rather than a
+/// version one. The bump is honest signalling for tooling and for a
+/// collection with no media (where deserialisation succeeds and this check is
+/// what fires); it is not a downgrade-safety mechanism.
+pub const ENGRAM_SNAPSHOT_MIN_READABLE_VERSION: u32 = 1;
 
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -62,7 +77,9 @@ impl EngramSnapshot {
                 message: "The selected file is not an Engram backup.".to_string(),
             });
         }
-        if self.version != ENGRAM_SNAPSHOT_VERSION {
+        if self.version < ENGRAM_SNAPSHOT_MIN_READABLE_VERSION
+            || self.version > ENGRAM_SNAPSHOT_VERSION
+        {
             return Err(SnapshotError {
                 message: format!("Unsupported Engram backup version: {}", self.version),
             });
@@ -248,6 +265,29 @@ mod tests {
         assert_eq!(
             restore_engram_snapshot(snapshot).unwrap_err().message,
             "Unsupported Engram backup version: 99"
+        );
+    }
+
+    /// A version 1 snapshot -- the numeric-array media encoding -- still loads.
+    ///
+    /// This is the compatibility that matters: these files exist on users'
+    /// machines at `~/.engram/mosaic-snapshot.v1.json`, and a build that
+    /// rejected them would present as having lost the collection.
+    #[test]
+    fn a_version_1_snapshot_is_still_readable() {
+        let mut snapshot = EngramSnapshot::from_state(&crate::AppState::default(), 0);
+        snapshot.version = 1;
+        assert!(snapshot.validate().is_ok(), "v1 must stay readable");
+    }
+
+    #[test]
+    fn a_future_snapshot_version_is_refused_by_name() {
+        let mut snapshot = EngramSnapshot::from_state(&crate::AppState::default(), 0);
+        snapshot.version = ENGRAM_SNAPSHOT_VERSION + 1;
+        let message = snapshot.validate().unwrap_err().message;
+        assert!(
+            message.contains("Unsupported Engram backup version"),
+            "{message}"
         );
     }
 }

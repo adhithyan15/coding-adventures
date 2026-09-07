@@ -1,0 +1,17 @@
+{
+  "id": "RU-EXT-025-REASON-AND-TIME",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask why and when, answer why with potomu chto, hang a time clause under a main one with kogda, and place the comma every subordinator requires.",
+  "prerequisites": [
+    "RU-EXT-024-CHTO"
+  ],
+  "lessons": [
+    "RU-C19-pochemu",
+    "RU-C19-potomu-chto",
+    "RU-C19-kogda-vopros",
+    "RU-C19-kogda-soyuz",
+    "RU-W10-zapyataya"
+  ]
+}

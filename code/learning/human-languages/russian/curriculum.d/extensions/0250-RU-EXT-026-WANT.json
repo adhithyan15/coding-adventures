@@ -1,0 +1,15 @@
+{
+  "id": "RU-EXT-026-WANT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say what I want, follow it with a bare infinitive, and give the purpose of an action with chtoby.",
+  "prerequisites": [
+    "RU-EXT-025-REASON-AND-TIME"
+  ],
+  "lessons": [
+    "RU-C20-khotet",
+    "RU-C20-khochu-chitat",
+    "RU-C20-chtoby"
+  ]
+}

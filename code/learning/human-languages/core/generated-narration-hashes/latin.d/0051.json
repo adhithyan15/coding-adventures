@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:d9fffbe09435bbf4",
+  "lessonIds": [
+    "LA-C51-amicus",
+    "LA-C51-pecunia",
+    "LA-C51-medicus",
+    "LA-C51-miles",
+    "LA-C51-epistula"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "latin/narration/ch51.txt",
+  "json": "latin/narration/ch51.json",
+  "textHash": "fnv1a64:ba796cead91a7cf4",
+  "jsonHash": "fnv1a64:e6f294f0297ce764",
+  "findings": []
+}

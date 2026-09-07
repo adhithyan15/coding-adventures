@@ -356,7 +356,11 @@
       "id": "LA-A1-DEM-01",
       "category": "Demonstrativa (pointing)",
       "label": "the demonstrative forms: hic, iste, ille",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C50-POINT-01",
+        "LA-LEX-C50-POINT-02",
+        "LA-LEX-C50-POINT-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -365,13 +369,17 @@
       "derivedFrom": [
         "A1-DEM-01"
       ],
-      "note": "hic and ille both return ZERO occurrences in 112 files. Latin's three-way system is the ancestor of the Spanish three-way system the proxy point describes, so the demand transfers exactly, and nothing meets it."
+      "note": "hic, iste and ille, one lesson each, with their three-form agreement. The column that was completely empty is now the fullest thing in the tranche."
     },
     {
       "id": "LA-A1-DEM-02",
       "category": "Demonstrativa (pointing)",
       "label": "spatial deixis: near me, near you, over there",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C50-POINT-01",
+        "LA-LEX-C50-POINT-02",
+        "LA-LEX-C50-POINT-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -380,13 +388,16 @@
       "derivedFrom": [
         "A1-DEM-02"
       ],
-      "note": "Absent. This is the one place in the inventory where the Spanish point can be taken over word for word, because este/ese/aquel descends from hic/iste/ille."
+      "note": "Near me, near you, over there -- and each lesson says which. The Spanish point transfers exactly here, because este/ese/aquel descends from this system."
     },
     {
       "id": "LA-A1-DEM-03",
       "category": "Demonstrativa (pointing)",
       "label": "the demonstrative agreeing with its noun, and standing alone as a pronoun",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C50-POINT-01",
+        "LA-LEX-C50-POINT-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -395,13 +406,16 @@
       "derivedFrom": [
         "A1-DEM-03"
       ],
-      "note": "The Spanish point says the demonstrative cannot take an article; in Latin there is no article to exclude, and the demand behind it -- that the demonstrative declines with its noun and can also stand alone -- is what a reader actually needs. Absent."
+      "note": "hic/haec/hoc gives the agreement, and is/ea/id gives the standing-alone use. Read the limit: the full declension of either is not set out."
     },
     {
       "id": "LA-A1-POS-01",
       "category": "Possessio (possession)",
       "label": "the possessive adjectives: meus, tuus",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C52-ASK-04",
+        "LA-LEX-C52-ASK-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -410,7 +424,7 @@
       "derivedFrom": [
         "A1-POS-01"
       ],
-      "note": "meus and tuus both return ZERO occurrences in 112 files. The learner CAN say my name is (see LA-A1-POS-03) and cannot say my anything else."
+      "note": "meus and tuus, each agreeing with the thing owned rather than the owner -- and each taught against the dative of possession the name lesson uses instead."
     },
     {
       "id": "LA-A1-POS-02",
@@ -596,7 +610,9 @@
       "id": "LA-A1-PRON-03",
       "category": "Pronomina (pronouns)",
       "label": "the third person, which Latin builds from a demonstrative",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C50-POINT-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -605,7 +621,7 @@
       "derivedFrom": [
         "A1-PRON-01"
       ],
-      "note": "Latin has no dedicated third-person pronoun and presses is/ea/id into the job. Absent, and behind LA-A1-DEM-01 as well."
+      "note": "is, ea, id, taught as what it is -- a colourless demonstrative pressed into a job Latin has no dedicated word for."
     },
     {
       "id": "LA-A1-PRON-04",
@@ -682,7 +698,9 @@
       "id": "LA-A1-PRON-08",
       "category": "Pronomina (pronouns)",
       "label": "the relative pronoun qui, quae, quod",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C49-FRAME-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -691,7 +709,7 @@
       "derivedFrom": [
         "A1-PRON-05"
       ],
-      "note": "All three forms return ZERO occurrences in 112 files. The single most common word in surviving Latin prose is absent from a track whose declared purpose is reading."
+      "note": "quī, quae, quod, with the three-way agreement and the Grimm's Law cousinhood of English who, what and which. The commonest word in surviving Latin prose is no longer absent from a reading course."
     },
     {
       "id": "LA-A1-PRON-09",
@@ -745,7 +763,9 @@
       "id": "LA-A1-ADV-01",
       "category": "Adverbia (adverbs)",
       "label": "place deictics: hic, illic",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C50-POINT-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -754,7 +774,7 @@
       "derivedFrom": [
         "A1-ADV-01"
       ],
-      "note": "Absent, with the demonstratives they are built from."
+      "note": "hīc and ibi, taught as a pair, with the macron doing the work of separating the adverb hīc from the pronoun hic. Read the limit: illīc, the far adverb the label names, is not taught."
     },
     {
       "id": "LA-A1-ADV-02",
@@ -790,7 +810,10 @@
       "id": "LA-A1-ADV-04",
       "category": "Adverbia (adverbs)",
       "label": "manner adverbs: bene, male",
-      "probe": null,
+      "probe": [
+        "LA-LEX-BENE-01",
+        "LA-LEX-C48-DENY-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -799,7 +822,7 @@
       "derivedFrom": [
         "A1-ADV-04"
       ],
-      "note": "bene has a whole chapter (27) and male has nothing, so the pair is half taught. valeo answers how one is; there is no way to say that anything went badly."
+      "note": "bene had the scale to itself; male is now the other end of it, taught as the adverb cut from malus and set against bene in the same lesson."
     },
     {
       "id": "LA-A1-ADV-05",
@@ -838,7 +861,10 @@
       "id": "LA-A1-ADV-07",
       "category": "Adverbia (adverbs)",
       "label": "interrogative adverbs: quomodo, ubi",
-      "probe": null,
+      "probe": [
+        "LA-LEX-QUOMODO-01",
+        "LA-LEX-C52-ASK-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -847,13 +873,16 @@
       "derivedFrom": [
         "A1-ADV-07"
       ],
-      "note": "quomodo is taught properly, with a chapter of its own (26) tracing it to Italian come, Spanish como and French comment. ubi returns ZERO occurrences, so the learner can ask HOW and cannot ask WHERE. Half a point."
+      "note": "quōmodo had the column to itself; ubi is now the other half. The lesson also names quō and unde, so the learner knows Latin distinguishes three directions where English says only where."
     },
     {
       "id": "LA-A1-ADV-08",
       "category": "Adverbia (adverbs)",
       "label": "cur against quia: asking why and answering it",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C52-ASK-02",
+        "LA-LEX-C52-ASK-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -862,7 +891,7 @@
       "derivedFrom": [
         "A1-ADV-08"
       ],
-      "note": "Spanish spends an A1 point on por que against porque. Latin's pair is cur and quia (or quod), and both members return zero occurrences. The whole causal apparatus is missing; see LA-A1-CJ-11."
+      "note": "cūr and quia, one lesson each and taught as a pair -- the question and the answer it asks for. Both are recorded as leaving no Romance descendant."
     },
     {
       "id": "LA-A1-V-01",
@@ -1237,7 +1266,9 @@
       "id": "LA-A1-OS-02",
       "category": "Oratio simplex (the simple sentence)",
       "label": "the negative declarative, with non",
-      "probe": null,
+      "probe": [
+        "LA-GRAMMAR-C48-NON-VERB-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1246,7 +1277,7 @@
       "derivedFrom": [
         "A1-OS-01"
       ],
-      "note": "non is TAUGHT as a word in chapter 1 and is never once put in front of a verb. The negator is in the learner's hands and the operation is not: non valeo, non intellego and non scio are all unsayable although every part of each is separately taught. A cheaper repair than any other gap in this file."
+      "note": "CLOSED BY THE TRANCHE. The nesciō lesson states the rule in one line -- nōn stands immediately in front of a finite verb, with no auxiliary, no word-order change and no second negative -- and works it on nōn valeō, nōn intellegō, nōn sciō and nōn possum. Before that lesson, nōn was taught as a word on the first day and never once attached to a verb."
     },
     {
       "id": "LA-A1-OS-03",
@@ -1338,7 +1369,9 @@
       "id": "LA-A1-CJ-01",
       "category": "Coniunctio et subiunctio (joining and subordination)",
       "label": "copulative coordination: et, -que, atque",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C49-FRAME-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1347,7 +1380,7 @@
       "derivedFrom": [
         "A1-CO-01"
       ],
-      "note": "et occurs TWICE in 112 files and both are inside quoted classical sentences a lesson is discussing -- Cato's quinque et sexaginta annos natus in chapter 14, and valeo et salvos sum recte in chapter 19. It is glossed in passing in the second and taught in neither, and the enclitic -que that a reader meets on every page of Latin prose never appears at all."
+      "note": "et, AND the enclitic -que, taught together with SPQR as the worked example. Read the limit: atque, the third member the label names, is still untaught."
     },
     {
       "id": "LA-A1-CJ-02",
@@ -1368,7 +1401,9 @@
       "id": "LA-A1-CJ-03",
       "category": "Coniunctio et subiunctio (joining and subordination)",
       "label": "disjunctive coordination: aut, vel",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C48-DENY-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1377,13 +1412,15 @@
       "derivedFrom": [
         "A1-CO-03"
       ],
-      "note": "Both return ZERO occurrences in 112 files."
+      "note": "aut, with vel taught beside it and the difference named: aut is the exclusive or, vel the indifferent one, and vel is literally the imperative of volō."
     },
     {
       "id": "LA-A1-CJ-04",
       "category": "Coniunctio et subiunctio (joining and subordination)",
       "label": "adversative coordination: sed",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C48-DENY-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1392,7 +1429,7 @@
       "derivedFrom": [
         "A1-CO-04"
       ],
-      "note": "sed occurs only inside the Cicero letter quoted in chapter 24 (Sed, ut spero, propediem te videbo), where it is part of the citation and is translated but not taught."
+      "note": "sed, and the lesson opens on the Cicero letter this corpus had already quoted without naming the word in it. It also records that not one Romance language kept sed -- they all took magis instead."
     },
     {
       "id": "LA-A1-CJ-05",
@@ -1428,7 +1465,10 @@
       "id": "LA-A1-CJ-07",
       "category": "Coniunctio et subiunctio (joining and subordination)",
       "label": "the complementary infinitive: volo videre",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C49-FRAME-02",
+        "LA-LEX-DORMIO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1437,7 +1477,7 @@
       "derivedFrom": [
         "A1-SUB-02"
       ],
-      "note": "Absent, and the modal verbs that take one (volo, possum, debeo) are absent too."
+      "note": "volō bibere, nōn volō dormīre. The complementary infinitive, with dormiō already in the corpus and the negation rule from the chapter before."
     },
     {
       "id": "LA-A1-CJ-08",
@@ -1458,7 +1498,9 @@
       "id": "LA-A1-CJ-09",
       "category": "Coniunctio et subiunctio (joining and subordination)",
       "label": "the relative clause",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C49-FRAME-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1468,13 +1510,15 @@
         "A1-SUB-04",
         "A1-SUB-05"
       ],
-      "note": "TWO PROXY POINTS, ONE ABSENCE, AND THE MOST EXPENSIVE ONE IN THIS FILE. qui, quae and quod all return zero occurrences; see LA-A1-PRON-08. A track whose declared purpose is reading cannot read a sentence of connected Latin prose without this."
+      "note": "The same lesson builds the clause: amīcus quī venit, liber quem legō."
     },
     {
       "id": "LA-A1-CJ-10",
       "category": "Coniunctio et subiunctio (joining and subordination)",
       "label": "causal clauses: quod, quia",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C52-ASK-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1483,7 +1527,7 @@
       "derivedFrom": [
         "A1-SUB-06"
       ],
-      "note": "Both zero."
+      "note": "quia, with quod and quoniam named as the other two and the difference between them stated."
     },
     {
       "id": "LA-A1-CJ-11",
@@ -1504,7 +1548,9 @@
       "id": "LA-A1-CJ-12",
       "category": "Coniunctio et subiunctio (joining and subordination)",
       "label": "simultaneity: cum, ubi",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C49-FRAME-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1513,7 +1559,7 @@
       "derivedFrom": [
         "A1-SUB-08"
       ],
-      "note": "Both zero."
+      "note": "quandō, in both its jobs -- the question and the temporal hinge. Read the limit: the label also names cum and ubi as subordinators, and neither is taught in that job; ubi is now taught only as a question word."
     },
     {
       "id": "LA-A1-F1-01",
@@ -1722,7 +1768,9 @@
       "id": "LA-A1-F2-08",
       "category": "Officia: sententiae et scientia",
       "label": "show scepticism: nescio",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C48-DENY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1731,13 +1779,15 @@
       "derivedFrom": [
         "A1-F2-08"
       ],
-      "note": "scio is taught in chapter 37 and its negative compound nescio, which is the actual Latin word, is never given -- and non scio cannot be built either, for the reason at LA-A1-OS-02."
+      "note": "nesciō, taken apart into nē- plus sciō, which was already taught. The word a Roman actually said, rather than the two-word nōn sciō the same lesson also licenses."
     },
     {
       "id": "LA-A1-F2-09",
       "category": "Officia: sententiae et scientia",
       "label": "offer a counter-argument",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C48-DENY-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1746,7 +1796,7 @@
       "derivedFrom": [
         "A1-F2-09"
       ],
-      "note": "Needs sed; see LA-A1-CJ-04."
+      "note": "sed. A counter-argument at A1 is a contrastive conjunction and one clause."
     },
     {
       "id": "LA-A1-F2-10",
@@ -1816,7 +1866,9 @@
       "id": "LA-A1-F2-14",
       "category": "Officia: sententiae et scientia",
       "label": "express ignorance",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C48-DENY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1825,7 +1877,7 @@
       "derivedFrom": [
         "A1-F2-15"
       ],
-      "note": "See LA-A1-F2-08."
+      "note": "nesciō. The same word answers scepticism and ignorance at this level, and both points are enumerated because an examiner asks them separately."
     },
     {
       "id": "LA-A1-F2-15",
@@ -1846,7 +1898,9 @@
       "id": "LA-A1-F2-16",
       "category": "Officia: sententiae et scientia",
       "label": "express ability",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C49-FRAME-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1855,13 +1909,16 @@
       "derivedFrom": [
         "A1-F2-17"
       ],
-      "note": "possum is absent."
+      "note": "possum, taken apart into potis plus sum, with all five persons and the rule that an infinitive follows. Note the asymmetry with LA-A1-F2-15, which is still uncovered: the track can now EXPRESS ability and still cannot ASK about it, because it has no polar question particle."
     },
     {
       "id": "LA-A1-F2-17",
       "category": "Officia: sententiae et scientia",
       "label": "say that you have understood, and that you have not",
-      "probe": null,
+      "probe": [
+        "LA-LEX-INTELLEGO-01",
+        "LA-GRAMMAR-C48-NON-VERB-01"
+      ],
       "anchorIds": [
         "CEFR-CV",
         "LA-CORPUS",
@@ -1869,7 +1926,7 @@
       ],
       "derivedFrom": [],
       "latinSpecific": true,
-      "note": "THE REPAIR COLUMN, CHECKED SEPARATELY. intellego is taught in chapter 38, and only as a dictionary entry with an etymology (inter plus lego, to read between); it never appears in a sentence, and non intellego cannot be built because negation is never attached to a verb (LA-A1-OS-02). So the commonest thing a beginner has to say is unsayable in both directions. The proxy has no A1 slot for it and CEFR's A1 descriptors do."
+      "note": "THE REPAIR COLUMN, HALF OF IT, CLOSED. intellegō was already taught as a dictionary entry, and the nesciō lesson supplies nōn intellegō explicitly as one of its four worked negatives. The other half -- asking for a repetition -- is at LA-A1-F6-05 and is also now closed."
     },
     {
       "id": "LA-A1-F3-01",
@@ -1893,7 +1950,9 @@
       "id": "LA-A1-F3-02",
       "category": "Officia: voluntates et sensus",
       "label": "ask about a preference by offering alternatives",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C48-DENY-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1902,7 +1961,7 @@
       "derivedFrom": [
         "A1-F3-02"
       ],
-      "note": "Needs aut; see LA-A1-CJ-03."
+      "note": "Aquam aut vīnum? -- the first choice this course can offer, built on words it already had."
     },
     {
       "id": "LA-A1-F3-03",
@@ -1923,7 +1982,9 @@
       "id": "LA-A1-F3-04",
       "category": "Officia: voluntates et sensus",
       "label": "express a wish: volo",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C49-FRAME-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -1932,7 +1993,7 @@
       "derivedFrom": [
         "A1-F3-04"
       ],
-      "note": "Absent. As in the Italian file, this is the single word that would unlock asking, ordering and inviting at this level."
+      "note": "volō, with its irregular forms and the infinitive that follows it. The word the earlier reading of this file called the single one that would unlock ordering, asking and inviting at once."
     },
     {
       "id": "LA-A1-F3-05",
@@ -2414,7 +2475,10 @@
       "id": "LA-A1-F6-05",
       "category": "Officia: sermonem regere (discourse and repair)",
       "label": "REPAIR: ask for a repetition",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C53-SCHOOL-01",
+        "LA-ETYMON-QUAESO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -2423,7 +2487,7 @@
       "derivedFrom": [
         "A1-F6-04"
       ],
-      "note": "NOTHING. quid dicis?, iterum, quaeso, lentius: none of them. dico is taught as a dictionary word in chapter 37 and quaeso in chapter 3, so both halves of quid dicis, quaeso? are in the learner's hands and no lesson ever joins them. This track can apologise, thank and say please, and it cannot ask anyone to say something again."
+      "note": "CLOSED, AND IT WAS THE LARGEST HOLE IN THE COURSE. Iterum, quaesō -- again, please. quaesō was taught in the fourth chapter and dīcō among the first verbs, and fifty-two chapters went by without a lesson joining them. A track that could greet, thank, apologise and say please could not ask anybody to repeat anything."
     },
     {
       "id": "LA-A1-F6-06",
@@ -2603,7 +2667,10 @@
       "id": "LA-A1-NG-10",
       "category": "Notiones generales (general notions)",
       "label": "location: saying where something is",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C50-POINT-05",
+        "LA-LEX-C52-ASK-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -2612,7 +2679,7 @@
       "derivedFrom": [
         "A1-NG3-01"
       ],
-      "note": "No locative adverb, no preposition of place used in a sentence, and no ubi to ask with. The learner can name the sea, the earth and the sky and cannot say that anything is in any of them."
+      "note": "Ubi est liber? -- Ibi. The question and the answer, from two chapters of the tranche, and the first time this course can place anything anywhere."
     },
     {
       "id": "LA-A1-NG-11",
@@ -2861,7 +2928,10 @@
       "id": "LA-A1-NG-25",
       "category": "Notiones generales (general notions)",
       "label": "general evaluation",
-      "probe": null,
+      "probe": [
+        "LA-LEX-BENE-01",
+        "LA-LEX-C48-DENY-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -2870,7 +2940,7 @@
       "derivedFrom": [
         "A1-NG6-01"
       ],
-      "note": "bene is taught and its opposite is not; bonus exists only inside the three greeting formulas and malus never appears. Half a scale."
+      "note": "bene and male together. The pair, not one half of it."
     },
     {
       "id": "LA-A1-NG-26",
@@ -2906,7 +2976,10 @@
       "id": "LA-A1-NG-28",
       "category": "Notiones generales (general notions)",
       "label": "quality: bonus and malus",
-      "probe": null,
+      "probe": [
+        "LA-GRAMMAR-BONAM-NOCTEM-01",
+        "LA-LEX-C48-DENY-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -2915,7 +2988,7 @@
       "derivedFrom": [
         "A1-NG6-04"
       ],
-      "note": "See LA-A1-NG-25."
+      "note": "malus is now taught as an adjective with its three endings, beside the bonus that the greeting lessons carry inside bonam noctem. Read the limit: bonus still has no lesson of its own and is met only in the greeting formulas."
     },
     {
       "id": "LA-A1-NG-29",
@@ -3055,7 +3128,13 @@
       "id": "LA-A1-NE-01",
       "category": "Notiones speciales (specific notions)",
       "label": "parts of the body",
-      "probe": null,
+      "probe": [
+        "LA-ETYMON-CAPUT-01",
+        "LA-ETYMON-MANUS-01",
+        "LA-LEX-C54-BODY-03",
+        "LA-LEX-C54-BODY-04",
+        "LA-LEX-C54-BODY-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -3064,7 +3143,7 @@
       "derivedFrom": [
         "A1-NE01-01"
       ],
-      "note": "TWO body words in 112 files -- caput (chapter 8) and manus (chapter 8) -- and the proxy point asks for the set. Compare the Italian track, which teaches nine. This is the cheapest large gain available in the whole file."
+      "note": "caput and manus were the whole body this course had. oculus, auris and pēs bring it to five, and each is taught as an inherited English cousin rather than a loan -- eye, ear and foot, the last of them the cleanest Grimm's Law pair in the book."
     },
     {
       "id": "LA-A1-NE-02",
@@ -3202,7 +3281,9 @@
       "id": "LA-A1-NE-10",
       "category": "Notiones speciales (specific notions)",
       "label": "social relationships",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C51-CITY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -3211,7 +3292,7 @@
       "derivedFrom": [
         "A1-NE04-02"
       ],
-      "note": "amicus is ABSENT, which is a striking gap: chapter 10 traces panis to companion and to the friendship-word every Romance daughter shares, and never teaches the Latin word for friend."
+      "note": "amīcus -- built on amō, which was already taught, and with inimīcus, English enemy, as its negative. The word the bread lesson pointed at and did not give."
     },
     {
       "id": "LA-A1-NE-11",
@@ -3302,7 +3383,10 @@
       "id": "LA-A1-NE-16",
       "category": "Notiones speciales (specific notions)",
       "label": "eating out, or eating at all",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C54-BODY-01",
+        "LA-LEX-C54-BODY-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -3311,13 +3395,15 @@
       "derivedFrom": [
         "A1-NE05-05"
       ],
-      "note": "The corpus has eight foodstuffs and NO VERB FOR EATING OR DRINKING. edo and bibo are both absent, so a learner can name bread, salt, honey, egg, fish, water, wine and milk and cannot say what to do with any of them."
+      "note": "edō and bibō. Eight foodstuffs had been taught with no verb to do anything with them; there are now two, and the edō lesson meets the ēsse / esse collision head on."
     },
     {
       "id": "LA-A1-NE-17",
       "category": "Notiones speciales (specific notions)",
       "label": "educational institutions",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C53-SCHOOL-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -3326,13 +3412,16 @@
       "derivedFrom": [
         "A1-NE06-01"
       ],
-      "note": "schola and ludus (in its school sense) are absent -- and ludo, to play, IS taught in chapter 42, which is the same word in its other sense."
+      "note": "schola, with the Greek leisure it started as."
     },
     {
       "id": "LA-A1-NE-18",
       "category": "Notiones speciales (specific notions)",
       "label": "teacher and pupil",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C53-SCHOOL-02",
+        "LA-LEX-C53-SCHOOL-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -3341,7 +3430,7 @@
       "derivedFrom": [
         "A1-NE06-02"
       ],
-      "note": "magister and discipulus absent, though puer is quoted inside the chapter 20 grammar frame puero nomen est."
+      "note": "magister and discipulus, taught as the two ends of a Roman classroom and as a matched pair with minister and discō behind them."
     },
     {
       "id": "LA-A1-NE-19",
@@ -3378,7 +3467,9 @@
       "id": "LA-A1-NE-21",
       "category": "Notiones speciales (specific notions)",
       "label": "classroom language",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C53-SCHOOL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -3387,7 +3478,7 @@
       "derivedFrom": [
         "A1-NE06-06"
       ],
-      "note": "Nothing; see LA-A1-F6-05."
+      "note": "iterum, quaesō is classroom language, and the lesson presents it as exactly that."
     },
     {
       "id": "LA-A1-NE-22",
@@ -3576,7 +3667,10 @@
       "id": "LA-A1-NE-34",
       "category": "Notiones speciales (specific notions)",
       "label": "written correspondence",
-      "probe": null,
+      "probe": [
+        "LA-LEX-SCRIBO-01",
+        "LA-LEX-C51-CITY-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -3585,13 +3679,15 @@
       "derivedFrom": [
         "A1-NE09-02"
       ],
-      "note": "scribo is taught in chapter 38 and epistula is absent -- and chapter 24 quotes Cicero's own letters twice, so the corpus reads a letter without naming one."
+      "note": "epistula beside the scrībō the corpus already had. The letters this course quotes twice now have a name."
     },
     {
       "id": "LA-A1-NE-35",
       "category": "Notiones speciales (specific notions)",
       "label": "the printed page, and the Roman book",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C53-SCHOOL-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -3600,7 +3696,7 @@
       "derivedFrom": [
         "A1-NE09-04"
       ],
-      "note": "liber and volumen are absent; see LA-A1-NE-22."
+      "note": "liber, with the tree bark it started as and the volūmen scroll explained in the same lesson."
     },
     {
       "id": "LA-A1-NE-36",
@@ -3687,7 +3783,9 @@
       "id": "LA-A1-NE-41",
       "category": "Notiones speciales (specific notions)",
       "label": "money and banking",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C51-CITY-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -3697,13 +3795,15 @@
         "A1-NE11-02",
         "A1-NE15-01"
       ],
-      "note": "pecunia, argentum, as, denarius: none of them. Two proxy points, one absence."
+      "note": "pecūnia, with the cattle it is named for. Read the limit: the coin names -- as, dēnārius, sēstertius -- are still absent, so a price can be spoken of and not stated."
     },
     {
       "id": "LA-A1-NE-42",
       "category": "Notiones speciales (specific notions)",
       "label": "health services",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C51-CITY-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -3712,13 +3812,15 @@
       "derivedFrom": [
         "A1-NE11-03"
       ],
-      "note": "medicus is absent."
+      "note": "medicus, from medeor and the root that means to take the right measures."
     },
     {
       "id": "LA-A1-NE-43",
       "category": "Notiones speciales (specific notions)",
       "label": "protection and security",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C51-CITY-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -3727,7 +3829,7 @@
       "derivedFrom": [
         "A1-NE11-04"
       ],
-      "note": "Absent -- and this is the notion a Latin reader meets soonest, in the shape of miles and the army."
+      "note": "mīles, with the genitive stem that every English derivative is built on, and with the etymology recorded as OPEN rather than as the usual mille story."
     },
     {
       "id": "LA-A1-NE-44",

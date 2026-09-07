@@ -1,0 +1,14 @@
+{
+  "id": "MR-PATH-051",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "MR-C48-kade",
+    "MR-C48-possession",
+    "MR-R48-have-and-toward"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-064-TOWARD-AND-HAVE"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:fc586e1f1fe11488",
+  "lessonIds": [
+    "RU-C19-pochemu",
+    "RU-C19-potomu-chto",
+    "RU-C19-kogda-vopros",
+    "RU-C19-kogda-soyuz",
+    "RU-W10-zapyataya"
+  ],
+  "tex": "russian/book/chapters/ch19-why-because-when.tex"
+}

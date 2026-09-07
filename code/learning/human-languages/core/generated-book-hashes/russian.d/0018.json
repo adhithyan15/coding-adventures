@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:2a1f118d3115a456",
+  "lessonIds": [
+    "RU-C18-chto-vopros",
+    "RU-C18-chto-soyuz",
+    "RU-C18-dumayu-chto",
+    "RU-C18-znayu-chto",
+    "RU-W09-tire"
+  ],
+  "tex": "russian/book/chapters/ch18-chto.tex"
+}

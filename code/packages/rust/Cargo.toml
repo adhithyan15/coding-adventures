@@ -805,6 +805,7 @@ members = [
     "vault-import-export",
     "vault-import-bitwarden",
     "vault-import-csv",
+    "vault-import-keepass",
     "vault-import-otpauth",
     "vault-pm-format",
     "vault-pm-domain",

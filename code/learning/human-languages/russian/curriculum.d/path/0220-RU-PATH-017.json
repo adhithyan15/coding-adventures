@@ -1,0 +1,16 @@
+{
+  "id": "RU-PATH-017",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "RU-C16-i",
+    "RU-C16-i-predlozheniya",
+    "RU-C16-ili",
+    "RU-C16-ni-ni",
+    "RU-C16-tozhe"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-022-COORDINATORS"
+  ],
+  "after": []
+}

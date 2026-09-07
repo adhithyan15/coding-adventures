@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C52-meus",
+    "language": "latin",
+    "chapter": 52,
+    "sequence": 1380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4f1cd9a02df7d17"
+  },
+  "findings": []
+}

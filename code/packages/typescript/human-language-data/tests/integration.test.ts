@@ -253,7 +253,14 @@ describe("real curriculum", () => {
       // 14 -> 15: HL-C232, eight more letters on the same three-kinds frame. It exists
       // because а and о -- the two commonest vowels in the language -- were taught by no
       // lesson at all, which 75 lessons and 14 chapters had not surfaced.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+      // 15 -> 22: the joining and repair tranche. 16 is coordination (и, или,
+      // ни ... ни, тоже); 17 is the two buts and the closing punctuation marks;
+      // 18 is что and the two frames it unlocks; 19 is почему/потому что and
+      // когда, closing on the comma rule; 20 is the verb that takes another
+      // verb; 21 is the repair kit the track had none of; 22 is the question
+      // family and который. All seven are generated, all seven are Cyrillic,
+      // and none of them needed a letter the track had not already taught.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

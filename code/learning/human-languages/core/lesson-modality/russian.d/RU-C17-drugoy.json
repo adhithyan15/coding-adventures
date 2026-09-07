@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C17-drugoy",
+    "language": "russian",
+    "chapter": 17,
+    "sequence": 880,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:44e706acb06b04a5"
+  },
+  "findings": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "german",
+  "title": "Pronunciation --- a reference, not a chapter",
+  "shortTitle": "Pronunciation (reference)",
+  "source": "german/pronunciation-reference.md",
+  "output": "german/book/chapters/appendix-pronunciation.tex"
+}

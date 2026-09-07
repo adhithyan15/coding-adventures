@@ -17,10 +17,14 @@ it("pins Russian continuity", () => expectLanguageContinuity("russian"));
 it("pins Russian modality", () => expectLanguageModality("russian"));
 it("pins Russian lesson-content budgets", () =>
   expectLanguageLessonBudgets("russian", {
-    lessons: 88,
+    // 88 -> 123: the joining and repair tranche, chapters 16-22, seven chapters
+    // of five lessons each. The single new culture claim is that простите is
+    // the heavier of the two apologies -- a fact about when a Russian reaches
+    // for which word, which is a claim about people rather than about grammar.
+    lessons: 123,
     idioms: 0,
     senses: 4,
-    cultureClaims: 9,
+    cultureClaims: 10,
     unitPrefix: "RU",
   }));
 

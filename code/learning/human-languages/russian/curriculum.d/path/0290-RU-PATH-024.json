@@ -1,0 +1,16 @@
+{
+  "id": "RU-PATH-024",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "RU-C22-kto",
+    "RU-C22-kakoy",
+    "RU-C22-skolko",
+    "RU-C22-kotoryy",
+    "RU-C22-li"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-029-QUESTION-FAMILY"
+  ],
+  "after": []
+}

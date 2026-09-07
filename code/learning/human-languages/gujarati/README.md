@@ -16,6 +16,13 @@ the end.
 - Gujarati retains masculine, feminine, and neuter agreement, has the copula
   *chhe*, and contains an important Perso-Arabic trade-language layer.
 - Etymology is a memory tool, not a substitute for current meaning and usage.
+- Noto Sans Gujarati carries no basic-Latin punctuation glyphs, so `.` `?` `!`
+  and `-` must stay **outside** a `\gu{}` span or they render as a tofu box.
+  The book generator already keeps them outside, because a script run only ever
+  collects characters of that script; anything hand-written into a `.tex` here
+  has to do the same. This note lived in `pronunciation-reference.md` until that
+  file became the book's own source, where a note about LaTeX macros would have
+  printed on a reader's page.
 
 ## Assessment destination
 
