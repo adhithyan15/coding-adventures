@@ -480,6 +480,7 @@ members = [
     "lattice-lexer",
     "lattice-parser",
     "lattice-transpiler",
+    "base64",
     "md5",
     "sha1",
     "uuid",
