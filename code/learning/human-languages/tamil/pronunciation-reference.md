@@ -10,9 +10,10 @@ in one spot.
 1. **Consonants carry a built-in "a".** க = "ka," ம = "ma," ர = "ra." You never
    write the short *a* — it's already there.
 2. **A vowel sign changes that built-in vowel.** Hooked onto a consonant, it
-   swaps the *a* for another vowel:
-   - **ா** = ā (கா = kā) · **ி** = i (கி = ki) · **ீ** = ī · **ு** = u · **ூ** =
-     ū · **ெ** = e · **ே** = ē · **ை** = ai · **ொ** = o · **ோ** = ō · **ௌ** = au.
+   swaps the *a* for another vowel — க ka + ி gives கி ki. The signs are
+   **ா** = ā (கா = kā) · **ி** = i (கி = ki) · **ீ** = ī · **ு** = u ·
+   **ூ** = ū · **ெ** = e · **ே** = ē · **ை** = ai · **ொ** = o · **ோ** = ō ·
+   **ௌ** = au.
 3. **A *puḷḷi* (the dot, ்) removes the built-in vowel.** க் = bare "k." A
    vowel-less consonant then leans into the next (க் + க → க்க, a held "kk").
 
@@ -31,9 +32,9 @@ o · **ஓ** ō · **ஔ** au.
 - **One letter, several sounds.** Tamil marks no voicing or aspiration: **க**
   can be *k*, *g*, or *h*; **ச** can be *s* or *ch* — **position** decides. The
   alphabet is small; the exact sound is read from context, picked up by ear.
-- **A small native alphabet.** Classical Tamil uses 18 consonants; a few
-  *grantha* letters (**ஜ** ja, **ஷ** ṣa, **ஸ** sa, **ஹ** ha) are added only to
-  spell loanwords.
+- **No Sanskrit-only letters in the core set.** Classical Tamil gets by with
+  18 consonants; a handful of *grantha* letters (**ஜ** ja, **ஷ** ṣa, **ஸ** sa,
+  **ஹ** ha) are added only to spell loanwords.
 
 ## Tamil in the Dravidian family
 

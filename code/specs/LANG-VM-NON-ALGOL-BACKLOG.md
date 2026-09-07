@@ -38,6 +38,60 @@ runtime-parameter probe before changing this path; rank this suspected shared
 lowering defect ahead of VM-047c when the current PR merges. It is not yet an
 executed failure and is outside the concat repair's validated scope.
 
+## VM-057 implementation contract (selected after #14407 merged)
+
+A discriminating IIR-level probe confirmed the suspected hazard before any
+fix: a `str_slice` whose destination register aliases its source (`reg_map`
+keys one wasm local per variable *name*, so `str_slice s = s, start, end`
+reads and writes the identical local) produced wrong bytes, not merely a
+theoretical risk. The runtime path wrote `rd = i32.wrap(bump)` — the fresh
+block's handle — before the header write and the `memory.copy` that reads
+`src_base` back out of that same local, so an aliased read observed the new,
+uninitialized block instead of the original string.
+
+Repaired with VM-056's exact pattern: address the fresh block through the
+not-yet-advanced `bump` global for both the header store and the
+`memory.copy` source/destination math, keeping every source-local read
+(`push_src_len`, `push_src_base`, and the shared `push_start`/`push_end`
+bounds/index reads) intact until after the last one completes; only then
+push the bump-based handle, advance `bump`, and `local.set` the destination.
+Bounds checks, the `$__ensure_capacity` growth call and the literal fast path
+are unchanged.
+
+Traced the actual COBOL-reachable trigger rather than assuming the reference-
+modification shape the discovery note suggested: `ref_mod_slice` (COBOL
+`base(start:len)`) always materializes its slice into a fresh temporary
+before the final reshape write, so `MOVE`/comparison reference modification
+never reaches this hazard. The real single-instruction alias is
+`STRING <item> DELIMITED BY SIZE INTO <same item>` — `string_source` returns
+a `Name` operand's live register directly, and a lone sending field skips the
+`str_concat` combining loop entirely, so the truncating `str_slice`'s
+destination and source are the identical register.
+
+VM-057 local repair: the destination-aliases-source IIR probe reproduces
+corrupted output before the fix and passes after it, alongside the existing
+left/right/both-alias `str_concat` regressions in the same file. A COBOL
+`STRING S DELIMITED BY SIZE INTO S` program (`S PIC X(5) VALUE "ABCDE"`)
+gets a seven-backend `lang_matrix` cell expecting `S` unchanged, plus an
+oracle-agreement sanity check on the generic JIT/interpreter path (which was
+never exposed to this WASM-only defect). All 237 `iir-to-wasm` package tests
+(including doctests) and all 632 `cobol-iir-compiler` tests (including the
+new construct's oracle proof) pass; focused Clippy on `iir-to-wasm`,
+`cobol-iir-compiler` and `lang-aot` (tests included) is clean. Audited every
+other `iir-to-wasm` lowering site that shares `str_concat`/`str_slice`'s
+bump-allocate-then-`memory.copy` shape: `alloc_array` copies no existing
+operand's bytes (only a requested length), so it was never exposed, and no
+third such site exists. Spot-checked `iir-to-llvm`'s `str_slice`/`str_concat`
+lowering, which already reads every operand into a value before overwriting
+the destination `env` entry (with a comment recording that ordering is
+deliberate) — this bug's shape is specific to a backend that reuses one
+mutable local per variable name, not a defect to assume recurs in every
+backend.
+
+No further executed failure or lowering defect was found. VM-047c (INSPECT
+BEFORE/AFTER regions and absent-delimiter asymmetry) is next per the existing
+ranked queue.
+
 ## VM-047b implementation contract (selected after #14400 merged)
 
 Refreshed main is `2755b36eb5`. PR #14400 merged after all current-head checks

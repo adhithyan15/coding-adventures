@@ -6806,6 +6806,40 @@ write the destination last. Exercise left, right and double aliasing explicitly.
 
 Direct WASM IIR tests must give `str_eq` an i64/i32 result hint; `bool` is
 rejected by the backend validator before execution. Use the established test ABI.
+
+
+### The destination-before-read hazard was not unique to str_concat (2026-09-07)
+
+VM-056 fixed `str_concat`; the same "assign the destination local, then read
+an operand local that may be the same local" shape existed in `str_slice`'s
+runtime path too, guessed at as a suspected defect (VM-057) rather than
+confirmed. A raw IIR-level probe (a `str_slice` whose dest and source share a
+variable name) reproduced wrong output before any fix — corrupted bytes
+instead of the correct slice — proving it was a real, not merely suspected,
+bug. The repair is the identical pattern: address the fresh block through the
+not-yet-advanced bump global while the source local is still needed, and
+`local.set` the destination only after the last read.
+
+Before trusting "just one op was buggy," grep every other lowering site that
+shares the same bump-allocate-and-copy shape (`ARRAY_BUMP_GLOBAL` +
+`memory.copy`) for the same ordering hazard. `alloc_array` copies no existing
+operand's bytes (only a requested length), so it was never exposed; the LLVM
+backend's `str_slice`/`str_concat` already read every operand into a value
+before overwriting the destination `env` entry, with a comment recording that
+was deliberate — so the class of bug is backend-lowering-shape-specific
+(mutable-local reuse keyed by variable name), not something to assume
+recurs in every backend just because one had it.
+
+Finding the actual real-world trigger mattered: COBOL reference-modification
+`MOVE base(i:j) TO dst` does NOT reach this hazard (`ref_mod_slice` always
+materializes into a fresh temp before the final reshape write), but
+`STRING <item> DELIMITED BY SIZE INTO <same item>` does — a lone sending
+field's register is returned directly by `string_source` with no temporary,
+so the truncating `str_slice`'s destination and source are the identical
+local. Guessing at "a MOVE-shaped example" instead of tracing the actual
+register data flow would have produced a regression that never touched the
+buggy path.
+
 ## `to_value` builds one Value per element, and a `Vec<u8>` is a lot of elements
 
 `ok_with` in the wasm facade did `serde_json::to_value(value)` before rendering
@@ -6880,3 +6914,92 @@ line that is not derived from the thing it claims to describe.** A byte scan
 that could not see undefined symbols, a mutation test whose mutation never
 applied, a guard whose fixtures encoded the same assumption it did — and now a
 "clean" that was just `tail` exiting zero.
+
+## The benchmark shape decides the answer
+
+Base64 for media looked like a clear win on wire size, so I measured peak
+memory to confirm. One 4 MiB asset:
+
+```
+  array: 3.57x wire, 2.00x peak   |   base64: 1.33x wire, 2.67x peak
+```
+
+Base64 was **worse** on peak. Reported as-is that would have been a real
+argument against the change — and it would have been misleading, because one
+asset is base64's worst possible case. The intermediate encoded string is
+per-asset, while the output buffer holds every asset. An `.apkg` is many small
+files, not one enormous one:
+
+```
+  2048 x 16 KiB (32 MiB) | array 3.57x wire 2.00x peak | base64 1.33x wire 1.34x peak
+```
+
+Same code, opposite conclusion. The first benchmark was not wrong; it measured
+a shape the product does not have.
+
+**Pick the fixture from the workload, not from what is easy to write.** A
+single big buffer is the convenient benchmark, and here it inverted the result.
+Both numbers are now in the source comment, including the case where base64
+loses, so nobody has to rediscover it.
+
+Two smaller things from the same change:
+
+- **A second copy of the same bug lived one crate away.** Fixing
+  `MediaAssetRecord` left `ResolvedMediaFile` in `engram-anki-package`
+  untouched, and that one backs `eg_read_anki_apkg_media` — a response that IS
+  a single media file. Only a downstream test failing on `left: Array` vs
+  `right: String` pointed at it. When a fix is about a *shape* rather than a
+  site, grep for the shape: `pub data: Vec<u8>` found it in seconds.
+- **Test fixtures that look like expectations are not.** Three failing
+  assertions held numeric arrays; two were inputs and one was an expectation.
+  Blanket-replacing all three would have passed CI while deleting the only
+  coverage of the legacy read path — the path that keeps every snapshot already
+  on a user's disk loadable. They are classified individually now, with the
+  input ones left as arrays deliberately.
+
+## The number I optimised was not the number that mattered
+
+I measured base64 media encoding at 1.34x peak and raised the wasm media
+ceiling 4x on that basis. Security review measured the same change with the
+same technique and got a different answer, because I had measured the wrong
+quantity: **1.34x is incremental allocation during serialisation.** It excludes
+the media retained in state, the reducer's whole-state clone on every command,
+and the output buffer's doubling growth. Total live heap at 128 MiB of media is
+429–939 MiB depending on shape, not the ~172 MiB my arithmetic implied.
+
+Worse, the guard I described as bounding the damage does not.
+`media_budget = min(archive_len * 50, CEILING)` reads like a ratio limit, but
+zip padding is free — a 2.56 MiB archive unlocks the full ceiling, so above
+that size the ceiling is the *only* bound, and I had just multiplied it by
+four. On `wasm32` linear memory never shrinks and `panic = "abort"` means the
+`catch_unwind` never runs, so the spike takes the user's unsaved collection.
+
+Reverted. The lesson is not "measure" — I did measure. It is:
+
+- **A ratio is not a bound until you check what the denominator costs the
+  attacker.** `* 50` sounds protective; padding bytes are free, so it protects
+  only inputs too small to matter.
+- **State the quantity, not just the number.** "1.34x peak" was true and
+  useless. "1.34x incremental serialisation allocation, excluding retained
+  state and the reducer's clone" would have been visibly insufficient for a
+  ceiling decision.
+- **A memory figure justifying a limit must be total live heap**, because that
+  is what the allocator has to satisfy.
+
+## A grep for a shape finds the shapes it can see
+
+Fixing the media amplification, I grepped `pub data: Vec<u8>` and found two
+types. Review found a third: the exported `.apkg`, which is a **local** handed
+straight to `ok_with` and matches no field pattern. It measured at 4.00x wire
+and 5.5–8.25x peak — the largest of the three, since a legacy `.apkg` stores
+media uncompressed.
+
+It is also the one I could not fix in the same change, and finding out why was
+the useful part: **six host adapters read that payload** through
+`jsonByteArray` helpers expecting an array of numbers. The two struct fields
+cross the facade and no host reads them; this one every host reads. Same bug,
+same fix, completely different blast radius — and nothing about the two sites
+distinguished them until I went looking at consumers.
+
+Grep for the shape, then grep for the *consumers* of each hit. The second
+search is what tells you which fixes are one commit and which are six.

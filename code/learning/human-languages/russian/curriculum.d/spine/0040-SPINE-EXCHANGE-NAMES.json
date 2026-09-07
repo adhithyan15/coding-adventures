@@ -2,10 +2,11 @@
   "segments": [
     "RU-PATH-006",
     "RU-PATH-011",
-    "RU-PATH-014"
+    "RU-PATH-014",
+    "RU-PATH-019",
+    "RU-PATH-024"
   ],
   "omits": [
-    "QUESTION-WHAT",
     "PRONOUN-ME",
     "PRONOUN-MY",
     "WORD-NAME",

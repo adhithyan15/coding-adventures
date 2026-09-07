@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:207937186d16b6e6",
+  "lessonIds": [
+    "RU-C17-no",
+    "RU-C17-a",
+    "RU-C17-odin",
+    "RU-C17-drugoy",
+    "RU-W08-tochka"
+  ],
+  "tex": "russian/book/chapters/ch17-but-twice-over.tex"
+}

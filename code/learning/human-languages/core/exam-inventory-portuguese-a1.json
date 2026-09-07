@@ -1,0 +1,3645 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO CAPLE, which core/exam-levels.json names as this track's exam, nor to Centro de Avaliacao de Portugues Lingua Estrangeira, nor to Celpe-Bras. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT PORTUGUESE: they published a Spanish syllabus and have said nothing whatever about this language. READ THE THREE CLAIMS APART. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, this project's restatement of the A1 inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing here and all it establishes is a LEVEL. (2) THE PORTUGUESE EXPONENTS are editorial throughout. THE PROXY IS A SISTER LANGUAGE AND THAT IS ITS OWN HAZARD, the same hazard the Italian file names: two genders, pro-drop, ser and estar, written accents on the same alphabet, punctuation from the same tradition. The temptation is to let the Spanish sentence stand and call it Portuguese. Where the two diverge the divergence is recorded on the point itself and is usually the interesting part, and here it is unusually often the point where a Spanish speaker would go WRONG rather than merely differ: gostar keeps the liker as subject and demands de, where gustar inverts the frame (PT-A1-PRON-05); tenho falado does NOT mean I have spoken (PT-A1-V-09); Portuguese does not mark a personal object with a preposition where Spanish does (PT-A1-SV-03); obrigado agrees with the SPEAKER and not with the noun (PT-A1-ADJ-07); the weekdays are numbered rather than named (PT-A1-NG-10); and the cedilla Spanish dropped in 1815 is still here (PT-A1-ORT-04). The corpus teaches every one of those as a contrast, which is why they can be probed at all. (3) THE COVERAGE NUMBER is a measure of the corpus against this list, not an exam-readiness claim. THE REGISTER COLUMN IS DERIVED FROM LESSON BODIES, NOT FROM FRONTMATTER, AND BOTH FRONTMATTER FIELDS ARE ARTEFACTS: all 102 lessons declare register: neutral and all 102 declare variety: standard-contemporary, so neither field carries any information. exam-levels.json carries NO caveat for portuguese, so there was nothing to import either. What the bodies teach is a THREE-term address system (tu, voce, o senhor) and, undeclared, TWO major varieties at once -- me chamo beside chamo-me, acho que sim beside penso que sim, Onde voce mora? in a course that also teaches o senhor. PT-A1-REG-03 records that the contrasts are taught and the label is missing. NOT SEARCHED, BY INSTRUCTION: no external search for a CAPLE or Celpe-Bras content syllabus was performed for this file; code/learning/human-languages/BACKLOG.d records the sourcing question as settled and directs that it not be repeated per track (HL-C287, HL-C290).",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Portuguese is attributed to DELE, the Instituto Cervantes or the Plan Curricular, and nothing whatever to CAPLE. EXAM ENVELOPE: NONE EXISTS IN THIS REPOSITORY. Like italian/ and unlike latin/, marwadi/ and persian/, the portuguese/ track ships no assessment spec, no assessment.json, no task shapes and no mocks -- `npm run plan` still lists writing portuguese/assessment.json as outstanding work -- so no project-internal contract bounds the exponent choices or the gap notes below. That is separate from the EXTERNAL picture, where core/exam-levels.json records exam 'CAPLE', basis 'published', mapping 'identity' AND NO CAVEAT. italian and portuguese are the only two tracks in this batch with a published external exam and no caveat, and a published exam whose syllabus nobody here has read cannot bound anything either. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.portuguese. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 102 lesson files in code/learning/human-languages/portuguese/lessons/, which introduce 212 distinct atoms between them -- 85 ETYMON, 53 LEX, 35 GRAMMAR, 21 SOUND, 12 NOTICE, 3 PRAGMATICS, 2 PRAGMATIC and 1 PHONO. The last three kinds are the same kind under three spellings and the inventory probes all three. NOT SEARCHED, BY INSTRUCTION: see `about`.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "This project's restatement of the A1 inventories the Instituto Cervantes publishes behind DELE. The only inventory in this repository that restates a real awarding body's published syllabus, so it is the only one that can lend a LEVEL. It lends a level and never a language, even to the closest sister language it has: nothing about Portuguese is attributable to DELE, the Instituto Cervantes or the Plan Curricular."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "Public, third-party and language-neutral. It can anchor a can-do and never a Portuguese form. Used here only where a point is a can-do rather than a structure."
+    },
+    {
+      "id": "PT-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/portuguese/ -- 102 lessons across 26 chapters, curriculum.d and chapters.d",
+      "note": "Our own work. It is what every probe resolves against and it is finite and auditable, but agreeing with it is not corroboration. Where a point's note says a word is missing, that absence was read out of this directory."
+    },
+    {
+      "id": "PT-EXAM-LEVELS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/core/exam-levels.json, tracks.portuguese",
+      "note": "Records Portuguese as exam 'CAPLE', basis 'published', mapping 'identity', with NO caveat. The absence of a caveat is why the register column of this file was measured from lesson bodies rather than imported from a sibling track's caveat -- and the measurement found that both frontmatter fields are artefacts."
+    },
+    {
+      "id": "ED-PORTUGUESE",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Portuguese",
+      "note": "Every Portuguese exponent below. Deciding that ter que answers the infinitive-clause point, that Penso que sim and Espero que sim between them answer the finite-complement point, that the ou inside mais ou menos counts as covering disjunction while offering alternatives stays uncovered, and that nao sei covers negation while the note records that it is the whole of negation in 102 files -- all of that is chosen here. A working default to be corrected, not a standard."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [],
+    "note": "EMPTY ON PURPOSE, for the same reason the Italian file's is: Portuguese is a sister of the proxy and every one of the 273 Spanish points names a real Portuguese demand. The four that look Spanish-only all restate: the general accentuation rules become Portuguese's own three accent marks and the os pais / o pais pair (PT-A1-ORT-06); the diacritic tilde becomes that same pair; the inverted question mark becomes the fact that Portuguese does not write one (PT-A1-ORT-09); and the superscript abbreviation letter becomes the raised ordinal indicator (PT-A1-ORT-11). RESTATING A POINT AROUND THE TARGET LANGUAGE'S MACHINERY IS DERIVING IT, and an empty list is that rule carried to its end rather than a walk that was not done. Where the sister languages actually diverge the divergence is recorded on the point, and for this pair it is unusually often a place a Spanish speaker would get Portuguese WRONG rather than merely differently -- gostar de, tenho falado, the unmarked personal object, obrigado agreeing with the speaker."
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points) and the Council of Europe CEFR Companion Volume A1 descriptors",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Portuguese is our choice every time, and Portuguese ships no mock or task shape to pin an exponent against. One function is enumerated that the proxy has no A1 slot for: saying that you have understood and that you have not (PT-A1-F2-16), which is empty and is a near-miss -- entender AND compreender are both taught, and nao is taught attached to a verb, and no lesson says nao entendo."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
+      "note": "Walking the Spanish grammar column surfaced demands no reading of the Portuguese corpus alone would have named: that two of the three conjugations are never set out, that no imperative exists in 102 files, that que appears three times over and never as a relative, that mas returns zero. It does not close, because Portuguese makes demands Spanish cannot: the personal infinitive, the -ao ending, the enclitic pronoun with its hyphen, and a three-term address system. Those are enumerated on the project's judgement and, where the proxy has no slot at all, marked portugueseSpecific."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json for the orthographic demands, and portuguese/pronunciation-reference.md",
+      "note": "Portuguese and Spanish share an alphabet, so this column is not about a new writing system and the proxy's shape survives. What it cannot supply is the part of Portuguese spelling Spanish has no counterpart for: the nasal vowels and the til, the cedilla Spain dropped in 1815, the nh and lh digraphs, and the hyphen that attaches an enclitic pronoun. The corpus is strong on the sound-law side -- the -cl- to -lh- change is taught three times and used to predict words -- and empty on the punctuation side: not one punctuation mark is taught."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's general and specific notion inventories)",
+      "note": "The proxy's notion inventories are what this column is walked against, at the granularity of their numbered subsections. They do not close it: which Portuguese words an A1 candidate must hold is what CAPLE's word list would say and this project has read none. What the column DOES show is the shape of the debt: ten food and drink words, six body words, six people words, four colours, the days, the months, the seasons and the numbers to twenty are all there, and the shop, the classroom, the journey, the house, the weather and every profession but medico are empty."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped, and its note is written as a work queue. Every atom named in every probe was checked mechanically against the 212 atoms the portuguese track actually introduces; an id was never invented to fill a point. ONE HABIT IS NAMED SO IT IS NOT A HIDDEN GENEROSITY: this track files most of its vocabulary under ETYMON rather than LEX -- 85 ETYMON atoms against 53 LEX -- because nearly every word lesson is built around where the word came from. dia, tarde, noite, pao, agua, vinho, the months and the seasons are all carried on an etymology atom, so probing those points names an ETYMON id. The word IS introduced by that lesson. A SECOND HABIT MATTERS MORE HERE THAN IN ANY SIBLING FILE: this corpus teaches a great deal INSIDE worked example sentences that belong to a lesson about something else. Lisboa, medico, doente, bonita, nadar and Vai chover? all arrive that way, and sim and nao arrive welded into Espero que sim and nao sei. Where such an instance is the whole of what the corpus has, the point is counted covered and the note says what the learner actually holds -- a sentence rather than a word. PT-A1-ADV-05, PT-A1-OS-02, PT-A1-NG-17 and PT-A1-NE-20 are the clearest cases. A POINT IS NOT COUNTED AS COVERED WHEN ONLY PART OF WHAT IT NAMES IS TAUGHT: amanha without hoje and ontem leaves the time deictics uncovered; comprar without vender leaves commerce uncovered; the -ar paradigm without -er and -ir leaves two thirds of the verb system uncovered. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or an empty list with `portugueseSpecific: true`. `anchorIds` records which anchor each point leans on, and the anchor's `kind` says whether that was something read or something decided.",
+  "points": [
+    {
+      "id": "PT-A1-N-01",
+      "category": "O substantivo (the noun)",
+      "label": "proper nouns: a personal name in an introduction",
+      "probe": [
+        "PT-LEX-C03-PRACTICE-02",
+        "PT-ETYMON-ME-CHAMO-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "Chapter 3's exchange trades names casually and formally."
+    },
+    {
+      "id": "PT-A1-N-02",
+      "category": "O substantivo (the noun)",
+      "label": "place names",
+      "probe": [
+        "PT-GRAMMAR-SER-VS-ESTAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "Lisboa, in Estou em Lisboa -- the worked example of estar for location in chapter 16. One city, and it is used in a sentence."
+    },
+    {
+      "id": "PT-A1-N-03",
+      "category": "O substantivo (the noun)",
+      "label": "common nouns naming periods of time",
+      "probe": [
+        "PT-ETYMON-DIA-02",
+        "PT-ETYMON-TARDE-02",
+        "PT-ETYMON-NOITE-02",
+        "PT-ETYMON-HORA-03",
+        "PT-ETYMON-IDADE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "note": "dia, tarde, noite, hora, ano. Five, and the first three arrive inside the greetings on the first day."
+    },
+    {
+      "id": "PT-A1-N-04",
+      "category": "O substantivo (the noun)",
+      "label": "gender: masculine and feminine, and why the ending cannot be trusted",
+      "probe": [
+        "PT-GRAMMAR-O-A-03",
+        "PT-GRAMMAR-DIA-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ],
+      "note": "Chapter 1 gives the rule AND its first exception in consecutive lessons: o dia ends in -a and is masculine, so learn each noun with its article rather than guessing. That is better teaching than the Spanish point asks for."
+    },
+    {
+      "id": "PT-A1-N-05",
+      "category": "O substantivo (the noun)",
+      "label": "gender by heteronymy: the paired kinship words",
+      "probe": [
+        "PT-ETYMON-PAIS-02",
+        "PT-ETYMON-IRMAOS-02",
+        "PT-ETYMON-HOMEM-03",
+        "PT-ETYMON-MULHER-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "note": "pai/mae, irmao/irma, homem/mulher. Chapter 10 also notes that irmao is NOT from frater but from germanus, of the same stock."
+    },
+    {
+      "id": "PT-A1-N-06",
+      "category": "O substantivo (the noun)",
+      "label": "number: the plural, and the masculine plural that covers a mixed group",
+      "probe": [
+        "PT-GRAMMAR-PAIS-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "os pais, literally the fathers, for the parents -- chapter 10 states the rule and the mixed-group convention with it. The general plural formation (-s, -es, -oes) is not set out; this one instance is."
+    },
+    {
+      "id": "PT-A1-N-07",
+      "category": "O substantivo (the noun)",
+      "label": "the -ao ending, and the three Latin endings it swallowed",
+      "probe": [
+        "PT-GRAMMAR-MAO-04",
+        "PT-ETYMON-MAO-03",
+        "PT-ETYMON-CORACAO-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "pao, mao, coracao. Chapter 17 names the -ao ending as the merger point of three separate Latin endings, and chapter 26 notes that coracao GREW its ending where pao wore one down. Spanish has no comparable ending, so this demand is Portuguese's and is derived from the plural point that is nearest to it."
+    },
+    {
+      "id": "PT-A1-ADJ-01",
+      "category": "O adjetivo (the adjective)",
+      "label": "adjective agreement in gender and number",
+      "probe": [
+        "PT-GRAMMAR-BOM-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03",
+        "A1-ADJ-04"
+      ],
+      "note": "bom/boa/bons/boas, chapter 1, made audible on bom dia against boa tarde."
+    },
+    {
+      "id": "PT-A1-ADJ-02",
+      "category": "O adjetivo (the adjective)",
+      "label": "the adjective used attributively",
+      "probe": [
+        "PT-GRAMMAR-BOM-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "note": "bom dia, boa tarde, boa noite -- prenominal, which is where bom actually goes."
+    },
+    {
+      "id": "PT-A1-ADJ-03",
+      "category": "O adjetivo (the adjective)",
+      "label": "the adjective used predicatively, and what the copula does to it",
+      "probe": [
+        "PT-GRAMMAR-SER-VS-ESTAR-02",
+        "PT-ETYMON-SER-ESTAR-MEANING-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "note": "COVERED, AND BETTER THAN THE POINT ASKS. Chapter 16 teaches e bonita against esta bonita -- the same adjective meaning she is beautiful and she is looking beautiful -- and Ele e medico against Ele esta doente. The Italian track, which has both copulas and four colour words, never predicates an adjective of anything at all."
+    },
+    {
+      "id": "PT-A1-ADJ-04",
+      "category": "O adjetivo (the adjective)",
+      "label": "postnominal position, the Portuguese default",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "note": "Every attributive adjective in the corpus is bom or boa, one of the small class that goes in FRONT. um vinho tinto, a casa branca: never. The learner has met the exception and not the rule."
+    },
+    {
+      "id": "PT-A1-ADJ-05",
+      "category": "O adjetivo (the adjective)",
+      "label": "relational adjectives: the nationality word",
+      "probe": [
+        "PT-LEX-FALO-PORTUGUES-03",
+        "PT-GRAMMAR-SER-VS-ESTAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ],
+      "note": "portugues, taught in chapter 5 as the language name and used in chapter 16 as the nationality: Sou portugues. Both jobs, which is more than the Italian track reaches."
+    },
+    {
+      "id": "PT-A1-ADJ-06",
+      "category": "O adjetivo (the adjective)",
+      "label": "degree: muito, and the -issimo superlative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01"
+      ],
+      "note": "muito occurs eight times in 102 files, all inside muito prazer or English prose. No lesson puts a degree word in front of an adjective and -issimo is never mentioned."
+    },
+    {
+      "id": "PT-A1-ADJ-07",
+      "category": "O adjetivo (the adjective)",
+      "label": "the adjective that agrees with the SPEAKER, not the noun",
+      "probe": [
+        "PT-GRAMMAR-OBRIGADO-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03"
+      ],
+      "note": "obrigado from a man, obrigada from a woman, whoever is being thanked. Chapter 1 states it and says plainly that this is unlike ordinary adjectives. A demand Spanish's gracias does not make at all, restated onto the agreement point."
+    },
+    {
+      "id": "PT-A1-ART-01",
+      "category": "O artigo (the article)",
+      "label": "the definite article: o and a",
+      "probe": [
+        "PT-GRAMMAR-O-A-03",
+        "PT-ETYMON-O-A-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ART-01"
+      ]
+    },
+    {
+      "id": "PT-A1-ART-02",
+      "category": "O artigo (the article)",
+      "label": "the plural definite article: os and as",
+      "probe": [
+        "PT-GRAMMAR-PAIS-03",
+        "PT-ETYMON-ESTACOES-02",
+        "PT-ETYMON-MESES-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ART-01"
+      ],
+      "note": "os pais with its rule stated, and as estacoes and os meses as chapter headwords."
+    },
+    {
+      "id": "PT-A1-ART-03",
+      "category": "O artigo (the article)",
+      "label": "the indefinite article: um and uma",
+      "probe": [
+        "PT-GRAMMAR-NUMEROS-1-5-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ART-03"
+      ],
+      "note": "Taught as a side effect of the numeral um, as in the Italian track."
+    },
+    {
+      "id": "PT-A1-ART-04",
+      "category": "O artigo (the article)",
+      "label": "the contractions: do, da, no, na, ao",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ART-02"
+      ],
+      "note": "Portuguese contracts far more than Spanish's al and del -- de, em, a and por all fuse with the article -- so the demand behind this point is LARGER here. gostar de is taught in chapter 20 with the preposition insisted on, and de o is never contracted to do anywhere in the corpus."
+    },
+    {
+      "id": "PT-A1-ART-05",
+      "category": "O artigo (the article)",
+      "label": "the bare noun",
+      "probe": [
+        "PT-LEX-FALO-PORTUGUES-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ART-04"
+      ],
+      "note": "Falo portugues, taught as a whole sentence in chapter 5. The rule behind the missing article is not stated; the instance is."
+    },
+    {
+      "id": "PT-A1-DEM-01",
+      "category": "Os demonstrativos (pointing)",
+      "label": "the demonstrative forms: este, esse, aquele",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01"
+      ],
+      "note": "None of the three occurs. (Every raw match for esse in 102 files is the LATIN infinitive esse, discussed in chapter 16's account of where ser comes from.)"
+    },
+    {
+      "id": "PT-A1-DEM-02",
+      "category": "Os demonstrativos (pointing)",
+      "label": "spatial deixis: near me, near you, over there",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-DEM-02"
+      ],
+      "note": "Portuguese keeps the full three-way system Spanish has, so this point transfers exactly, and it is empty."
+    },
+    {
+      "id": "PT-A1-DEM-03",
+      "category": "Os demonstrativos (pointing)",
+      "label": "position, and the contracted forms deste, nesse",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03"
+      ],
+      "note": "Unreachable while PT-A1-DEM-01 is empty."
+    },
+    {
+      "id": "PT-A1-POS-01",
+      "category": "Os possessivos (possession)",
+      "label": "possessives for one possessor: meu, teu, seu",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "note": "meu occurs thirteen times in 102 files and every one is English prose or an example sentence in a lesson about something else; no lesson teaches it. seu occurs three times, all in chapter 26's discussion of coracao. A learner can give their name and cannot say my name."
+    },
+    {
+      "id": "PT-A1-POS-02",
+      "category": "Os possessivos (possession)",
+      "label": "possessives for several possessors: nosso, vosso",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-POS-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-POS-03",
+      "category": "Os possessivos (possession)",
+      "label": "the rule Spanish does not have: the Portuguese possessive usually keeps its article",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-POS-03"
+      ],
+      "note": "Spanish says mi hermano; European Portuguese says o meu irmao and Brazilian Portuguese often drops the article. That split is itself an A1 demand for a track that teaches both varieties (PT-A1-REG-03), and neither half is taught."
+    },
+    {
+      "id": "PT-A1-Q-01",
+      "category": "Os quantificadores (quantity and number)",
+      "label": "cardinal numerals 1 to 10",
+      "probe": [
+        "PT-GRAMMAR-NUMEROS-1-5-04",
+        "PT-GRAMMAR-NUMEROS-6-10-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ]
+    },
+    {
+      "id": "PT-A1-Q-02",
+      "category": "Os quantificadores (quantity and number)",
+      "label": "cardinal numerals 11 to 20, and the seam at 16",
+      "probe": [
+        "PT-GRAMMAR-NUMEROS-11-15-02",
+        "PT-GRAMMAR-NUMEROS-16-20-02",
+        "PT-NOTICE-NUMEROS-16-20-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ],
+      "note": "Chapter 12 takes the five fused teens apart and then shows Portuguese breaking earliest of all the Romance sisters, rebuilding sixteen as ten-AND-six."
+    },
+    {
+      "id": "PT-A1-Q-03",
+      "category": "Os quantificadores (quantity and number)",
+      "label": "cardinal numerals above 20",
+      "probe": [
+        "PT-GRAMMAR-HA-TIME-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-01"
+      ],
+      "note": "vinte is the taught ceiling, and ha tres anos and ha dois dias in chapter 18 reuse the numerals in a frame. Counted covered at the level the corpus reaches -- numbers above twenty are not taught, and the note says so, because a price or a telephone number is still out of reach."
+    },
+    {
+      "id": "PT-A1-Q-04",
+      "category": "Os quantificadores (quantity and number)",
+      "label": "ordinal numerals to tenth",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-02"
+      ],
+      "note": "primeiro, segundo: absent as words. The WEEKDAYS are ordinals -- segunda, terca, quarta, quinta, sexta -- and chapter 7 says so, which is the nearest the corpus comes and is not the same as teaching the ordinal series."
+    },
+    {
+      "id": "PT-A1-Q-05",
+      "category": "Os quantificadores (quantity and number)",
+      "label": "pouco and muito, agreeing",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-03"
+      ],
+      "note": "um pouco occurs twice, in chapter 5's dialogue, unglossed."
+    },
+    {
+      "id": "PT-A1-Q-06",
+      "category": "Os quantificadores (quantity and number)",
+      "label": "bastante",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-Q-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-PRON-01",
+      "category": "O pronome (pronouns)",
+      "label": "subject pronouns: eu, tu, voce, ele, ela",
+      "probe": [
+        "PT-GRAMMAR-EU-04",
+        "PT-GRAMMAR-FALAR-04",
+        "PT-GRAMMAR-TUDO-BEM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "eu with its own lesson, the falar table giving tu and voce/ele/ela, and chapter 2 tracing voce to vossa merce, your mercy -- a respectful title worn down into an ordinary pronoun."
+    },
+    {
+      "id": "PT-A1-PRON-02",
+      "category": "O pronome (pronouns)",
+      "label": "the plural subject pronouns: nos, voces, eles",
+      "probe": [
+        "PT-GRAMMAR-FALAR-04",
+        "PT-GRAMMAR-TER-QUE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "nos and voces/eles are both in the chapter 5 paradigm table, and temos que falar in chapter 18 uses the first person plural in a sentence."
+    },
+    {
+      "id": "PT-A1-PRON-03",
+      "category": "O pronome (pronouns)",
+      "label": "pro-drop, and when the pronoun comes back",
+      "probe": [
+        "PT-GRAMMAR-EU-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "Chapter 3 states it and gives the emphasis exception in a real sentence: Eu estou bem, e voce?."
+    },
+    {
+      "id": "PT-A1-PRON-04",
+      "category": "O pronome (pronouns)",
+      "label": "unstressed direct-object pronouns: o, a, os, as",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02"
+      ],
+      "note": "Absent, and with them the enclitic hyphenation (ve-lo) that is one of the harder mechanical facts about written Portuguese."
+    },
+    {
+      "id": "PT-A1-PRON-05",
+      "category": "O pronome (pronouns)",
+      "label": "the indirect object, and the gostar frame",
+      "probe": [
+        "PT-GRAMMAR-GOSTAR-DE-04",
+        "PT-LEX-GOSTAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-01",
+        "A1-SV-05"
+      ],
+      "note": "THREE PROXY POINTS ON ONE LESSON, AND THE FRAME IS NOT SPANISH'S. Spanish's gustar makes the thing the subject; Portuguese's gostar keeps the liker as subject and demands the preposition de -- Gosto de cafe. Chapter 20 explains why the de is not optional, from Latin gustare de. A learner who transferred the Spanish frame would build the sentence wrong, and the lesson heads that off."
+    },
+    {
+      "id": "PT-A1-PRON-06",
+      "category": "O pronome (pronouns)",
+      "label": "the reflexive: me, te, se",
+      "probe": [
+        "PT-GRAMMAR-ME-CHAMO-04",
+        "PT-ETYMON-COMO-SE-CHAMA-02",
+        "PT-GRAMMAR-ENCONTRAR-MEET-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "note": "me chamo and chamo-me, Como se chama?, and encontrar-se in chapter 22. Both the proclitic and the enclitic order are shown, which is the European/Brazilian split the track otherwise leaves implicit."
+    },
+    {
+      "id": "PT-A1-PRON-07",
+      "category": "O pronome (pronouns)",
+      "label": "the relative que with an overt antecedent",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05"
+      ],
+      "note": "que IS in the corpus three times over (see PT-A1-CJ-06) and never once as a RELATIVE. o homem que fala is unsayable."
+    },
+    {
+      "id": "PT-A1-PRON-08",
+      "category": "O pronome (pronouns)",
+      "label": "interrogative pronouns: quem, o que, quanto",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "note": "quem and quanto both return ZERO occurrences in 102 files. Como and onde are taught (PT-A1-ADV-07) and who, what and how much are not."
+    },
+    {
+      "id": "PT-A1-PRON-09",
+      "category": "O pronome (pronouns)",
+      "label": "exclamative que",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-PRON-10",
+      "category": "O pronome (pronouns)",
+      "label": "stressed pronouns after a preposition: mim, ti, ele",
+      "probe": [
+        "PT-LEX-PENSAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-PRON-08"
+      ],
+      "note": "Penso em ti, chapter 19, taught beside Penso que sim as the two things pensar can take. One instance, and it is the construction the point is about."
+    },
+    {
+      "id": "PT-A1-ADV-01",
+      "category": "O adverbio (adverbs)",
+      "label": "place deictics: aqui, ai, ali",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "note": "All three return ZERO occurrences. Location is carried entirely by estar plus a place name (Estou em Lisboa)."
+    },
+    {
+      "id": "PT-A1-ADV-02",
+      "category": "O adverbio (adverbs)",
+      "label": "time deictics: hoje, ontem, amanha",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "note": "amanha is taught, inside the farewell ate amanha. hoje and ontem each occur in English-facing prose only -- hoje three times inside chapter 20's ajudar lesson, ontem inside chapter 15's account of the preterite -- and neither is given as a word. Two thirds of a three-way set is not the set."
+    },
+    {
+      "id": "PT-A1-ADV-03",
+      "category": "O adverbio (adverbs)",
+      "label": "quantity adverbs: pouco, muito, bastante",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03",
+        "A1-NG2-02",
+        "A1-NG2-03"
+      ],
+      "note": "Three proxy points, no exponent; um pouco is on the page once and unglossed."
+    },
+    {
+      "id": "PT-A1-ADV-04",
+      "category": "O adverbio (adverbs)",
+      "label": "manner adverbs: bem and mal",
+      "probe": [
+        "PT-GRAMMAR-TUDO-BEM-02",
+        "PT-GRAMMAR-MAIS-OU-MENOS-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04"
+      ],
+      "note": "Chapter 2 builds a three-term answer ladder: Tudo bem / Tudo otimo / Mais ou menos. mal is absent, and the ladder covers the demand this point makes at A1."
+    },
+    {
+      "id": "PT-A1-ADV-05",
+      "category": "O adverbio (adverbs)",
+      "label": "polarity: sim and nao",
+      "probe": [
+        "PT-GRAMMAR-ESPERAR-HOPE-04",
+        "PT-LEX-SABER-CONHECER-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "note": "COVERED, AND ONLY JUST. sim arrives inside Espero que sim and Penso que sim; nao arrives inside nao sei, which chapter 18 calls the sentence you will need first. Neither is given a lesson of its own, and both are in the learner's hands as usable words -- which is more than the Italian track manages, where no is never taught at all."
+    },
+    {
+      "id": "PT-A1-ADV-06",
+      "category": "O adverbio (adverbs)",
+      "label": "connective adverbs: tambem, tampouco",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-ADV-07",
+      "category": "O adverbio (adverbs)",
+      "label": "interrogative adverbs: como and onde",
+      "probe": [
+        "PT-ETYMON-COMO-03",
+        "PT-GRAMMAR-COMO-04",
+        "PT-ETYMON-MORAR-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "note": "como has its own lesson in chapter 2; onde arrives in chapter 5's Onde voce mora?, in the lesson that also explains why morar rather than viver is what one actually says."
+    },
+    {
+      "id": "PT-A1-ADV-08",
+      "category": "O adverbio (adverbs)",
+      "label": "por que against porque",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08"
+      ],
+      "note": "Portuguese splits this FOUR ways in writing -- por que, porque, por que, porque -- which is a larger demand than the Spanish point makes, and none of the four occurs in 102 files."
+    },
+    {
+      "id": "PT-A1-V-01",
+      "category": "O verbo (the verb)",
+      "label": "present indicative: the regular -ar class",
+      "probe": [
+        "PT-GRAMMAR-FALAR-04",
+        "PT-GRAMMAR-MORAR-04",
+        "PT-GRAMMAR-TRABALHAR-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "Chapter 5, three times over, with the full person table."
+    },
+    {
+      "id": "PT-A1-V-02",
+      "category": "O verbo (the verb)",
+      "label": "present indicative: the -er and -ir classes",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "NEVER SET OUT. Nine -er verbs and several -ir verbs are taught as words across chapters 18 to 22 -- escrever, ler, responder, entender, conseguir, dizer, vir -- and no lesson gives the -er or -ir endings. Two of the three Portuguese conjugations are missing, which is the largest structural gap in this file and one lesson wide."
+    },
+    {
+      "id": "PT-A1-V-03",
+      "category": "O verbo (the verb)",
+      "label": "present indicative: ser and estar",
+      "probe": [
+        "PT-LEX-SER-02",
+        "PT-GRAMMAR-SER-VS-ESTAR-02",
+        "PT-LEX-SER-ESTAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-02"
+      ],
+      "note": "Chapter 16 gives ser's present, imperfect and preterite AND the ser/estar line, drawn Portugal's own way rather than Spain's."
+    },
+    {
+      "id": "PT-A1-V-04",
+      "category": "O verbo (the verb)",
+      "label": "present indicative: ter, haver and ir",
+      "probe": [
+        "PT-LEX-TER-02",
+        "PT-LEX-TER-HAVER-02",
+        "PT-LEX-IR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-02"
+      ],
+      "note": "ter with its own chapter, ter/haver contrasted for to have against there is, and ir noted as two letters welded out of three separate Latin verbs."
+    },
+    {
+      "id": "PT-A1-V-05",
+      "category": "O verbo (the verb)",
+      "label": "the present's values: actual and durative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-03"
+      ],
+      "note": "estar a + infinitive in Portugal and estar + gerund in Brazil -- one of the sharpest EP/BP splits there is, and one of the things a learner most needs told. Absent."
+    },
+    {
+      "id": "PT-A1-V-06",
+      "category": "O verbo (the verb)",
+      "label": "the imperfect",
+      "probe": [
+        "PT-LEX-SER-02",
+        "PT-ETYMON-SER-ROOTS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05"
+      ],
+      "note": "COVERED ONLY ON ONE VERB. Chapter 16 gives era among ser's forms and chapter 16's etymology lesson names it as one of ser's three stems. No regular imperfect paradigm is taught, so the tense is recognisable on ser and cannot be formed on anything else. Counted covered because both proxy points ask for the FORM and the corpus supplies it where it is most irregular; the note is the limit."
+    },
+    {
+      "id": "PT-A1-V-07",
+      "category": "O verbo (the verb)",
+      "label": "the preterite: the regular paradigm",
+      "probe": [
+        "PT-LEX-PRETERITO-PERFEITO-02",
+        "PT-PRAGMATICS-PRETERITO-PERFEITO-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-06"
+      ],
+      "note": "falei, chapter 15 -- and the lesson makes the point that Portuguese KEPT its simple past where three Romance sisters gave theirs up, which is exactly the contrast a learner arriving from French or Italian needs."
+    },
+    {
+      "id": "PT-A1-V-08",
+      "category": "O verbo (the verb)",
+      "label": "the preterite: the irregular verbs",
+      "probe": [
+        "PT-LEX-SER-03",
+        "PT-ETYMON-SER-ROOTS-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-07",
+        "A1-V-08"
+      ],
+      "note": "fui, among ser's forms in chapter 16, and the etymology lesson explains that it comes from a different Latin verb entirely. One irregular preterite, and it is the one that does double duty for ser and ir."
+    },
+    {
+      "id": "PT-A1-V-09",
+      "category": "O verbo (the verb)",
+      "label": "ter + participle, and why it is NOT the present perfect",
+      "probe": [
+        "PT-GRAMMAR-TENHO-FALADO-03",
+        "PT-LEX-TENHO-FALADO-02",
+        "PT-PRAGMATICS-TENHO-FALADO-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-09"
+      ],
+      "note": "THE PROXY POINT INVERTED, AND THE TRACK GETS IT RIGHT. Spanish's he hablado means I have spoken; Portuguese's tenho falado means I have been repeatedly speaking, and chapter 15 names it as the trap English speakers walk into. A learner who transferred the Spanish reading would be wrong, and the lesson exists to stop them."
+    },
+    {
+      "id": "PT-A1-V-10",
+      "category": "O verbo (the verb)",
+      "label": "the past participle, regular and irregular",
+      "probe": [
+        "PT-GRAMMAR-TENHO-FALADO-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "note": "falado, in the compound frame. The irregular participles (feito, dito, visto) are never given, so the point is covered for the regular form only and the note says so -- and dizer and ver ARE both taught as verbs in chapter 18, which makes dito and visto a one-line addition."
+    },
+    {
+      "id": "PT-A1-V-11",
+      "category": "O verbo (the verb)",
+      "label": "the affirmative imperative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-11"
+      ],
+      "note": "No imperative anywhere in 102 files. Every request, instruction and direction in Portuguese is behind this point -- and see PT-A1-F4-02, where the missing por favor sits beside it."
+    },
+    {
+      "id": "PT-A1-V-12",
+      "category": "O verbo (the verb)",
+      "label": "the infinitive as the citation form",
+      "probe": [
+        "PT-GRAMMAR-FALAR-04",
+        "PT-GRAMMAR-TER-QUE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ],
+      "note": "Every verb lesson is headed by its infinitive, and chapter 18's ter que frame states that the following action stays in its dictionary form."
+    },
+    {
+      "id": "PT-A1-V-13",
+      "category": "O verbo (the verb)",
+      "label": "the gerund, and the personal infinitive",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-V-13"
+      ],
+      "note": "Neither. The personal infinitive -- an inflected infinitive that no other Romance language has -- is Portuguese's most distinctive verb form and the proxy has no point that could have asked for it; it is recorded here against the gerund point because that is the nearest non-finite slot."
+    },
+    {
+      "id": "PT-A1-V-14",
+      "category": "O verbo (the verb)",
+      "label": "ter que: expressing obligation",
+      "probe": [
+        "PT-GRAMMAR-TER-QUE-04",
+        "PT-LEX-TER-HAVER-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-02"
+      ],
+      "note": "Tenho que falar, built in three named pieces in chapter 18 -- and it is the corpus's clearest instance of an infinitive clause as object, which is what the proxy point asks for."
+    },
+    {
+      "id": "PT-A1-SN-01",
+      "category": "O sintagma nominal (the noun phrase)",
+      "label": "noun-phrase complements: adjective, de-phrase, relative clause",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "note": "None of the three: no postnominal adjective (PT-A1-ADJ-04), no de-phrase linking two nouns, no relative clause (PT-A1-PRON-07)."
+    },
+    {
+      "id": "PT-A1-SN-02",
+      "category": "O sintagma nominal (the noun phrase)",
+      "label": "agreement inside the noun phrase",
+      "probe": [
+        "PT-GRAMMAR-BOM-04",
+        "PT-GRAMMAR-O-A-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SN-02"
+      ]
+    },
+    {
+      "id": "PT-A1-SN-03",
+      "category": "O sintagma nominal (the noun phrase)",
+      "label": "subject-verb agreement, stated as a rule",
+      "probe": [
+        "PT-GRAMMAR-FALAR-04",
+        "PT-GRAMMAR-TER-QUE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SN-03"
+      ],
+      "note": "The falar table, and chapter 18's statement that in temos que falar only ter changes with the person."
+    },
+    {
+      "id": "PT-A1-SN-04",
+      "category": "O sintagma nominal (the noun phrase)",
+      "label": "the vocative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SN-04"
+      ],
+      "note": "Nobody is addressed by name. o senhor and a senhora ARE taught (PT-A1-REG-02) and are used as subjects rather than as address forms."
+    },
+    {
+      "id": "PT-A1-SV-01",
+      "category": "O sintagma verbal (the verb phrase)",
+      "label": "the copula: ser for what a thing is, estar for how it is",
+      "probe": [
+        "PT-GRAMMAR-SER-VS-ESTAR-02",
+        "PT-NOTICE-SER-VS-ESTAR-03",
+        "PT-ETYMON-SER-ESTAR-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-02",
+        "A1-NG1-03"
+      ],
+      "note": "The best-taught grammar point in this track: two proxy points, a worked table, and chapter 16's observation that Portuguese draws the line its own way rather than Spain's."
+    },
+    {
+      "id": "PT-A1-SV-02",
+      "category": "O sintagma verbal (the verb phrase)",
+      "label": "the attribute, and the meaning the copula gives it",
+      "probe": [
+        "PT-ETYMON-SER-ESTAR-MEANING-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-03"
+      ],
+      "note": "e bonita against esta bonita. See PT-A1-ADJ-03."
+    },
+    {
+      "id": "PT-A1-SV-03",
+      "category": "O sintagma verbal (the verb phrase)",
+      "label": "the direct object",
+      "probe": [
+        "PT-LEX-SABER-CONHECER-02",
+        "PT-LEX-TOMAR-PEGAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-04"
+      ],
+      "note": "Sei a resposta, Conheco o Pedro, Conheco Lisboa -- and chapter 18 notes that Portuguese, unlike Spanish, does NOT mark a personal object with a preposition, which is the very thing the Spanish point is about."
+    },
+    {
+      "id": "PT-A1-SV-04",
+      "category": "O sintagma verbal (the verb phrase)",
+      "label": "circumstantial complements of place",
+      "probe": [
+        "PT-GRAMMAR-SER-VS-ESTAR-02",
+        "PT-ETYMON-MORAR-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ],
+      "note": "Estou em Lisboa, Onde voce mora?."
+    },
+    {
+      "id": "PT-A1-OS-01",
+      "category": "A frase simples (the simple sentence)",
+      "label": "the affirmative declarative",
+      "probe": [
+        "PT-LEX-FALO-PORTUGUES-02",
+        "PT-GRAMMAR-SER-VS-ESTAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ]
+    },
+    {
+      "id": "PT-A1-OS-02",
+      "category": "A frase simples (the simple sentence)",
+      "label": "the negative declarative, with nao",
+      "probe": [
+        "PT-LEX-SABER-CONHECER-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "COVERED BY ONE SENTENCE AND IT IS THE RIGHT ONE. nao sei, introduced in chapter 18 with the observation that it is the sentence a learner will need first. That is the whole of negation in 102 files -- nao entendo, nao falo and nao tenho are all unbuilt -- but the operation is on the page, attached to a verb, which is more than the Italian track (where non appears only inside a frozen phrase its own lesson defers) can say."
+    },
+    {
+      "id": "PT-A1-OS-03",
+      "category": "A frase simples (the simple sentence)",
+      "label": "yes-or-no questions, by intonation",
+      "probe": [
+        "PT-GRAMMAR-TUDO-BEM-02",
+        "PT-GRAMMAR-ESPERAR-HOPE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "note": "Tudo bem? and Vai chover?. Portuguese, like Spanish, inverts nothing and adds no particle."
+    },
+    {
+      "id": "PT-A1-OS-04",
+      "category": "A frase simples (the simple sentence)",
+      "label": "questions with an asking word",
+      "probe": [
+        "PT-ETYMON-COMO-SE-CHAMA-02",
+        "PT-LEX-COMO-VAI-ESTA-01",
+        "PT-ETYMON-MORAR-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "note": "Como se chama?, Como vai?, Como esta?, Onde voce mora?."
+    },
+    {
+      "id": "PT-A1-OS-05",
+      "category": "A frase simples (the simple sentence)",
+      "label": "impersonal existence with ha",
+      "probe": [
+        "PT-LEX-TER-HAVER-02",
+        "PT-GRAMMAR-HA-TIME-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01"
+      ],
+      "note": "Chapter 18 teaches haver as there is beside ter as to have, and then puts ha to work in the time frame ha tres anos. Two proxy points on one lesson."
+    },
+    {
+      "id": "PT-A1-OS-06",
+      "category": "A frase simples (the simple sentence)",
+      "label": "copulative and attributive sentences",
+      "probe": [
+        "PT-GRAMMAR-SER-VS-ESTAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-05"
+      ]
+    },
+    {
+      "id": "PT-A1-OS-07",
+      "category": "A frase simples (the simple sentence)",
+      "label": "transitive and intransitive sentences",
+      "probe": [
+        "PT-LEX-TOMAR-PEGAR-02",
+        "PT-GRAMMAR-ENCONTRAR-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-OS-06"
+      ],
+      "note": "tomar and pegar split by whether the thing ends in your hand or inside you, and encontrar (to find) beside encontrar-se (to meet up), which is exactly the transitive/reflexive contrast."
+    },
+    {
+      "id": "PT-A1-CJ-01",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "copulative coordination with e",
+      "probe": [
+        "PT-LEX-C02-PRACTICE-02",
+        "PT-GRAMMAR-TUDO-BEM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "note": "TAUGHT, AND EXPLICITLY. Chapter 2's practice lesson names it: the glue is e voce?, and e continues Latin et. It is used to hand the turn back throughout the corpus. Eleven tracks in this series report a joining column of zero or one; this one begins with the conjunction glossed in chapter 2."
+    },
+    {
+      "id": "PT-A1-CJ-02",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "negative coordination with nem",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "note": "ZERO occurrences."
+    },
+    {
+      "id": "PT-A1-CJ-03",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "disjunctive coordination with ou",
+      "probe": [
+        "PT-GRAMMAR-MAIS-OU-MENOS-04",
+        "PT-ETYMON-MAIS-OU-MENOS-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-03"
+      ],
+      "note": "COVERED SIDEWAYS AND THE BASIS IS THIN: ou is on the page only inside mais ou menos, which chapter 2 glosses as literally more or less and drills as an answer. The word's meaning is therefore visible and no lesson uses it to join two things a learner chose. Read this point beside PT-A1-F3-02, which reports that offering alternatives is still out of reach."
+    },
+    {
+      "id": "PT-A1-CJ-04",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "adversative coordination with mas",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-04"
+      ],
+      "note": "mas returns ZERO occurrences in 102 files. The one hole in an otherwise unusually strong joining column: a learner can add, offer an alternative, report an opinion and state an obligation, and cannot set one thing against another."
+    },
+    {
+      "id": "PT-A1-CJ-05",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "distributive coordination: um... outro",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-CJ-06",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "finite clause as direct object: penso que, espero que",
+      "probe": [
+        "PT-LEX-PENSAR-02",
+        "PT-GRAMMAR-ESPERAR-HOPE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03"
+      ],
+      "note": "COVERED TWICE OVER AND THIS IS THE FILE'S BEST NEWS. Chapter 19 teaches Penso que sim beside Penso em ti and names the difference -- pensar em for what is in your mind, pensar que for an opinion -- and even notes that everyday Brazilian speech prefers acho que sim. Chapter 21 then teaches Espero que sim as a whole banked answer. The Spanish point asks for creo que plus a clause; the corpus meets it with two separate verbs."
+    },
+    {
+      "id": "PT-A1-CJ-07",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "que as the link in a verb frame",
+      "probe": [
+        "PT-GRAMMAR-TER-QUE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-02"
+      ],
+      "note": "Chapter 18 calls que the link in as many words while building tenho que falar."
+    },
+    {
+      "id": "PT-A1-CJ-08",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "infinitive clause as subject",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-CJ-09",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "the relative clause",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "note": "que is in the corpus three times over and never as a relative; see PT-A1-PRON-07."
+    },
+    {
+      "id": "PT-A1-CJ-10",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "causal clauses with porque",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ],
+      "note": "ZERO; see PT-A1-ADV-08."
+    },
+    {
+      "id": "PT-A1-CJ-11",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "purpose clauses with para plus infinitive",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-CJ-12",
+      "category": "Coordenacao e subordinacao (joining and subordination)",
+      "label": "simultaneity with quando",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "note": "quando returns ZERO occurrences in 102 files."
+    },
+    {
+      "id": "PT-A1-F1-01",
+      "category": "Funcoes: dar e pedir informacao",
+      "label": "identify oneself by name",
+      "probe": [
+        "PT-GRAMMAR-ME-CHAMO-04",
+        "PT-ETYMON-ME-CHAMO-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-01"
+      ],
+      "note": "me chamo AND chamo-me -- both orders, which is the European/Brazilian split shown without being named."
+    },
+    {
+      "id": "PT-A1-F1-02",
+      "category": "Funcoes: dar e pedir informacao",
+      "label": "ask for information about a person",
+      "probe": [
+        "PT-ETYMON-COMO-SE-CHAMA-02",
+        "PT-ETYMON-MORAR-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "note": "Como se chama? and Onde voce mora?."
+    },
+    {
+      "id": "PT-A1-F1-03",
+      "category": "Funcoes: dar e pedir informacao",
+      "label": "give personal information: name, age, where you live",
+      "probe": [
+        "PT-GRAMMAR-ME-CHAMO-04",
+        "PT-LEX-IDADE-02",
+        "PT-GRAMMAR-MORAR-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-03"
+      ],
+      "note": "All three, which is rare in this series. tenho vinte anos caps the age at twenty (PT-A1-Q-03)."
+    },
+    {
+      "id": "PT-A1-F1-04",
+      "category": "Funcoes: dar e pedir informacao",
+      "label": "ask for confirmation with a tag question",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "note": "nao e? and certo? are both absent."
+    },
+    {
+      "id": "PT-A1-F1-05",
+      "category": "Funcoes: dar e pedir informacao",
+      "label": "confirm or deny the previous statement",
+      "probe": [
+        "PT-GRAMMAR-ESPERAR-HOPE-04",
+        "PT-LEX-SABER-CONHECER-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F1-05"
+      ],
+      "note": "sim inside Espero que sim, nao inside nao sei. Both halves, and both arrive welded into a phrase rather than taught as words; see PT-A1-ADV-05."
+    },
+    {
+      "id": "PT-A1-F2-01",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "ask for an opinion by handing the turn back",
+      "probe": [
+        "PT-LEX-C02-PRACTICE-02",
+        "PT-LEX-FORMAL-PRACTICE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-01"
+      ],
+      "note": "e voce? in the casual exchange and E o senhor? in the formal one. Both registers, chapter 2."
+    },
+    {
+      "id": "PT-A1-F2-02",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "give an opinion with penso que",
+      "probe": [
+        "PT-LEX-PENSAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "note": "Penso que sim -- and the lesson adds that Brazilian speech more often says acho que sim, so the learner meets the register variant as well as the form."
+    },
+    {
+      "id": "PT-A1-F2-03",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "ask for an evaluation",
+      "probe": [
+        "PT-LEX-COMO-VAI-ESTA-01",
+        "PT-GRAMMAR-TUDO-BEM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-03"
+      ],
+      "note": "Como vai?, Como esta?, Tudo bem? -- and chapter 2 notes that Tudo bem? is the verb-free everyday one."
+    },
+    {
+      "id": "PT-A1-F2-04",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "evaluate on a scale",
+      "probe": [
+        "PT-GRAMMAR-MAIS-OU-MENOS-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-04",
+        "A1-NG6-01"
+      ],
+      "note": "Tudo bem / Tudo otimo / Mais ou menos, and the lesson adds the hand-wobble that turns the middle term into eh, could be better. A three-term scale with a pragmatic gloss."
+    },
+    {
+      "id": "PT-A1-F2-05",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "express approval and disapproval",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-F2-06",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "express agreement",
+      "probe": [
+        "PT-LEX-PENSAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-NG6-06"
+      ],
+      "note": "Penso que sim does this job at A1. de acordo and tambem are absent."
+    },
+    {
+      "id": "PT-A1-F2-07",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "express disagreement",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-07"
+      ],
+      "note": "Needs either mas (PT-A1-CJ-04) or a negated verb other than nao sei. Neither is available."
+    },
+    {
+      "id": "PT-A1-F2-08",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "show scepticism with nao sei",
+      "probe": [
+        "PT-LEX-SABER-CONHECER-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-08"
+      ],
+      "note": "nao sei, exactly the exponent the Spanish point names, taught in chapter 18 and flagged there as the sentence a learner will need first."
+    },
+    {
+      "id": "PT-A1-F2-09",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "offer a counter-argument with mas",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-09"
+      ],
+      "note": "See PT-A1-CJ-04."
+    },
+    {
+      "id": "PT-A1-F2-10",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "express certainty by plain assertion",
+      "probe": [
+        "PT-LEX-FALO-PORTUGUES-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-10"
+      ]
+    },
+    {
+      "id": "PT-A1-F2-11",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "express possibility",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-12"
+      ],
+      "note": "talvez and poder are both absent."
+    },
+    {
+      "id": "PT-A1-F2-12",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "ask whether somebody knows something",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-13"
+      ],
+      "note": "saber is taught and no question is ever built on it."
+    },
+    {
+      "id": "PT-A1-F2-13",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "express knowledge: saber against conhecer",
+      "probe": [
+        "PT-LEX-SABER-CONHECER-02",
+        "PT-ETYMON-SABER-CONHECER-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-14",
+        "A1-NG6-09"
+      ],
+      "note": "BOTH VERBS, WITH THE SPLIT NAMED AND WORKED. Sei a resposta, Sei nadar, Conheco o Pedro, Conheco Lisboa -- knowing that, knowing how, and being acquainted with. Chapter 18 also gives both present paradigms, which makes this one of the few conjugated verbs outside the -ar class."
+    },
+    {
+      "id": "PT-A1-F2-14",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "express ignorance",
+      "probe": [
+        "PT-LEX-SABER-CONHECER-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-15"
+      ],
+      "note": "nao sei."
+    },
+    {
+      "id": "PT-A1-F2-15",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "ability: asking about it and expressing it",
+      "probe": [
+        "PT-LEX-SABER-CONHECER-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17"
+      ],
+      "note": "Sei nadar -- saber plus an infinitive, which is how Portuguese says knows how to. The ASKING half is not modelled anywhere, so read this as the answer without its question."
+    },
+    {
+      "id": "PT-A1-F2-16",
+      "category": "Funcoes: opinioes, atitudes e conhecimento",
+      "label": "say that you have understood, and that you have not",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [],
+      "portugueseSpecific": true,
+      "note": "THE REPAIR COLUMN, HALF OF IT, AND THE PIECES ARE SO CLOSE TOGETHER. Chapter 19 teaches entender AND compreender, with the difference named -- one stretches toward the thing, one seizes it whole -- and chapter 18 teaches nao attached to a verb in nao sei. nao entendo therefore needs no new machinery at all and no lesson says it. The proxy has no A1 slot for this and CEFR's A1 descriptors do."
+    },
+    {
+      "id": "PT-A1-F3-01",
+      "category": "Funcoes: gostos, desejos e sentimentos",
+      "label": "express likes with gostar de",
+      "probe": [
+        "PT-LEX-GOSTAR-02",
+        "PT-GRAMMAR-GOSTAR-DE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-01"
+      ],
+      "note": "Gosto de cafe, with the obligatory preposition explained from Latin gustare de."
+    },
+    {
+      "id": "PT-A1-F3-02",
+      "category": "Funcoes: gostos, desejos e sentimentos",
+      "label": "ask about a preference by offering alternatives",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-02"
+      ],
+      "note": "ou exists only inside mais ou menos (PT-A1-CJ-03) and no lesson offers a choice between two named things."
+    },
+    {
+      "id": "PT-A1-F3-03",
+      "category": "Funcoes: gostos, desejos e sentimentos",
+      "label": "express a preference with prefiro",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-F3-04",
+      "category": "Funcoes: gostos, desejos e sentimentos",
+      "label": "express a wish with querer or queria",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-04"
+      ],
+      "note": "querer is ABSENT, which is the single most expensive missing word in this file: it would unlock ordering, asking, inviting and refusing at once. Note what stands next to the hole -- chapter 20 teaches perguntar and says in its own gloss that it is NOT the verb for asking for a coffee, and never supplies the verb that is."
+    },
+    {
+      "id": "PT-A1-F3-05",
+      "category": "Funcoes: gostos, desejos e sentimentos",
+      "label": "ask about plans and intentions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-F3-06",
+      "category": "Funcoes: gostos, desejos e sentimentos",
+      "label": "express plans with ir plus infinitive",
+      "probe": [
+        "PT-GRAMMAR-ESPERAR-HOPE-04",
+        "PT-LEX-IR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F3-06"
+      ],
+      "note": "Vai chover? -- going to rain -- in chapter 21, which is the periphrastic future doing exactly this job, and ir itself in chapter 18. The pattern is never named as a future and it is on the page in use."
+    },
+    {
+      "id": "PT-A1-F4-01",
+      "category": "Funcoes: influir no interlocutor",
+      "label": "give an order or instruction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ],
+      "note": "No imperative in 102 files; see PT-A1-V-11."
+    },
+    {
+      "id": "PT-A1-F4-02",
+      "category": "Funcoes: influir no interlocutor",
+      "label": "ask for an object, softened",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "note": "por favor returns ZERO occurrences. The track teaches obrigado, obrigada and de nada in its first two chapters and never teaches please -- and chapter 20 explicitly declines to give the verb for asking for a coffee. A learner can thank, answer thanks and decline to know something, and cannot ask for anything at all."
+    },
+    {
+      "id": "PT-A1-F4-03",
+      "category": "Funcoes: influir no interlocutor",
+      "label": "ask for help",
+      "probe": [
+        "PT-LEX-AJUDAR-02",
+        "PT-ETYMON-AJUDAR-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "note": "ajudar, chapter 20. The verb is present and, with no imperative and no querer, cannot be turned into a request."
+    },
+    {
+      "id": "PT-A1-F4-04",
+      "category": "Funcoes: influir no interlocutor",
+      "label": "respond to an order, request or plea",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-F4-05",
+      "category": "Funcoes: influir no interlocutor",
+      "label": "grant or refuse permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-05",
+        "A1-F4-06"
+      ],
+      "note": "Two proxy points, no exponent; poder is absent."
+    },
+    {
+      "id": "PT-A1-F4-06",
+      "category": "Funcoes: influir no interlocutor",
+      "label": "offer and invite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "note": "Absent, and behind both the imperative and querer."
+    },
+    {
+      "id": "PT-A1-F4-07",
+      "category": "Funcoes: influir no interlocutor",
+      "label": "accept a proposal, offer or invitation",
+      "probe": [
+        "PT-GRAMMAR-ESPERAR-HOPE-04",
+        "PT-ETYMON-OBRIGADO-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-08"
+      ],
+      "note": "sim and obrigado together do this at A1, and both are separately taught."
+    },
+    {
+      "id": "PT-A1-F4-08",
+      "category": "Funcoes: influir no interlocutor",
+      "label": "decline a proposal, offer or invitation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F4-09"
+      ],
+      "note": "nao exists only inside nao sei; nao, obrigado -- which is the whole move -- is never modelled, although both words are in the corpus."
+    },
+    {
+      "id": "PT-A1-F5-01",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "greet by the time of day",
+      "probe": [
+        "PT-LEX-BOM-DIA-02",
+        "PT-ETYMON-TARDE-02",
+        "PT-LEX-NOITE-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "note": "bom dia, boa tarde, boa noite. Chapter 1, and the three of them also carry the adjective-agreement lesson."
+    },
+    {
+      "id": "PT-A1-F5-02",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "greet informally",
+      "probe": [
+        "PT-PRAGMATIC-OLA-03",
+        "PT-ETYMON-OLA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "note": "ola, chapter 1."
+    },
+    {
+      "id": "PT-A1-F5-03",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "respond to a greeting",
+      "probe": [
+        "PT-LEX-C02-PRACTICE-02",
+        "PT-LEX-FORMAL-PRACTICE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-02"
+      ]
+    },
+    {
+      "id": "PT-A1-F5-04",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "address somebody by title",
+      "probe": [
+        "PT-LEX-FORMAL-PRACTICE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "note": "o senhor and a senhora, taught in chapter 2 with their descent from Latin senior. This is the point the Italian inventory reports empty, and here it is the backbone of the formal register."
+    },
+    {
+      "id": "PT-A1-F5-05",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "introduce oneself",
+      "probe": [
+        "PT-GRAMMAR-ME-CHAMO-04",
+        "PT-LEX-C03-PRACTICE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-04"
+      ]
+    },
+    {
+      "id": "PT-A1-F5-06",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "introduce a third person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-04"
+      ],
+      "note": "Absent, and behind the missing demonstrative."
+    },
+    {
+      "id": "PT-A1-F5-07",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "respond to an introduction",
+      "probe": [
+        "PT-GRAMMAR-PRAZER-04",
+        "PT-ETYMON-PRAZER-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ],
+      "note": "prazer, chapter 3."
+    },
+    {
+      "id": "PT-A1-F5-08",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "apologise",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "note": "desculpe, desculpa and lamento all return ZERO occurrences. With por favor also missing, the two courtesy moves a beginner needs on day one are both absent from a track that teaches four separate thanking words."
+    },
+    {
+      "id": "PT-A1-F5-09",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "thank, and answer thanks",
+      "probe": [
+        "PT-ETYMON-OBRIGADO-03",
+        "PT-GRAMMAR-OBRIGADO-04",
+        "PT-ETYMON-DE-NADA-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "note": "obrigado/obrigada with the speaker-agreement rule, and de nada. Both halves, chapters 1 and 2."
+    },
+    {
+      "id": "PT-A1-F5-10",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "offer condolences, propose a toast, congratulate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-08",
+        "A1-F5-09",
+        "A1-F5-10"
+      ],
+      "note": "Three proxy points, no exponent -- although vinho is taught in chapter 11."
+    },
+    {
+      "id": "PT-A1-F5-11",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "take leave",
+      "probe": [
+        "PT-ETYMON-ADEUS-03",
+        "PT-LEX-C04-PRACTICE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "note": "adeus, glossed as literally to God."
+    },
+    {
+      "id": "PT-A1-F5-12",
+      "category": "Funcoes: relacionar-se socialmente",
+      "label": "take leave naming when you will meet again",
+      "probe": [
+        "PT-ETYMON-ATE-AMANHA-03",
+        "PT-ETYMON-ATE-BREVE-03",
+        "PT-ETYMON-ATE-LOGO-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "note": "ate amanha, ate breve, ate logo -- a whole chapter on choosing the promise that fits."
+    },
+    {
+      "id": "PT-A1-F6-01",
+      "category": "Funcoes: gerir a conversa (discourse and repair)",
+      "label": "open a conversation",
+      "probe": [
+        "PT-LEX-C02-PRACTICE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-01"
+      ]
+    },
+    {
+      "id": "PT-A1-F6-02",
+      "category": "Funcoes: gerir a conversa (discourse and repair)",
+      "label": "greet and respond within a conversation",
+      "probe": [
+        "PT-LEX-C02-PRACTICE-02",
+        "PT-LEX-C03-PRACTICE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-02"
+      ]
+    },
+    {
+      "id": "PT-A1-F6-03",
+      "category": "Funcoes: gerir a conversa (discourse and repair)",
+      "label": "ask for a person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-03"
+      ],
+      "note": "Absent; no telephone words at all."
+    },
+    {
+      "id": "PT-A1-F6-04",
+      "category": "Funcoes: gerir a conversa (discourse and repair)",
+      "label": "show that one is following",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "No backchannel of any kind. Tudo bem could serve and is only ever a question or its answer."
+    },
+    {
+      "id": "PT-A1-F6-05",
+      "category": "Funcoes: gerir a conversa (discourse and repair)",
+      "label": "REPAIR: ask for a repetition",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "NOTHING. Como? used as a repair, desculpe, outra vez, mais devagar: none of them occurs. como IS taught in chapter 2 as the question word, so the single commonest Portuguese repair move -- a rising Como? -- is one line away from an existing lesson. The Italian track, which is otherwise weaker, HAS its repair move: rising Prego? gets a lesson of its own."
+    },
+    {
+      "id": "PT-A1-F6-06",
+      "category": "Funcoes: gerir a conversa (discourse and repair)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "note": "Absent; behind the imperative."
+    },
+    {
+      "id": "PT-A1-F6-07",
+      "category": "Funcoes: gerir a conversa (discourse and repair)",
+      "label": "propose closing the conversation",
+      "probe": [
+        "PT-LEX-C04-PRACTICE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-F6-06"
+      ],
+      "note": "Chapter 4's closing set."
+    },
+    {
+      "id": "PT-A1-NG-01",
+      "category": "Nocoes gerais (general notions)",
+      "label": "existence and having: ter and haver",
+      "probe": [
+        "PT-LEX-TER-02",
+        "PT-LEX-TER-HAVER-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "note": "Two proxy points on chapter 18's lesson, which sets to have against there is. com and sem are absent, which is the half of NG1-02 this does not reach."
+    },
+    {
+      "id": "PT-A1-NG-02",
+      "category": "Nocoes gerais (general notions)",
+      "label": "locating an event in time",
+      "probe": [
+        "PT-GRAMMAR-HA-TIME-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04"
+      ],
+      "note": "ha tres anos, ha dois dias -- a reusable frame for how far back, taught in chapter 18. It places an event in the past and there is no way to place one in the future or on a named day."
+    },
+    {
+      "id": "PT-A1-NG-03",
+      "category": "Nocoes gerais (general notions)",
+      "label": "certainty and uncertainty",
+      "probe": [
+        "PT-LEX-SABER-CONHECER-02",
+        "PT-GRAMMAR-ESPERAR-HOPE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG1-05"
+      ],
+      "note": "nao sei for the uncertain side and Espero que sim for the hedged one."
+    },
+    {
+      "id": "PT-A1-NG-04",
+      "category": "Nocoes gerais (general notions)",
+      "label": "numerical quantity",
+      "probe": [
+        "PT-GRAMMAR-NUMEROS-1-5-04",
+        "PT-GRAMMAR-NUMEROS-6-10-04",
+        "PT-GRAMMAR-NUMEROS-11-15-02",
+        "PT-GRAMMAR-NUMEROS-16-20-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "note": "One to twenty, and chapter 12 treats the numeral system as a system rather than a list."
+    },
+    {
+      "id": "PT-A1-NG-05",
+      "category": "Nocoes gerais (general notions)",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-NG-06",
+      "category": "Nocoes gerais (general notions)",
+      "label": "relative position, distance, direction and order",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-03",
+        "A1-NG3-05",
+        "A1-NG3-06"
+      ],
+      "note": "FOUR PROXY POINTS AND NO EXPONENT: no perto, no longe, no direita, no antes, no depois."
+    },
+    {
+      "id": "PT-A1-NG-07",
+      "category": "Nocoes gerais (general notions)",
+      "label": "movement and stability",
+      "probe": [
+        "PT-LEX-IR-02",
+        "PT-LEX-VIR-02",
+        "PT-LEX-TRAZER-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04"
+      ],
+      "note": "ir, vir and trazer -- going, coming, and carrying toward the speaker, which chapter 21 makes the point of."
+    },
+    {
+      "id": "PT-A1-NG-08",
+      "category": "Nocoes gerais (general notions)",
+      "label": "origin: ser de plus a place, and a nationality",
+      "probe": [
+        "PT-GRAMMAR-SER-VS-ESTAR-02",
+        "PT-LEX-FALO-PORTUGUES-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07"
+      ],
+      "note": "Sou portugues -- ser with a nationality, in chapter 16's worked table. The ser DE frame with a place name is not modelled; the nationality half is, which is the half this level uses."
+    },
+    {
+      "id": "PT-A1-NG-09",
+      "category": "Nocoes gerais (general notions)",
+      "label": "the clock, and the parts of the day",
+      "probe": [
+        "PT-ETYMON-HORA-03",
+        "PT-GRAMMAR-HORA-04",
+        "PT-ETYMON-MEIO-DIA-MEIA-NOITE-02",
+        "PT-ETYMON-DIA-02",
+        "PT-ETYMON-TARDE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "note": "hora with the telling-the-time lesson, meio-dia and meia-noite, and the parts of the day inside chapter 1's greetings."
+    },
+    {
+      "id": "PT-A1-NG-10",
+      "category": "Nocoes gerais (general notions)",
+      "label": "locating in time: weekdays, months, seasons",
+      "probe": [
+        "PT-GRAMMAR-DIAS-1-03",
+        "PT-GRAMMAR-DIAS-2-03",
+        "PT-ETYMON-MESES-02",
+        "PT-ETYMON-ESTACOES-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "Complete, and chapter 7 is the interesting one: Portuguese NUMBERS its weekdays -- segunda, terca, quarta -- where every sister names planets, and only sabado and domingo kept their names. The today/yesterday/tomorrow half is reported separately at PT-A1-ADV-02 and is not covered."
+    },
+    {
+      "id": "PT-A1-NG-11",
+      "category": "Nocoes gerais (general notions)",
+      "label": "anteriority and posteriority",
+      "probe": [
+        "PT-GRAMMAR-HA-TIME-04",
+        "PT-PRAGMATICS-TENHO-FALADO-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03"
+      ],
+      "note": "ha + time for how far back, and the preterite/tenho falado contrast for finished against repeated. Thin, and it is the aspectual distinction this level actually needs."
+    },
+    {
+      "id": "PT-A1-NG-12",
+      "category": "Nocoes gerais (general notions)",
+      "label": "sight and hearing",
+      "probe": [
+        "PT-LEX-VER-02",
+        "PT-LEX-OLHO-02",
+        "PT-LEX-ORELHA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "note": "ver in chapter 18, plus olho and orelha in chapter 26. The verb of hearing (ouvir) is absent, so hearing has the organ only -- and the point is counted covered because ver AND both organs are present, which is what the pair of proxy points asks for between them. Sight is complete; hearing is not, and the note is the limit."
+    },
+    {
+      "id": "PT-A1-NG-13",
+      "category": "Nocoes gerais (general notions)",
+      "label": "colour",
+      "probe": [
+        "PT-ETYMON-PRETO-BRANCO-02",
+        "PT-ETYMON-VERMELHO-AZUL-02",
+        "PT-NOTICE-VERMELHO-AZUL-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "note": "preto, branco, vermelho, azul -- and chapter 13 notes that Portuguese has TWO blacks, that its white is a Germanic loan, and that vermelho is named after a worm."
+    },
+    {
+      "id": "PT-A1-NG-14",
+      "category": "Nocoes gerais (general notions)",
+      "label": "age",
+      "probe": [
+        "PT-LEX-IDADE-02",
+        "PT-GRAMMAR-IDADE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "note": "tenho vinte anos, and chapter 14 makes the point that Portuguese and Spanish broke ranks with the rest of Romance by using ter here."
+    },
+    {
+      "id": "PT-A1-NG-15",
+      "category": "Nocoes gerais (general notions)",
+      "label": "open and closed, way in and way out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-NG-16",
+      "category": "Nocoes gerais (general notions)",
+      "label": "value and price",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02"
+      ],
+      "note": "quanto custa is absent, and so is every number above twenty."
+    },
+    {
+      "id": "PT-A1-NG-17",
+      "category": "Nocoes gerais (general notions)",
+      "label": "attractiveness",
+      "probe": [
+        "PT-ETYMON-SER-ESTAR-MEANING-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03"
+      ],
+      "note": "bonita, in chapter 16's e bonita / esta bonita contrast. It is there to demonstrate the copula and it is the only word of appearance in the corpus."
+    },
+    {
+      "id": "PT-A1-NG-18",
+      "category": "Nocoes gerais (general notions)",
+      "label": "quality: ser bom, ser mau",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-04"
+      ],
+      "note": "bom is taught only as the first half of a greeting and mau never appears."
+    },
+    {
+      "id": "PT-A1-NG-19",
+      "category": "Nocoes gerais (general notions)",
+      "label": "acceptability, correctness, interest and ease",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG6-05",
+        "A1-NG6-07",
+        "A1-NG6-08",
+        "A1-NG6-10"
+      ],
+      "note": "Four proxy points, no exponent."
+    },
+    {
+      "id": "PT-A1-NG-20",
+      "category": "Nocoes gerais (general notions)",
+      "label": "reflection and knowing: the verbs of mind",
+      "probe": [
+        "PT-LEX-PENSAR-02",
+        "PT-LEX-ENTENDER-COMPREENDER-02",
+        "PT-LEX-LER-02",
+        "PT-LEX-SABER-CONHECER-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG7-01"
+      ],
+      "note": "pensar, entender/compreender, ler, saber/conhecer. Chapter 19 is exactly this notion and splits two of the four the way Portuguese splits them."
+    },
+    {
+      "id": "PT-A1-NG-21",
+      "category": "Nocoes gerais (general notions)",
+      "label": "verbal expression: speaking, saying and writing",
+      "probe": [
+        "PT-GRAMMAR-FALAR-04",
+        "PT-LEX-DIZER-02",
+        "PT-LEX-ESCREVER-02",
+        "PT-LEX-RESPONDER-02",
+        "PT-LEX-PERGUNTAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "note": "falar, dizer, escrever, and the asking/answering pair perguntar and responder."
+    },
+    {
+      "id": "PT-A1-NE-01",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "parts of the body",
+      "probe": [
+        "PT-LEX-MAO-02",
+        "PT-ETYMON-CABECA-03",
+        "PT-LEX-BOCA-02",
+        "PT-LEX-CORACAO-02",
+        "PT-LEX-OLHO-02",
+        "PT-LEX-ORELHA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "cabeca, mao, boca, coracao, olho, orelha -- six, chapters 17 and 26, and chapter 17 also gives the cabeca/capital doublet."
+    },
+    {
+      "id": "PT-A1-NE-02",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "physical characteristics, and character",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02",
+        "A1-NE02-01"
+      ],
+      "note": "bonita is the only word of appearance and it belongs to the copula lesson; see PT-A1-NG-17."
+    },
+    {
+      "id": "PT-A1-NE-03",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "actions and positions of the body",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE01-03"
+      ],
+      "note": "Absent; nadar appears once, inside Sei nadar, and is not taught."
+    },
+    {
+      "id": "PT-A1-NE-04",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "personal data: the name and the age",
+      "probe": [
+        "PT-GRAMMAR-ME-CHAMO-04",
+        "PT-LEX-IDADE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "note": "Surname, address and telephone number are all absent, so this covers two fields of five; the label says which two."
+    },
+    {
+      "id": "PT-A1-NE-05",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "documents and personal objects",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02",
+        "A1-NE03-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-NE-06",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "family relationships",
+      "probe": [
+        "PT-ETYMON-PAIS-02",
+        "PT-ETYMON-IRMAOS-02",
+        "PT-LEX-FAMILIA-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "pai, mae, irmao, irma, familia -- and chapter 25 notes that familia once meant a household's servants rather than its blood relatives."
+    },
+    {
+      "id": "PT-A1-NE-07",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "social relationships",
+      "probe": [
+        "PT-LEX-AMIGO-02",
+        "PT-LEX-HOMEM-02",
+        "PT-LEX-MULHER-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "note": "amigo/amiga, homem, mulher. Chapter 25's people set. Boss and colleague are absent."
+    },
+    {
+      "id": "PT-A1-NE-08",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "celebrations and occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "PT-A1-NE-09",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "drink",
+      "probe": [
+        "PT-ETYMON-AGUA-VINHO-02",
+        "PT-LEX-CAFE-02",
+        "PT-LEX-CHA-02",
+        "PT-LEX-LEITE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "note": "agua, vinho, cafe, cha, leite -- five, and chapter 23 makes the point that Portuguese is the ONE Western European exception in how it got the word for tea, by the overland route rather than the sea one."
+    },
+    {
+      "id": "PT-A1-NE-10",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "foodstuffs",
+      "probe": [
+        "PT-ETYMON-PAO-02",
+        "PT-LEX-ACUCAR-02",
+        "PT-LEX-ARROZ-02",
+        "PT-LEX-OVO-02",
+        "PT-LEX-QUEIJO-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03"
+      ],
+      "note": "pao, acucar, arroz, ovo, queijo -- FIVE, which is the largest food block in this batch, and chapter 24 traces acucar and arroz along the same al-Andalus thread."
+    },
+    {
+      "id": "PT-A1-NE-11",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "the meals of the day, and dishes",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01",
+        "A1-NE05-04"
+      ],
+      "note": "pequeno-almoco, almoco, jantar: none of them. Two proxy points, and the track has the parts of the day and not the meals named after them."
+    },
+    {
+      "id": "PT-A1-NE-12",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "the cafe and the restaurant",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE05-05"
+      ],
+      "note": "Ten food and drink words are taught, tomar is taught with its table sense, and there is no cafe, no menu, no waiter, no please and no price. Chapter 20 even declines to give the verb for asking for a coffee."
+    },
+    {
+      "id": "PT-A1-NE-13",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "school, teaching and learning",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-02",
+        "A1-NE06-03",
+        "A1-NE06-04",
+        "A1-NE06-05",
+        "A1-NE06-06",
+        "A1-NE06-07"
+      ],
+      "note": "Seven proxy points, no exponent. ler and escrever are taught and belong to the mind rather than the classroom."
+    },
+    {
+      "id": "PT-A1-NE-14",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "work",
+      "probe": [
+        "PT-GRAMMAR-TRABALHAR-04",
+        "PT-GRAMMAR-SER-VS-ESTAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01",
+        "A1-NE07-02",
+        "A1-NE07-03",
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "note": "SIX PROXY POINTS AND TWO WORDS: trabalhar in chapter 5, and medico inside chapter 16's Ele e medico. One verb and one profession, the latter present only to demonstrate ser."
+    },
+    {
+      "id": "PT-A1-NE-15",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "free time, shows, sport and games",
+      "probe": [
+        "PT-LEX-JOGAR-BRINCAR-TOCAR-02",
+        "PT-GRAMMAR-JOGAR-BRINCAR-TOCAR-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01",
+        "A1-NE08-02",
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "note": "jogar, brincar and tocar -- Portuguese splits English's play THREE ways, by whether it is a game, a child at play or an instrument, and chapter 22 teaches all three together. Four proxy points land here and the verbs answer them; no game, sport or show is named."
+    },
+    {
+      "id": "PT-A1-NE-16",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "media, correspondence, telephone and internet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-02",
+        "A1-NE09-03",
+        "A1-NE09-04",
+        "A1-NE09-05",
+        "A1-NE09-06"
+      ],
+      "note": "Six proxy points, no exponent. escrever is taught and nothing is written to anybody."
+    },
+    {
+      "id": "PT-A1-NE-17",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "the dwelling, and living in it",
+      "probe": [
+        "PT-GRAMMAR-MORAR-04",
+        "PT-ETYMON-MORAR-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01",
+        "A1-NE10-02",
+        "A1-NE10-03",
+        "A1-NE10-04"
+      ],
+      "note": "morar, chapter 5, taught with the point that morar rather than viver is what one actually says about a dwelling. Four proxy points, one verb, and no casa."
+    },
+    {
+      "id": "PT-A1-NE-18",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "services: post, bank, health, security",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-02",
+        "A1-NE11-03",
+        "A1-NE11-04"
+      ],
+      "note": "Four proxy points, no exponent."
+    },
+    {
+      "id": "PT-A1-NE-19",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "shopping, clothing and payment",
+      "probe": [
+        "PT-LEX-COMPRAR-02",
+        "PT-ETYMON-COMPRAR-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01",
+        "A1-NE12-02",
+        "A1-NE12-03",
+        "A1-NE15-01",
+        "A1-NE15-02"
+      ],
+      "note": "FIVE PROXY POINTS AND ONE VERB: comprar, chapter 21, taught with the warning that its Latin source is not the one behind compare. vender is absent, so the transaction has one side, and no shop, garment, coin or price is named."
+    },
+    {
+      "id": "PT-A1-NE-20",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "health, illness, medicine and hygiene",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01",
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE13-04"
+      ],
+      "note": "Four proxy points and one word between them -- doente, inside chapter 16's Ele esta doente, which is there to demonstrate estar. Six body words ARE taught, which is where an A1 complaint would land."
+    },
+    {
+      "id": "PT-A1-NE-21",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "travel, accommodation and transport",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01",
+        "A1-NE14-02",
+        "A1-NE14-03"
+      ],
+      "note": "Three proxy points, no exponent. ir, vir and trazer are all taught, so the corpus has every verb of travel and nothing to travel in."
+    },
+    {
+      "id": "PT-A1-NE-22",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "businesses, industry and technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE15-03",
+        "A1-NE15-04",
+        "A1-NE16-02"
+      ],
+      "note": "Three proxy points, no exponent."
+    },
+    {
+      "id": "PT-A1-NE-23",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "government, politics, law and justice",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "note": "Absent -- although chapter 18 notes in passing that the Latin verb behind dizer also produced the judge."
+    },
+    {
+      "id": "PT-A1-NE-24",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "the arts",
+      "probe": [
+        "PT-LEX-JOGAR-BRINCAR-TOCAR-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-04",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "note": "SIX PROXY POINTS AND ONE VERB: tocar, to play an instrument, taught in chapter 22 beside its two homonyms. No instrument, no song, no book, no film and no fado, which for this language is the omission to fix first."
+    },
+    {
+      "id": "PT-A1-NE-25",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "religion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "note": "The corpus touches religion only in etymology -- adeus glossed as to God, domingo as the Lord's day -- and teaches no religious word as a word."
+    },
+    {
+      "id": "PT-A1-NE-26",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "geography: country, town, city, capital",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02",
+        "A1-NE20-03"
+      ],
+      "note": "Lisboa is used as a place NAME in chapter 16 and cidade, pais and capital are all absent. Note the near-miss chapter 10 records: o pais with an accent means the country and os pais without one means the parents, and the lesson mentions the spelling twin without teaching the word."
+    },
+    {
+      "id": "PT-A1-NE-27",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "the universe, climate and weather",
+      "probe": [
+        "PT-GRAMMAR-ESPERAR-HOPE-04"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01",
+        "A1-NE20-04"
+      ],
+      "note": "Vai chover? -- is it going to rain -- in chapter 21, which is the only weather in 102 files and is there to demonstrate a hoped-for answer. Two proxy points, one question, no sun, no moon and no temperature."
+    },
+    {
+      "id": "PT-A1-NE-28",
+      "category": "Nocoes especificas (specific notions)",
+      "label": "fauna and flora",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05",
+        "A1-NE20-06"
+      ],
+      "note": "Absent. The worm behind vermelho (chapter 13) is the only animal in the corpus and it is an etymology."
+    },
+    {
+      "id": "PT-A1-ORT-01",
+      "category": "Ortografia e pontuacao (spelling and punctuation)",
+      "label": "the alphabet and the names of the letters",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "note": "The track never says the alphabet aloud. It teaches a great deal about how letters SOUND -- twenty-one SOUND atoms -- and never what they are CALLED."
+    },
+    {
+      "id": "PT-A1-ORT-02",
+      "category": "Ortografia e pontuacao (spelling and punctuation)",
+      "label": "the vowel letters, and the nasal vowels behind them",
+      "probe": [
+        "PT-SOUND-BOM-02",
+        "PT-GRAMMAR-MAO-04",
+        "PT-ETYMON-PAO-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "Portuguese's nasal vowels are the demand the Spanish column cannot make, and the corpus meets them lexically -- bom, pao, mao, coracao -- rather than as an inventory. The til over -ao is on the page from chapter 11 on and is never named as a diacritic."
+    },
+    {
+      "id": "PT-A1-ORT-03",
+      "category": "Ortografia e pontuacao (spelling and punctuation)",
+      "label": "the consonant letters, and the digraphs nh and lh",
+      "probe": [
+        "PT-ETYMON-AGUA-VINHO-03",
+        "PT-ETYMON-OLHO-03",
+        "PT-ETYMON-ORELHA-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Chapter 11 names -nh- as Portuguese's reflex of Latin -n-, and chapter 26 gives the -cl- to -lh- law twice, on olho and orelha -- the same law chapter 13 used to explain vermelho. A sound law taught three times and used to predict words."
+    },
+    {
+      "id": "PT-A1-ORT-04",
+      "category": "Ortografia e pontuacao (spelling and punctuation)",
+      "label": "the cedilla",
+      "probe": [
+        "PT-SOUND-CABECA-02",
+        "PT-ETYMON-ACUCAR-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "cabeca in chapter 17, with the c pronounced s, and acucar in chapter 24 named as the same cedilla. Spanish dropped the cedilla in 1815 and Portuguese kept it, so this is a demand the proxy's alphabet column cannot state."
+    },
+    {
+      "id": "PT-A1-ORT-05",
+      "category": "Ortografia e pontuacao (spelling and punctuation)",
+      "label": "capital letters, and where Portuguese keeps lower case",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "note": "Languages, nationalities, weekdays and months go in lower case, as in Spanish and unlike English. The corpus writes them correctly on every page and never states the rule."
+    },
+    {
+      "id": "PT-A1-ORT-06",
+      "category": "Ortografia e pontuacao (spelling and punctuation)",
+      "label": "the written accent, and the words it separates",
+      "probe": [
+        "PT-GRAMMAR-PAIS-03",
+        "PT-SOUND-CAFE-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-O2-01",
+        "A1-O2-02"
+      ],
+      "note": "TWO PROXY POINTS ON ONE NEAR-MISS. Chapter 10 says outright that os pais (the parents) and o pais (the country) differ only by an accent -- which is exactly the diacritic demand -- and does so in a parenthesis while teaching something else. cafe carries the acute in chapter 23. The general accentuation rules, which Portuguese complicates further than Spanish with three separate accent marks, are never set out."
+    },
+    {
+      "id": "PT-A1-ORT-07",
+      "category": "Ortografia e pontuacao (spelling and punctuation)",
+      "label": "syllable division, and double spellings",
+      "probe": [
+        "PT-ETYMON-ESCREVER-03"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "Chapter 19's account of the propped-up e- in escrever -- the vowel Portuguese and Spanish add in front of Latin sc- -- is the corpus's one piece of spelling-shape teaching, and the lesson says it decodes a hundred other words."
+    },
+    {
+      "id": "PT-A1-ORT-08",
+      "category": "Ortografia e pontuacao (spelling and punctuation)",
+      "label": "the full stop, the comma, and the rest of the punctuation set",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-09"
+      ],
+      "note": "SEVEN PROXY POINTS AND NOTHING. No punctuation mark is taught anywhere in 102 files; every mark on every page is used correctly and none is named. The hyphen matters more here than in Spanish, because Portuguese hyphenates its enclitic pronouns (chamo-me, encontrar-se) and the corpus uses both without comment."
+    },
+    {
+      "id": "PT-A1-ORT-09",
+      "category": "Ortografia e pontuacao (spelling and punctuation)",
+      "label": "question and exclamation marks -- and the Spanish opening pair Portuguese does NOT write",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-04"
+      ],
+      "note": "Restated rather than dropped: the Spanish point is about the inverted opening marks, and the Portuguese demand behind it is knowing they are Spanish and that Portuguese writes only the closing one. Neither is taught."
+    },
+    {
+      "id": "PT-A1-ORT-10",
+      "category": "Ortografia e pontuacao (spelling and punctuation)",
+      "label": "the dash in dialogue",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-O3-08"
+      ],
+      "note": "Every practice exchange in the corpus is set with the em-dash speaker mark, which is the Portuguese convention, and no lesson mentions it."
+    },
+    {
+      "id": "PT-A1-ORT-11",
+      "category": "Ortografia e pontuacao (spelling and punctuation)",
+      "label": "abbreviations, initialisms and symbols",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02",
+        "A1-O4-03",
+        "A1-O1-06"
+      ],
+      "note": "Sr., Sra., Dr. -- and the ordinal indicators 1o and 1a, which are the exact counterpart of the Spanish superscript letter, so that point transfers rather than dropping. Nothing in this group is taught, and o senhor and a senhora ARE taught in chapter 2, which makes Sr. and Sra. a one-line addition."
+    },
+    {
+      "id": "PT-A1-REG-01",
+      "category": "Registo: tu, voce e o senhor (register)",
+      "label": "the three-term address system: tu, voce, o senhor",
+      "probe": [
+        "PT-GRAMMAR-FALAR-04",
+        "PT-GRAMMAR-TUDO-BEM-02",
+        "PT-LEX-FORMAL-PRACTICE-02"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [],
+      "portugueseSpecific": true,
+      "note": "PORTUGUESE HAS THREE TERMS WHERE ITALIAN HAS TWO AND LATIN HAS NONE, and this track teaches all three: tu in the chapter 5 verb table, voce in chapter 2 with its descent from vossa merce, and o senhor / a senhora in chapter 2's formal exchange with their descent from Latin senior. The PCIC A1 grammar column has no point for a three-term system because Spanish has two, so this is enumerated here."
+    },
+    {
+      "id": "PT-A1-REG-02",
+      "category": "Registo: tu, voce e o senhor (register)",
+      "label": "running the same exchange at two registers",
+      "probe": [
+        "PT-LEX-C02-PRACTICE-02",
+        "PT-LEX-FORMAL-PRACTICE-02",
+        "PT-LEX-C03-PRACTICE-02"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [],
+      "portugueseSpecific": true,
+      "note": "Chapter 2 ships TWO practice lessons -- Ola! Tudo bem? and Bom dia. Como esta o senhor? -- and chapter 3 does the same for names. Choosing the register and then keeping it for a whole exchange is what an examiner would actually test, and the corpus models it twice."
+    },
+    {
+      "id": "PT-A1-REG-03",
+      "category": "Registo: tu, voce e o senhor (register)",
+      "label": "which Portuguese is being taught, and the two varieties in the corpus",
+      "probe": [
+        "PT-GRAMMAR-ME-CHAMO-04",
+        "PT-LEX-PENSAR-02",
+        "PT-ETYMON-MORAR-03"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [],
+      "portugueseSpecific": true,
+      "note": "MEASURED, NOT IMPORTED, AND THIS IS THE ONE THE FRONTMATTER GETS WRONG. All 102 lessons declare variety: standard-contemporary, which is a single label -- and the BODIES teach both major varieties, deliberately and without ever naming what they are doing: chapter 3 gives me chamo (Brazilian order) AND chamo-me (European order); chapter 19 says everyday Brazilian speech prefers acho que sim to penso que sim; chapter 5 uses Onde voce mora?, which is the Brazilian question, in a course that also teaches o senhor. A learner is being taught two dialects at once and has not been told. Counted covered because the CONTRASTS are on the page and taught; what is missing is the label, and IT IS THE LABEL THAT MATTERS, because estar a + infinitive against estar + gerund (PT-A1-V-05) is the next thing they will meet and there is no frame to put it in."
+    },
+    {
+      "id": "PT-A1-REG-04",
+      "category": "Registo: tu, voce e o senhor (register)",
+      "label": "what the frontmatter register field records, against what the lessons teach",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "PT-CORPUS",
+        "ED-PORTUGUESE"
+      ],
+      "derivedFrom": [],
+      "portugueseSpecific": true,
+      "note": "MEASURED. core/exam-levels.json carries NO caveat for portuguese -- it records exam 'CAPLE', basis 'published', mapping 'identity' and nothing else -- so there was nothing to import and nothing to defer to. The measurement: ALL 102 lessons declare register: neutral and ALL 102 declare variety: standard-contemporary, so both fields are artefacts and carry no information at all, exactly as Bengali's do. Every register claim in PT-A1-REG-01 to PT-A1-REG-03 was read out of lesson BODIES. Tamil's register column was not imported here; this one was measured."
+    }
+  ]
+}

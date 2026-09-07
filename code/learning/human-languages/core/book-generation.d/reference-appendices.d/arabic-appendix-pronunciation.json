@@ -1,0 +1,8 @@
+{
+  "language": "arabic",
+  "title": "Pronunciation & Script --- a reference",
+  "shortTitle": "Pronunciation & script (reference)",
+  "source": "arabic/pronunciation-reference.md",
+  "output": "arabic/book/chapters/appendix-pronunciation.tex",
+  "scriptSet": "arabic-main"
+}

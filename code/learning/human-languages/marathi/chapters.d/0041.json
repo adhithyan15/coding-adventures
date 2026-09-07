@@ -1,0 +1,21 @@
+{
+  "chapter": 41,
+  "title": "A House, a Room, and the Stem That Bends",
+  "label": "ch:mr-the-oblique-stem",
+  "canDo": "I can name a house and a room, and I can put either of them into the -t locative, knowing which one changes shape first and why.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS",
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R41-in-the-house",
+    "kind": "production",
+    "summary": "Complete MR-R41-in-the-house and answer kuṭhe? twice with a place you can name -- gharāt and khoolīt -- saying which of the two nouns had to bend.",
+    "assesses": [
+      "MR-LEX-GHAR",
+      "MR-LEX-KHOLI",
+      "MR-GRAMMAR-OBLIQUE"
+    ],
+    "note": "The two nouns come first and the rule second on purpose: the oblique stem is only visible on a noun the reader already owns."
+  }
+}

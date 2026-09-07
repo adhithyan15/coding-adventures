@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C43-javal",
+    "language": "marathi",
+    "chapter": 43,
+    "sequence": 1720,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3400668ac0bbc5bd"
+  },
+  "findings": []
+}

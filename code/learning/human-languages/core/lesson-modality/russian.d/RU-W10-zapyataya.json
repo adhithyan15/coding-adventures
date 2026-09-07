@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "RU-W10-zapyataya",
+    "language": "russian",
+    "chapter": 19,
+    "sequence": 990,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d716cdb9dc20623e",
+    "detachableSegments": [
+      "Writing — the hooked-back stroke"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

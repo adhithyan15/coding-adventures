@@ -1,0 +1,13 @@
+{
+  "id": "MR-PATH-044",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "MR-C41-oblique",
+    "MR-R41-in-the-house"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-057-THE-OBLIQUE-STEM"
+  ],
+  "after": []
+}

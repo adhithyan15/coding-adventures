@@ -1,0 +1,827 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 54,
+  "title": "Edo, Bibo, Oculus, Auris, Pes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ccc2bb5d70db1566",
+  "lessons": [
+    {
+      "id": "LA-C54-edo",
+      "sequence": 1450,
+      "title": "edō — and the infinitive that collides with to be",
+      "headword": "edō, esse",
+      "romanization": "edō, esse",
+      "gloss": "I eat — and the infinitive that collides with to be",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a12bc603355afe1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say liber — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *liber* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iterum — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iterum* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hic — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hic* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say currō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *currō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bene — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bene* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say diēs — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *diēs* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "edō — \"I eat.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Fifty-three chapters gave you bread, salt, honey, milk, eggs, fish, water and wine, and no verb to do anything with them. Here it is."
+            },
+            {
+              "kind": "speech",
+              "text": "The root is Proto-Indo-European h₁ed-, and English eat is an inherited cousin, not a loan — the same relationship piscis and fish have, by the same Grimm's Law. So are etch and, at a distance, fret (fra-etan, \"to eat away\")."
+            },
+            {
+              "kind": "speech",
+              "text": "And then a trap worth meeting once. The infinitive of edō is ēsse, and the infinitive of sum, \"to be,\" is esse. Four identical letters again. Only the long ē separates eating from being, and only in speech; a Roman reader took it from the sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Edible and comestible are loans from this verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "edō, esse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *edō, esse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is English eat a cousin or a loan? (A cousin.) What two verbs share the spelling esse? (Edō and sum — separated by vowel length.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C54-bibo",
+      "sequence": 1460,
+      "title": "bibō — the verb inside beverage, bib and imbibe",
+      "headword": "bibō, bibere",
+      "romanization": "bibō, bibere",
+      "gloss": "I drink — the verb inside beverage, bib and imbibe",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08c99aa69ad1ce25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say edō — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *edō* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say magister — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *magister* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iste — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iste* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aperiō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aperiō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say diēs — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *diēs* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nox — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nox* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bibō — \"I drink.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The other half of the pair, and the one that finally does something with the aqua and vīnum of the bread-and-wine lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Aquam bibō. — I drink water. Aquam aut vīnum bibō? — Do I drink water or wine? (with the aut of the denying chapter.)"
+            },
+            {
+              "kind": "speech",
+              "text": "The form is odd and the oddity is old: bibō is a reduplicated verb, the root syllable said twice, from Proto-Indo-European peh₃-. Latin regularly turns that initial p into b here, which is why bibō looks nothing like Greek pīnō although they are the same word."
+            },
+            {
+              "kind": "speech",
+              "text": "English beverage is Old French bevrage, from bibere; imbibe and bibulous are direct loans; and a baby's bib is probably from the same verb, the thing you drink over — probably, not certainly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bibō, bibere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bibō, bibere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I drink water.\" (Aquam bibō.) Is bib certainly from bibō? (Probably, not certainly.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C54-oculus",
+      "sequence": 1470,
+      "title": "oculus — and the eye already hiding inside a word you know",
+      "headword": "oculus, oculī",
+      "romanization": "oculus, oculī",
+      "gloss": "the eye — and the eye already hiding inside a word you know",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc568fc39377f4c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bibō — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bibō* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say discipulus — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *discipulus* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ille — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ille* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say claudō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *claudō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nox — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nox* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say salvē / salvēte — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *salvē / salvēte* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "oculus — \"an eye.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The third body word this book has, after caput and manus."
+            },
+            {
+              "kind": "speech",
+              "text": "English eye is an inherited cousin — Proto-Indo-European h₃ekʷ- gave Latin oculus and Germanic augon, which is eye. And the loans are everywhere: ocular, binoculars, monocle, oculist."
+            },
+            {
+              "kind": "speech",
+              "text": "The best of them is inoculate. Latin inoculāre was a gardening word: to graft a bud — an oculus, an \"eye\" — into a plant. Eighteenth-century physicians borrowed the gardener's word for grafting a little disease into a person, and that is why an injection is named after an eye."
+            },
+            {
+              "kind": "speech",
+              "text": "Italian occhio and Spanish ojo both descend from it, by the same -cl- to -cchi- change Italian makes on occhio."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oculus, oculī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oculus, oculī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is English eye a cousin or a loan? (A cousin.) Why is inoculate named after an eye? (It was a gardening word — grafting a bud.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C54-auris",
+      "sequence": 1480,
+      "title": "auris — and the reason a Roman listened by obeying",
+      "headword": "auris, auris",
+      "romanization": "auris, auris",
+      "gloss": "the ear — and the reason a Roman listened by obeying",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ff60f714176e6c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say oculus — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *oculus* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say schola — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *schola* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say is — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *is* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ferō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ferō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say salvē / salvēte — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *salvē / salvēte* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say avē / avēte — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *avē / avēte* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "auris — \"an ear.\""
+            },
+            {
+              "kind": "speech",
+              "text": "English ear is an inherited cousin again — the same Proto-Indo-European h₂ews- on both sides."
+            },
+            {
+              "kind": "speech",
+              "text": "And it connects to a verb you already have. The audiō lesson gave you \"I hear,\" and noted that obey is hidden inside it. Now you can see why: audiō is itself built on this root — aus-diō, roughly \"I put the ear to\" — so hearing, in Latin, is an action performed with the named organ. Ob-audīre, \"to listen towards,\" wore down through French into obey."
+            },
+            {
+              "kind": "speech",
+              "text": "Auricle, aural and auscultate are loans. Watch the near-collision: aural (of the ear) and oral (of the mouth) are different words from different roots, and English pronounces them identically — which is why careful writers avoid both."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auris, auris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auris, auris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which earlier verb is built on this root? (Audiō.) What is the difference between aural and oral? (Ear against mouth — different roots, same sound.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C54-pes",
+      "sequence": 1490,
+      "title": "pēs — the clearest Grimm's Law pair in the book, and the last word of the tranche",
+      "headword": "pēs, pedis",
+      "romanization": "pēs, pedis",
+      "gloss": "the foot — the clearest Grimm's Law pair in the book, and the last word of the tranche",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28f142292b6302e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say auris — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *auris* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say liber — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *liber* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ibi — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ibi* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say accipiō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *accipiō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say videō — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *videō* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say salvē / salvēte — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *salvē / salvēte* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pēs, pedis — \"a foot.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The piscis lesson taught Grimm's Law on piscis and fish, and promised the other pairs. This is the cleanest of them: Latin p against English f, pēs against foot, on the same Proto-Indo-European ped-."
+            },
+            {
+              "kind": "speech",
+              "text": "And the genitive matters again, exactly as it did for mīles. The nominative is pēs; the stem is ped-; and every English loan is built on the stem: pedal, pedestrian, impede (\"to shackle the feet\"), expedite (\"to free them\"), biped, pedicure."
+            },
+            {
+              "kind": "speech",
+              "text": "Pedigree is the best of them: French pied de grue, \"crane's foot,\" because the three-line mark that shows descent on a genealogical chart looks like a bird's footprint."
+            },
+            {
+              "kind": "speech",
+              "text": "That is thirty-five words in seven chapters. Say the five of this chapter in order, then say the head and the hand you have had from the start, and you have named a body."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēs, pedis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēs, pedis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What sound does Latin p correspond to in inherited English? (F — Grimm's Law.) Which form do the English loans use? (The genitive stem ped-.) And why is a pedigree a foot? (The chart mark looks like a crane's footprint.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

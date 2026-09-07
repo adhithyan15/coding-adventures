@@ -1,0 +1,25 @@
+{
+  "chapter": 44,
+  "title": "Right and Left",
+  "label": "ch:mr-right-and-left",
+  "canDo": "I can name the right and left sides with an adjective that agrees with its noun, and I can run every place word in the book off one bent stem.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R44-directions",
+    "kind": "production",
+    "summary": "Complete MR-R44-directions and bend ghar once, then run madhye, var, khālī, javaḷ and samor off that single stem before adding a side with ujvā or ḍāvā.",
+    "assesses": [
+      "MR-LEX-UJVA",
+      "MR-LEX-DAAVA",
+      "MR-GRAMMAR-OBLIQUE",
+      "MR-POSTP-MADHYE",
+      "MR-POSTP-VAR",
+      "MR-POSTP-KHAALI",
+      "MR-POSTP-JAVAL",
+      "MR-POSTP-SAMOR"
+    ],
+    "note": "The payoff is the whole place column run once off one stem, not the two sides this chapter introduces."
+  }
+}

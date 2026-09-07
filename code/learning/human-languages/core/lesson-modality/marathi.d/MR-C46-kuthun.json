@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C46-kuthun",
+    "language": "marathi",
+    "chapter": 46,
+    "sequence": 1860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffeb75d814d082f4"
+  },
+  "findings": []
+}

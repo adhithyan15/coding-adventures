@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C52-quia",
+    "language": "latin",
+    "chapter": 52,
+    "sequence": 1370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e124da2ed49a896b"
+  },
+  "findings": []
+}

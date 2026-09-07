@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:e5779f1ea3d9ee68",
+  "lessonIds": [
+    "RU-C16-i",
+    "RU-C16-i-predlozheniya",
+    "RU-C16-ili",
+    "RU-C16-ni-ni",
+    "RU-C16-tozhe"
+  ],
+  "tex": "russian/book/chapters/ch16-and-or-neither.tex"
+}

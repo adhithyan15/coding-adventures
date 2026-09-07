@@ -5,9 +5,10 @@ This page gathers the classical scheme (the one this course uses).
 
 ## The three facts
 
-1. **Every letter is sounded, always the same way.** No silent letters; in the
-   classical scheme *c* and *g* are **always hard** (*Cicero* = *KIH-keh-ro*),
-   *v* is **w**, *s* is always hissed, *r* is trilled.
+1. **Every letter is sounded, always the same way.** No silent letters and, in
+   the classical scheme, no "soft" consonants: *c* and *g* are **always hard**
+   (*Cicero* = *KIH-keh-ro*, not "SIS-er-o"), *v* is **w**, *s* is always
+   hissed (never "z"), *r* is trilled.
 2. **Vowels come long or short, marked by a macron.** ā ē ī ō ū are *held longer*
    than a e i o u — same quality, more time. Length can change meaning (*malum*
    "evil" vs. *mālum* "apple"), which is why teaching texts print macrons Romans
@@ -21,15 +22,18 @@ This page gathers the classical scheme (the one this course uses).
   *YOO-lee-oos*. The "v as vee / soft c" you may have heard is *later* Church
   Latin.
 - **Stress is predictable:** two-syllable words stress the first; longer words
-  stress the second-to-last syllable if it is long, else the one before.
+  stress the second-to-last syllable if it is long, else the one before. No
+  accent marks are needed once you hear vowel length.
 - **No *j*, *u/v* split, or *w*:** classical Latin wrote **I** and **V** for both
   vowel and glide; *j*, *u*, *w* are medieval/modern additions.
 
 ## Latin in the family
 
 Latin is **Italic**, a branch of **Indo-European** — cousin to Greek, to the
-Germanic languages (English among them), and, further off, to Sanskrit. As it
-fragmented in daily use it became Spanish, Portuguese, French, Italian, Romanian,
+Germanic languages (English among them), and, further off, to Sanskrit. It was the
+speech of Rome, then of an empire, then of the medieval church and the learned
+world; as it fragmented in daily use it became Spanish, Portuguese, French,
+Italian, Romanian,
 and the rest. This curriculum treats Latin as a **taproot**: nearly every word
 has both English and Romance descendants, traced in the lessons — and its sister
 taproot, Sanskrit, shares the same Indo-European negative (*nōn* / *na*) and the

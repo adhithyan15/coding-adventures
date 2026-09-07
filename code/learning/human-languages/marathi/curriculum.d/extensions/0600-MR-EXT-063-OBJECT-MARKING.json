@@ -1,0 +1,15 @@
+{
+  "id": "MR-EXT-063-OBJECT-MARKING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can mark an animate direct object with -laa and leave an inanimate one bare, and I can say that I give or bring something to somebody.",
+  "prerequisites": [
+    "MR-EXT-062-WHERE-FROM"
+  ],
+  "lessons": [
+    "MR-C47-laa-object",
+    "MR-C47-laa-recipient",
+    "MR-R47-give-it-to"
+  ]
+}

@@ -6207,6 +6207,32 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 
+    // VM-057: STRING with a single sending field that is also the INTO receiver
+    // lowers to a truncating `str_slice` whose destination register is the SAME
+    // register as its source (`concat` is the receiver's own register when
+    // there is exactly one sending field — no intermediate temp is created).
+    // The receiver's total content exactly fills its own width, so the correct
+    // observation is the field completely unchanged; the pre-fix WASM lowering
+    // wrote the fresh allocation handle into that shared register before
+    // copying the source bytes, so the copy read back its own new, uninitialized
+    // block instead of the original characters.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. STRING-SELF-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"ABCDE\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING S DELIMITED BY SIZE INTO S.\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("ABCDE"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

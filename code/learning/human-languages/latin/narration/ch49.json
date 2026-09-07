@@ -1,0 +1,852 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 49,
+  "title": "Possum, Volo, Qui, Et, Quando",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9b2e08c405f47cd9",
+  "lessons": [
+    {
+      "id": "LA-C49-possum",
+      "sequence": 1200,
+      "title": "possum — potis plus sum, and the verb that will not sit still",
+      "headword": "possum, posse",
+      "romanization": "possum, posse",
+      "gloss": "I can — potis plus sum, and the verb that will not sit still",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa963c68b8a2e6da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aut — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aut* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nesciō — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nesciō* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say salvē (post merīdiem) — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *salvē (post merīdiem)* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say salvē / salvēte — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *salvē / salvēte* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pānis — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pānis* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Iānuārius — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Iānuārius* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "possum — \"I am able, I can.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two words in a coat. Potis meant \"able,\" and Latin bolted it onto sum, the verb the eight-verb chapter gave you. Where sum begins with s, the t of potis flattens into it — pot-sum becomes possum — and where it does not, the t survives:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "built from"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "person: I can. form: possum. built from: pot- + sum.",
+                "person: you can. form: potes. built from: pot- + es.",
+                "person: he/she can. form: potest. built from: pot- + est.",
+                "person: we can. form: possumus. built from: pot- + sumus.",
+                "person: they can. form: possunt. built from: pot- + sunt."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "What follows possum is an infinitive, which is the form every verb in this book is already stored under: possum vidēre, \"I can see.\" Nōn possum vidēre, \"I cannot see,\" using last chapter's rule."
+            },
+            {
+              "kind": "speech",
+              "text": "English potent, possible, potential and omnipotent are all potis; so is power, by way of French pouvoir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "possum, posse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *possum, posse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two words are inside possum? (Potis and sum.) What form follows it? (The infinitive.) Say \"I cannot see.\" (Nōn possum vidēre.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C49-volo",
+      "sequence": 1210,
+      "title": "volō — and the root inside voluntary, benevolent and will itself",
+      "headword": "volō, velle",
+      "romanization": "volō, velle",
+      "gloss": "I want — and the root inside voluntary, benevolent and will itself",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bc2ede9313b825b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say possum — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *possum* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say male — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *male* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say salvē — bonum vesperum — bonam noctem — valē — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *salvē — bonum vesperum — bonam noctem — valē* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sum — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sum* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say medius diēs — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *medius diēs* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hōra — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hōra* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "volō — \"I want, I wish.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The word that turns everything you own into a request. Like possum, it takes an infinitive:"
+            },
+            {
+              "kind": "speech",
+              "text": "Volō bibere. — I want to drink. Nōn volō dormīre. — I do not want to sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "Its forms are irregular and worth hearing once: volō, vīs, vult, volumus, vultis, volunt. The infinitive is velle, not volere — an old form that survived because the verb was too common to regularise."
+            },
+            {
+              "kind": "speech",
+              "text": "The root is Proto-Indo-European welh₁-, \"to choose.\" English inherited it directly as will — a blood cousin, not a loan — and borrowed it back from Latin many times over: voluntary, volition, benevolent (\"well-wishing\"), malevolent (with last chapter's male), and voluptuous."
+            },
+            {
+              "kind": "speech",
+              "text": "And you have already met its imperative. Vel, \"or,\" from the last lesson of the denying chapter, is literally volō telling you to choose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "volō, velle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *volō, velle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What form follows volō? (The infinitive.) Which English word is a blood cousin rather than a loan? (Will.) And where have you already met volō's imperative? (In vel, \"or.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C49-qui",
+      "sequence": 1220,
+      "title": "quī — the commonest word in Latin prose, and the one that joins two sentences into one",
+      "headword": "quī, quae, quod",
+      "romanization": "quī, quae, quod",
+      "gloss": "who, which — the commonest word in Latin prose, and the one that joins two sentences into one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:088dcc5bf4cb8bb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say volō — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *volō* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say malus — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *malus* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sum — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sum* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say habeō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *habeō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say medius diēs — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *medius diēs* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hōra — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hōra* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quī, quae, quod — \"who, which, that.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This is the single most common word in surviving Latin prose, and it does one job: it hangs a second statement onto a noun in the first."
+            },
+            {
+              "kind": "speech",
+              "text": "Amīcus quī venit. — The friend who comes. Liber quem legō. — The book which I am reading."
+            },
+            {
+              "kind": "speech",
+              "text": "Three forms, because it agrees with the noun it hangs on: quī for a masculine one, quae for a feminine one, quod for a neuter one."
+            },
+            {
+              "kind": "speech",
+              "text": "You already know its relatives. Quid (\"what\") from the wellbeing exchange and quis (\"who\") are the question words built on the same Proto-Indo-European stem kwi-. And Grimm's Law — the piscis law, p to f — does kw to hw as well, which is why English who, what, which and why are inherited cousins of this word rather than borrowings from it. The spelling wh- is the old hw- with its letters swapped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quī, quae, quod",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quī, quae, quod*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does quī do to two sentences? (Joins them — hangs the second on a noun in the first.) Are English who and what cousins or loans? (Cousins, by Grimm's Law.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C49-et",
+      "sequence": 1230,
+      "title": "et — and the enclitic -que, which does the same job glued to the back of a word",
+      "headword": "et",
+      "romanization": "et",
+      "gloss": "and — and the enclitic -que, which does the same job glued to the back of a word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ad2a11e34709aea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quī — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quī* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sed — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sed* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say caelum — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *caelum* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hōra — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hōra* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vīgintī annōs nātus sum — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vīgintī annōs nātus sum* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "et — \"and.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The plainest word in this book, and the corpus went forty-seven chapters without teaching it."
+            },
+            {
+              "kind": "speech",
+              "text": "Aqua et vīnum. — Water and wine. Pater et māter. — Father and mother."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin has a second way of saying it, and a reader meets it constantly: -que, glued onto the back of the second word rather than standing between the two."
+            },
+            {
+              "kind": "speech",
+              "text": "Senātus populusque Rōmānus — \"The Senate and the Roman people,\" the SPQR on every Roman standard. The -que is that fourth letter."
+            },
+            {
+              "kind": "speech",
+              "text": "-que is Proto-Indo-European kwe, an enclitic Sanskrit kept as ca and Greek as te. Et went the other way: it is Spanish y, French et, Italian e and Portuguese e, and every Romance daughter kept it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "et",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *et*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two ways to say and in Latin? (Et, and -que glued to the back.) What does the Q in SPQR stand for? (-que, \"and.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C49-quando",
+      "sequence": 1240,
+      "title": "quandō — as a question and as the hinge of a clause",
+      "headword": "quandō",
+      "romanization": "quandō",
+      "gloss": "when — as a question and as the hinge of a clause",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e3256adecc57856",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say et — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *et* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aut — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aut* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mare — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mare* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say veniō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *veniō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vīgintī annōs nātus sum — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vīgintī annōs nātus sum* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tempestās — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tempestās* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quandō — \"when.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Built on the same kwo- stem as quī and quid, three lessons back. It does two jobs."
+            },
+            {
+              "kind": "speech",
+              "text": "As a question: Quandō venīs? — \"When are you coming?\""
+            },
+            {
+              "kind": "speech",
+              "text": "As a hinge, joining two statements in time: Quandō veniō, videō — \"When I come, I see.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Every Romance daughter kept it unchanged: Spanish cuándo, Italian and Portuguese quando, French quand. English quandary is often attached to it and the connection is not established — the word appears in the sixteenth century from nowhere obvious, and quandō is a guess rather than an etymology. This book will always tell you when a resemblance is only a resemblance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quandō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quandō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two jobs for quandō? (Asking when, and joining two statements in time.) Is English quandary from it? (Not established — a guess, not an etymology.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

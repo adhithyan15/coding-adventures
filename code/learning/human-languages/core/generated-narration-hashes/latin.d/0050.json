@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:3b21a943c1a1e4e2",
+  "lessonIds": [
+    "LA-C50-hic",
+    "LA-C50-iste",
+    "LA-C50-ille",
+    "LA-C50-is",
+    "LA-C50-ibi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch50.txt",
+  "json": "latin/narration/ch50.json",
+  "textHash": "fnv1a64:f24eebd64b820638",
+  "jsonHash": "fnv1a64:31e6211ee6225cab",
+  "findings": []
+}

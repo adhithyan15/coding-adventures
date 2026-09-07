@@ -387,11 +387,72 @@ of three- and four-lesson chapters systematically misses **R2 (distance 5–15)*
 and lands inside it. Marathi's R2 miss count did not move while the track grew
 by thirteen lessons, which is the number that says the reach works.
 
+## Chapters 41–44 — the place column
+
+| Session | Lesson | Job |
+|---|---|---|
+| 244 | C41-ghar | **घर** — a place that can be named, not only pointed at |
+| 245 | C41-kholi | **खोली** — the inside of it, and `LODGING-ROOM` realized |
+| 246 | C41-oblique | **घरा-** — the stem a noun takes before any postposition |
+| 247 | R41-in-the-house | ask **कुठे?**, answer with a room |
+| 248 | C42-madhye | **मध्ये** — the written partner of the spoken **-त** |
+| 249 | C42-var | **वर** — on; up; and where Marathi puts love |
+| 250 | C42-khaali | **खाली** — its exact mirror, twice over |
+| 251 | R42-inside-outside | one stem, three relations, and *there is* |
+| 252 | C43-javal | **जवळ** — the answer a real person gives |
+| 253 | C43-samor | **समोर** — face-to-face, out of **सम्** and **मुख** |
+| 254 | C43-laamb | **लांब** — *long* before it is *far*, and no stem |
+| 255 | R43-how-far | a distance, a side, and the far end |
+| 256 | C44-ujva | **उजवा** — the straight hand, agreeing like **माझा** |
+| 257 | C44-daava | **डावा** — the pair closed for the cost of one sound |
+| 258 | R44-directions | bend **घर** once and run all five off it |
+
+The two nouns come BEFORE the rule, which is the whole shape of chapter 41. An
+oblique stem is invisible except on a noun the reader already owns, so **घर**
+and **खोली** are taught first and then made to demonstrate the two halves of the
+rule — one bends, one does not.
+
+Three of the eleven items are deliberately NOT postpositions. **लांब**,
+**उजवा** and **डावा** take no oblique stem, and a rule that every new word obeys
+is a rule the reader cannot test. The contrast is the teaching.
+
+## Chapters 45–48 — with, from, to whom, and having
+
+| Session | Lesson | Job |
+|---|---|---|
+| 259 | C45-barobar | **बरोबर** — alongside, and *that's right* |
+| 260 | C45-pron-oblique | **माझ्याबरोबर** — a pronoun bends from its POSSESSIVE |
+| 261 | C45-shii | **-शी** — engaged with, which speaking demands |
+| 262 | C45-ne | **-ने** — a tool, never a person |
+| 263 | R45-with | one question sorts all three |
+| 264 | C46-huun | **-हून** — a form field becomes a spoken answer |
+| 265 | C46-paasun | **पासून** — a starting point in place OR time |
+| 266 | C46-kuthun | **कुठून** — and now somebody can ask you |
+| 267 | R46-from | the interview's second exchange, both halves |
+| 268 | C47-laa-object | **मित्राला** — animate marked, inanimate bare |
+| 269 | C47-laa-recipient | the same **-ला** for the person given to |
+| 270 | R47-give-it-to | one ending, three jobs |
+| 271 | C48-kade | **-कडे** — a side becomes a direction |
+| 272 | C48-possession | **माझ्याकडे … आहे** — having, without a verb for it |
+| 273 | R48-have-and-toward | a direction, a possession, a handover |
+
+Two shapes in this tranche are worth naming as method rather than as content.
+
+**The three-way contrast is the lesson.** English collapses *with my friend*,
+*with the doctor* and *with my hand* into one word; Marathi keeps three. A
+learner who meets only one of them over-applies it, so the chapter teaches the
+QUESTION — companion, partner in the act, or tool? — and lets the question pick
+the ending.
+
+**A side is not a direction, and four chapters keep them apart.** उजवा and डावा
+landed in chapter 44 as descriptions, with the gap named on the page. **-कडे**
+closes it in chapter 48. Deferring the payoff by four chapters is what makes the
+second half feel like an answer rather than a list.
+
 ## Next
 
-The next Marathi tranche should take the **oblique stem** (`MR-A1-N-09`) and the
-postpositions built on it — the locative **-त** / **-वर**, **मध्ये**, **खाली**,
-**जवळ**, **समोर**, the accompaniment **-शी** / **बरोबर**, the ablative
-**-हून** / **पासून** and the goal **-कडे**. Around seventeen uncovered inventory
-points sit behind that one stem change, and it is the largest structural gap the
-inventory names.
+The next Marathi tranche should teach the **reph** and the **rakaar** — two
+script lessons that close `MR-A1-OR-21` and, with them, **पर्यंत** and
+`MR-A1-P-05`, the last open point in the postposition column. The rakaar has
+been shown in **मित्र** since chapter 18 and never named, so one of the two is
+already earning its keep before it is taught.

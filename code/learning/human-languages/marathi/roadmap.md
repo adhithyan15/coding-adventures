@@ -154,6 +154,35 @@ lesson is `coreVoice` and both chapters stay fully drivable.
   migrated, so material already in the book was scoring as content debt. **Read
   a MEASUREMENT GAP note against the tree before believing it.**
 
+## Chapters 41–44 — the place column
+
+- **Authored.** Eleven items across four chapters: **घर · खोली · घरा-**;
+  **मध्ये · वर · खाली**; **जवळ · समोर · लांब**; **उजवा · डावा**. A1 exam
+  coverage 124/301 → 133/301, with `SPINE-NAME-EVERYDAY-THINGS` — a second A1
+  **core** node — realizing `LODGING-ROOM`.
+
+  Nine points from eleven items, and the ratio is the STEM rather than the
+  vocabulary. `MR-A1-N-09`, the oblique stem, is one rule that four other points
+  were sitting behind, which is what the inventory meant by calling it the
+  largest structural gap in the track.
+
+  Three of the eleven — **लांब**, **उजवा**, **डावा** — take no oblique stem, and
+  they are in the tranche for that reason. A rule every new word obeys cannot be
+  tested by the reader.
+
+## Chapters 45–48 — with, from, to whom, and having
+
+- **Authored.** Eleven items across four chapters: **बरोबर · माझ्याबरोबर ·
+  -शी · -ने**; **-हून · पासून · कुठून**; the animate object marker **-ला** and
+  the recipient; **-कडे** and the possession frame. A1 exam coverage 133/301 →
+  142/301, closing **Case and postpositions to 5 of 6**.
+
+  The one point still open in that column is `MR-A1-P-05`, and it is open for a
+  SCRIPT reason rather than a vocabulary one: **पर्यंत** cannot be written
+  without the reph, which `MR-A1-OR-21` also names. Two script lessons — the
+  reph and the rakaar that **मित्र** has carried unnamed since chapter 18 —
+  close both points at once.
+
 ## Planned
 
 | Chapter | Theme |
@@ -162,7 +191,7 @@ lesson is `coreVoice` and both chapters stay fully drivable.
 | 10 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
 | 11 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
 | 12+ | The rest of `SPINE-SAY-WHAT-I-DO` — *aikṇe* and the remaining core verbs now that *deṇe*, *sāṅgṇe* and *shikṇe* are authored — then past and future tenses (where gender returns on the verb), always with the Hindi/Dravidian contrast thread. Negation and yes-or-no questions are done: chapters 32 and 33 |
-| next | The **oblique stem** (`MR-A1-N-09`) and the postpositions built on it — the locative *-त* / *-वर*, *मध्ये*, *खाली*, *जवळ*, *समोर*, the accompaniment *-शी* / *बरोबर*, the ablative *-हून* / *पासून* and the goal *-कडे*. Seventeen or so inventory points sit behind that one stem change, including possession (`MR-A1-V-20`, Marathi having no verb *to have*), existence in a place, and origin — the interview answer *I am from Pune* |
+| next | The **reph** and the **rakaar** (`MR-A1-OR-21`), two script lessons that also unlock *पर्यंत* and with it `MR-A1-P-05` — the last open point in the postposition column. The rakaar has been shown in *मित्र* since chapter 18 and never named |
 | after that | The **adjective** (`SPINE-DESCRIBE-QUALITIES`, an A1 core node with no realization), which unblocks roughly fifteen further points including the exclamative *किती!*, colour, age, quality and physical description |
 
 Note: Marathi marks "you" by **register** (*tū* familiar / *tumhī* respectful,

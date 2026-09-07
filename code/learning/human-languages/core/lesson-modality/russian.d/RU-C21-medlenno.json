@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C21-medlenno",
+    "language": "russian",
+    "chapter": 21,
+    "sequence": 1080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22934401fe53508c"
+  },
+  "findings": []
+}

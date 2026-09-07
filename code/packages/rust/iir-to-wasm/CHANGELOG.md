@@ -1,5 +1,15 @@
 # Changelog — iir-to-wasm
 
+## Runtime substring operand aliasing (VM-057)
+
+Runtime `str_slice` preserves the source handle until the header write and
+byte copy both finish, then assigns the destination — the same repair VM-056
+applied to `str_concat`. A discriminating regression proved a real defect
+(destination-aliases-source produced corrupted output before the fix, not
+just a suspected hazard) and now passes; a COBOL `STRING` with a single
+sending field that is also its own `INTO` receiver adds a seven-backend
+conformance program.
+
 ## Runtime concatenation operand aliasing (VM-056)
 
 Runtime string concatenation preserves both source handles until all lengths

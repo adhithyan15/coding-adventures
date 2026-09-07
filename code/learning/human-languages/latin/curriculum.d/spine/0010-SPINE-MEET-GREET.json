@@ -1,7 +1,8 @@
 {
   "segments": [
     "LA-PATH-001",
-    "LA-PATH-005"
+    "LA-PATH-005",
+    "LA-PATH-035"
   ],
   "omits": [
     "GREETING-PEACE",

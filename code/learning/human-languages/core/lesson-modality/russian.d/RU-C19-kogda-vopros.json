@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C19-kogda-vopros",
+    "language": "russian",
+    "chapter": 19,
+    "sequence": 970,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:af3a1d76fea785fe"
+  },
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:76408702efe775a1",
+  "lessonIds": [
+    "MR-C46-huun",
+    "MR-C46-paasun",
+    "MR-C46-kuthun",
+    "MR-R46-from"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch46.txt",
+  "json": "marathi/narration/ch46.json",
+  "textHash": "fnv1a64:bec2e837ce139115",
+  "jsonHash": "fnv1a64:3161daf95581bd8b",
+  "findings": []
+}

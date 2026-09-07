@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:ab70e48e709002cf",
+  "lessonIds": [
+    "RU-C20-khotet",
+    "RU-C20-khochu-chitat",
+    "RU-C20-chtoby",
+    "RU-C20-moch",
+    "RU-C20-nado"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "russian/narration/ch20.txt",
+  "json": "russian/narration/ch20.json",
+  "textHash": "fnv1a64:397f45472750519f",
+  "jsonHash": "fnv1a64:ea5b67600f15c181",
+  "findings": []
+}

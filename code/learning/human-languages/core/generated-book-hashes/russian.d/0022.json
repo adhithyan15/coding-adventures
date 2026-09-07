@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:af6a3e02fd960d2f",
+  "lessonIds": [
+    "RU-C22-kto",
+    "RU-C22-kakoy",
+    "RU-C22-skolko",
+    "RU-C22-kotoryy",
+    "RU-C22-li"
+  ],
+  "tex": "russian/book/chapters/ch22-question-family.tex"
+}

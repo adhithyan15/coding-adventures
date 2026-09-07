@@ -24,6 +24,7 @@ license = "MIT"
 coding_adventures_sha1 = { path = "../sha1" }
 engram-core = { path = "../engram-core" }
 protobuf = { path = "../protobuf" }
+coding_adventures_base64 = { path = "../base64" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sqlite-file = { path = "../sqlite-file" }
