@@ -43,6 +43,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout reviewed source
+        # actions/checkout v7.0.1 -- SHA is contract-bound in ocaml_toolchain_lock.py
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
@@ -75,11 +76,13 @@ jobs:
             runner-arch: X64
     steps:
       - name: Checkout reviewed source
+        # actions/checkout v7.0.1 -- SHA is contract-bound in ocaml_toolchain_lock.py
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
 
       - name: Set up the reviewed OCaml compiler and repository
+        # ocaml/setup-ocaml v3.7.0 -- SHA is contract-bound in ocaml_toolchain_lock.py
         uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
         with:
           ocaml-compiler: ocaml-base-compiler.5.2.1
@@ -151,6 +154,7 @@ jobs:
             "$RUNNER_OS" "$RUNNER_ARCH" > "$output/runner-image.txt"
 
       - name: Upload fresh solver evidence
+        # actions/upload-artifact v7.0.1 -- SHA is contract-bound in ocaml_toolchain_lock.py
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ocaml03-fresh-${{ matrix.target }}
@@ -193,11 +197,13 @@ jobs:
             runner-arch: X64
     steps:
       - name: Checkout reviewed source
+        # actions/checkout v7.0.1 -- SHA is contract-bound in ocaml_toolchain_lock.py
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
 
       - name: Set up the reviewed OCaml compiler and repository
+        # ocaml/setup-ocaml v3.7.0 -- SHA is contract-bound in ocaml_toolchain_lock.py
         uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
         with:
           ocaml-compiler: ocaml-base-compiler.5.2.1
@@ -312,6 +318,7 @@ jobs:
           done
 
       - name: Upload measured coverage
+        # actions/upload-artifact v7.0.1 -- SHA is contract-bound in ocaml_toolchain_lock.py
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ocaml03-coverage-${{ matrix.target }}

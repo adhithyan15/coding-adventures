@@ -115,7 +115,11 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("Round-trip Rust engine through standard Flutter binding", workflow)
         self.assertIn("needs_mosaic_flutter_runtime == 'true'", workflow)
         self.assertIn("timeout-minutes: 25", workflow)
-        self.assertIn("uses: subosito/flutter-action@v2", workflow)
+        # Asserts the ACTION, not how it is pinned. The literal
+        # `@v2` was asserted here, which made this test a tripwire against
+        # SHA-pinning that action -- a test that fails when the workflow is
+        # made more secure is a test arguing for the insecure form.
+        self.assertRegex(workflow, r"uses: subosito/flutter-action@\S+")
         self.assertIn("flutter-version: '3.44.0'", workflow)
         self.assertIn("flutter config --enable-native-assets", workflow)
         self.assertIn("sudo apt-get install -y libgtk-3-dev", workflow)
