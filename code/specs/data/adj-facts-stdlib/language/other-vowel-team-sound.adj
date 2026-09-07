@@ -42,7 +42,7 @@
 % treats every other spelling here. This table reproduces that split
 % faithfully as two rows sharing the same `spelling` key, not collapsed into
 % one: a forward query on `oo` therefore yields BOTH rows, an honest
-% reflection of the source, not an omission.
+% reflection of the page's lesson table, not an omission.
 %
 % DESIGN NOTE — why lesson 90's "oo" and lesson 91's "ew"/"ui"/"ue" share
 % the SAME sound atom `long_u_sound`: the source's own IPA-ish notation

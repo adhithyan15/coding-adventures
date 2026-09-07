@@ -7,7 +7,7 @@
 //! that page's definition paragraph, which grounds the DEFINITION and not the
 //! rows -- see its Provenance block, and the 4g pin at the bottom of this file. `th` carries TWO rows
 //! (voiced and unvoiced), an honest one-key/many-values reflection of the
-//! source's own lesson split. Abstains honestly on `qu`, a real digraph the
+//! page's own lesson split. Abstains honestly on `qu`, a real digraph the
 //! same UFLI scope-and-sequence covers elsewhere but not one of these nine
 //! lessons. 0 answer-time model calls.
 
@@ -54,6 +54,17 @@ fn digraph_sound_recall_binds_the_sound_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN, the shape #13916/#13918 established and
+    // the one library of these five that lacked it. Anchoring on the
+    // `"source":"` key and closing on the terminating quote pins head, tail,
+    // punctuation, whitespace and length at once -- a fragment needle would
+    // let the citation be truncated at that point while the test stayed green.
+    // The three `\u{a0}` are the page's own no-break spaces, spelled as
+    // escapes so a reader can see which byte is meant.
+    assert!(
+        out.contains("\"source\":\"A consonant digraph is a combination of two consonant letters that represent a single consonant\u{a0}speech sound.\u{a0} The lessons in this unit are designed to strengthen students\u{2019} familiarity with\u{a0}consonant digraphs.\""),
+        "the citation is the page's paragraph, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"Sound\":\"sh_sound\""),
@@ -163,11 +174,16 @@ fn digraph_sound_abstains_honestly_on_an_untabled_digraph() {
 /// heading, invented separators between each lesson number and the cell
 /// before it, and flattened the page's U+2019 apostrophe to an ASCII one.
 ///
-/// The POSITIVE needle is the paragraph's closing sentence, which the stitch dropped, with the page's own U+2019 apostrophe. The NEGATIVE needles SPAN
-/// THE SEAM -- each joins the paragraph's own last words to the heading
-/// welded after them -- so they can only match if the stitch comes back;
-/// a needle wholly inside either side would still pass a half-undone
-/// repair.
+/// The POSITIVE needle is the paragraph's closing sentence, which the
+/// stitch dropped, with the page's own U+2019 apostrophe. The FIRST
+/// negative needle SPANS THE SEAM, joining the paragraph's own last words
+/// to the heading welded after them, so it matches only if the weld is
+/// back; a needle wholly inside either side would not discriminate. The
+/// other two are artifacts the stitch invented outright — the colon after
+/// the unit heading, and a lesson number welded to the Concept cell that
+/// follows it — neither of which occurs anywhere on the page, checked
+/// against the raw HTML rather than the extractor, which normalises
+/// whitespace.
 ///
 /// This pin does NOT assert that the rows are cited by that span. They
 /// are not: the rows read the page's lesson-table Concept cells, whose
@@ -187,7 +203,7 @@ fn digraph_sound_source_is_the_page_paragraph_not_a_stitched_lesson_table() {
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
     assert!(
-        out.contains("The lessons in this unit are designed to strengthen students\u{2019} familiarity with consonant digraphs."),
+        out.contains("The lessons in this unit are designed to strengthen students\u{2019} familiarity with\u{a0}consonant digraphs."),
         "the citation carries the page paragraph whole: {out}"
     );
     assert!(

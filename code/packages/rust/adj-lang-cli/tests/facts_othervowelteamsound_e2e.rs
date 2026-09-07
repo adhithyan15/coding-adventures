@@ -88,7 +88,7 @@ fn other_vowel_team_sound_recall_binds_the_sound_with_citation() {
     // length at once. See issues #13916 and #13918.
     assert!(
         out.contains("\"source\":\"A vowel team is a combination of letters that represents a vowel sound. These lessons focus on vowel teams that represent a new sound (e.g., draw, book) and vowel teams that include letters that aren\u{2019}t vowels (e.g., dew, high). These lessons are designed to build students\u{2019} accuracy and automaticity in connecting these vowel teams with the sounds associated with them. The lessons also build students\u{2019} proficiency in reading and spelling words that contain these vowel teams.\""),
-        "the citation is the whole source sentence, exactly: {out}"
+        "the citation is the page's paragraph, exactly: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
@@ -137,8 +137,8 @@ fn other_vowel_team_sound_oo_carries_both_lesson89_and_lesson90_sounds() {
     assert!(ok, "cli should succeed: {out}");
     // The SAME one-key/many-values shape digraph-sound.adj's own "th" row
     // established: "oo" forward-recalls BOTH lesson 89's short sound and
-    // lesson 90's long sound, an honest reflection of the source's own
-    // two-lesson split.
+    // lesson 90's long sound, an honest reflection of the cited page's
+    // own two-lesson split.
     assert!(
         out.contains("\"Sound\":\"short_oo_sound\""),
         "oo carries short_oo_sound (lesson 89): {out}"
@@ -233,11 +233,17 @@ fn other_vowel_team_sound_abstains_honestly_on_a_different_ufli_unit() {
 /// heading, invented separators between each lesson number and the cell
 /// before it, and flattened the page's U+2019 apostrophe to an ASCII one.
 ///
-/// The POSITIVE needle is one of the two closing sentences the stitch dropped, plus the page's U+2019 apostrophe in "aren't" inside the sentence the stitch DID carry -- two independent discriminating needles. The NEGATIVE needles SPAN
-/// THE SEAM -- each joins the paragraph's own last words to the heading
-/// welded after them -- so they can only match if the stitch comes back;
-/// a needle wholly inside either side would still pass a half-undone
-/// repair.
+/// The POSITIVE needle is one of the two closing sentences the stitch
+/// dropped, plus the page's U+2019 apostrophe in "aren't" inside the
+/// sentence the stitch DID carry -- two independent discriminating needles.
+/// The FIRST negative needle SPANS THE SEAM, joining the paragraph's own
+/// last words to the heading welded after them, so it matches only if the
+/// weld is back; a needle wholly inside either side would not discriminate.
+/// The other two are artifacts the stitch invented outright — the colon
+/// after the unit heading, and a lesson number welded to the Concept cell
+/// that follows it — neither of which occurs anywhere on the page, checked
+/// against the raw HTML rather than the extractor, which normalises
+/// whitespace.
 ///
 /// This pin does NOT assert that the rows are cited by that span. They
 /// are not: the rows read the page's lesson-table Concept cells, whose

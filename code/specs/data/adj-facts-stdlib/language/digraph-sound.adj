@@ -30,7 +30,8 @@
 %     ? digraph_sound($D, ch_sound)
 %       % ch
 %
-% DESIGN NOTE — why `th` has TWO rows: the cited source splits "th" into two
+% DESIGN NOTE — why `th` has TWO rows: the cited page's lesson table splits
+% "th" into two
 % separate lessons, one per pronunciation ("th /th/ (voiced)", as in "this",
 % and "th /th/ (unvoiced)", as in "think") rather than treating "th" as a
 % single sound the way it treats every other digraph here. This table
@@ -40,7 +41,7 @@
 % elsewhere in this library (there for one word with several antonyms or
 % synonyms; here for one spelling with two genuinely different sounds). A
 % forward query on `th` therefore yields BOTH rows, not one — an honest
-% reflection of the source, not an omission.
+% reflection of the page's lesson table, not an omission.
 %
 % Provenance — the `source` and the ROWS are not grounded by the same thing,
 % and this note says which is which. Both come from the University of
@@ -50,9 +51,15 @@
 %
 % The `source` is that page's opening definition paragraph, quoted WHOLE and
 % byte for byte: "A consonant digraph is a combination of two consonant
-% letters that represent a single consonant speech sound. The lessons in
-% this unit are designed to strengthen students’ familiarity with consonant
-% digraphs."
+% letters that represent a single consonant<U+00A0>speech sound.<U+00A0> The
+% lessons in this unit are designed to strengthen students’ familiarity
+% with<U+00A0>consonant digraphs."
+%
+% The `<U+00A0>` marks are NOTATION, not text: the page uses NO-BREAK SPACES
+% at those 3 positions and the `source` field carries the real character.
+% They are written out here because a literal U+00A0 inside a wrapped
+% comment is invisible to a reader and a break opportunity to a rewrapper —
+% the two ways this byte has already gone missing once.
 %
 % It states what a consonant digraph IS. It names no individual digraph and
 % no sound, so it grounds none of the nine rows. Those come from elsewhere
@@ -117,7 +124,7 @@ table digraph_sound {
     row (ng, ng_sound)            % lesson 51 cell: "ng /ŋ/"
     row (nk, nk_sound)            % lesson 52 cell: "nk /ŋk/"
 
-    source "A consonant digraph is a combination of two consonant letters that represent a single consonant speech sound. The lessons in this unit are designed to strengthen students’ familiarity with consonant digraphs."
+    source "A consonant digraph is a combination of two consonant letters that represent a single consonant speech sound.  The lessons in this unit are designed to strengthen students’ familiarity with consonant digraphs."
     locator "https://ufli.education.ufl.edu/foundations/toolbox-aus/42-53/"
     trust authoritative
 }

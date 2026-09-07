@@ -65,7 +65,7 @@ fn silent_letter_sound_recall_binds_the_sound_with_citation() {
     // length at once. See issues #13916 and #13918.
     assert!(
         out.contains("\"source\":\"The Silent Letters Unit only consists of one lesson, but this lesson instructs students on three common silent letter patterns (e.g., kn-, wr-, and -mb). This lesson is designed to build students\u{2019} accuracy and automaticity in recognizing silent letter patterns. The lesson also builds students\u{2019} proficiency in reading and spelling words that contain silent letter patterns.\""),
-        "the citation is the whole source sentence, exactly: {out}"
+        "the citation is the page's paragraph, exactly: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
@@ -146,11 +146,17 @@ fn silent_letter_sound_abstains_honestly_on_an_untabled_pattern() {
 /// heading, invented separators between each lesson number and the cell
 /// before it, and flattened the page's U+2019 apostrophe to an ASCII one.
 ///
-/// The POSITIVE needle is the page's U+2019 apostrophe in "students'", which the stitch flattened to ASCII -- this paragraph is otherwise carried whole by both the old value and the new, so the apostrophe is the discriminating byte. The NEGATIVE needles SPAN
-/// THE SEAM -- each joins the paragraph's own last words to the heading
-/// welded after them -- so they can only match if the stitch comes back;
-/// a needle wholly inside either side would still pass a half-undone
-/// repair.
+/// The POSITIVE needle is the page's U+2019 apostrophe in "students'",
+/// which the stitch flattened to ASCII -- this paragraph is otherwise
+/// carried whole by both the old value and the new, so the apostrophe is
+/// the discriminating byte. The FIRST negative needle SPANS THE SEAM,
+/// joining the paragraph's own last words to the heading welded after them,
+/// so it matches only if the weld is back; a needle wholly inside either
+/// side would not discriminate. The other two are artifacts the stitch
+/// invented outright — the colon after the unit heading, and a lesson
+/// number welded to the Concept cell that follows it — neither of which
+/// occurs anywhere on the page, checked against the raw HTML rather than
+/// the extractor, which normalises whitespace.
 ///
 /// This pin does NOT assert that the rows are cited by that span. They
 /// are not: the rows read the page's lesson-table Concept cells, whose

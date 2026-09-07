@@ -81,11 +81,17 @@
 %
 % The `source` is that page's opening definition paragraph, quoted WHOLE and
 % byte for byte: "A vowel team is a combination of letters that represents a
-% vowel sound. These lessons focus on vowel teams that represent the sound
-% of the first vowel (e.g., team, rain). These lessons are designed to build
-% students’ accuracy and automaticity in connecting these vowel teams with
-% the sounds associated with them. The lessons also build students’
+% vowel sound.<U+00A0> These lessons focus on vowel teams that represent the
+% sound of the first vowel (e.g., team, rain). These lessons are designed to
+% build students’ accuracy and automaticity in connecting these vowel teams
+% with the sounds associated with them. The lessons also build students’
 % proficiency in reading and spelling words that contain these vowel teams."
+%
+% The `<U+00A0>` marks are NOTATION, not text: the page uses NO-BREAK SPACES
+% at those 1 positions and the `source` field carries the real character.
+% They are written out here because a literal U+00A0 inside a wrapped
+% comment is invisible to a reader and a break opportunity to a rewrapper —
+% the two ways this byte has already gone missing once.
 %
 % It says what a vowel team IS and which vowel teams the unit covers. It
 % names no spelling and no sound, so it grounds none of the ten rows. Those
@@ -166,7 +172,7 @@ table long_vowel_team_sound {
     row (ie, long_i_sound)        % lesson 87 cell: "ie /ī/, igh /ī/"
     row (igh, long_i_sound)       % lesson 87 cell: "ie /ī/, igh /ī/"
 
-    source "A vowel team is a combination of letters that represents a vowel sound. These lessons focus on vowel teams that represent the sound of the first vowel (e.g., team, rain). These lessons are designed to build students’ accuracy and automaticity in connecting these vowel teams with the sounds associated with them. The lessons also build students’ proficiency in reading and spelling words that contain these vowel teams."
+    source "A vowel team is a combination of letters that represents a vowel sound.  These lessons focus on vowel teams that represent the sound of the first vowel (e.g., team, rain). These lessons are designed to build students’ accuracy and automaticity in connecting these vowel teams with the sounds associated with them. The lessons also build students’ proficiency in reading and spelling words that contain these vowel teams."
     locator "https://ufli.education.ufl.edu/foundations/toolbox/84-88/"
     trust authoritative
 }
