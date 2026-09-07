@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "One Word, and a Whole Sentence After It",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2bcedccda9405442",
+  "sourceHash": "fnv1a64:fe496d3869edc753",
   "lessons": [
     {
       "id": "RU-C18-chto-vopros",
@@ -641,7 +641,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b2a2bc47ea82f014",
+      "sourceHash": "fnv1a64:7a588a6fe85870ac",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -736,7 +736,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You learned early that Russian says I am a student with no verb in the middle: the present tense of быть is simply absent. On the page, that absence gets a mark of its own."
+              "text": "You learned early that Russian says I am a student with no verb in the middle: the present tense of быть is absent altogether. On the page, that absence gets a mark of its own."
             },
             {
               "kind": "speech",

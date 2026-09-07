@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R19-ma-two-r1",
+    "language": "chinese",
+    "chapter": 19,
+    "sequence": 1890,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fd3826974b78caf9"
+  },
+  "findings": []
+}

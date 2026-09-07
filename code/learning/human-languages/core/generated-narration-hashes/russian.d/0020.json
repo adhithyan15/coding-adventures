@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 20,
-  "sourceHash": "fnv1a64:ab70e48e709002cf",
+  "sourceHash": "fnv1a64:d6e71ea5670ea447",
   "lessonIds": [
     "RU-C20-khotet",
     "RU-C20-khochu-chitat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "russian/narration/ch20.txt",
   "json": "russian/narration/ch20.json",
-  "textHash": "fnv1a64:397f45472750519f",
-  "jsonHash": "fnv1a64:ea5b67600f15c181",
+  "textHash": "fnv1a64:5cdc49f76bec83c9",
+  "jsonHash": "fnv1a64:f61b76822c4911be",
   "findings": []
 }

@@ -2472,20 +2472,39 @@ describe("the committed Chinese A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(191);
-    expect(coverage.covered).toBe(66);
-    expect(coverage.unmapped).toBe(125);
+    expect(coverage.covered).toBe(70);
+    expect(coverage.unmapped).toBe(121);
     expect(coverage.partial).toBe(0);
-    // THE HEADLINE, and it is not a vocabulary gap. Mandarin carries almost all
-    // of its grammar in a handful of toneless particles, and NOT ONE is taught:
-    // de, le, ma, ne, ba, guo and zhe each return zero occurrences across the
-    // 175 lesson files, in characters and in tone-marked pinyin. A Mandarin
-    // course with no particles has taught vocabulary and script and has not yet
-    // taught grammar, which is why the sentence columns read as they do.
-    expect(coverage.byCategory["Zhuci - the particles"]!).toEqual({ enumerated: 4, covered: 0 });
+    // THE HEADLINE WHEN THIS FILE WAS WRITTEN, and it was not a vocabulary gap.
+    // Mandarin carries almost all of its grammar in a handful of toneless
+    // particles, and NOT ONE was taught: de, le, ma, ne, ba, guo and zhe each
+    // returned zero occurrences across the 175 lesson files, in characters and
+    // in tone-marked pinyin. A Mandarin course with no particles has taught
+    // vocabulary and script and has not yet taught grammar, which is why the
+    // sentence columns read as they do.
+    //
+    // 0/4 -> 1/4. Chapter 19 teaches 吗, the first particle in the track and
+    // the first character this corpus has added for a GRAMMATICAL word rather
+    // than a lexical one. A class point is not answered by one member, so
+    // PART-04 stays open — but the sentence above is no longer quite true.
+    expect(coverage.byCategory["Zhuci - the particles"]!).toEqual({ enumerated: 4, covered: 1 });
     // Seventh track running with an empty joining column, and the second
     // outside South Asia. `he` ("and") is zero — every raw pinyin match is
     // inside `heng` or `shenme`.
+    //
+    // STILL 0/8 after the asking tranche, and the reason is now measured rather
+    // than assumed. Every one of the nine joining words needs at least one
+    // character the track does not teach, and a character here is not cheap: it
+    // costs a five-lesson cycle, a source-verified stroke record, a ductus path
+    // checked against the vendored font outline, and a regeneration of the
+    // subset font. Russian closed thirteen joining devices in one 35-lesson
+    // tranche because all thirteen were spelled in letters it already taught;
+    // Chinese cannot borrow that shape. The reason is written into J-08's note
+    // so a future tranche budgets for it instead of rediscovering it.
     expect(coverage.byCategory["Lianjie - joining two clauses"]!).toEqual({ enumerated: 8, covered: 0 });
+    // The sentence column the particle bought outright: both of Mandarin's
+    // polar questions are now taught, and the second cost no character at all.
+    expect(coverage.byCategory["Danju - the simple sentence"]!).toEqual({ enumerated: 4, covered: 3 });
     // The column the proxy has NO point for anywhere, and the corpus's best
     // work: tone is lexical (chapter 1), the five contours, third-tone sandhi
     // taught on the first word in the book, and bu sandhi taught on the
@@ -2504,7 +2523,7 @@ describe("the committed Chinese A1 inventory", () => {
     expect(coverage.byCategory["Jiaoyu - education"]!.covered).toBe(3);
     expect(coverage.byCategory["Yinshi - food and drink"]!).toEqual({ enumerated: 1, covered: 0 });
     expect(formatExamCoverage(coverage)).toContain(
-      "chinese A1 (partial inventory): 66/191 points covered (35%)",
+      "chinese A1 (partial inventory): 70/191 points covered (37%)",
     );
   }, 60_000);
 });

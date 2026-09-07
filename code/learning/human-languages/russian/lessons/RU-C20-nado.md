@@ -65,8 +65,8 @@ There is no **я**, no **ты**, and no verb agreeing with anybody. English cann
 this: it has to invent a subject — *one* must read, *it* is necessary, *you*
 should read — because an English sentence is not allowed to go without one.
 
-Russian is allowed. **надо** is an **impersonal** word: the obligation is simply
-stated, hanging in the air, belonging to nobody in particular. This is the same
+Russian is allowed. **надо** is an **impersonal** word: the obligation is stated
+and left hanging in the air, belonging to nobody in particular. This is the same
 freedom you met when the present tense of **быть** turned out to be missing
 altogether — Russian is content to leave out what it does not need.
 
