@@ -1,0 +1,7 @@
+{
+  "language": "french",
+  "title": "Pronunciation --- a reference, not a chapter",
+  "shortTitle": "Pronunciation (reference)",
+  "source": "french/pronunciation-reference.md",
+  "output": "french/book/chapters/appendix-pronunciation.tex"
+}
