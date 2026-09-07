@@ -23,7 +23,7 @@
 //!   → ModuleGrid
 //! ```
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 use barcode_2d::{layout, Barcode2DLayoutConfig, ModuleGrid, ModuleShape};
 use gf256::{multiply as gf_mul, power as gf_power};
@@ -1029,7 +1029,7 @@ mod tests {
 
     #[test]
     fn version_constant() {
-        assert_eq!(VERSION, "0.2.0");
+        assert_eq!(VERSION, "0.3.0");
     }
 
     #[test]
