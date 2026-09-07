@@ -17,8 +17,8 @@ Devanagari.
 
 - **The extra letter ळ (*ḷa*)** — a **retroflex l**, tongue curled back. Hindi
   does *not* have it; Marathi shares it with the Dravidian languages to the
-  south, a mark of centuries of contact. Common in *kāḷ* ("time"), *phaḷ*
-  ("fruit").
+  south — Tamil, Kannada and the rest — a mark of centuries of contact.
+  Common in *kāḷ* ("time"), *phaḷ* ("fruit").
 - **The vowel ॲ / ऍ** for the English "a" of *cat* — added for English
   loanwords (*bĕnk*, "bank").
 - **Three genders.** Marathi keeps Sanskrit's masculine, feminine, *and* neuter
