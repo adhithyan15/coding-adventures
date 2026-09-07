@@ -24,6 +24,7 @@ coding_adventures_zeroize = { path = "../zeroize" }
 coding_adventures_vault_import_export = { path = "../vault-import-export" }
 coding_adventures_vault_import_bitwarden = { path = "../vault-import-bitwarden" }
 coding_adventures_vault_import_csv = { path = "../vault-import-csv" }
+coding_adventures_vault_import_keepass = { path = "../vault-import-keepass" }
 coding_adventures_vault_import_otpauth = { path = "../vault-import-otpauth" }
 
 [features]
@@ -43,3 +44,11 @@ libc = "0.2"
 # computation rather than against the code that produced it. Same argument as
 # the line above: already in the graph, and no feature is enabled.
 coding_adventures_sha256 = { path = "../sha256" }
+# Re-declaring the same path dependency with `test-fixtures` enabled: Cargo
+# unifies features across normal- and dev-dependency edges to the same
+# package for test builds, so `import kdbx`'s own tests can build a
+# genuinely valid `.kdbx` fixture via `test_support::build_single_login_
+# fixture` without this crate duplicating that byte-level encoder. The
+# feature stays off for a plain (non-test) `cargo build`, since only the
+# `[dependencies]` edge above is included then.
+coding_adventures_vault_import_keepass = { path = "../vault-import-keepass", features = ["test-fixtures"] }
