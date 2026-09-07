@@ -121,7 +121,7 @@
       "note": "THE DIMENSION THE PROXY CHANGED MOST, AND THE CHANGE IS THE HEADLINE. The Spanish source publishes a closed list of seven general-notion classes and twenty thematic areas, every entry marked A1 or A2. Walking it added the domains an editorially-chosen list had simply never thought of -- education, work, leisure, media, housing, services, shopping, health, travel, money, government, the arts, religion and the natural world -- and the corpus covers almost none of them. That is not the proxy being unfair; it is what an external boundary is FOR. These points still bound DOMAINS rather than words, so the count here is not a count of words: the project's own A1 target is 600 headwords against roughly 50 today, and this dimension names WHICH 600 and in what order the papers ask for them. It stays partial because no ranked A1 Marathi headword list exists to close it, and because deciding which Marathi words populate a Spanish-sourced domain is editorial throughout."
     }
   },
-  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped, and every null here carries a `note` saying what is missing. Every atom named in a probe EXISTS in the Marathi corpus today, and that rule is enforced both by the generator that wrote this file and by a test. A guessed id -- an atom somebody expects a future lesson to introduce -- resolves to 'not introduced', which is silent, permanent and indistinguishable from real content debt, and would never flip to covered if the author picked a different suffix. So a point whose demonstration would need an atom nobody has written yet gets `null` and a note, not a hopeful probe. ONE MORE DISTINCTION, WHICH THIS TRACK FORCED. A probe reads DECLARED atoms, so a null means one of two quite different things and the note always says which: a CONTENT gap (nobody has taught it) or a MEASUREMENT GAP (it is taught and cannot be measured). Grep for MEASUREMENT GAP to find them. There are two kinds. SCHEMA-V1 MEASUREMENT GAP: 26 of Marathi's 205 lessons, the whole of chapters 9 to 12, are schema-v1 and declare no atoms while teaching mii, tuu/tumhii, maazhaM, kaay, kasaa, 'tumchaM naav kaay aahe?', 'tumhii kase aahaat?', kaam karne and raahne. EMPTY-INTRODUCES MEASUREMENT GAP is worse, because it hides inside schema-v2 where everything looks declared: 66 v2 lessons carry `introduces: []`, most of them honest retrieval lessons that should introduce nothing, but MR-R22-request-verbs and MR-R23-wellbeing-verbs drill five polite imperatives and a future while declaring only the INFINITIVE atoms they review, and MR-A1M17/18 teach the guided and independent 30-to-40-word message -- the A1 writing paper's second task -- while declaring nothing at all. Reading a measurement gap as a content gap would send an author to rewrite chapters 9 and 24.",
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped, and every null here carries a `note` saying what is missing. Every atom named in a probe EXISTS in the Marathi corpus today, and that rule is enforced both by the generator that wrote this file and by a test. A guessed id -- an atom somebody expects a future lesson to introduce -- resolves to 'not introduced', which is silent, permanent and indistinguishable from real content debt, and would never flip to covered if the author picked a different suffix. So a point whose demonstration would need an atom nobody has written yet gets `null` and a note, not a hopeful probe. ONE MORE DISTINCTION, WHICH THIS TRACK FORCED. A probe reads DECLARED atoms, so a null means one of two quite different things and the note always says which: a CONTENT gap (nobody has taught it) or a MEASUREMENT GAP (it is taught and cannot be measured). Grep for MEASUREMENT GAP to find them. There are two kinds. SCHEMA-V1 MEASUREMENT GAP: RETIRED, AND THE PHRASE IS KEPT HERE ONLY SO THE HISTORY IS READABLE. It once described 26 of Marathi's 205 lessons -- the whole of chapters 9 to 12 -- declaring no atoms while teaching mii, tuu/tumhii, maazhaM, kaay, kasaa, 'tumchaM naav kaay aahe?', 'tumhii kase aahaat?', kaam karne and raahne. Those chapters were migrated to schema v2 after this file was first written, and NOT ONE POINT NOTE IN THIS FILE CARRIES THAT MARKER ANY MORE: eight points that scored zero purely because the teaching was invisible now carry real probes, and the three that stayed null had their notes rewritten to say what is genuinely absent. The lesson is worth keeping: a stale note about a measurement is indistinguishable from content debt and decays in the flattering direction for the AUTHOR, not for the corpus -- it hides work already done. Re-read every MEASUREMENT GAP note against the tree before believing it. EMPTY-INTRODUCES MEASUREMENT GAP is the kind that remains, and it is worse, because it hides inside schema-v2 where everything looks declared: v2 lessons carry `introduces: []`, most of them honest retrieval lessons that should introduce nothing, but MR-R22-request-verbs and MR-R23-wellbeing-verbs drill five polite imperatives and a future while declaring only the INFINITIVE atoms they review, and MR-A1M17/18 teach the guided and independent 30-to-40-word message -- the A1 writing paper's second task -- while declaring nothing at all. One point, MR-A1-V-17, is still null for that reason alone. Reading a measurement gap as a content gap would send an author to rewrite chapter 24.",
   "points": [
     {
       "id": "MR-A1-N-01",
@@ -413,7 +413,7 @@
       "category": "Possessives",
       "label": "possessives with one possessor: maazaa, tuzaa, tyaachaa",
       "probe": null,
-      "note": "PART MEASUREMENT GAP (SCHEMA-V1), PART REAL. maazhaM is taught in its own right by MR-C02-majhe (chapter 9, schema-v1, declaring no atom) and appears inside the v2 lines MR-A1-MESSAGE-LINE-NAME and -WRITE-NAME. The PARADIGM is what no lesson supplies: the learner meets one neuter form and cannot change the possessor.",
+      "note": "Real, and no longer a measurement artefact. maazhaM has an atom of its own (MR-LEX-MAJHE, chapter 9, now schema-v2) and MR-GRAMMAR-POSSESSIVE-THREE-GENDERS states its gender agreement. What no lesson supplies is the PARADIGM: the learner can change the thing possessed and cannot change the POSSESSOR, because tuzaa and tyaachaa have no exponent anywhere.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -546,7 +546,7 @@
       "category": "Pronouns",
       "label": "subject pronouns: the full paradigm",
       "probe": null,
-      "note": "SCHEMA-V1 MEASUREMENT GAP, PARTLY. mii and tuu/tumhii ARE taught -- MR-C03-mi (chapter 10) and MR-C02-tu-tumhi (chapter 9) -- but both lessons are schema-v1 and declare no atoms, so nothing can be probed and the point scores zero. Do not send an author to write them again. Genuinely absent are the third person and the plural: to, tii, te and aamhii occur nowhere, which is what the reading paper's person-to-detail part asks for.",
+      "note": "Half real, and the half that was a measurement artefact is gone. mii and tuu/tumhii ARE taught and NOW MEASURABLE -- chapters 9 to 12 migrated to schema v2, so MR-LEX-MI and MR-LEX-TU-TUMHI exist and this note no longer needs a measurement caveat. What remains is content: the third person and the plural, to, tii, te and aamhii, occur nowhere, which is what the reading paper's person-to-detail part asks for. A paradigm missing its third person is not a paradigm.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -617,8 +617,11 @@
       "id": "MR-A1-PRON-06",
       "category": "Pronouns",
       "label": "interrogative pronouns: kon, kaay, kitii",
-      "probe": null,
-      "note": "PART MEASUREMENT GAP (SCHEMA-V1), PART REAL, and the point with the widest blast radius either way. kaay is taught by MR-C02-kaay (chapter 9, schema-v1, no atom). kon and kitii appear nowhere at all -- who and how-many being two of the things a wh-item paper asks most.",
+      "probe": [
+        "MR-QUESTION-KON",
+        "MR-LEX-KAAY",
+        "MR-QUESTION-KITI"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -632,7 +635,7 @@
       "category": "Pronouns",
       "label": "the exclamative kitii with an adjective or adverb",
       "probe": null,
-      "note": "Untaught.",
+      "note": "Still uncovered, and now blocked by something other than the pronoun. kitii itself is taught (MR-QUESTION-KITI, chapter 37). The exclamative takes an ADJECTIVE or an ADVERB -- 'how nice!', 'how quickly!' -- and this track teaches neither, because SPINE-DESCRIBE-QUALITIES has no realization at all. The fix for this point is the adjective tranche, not another question word.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -659,8 +662,10 @@
       "id": "MR-A1-PRON-09",
       "category": "Pronouns",
       "label": "the tuu / tumhii politeness contrast, and which to use with a stranger",
-      "probe": null,
-      "note": "MARATHI-SPECIFIC: Spanish's tu/usted is not an A1 point in the source, but Marathi's speaking paper is an interview with an unmet interlocutor and rubric dimension 2 scores the choice. SCHEMA-V1 MEASUREMENT GAP, ENTIRELY: MR-C02-tu-tumhi teaches exactly this contrast and declares no atom.",
+      "probe": [
+        "MR-LEX-TU-TUMHI",
+        "MR-GRAMMAR-RESPECT-BY-PLURAL"
+      ],
       "anchorIds": [
         "editorial-marathi-structure",
         "ca-marathi-task-shapes-a1"
@@ -672,8 +677,10 @@
       "id": "MR-A1-ADV-01",
       "category": "Adverbs",
       "label": "place deictics: ithe, tithe",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-LEX-ITHE",
+        "MR-LEX-TITHE"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -765,8 +772,11 @@
       "id": "MR-A1-ADV-07",
       "category": "Adverbs",
       "label": "interrogative adverbs: kuthe, kadhii, kasaa",
-      "probe": null,
-      "note": "PART MEASUREMENT GAP (SCHEMA-V1), PART REAL. The agreeing kasaa/kashii/kasaM is taught by MR-C03-kasa (chapter 10, schema-v1, no atom); kuthe and kadhii appear nowhere. SPINE-ASK-LOCATION is an A1 core node and the track omits its only concept, QUESTION-WHERE.",
+      "probe": [
+        "MR-QUESTION-KUTHE",
+        "MR-QUESTION-KADHI",
+        "MR-LEX-KASA"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -930,8 +940,9 @@
       "id": "MR-A1-V-10",
       "category": "The verb",
       "label": "the imperative, plain and polite",
-      "probe": null,
-      "note": "EMPTY-INTRODUCES MEASUREMENT GAP. The polite imperative is drilled outright: MR-R22-request-verbs (chapter 26) is built on dyaa, pyaa, aannaa and thevaa, and MR-R23-wellbeing-verbs adds basaa. Both are schema-v2 with `introduces: []` and both practise the INFINITIVE atoms, so five taught imperative forms carry no atom between them. ghyaa is taught too, in schema-v1 MR-C04-kalji-ghya. The form is in the book and invisible to the measurement.",
+      "probe": [
+        "MR-GRAMMAR-IMPERATIVE-REGISTER"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-task-shapes-a1"
@@ -1039,7 +1050,7 @@
       "category": "The verb",
       "label": "the future",
       "probe": null,
-      "note": "PART MEASUREMENT GAP (EMPTY-INTRODUCES), PART REAL. bhetuu is taught three times over -- MR-C04-bhetu, -punha-bhetu, -udya-bhetu, all schema-v1 -- and chaalel, a third-person future, is drilled by MR-R23-wellbeing-verbs (schema-v2, `introduces: []`, practising the SENSE atom rather than the form). Always a fixed phrase, never a tense a learner could build.",
+      "note": "EMPTY-INTRODUCES MEASUREMENT GAP, and now the only one left in this file. bhetuu is taught three times over -- MR-C04-bhetu, -punha-bhetu, -udya-bhetu -- and those lessons are schema-v2 today, so the schema-v1 half of this note is retired; what they declare is a fixed FORM (MR-LEX-BHETU) and not a tense. chaalel, a third-person future, is still drilled by MR-R23-wellbeing-verbs (schema-v2, `introduces: []`, practising the SENSE atom rather than the form). Always a fixed phrase, never a tense a learner could build.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1372,8 +1383,9 @@
       "id": "MR-A1-OS-03",
       "category": "The simple sentence",
       "label": "questions with an asking word",
-      "probe": null,
-      "note": "SCHEMA-V1 MEASUREMENT GAP. Two complete wh-questions are taught as whole phrases -- MR-C02-tumche-naav-kaay-aahe and MR-C03-tumhi-kase-aahat, both schema-v1 -- so the word order has been SHOWN twice and never stated, and neither can be probed. Kept separate from MR-A1-PRON-06 because knowing the question word is not knowing where to put it.",
+      "probe": [
+        "MR-GRAMMAR-WH-ORDER"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-task-shapes-a1"
@@ -1642,8 +1654,11 @@
       "id": "MR-A1-F1-02",
       "category": "Giving and asking for information",
       "label": "ask for information about a person, a thing or a place",
-      "probe": null,
-      "note": "SCHEMA-V1 MEASUREMENT GAP, PARTLY. 'tumchaM naav kaay aahe?' is taught outright by MR-C02-tumche-naav-kaay-aahe (chapter 9, no atom). Asking about a THING or a PLACE needs kuthe, which appears nowhere.",
+      "probe": [
+        "MR-PHRASE-TUMCHE-NAAV-KAAY-AAHE",
+        "MR-QUESTION-KON",
+        "MR-QUESTION-KUTHE"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-task-shapes-a1"
@@ -1734,8 +1749,10 @@
       "id": "MR-A1-F2-03",
       "category": "Opinions, attitudes and knowledge",
       "label": "ask for an evaluation",
-      "probe": null,
-      "note": "Blocked behind MR-A1-ADV-07: the question word kasaa is schema-v1 only.",
+      "probe": [
+        "MR-LEX-KASA",
+        "MR-PHRASE-TUMHI-KASE-AAHAT"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2000,8 +2017,9 @@
       "id": "MR-A1-F4-01",
       "category": "Influencing the listener",
       "label": "give an order or an instruction",
-      "probe": null,
-      "note": "EMPTY-INTRODUCES MEASUREMENT GAP -- see MR-A1-V-10. Five polite imperatives are drilled by lessons that declare no atoms. Public notices, which the reading paper's second part is made of, are written in exactly this form.",
+      "probe": [
+        "MR-GRAMMAR-IMPERATIVE-REGISTER"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-task-shapes-a1"
@@ -2218,8 +2236,9 @@
       "id": "MR-A1-F5-06",
       "category": "Social relations",
       "label": "ask somebody else's name",
-      "probe": null,
-      "note": "SCHEMA-V1 MEASUREMENT GAP, ENTIRELY. MR-C02-tumche-naav-kaay-aahe (chapter 9) teaches it outright, declares no atom, and is invisible to every probe. With MR-A1-F5-08 it is one of the two clearest cases in this file of the corpus being better than its own measurement says.",
+      "probe": [
+        "MR-PHRASE-TUMCHE-NAAV-KAAY-AAHE"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-spine"
@@ -2247,8 +2266,10 @@
       "id": "MR-A1-F5-08",
       "category": "Social relations",
       "label": "ask how somebody is, and answer",
-      "probe": null,
-      "note": "SCHEMA-V1 MEASUREMENT GAP, ENTIRELY. Both halves are taught in chapter 10 -- MR-C03-tumhi-kase-aahat gives the question, MR-C03-mi-bara-aahe the answer -- and both are schema-v1. The v2 material under SPINE-CHECK-WELLBEING is lexical, so the probe sees vocabulary arranged around an exchange it cannot see.",
+      "probe": [
+        "MR-PHRASE-TUMHI-KASE-AAHAT",
+        "MR-PHRASE-MI-BARA-AAHE"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-spine"
@@ -2343,7 +2364,7 @@
       "category": "Structuring the exchange",
       "label": "ask for a person and respond",
       "probe": null,
-      "note": "Untaught; blocked behind MR-A1-PRON-06 and MR-A1-OS-03.",
+      "note": "Still uncovered, and the blockers named here have both cleared. MR-A1-PRON-06 and MR-A1-OS-03 are now covered, so the question half exists. The point is asking FOR a person -- 'is Mira there?' -- and being told whether they are, and no lesson supplies that exchange; the chapter-39 material asks WHERE a named person is, which is a different move. Deliberately not claimed on the strength of the nearby material.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2490,7 +2511,7 @@
       "category": "Spatial notions",
       "label": "location: being somewhere",
       "probe": null,
-      "note": "Blocked behind MR-A1-P-02 and MR-A1-ADV-01.",
+      "note": "Blocked behind MR-A1-P-02 alone now. MR-A1-ADV-01 is covered -- ithe and tithe both have atoms -- so a place can be pointed at; putting a thing IN a place still needs the locative.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -3267,8 +3288,10 @@
       "id": "MR-A1-NE07-03",
       "category": "Work",
       "label": "working activity",
-      "probe": null,
-      "note": "SCHEMA-V1 MEASUREMENT GAP. kaam karne is taught by MR-C05-kaam-karne (chapter 12) and raahne by MR-C05-rahne, both schema-v1 with no atoms, so 'I work' and 'I live' are reachable and invisible.",
+      "probe": [
+        "MR-LEX-KARNE",
+        "MR-LEX-RAHNE"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -4064,7 +4087,7 @@
       "category": "Devanagari letters and signs",
       "label": "the retroflex row tta ttha dda ddha nna",
       "probe": null,
-      "note": "Four fifths taught -- MR-SCRIPT-TTA-01, -TTHA-01, -DDA-01 and -NNA-01 -- and the fifth missing: no atom introduces DDHA. A row a reader can only rebuild four ways is not a row, and DDHA is not rare (dhag, gadhav, vaadh).",
+      "note": "Four fifths taught -- MR-SCRIPT-TTA-01, -TTHA-01, -DDA-01 and -NNA-01 -- and the fifth missing: no atom introduces DDHA. A row a reader can only rebuild four ways is not a row, and DDHA is not rare (dhag, gadhav, vaadh). Its dental neighbour MR-A1-OR-06 closed in chapter 39 by exactly this route, one script lesson for one missing letter, so the fix is known and cheap.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-assessment"
@@ -4077,8 +4100,13 @@
       "id": "MR-A1-OR-06",
       "category": "Devanagari letters and signs",
       "label": "the dental row ta tha da dha na",
-      "probe": null,
-      "note": "TA, DA, DHA and NA are taught; THA, the aspirated dental, has no atom. It spells thodaa and the ordinal-forming -thaa, so the gap sits inside A1 vocabulary rather than beyond it.",
+      "probe": [
+        "MR-SCRIPT-TA-01",
+        "MR-SCRIPT-THA-01",
+        "MR-SCRIPT-DA-01",
+        "MR-SCRIPT-DHA-01",
+        "MR-SCRIPT-NA-01"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-assessment"
@@ -4171,7 +4199,7 @@
       "category": "Devanagari letters and signs",
       "label": "the independent vowel letters, used word-initially",
       "probe": null,
-      "note": "A, AA, U, UU and E are taught as independents. I, II, O, AI and AU are not, so a candidate cannot begin a word with them -- and the reading genres are full of such words (ithe, ekun, aai, olakh).",
+      "note": "A, AA, U, UU, E and now I are taught as independents -- MR-SCRIPT-I-INDEPENDENT-01 arrived in chapter 40 so that ithe could be written at all. II, O, AI and AU are still missing, so a candidate still cannot begin a word with them, and the reading genres are full of such words (ekun, aai, olakh).",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-assessment"

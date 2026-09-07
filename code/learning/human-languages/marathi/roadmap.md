@@ -134,6 +134,26 @@ lesson is `coreVoice` and both chapters stay fully drivable.
   the track's taught-glyph set **before** it was written, so the tranche adds no
   script-closure debt at all.
 
+## Chapters 37–40 — the asking words
+
+- **Authored.** Nine items across four chapters: **कोण · किती**;
+  **कुठे · कधी** and the word-order rule behind them; **थ · तिथे**;
+  **इ · इथे**. A1 exam coverage 111/301 → 124/301, with `SPINE-ASK-LOCATION` —
+  an A1 **core** node this track had left entirely unrealized — now realizing
+  `QUESTION-WHERE`.
+
+  Two lessons of the nine are script lessons, and both were forced rather than
+  chosen: **तिथे** cannot be written without **थ**, and **इथे** cannot begin
+  without the independent **इ**. Teaching **थ** closed `MR-A1-OR-06` on its own,
+  which is the cheapest kind of point in the file — one letter, one row, one
+  point — and `MR-A1-OR-05` is the same shape and still open, needing only
+  **ढ**.
+
+  Six further points moved without any lesson at all. Their inventory notes
+  still described chapters 9–12 as schema v1 after those chapters had been
+  migrated, so material already in the book was scoring as content debt. **Read
+  a MEASUREMENT GAP note against the tree before believing it.**
+
 ## Planned
 
 | Chapter | Theme |
@@ -142,7 +162,8 @@ lesson is `coreVoice` and both chapters stay fully drivable.
 | 10 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
 | 11 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
 | 12+ | The rest of `SPINE-SAY-WHAT-I-DO` — *aikṇe* and the remaining core verbs now that *deṇe*, *sāṅgṇe* and *shikṇe* are authored — then past and future tenses (where gender returns on the verb), always with the Hindi/Dravidian contrast thread. Negation and yes-or-no questions are done: chapters 32 and 33 |
-| next | The **oblique stem** (`MR-A1-N-09`), which chapter 35 teaches one instance of and explicitly records as still owed; then the locative *-t* / *-var*, which four uncovered inventory points are blocked behind |
+| next | The **oblique stem** (`MR-A1-N-09`) and the postpositions built on it — the locative *-त* / *-वर*, *मध्ये*, *खाली*, *जवळ*, *समोर*, the accompaniment *-शी* / *बरोबर*, the ablative *-हून* / *पासून* and the goal *-कडे*. Seventeen or so inventory points sit behind that one stem change, including possession (`MR-A1-V-20`, Marathi having no verb *to have*), existence in a place, and origin — the interview answer *I am from Pune* |
+| after that | The **adjective** (`SPINE-DESCRIBE-QUALITIES`, an A1 core node with no realization), which unblocks roughly fifteen further points including the exclamative *किती!*, colour, age, quality and physical description |
 
 Note: Marathi marks "you" by **register** (*tū* familiar / *tumhī* respectful,
 also plural) — like the other Indo-Aryan and Romance tracks. Its signature is

@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:8b6ec44dc9f72a11",
+  "lessonIds": [
+    "MR-W40-i-independent",
+    "MR-C40-ithe",
+    "MR-R40-asking-column"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch40.txt",
+  "json": "marathi/narration/ch40.json",
+  "textHash": "fnv1a64:38ebb526d41a411f",
+  "jsonHash": "fnv1a64:e521359dc78917bd",
+  "findings": []
+}

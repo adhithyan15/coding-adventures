@@ -1,0 +1,19 @@
+{
+  "chapter": 39,
+  "title": "There",
+  "label": "ch:mr-there",
+  "canDo": "I can write the aspirated dental थ, and answer a where-question with tithe instead of naming a city.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R39-there",
+    "kind": "production",
+    "summary": "Complete MR-R39-there and run one place exchange end to end: ask kuṭhe, answer tithe, then ask kā and decline with māhīt nāhī.",
+    "assesses": [
+      "MR-SCRIPT-THA-01",
+      "MR-LEX-TITHE"
+    ],
+    "note": "One letter and one word, in that order: तिथे cannot be read until थ is taught, which is why the chapter is shaped this way rather than by topic."
+  }
+}

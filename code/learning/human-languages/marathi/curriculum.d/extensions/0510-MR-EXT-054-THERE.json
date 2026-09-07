@@ -1,0 +1,15 @@
+{
+  "id": "MR-EXT-054-THERE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can write the aspirated dental थ and answer a where-question with tithe rather than a place name.",
+  "prerequisites": [
+    "MR-EXT-053-WHERE-AND-WHEN"
+  ],
+  "lessons": [
+    "MR-W39-tha",
+    "MR-C39-tithe",
+    "MR-R39-there"
+  ]
+}

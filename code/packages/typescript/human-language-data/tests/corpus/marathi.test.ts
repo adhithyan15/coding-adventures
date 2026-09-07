@@ -50,7 +50,14 @@ it("pins Marathi lesson-content budgets", () =>
     // merged tree rather than derived by adding 9, 6, 11 and 25 to 179, which
     // would have been right only by luck. Idioms, senses and culture claims
     // stay at 5 / 4 / 7: a conjunction is not an idiom.
-    lessons: 230,
+    //
+    // 230 -> 243: the asking-word tranche (chapters 37-40) adds thirteen
+    // lessons -- nine items, of which two are script signs, and four reviews.
+    // RE-MEASURED against the merged tree, not derived by adding 13. Idioms,
+    // senses and culture claims stay at 5 / 4 / 7 for the same reason as
+    // above: an interrogative is not an idiom, and naming the k- / i- / t-
+    // series is a grammar statement rather than a culture claim.
+    lessons: 243,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -220,6 +227,17 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["34", 4],
     ["35", 3],
     ["36", 4],
+    // Chapters 37-40 are the asking-word tranche: koṇ, kitī, kuṭhe, kadhī, the
+    // rule that says where an asking word STANDS, and the ithe/tithe pair that
+    // answers a where-question without naming a place. Four chapters rather
+    // than two, because the two script lessons this needed -- थ and the
+    // independent इ -- must sit at least two lessons apart under
+    // minLessonsBetweenScriptSegments, and each must land in the chapter
+    // immediately before the word that spends it.
+    ["37", 3],
+    ["38", 4],
+    ["39", 3],
+    ["40", 3],
   ]);
 });
 

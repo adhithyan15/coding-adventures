@@ -1,0 +1,14 @@
+{
+  "id": "MR-PATH-039",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "MR-C37-kon",
+    "MR-C37-kiti",
+    "MR-R37-who-how-many"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-052-WHO-AND-HOW-MANY"
+  ],
+  "after": []
+}

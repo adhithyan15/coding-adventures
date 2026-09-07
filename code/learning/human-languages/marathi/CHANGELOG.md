@@ -1,5 +1,84 @@
 # Changelog
 
+## 2026-09-07 — The asking words: 111 → 124 of 301 A1 points
+
+- **Chapters 37–40 teach Marathi's interrogatives and the here/there pair, and
+  A1 exam coverage moves 111/301 (37%) → 124/301 (41%).** Both numbers are
+  `measureExamCoverage` against `core/exam-inventory-marathi-a1.json`,
+  re-measured on the merged tree, not arithmetic on a delta.
+- **The thirteen points split into two kinds, and they are reported apart
+  because they cost completely different things.**
+  - **Seven were EARNED by the nine new items**: `MR-A1-PRON-06` (कोण · काय ·
+    किती), `MR-A1-ADV-07` (कुठे · कधी · कसा), `MR-A1-OS-03` (where an asking
+    word stands), `MR-A1-F1-02` (ask about a person, a thing or a place),
+    `MR-A1-ADV-01` (इथे · तिथे), `MR-A1-OR-06` (the dental row), and
+    `MR-A1-F2-03` (ask for an evaluation).
+  - **Six were already taught and only LOOKED uncovered.** `MR-A1-F5-06`,
+    `MR-A1-F5-08`, `MR-A1-PRON-09`, `MR-A1-NE07-03`, `MR-A1-V-10` and
+    `MR-A1-F4-01` each carried a note saying the teaching sat in a schema-v1
+    lesson and could not be probed. Chapters 9–12 were migrated to schema v2
+    two tranches ago; the notes were never re-read. **Nothing was authored for
+    those six — a stale note was corrected.**
+- **The SCHEMA-V1 measurement-gap class is now closed and pinned closed.** Not
+  one point note in the inventory carries that marker any more, and
+  `exam-inventory.test.ts` asserts the list is empty rather than pinning a
+  floor on the count. A floor on a count of known defects only ever rises and
+  rewards nobody for clearing one; it also decayed in the flattering direction
+  for the AUTHOR rather than the corpus, because it hid work already done.
+  `MR-A1-V-17` is the last MEASUREMENT GAP left, and it is the other kind —
+  EMPTY-INTRODUCES, which hides inside schema v2.
+- **What is taught, one item per lesson:**
+
+  | ch. | items |
+  |---|---|
+  | 37 | **कोण** who · **किती** how many |
+  | 38 | **कुठे** where · **कधी** when · the rule that an asking word stands in the answer's own slot |
+  | 39 | **थ** the aspirated dental · **तिथे** there |
+  | 40 | **इ** the independent short *i* · **इथे** here |
+
+- **`SPINE-ASK-LOCATION` stops being omitted.** It is an A1 **core** node whose
+  single concept, `QUESTION-WHERE`, this track had no realization for at all.
+  `MR-C38-kuthe` realizes it and the omission ledger is empty.
+- **Two new glyphs, and both were forced rather than chosen.** थ is the only
+  missing letter of a dental row the book otherwise finished in chapter three,
+  and तिथे cannot be written without it — teaching it closes `MR-A1-OR-06`
+  outright. The independent इ is what इथे needs to begin at all. Every other
+  item in the tranche was filtered against the taught-glyph set before a word of
+  prose was written, so `scriptClosureViolations` and `neverTaughtGlyphs` both
+  stay at 0. The two script lessons sit two lessons apart, which is why this is
+  four chapters and not two: `minLessonsBetweenScriptSegments` is 2 and each
+  letter must land in the chapter immediately before the word that spends it.
+- **`reinforcementWindowMisses` 374 → 360, and the tranche's own debt is zero.**
+  R4 fell 104 → 90; R1, R2 and R3 did not move. Decomposed:
+  - **The tranche created 0 misses.** No atom introduced by these thirteen
+    lessons misses any window the track was long enough to have.
+  - **The tranche EXPOSED 30 windows that did not previously fit** — thirteen
+    lessons lengthen the track, so R2 became judgeable for four atoms, R3 for
+    thirteen and R4 for eleven — and every one of the 30 was retrieved on
+    purpose by a `practises` list placed at the right distance.
+  - **It also cleared 14 pre-existing R4 misses** that no earlier lesson sat far
+    enough out to answer.
+  The mechanism is the chapter boundary: every chapter opens by retrieving the
+  two preceding items **by name**, and — new in this tranche — every chapter
+  opener also carries a `[YOU RECALL: …]` for the item at the same position
+  **two chapters back**, which is distance 7–9 and therefore lands in R2, the
+  window a naive append always misses because within-chapter retrieval only
+  reaches distance 1–4.
+- **`atomsTaught` 241 → 250; `atomsNeverRevisited` unchanged at 1;
+  `durationViolations`, `forwardReferences`, `orderDefects` all unchanged.**
+- **What was deliberately left uncovered, with the reason written into the
+  inventory:** `MR-A1-PRON-07` (किती itself is now taught; the exclamative takes
+  an adjective or adverb and this track teaches none, so it is blocked behind
+  `SPINE-DESCRIBE-QUALITIES` and not behind a question word), `MR-A1-F6-02`
+  (both its named blockers cleared, but asking FOR a person — "is Mira there?" —
+  is a different move from asking where a named person is, and no lesson
+  supplies it), `MR-A1-OR-12` (I is now taught as an independent; II, O, AI and
+  AU are not, and four fifths of a set is not the set), `MR-A1-NG3-01` (इथे and
+  तिथे close the deictic half; putting a thing IN a place still needs the
+  locative), `MR-A1-PRON-01` and `MR-A1-POS-01` (both had their schema-v1 caveat
+  removed and stay uncovered on genuine content: no third person, no plural, no
+  possessor paradigm), and `MR-A1-V-17` (still an EMPTY-INTRODUCES gap).
+
 ## 2026-09-02 — The joining column: 88 → 111 of 301 A1 points
 
 - **Chapters 30–36 teach Marathi's joining words, and A1 exam coverage moves

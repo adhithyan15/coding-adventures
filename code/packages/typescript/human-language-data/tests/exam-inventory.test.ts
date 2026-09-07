@@ -996,9 +996,31 @@ describe("the committed Marathi A1 inventory", () => {
     // metric can see either class; only a target list asks the question that
     // exposes them. This pins the marker so a future edit cannot quietly collapse
     // the distinction back into an undifferentiated "not covered".
+    // WHAT CHANGED, AND WHY THE ASSERTION IS NOW A DIFFERENT SHAPE.
+    //
+    // The count used to be pinned at 13-or-more, and a floor on a count of
+    // KNOWN DEFECTS is a bad pin: it only ever rises, it rewards nobody for
+    // clearing one, and it went stale in the flattering direction for the
+    // AUTHOR rather than for the corpus. All 26 schema-v1 lessons were
+    // migrated to v2 in the chapters 9-12 work, and for a whole tranche
+    // afterwards this file still said the material was unmeasurable -- so
+    // eight points read as content debt while the teaching sat in the book,
+    // already done. That is the failure mode worth pinning against.
+    //
+    // The SCHEMA-V1 class is therefore asserted CLOSED, permanently: no point
+    // note may carry that marker again, because there is no schema-v1 lesson
+    // left in the track to carry it. EMPTY-INTRODUCES is the class that
+    // survives, it hides inside v2, and at least one point must still name it
+    // -- a zero there would mean somebody deleted the distinction rather than
+    // fixed it.
     const marked = inventory.points.filter((point) => (point.note ?? "").includes("MEASUREMENT GAP"));
-    expect(marked.length).toBeGreaterThanOrEqual(13);
+    expect(marked.length).toBeGreaterThanOrEqual(1);
     for (const point of marked) expect(point.probe, point.id).toBeNull();
+    const staleClass = inventory.points.filter((point) =>
+      (point.note ?? "").includes("SCHEMA-V1 MEASUREMENT GAP"),
+    );
+    expect(staleClass.map((point) => point.id)).toEqual([]);
+    expect(marked.some((point) => (point.note ?? "").includes("EMPTY-INTRODUCES"))).toBe(true);
     expect(inventory.probeSemantics).toMatch(/SCHEMA-V1 MEASUREMENT GAP/);
     expect(inventory.probeSemantics).toMatch(/EMPTY-INTRODUCES MEASUREMENT GAP/);
   });
@@ -1032,11 +1054,26 @@ describe("the committed Marathi A1 inventory", () => {
     // empty-category list below, which is the movement, and Demonstratives,
     // Temporal notions, Housing and Shopping stay in it, which is the remaining
     // work.
+    // 111 -> 124: the asking-word tranche (chapters 37-40), and two different
+    // kinds of movement inside one number, which is why they are reported
+    // apart. SEVEN points were EARNED by the nine new items: the interrogative
+    // pronouns and adverbs, the word-order rule behind them, asking about a
+    // person or a place, the ithe/tithe pair, and the dental row, which closed
+    // because one missing letter (थ) was the only thing keeping तिथे
+    // unwritable. SIX more were already taught and only LOOKED uncovered,
+    // because their notes still described chapters 9 to 12 as schema-v1 after
+    // those chapters had been migrated -- the politeness contrast, asking a
+    // name, asking how somebody is, asking for an evaluation, working
+    // activity, and the imperative. Nothing was authored for those six; a
+    // stale note was corrected. Work therefore leaves the empty-category list
+    // -- on a note fix, not on a lesson, which is worth saying plainly -- and
+    // Demonstratives, Temporal notions, Housing and Shopping stay in it, which
+    // is the remaining work.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(111);
-    expect(coverage.unmapped).toBe(190);
+    expect(coverage.covered).toBe(124);
+    expect(coverage.unmapped).toBe(177);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1047,7 +1084,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 111/301 points covered (37%)",
+      "marathi A1 (partial inventory): 124/301 points covered (41%)",
     );
   }, 60_000);
 });
