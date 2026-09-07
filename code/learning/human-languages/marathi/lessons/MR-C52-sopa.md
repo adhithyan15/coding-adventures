@@ -36,7 +36,7 @@ reviews_of: [MR-C51-hushaar, MR-C51-kharaab, MR-C50-lahaan, MR-C30-aani]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-HUSHAAR, MR-LEX-KHARAAB] -->
 
-[PAUSE 2s] Four adjectives in a row have refused to agree. Here is one that
+[PAUSE 2s] Six adjectives in, and only two of them agree. Here is a third that
 does, so the ending muscle does not go cold.
 
 - [YOU RECALL: say *hushār*, then *kharāb*, and name the class they share]

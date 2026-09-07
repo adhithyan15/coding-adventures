@@ -7,7 +7,7 @@ chapter: 52
 type: review
 headword: सोपा · कठीण · उंच
 romanization: sopā · kaṭhīṇ · uṁch
-gloss: eight adjectives, two classes, and the first description of a person this book can produce
+gloss: nine adjectives, two classes, and the first description of a person this book can produce
 concept_tag: MR-REVIEW-EASY-HARD-TALL
 prerequisites: [MR-C52-unch, MR-C47-laa-recipient, MR-C51-changla]
 sounds: []
@@ -36,7 +36,7 @@ reviews_of: [MR-C52-sopa, MR-C52-kathin, MR-C52-unch, MR-C51-changla, MR-C47-laa
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-SOPA, MR-LEX-KATHIN, MR-LEX-UNCH] -->
 
-[PAUSE 5s] Eight adjectives are now yours. Sort all eight into the two classes
+[PAUSE 5s] Nine adjectives are now yours. Sort all nine into the two classes
 before you use any of them.
 
 ## Guided Practice
@@ -45,7 +45,7 @@ before you use any of them.
 <!-- hl-activity: {"id":"MR-R52-easy-hard-tall-run","kind":"text","assesses":["MR-LEX-UNCH","MR-LEX-HUSHAAR","MR-LEX-CHANGLA","MR-GRAMMAR-ADJ-PRENOMINAL"],"prompt":"Describe a friend in three sentences: tall, clever, and a good friend.","answer":"mājhā mitra uṁch āhe; mājhā mitra hushār āhe; to chāṅglā mitra āhe","accepted":["माझा मित्र उंच आहे माझा मित्र हुशार आहे चांगला मित्र"],"feedback":{"correct":"A one-minute description, started.","incorrect":"Two of the three never change; chāṅglā matches masculine mitra."},"response_seconds":35} -->
 
 [PAUSE 1s]
-- [YOU SAY: the two that agree — ***मोठा***, ***चांगला***, ***सोपा***]
+- [YOU SAY: the three that agree — ***मोठा***, ***चांगला***, ***सोपा***]
 - [YOU SAY: the ones that never do — ***लहान***, ***सुंदर***, ***खराब***, ***हुशार***, ***कठीण***, ***उंच***]
 - [YOU SAY: *mājhā mitra uṁch āhe paṇ lahān nāhī*]
 - [YOU SAY: *chāṅglā mitra* — with the adjective in front, where it belongs]

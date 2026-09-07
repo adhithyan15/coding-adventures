@@ -27,8 +27,8 @@
   meets only **मोठा** will say *लहानी खोली* by analogy, which no Marathi speaker
   has ever heard. So the invariable class arrives in the very next chapter and
   every lesson after it states which class its word is in, until the test — *does
-  it end in **-आ**?* — is automatic. Six of the eight adjectives do **not**
-  agree, which is worth the reader knowing so the endings stop feeling like the
+  it end in **-आ**?* — is automatic. Six of the nine adjectives do **not** agree,
+  which is worth the reader knowing so the endings stop feeling like the
   default.
 - **A forward reference that had been sitting in the corpus since chapter 14.**
   `MR-C07-khane` demonstrated three-gender agreement with a table of

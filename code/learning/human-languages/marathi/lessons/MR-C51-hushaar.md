@@ -48,9 +48,9 @@ paper asks you to describe a **person** for a minute.
 > — *mājhā mitra hushār āhe.* — **my friend is clever.**
 
 Another one that does not agree, and by now you saw that coming from the last
-letter. This is the fourth adjective and the third invariable one; the class is
-bigger than the agreeing class, which is worth knowing so the endings stop
-feeling like the default.
+letter. It is the sixth adjective this book has taught and the fourth that does
+not agree; the invariable class is already twice the size of the other one,
+which is worth knowing so the endings stop feeling like the default.
 
 **हुशार** is the Persian *hushyār*, "**alert, wide awake**," built on *hush*,
 "consciousness, wits." Marathi kept the alertness inside the

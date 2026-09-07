@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Good, Bad, Clever",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b2ba5b3e807826fd",
+  "sourceHash": "fnv1a64:33406bb90af94966",
   "lessons": [
     {
       "id": "MR-C51-changla",
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41904e3c539e8c29",
+      "sourceHash": "fnv1a64:4c49f39d865b959d",
       "notice": null,
       "blocks": [
         {
@@ -343,7 +343,7 @@
             },
             {
               "kind": "speech",
-              "text": "Another one that does not agree, and by now you saw that coming from the last letter. This is the fourth adjective and the third invariable one; the class is bigger than the agreeing class, which is worth knowing so the endings stop feeling like the default."
+              "text": "Another one that does not agree, and by now you saw that coming from the last letter. It is the sixth adjective this book has taught and the fourth that does not agree; the invariable class is already twice the size of the other one, which is worth knowing so the endings stop feeling like the default."
             },
             {
               "kind": "speech",

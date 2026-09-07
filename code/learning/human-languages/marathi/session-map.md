@@ -471,7 +471,7 @@ second half feel like an answer rather than a list.
 | 289 | R52-easy-hard-tall | describe a person for a minute |
 
 The method here is a CONTRAST held open across four chapters. Marathi's
-adjectives fall into two classes and only one of them agrees; six of the eight
+adjectives fall into two classes and only one of them agrees; six of the nine
 taught here do not. So the invariable class is introduced in the chapter
 immediately after the agreeing one, and every lesson from **सुंदर** onwards
 states which class its word belongs to before using it. A learner who meets only

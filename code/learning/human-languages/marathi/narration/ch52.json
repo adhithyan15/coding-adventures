@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Easy, Hard, Tall",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:59de720427c14cf0",
+  "sourceHash": "fnv1a64:ad9b34fbe61febdb",
   "lessons": [
     {
       "id": "MR-C52-sopa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d540e30e4ca54d71",
+      "sourceHash": "fnv1a64:743c28839a03d3a9",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four adjectives in a row have refused to agree. Here is one that does, so the ending muscle does not go cold."
+              "text": "Six adjectives in, and only two of them agree. Here is a third that does, so the ending muscle does not go cold."
             },
             {
               "kind": "prompt",
@@ -458,14 +458,14 @@
       "title": "Describe a person for the first time",
       "headword": "सोपा · कठीण · उंच",
       "romanization": "sopā · kaṭhīṇ · uṁch",
-      "gloss": "eight adjectives, two classes, and the first description of a person this book can produce",
+      "gloss": "nine adjectives, two classes, and the first description of a person this book can produce",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b2115fdc0735400",
+      "sourceHash": "fnv1a64:44ae80be643ea713",
       "notice": null,
       "blocks": [
         {
@@ -481,7 +481,7 @@
             },
             {
               "kind": "speech",
-              "text": "Eight adjectives are now yours. Sort all eight into the two classes before you use any of them."
+              "text": "Nine adjectives are now yours. Sort all nine into the two classes before you use any of them."
             }
           ]
         },
@@ -499,11 +499,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two that agree — मोठा, चांगला, सोपा (sopā)",
+              "instruction": "the three that agree — मोठा, चांगला, सोपा (sopā)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two that agree — ***मोठा***, ***चांगला***, ***सोपा***]"
+              "source": "[YOU SAY: the three that agree — ***मोठा***, ***चांगला***, ***सोपा***]"
             },
             {
               "kind": "prompt",

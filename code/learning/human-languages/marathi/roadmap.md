@@ -191,7 +191,7 @@ lesson is `coreVoice` and both chapters stay fully drivable.
   half, and `SPINE-DESCRIBE-QUALITIES` — a third A1 **core** node — stops being
   unrealized.
 
-  The shape is a CONTRAST rather than a list. Six of the eight adjectives do not
+  The shape is a CONTRAST rather than a list. Six of the nine adjectives do not
   agree, so the invariable class is taught in the chapter immediately after the
   agreeing one and every lesson afterwards names which class its word is in.
   A learner who meets only **मोठा** says *लहानी खोली*, which no Marathi speaker
