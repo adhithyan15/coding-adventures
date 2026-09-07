@@ -9,11 +9,12 @@ in one spot.
 
 1. **Consonants carry a built-in "a".** క = "ka," మ = "ma," ర = "ra." (Many
    wear the *talakaṭṭu*, a small check-mark hat.) You never write the short *a*.
-2. **A vowel sign changes that built-in vowel.** Attached to a consonant:
-   - **ా** = ā (కా = kā) · **ి** = i · **ీ** = ī · **ు** = u · **ూ** = ū · **ె**
-     = e · **ే** = ē · **ొ** = o · **ో** = ō.
-3. **A *virama* strips the vowel, and the bare consonant *stacks below* the
-   next as a conjunct.** స + క → స్క (ska), న + య → న్య (nya). A dot
+2. **A vowel sign changes that built-in vowel.** Attached to a consonant it
+   gives కా = kā · కి = ki · కీ = kī · కు = ku · కూ = kū · కె = ke · కే = kē ·
+   కొ = ko · కో = kō. The signs themselves are **ా** ā · **ి** i · **ీ** ī ·
+   **ు** u · **ూ** ū · **ె** e · **ే** ē · **ొ** o · **ో** ō.
+3. **A *virama* (్) strips the vowel, and the bare consonant *stacks below* the
+   next as a conjunct.** స్ + క → స్క (ska), న్ + య → న్య (nya). A dot
    **anusvāra** (ం) adds a final nasal.
 
 ## Independent vowels (word-initial)
@@ -25,7 +26,8 @@ in one spot.
 
 - **Aspiration is written.** క k / ఖ kh, గ g / ఘ gh, ద d / ధ dh — the "h" is a
   real puff. Like Kannada and unlike Tamil, Telugu keeps separate letters for
-  the Sanskrit aspirates and voiced stops.
+  the Sanskrit aspirates and voiced stops, because it borrowed so many Sanskrit
+  words.
 - **Round, looping forms.** Telugu and Kannada are script-sisters, shaped for
   palm-leaf writing; the two look far more alike than either does to Tamil.
 - **"The Italian of the East."** Telugu words tend to end in vowels, giving the
