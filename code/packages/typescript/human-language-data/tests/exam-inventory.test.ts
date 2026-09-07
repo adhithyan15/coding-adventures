@@ -1869,16 +1869,23 @@ describe("the committed Gujarati A1 inventory", () => {
 //
 // Two results are worth pinning as SHAPE rather than as size:
 //
-//   1. The joining column is 0 of 13 — the sixth track running, and the first
-//      that is neither Indo-Aryan nor Dravidian. `i` ("and") is PRINTED as a
-//      conjunction in two lesson bodies and introduced by no lesson at all,
-//      which is a hair better than Gujarati's `ane` at zero occurrences and
-//      worse in one way: the word is on the page doing work the reader is
-//      never told about.
-//   2. The repair column is HALF closed, which no percentage would show. The
-//      track teaches `ya ne ponimayu` and `ya ne znayu` in full, and has no
+//   1. The joining column was 0 of 13 when this file was written — the sixth
+//      track running, and the first that is neither Indo-Aryan nor Dravidian.
+//      `i` ("and") was PRINTED as a conjunction in two lesson bodies and
+//      introduced by no lesson at all, which was a hair better than Gujarati's
+//      `ane` at zero occurrences and worse in one way: the word was on the page
+//      doing work the reader was never told about.
+//   2. The repair column was HALF closed, which no percentage would show. The
+//      track taught `ya ne ponimayu` and `ya ne znayu` in full, and had no
 //      word for sorry and no way to ask for a repeat: `izvinite`, `prostite`,
-//      `povtorite` and `medlenno` are each zero across all 88 files.
+//      `povtorite` and `medlenno` were each zero across all 88 files.
+//
+// BOTH ARE NOW CLOSED, by chapters 16-22 (35 lessons, 57 atoms). Thirteen of
+// thirteen joining devices are taught and the track can produce a two-clause
+// sentence for the first time; the repair kit exists. The assertions below are
+// re-pinned at the new figures and the shape claims are kept, in the past
+// tense, because the finding they record is about how this corpus was authored
+// rather than about where it stands today.
 // ---------------------------------------------------------------------------
 describe("the committed Russian A1 inventory", () => {
   const inventory = loadExamInventory("russian", "A1");
@@ -1996,8 +2003,8 @@ describe("the committed Russian A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(228);
-    expect(coverage.covered).toBe(73);
-    expect(coverage.unmapped).toBe(155);
+    expect(coverage.covered).toBe(104);
+    expect(coverage.unmapped).toBe(124);
     // Zero partials is a property of the "existing atoms only" rule, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -2008,17 +2015,35 @@ describe("the committed Russian A1 inventory", () => {
     // absent, and the plural is absent outright rather than late.
     expect(coverage.byCategory["Padezh - case"]!).toEqual({ enumerated: 10, covered: 3 });
     // The sixth empty joining column in the series, and the first outside
-    // South Asia. Not one coordinator and not one subordinator is taught.
+    // South Asia — CLOSED. Both halves are now full: five coordinators
+    // (i, ili, ni ... ni, no/a, odin ... drugoy) and eight subordination
+    // points (the bare infinitive, chto, kotoryy, potomu chto, chtoby, kogda,
+    // li, and the column measured as a column).
     expect(coverage.byCategory["Sochinenie - joining two clauses"]!).toEqual({
       enumerated: 5,
-      covered: 0,
+      covered: 5,
     });
     expect(coverage.byCategory["Podchinenie - subordination"]!).toEqual({
       enumerated: 8,
-      covered: 0,
+      covered: 8,
     });
+    // The repair column, which had no word for sorry at all. What is still
+    // open is asking for somebody by name at a door, and asking somebody to be
+    // quiet.
+    expect(coverage.byCategory["Vesti razgovor - managing the conversation, and repairing it"]!)
+      .toEqual({ enumerated: 7, covered: 5 });
+    // Punctuation went 0/7 to 4/7: the full stop, the closing-only question
+    // mark, the dash that stands in for the absent copula, and the comma rule
+    // that could not be stated until the track owned a subordinator.
+    expect(coverage.byCategory["Punktuatsiya - punctuation"]!).toEqual({ enumerated: 7, covered: 4 });
     // And the other end: 29 of the 33 Cyrillic letters have their own writing
     // lesson, which is the closest thing this track has to a finished column.
+    // Unmoved by the joining tranche, and deliberately: every one of the
+    // thirteen joining devices, both apologies, the whole question family and
+    // all four punctuation marks were checked against the union of taught
+    // glyphs before a lesson was designed, and not one of them needed a new
+    // sign. The three untaught lower-case letters — shcha, the hard sign and
+    // e-oborotnoe — do not occur in any of them.
     // Reading that number alone would say the script is done; the five
     // uncovered points here — the letter names, the four untaught letters, the
     // cursive hand, the lower-case rule, the spelling rule — are the
@@ -2027,7 +2052,7 @@ describe("the committed Russian A1 inventory", () => {
     // Nothing in the corpus can be described, because no adjective is taught.
     expect(coverage.byCategory["Prilagatelnoe - the adjective"]!.covered).toBe(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "russian A1 (partial inventory): 73/228 points covered (32%)",
+      "russian A1 (partial inventory): 104/228 points covered (46%)",
     );
   }, 60_000);
 });

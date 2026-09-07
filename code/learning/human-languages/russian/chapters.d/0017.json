@@ -1,0 +1,25 @@
+{
+  "chapter": 17,
+  "title": "But, Twice Over",
+  "label": "ch:ru-but-twice-over",
+  "canDo": "I can contradict with no, set two facts side by side with a, count one, name the other one, divide a fact between two people with odin ... drugoy, and close a sentence with the three marks Russian writes only at the end.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-W08-tochka",
+    "kind": "writing",
+    "summary": "English hides two different jobs under one word, but. Russian splits them: no denies the first half, a sets two facts beside each other, and an English speaker reaches for the wrong one until the whereas test is stated out loud. drugoy then pays back a root the book has been holding since the friends chapter -- drug, the companion, is literally the other one. The chapter closes on the page itself: Russian, unlike Spanish, opens nothing and marks only the end.",
+    "assesses": [
+      "RU-LEX-NO-01",
+      "RU-LEX-A-01",
+      "RU-GRAMMAR-NO-VS-A-01",
+      "RU-LEX-ODIN-01",
+      "RU-LEX-DRUGOY-01",
+      "RU-GRAMMAR-ODIN-DRUGOY-01",
+      "RU-PUNCT-TOCHKA-01",
+      "RU-PUNCT-VOPROS-01"
+    ],
+    "note": "Carried on SPINE-DESCRIBE-QUALITIES for the same reason as the previous chapter: coordination has no canonical spine concept below B1."
+  }
+}

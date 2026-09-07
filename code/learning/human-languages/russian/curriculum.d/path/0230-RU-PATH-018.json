@@ -1,0 +1,16 @@
+{
+  "id": "RU-PATH-018",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "RU-C17-no",
+    "RU-C17-a",
+    "RU-C17-odin",
+    "RU-C17-drugoy",
+    "RU-W08-tochka"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-023-CONTRAST"
+  ],
+  "after": []
+}

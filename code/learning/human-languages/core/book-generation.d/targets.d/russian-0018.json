@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 18,
+  "output": "russian/book/chapters/ch18-chto.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

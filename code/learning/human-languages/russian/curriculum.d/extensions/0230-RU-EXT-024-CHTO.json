@@ -1,0 +1,17 @@
+{
+  "id": "RU-EXT-024-CHTO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask what, hang a whole clause off dumat and znat with chto, and write the dash that replaces the missing copula.",
+  "prerequisites": [
+    "RU-EXT-023-CONTRAST"
+  ],
+  "lessons": [
+    "RU-C18-chto-vopros",
+    "RU-C18-chto-soyuz",
+    "RU-C18-dumayu-chto",
+    "RU-C18-znayu-chto",
+    "RU-W09-tire"
+  ]
+}

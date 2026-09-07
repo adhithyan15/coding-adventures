@@ -1,0 +1,17 @@
+{
+  "id": "RU-EXT-023-CONTRAST",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can tell Russian's two buts apart, divide a fact between two people with odin ... drugoy, and punctuate the end of a sentence.",
+  "prerequisites": [
+    "RU-EXT-022-COORDINATORS"
+  ],
+  "lessons": [
+    "RU-C17-no",
+    "RU-C17-a",
+    "RU-C17-odin",
+    "RU-C17-drugoy",
+    "RU-W08-tochka"
+  ]
+}

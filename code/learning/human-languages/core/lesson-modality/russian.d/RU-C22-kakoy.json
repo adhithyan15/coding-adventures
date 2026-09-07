@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C22-kakoy",
+    "language": "russian",
+    "chapter": 22,
+    "sequence": 1110,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8a614ed3a35a09d9"
+  },
+  "findings": []
+}
