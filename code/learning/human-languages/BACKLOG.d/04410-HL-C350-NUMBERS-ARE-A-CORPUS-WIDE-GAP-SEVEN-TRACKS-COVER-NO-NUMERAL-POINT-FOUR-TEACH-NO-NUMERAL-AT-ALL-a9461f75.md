@@ -84,7 +84,7 @@ reaching twenty against a point that demands a hundred.
 checked in as `data/scripts/numeral-probe.mjs` and prints this table; run it
 with `node code/learning/human-languages/data/scripts/numeral-probe.mjs` after
 building the human-language-data package, and pass a path to get the per-point
-JSON behind the summary. A measurement filed as a number ages; filed as a
+JSON behind the summary (it writes nothing unless asked). A measurement filed as a number ages; filed as a
 script it can be re-run against whatever the corpus has become.
 
 The citable layer

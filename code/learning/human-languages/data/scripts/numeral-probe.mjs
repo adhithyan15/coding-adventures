@@ -35,7 +35,7 @@ const WORDS = ["one","two","three","four","five","six","seven","eight","nine","t
   "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen",
   "nineteen","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety",
   "hundred","thousand"];
-const VALUE = {}; WORDS.forEach((w,i)=>{ VALUE[w] = i<20 ? i+1 : [30,40,50,60,70,80,90,100,1000][i-20]; });
+const VALUE = Object.create(null); WORDS.forEach((w,i)=>{ VALUE[w] = i<20 ? i+1 : [30,40,50,60,70,80,90,100,1000][i-20]; });
 // "one to five", "six to twenty", "1-10" etc. all appear as gloss heads
 // A lesson TEACHES a numeral when its gloss head is made of nothing but number
 // words and connectives. Matching a number ANYWHERE in the head reports
@@ -63,8 +63,13 @@ function headIsNumeral(head) {
   return best;
 }
 
+// Collapse whitespace with one linear pass BEFORE splitting. `\s+[dash]\s+`
+// retried at every offset is quadratic on a long run of spaces -- measured at
+// 92 seconds for a 320,000-space gloss -- and glossHead runs once per lesson,
+// so a single pathological gloss would stall the whole probe.
 function glossHead(g) {
-  return (g ?? "").split(/\s+[—–-]\s+|\s*\(/)[0].trim();
+  const flat = (g ?? "").slice(0, 512).replace(/\s+/g, " ");
+  return flat.split(/ [—–-] | ?\(/)[0].trim();
 }
 
 const byLang = new Map();
@@ -114,7 +119,10 @@ for (const [lang, ls] of [...byLang].sort()) {
   }
   out.push({ lang, lessons: ordered.length, numeralLessons: taught.length, metaOnly, highest: maxN, taught, inv });
 }
-fs.writeFileSync(process.argv[2] ?? "/tmp/probe.json", JSON.stringify(out, null, 1));
+// Only write when a path is asked for. A fixed default under a world-writable
+// /tmp is a symlink target anybody on the box can pre-create, and the summary
+// below is the output that matters anyway.
+if (process.argv[2]) fs.writeFileSync(process.argv[2], JSON.stringify(out, null, 1), { flag: "w" });
 console.log("track        lessons  numeral-lessons  highest  numeral-points(covered/all)  waiting");
 for (const r of out) {
   const np = r.inv.points.length, nc = r.inv.points.filter(p=>p.covered).length;
