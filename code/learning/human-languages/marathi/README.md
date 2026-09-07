@@ -317,6 +317,20 @@ first-person can-do sentence and the lesson that pays it off.
   which turns chapter 44's two sides into directions and then does the work of
   a verb Marathi does not have: **माझ्याकडे पाणी आहे**, *at-my-side water is*.
   A1 exam coverage 133/301 → **142/301**.
+- **Chapters 49–52 — the adjective** ([`lessons/MR-C49-*`, `MR-C50-*`,
+  `MR-C51-*`, `MR-C52-*`](./lessons/)): the track could name a house and say
+  nothing about what it was like. **49** **मोठा**, then the two rules it obeys —
+  the three-gender agreement the reader has been using since **माझा** in chapter
+  nine, and the prenominal position, which is the opposite of what a Romance
+  language does; **50** **लहान** and **सुंदर**, and the class that never agrees
+  at all, taught immediately after the class that does because a learner who
+  meets only **मोठा** over-applies its endings; **51** **चांगला** and **खराब**
+  — the first words in the book that judge a THING, where **बरं** could only
+  ever say a state was fine — and **हुशार**, which describes a person; **52**
+  **सोपा**, **कठीण** and **उंच**, and the first one-minute description of a
+  person the book can produce. `SPINE-DESCRIBE-QUALITIES`, a third A1 **core**
+  node, stops being unrealized. A1 exam coverage 142/301 → **151/301**, which is
+  exactly half.
 
 Chapters 9–12 **are** in the ledger with scored payoffs, and that is a change
 worth recording rather than quietly editing. This paragraph used to say the

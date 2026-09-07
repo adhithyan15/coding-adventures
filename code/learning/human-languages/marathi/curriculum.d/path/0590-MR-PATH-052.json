@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-052",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "MR-C49-motha",
+    "MR-C49-adj-agreement",
+    "MR-C49-adj-prenominal",
+    "MR-R49-big"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-065-THE-ADJECTIVE"
+  ],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-068-EASY-HARD-TALL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say a thing is easy or difficult and a person is tall, and sort every adjective I own into its class by its last letter.",
+  "prerequisites": [
+    "MR-EXT-067-GOOD-AND-BAD"
+  ],
+  "lessons": [
+    "MR-C52-sopa",
+    "MR-C52-kathin",
+    "MR-C52-unch",
+    "MR-R52-easy-hard-tall"
+  ]
+}

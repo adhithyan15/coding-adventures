@@ -68,7 +68,14 @@ it("pins Marathi lesson-content budgets", () =>
     // 258 -> 273: the accompaniment tranche (chapters 45-48) adds fifteen
     // lessons -- eleven items and four reviews. RE-MEASURED. Idioms, senses
     // and culture claims stay at 5 / 4 / 7 for the third tranche running.
-    lessons: 273,
+    //
+    // 273 -> 289: the adjective tranche (chapters 49-52) adds sixteen lessons
+    // -- twelve items and four reviews. RE-MEASURED. Idioms, senses and
+    // culture claims stay at 5 / 4 / 7 for the fourth tranche running; the
+    // one lesson that touched an existing declaration (MR-C07-khane, whose
+    // gender table was retargeted onto a word the reader owns) kept its
+    // single sense atom and added none.
+    lessons: 289,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -267,6 +274,16 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["46", 4],
     ["47", 3],
     ["48", 3],
+    // Chapters 49-52 are the adjective tranche, and they close
+    // SPINE-DESCRIBE-QUALITIES -- an A1 core node this track had never
+    // realized at all. Two classes are taught as a contrast rather than a
+    // list: the -ā adjectives that agree in three genders, and the larger
+    // class that never agrees, because a learner who meets only the first
+    // over-applies its endings.
+    ["49", 4],
+    ["50", 4],
+    ["51", 4],
+    ["52", 4],
   ]);
 });
 

@@ -132,21 +132,22 @@ Sounds you'll need: खा, णे.
 ख is kha — a k with a genuine puff of breath after it, the sound in English kit said hard, not the k of skit. Marathi treats that puff as a different letter, not an accent. Add the long-ā stroke and the familiar णे: khā-ṇe.
 
 Grammar Lens: the infinitive is a neuter noun.
-खाणे (khāṇe) also simply means "eating" — the thing, not the act of doing it. Every -णे infinitive works this way; खाणंपिणं (khāṇaṁ-piṇaṁ), "eating and drinking," is how Marathi says food and drink.
+खाणे (khāṇe) also means "eating" — the thing, not the act of doing it. Every -णे infinitive works this way; खाणंपिणं (khāṇaṁ-piṇaṁ), "eating and drinking," is how Marathi says food and drink.
 And as a noun it carries a gender — neuter, the third one. Hindi has two genders, masculine and feminine. Marathi kept all three that Sanskrit had, so words agreeing with a noun come in three shapes:
 [a table of 3 rows, read aloud]
-gender: masculine. "good": चांगला. said: chāṅglā.
-gender: feminine. "good": चांगली. said: chāṅglī.
-gender: neuter. "good": चांगलं. said: chāṅglaṁ.
-So "eating is good" is खाणं चांगलं आहे — khāṇaṁ chāṅglaṁ āhe, with the neuter ending twice over and the verb, as always, last.
+gender: masculine. "my": माझा. said: mājhā.
+gender: feminine. "my": माझी. said: mājhī.
+gender: neuter. "my": माझं. said: mājhaṁ.
+You met the neuter one five chapters ago in माझं नाव, so this table is a word you already own being shown in its other two shapes rather than a new one.
+So "eating is fine" is खाणं बरं आहे — khāṇaṁ baraṁ āhe, with the neuter ending twice over and the verb, as always, last.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "khāṇe" — to eat — then "I eat" in your own gender]
 [pause 8 seconds for the answer]
-[your turn — say: the three shapes — "chāṅglā … chāṅglī … chāṅglaṁ"]
+[your turn — say: the three shapes — "mājhā … mājhī … mājhaṁ"]
 [pause 8 seconds for the answer]
-[your turn — say: "eating is good" — "khāṇaṁ chāṅglaṁ āhe"]
+[your turn — say: "eating is fine" — "khāṇaṁ baraṁ āhe"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -205,7 +206,7 @@ Sounds you'll need: मा, ही, त.
 
 Grammar Lens: knowledge comes to you, you do not do it.
 मला माहीत आहे — malā māhīt āhe — "I know."
-Word by word: "to me known is." Malā is "to me," and the knower sits there, not in the subject slot. Nobody acts; a fact is simply in your possession, and āhe closes the line.
+Word by word: "to me known is." Malā is "to me," and the knower sits there, not in the subject slot. Nobody acts; a fact is in your possession, and āhe closes the line.
 The same frame carries a language: मला मराठी येते — malā marāṭhī yete — "I know Marathi," literally "to me Marathi comes." Yete is feminine because the subject is मराठी, a feminine noun — not the speaker; a man says it too. The verb agrees with its subject, as always. Here the subject is not you.
 
 The word, taken apart — a loan beside an inheritance.

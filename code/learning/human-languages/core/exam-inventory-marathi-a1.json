@@ -258,8 +258,11 @@
       "id": "MR-A1-ADJ-01",
       "category": "The adjective",
       "label": "qualifying adjectives in attributive and predicative use",
-      "probe": null,
-      "note": "SPINE-DESCRIBE-QUALITIES is an A1 core node with no realization in this track at all, so neither use is reachable.",
+      "probe": [
+        "MR-GRAMMAR-ADJ-AGREEMENT",
+        "MR-GRAMMAR-ADJ-PRENOMINAL",
+        "MR-LEX-MOTHA"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -304,7 +307,7 @@
       "category": "The adjective",
       "label": "adjective number and agreement in the plural",
       "probe": null,
-      "note": "Blocked behind the plurals themselves (MR-A1-N-05 to -07).",
+      "note": "Blocked behind the plurals themselves (MR-A1-N-05 to -07). The SINGULAR agreement is now taught and named (MR-A1-ADJ-01, chapter 49), so this point is the plural column of a paradigm whose singular column is complete.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -317,8 +320,9 @@
       "id": "MR-A1-ADJ-05",
       "category": "The adjective",
       "label": "position: prenominal, which is the opposite of the Spanish default",
-      "probe": null,
-      "note": "Never stated. Every taught example happens to be prenominal, so the rule has been demonstrated and never named -- which is exactly the case a reader cannot generalize from.",
+      "probe": [
+        "MR-GRAMMAR-ADJ-PRENOMINAL"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -332,7 +336,7 @@
       "category": "The adjective",
       "label": "degree: khuup and the intensifying reduplication",
       "probe": null,
-      "note": "Untaught. Spanish's absolute superlative in muy is the same demand: making an adjective stronger.",
+      "note": "Untaught. Spanish's absolute superlative in muy is the same demand: making an adjective stronger. The adjectives to strengthen now exist (chapters 49-52); khuup and the intensifying reduplication do not.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -345,8 +349,11 @@
       "id": "MR-A1-ADJ-07",
       "category": "The adjective",
       "label": "invariable adjectives, which do not agree at all",
-      "probe": null,
-      "note": "MARATHI-SPECIFIC contrast with MR-A1-ADJ-03: a learner who has only met agreeing adjectives over-applies the endings. Spanish's -e and consonant-final adjectives are the nearest analogue and are not an A1 point there.",
+      "probe": [
+        "MR-GRAMMAR-ADJ-INVARIABLE",
+        "MR-LEX-LAHAAN",
+        "MR-LEX-SUNDAR"
+      ],
       "anchorIds": [
         "editorial-marathi-structure"
       ],
@@ -636,7 +643,7 @@
       "category": "Pronouns",
       "label": "the exclamative kitii with an adjective or adverb",
       "probe": null,
-      "note": "Still uncovered, and now blocked by something other than the pronoun. kitii itself is taught (MR-QUESTION-KITI, chapter 37). The exclamative takes an ADJECTIVE or an ADVERB -- 'how nice!', 'how quickly!' -- and this track teaches neither, because SPINE-DESCRIBE-QUALITIES has no realization at all. The fix for this point is the adjective tranche, not another question word.",
+      "note": "Still uncovered, and the blocker named here has cleared. kitii is taught (MR-QUESTION-KITI, chapter 37) and adjectives arrived in chapters 49-52, so both halves of the exclamative now exist as words. What no lesson supplies is the CONSTRUCTION -- kitii in front of an adjective as an exclamation rather than a question -- and it is not scored as covered on the strength of its two ingredients.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1205,7 +1212,7 @@
       "category": "The noun phrase",
       "label": "noun-phrase complements: an adjective, a genitive phrase, a relative clause",
       "probe": null,
-      "note": "Only the genitive is taught (MR-A1-POS-03); the other two are blocked behind MR-A1-ADJ-01 and MR-A1-PRON-05.",
+      "note": "Two thirds taught. The genitive is covered (MR-A1-POS-03) and the ADJECTIVE complement closed in chapter 49 (MR-A1-ADJ-01), so a noun can now carry a describing word. The relative clause is what remains, and it is blocked behind MR-A1-PRON-05: Marathi's relative is correlative, and no lesson supplies jo/tii/je.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -1267,7 +1274,7 @@
       "category": "The adjective phrase",
       "label": "degree modifiers: khuup, jaraa, puresaa",
       "probe": null,
-      "note": "Untaught, and blocked behind MR-A1-ADJ-01: there is nothing yet to modify.",
+      "note": "No longer blocked behind MR-A1-ADJ-01, which closed in chapter 49 -- there is now plenty to modify. What is missing is the modifiers themselves: khuup, jaraa and puresaa have no exponent, so an adjective can be applied and not graded.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2481,8 +2488,11 @@
       "id": "MR-A1-NG1-03",
       "category": "Existential notions",
       "label": "stating a general quality",
-      "probe": null,
-      "note": "Blocked behind MR-A1-ADJ-01.",
+      "probe": [
+        "MR-GRAMMAR-ADJ-PRENOMINAL",
+        "MR-LEX-CHANGLA",
+        "MR-LEX-AAHE-COPULA"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2787,7 +2797,7 @@
       "category": "Qualitative notions",
       "label": "age",
       "probe": null,
-      "note": "Untaught, and blocked behind MR-A1-QU-03: saying an age needs a number above five.",
+      "note": "Untaught, and blocked behind MR-A1-QU-03 alone now: saying an age needs a number above five. The adjective frame it would sit in exists as of chapter 49.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-task-shapes-a1"
@@ -2845,8 +2855,9 @@
       "id": "MR-A1-NG6-03",
       "category": "Evaluative notions",
       "label": "attractiveness",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-LEX-SUNDAR"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -2859,8 +2870,10 @@
       "id": "MR-A1-NG6-04",
       "category": "Evaluative notions",
       "label": "quality: calling a thing good or bad",
-      "probe": null,
-      "note": "Blocked behind MR-A1-ADJ-01; baraM evaluates a state, not a thing.",
+      "probe": [
+        "MR-LEX-CHANGLA",
+        "MR-LEX-KHARAAB"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -2919,8 +2932,10 @@
       "id": "MR-A1-NG6-08",
       "category": "Evaluative notions",
       "label": "ease and difficulty",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-LEX-SOPA",
+        "MR-LEX-KATHIN"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -2986,8 +3001,11 @@
       "id": "MR-A1-NE01-02",
       "category": "The person: the body",
       "label": "physical characteristics",
-      "probe": null,
-      "note": "Untaught; blocked behind MR-A1-ADJ-01. The A1 speaking paper asks for a one-minute description of a familiar person.",
+      "probe": [
+        "MR-LEX-UNCH",
+        "MR-LEX-MOTHA",
+        "MR-LEX-LAHAAN"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -3017,8 +3035,9 @@
       "id": "MR-A1-NE02-01",
       "category": "The person: character",
       "label": "character and personality",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-LEX-HUSHAAR"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
