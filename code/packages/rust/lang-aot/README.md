@@ -474,3 +474,10 @@ VM-047b extends the ASCII INSPECT corpus to replacement: ALL, LEADING,
 CHARACTERS, first-match priority and non-rechaining multi-item rules. Five
 programs compare complete output with the oracle and seven standard backends;
 BEFORE/AFTER regions remain a separate proof slice.
+
+
+VM-057 adds a seven-backend cell for `STRING S DELIMITED BY SIZE INTO S`: the
+sole sending field is also the receiver, so the frontend's own register (not a
+temporary) is both source and destination of the truncating reshape. Expects
+`S` unchanged; this is the real COBOL construct that reaches WASM
+`str_slice`'s destination-aliases-source lowering path.
