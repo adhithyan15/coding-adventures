@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C16-nei",
+    "language": "bengali",
+    "chapter": 27,
+    "sequence": 1420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5d22a1d2d28b4fe"
+  },
+  "findings": []
+}

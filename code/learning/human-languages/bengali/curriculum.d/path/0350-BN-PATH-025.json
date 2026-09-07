@@ -1,0 +1,15 @@
+{
+  "id": "BN-PATH-025",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "BN-C18-kintu",
+    "BN-C18-ekmot",
+    "BN-C18-kenona",
+    "BN-R18-agree-and-differ"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-026-AGREE-AND-EXPLAIN"
+  ],
+  "after": []
+}

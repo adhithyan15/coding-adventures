@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 1,
-  "sourceHash": "fnv1a64:ab60ccde427cdd72",
+  "sourceHash": "fnv1a64:75848839a7c61534",
   "lessonIds": [
     "BN-C01-nomoshkar",
     "BN-C01-dhonnobad",
@@ -15,6 +15,6 @@
   "text": "bengali/narration/ch01.txt",
   "json": "bengali/narration/ch01.json",
   "textHash": "fnv1a64:7e93d36996209b8d",
-  "jsonHash": "fnv1a64:cb1468b9a6615467",
+  "jsonHash": "fnv1a64:3491eb4c48fc9222",
   "findings": []
 }

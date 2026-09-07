@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:2461ad88fb71f6b4",
+  "lessonIds": [
+    "BN-C16-na-verb",
+    "BN-C16-noy",
+    "BN-C16-nei",
+    "BN-C16-polar",
+    "BN-R16-three-noes"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch27.txt",
+  "json": "bengali/narration/ch27.json",
+  "textHash": "fnv1a64:00b7f78e9afbb0b9",
+  "jsonHash": "fnv1a64:7bfee4693b42d6ca",
+  "findings": []
+}

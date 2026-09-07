@@ -1,0 +1,17 @@
+{
+  "id": "BN-EXT-025-JOINING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can put two nouns in one sentence, mark either one of them as included, offer a choice between them, and refuse both.",
+  "prerequisites": [
+    "BN-EXT-024-THREE-NEGATORS"
+  ],
+  "lessons": [
+    "BN-C17-ar",
+    "BN-C17-o",
+    "BN-C17-ba",
+    "BN-C17-na-na",
+    "BN-R17-joined-and-refused"
+  ]
+}

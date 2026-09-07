@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Friend, Family, Brother, and Sister",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2f068cbe6a3e94a6",
+  "sourceHash": "fnv1a64:6f391dadc0395e09",
   "lessons": [
     {
       "id": "BN-C11-bondhu",
@@ -166,7 +166,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3b5d9f91dc7f381a",
+      "sourceHash": "fnv1a64:e33c462d8df34cda",
       "notice": {
         "modality": "sight",
         "needs": [

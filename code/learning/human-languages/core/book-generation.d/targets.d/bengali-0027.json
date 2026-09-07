@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 27,
+  "output": "bengali/book/chapters/ch27-three-ways-to-say-no.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

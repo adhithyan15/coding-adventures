@@ -47,7 +47,7 @@ it, by a trick Bengali still uses every day.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ভাবা** is **ভা** (*bhā*) + **বা** (*bā*). **ভ** is *bh*, a *b* with breath
+**ভাবা** is **ভা** (*bhā*) + বা (*bā*). **ভ** is *bh*, a *b* with breath
 behind it; **ব** is the plain *b* underneath. Two letters, one puff of air
 between them.
 

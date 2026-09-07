@@ -1,0 +1,14 @@
+{
+  "id": "BN-EXT-027-REPORT-AND-TIME",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can report what I think with a complementiser, and put one event beside another in time with a relative-and-demonstrative pair.",
+  "prerequisites": [
+    "BN-EXT-026-AGREE-AND-EXPLAIN"
+  ],
+  "lessons": [
+    "BN-C19-je",
+    "BN-C19-jokhon"
+  ]
+}

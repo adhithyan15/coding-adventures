@@ -1,6 +1,8 @@
 {
   "segments": [
-    "BN-PATH-003"
+    "BN-PATH-003",
+    "BN-PATH-024",
+    "BN-PATH-026"
   ],
   "omits": [
     "RESPONSE-YES",

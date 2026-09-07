@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ab60ccde427cdd72",
+  "sourceHash": "fnv1a64:75848839a7c61534",
   "lessons": [
     {
       "id": "BN-C01-nomoshkar",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ff54deaf5463135f",
+      "sourceHash": "fnv1a64:b8749d6073c66dd7",
       "notice": {
         "modality": "sight",
         "needs": [

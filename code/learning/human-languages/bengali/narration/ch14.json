@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "The Mind and the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:af7da8853d1d6ca9",
+  "sourceHash": "fnv1a64:a6138b065991d967",
   "lessons": [
     {
       "id": "BN-C08-bhaba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:07b9ffad4bc9cfcb",
+      "sourceHash": "fnv1a64:5341927947d2e96b",
       "notice": {
         "modality": "sight",
         "needs": [

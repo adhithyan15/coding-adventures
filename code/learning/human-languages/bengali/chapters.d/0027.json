@@ -1,0 +1,21 @@
+{
+  "chapter": 27,
+  "title": "Three Ways to Say No",
+  "label": "ch:bn-three-ways-to-say-no",
+  "canDo": "I can deny any sentence this book has taught me — one negator for a sentence with a verb, one for a sentence without, one for a thing that is not there — and I can turn every one of them into a yes-or-no question without moving a word.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "BN-R16-three-noes",
+    "kind": "production",
+    "summary": "Three negators and one question shape, run against frames the book has been teaching since chapter three: the name frame denied with নয়, the verb denied with না, the missing thing denied with নেই, and each of the three asked back with a rising voice.",
+    "assesses": [
+      "BN-GRAMMAR-C16-NA-VERB-01",
+      "BN-GRAMMAR-C16-NOY-01",
+      "BN-GRAMMAR-C16-NEI-01",
+      "BN-GRAMMAR-C16-POLAR-01"
+    ],
+    "note": "The chapter's payoff is that every affirmative frame already in the book becomes two more sentences — a denial and a question — with no new vocabulary."
+  }
+}

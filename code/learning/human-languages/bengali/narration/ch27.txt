@@ -1,0 +1,170 @@
+Bengali, chapter 27: Three Ways to Say No.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+না (nā) — the word that goes after.
+
+Warm-up.
+[pause 2 seconds]
+The first chapter of this book taught না (nā) as an answer, and twenty-six chapters have gone by without it doing anything else. It is about to do the largest job in the language.
+[your turn — recall: two chapters back, the cloth word — kāpoṛ]
+[pause 8 seconds for the answer]
+
+You'll want to know: না after the verb.
+আমি জানি না — āmi jāni nā — I do not know.
+আমি ভাত খাই না — āmi bhāt khāi nā — I do not eat rice.
+Take any sentence in this book, keep every word exactly where it stands, and put না (nā) at the end. That is the whole operation. English drops not in front of the verb and rebuilds the sentence around it — I know becomes I do not know, with a do that came from nowhere. Bengali adds one syllable and moves nothing.
+
+The word, taken apart.
+না is one of the oldest words a reader of English owns. Sanskrit na, Latin ne-, Greek nē-, Old English ne: it is the syllable behind no, not, never, none and nay. Chapter five already handed it over inside কোনো ব্যাপার না (kono bæpār nā), "no matter" — a whole phrase ending in the negator, exactly where this lesson puts it.
+One sentence this book cannot yet print is āmi bujhi nā, "I do not understand" — the most useful sentence a beginner can carry. The verb is taught, in chapter fourteen; the letter in the middle of it is not, so the words stay in romanization until a script lesson pays for that letter.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: āmi jāni — then again with the negator — āmi jāni nā]
+[pause 8 seconds for the answer]
+[your turn — say: āmi bānglā bôli nā]
+[pause 8 seconds for the answer]
+[your turn — say: āmi khāi nā — I do not eat]
+[pause 8 seconds for the answer]
+[your turn — say: the sentence in romanization — āmi bujhi nā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where in the sentence does না (nā) stand? (After the verb, at the end — nothing else moves.) What did chapter one teach it as? (The answer "no" — one word doing two jobs.) And what does English have to borrow to negate I know? (A verb do that means nothing — Bengali borrows nothing.)
+Source: Unicode Bengali chart.
+
+
+Lesson 2 of 5.
+নয় (nôy) — denying a sentence with no verb in it.
+
+Warm-up.
+[pause 2 seconds]
+The lesson before this one put না (nā) after a verb. Now try it on আমার নাম রাম — and notice there is no verb there to put anything after.
+[your turn — recall: two chapters back, the shirt word — jāmā]
+[pause 8 seconds for the answer]
+
+You'll want to know: নয়.
+আমার নাম রাম নয় — āmār nām rām nôy — my name is not Ram.
+আমি ভালো নই — āmi bhālo nôi — I am not well.
+Chapter three taught the frame আমার নাম … and said plainly that it carries no word for is. Bengali leaves the present-tense is out. To deny that sentence you cannot negate a verb that was never said, so the language supplies one, and it supplies it only here: নয় (nôy).
+
+Grammar Lens: the form follows the person.
+[a table of 2 rows, read aloud]
+about: me. say: নই (nôi).
+about: you, or anybody else. say: নয় (nôy).
+That is the whole paradigm a beginner needs. আমি ভালো নই denies your own state; রাম ভালো নয় (nôy) denies somebody else's. Notice what the affirmative looks like beside it: আমি ভালো is a complete Bengali sentence with no verb at all. The copula in this language is a ghost — it is audible only when you refuse it.
+
+Sounds you'll need: the dot under য.
+নয় ends in য়, which is য wearing the dot chapter ten taught. Without the dot the letter says j; with it, a glide, so the word is nôy and not nôj. The dot is doing exactly the job that lesson gave it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: āmār nām rām nôy]
+[pause 8 seconds for the answer]
+[your turn — say: āmi bhālo nôi — then the affirmative it denies, āmi bhālo]
+[pause 8 seconds for the answer]
+[your turn — say: the verb kind beside the verbless kind — āmi jāni nā … āmi bhālo nôi]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which negator does a sentence with a verb take, and which does a sentence without one? (না (nā) after the verb; নয় (nôy) when there is none.) Which form goes with আমি? (নই.) And where is the is in আমি ভালো? (Nowhere — it exists only to be denied.)
+Source: Unicode Bengali chart.
+
+
+Lesson 3 of 5.
+নেই (nei) — the third negator, for things that are not there.
+
+Warm-up.
+[pause 2 seconds]
+Two negators so far: one after a verb, one for a sentence with no verb. A third is coming, and it exists because Bengali refuses to build this one out of the first two.
+[your turn — recall: two chapters back, the woven strip of cloth — shāṛi]
+[pause 8 seconds for the answer]
+
+You'll want to know: নেই.
+আমার চা নেই — āmār chā nei — I have no tea.
+আমার ভাই নেই — āmār bhāi nei — I have no brother.
+Chapter five taught আমি ভালো আছি, "I am well," on the stem আছ-, which means to be present. নেই (nei) is that stem's denial, and it comes as a single word rather than as আছি না (nā), which no Bengali says.
+
+Grammar Lens: having, in a language with no verb for it.
+Bengali has no verb to have. It says of-me tea is-present, using the same আমার chapter three taught for my. So আমার চা নেই (nei) is literally of me, tea is not present — and the same shape covers I have no tea and there is no tea of mine, because in Bengali those were never different sentences.
+নেই (nei) does not change for the person. আমার নেই (nei), তোমার নেই (nei): one form for everybody, which makes it the easiest of the three negators and the one a traveller reaches for first.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: āmār chā nei]
+[pause 8 seconds for the answer]
+[your turn — say: āmār jôl nei — I have no water]
+[pause 8 seconds for the answer]
+[your turn — say: all three in a row — jāni nā … bhālo nôi … chā nei]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which stem is নেই (nei) the denial of? (আছ-, the being present stem behind আছি.) Why is there no আছি না (nā)? (Because the negator and the stem fused into one word long ago.) And how does Bengali say I have? (With আমার — of me, and no verb to have at all.)
+Source: Unicode Bengali chart.
+
+
+Lesson 4 of 5.
+তুমি ভালো? (tumi bhālo?) — a question with nothing added.
+
+Warm-up.
+[pause 2 seconds]
+Three chapters have taught you how to say হ্যাঁ and না (nā) to a question nobody in this book has been able to ask.
+[your turn — recall: two chapters back, the eye-thing — chôshmā]
+[pause 8 seconds for the answer]
+
+You'll want to know: the rising voice.
+তুমি ভালো — tumi bhālo. — you are well.
+তুমি ভালো? — tumi bhālo? — are you well?
+Those are the same four syllables in the same order. The only difference is that the second one ends higher than it began. English rebuilds the sentence — you are becomes are you — and Bengali does not touch it.
+
+Grammar Lens: what the rise turns into a question.
+Every frame in this book can now be asked as well as said, at no cost:
+[a table of 2 rows, read aloud]
+said: আমার চা নেই (nei). asked: তোমার চা নেই (nei)?
+said: তুমি ভাত খাও. asked: তুমি ভাত খাও?
+A negative asked this way is the ordinary way to check something you suspect: তোমার চা নেই (nei)? — you have no tea? And the answer is one of the two words chapter one taught.
+Bengali also has a written question particle, কি, which chapter three taught as the word for what. In a yes-or-no question it does the job the rising voice does in speech. The voice is what a speaker needs first.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: tumi bhālo. flat — then tumi bhālo? rising]
+[pause 8 seconds for the answer]
+[your turn — say: tomār chā nei? — and answer it hyã or nā]
+[pause 8 seconds for the answer]
+[your turn — say: āpni bhālo? — the respectful one]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What moves when a Bengali statement becomes a yes-or-no question? (Nothing — only the pitch at the end.) What does English have to move? (The verb, in front of the subject.) And which two words answer it? (হ্যাঁ and না (nā), from the first chapter.)
+Source: Unicode Bengali chart.
+
+
+Lesson 5 of 5.
+Three ways to say no, and one way to ask — three negators, one question, and the first Bengali conversation in which somebody can disagree.
+
+Warm-up.
+[pause 4 seconds]
+Three negators arrived in this chapter and each one owns a different kind of sentence. Name them in the order you met them, and name what each one denies.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the sentence with a verb — āmi jāni nā]
+[pause 8 seconds for the answer]
+[your turn — say: the sentence with none — āmār nām rām nôy]
+[pause 8 seconds for the answer]
+[your turn — say: the thing that is missing — āmār chā nei]
+[pause 8 seconds for the answer]
+[your turn — say: each of those three again with a rising end, and hear a question]
+[pause 8 seconds for the answer]
+[your turn — recall: the sentence chapter eleven taught, then deny it — āmi bānglā bôli nā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which negator would you use to deny আমার নাম রাম, which for আমি জানি, and which for আমার চা আছে? (নয় (nôy), then না (nā), then নেই (nei).) What has to change to turn any of the three into a question? (The pitch at the end, and nothing else.)
