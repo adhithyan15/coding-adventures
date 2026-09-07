@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-040",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "MR-C38-kuthe",
+    "MR-C38-kadhi",
+    "MR-C38-wh-order",
+    "MR-R38-where-when"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-053-WHERE-AND-WHEN"
+  ],
+  "after": []
+}

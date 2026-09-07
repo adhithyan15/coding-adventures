@@ -354,8 +354,44 @@ reinforcement-miss count because items late in a chapter have nowhere left to be
 revisited, and the fix belongs at the chapter boundary. This tranche's own
 reinforcement debt is zero.
 
+## Chapters 37–40 — the asking words
+
+| Session | Lesson | Job |
+|---|---|---|
+| 231 | C37-kon | **कोण** — ask for a person, not a thing |
+| 232 | C37-kiti | **किती** — the question whose answer is always a number |
+| 233 | R37-who-how-many | sort three asking words by the shape of the answer |
+| 234 | C38-kuthe | **कुठे** — the interview's second question, at last |
+| 235 | C38-kadhi | **कधी** — and it takes the time word's own early slot |
+| 236 | C38-wh-order | the asking word stands in the answer's slot; nothing moves |
+| 237 | R38-where-when | two kinds of question, told apart by the rise |
+| 238 | W39-tha | **थ** — the fifth of a row finished in chapter three |
+| 239 | C39-tithe | **तिथे** — answer कुठे without naming a place |
+| 240 | R39-there | ask a place, answer a place, then ask why |
+| 241 | W40-i-independent | **इ** — the vowel that can open a word |
+| 242 | C40-ithe | **इथे** — and the **क- / इ- / त-** series closes |
+| 243 | R40-asking-column | interrogate your own A1 message |
+
+Two script lessons in four chapters, and their spacing is what fixes the chapter
+count. `minLessonsBetweenScriptSegments` is 2, and each letter has to land in the
+chapter immediately before the word that spends it — so **थ** opens 39 and **इ**
+opens 40 rather than both crowding into one chapter. Chapter length was never
+the constraint; the ledger was.
+
+Every chapter opener retrieves the two preceding items **by name**, as chapters
+30–36 established. This tranche adds one thing to that shape: each opener also
+carries a `[YOU RECALL: …]` naming the item at the same position **two chapters
+back**. Within-chapter retrieval only reaches distance 1–4, so a track built out
+of three- and four-lesson chapters systematically misses **R2 (distance 5–15)**
+— the "first real retrieval" window. Reaching two chapters back is distance 7–9
+and lands inside it. Marathi's R2 miss count did not move while the track grew
+by thirteen lessons, which is the number that says the reach works.
+
 ## Next
 
-The next Marathi tranche should take the **oblique stem** (`MR-A1-N-09`), which
-chapter 35 teaches exactly one instance of and records as still owed, and then
-the locative **-त** / **-वर**, which four uncovered inventory points sit behind.
+The next Marathi tranche should take the **oblique stem** (`MR-A1-N-09`) and the
+postpositions built on it — the locative **-त** / **-वर**, **मध्ये**, **खाली**,
+**जवळ**, **समोर**, the accompaniment **-शी** / **बरोबर**, the ablative
+**-हून** / **पासून** and the goal **-कडे**. Around seventeen uncovered inventory
+points sit behind that one stem change, and it is the largest structural gap the
+inventory names.

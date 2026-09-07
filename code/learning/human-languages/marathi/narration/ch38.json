@@ -1,0 +1,569 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 38,
+  "title": "Where, and When",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:4cd1c210f326a651",
+  "lessons": [
+    {
+      "id": "MR-C38-kuthe",
+      "sequence": 1540,
+      "title": "कुठे (kuṭhe) — where",
+      "headword": "कुठे",
+      "romanization": "kuṭhe",
+      "gloss": "where — the asking word the whole book has been unable to say, and the one a sign, a station and an interviewer all need",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e02c18ad29fc904",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two chapters ago you learned to add one more thing with सुद्धा. Last chapter gave you कोण and किती."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say koṇ, then kitī, then sudhā in one breath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *koṇ*, then *kitī*, then *sudhā* in one breath]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कुठे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुठे — kuṭhe — where."
+            },
+            {
+              "kind": "speech",
+              "text": "तुम्ही कुठे राहता? — tumhī kuṭhe rāhtā? — where do you live? मी पुण्यात राहतो. — mī puṇyāt rāhto. — I live in Pune."
+            },
+            {
+              "kind": "speech",
+              "text": "That exchange is the second question of almost every spoken interview, and until this lesson the book could write the answer and not the question. You already had पुण्यात — the city with -ात glued on its tail. What was missing was the word that asks for it."
+            },
+            {
+              "kind": "speech",
+              "text": "कुठे (kuṭhe) is the क- family again, from Sanskrit कुत्र (kutra, \"where\"). Its answer is a place, the way कोण wants a person and किती wants a number."
+            },
+            {
+              "kind": "speech",
+              "text": "When you do not know: माहीत नाही — māhīt nāhī — I don't know. That is a complete and polite answer to कुठे (kuṭhe)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭhe — where",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭhe* — where]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumhī kuṭhe rāhtā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumhī kuṭhe rāhtā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māhīt nāhī — the answer when you do not know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māhīt nāhī* — the answer when you do not know]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C38-kuthe-r1",
+              "prompt": "Ask where somebody lives, then answer with Pune.",
+              "assesses": [
+                "MR-QUESTION-KUTHE",
+                "MR-LEX-RAHNE"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "tumhī kuṭhe rāhtā? — mī puṇyāt rāhto",
+                "तुम्ही कुठे राहता? मी पुण्यात राहतो"
+              ],
+              "feedback": {
+                "correct": "A question and an address.",
+                "incorrect": "kuṭhe goes before the verb, and the answer glues -āt to the city."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What shape of answer does कुठे (kuṭhe) want? (A place.) Which form field on your A1 profile answers it? (शहर.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: कुठे (kuṭhe)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C38-kadhi",
+      "sequence": 1550,
+      "title": "कधी (kadhī) — when",
+      "headword": "कधी",
+      "romanization": "kadhī",
+      "gloss": "when — the fourth asking word, and the one that finally lets you interrogate the time frames of the last chapter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8bd6d1d0dab9fa1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already put two events in order with जेव्हा … तेव्हा … and with -ल्यावर. Both of them ANSWER a question you cannot yet ask."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say a jevhā … tevhā … sentence, then the same idea with -ल्यावर",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say a *jevhā … tevhā …* sentence, then the same idea with **-ल्यावर**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कधी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कधी — kadhī — when."
+            },
+            {
+              "kind": "speech",
+              "text": "तुम्ही कधी येता? — tumhī kadhī yetā? — when are you coming? उद्या. — udyā. — tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "कधी (kadhī) is Sanskrit कदा (kadā, \"when\"), and it is the fourth क- word in four lessons. The family is now large enough to be a rule rather than a coincidence: काय, कोण, किती, कुठे (kuṭhe), कधी (kadhī)."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice where it sits. A Marathi time word comes early, before the verb — you saw that with उद्या भेटू. कधी (kadhī) takes exactly that slot, because it is standing in for the answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadhī — when",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadhī* — when]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumhī kadhī yetā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumhī kadhī yetā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṇ, kuṭhe, kadhī — person, place, time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṇ*, *kuṭhe*, *kadhī* — person, place, time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nako — the word that refuses an offer, so you can decline as well as answer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nako* — the word that refuses an offer, so you can decline as well as answer]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C38-kadhi-r1",
+              "prompt": "Ask when somebody is coming, then answer with tomorrow.",
+              "assesses": [
+                "MR-QUESTION-KADHI",
+                "MR-LEX-UDYA"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "tumhī kadhī yetā? — udyā",
+                "तुम्ही कधी येता? उद्या"
+              ],
+              "feedback": {
+                "correct": "A question about time, answered with a time word.",
+                "incorrect": "kadhī sits where udyā would sit — early, before the verb."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where in the sentence does a Marathi time word go? (Early, before the verb.) So where does कधी (kadhī) go? (The same place.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: कधी (kadhī)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C38-wh-order",
+      "sequence": 1560,
+      "title": "Where the asking word stands",
+      "headword": "… कुठे …?",
+      "romanization": "… kuṭhe …?",
+      "gloss": "where an asking word stands — Marathi leaves it in the answer's own slot and moves nothing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:312d0b679e691cf6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have said तुमचं नाव काय आहे? and तुम्ही कसे आहात? for many chapters. Both are questions. Neither one told you the rule they obey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: nothing moves to the front",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English hauls its asking word to the front of the sentence: your name is Aruṇ becomes what is your name. Marathi does not move anything. The asking word simply stands in the slot where the answer would stand, and the verb stays last."
+            },
+            {
+              "kind": "speech",
+              "text": "तुमचं नाव अरुण आहे. becomes तुमचं नाव काय आहे? तुम्ही पुण्यात राहता. becomes तुम्ही कुठे (kuṭhe) राहता?"
+            },
+            {
+              "kind": "speech",
+              "text": "Read those two pairs across. In each, exactly one word changed and nothing else moved. That is the whole rule, and it is worth having as a rule rather than as two memorised phrases: it means every asking word you own works in every sentence you own, without rearrangement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a statement, then the same sentence with कुठे (kuṭhe) in the answer's slot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a statement, then the same sentence with **कुठे** in the answer's slot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same trick with कधी (kadhī)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same trick with **कधी**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kitī and put it where a number would have gone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kitī* and put it where a number would have gone]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C38-wh-order-r1",
+              "prompt": "Turn 'tumhī puṇyāt rāhtā' into a question about place by changing one word.",
+              "assesses": [
+                "MR-GRAMMAR-WH-ORDER",
+                "MR-QUESTION-KUTHE"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "tumhī kuṭhe rāhtā?",
+                "तुम्ही कुठे राहता?"
+              ],
+              "feedback": {
+                "correct": "One word swapped, nothing moved.",
+                "incorrect": "Replace the place with kuṭhe and leave the rest exactly where it is."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does a Marathi asking word stand? (In the answer's own slot.) What moves to the front? (Nothing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R38-where-when",
+      "sequence": 1570,
+      "title": "Two ways to ask, and how to tell them apart",
+      "headword": "कुठे? · कधी?",
+      "romanization": "kuṭhe? · kadhī?",
+      "gloss": "five asking words in one slot — and the rising voice you no longer need",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a4f4af469db4802",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Marathi now gives you two kinds of question. One ends in का and is answered हो or नाही. The other carries a क- word and is answered with information."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṇ, kitī, kuṭhe, kadhī — the four you now own, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṇ*, *kitī*, *kuṭhe*, *kadhī* — the four you now own, in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one का question, with the voice rising at the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one **का** question, with the voice rising at the end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one कुठे (kuṭhe) question, with the voice NOT rising — it does not have to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one **कुठे** question, with the voice NOT rising — it does not have to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kāy, the oldest of the family, and the sentence you have used it in since chapter nine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kāy*, the oldest of the family, and the sentence you have used it in since chapter nine]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R38-where-when-run",
+              "prompt": "Ask three questions about one person: who, where, when.",
+              "assesses": [
+                "MR-GRAMMAR-WH-ORDER",
+                "MR-QUESTION-KUTHE",
+                "MR-QUESTION-KADHI"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "koṇ āhe? tumhī kuṭhe rāhtā? tumhī kadhī yetā?",
+                "कोण आहे? तुम्ही कुठे राहता? तुम्ही कधी येता?"
+              ],
+              "feedback": {
+                "correct": "Three slots, three answers.",
+                "incorrect": "Keep the sentence still and change only the asked-for word."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which kind of question needs the rise, and which does not? (The का question needs it; a क- question already shows itself in a word.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
