@@ -7,8 +7,7 @@ component Badge {
   // Visible label text. Required.
   slot label : text ;
 
-  // Variant keyword. One of: primary, secondary, success, danger,
-  // warning, info, light, dark. Default: primary.
-  // Drives the part-level styling via `part badge/<variant>`.
-  slot variant : text ;
+  // Variant keyword. The base style is primary when the host omits
+  // this slot; the closed type rejects unknown values.
+  slot variant : one-of primary secondary success danger warning info light dark ;
 }

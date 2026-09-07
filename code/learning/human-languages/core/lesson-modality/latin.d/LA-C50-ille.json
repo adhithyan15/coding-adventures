@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C50-ille",
+    "language": "latin",
+    "chapter": 50,
+    "sequence": 1270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8dd801958ece3671"
+  },
+  "findings": []
+}

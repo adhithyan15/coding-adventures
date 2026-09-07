@@ -1,0 +1,21 @@
+{
+  "chapter": 45,
+  "title": "With Whom, and With What",
+  "label": "ch:mr-with",
+  "canDo": "I can say who I am with, who I am speaking to and what I am doing something with, choosing between three endings English collapses into one, and I can put a pronoun in front of any of them.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R45-with",
+    "kind": "production",
+    "summary": "Complete MR-R45-with and put all three endings on mitra, saying for each one whether it takes a companion, a partner in the act, or a tool.",
+    "assesses": [
+      "MR-POSTP-BAROBAR",
+      "MR-POSTP-SHII",
+      "MR-POSTP-NE-INSTR",
+      "MR-GRAMMAR-PRON-OBLIQUE"
+    ],
+    "note": "The pronoun's oblique is in this chapter rather than with the noun's, because it is only visible once there is a postposition to put it in front of."
+  }
+}

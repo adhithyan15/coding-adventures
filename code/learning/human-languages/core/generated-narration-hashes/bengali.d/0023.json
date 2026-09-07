@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 23,
-  "sourceHash": "fnv1a64:18657ff6f97ed151",
+  "sourceHash": "fnv1a64:656e10df069e60ba",
   "lessonIds": [
     "BN-C14-lal",
     "BN-C14-nil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch23.txt",
   "json": "bengali/narration/ch23.json",
-  "textHash": "fnv1a64:e73ca2a020f4c597",
-  "jsonHash": "fnv1a64:79e4dfcf6c4e1250",
+  "textHash": "fnv1a64:ae620342659a728a",
+  "jsonHash": "fnv1a64:20f2dc214f2e2e43",
   "findings": []
 }

@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:0f28c9ecb07195d3",
+  "lessonIds": [
+    "MR-C48-kade",
+    "MR-C48-possession",
+    "MR-R48-have-and-toward"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "marathi/narration/ch48.txt",
+  "json": "marathi/narration/ch48.json",
+  "textHash": "fnv1a64:f639287d025883d2",
+  "jsonHash": "fnv1a64:9334b1413e173fb4",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 53,
+  "title": "Iterum, Magister, Discipulus, Schola, Liber",
+  "label": "ch:la-schola",
+  "canDo": "I can ask for something to be said again, and name the teacher, the pupil, the school and the book.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "LA-C53-liber",
+    "kind": "task",
+    "summary": "The fifth word of the group, taken apart against the four before it.",
+    "assesses": [
+      "LA-LEX-C53-SCHOOL-01",
+      "LA-LEX-C53-SCHOOL-02",
+      "LA-LEX-C53-SCHOOL-03",
+      "LA-LEX-C53-SCHOOL-04",
+      "LA-LEX-C53-SCHOOL-05"
+    ]
+  }
+}

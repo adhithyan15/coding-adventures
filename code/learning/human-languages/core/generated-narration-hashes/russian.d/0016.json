@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:e60c8ab454b7f82b",
+  "lessonIds": [
+    "RU-C16-i",
+    "RU-C16-i-predlozheniya",
+    "RU-C16-ili",
+    "RU-C16-ni-ni",
+    "RU-C16-tozhe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch16.txt",
+  "json": "russian/narration/ch16.json",
+  "textHash": "fnv1a64:744182d046792d6c",
+  "jsonHash": "fnv1a64:c625c00135479cc4",
+  "findings": []
+}

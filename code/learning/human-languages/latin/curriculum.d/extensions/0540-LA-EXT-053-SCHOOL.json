@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-053-SCHOOL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can ask for something to be said again, and name the teacher, the pupil, the school and the book.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C53-iterum",
+    "LA-C53-magister",
+    "LA-C53-discipulus",
+    "LA-C53-schola",
+    "LA-C53-liber"
+  ]
+}

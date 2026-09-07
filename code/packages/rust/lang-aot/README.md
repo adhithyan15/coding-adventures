@@ -1,5 +1,9 @@
 # lang-aot
 
+COBOL STRING/UNSTRING pointer rows compare receiver text, pointer writeback and
+overflow/success markers together, including exact fit, partial transfer,
+invalid starts and a trailing delimiter. They declare all seven standard backends.
+
 COBOL delimiter rows cover STRING first-delimiter behavior and UNSTRING field
 fitting, empty fields and exhausted-source receiver preservation. Bracketed
 outputs keep all padding visible across the seven standard backends.
@@ -458,3 +462,32 @@ a detected toolchain cannot silently skip. The unfiltered matrix and its
 single-cell diagnostics remain available. Full ALGOL matrix CI is tracked as
 VM-025 in `LANG-VM-NON-ALGOL-BACKLOG.md`. The Windows Rust-only CI leg retains
 its dedicated native smoke gate; this BUILD command runs on Linux/macOS CI.
+
+
+The VM-047a INSPECT tallying corpus compares ALL, CHARACTERS and LEADING with
+frontend oracle output and the seven standard LANG matrix backends. It observes
+nonzero counters, zero matches, padded field widths and reassigned items.
+These ASCII proofs do not establish replacement or BEFORE/AFTER region parity.
+
+
+VM-047b extends the ASCII INSPECT corpus to replacement: ALL, LEADING,
+CHARACTERS, first-match priority and non-rechaining multi-item rules. Five
+programs compare complete output with the oracle and seven standard backends;
+BEFORE/AFTER regions remain a separate proof slice.
+
+
+VM-047c promotes the already-implemented single-region BEFORE/AFTER window to
+the seven standard backends: TALLYING FOR ALL narrowed BEFORE a delimiter,
+TALLYING narrowed AFTER a delimiter, REPLACING ALL narrowed BEFORE a
+delimiter, REPLACING narrowed AFTER a delimiter, and BEFORE/AFTER used
+together across the independently-regioned TALLYING/REPLACING halves of one
+combined `INSPECT` statement. Each pair also observes the ISO not-found
+asymmetry: an absent BEFORE delimiter covers the WHOLE source, an absent
+AFTER delimiter covers an EMPTY region.
+
+
+VM-057 adds a seven-backend cell for `STRING S DELIMITED BY SIZE INTO S`: the
+sole sending field is also the receiver, so the frontend's own register (not a
+temporary) is both source and destination of the truncating reshape. Expects
+`S` unchanged; this is the real COBOL construct that reaches WASM
+`str_slice`'s destination-aliases-source lowering path.

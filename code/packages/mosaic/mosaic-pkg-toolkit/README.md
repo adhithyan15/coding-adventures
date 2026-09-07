@@ -12,13 +12,19 @@ for the architecture, component catalog, and phasing plan.
 
 **11 of 13 Tier-1 components shipped:**
 
-- **`Alert`** — colored info banner with `variant`, optional inline
-  dismiss button. Composed from `Box` + `Row` + `Text` + `If` +
-  `HostButton`.
-- **`Badge`** — small pill label. `Box[badge] { Text }`. Slots:
-  `label`, `variant`.
-- **`Button`** — styled push button with `variant`, `size`,
-  `disabled` slots. Wraps the kernel `HostButton`.
+- **`Alert`** — colored banner with the same closed eight-value `variant`
+  axis as Button and an optional inline dismiss button. UI49 states color
+  both the banner and its native close control in each theme; an omitted
+  variant keeps the `info` base style. Composed from `Box` + `Row` + `Text` +
+  `If` + `HostButton`.
+- **`Badge`** — small pill label with a closed eight-value `variant` axis.
+  UI49 states render every legal value in both themes; an omitted variant
+  keeps the primary base style. `Box[badge] { Text }`.
+- **`Button`** — styled push button with closed `variant` (`primary`,
+  `secondary`, `success`, `danger`, `warning`, `info`, `light`, `dark`)
+  and `size` (`sm`, `md`, `lg`) axes plus a `disabled` slot. UI49-owned
+  style states make every legal value visible on all nine backends; an
+  omitted axis keeps the primary/md base style. Wraps `HostButton`.
 - **`Checkbox`** — labeled checkbox. `Row { If checked HostButton[✓]
   Else HostButton[], Text }`. Slots: `label`, `checked`,
   `disabled`. Emit: `onChange`. Host owns the state.
@@ -122,7 +128,11 @@ cargo test
 
 Smoke tests assert every exported component's `.mil` / `.mll` /
 `.msl` triple round-trips through the three IR compilers, and that
-the manifest is internally consistent.
+the manifest is internally consistent. Button, Alert, and Badge additionally
+assert their closed axes, complete state ownership in both themes, and
+representative visual differences. MosaicBook stories for three-file
+components remain blocked by #14031; this package does not claim story
+coverage yet.
 
 `native_complete_gate.rs` (issue #12024) goes one step further: for
 each of the five native backends (SwiftUI, Qt, XAML, Flutter,

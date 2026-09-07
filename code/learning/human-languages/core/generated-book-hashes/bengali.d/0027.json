@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:8fbe695b9d86227e",
+  "lessonIds": [
+    "BN-C16-na-verb",
+    "BN-C16-noy",
+    "BN-C16-nei",
+    "BN-C16-polar",
+    "BN-R16-three-noes"
+  ],
+  "tex": "bengali/book/chapters/ch27-three-ways-to-say-no.tex"
+}

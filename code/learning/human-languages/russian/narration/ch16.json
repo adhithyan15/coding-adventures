@@ -1,0 +1,784 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 16,
+  "title": "And, Or, and Neither",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e60c8ab454b7f82b",
+  "lessons": [
+    {
+      "id": "RU-C16-i",
+      "sequence": 800,
+      "title": "и (i) — the word you have already read",
+      "headword": "и",
+      "romanization": "i",
+      "gloss": "and — one letter, one sound, and the commonest word in the language",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53e28a7c3f84cf01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two verbs from the chapter of first verbs, before the smallest word in the book arrives."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "знать, its English cousin know, and how не goes in front",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *знать*, its English cousin *know*, and how **не** goes in front]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "говорить, which is not a relative of govern, and the two verb families it belongs to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *говорить*, which is **not** a relative of *govern*, and the two verb families it belongs to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the eight letters you sorted into true friends, false friends and new shapes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the eight letters you sorted into true friends, false friends and new shapes]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — и",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "и — i — and."
+            },
+            {
+              "kind": "speech",
+              "text": "One letter. One vowel. Nothing else. It is the commonest word in Russian, and you have been reading it since the verbs of the mind:"
+            },
+            {
+              "kind": "speech",
+              "text": "Я читаю и понимаю. — ya chitáyu i panimáyu — I read and I understand."
+            },
+            {
+              "kind": "speech",
+              "text": "That sentence was on the page long before anyone told you that the little и between the two verbs was a word at all. It is. It joins two things of the same kind: two nouns, two verbs, two whole thoughts."
+            },
+            {
+              "kind": "speech",
+              "text": "The letter is one you can already write, and the word is the letter. Nothing new goes on the page here — only the fact that this shape has a meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — the pointing stem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "и goes back to a Slavic particle built on the ancient pointing stem i-, the demonstrative that meant roughly this one, that one. A joining word that began as a pointing word is not strange: and is a way of saying there is another one over here."
+            },
+            {
+              "kind": "speech",
+              "text": "That same old stem is the one hiding in его — which is why the smallest word in the language and one of its pronouns are relatives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "я читаю и понимаю — and hear и as a word this time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *я читаю и понимаю* — and hear **и** as a word this time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "any two verbs you own, with и between them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: any two verbs you own, with **и** between them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "two foods, joined — молоко и сок",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: two foods, joined — *молоко и сок*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"and.\" (и.) Which letter is it, and had you written that letter before today? (и — yes, from the writing lessons.) What kind of old word is it built on? (A pointing word.) And one look back: say \"I know,\" and then say you do not. (я знаю / я не знаю.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C16-i-predlozheniya",
+      "sequence": 810,
+      "title": "и between two sentences — the book's first long sentence",
+      "headword": "… и …",
+      "romanization": "… i …",
+      "gloss": "and, between two whole sentences — the first two-clause sentence this book can make",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35a4ccaeca5eb015",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Yesterday's word, and two verbs it is about to join."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "идти, the one-way verb whose past comes from another root entirely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *идти*, the one-way verb whose past comes from another root entirely]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "думать, the verb hiding inside the name of the Russian parliament, and the partner verb that finishes what it starts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *думать*, the verb hiding inside the name of the Russian parliament, and the partner verb that finishes what it starts]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens — one word, any size of piece",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have joined two verbs with и. Now join two whole sentences with it. The word does not change:"
+            },
+            {
+              "kind": "speech",
+              "text": "я иду и я думаю — ya idú i ya dúmayu — I am walking and I am thinking."
+            },
+            {
+              "kind": "speech",
+              "text": "Each half stands on its own. Take the и away and you have two sentences that are still Russian. Put it back and you have one sentence with two halves, which is a thing this book has not been able to make until now."
+            },
+            {
+              "kind": "speech",
+              "text": "Russian does not need a comma here, and does not want one: when и joins two halves that share a subject, nothing goes in front of it."
+            },
+            {
+              "kind": "speech",
+              "text": "я иду и думаю — ya idú i dúmayu — I walk and think."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the second я or leave it out; both are Russian. Leaving it out is what a Russian usually does, because the ending on the verb has already said who."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "я иду и (i) думаю",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *я иду и думаю*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "any two things you do, joined with и, dropping the second я",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: any two things you do, joined with **и**, dropping the second *я*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "the same pair with the second я put back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: the same pair with the second *я* put back]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does и change when the pieces it joins get bigger? (No — one letter, always, and it is still the same old pointing word underneath.) Does a comma go in front of it when both halves share a subject? (No.) And one look back: which verb of motion means going one way, this once? (The verb is идти.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C16-ili",
+      "sequence": 820,
+      "title": "или (íli) — \"or,\" which is \"and\" with a doubt on the end",
+      "headword": "или",
+      "romanization": "íli",
+      "gloss": "or — and it is и with a small question-word stuck on the end",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc468e98285d59d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The two verbs that first stood on either side of и."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "понимать, which literally means to take hold of — the same picture English keeps in comprehend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *понимать*, which literally means to **take hold of** — the same picture English keeps in *comprehend*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "читать, and the fact that Russian has no separate way to say I am reading",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *читать*, and the fact that Russian has **no separate way** to say *I am reading*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the whole first exchange — да, нет, and which greeting you give a stranger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the whole first exchange — *да*, *нет*, and which greeting you give a stranger]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — или",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "или — íli — or."
+            },
+            {
+              "kind": "speech",
+              "text": "Stress the first syllable: Í-li. It sits between the two things exactly where и sat, and it does the opposite job — not both, but one of the two."
+            },
+            {
+              "kind": "speech",
+              "text": "чай или кофе? — chai íli kófe — tea or coffee?"
+            },
+            {
+              "kind": "speech",
+              "text": "я читаю или пишу — ya chitáyu íli pishú — I read or I write."
+            },
+            {
+              "kind": "speech",
+              "text": "Offering somebody a choice is one of the first useful things you can do with a joining word, and this is the whole of it: two nouns, или (íli), a rising voice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — и plus ли",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "или (íli) is и with a small word welded on the end: ли, an old particle that carries doubt — the thing Russian puts in a sentence when the answer is not yet known."
+            },
+            {
+              "kind": "speech",
+              "text": "So and plus maybe gives or. Once you see и at the front of или (íli), the pair is impossible to confuse: the short one joins, the long one doubts."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "чай или (íli) кофе? with the voice going up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *чай или кофе?* with the voice going up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "the same two drinks joined with и instead — and hear the meaning turn over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: the same two drinks joined with **и** instead — and hear the meaning turn over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "two of your own verbs with или (íli) between them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: two of your own verbs with **или** between them]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"or.\" (It is или (íli).) Which two pieces is it built from? (и plus ли.) Which of the two, и or или (íli), offers a choice? (The long one, или (íli).) And one look back: what does понимать literally do to a thing? (Takes hold of it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C16-ni-ni",
+      "sequence": 830,
+      "title": "ни … ни … (ni … ni …) — refusing both halves at once",
+      "headword": "ни … ни …",
+      "romanization": "ni … ni …",
+      "gloss": "neither … nor … — the joining word that stands in FRONT of both halves",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69d2cb95cb423d80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two verbs, and the letter one of them brought with it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "писать, whose root means to scratch — the same root behind paint and picture — and the letter ш it taught you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *писать*, whose root means to **scratch** — the same root behind *paint* and *picture* — and the letter **ш** it taught you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "брать, English bear, and the partner verb from a completely different root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *брать*, English *bear*, and the partner verb from a completely different root]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "или (íli), and the two pieces и and ли it is welded from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *или*, and the two pieces **и** and **ли** it is welded from]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens — the word that goes in front, twice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "и and или (íli) both stand between the two things. This one stands in front of each of them, and there are two of it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ни чай, ни кофе — ni chai, ni kófe — neither tea nor coffee."
+            },
+            {
+              "kind": "speech",
+              "text": "That shape is new. Every joining word so far has been a hinge in the middle; ни … ни … (ni … ni …) is a pair of flags planted before each half."
+            },
+            {
+              "kind": "speech",
+              "text": "ни is the negator не with its vowel changed. Russian keeps them apart by job: не denies one thing, ни is the form that turns up when the denial has to be said twice."
+            },
+            {
+              "kind": "speech",
+              "text": "And Russian says the denial a third time, on the verb. Where English is content with I take neither, Russian negates the verb as well:"
+            },
+            {
+              "kind": "speech",
+              "text": "я не беру ни чай, ни сок — ya ne berú ni chai, ni sok — I take neither tea nor juice."
+            },
+            {
+              "kind": "speech",
+              "text": "Three negatives in one short sentence, and every one of them is required. That is not sloppiness — it is the rule."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ни чай, ни кофе",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ни чай, ни кофе*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole refusal — я не беру ни чай, ни сок",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole refusal — *я не беру ни чай, ни сок*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "two foods you own, refused together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: two foods you own, refused together]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does ни stand — between the halves or in front of them? (In front of each half.) How many times is the negative said in я не беру ни чай, ни сок? (Three.) And one look back: which verb means to write, and which letter arrived with it? (The verb is писать; the letter is ш.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C16-tozhe",
+      "sequence": 840,
+      "title": "тоже (tózhe) — \"me too,\" and \"me neither\"",
+      "headword": "тоже",
+      "romanization": "tózhe",
+      "gloss": "also, too — two little words fused, and the way to say 'me neither'",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fac9d8529445dcbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two verbs whose roots went a long way from home."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "спрашивать, on the root that gave Latin its word for pray",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *спрашивать*, on the root that gave Latin its word for **pray**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "помогать, built on a verb meaning to be able — English may, might and main",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *помогать*, built on a verb meaning **to be able** — English *may*, *might* and *main*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — тоже",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "тоже — tózhe — also, too."
+            },
+            {
+              "kind": "speech",
+              "text": "Stress the first syllable. It is not a joining word — it does not sit between two things — but it does the same social work as one: it puts a second person or a second fact alongside the first."
+            },
+            {
+              "kind": "speech",
+              "text": "я тоже — ya tózhe — me too."
+            },
+            {
+              "kind": "speech",
+              "text": "Two syllables, and one of the most useful answers in the language. Somebody says what they do; you say я тоже (tózhe) and you have agreed, in full, without owning a single extra verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — то же",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "тоже (tózhe) is two words fused: то (that) and же (a little word meaning the very same). That same — which is what also has always meant."
+            },
+            {
+              "kind": "speech",
+              "text": "And because Russian negates by putting не in front of the verb, me neither comes out by putting не after тоже (tózhe):"
+            },
+            {
+              "kind": "speech",
+              "text": "я тоже не знаю — ya tózhe ne znáyu — I do not know either."
+            },
+            {
+              "kind": "speech",
+              "text": "English swaps the whole word — too becomes either. Russian leaves тоже (tózhe) where it is and lets не do the work, which is one fewer word to learn."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "я тоже (tózhe)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *я тоже*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "я тоже (tózhe) не знаю",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *я тоже не знаю*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "agree with any sentence you can already make, using тоже (tózhe)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: agree with any sentence you can already make, using **тоже**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"me too.\" (That is я тоже (tózhe).) Which two words is тоже (tózhe) built from? (то and же.) How do you turn it into \"me neither\"? (Put не in front of the verb — the word тоже (tózhe) itself does not change.) And one look back: which verb means to help, and what is buried inside it? (The verb is помогать, and the piece inside it means to be able.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

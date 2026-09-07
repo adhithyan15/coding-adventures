@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R17-joined-and-refused",
+    "language": "bengali",
+    "chapter": 28,
+    "sequence": 1490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18e5add14f13192b"
+  },
+  "findings": []
+}

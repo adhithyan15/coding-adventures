@@ -590,7 +590,7 @@
         "A1-NG2-01",
         "A1-NE16-01"
       ],
-      "note": "NO NUMERAL IS TAUGHT. Not odin, not dva, not any of them; dva appears once inside the phrase do vstrechi's commentary and nowhere as a word. A candidate cannot give a telephone number, an age, a price or a floor. Russian numerals also govern case, so this gap and the case gap will have to be paid together."
+      "note": "STILL ABSENT as a series. odin is now taught, as half of the odin ... drugoy joining pattern rather than as a numeral, so the track holds exactly one number and cannot count. dva through desyat, and the case government numerals impose, are untouched."
     },
     {
       "id": "RU-A1-Q-02",
@@ -729,7 +729,10 @@
       "id": "RU-A1-PRON-05",
       "category": "Mestoimenie - the pronoun",
       "label": "the relative kotoryy with an expressed antecedent",
-      "probe": null,
+      "probe": [
+        "RU-LEX-KOTORYY-01",
+        "RU-GRAMMAR-KOTORYY-CLAUSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -740,13 +743,19 @@
         "A1-SUB-04",
         "A1-SUB-05"
       ],
-      "note": "Absent - see the whole Podchinenie column."
+      "note": "TAUGHT with an expressed antecedent - the lesson's worked example is drug, kotoryy chitayet. What is NOT taught is kotoryy agreeing in case with its own clause, which needs the case column."
     },
     {
       "id": "RU-A1-PRON-06",
       "category": "Mestoimenie - the pronoun",
       "label": "interrogative words used as pronouns: kto, chto, kakoy, skolko",
-      "probe": null,
+      "probe": [
+        "RU-LEX-KTO-01",
+        "RU-LEX-CHTO-01",
+        "RU-LEX-KAKOY-01",
+        "RU-LEX-SKOLKO-01",
+        "RU-GRAMMAR-QUESTION-FAMILY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -755,7 +764,7 @@
       "derivedFrom": [
         "A1-PRON-06"
       ],
-      "note": "Absent. kak ('how') is taught, and only as part of the naming frame (RU-A1-ADV-07); the track has no kto and no chto, so it cannot ask 'who is this' or 'what is this' - the two questions a first Russian lesson normally opens with."
+      "note": "TAUGHT, all four, and taught as ONE family rather than as four words: kto, chto, kakoy, kak, kogda, pochemu and skolko are the same ancient question-stem, and the track already held kak and had already named kakoy inside the poka lesson six chapters before teaching it."
     },
     {
       "id": "RU-A1-PRON-07",
@@ -871,7 +880,10 @@
       "id": "RU-A1-ADV-06",
       "category": "Narechie - the adverb",
       "label": "connective adverbs: tozhe and tozhe ne",
-      "probe": null,
+      "probe": [
+        "RU-LEX-TOZHE-01",
+        "RU-GRAMMAR-TOZHE-NE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -880,7 +892,7 @@
       "derivedFrom": [
         "A1-ADV-06"
       ],
-      "note": "Absent."
+      "note": "TAUGHT, both halves: tozhe, and the fact that Russian says me neither by leaving tozhe alone and putting ne in front of the verb, where English swaps too for either."
     },
     {
       "id": "RU-A1-ADV-07",
@@ -905,7 +917,11 @@
       "id": "RU-A1-ADV-08",
       "category": "Narechie - the adverb",
       "label": "pochemu against potomu chto: asking a reason and giving one",
-      "probe": null,
+      "probe": [
+        "RU-LEX-POCHEMU-01",
+        "RU-ETYMON-POCHEMU-PO-CHTO",
+        "RU-LEX-POTOMU-CHTO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -915,7 +931,7 @@
         "A1-ADV-08",
         "A1-SUB-06"
       ],
-      "note": "Absent in both halves. potomu chto occurs zero times in the 88 lesson files - checked in Cyrillic and in romanization."
+      "note": "TAUGHT as a pair, which is how the contrast is worth teaching: pochemu is po plus a form of chto, and potomu is the same shape with the question-stem swapped for the pointing-stem, so the answer is made out of the question."
     },
     {
       "id": "RU-A1-V-01",
@@ -1088,7 +1104,12 @@
       "id": "RU-A1-V-11",
       "category": "Glagol - the verb",
       "label": "the imperative, second person: skazhite, povtorite, izvinite",
-      "probe": null,
+      "probe": [
+        "RU-GRAMMAR-IMPERATIVE-ITE-01",
+        "RU-LEX-IZVINITE-01",
+        "RU-LEX-POVTORITE-01",
+        "RU-LEX-POMOGITE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1098,7 +1119,7 @@
         "A1-V-11",
         "A1-F4-01"
       ],
-      "note": "ABSENT, and this is a functional emergency rather than a grammatical one. Every classroom instruction, every request and every repair move in Russian is an imperative, and the track has none - see RU-A1-F4-01 and RU-A1-F6-05."
+      "note": "TAUGHT for the polite -ite form, with the -i form named. The previous note called this a functional emergency rather than a grammatical one, and that is exactly the part now closed: the classroom instruction, the request and the repair move all exist. What is still absent is the imperative as a PARADIGM - how to form it from any verb rather than the four the track now holds."
     },
     {
       "id": "RU-A1-V-12",
@@ -1396,7 +1417,10 @@
       "id": "RU-A1-OS-02",
       "category": "Prostoe predlozhenie - the simple sentence",
       "label": "the yes-or-no question, carried by intonation alone",
-      "probe": null,
+      "probe": [
+        "RU-PUNCT-VOPROS-01",
+        "RU-GRAMMAR-LI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1405,7 +1429,7 @@
       "derivedFrom": [
         "A1-OS-02"
       ],
-      "note": "Absent as a taught fact, which is a real loss: Russian marks a polar question with intonation and nothing else, so it is the cheapest thing in the language to teach and the track never says it. There is no li either."
+      "note": "TAUGHT. The tochka lesson states that a Russian question looks exactly like a Russian statement until the last character, so what marks it is the voice; the li lesson then adds the particle, which is the other way Russian forms a polar question."
     },
     {
       "id": "RU-A1-OS-03",
@@ -1492,7 +1516,10 @@
       "id": "RU-A1-CO-01",
       "category": "Sochinenie - joining two clauses",
       "label": "joining with i",
-      "probe": null,
+      "probe": [
+        "RU-LEX-I-01",
+        "RU-GRAMMAR-I-TWO-CLAUSES-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1501,13 +1528,15 @@
       "derivedFrom": [
         "A1-CO-01"
       ],
-      "note": "NOT TAUGHT. i is USED as a conjunction in exactly two lesson bodies - RU-C04-chitat ('Ya chitayu i ponimayu') and RU-C13-sup ('Moloko, syr, sok i sup, pozhaluysta') - and is introduced by no lesson and carried by no atom. Its other seven appearances in the corpus are the LETTER i being spelled out. So the commonest word in the Russian language is in the book, in print, twice, doing grammatical work, and the reader is never told it is a word."
+      "note": "TAUGHT. i now has a lesson of its own and a second one that joins two whole clauses with it. Before this tranche the word was USED as a conjunction in exactly two lesson bodies - RU-C04-chitat and RU-C13-sup - and was introduced by no lesson and carried by no atom, so the commonest word in the Russian language was in the book, in print, doing grammatical work, and the reader was never told it was a word. The chto lesson records the same defect for chto and the moch lesson for moch; all three are closed."
     },
     {
       "id": "RU-A1-CO-02",
       "category": "Sochinenie - joining two clauses",
       "label": "negative coordination: ni ... ni",
-      "probe": null,
+      "probe": [
+        "RU-GRAMMAR-NI-NI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1516,13 +1545,16 @@
       "derivedFrom": [
         "A1-CO-02"
       ],
-      "note": "Absent."
+      "note": "TAUGHT. ni ... ni is the first joining pattern in the track that stands in FRONT of both halves rather than between them, and the lesson states the triple negative the pattern requires on the verb as well."
     },
     {
       "id": "RU-A1-CO-03",
       "category": "Sochinenie - joining two clauses",
       "label": "the alternative: ili",
-      "probe": null,
+      "probe": [
+        "RU-LEX-ILI-01",
+        "RU-ETYMON-ILI-I-PLUS-LI"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1531,13 +1563,17 @@
       "derivedFrom": [
         "A1-CO-03"
       ],
-      "note": "Absent. ili occurs zero times in the 88 lesson files."
+      "note": "TAUGHT, and taken apart: ili is i plus the old particle li, which the track then teaches on its own at RU-A1-SUB-07."
     },
     {
       "id": "RU-A1-CO-04",
       "category": "Sochinenie - joining two clauses",
       "label": "the contrast: no and a, which are two different words in Russian",
-      "probe": null,
+      "probe": [
+        "RU-LEX-NO-01",
+        "RU-LEX-A-01",
+        "RU-GRAMMAR-NO-VS-A-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1546,13 +1582,17 @@
       "derivedFrom": [
         "A1-CO-04"
       ],
-      "note": "Absent, both of them. Russian splits Spanish pero into no (adversative) and a (contrastive), which is a real A1 distinction on the TORFL lexis paper. Neither occurs anywhere in the track."
+      "note": "TAUGHT, both words and the rule that separates them. A whole lesson exists for the choice because an English speaker reaches for no every time; the test the track states is whether whereas could be substituted."
     },
     {
       "id": "RU-A1-CO-05",
       "category": "Sochinenie - joining two clauses",
       "label": "distributive coordination: odin ... drugoy",
-      "probe": null,
+      "probe": [
+        "RU-LEX-ODIN-01",
+        "RU-LEX-DRUGOY-01",
+        "RU-GRAMMAR-ODIN-DRUGOY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1561,13 +1601,16 @@
       "derivedFrom": [
         "A1-CO-05"
       ],
-      "note": "Absent."
+      "note": "TAUGHT. drugoy is built on drug, the friend-word taught in chapter 7, which spends a root the ledger already held."
     },
     {
       "id": "RU-A1-SUB-01",
       "category": "Podchinenie - subordination",
       "label": "the infinitive clause after a verb: ya khochu chitat",
-      "probe": null,
+      "probe": [
+        "RU-LEX-KHOTET-01",
+        "RU-GRAMMAR-INFINITIVE-AFTER-VERB-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1577,13 +1620,17 @@
         "A1-SUB-01",
         "A1-SUB-02"
       ],
-      "note": "Absent as a CONSTRUCTION although fourteen infinitives are taught: nothing in the track ever puts one after a finite verb, because there is no khochu, mogu or nado to put it after. Two Spanish points collapse here - Russian does not distinguish a subject infinitive clause from an object one by form."
+      "note": "TAUGHT. The note this replaces said the construction was absent although fourteen infinitives were taught, because there was no khochu, mogu or nado to put one after. khotet, moch and nado are all taught now and the bare-infinitive pattern has its own lesson."
     },
     {
       "id": "RU-A1-SUB-02",
       "category": "Podchinenie - subordination",
       "label": "the finite clause after a verb of thinking: ya dumayu, chto ...",
-      "probe": null,
+      "probe": [
+        "RU-GRAMMAR-CHTO-COMPLEMENTISER-01",
+        "RU-GRAMMAR-DUMAYU-CHTO-01",
+        "RU-GRAMMAR-ZNAYU-CHTO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1594,13 +1641,16 @@
         "A1-F2-02",
         "A1-F2-11"
       ],
-      "note": "Absent, and one word away from existing. dumat is taught in chapter 4 and znat in chapter 3; chto as a complementiser is not taught at all, so the two verbs that most need a clause after them have nothing to take one. This is the highest-value single word in the whole Russian queue."
+      "note": "TAUGHT, and it was the highest-value single word in the queue as the previous note said: dumat and znat were both taught chapters ago and neither could take anything bigger than a one-word object. Three lessons: the complementiser, the opinion frame, and the negative frame that turns ya ne znayu from a shrug into something the other person can act on."
     },
     {
       "id": "RU-A1-SUB-03",
       "category": "Podchinenie - subordination",
       "label": "the relative clause with kotoryy",
-      "probe": null,
+      "probe": [
+        "RU-LEX-KOTORYY-01",
+        "RU-GRAMMAR-KOTORYY-CLAUSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1610,13 +1660,16 @@
         "A1-SUB-04",
         "A1-SUB-05"
       ],
-      "note": "Absent."
+      "note": "TAUGHT. kotoryy uses a track-local concept tag rather than the canonical RELATIVE-CLAUSE, which the corpus spine stages at B2 - claiming that concept would move the track's reach without moving what a reader can do."
     },
     {
       "id": "RU-A1-SUB-04",
       "category": "Podchinenie - subordination",
       "label": "the causal clause: potomu chto",
-      "probe": null,
+      "probe": [
+        "RU-LEX-POTOMU-CHTO-01",
+        "RU-GRAMMAR-POTOMU-CHTO-CLAUSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1625,13 +1678,15 @@
       "derivedFrom": [
         "A1-SUB-06"
       ],
-      "note": "Absent - see RU-A1-ADV-08."
+      "note": "TAUGHT, and it realizes CONNECTIVE-BECAUSE on SPINE-SAY-WHY, an A1 spine node the track had omitted outright."
     },
     {
       "id": "RU-A1-SUB-05",
       "category": "Podchinenie - subordination",
       "label": "the purpose clause: chtoby plus infinitive",
-      "probe": null,
+      "probe": [
+        "RU-GRAMMAR-CHTOBY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1640,13 +1695,16 @@
       "derivedFrom": [
         "A1-SUB-07"
       ],
-      "note": "Absent."
+      "note": "TAUGHT, and taken apart as chto plus the wish-particle by."
     },
     {
       "id": "RU-A1-SUB-06",
       "category": "Podchinenie - subordination",
       "label": "simultaneity: kogda",
-      "probe": null,
+      "probe": [
+        "RU-LEX-KOGDA-01",
+        "RU-GRAMMAR-KOGDA-CLAUSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1655,13 +1713,15 @@
       "derivedFrom": [
         "A1-SUB-08"
       ],
-      "note": "Absent."
+      "note": "TAUGHT, in two lessons: the question word and the joining word, which are the same word and are said the same way."
     },
     {
       "id": "RU-A1-SUB-07",
       "category": "Podchinenie - subordination",
       "label": "the reported question with li, which is how Russian embeds a yes/no question",
-      "probe": null,
+      "probe": [
+        "RU-GRAMMAR-LI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1669,13 +1729,26 @@
       ],
       "derivedFrom": [],
       "russianSpecific": true,
-      "note": "Russian-specific: Spanish embeds a polar question with si and the PCIC A1 column does not ask for it, while Russian's li is both an embedder and a question particle. Absent."
+      "note": "TAUGHT. li is Russian-specific as a point and it arrives having already been half-taught: the reader met it welded into ili six chapters earlier."
     },
     {
       "id": "RU-A1-SUB-08",
       "category": "Podchinenie - subordination",
       "label": "joining two clauses at all: the whole column, measured together",
-      "probe": null,
+      "probe": [
+        "RU-LEX-I-01",
+        "RU-LEX-ILI-01",
+        "RU-GRAMMAR-NI-NI-01",
+        "RU-LEX-NO-01",
+        "RU-LEX-A-01",
+        "RU-GRAMMAR-ODIN-DRUGOY-01",
+        "RU-GRAMMAR-CHTO-COMPLEMENTISER-01",
+        "RU-LEX-POTOMU-CHTO-01",
+        "RU-GRAMMAR-KOGDA-CLAUSE-01",
+        "RU-GRAMMAR-KOTORYY-CLAUSE-01",
+        "RU-GRAMMAR-CHTOBY-01",
+        "RU-GRAMMAR-LI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -1683,7 +1756,7 @@
       ],
       "derivedFrom": [],
       "russianSpecific": true,
-      "note": "Russian-specific, and it exists to record a corpus-level finding rather than a single form. NOT ONE SUBORDINATOR AND NOT ONE COORDINATOR IS TAUGHT IN THIS TRACK. i, ili, no, a, chto, potomu chto, kogda, kotoryy, chtoby: zero introducing lessons, and for six of the nine, zero occurrences of any kind across all 88 files. The reader finishes fifteen chapters able to produce single clauses only. This is the same hole the six Indic tracks reported, in a language family that shares nothing with them, which makes it a property of how this corpus is authored rather than of Indo-Aryan or Dravidian grammar."
+      "note": "CLOSED. The previous note recorded the corpus-level finding that NOT ONE SUBORDINATOR AND NOT ONE COORDINATOR was taught in this track, and that six of the nine devices returned zero occurrences of any kind across all 88 files. All thirteen joining devices now have introducing lessons: i, ili, ni ... ni, no, a, odin ... drugoy, chto, potomu chto, kogda, kotoryy, chtoby and li. The reader can now produce a two-clause sentence, which the track could not do at any point in its first fifteen chapters."
     },
     {
       "id": "RU-A1-F1-01",
@@ -1754,7 +1827,7 @@
       "derivedFrom": [
         "A1-F1-04"
       ],
-      "note": "Absent as a taught move. da? IS mentioned in the chapter-1 da lesson as a sentence-final tag equivalent to n'est-ce pas, in the prose and not in an atom, so the reader has seen it and cannot be said to hold it. da? is the cheapest tag question in Europe and one atom away."
+      "note": "STILL ABSENT. The track now teaches li, which asks a polar question, and that is not a TAG - a tag asks for confirmation of something already asserted. da? remains mentioned in prose and carried by no atom."
     },
     {
       "id": "RU-A1-F1-05",
@@ -1795,7 +1868,9 @@
       "id": "RU-A1-F2-02",
       "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
       "label": "give an opinion",
-      "probe": null,
+      "probe": [
+        "RU-GRAMMAR-DUMAYU-CHTO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -1806,7 +1881,7 @@
         "A1-F2-02",
         "A1-F2-11"
       ],
-      "note": "Absent - blocked on chto (RU-A1-SUB-02). dumat is taught and cannot take an object clause."
+      "note": "TAUGHT. ya dumayu, chto ... turns every sentence the reader already owns into an opinion marked as their own."
     },
     {
       "id": "RU-A1-F2-03",
@@ -1926,7 +2001,7 @@
       "derivedFrom": [
         "A1-F2-09"
       ],
-      "note": "Absent, and downstream of RU-A1-CO-04: a counter-argument in Russian starts with no or a, and the track teaches neither."
+      "note": "STILL ABSENT as a MOVE, although its material arrived: no and a are both taught now, so the previous note's blocker is gone. What is missing is a lesson that puts a counter-argument, which is a discourse act rather than a word, and one new item per lesson left no slot for it in this tranche."
     },
     {
       "id": "RU-A1-F2-10",
@@ -1992,7 +2067,10 @@
       "id": "RU-A1-F2-13",
       "category": "Vyrazhat mnenie i znanie - opinions, attitudes and knowledge",
       "label": "ask about, and state, an ability",
-      "probe": null,
+      "probe": [
+        "RU-LEX-MOCH-01",
+        "RU-GRAMMAR-INFINITIVE-AFTER-VERB-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2004,7 +2082,7 @@
         "A1-F2-17",
         "A1-NG6-09"
       ],
-      "note": "Absent: no umet, no moch, no govorit conjugated. Ya govoryu po-russki - the single most useful ability sentence for a beginner - is out of reach although govorit is taught in chapter 3."
+      "note": "TAUGHT. moch had been PRINTED in the pomogat lesson, which spells out that pomogat is po- plus moch and then never teaches moch - the same defect as i, and it went unnoticed for fifteen chapters."
     },
     {
       "id": "RU-A1-F3-01",
@@ -2028,7 +2106,10 @@
       "id": "RU-A1-F3-02",
       "category": "Vkusy, zhelaniya i chuvstva - likes, wishes and feelings",
       "label": "ask about a preference by offering alternatives",
-      "probe": null,
+      "probe": [
+        "RU-LEX-ILI-01",
+        "RU-LEX-KAKOY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2038,7 +2119,7 @@
       "derivedFrom": [
         "A1-F3-02"
       ],
-      "note": "Absent - needs ili (RU-A1-CO-03)."
+      "note": "TAUGHT. The alternative question chai ili kofe? is the ili lesson's worked example, and the kakoy lesson asks the same thing the other way."
     },
     {
       "id": "RU-A1-F3-03",
@@ -2060,7 +2141,9 @@
       "id": "RU-A1-F3-04",
       "category": "Vkusy, zhelaniya i chuvstva - likes, wishes and feelings",
       "label": "say what you want",
-      "probe": null,
+      "probe": [
+        "RU-LEX-KHOTET-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2070,7 +2153,7 @@
       "derivedFrom": [
         "A1-F3-04"
       ],
-      "note": "Absent. khotet is not taught, which also blocks the infinitive clause at RU-A1-SUB-01 and the softened request at RU-A1-F4-02."
+      "note": "TAUGHT."
     },
     {
       "id": "RU-A1-F3-05",
@@ -2109,7 +2192,11 @@
       "id": "RU-A1-F4-01",
       "category": "Vliyat na sobesednika - influencing the other person",
       "label": "give an instruction",
-      "probe": null,
+      "probe": [
+        "RU-GRAMMAR-IMPERATIVE-ITE-01",
+        "RU-LEX-POVTORITE-01",
+        "RU-GRAMMAR-GOVORITE-MEDLENNO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2119,7 +2206,7 @@
       "derivedFrom": [
         "A1-F4-01"
       ],
-      "note": "Absent - no imperative anywhere (RU-A1-V-11)."
+      "note": "TAUGHT. The -ite ending is named as the polite imperative, which retroactively turns izvinite and prostite into what they always were - commands - and makes them a set instead of three separate things to memorise."
     },
     {
       "id": "RU-A1-F4-02",
@@ -2145,7 +2232,9 @@
       "id": "RU-A1-F4-03",
       "category": "Vliyat na sobesednika - influencing the other person",
       "label": "ask for help",
-      "probe": null,
+      "probe": [
+        "RU-LEX-POMOGITE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2155,7 +2244,7 @@
       "derivedFrom": [
         "A1-F4-03"
       ],
-      "note": "Absent although pomogat ('to help') is taught in chapter 5. Pomogite, pozhaluysta needs the imperative."
+      "note": "TAUGHT, and built entirely out of parts the reader already held: pomogat from chapter 5 and the -ite ending from two lessons earlier."
     },
     {
       "id": "RU-A1-F4-04",
@@ -2193,7 +2282,7 @@
       "derivedFrom": [
         "A1-F4-07"
       ],
-      "note": "Absent - needs an imperative or a first-person-plural form."
+      "note": "STILL ABSENT. The imperative the previous note asked for is now taught, so the blocker is gone; no offer or invitation is authored. A one-lesson job with no new glyph and no new grammar behind it."
     },
     {
       "id": "RU-A1-F4-06",
@@ -2314,7 +2403,11 @@
       "id": "RU-A1-F5-05",
       "category": "Sotsialnyy kontakt - social contact",
       "label": "apologise",
-      "probe": null,
+      "probe": [
+        "RU-LEX-IZVINITE-01",
+        "RU-LEX-PROSTITE-01",
+        "RU-PRAGMATICS-IZVINITE-PROSTITE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2324,7 +2417,7 @@
       "derivedFrom": [
         "A1-F5-06"
       ],
-      "note": "ABSENT, AND THIS IS THE FUNCTIONAL HOLE NO PERCENTAGE SHOWS. izvinite, prostite and izvini occur ZERO times in the 88 lesson files - checked in Cyrillic and in romanization. There is no way to say sorry in this track, and no way to open a request to a stranger, because izvinite is how a Russian starts one. The same hole was measured in Gujarati; it is not an Indic accident."
+      "note": "TAUGHT, and it was the functional hole no percentage showed: izvinite, prostite and izvini occurred ZERO times across the 88 files, so there was no way to say sorry and no way to open a request to a stranger. Both words are taught, with the rule that separates them - weight of the offence, not politeness - stated as its own atom."
     },
     {
       "id": "RU-A1-F5-06",
@@ -2465,7 +2558,11 @@
       "id": "RU-A1-F6-05",
       "category": "Vesti razgovor - managing the conversation, and repairing it",
       "label": "ask for a repeat, or for slower speech",
-      "probe": null,
+      "probe": [
+        "RU-LEX-POVTORITE-01",
+        "RU-LEX-MEDLENNO-01",
+        "RU-GRAMMAR-GOVORITE-MEDLENNO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2474,7 +2571,7 @@
       ],
       "derivedFrom": [],
       "russianSpecific": true,
-      "note": "Russian-specific as a point, because the PCIC A1 function column has no separate repair entry and the CEFR A1 descriptor does: 'can ask for repetition when he/she does not understand'. MEASURED AND ABSENT. povtorite, poteshe, medlenno, ne ponyal and eshche raz occur ZERO times across the 88 files. So the track can report a failure of understanding and cannot do anything about it - which, with the missing apology at RU-A1-F5-05, is the whole repair column reading two out of five."
+      "note": "TAUGHT, both halves. The track could report a failure of understanding and do nothing about it; it can now ask for a repeat and, separately, ask the speaker to change what they are doing."
     },
     {
       "id": "RU-A1-F6-06",
@@ -3596,7 +3693,7 @@
       "derivedFrom": [
         "A1-O1-05"
       ],
-      "note": "Absent, and it is a genuine transfer error rather than a curiosity: an English or Spanish speaker writes Russkiy and Ponedelnik, and a TORFL A1 writing paper marks both. The track cannot teach it because it has no weekday, month or nationality to lower-case (RU-A1-N-02, RU-A1-ADJ-02)."
+      "note": "STILL ABSENT, and still blocked for the reason the previous note gave: the track has no weekday, month or nationality to lower-case. The tranche added vtornik inside the povtorite etymology, in prose and not as an atom, which does not change the position."
     },
     {
       "id": "RU-A1-L-07",
@@ -3712,7 +3809,9 @@
       "id": "RU-A1-PU-01",
       "category": "Punktuatsiya - punctuation",
       "label": "the full stop",
-      "probe": null,
+      "probe": [
+        "RU-PUNCT-TOCHKA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -3721,13 +3820,15 @@
       "derivedFrom": [
         "A1-O3-01"
       ],
-      "note": "No lesson in the track teaches any punctuation mark. Marks appear in every example sentence, so the reader sees them; nothing tells them what Russian requires. This whole column is untaught, and it is not a transfer failure - Russian punctuation is close enough to Spanish that all nine points restate cleanly."
+      "note": "TAUGHT. The previous note recorded that no lesson in the track taught any punctuation mark at all; three writing lessons now do."
     },
     {
       "id": "RU-A1-PU-02",
       "category": "Punktuatsiya - punctuation",
       "label": "the comma, which Russian requires before every subordinator without exception",
-      "probe": null,
+      "probe": [
+        "RU-PUNCT-ZAPYATAYA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -3736,7 +3837,7 @@
       "derivedFrom": [
         "A1-O3-02"
       ],
-      "note": "Absent, and the least optional punctuation rule in the language: Russian puts a comma before chto, potomu chto, kotoryy and kogda every time, where Spanish and English use judgement. It is the first thing a TORFL writing marker looks at, and the track has no subordinator to put one in front of (RU-A1-SUB-08)."
+      "note": "TAUGHT, and deliberately placed AFTER the subordinators it governs: the rule that a comma stands at the seam of every subordinate clause cannot be stated until the track owns chto, potomu chto and kogda. The lesson also states the split among the coordinators - i takes none, no and a take one always."
     },
     {
       "id": "RU-A1-PU-03",
@@ -3757,7 +3858,9 @@
       "id": "RU-A1-PU-04",
       "category": "Punktuatsiya - punctuation",
       "label": "the question and exclamation marks, closing only",
-      "probe": null,
+      "probe": [
+        "RU-PUNCT-VOPROS-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -3766,7 +3869,7 @@
       "derivedFrom": [
         "A1-O3-04"
       ],
-      "note": "Absent as a taught fact and worth one line of contrast: Spanish opens a question with an inverted mark and Russian does not, so a Spanish-speaking learner over-marks and an English-speaking one does not. The track's own example sentences use them correctly and never say so."
+      "note": "TAUGHT, with the Spanish contrast the previous note asked for: Russian closes and never opens."
     },
     {
       "id": "RU-A1-PU-05",
@@ -3788,7 +3891,9 @@
       "id": "RU-A1-PU-06",
       "category": "Punktuatsiya - punctuation",
       "label": "the dash, which stands where the missing copula would have been",
-      "probe": null,
+      "probe": [
+        "RU-PUNCT-TIRE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "RU-CORPUS",
@@ -3798,7 +3903,7 @@
         "A1-O3-07",
         "A1-O3-08"
       ],
-      "note": "ABSENT AND LOAD-BEARING. Russian writes Moskva - stolitsa with a dash exactly because there is no is, so this punctuation mark is the written face of the zero copula the track teaches twice (RU-A1-SV-02). Teaching the syntax and not its punctuation leaves a reader who cannot write the sentence they can say."
+      "note": "TAUGHT, and it is the one punctuation point this track could teach EARLIER than most, because the zero copula it stands in for has been taught since chapter 2."
     },
     {
       "id": "RU-A1-PU-07",

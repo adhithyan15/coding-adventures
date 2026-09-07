@@ -1369,7 +1369,7 @@ Rload out 0 1k
 fn parses_bjt_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05 VAF=75 VA=120 VAR=60 VB=90 IKF=3m IK=5m IKR=4m TNOM=27 T_NOM=35 KF=2p AF=1.3 PTF=30 XTF=0.4 ITF=2m VTF=0.6 RE=5 RC=7 RB=9 RBM=4 IRB=2m XCJC=0.6 ISE=2p NE=1.5 ISC=3p NC=2.5 XTB=-0.3 BR=2 BETA_R=-1 NR=1.4 NF=1.2 VJE=0.8 PE=-1 VJC=0.9 PC=-1 MJC=0.45 MC=1 MJE=0.4 ME=1)
+.model fast NPN(IS=1e-13 BF=120 VT=26m CJE=2p CJC=3p TF=4n TR=5n XTI=2.5 EG=1.05 VAF=75 VA=120 VAR=60 VB=90 IKF=3m IK=5m IKR=4m TNOM=27 T_NOM=35 KF=2p AF=1.3 PTF=30 XTF=0.4 ITF=2m VTF=0.6 RE=5 RC=7 RB=9 RBM=4 IRB=2m XCJC=0.6 ISE=2p NE=1.5 ISC=3p NC=2.5 XTB=-0.3 BR=2 BETA_R=-1 NR=1.4 NF=1.2 VJE=0.8 PE=-1 VJC=0.9 PC=-1 MJC=0.45 MC=1 FC=0.4 MJE=0.4 ME=1)
 Vcc vcc 0 DC 5
 Vbase base 0 DC 0.7
 Q1 vcc base out fast
@@ -1435,6 +1435,7 @@ Rload out 0 1k
     assert_close(bjt.base_emitter_junction_potential, 0.8);
     assert_close(bjt.base_collector_junction_potential, 0.9);
     assert_close(bjt.base_collector_grading_coefficient, 0.45);
+    assert_close(bjt.forward_bias_depletion_coefficient, 0.4);
     assert_close(bjt.base_emitter_grading_coefficient, 0.4);
 
     let result = dc_op(&parsed.circuit).unwrap();
@@ -2132,6 +2133,28 @@ fn rejects_invalid_bjt_base_collector_grading_coefficient_aliases() {
                 .to_string()
                 .contains("BJT MJC must be finite and in [0, 1)"));
         }
+    }
+}
+
+#[test]
+fn parses_bjt_forward_bias_depletion_coefficient() {
+    let parsed = parse_netlist(".model shaped NPN(FC=0.4)\nQ1 c b e shaped").unwrap();
+
+    let Element::Bjt(bjt) = &parsed.circuit.elements()[0] else {
+        panic!("expected BJT");
+    };
+    assert_close(bjt.forward_bias_depletion_coefficient, 0.4);
+}
+
+#[test]
+fn rejects_invalid_bjt_forward_bias_depletion_coefficient() {
+    for value in ["-1", "1", "1e999"] {
+        let error = parse_netlist(&format!(".model bad NPN(FC={value})\nQ1 c b e bad"))
+            .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("BJT FC must be finite and in [0, 1)"));
     }
 }
 

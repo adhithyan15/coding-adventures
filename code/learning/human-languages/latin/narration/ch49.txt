@@ -1,0 +1,199 @@
+Latin, chapter 49: Possum, Volo, Qui, Et, Quando.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+possum — potis plus sum, and the verb that will not sit still.
+
+Warm-up.
+[pause 2 seconds]
+Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work.
+[your turn — recall: say aut — R1, one lesson back, before it decays]
+[pause 8 seconds for the answer]
+[your turn — recall: say nesciō — R2, the first real retrieval, five to fifteen lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say salvē (post merīdiem) — R3, durable, twenty to sixty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say salvē / salvēte — R3, durable again, a second word from the same distance]
+[pause 8 seconds for the answer]
+[your turn — recall: say pānis — R4, recognition at distance, eighty lessons back or more]
+[pause 8 seconds for the answer]
+[your turn — recall: say Iānuārius — R4, recognition at distance, a second word from that far back]
+[pause 8 seconds for the answer]
+
+The word, taken apart.
+possum — "I am able, I can."
+Two words in a coat. Potis meant "able," and Latin bolted it onto sum, the verb the eight-verb chapter gave you. Where sum begins with s, the t of potis flattens into it — pot-sum becomes possum — and where it does not, the t survives:
+[a table of 5 rows, read aloud]
+person: I can. form: possum. built from: pot- + sum.
+person: you can. form: potes. built from: pot- + es.
+person: he/she can. form: potest. built from: pot- + est.
+person: we can. form: possumus. built from: pot- + sumus.
+person: they can. form: possunt. built from: pot- + sunt.
+What follows possum is an infinitive, which is the form every verb in this book is already stored under: possum vidēre, "I can see." Nōn possum vidēre, "I cannot see," using last chapter's rule.
+English potent, possible, potential and omnipotent are all potis; so is power, by way of French pouvoir.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: possum, posse]
+[pause 8 seconds for the answer]
+[your turn — say: every word this chapter has given you so far, in order]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two words are inside possum? (Potis and sum.) What form follows it? (The infinitive.) Say "I cannot see." (Nōn possum vidēre.)
+
+
+Lesson 2 of 5.
+volō — and the root inside voluntary, benevolent and will itself.
+
+Warm-up.
+[pause 2 seconds]
+Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work.
+[your turn — recall: say possum — R1, one lesson back, before it decays]
+[pause 8 seconds for the answer]
+[your turn — recall: say male — R2, the first real retrieval, five to fifteen lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say salvē — bonum vesperum — bonam noctem — valē — R3, durable, twenty to sixty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say sum — R3, durable again, a second word from the same distance]
+[pause 8 seconds for the answer]
+[your turn — recall: say medius diēs — R4, recognition at distance, eighty lessons back or more]
+[pause 8 seconds for the answer]
+[your turn — recall: say hōra — R4, recognition at distance, a second word from that far back]
+[pause 8 seconds for the answer]
+
+The word, taken apart.
+volō — "I want, I wish."
+The word that turns everything you own into a request. Like possum, it takes an infinitive:
+Volō bibere. — I want to drink. Nōn volō dormīre. — I do not want to sleep.
+Its forms are irregular and worth hearing once: volō, vīs, vult, volumus, vultis, volunt. The infinitive is velle, not volere — an old form that survived because the verb was too common to regularise.
+The root is Proto-Indo-European welh₁-, "to choose." English inherited it directly as will — a blood cousin, not a loan — and borrowed it back from Latin many times over: voluntary, volition, benevolent ("well-wishing"), malevolent (with last chapter's male), and voluptuous.
+And you have already met its imperative. Vel, "or," from the last lesson of the denying chapter, is literally volō telling you to choose.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: volō, velle]
+[pause 8 seconds for the answer]
+[your turn — say: every word this chapter has given you so far, in order]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What form follows volō? (The infinitive.) Which English word is a blood cousin rather than a loan? (Will.) And where have you already met volō's imperative? (In vel, "or.")
+
+
+Lesson 3 of 5.
+quī — the commonest word in Latin prose, and the one that joins two sentences into one.
+
+Warm-up.
+[pause 2 seconds]
+Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work.
+[your turn — recall: say volō — R1, one lesson back, before it decays]
+[pause 8 seconds for the answer]
+[your turn — recall: say malus — R2, the first real retrieval, five to fifteen lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say sum — R3, durable, twenty to sixty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say habeō — R3, durable again, a second word from the same distance]
+[pause 8 seconds for the answer]
+[your turn — recall: say medius diēs — R4, recognition at distance, eighty lessons back or more]
+[pause 8 seconds for the answer]
+[your turn — recall: say hōra — R4, recognition at distance, a second word from that far back]
+[pause 8 seconds for the answer]
+
+The word, taken apart.
+quī, quae, quod — "who, which, that."
+This is the single most common word in surviving Latin prose, and it does one job: it hangs a second statement onto a noun in the first.
+Amīcus quī venit. — The friend who comes. Liber quem legō. — The book which I am reading.
+Three forms, because it agrees with the noun it hangs on: quī for a masculine one, quae for a feminine one, quod for a neuter one.
+You already know its relatives. Quid ("what") from the wellbeing exchange and quis ("who") are the question words built on the same Proto-Indo-European stem kwi-. And Grimm's Law — the piscis law, p to f — does kw to hw as well, which is why English who, what, which and why are inherited cousins of this word rather than borrowings from it. The spelling wh- is the old hw- with its letters swapped.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: quī, quae, quod]
+[pause 8 seconds for the answer]
+[your turn — say: every word this chapter has given you so far, in order]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does quī do to two sentences? (Joins them — hangs the second on a noun in the first.) Are English who and what cousins or loans? (Cousins, by Grimm's Law.)
+
+
+Lesson 4 of 5.
+et — and the enclitic -que, which does the same job glued to the back of a word.
+
+Warm-up.
+[pause 2 seconds]
+Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work.
+[your turn — recall: say quī — R1, one lesson back, before it decays]
+[pause 8 seconds for the answer]
+[your turn — recall: say sed — R2, the first real retrieval, five to fifteen lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say caelum — R3, durable, twenty to sixty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say eō — R3, durable again, a second word from the same distance]
+[pause 8 seconds for the answer]
+[your turn — recall: say hōra — R4, recognition at distance, eighty lessons back or more]
+[pause 8 seconds for the answer]
+[your turn — recall: say vīgintī annōs nātus sum — R4, recognition at distance, a second word from that far back]
+[pause 8 seconds for the answer]
+
+The word, taken apart.
+et — "and."
+The plainest word in this book, and the corpus went forty-seven chapters without teaching it.
+Aqua et vīnum. — Water and wine. Pater et māter. — Father and mother.
+Latin has a second way of saying it, and a reader meets it constantly: -que, glued onto the back of the second word rather than standing between the two.
+Senātus populusque Rōmānus — "The Senate and the Roman people," the SPQR on every Roman standard. The -que is that fourth letter.
+-que is Proto-Indo-European kwe, an enclitic Sanskrit kept as ca and Greek as te. Et went the other way: it is Spanish y, French et, Italian e and Portuguese e, and every Romance daughter kept it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: et]
+[pause 8 seconds for the answer]
+[your turn — say: every word this chapter has given you so far, in order]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Two ways to say and in Latin? (Et, and -que glued to the back.) What does the Q in SPQR stand for? (-que, "and.")
+
+
+Lesson 5 of 5.
+quandō — as a question and as the hinge of a clause.
+
+Warm-up.
+[pause 2 seconds]
+Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work.
+[your turn — recall: say et — R1, one lesson back, before it decays]
+[pause 8 seconds for the answer]
+[your turn — recall: say aut — R2, the first real retrieval, five to fifteen lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say mare — R3, durable, twenty to sixty lessons back]
+[pause 8 seconds for the answer]
+[your turn — recall: say veniō — R3, durable again, a second word from the same distance]
+[pause 8 seconds for the answer]
+[your turn — recall: say vīgintī annōs nātus sum — R4, recognition at distance, eighty lessons back or more]
+[pause 8 seconds for the answer]
+[your turn — recall: say tempestās — R4, recognition at distance, a second word from that far back]
+[pause 8 seconds for the answer]
+
+The word, taken apart.
+quandō — "when."
+Built on the same kwo- stem as quī and quid, three lessons back. It does two jobs.
+As a question: Quandō venīs? — "When are you coming?"
+As a hinge, joining two statements in time: Quandō veniō, videō — "When I come, I see."
+Every Romance daughter kept it unchanged: Spanish cuándo, Italian and Portuguese quando, French quand. English quandary is often attached to it and the connection is not established — the word appears in the sixteenth century from nowhere obvious, and quandō is a guess rather than an etymology. This book will always tell you when a resemblance is only a resemblance.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: quandō]
+[pause 8 seconds for the answer]
+[your turn — say: every word this chapter has given you so far, in order]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Two jobs for quandō? (Asking when, and joining two statements in time.) Is English quandary from it? (Not established — a guess, not an etymology.)

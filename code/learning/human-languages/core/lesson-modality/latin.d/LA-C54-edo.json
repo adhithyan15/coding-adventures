@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C54-edo",
+    "language": "latin",
+    "chapter": 54,
+    "sequence": 1450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a12bc603355afe1"
+  },
+  "findings": []
+}

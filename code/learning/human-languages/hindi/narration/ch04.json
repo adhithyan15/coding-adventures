@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a95e574f3840801f",
+  "sourceHash": "fnv1a64:9d37927533d05aa1",
   "lessons": [
     {
       "id": "HI-C04-phir",
@@ -135,16 +135,16 @@
       "id": "HI-C04-milenge",
       "sequence": 350,
       "title": "मिलेंगे (milenge) — \"(we) will meet\"",
-      "headword": "मिलेंगे",
-      "romanization": "milenge",
-      "gloss": "(we) will meet",
+      "headword": "मिलेंगे / मिलना / मिल् / मिले / -एंगे / -गे",
+      "romanization": "mileṅge / milnā / mil / mile / -eṅge / -ge",
+      "gloss": "(we or they) will meet / to meet / stem / future base / plural future ending and its final syllable",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:054b13564fb25862",
+      "sourceHash": "fnv1a64:d2a22d32e65ad12c",
       "notice": {
         "modality": "sight",
         "needs": [

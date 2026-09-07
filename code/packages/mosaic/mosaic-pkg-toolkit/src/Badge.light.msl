@@ -1,7 +1,7 @@
 // Badge.light.msl — default light-theme styling for Badge.
 //
-// Pill shape via large border-radius. Variant sub-parts deferred
-// per spec §10 question 2; v0.1 PR-2 ships the primary-style base.
+// Pill shape via large border-radius. The base is the documented
+// primary fallback; UI49 states own the closed `variant` axis.
 
 style Badge {
   part badge {
@@ -11,6 +11,39 @@ style Badge {
     color         : "#ffffff" ;
     font-size     : 12 ;
     font-weight   : 600 ;
+
+    state primary {
+      background : "#0d6efd" ;
+      color      : "#ffffff" ;
+    }
+    state secondary {
+      background : "#6c757d" ;
+      color      : "#ffffff" ;
+    }
+    state success {
+      background : "#198754" ;
+      color      : "#ffffff" ;
+    }
+    state danger {
+      background : "#dc3545" ;
+      color      : "#ffffff" ;
+    }
+    state warning {
+      background : "#ffc107" ;
+      color      : "#212529" ;
+    }
+    state info {
+      background : "#0dcaf0" ;
+      color      : "#212529" ;
+    }
+    state light {
+      background : "#f8f9fa" ;
+      color      : "#212529" ;
+    }
+    state dark {
+      background : "#212529" ;
+      color      : "#ffffff" ;
+    }
   }
   part badge-text {
   }

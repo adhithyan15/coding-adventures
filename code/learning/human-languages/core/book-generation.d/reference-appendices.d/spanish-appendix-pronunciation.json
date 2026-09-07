@@ -1,0 +1,7 @@
+{
+  "language": "spanish",
+  "title": "Pronunciation --- a reference, not a chapter",
+  "shortTitle": "Pronunciation (reference)",
+  "source": "spanish/pronunciation-reference.md",
+  "output": "spanish/book/chapters/appendix-pronunciation.tex"
+}

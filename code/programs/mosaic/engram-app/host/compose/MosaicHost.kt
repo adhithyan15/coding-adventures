@@ -432,7 +432,27 @@ private fun jsonMap(value: Map<*, *>): Map<String, Any?> =
         key to entry.value
     }.toMap()
 
+/**
+ * Read a byte payload that may be base64 or a legacy array of numbers.
+ *
+ * Media and the exported `.apkg` moved to base64 because a JSON array of
+ * decimal numbers costs 3.6 wire bytes per byte (#13671). Both spellings are
+ * accepted so a host and the engine can be updated independently -- and
+ * because the failure mode otherwise is an EMPTY file rather than an error,
+ * which reads as a successful export of nothing.
+ */
 private fun jsonByteArray(root: JSONObject, property: String): ByteArray {
+    // `opt` and an explicit type check, NOT `optString`: org.json's
+    // `optString` COERCES, returning "[109,112,51]" for a JSONArray rather
+    // than "". That would send every legacy array down the base64 branch, fail
+    // to decode, and hand back an empty ByteArray -- a silently empty export
+    // file. Every other host adapter here uses an explicit type test; this is
+    // the one API that does not make that the default.
+    val payload = root.opt(property)
+    if (payload is String) {
+        return runCatching { java.util.Base64.getDecoder().decode(payload) }
+            .getOrDefault(ByteArray(0))
+    }
     val values = root.optJSONArray(property) ?: return ByteArray(0)
     return ByteArray(values.length()) { index -> values.optInt(index).toByte() }
 }

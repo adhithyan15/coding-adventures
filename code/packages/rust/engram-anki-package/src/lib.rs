@@ -259,7 +259,62 @@ pub struct MediaFile {
 pub struct ResolvedMediaFile {
     pub archive_name: String,
     pub filename: Option<String>,
+    /// The file's bytes, base64 on the wire.
+    ///
+    /// The SECOND media path, and it would have been missed by fixing only
+    /// `MediaAssetRecord`: `eg_read_anki_apkg_media` returns one media file,
+    /// so this response IS a media-sized payload. A derived `Vec<u8>`
+    /// serialises as an array of decimal numbers at 4.6 wire bytes per byte
+    /// (#13671); base64 is 1.33.
+    ///
+    /// Reads accept both spellings, for the same reason `MediaAssetRecord`
+    /// does -- anything already persisted holds the array form.
+    #[serde(with = "media_bytes")]
     pub data: Vec<u8>,
+}
+
+/// Base64 on write, base64 or the legacy numeric array on read.
+///
+/// Deliberately a copy of the module in `engram-core` rather than a shared
+/// helper: `engram-core` does not depend on this crate and this crate's serde
+/// is not optional, so hoisting it would mean a third crate existing only to
+/// hold twelve lines. If a third media-carrying type appears, that calculus
+/// changes.
+mod media_bytes {
+    use coding_adventures_base64::{decode, encode, STANDARD};
+    use serde::de::{Error, SeqAccess, Visitor};
+    use serde::{Deserializer, Serializer};
+    use std::fmt;
+
+    pub fn serialize<S: Serializer>(data: &[u8], serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&encode(data, &STANDARD))
+    }
+
+    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Vec<u8>, D::Error> {
+        deserializer.deserialize_any(MediaBytesVisitor)
+    }
+
+    struct MediaBytesVisitor;
+
+    impl<'de> Visitor<'de> for MediaBytesVisitor {
+        type Value = Vec<u8>;
+
+        fn expecting(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.write_str("a base64 string, or an array of byte values (legacy)")
+        }
+
+        fn visit_str<E: Error>(self, value: &str) -> Result<Self::Value, E> {
+            decode(value, &STANDARD).map_err(E::custom)
+        }
+
+        fn visit_seq<A: SeqAccess<'de>>(self, mut seq: A) -> Result<Self::Value, A::Error> {
+            let mut out = Vec::with_capacity(seq.size_hint().unwrap_or(0));
+            while let Some(byte) = seq.next_element::<u8>()? {
+                out.push(byte);
+            }
+            Ok(out)
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -513,10 +568,28 @@ const MEDIA_EXPANSION_RATIO: u64 = 50;
 /// hostile one.
 ///
 /// This is a limit on browser media size, and it is deliberately visible as one
-/// rather than hidden. The real fix is to stop amplifying — serialise media as
-/// base64 and stream with `to_writer` instead of building a `Value` tree — which
-/// changes the wire format every host adapter reads and so belongs in its own
-/// change, not this one.
+/// rather than hidden.
+///
+/// #14411 and the base64 encoding removed the serialisation amplification this
+/// was sized around, and the ceiling was briefly raised to 128 MiB on the
+/// strength of a 1.34x figure. **That was the wrong number for this decision.**
+/// 1.34x is incremental allocation during serialisation; it excludes the
+/// retained media, the reducer's whole-state clone on every command, and the
+/// output buffer's doubling growth. Measured total live heap at 128 MiB of
+/// media is 429-939 MiB depending on media shape, not the ~172 MiB the
+/// arithmetic implied.
+///
+/// The `* MEDIA_EXPANSION_RATIO` term is also not the effective bound above a
+/// 2.56 MiB archive: zip padding is free, so an attacker reaches the ceiling
+/// with a small archive and the ceiling alone decides the maximum. On `wasm32`
+/// linear memory never shrinks and `panic = "abort"` means the `catch_unwind`
+/// in `catch_json` never runs, so the spike takes the user's unsaved
+/// collection with it.
+///
+/// So it stays at 32 MiB. Raising it needs the multiplier removed first --
+/// pre-reserving the response buffer, `encode_into` rather than `encode` per
+/// asset, and not deep-cloning `media_assets` on every dispatch -- rather than
+/// a smaller serialisation constant.
 #[cfg(target_arch = "wasm32")]
 const MEDIA_EXPANSION_CEILING: u64 = 32 * 1024 * 1024;
 

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R37-who-how-many",
+    "language": "marathi",
+    "chapter": 37,
+    "sequence": 1530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ecc9f2cb97d13f7"
+  },
+  "findings": []
+}

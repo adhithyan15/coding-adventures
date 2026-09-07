@@ -5829,6 +5829,546 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("[A ]\n[B ]\n[ZZ]"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL pointer/overflow: in-range STRING preserves both sides and advances by bytes placed.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(2) VALUE \"XY\".\n\
+               000000 01 T PIC X(6) VALUE \"......\".\n\
+               000000 01 P PIC 9(2) VALUE 3.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A DELIMITED BY SIZE INTO T WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" T \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[..XY..]\n05\nNON"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: an exact fit reaches width plus one without overflow.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(3) VALUE \"XYZ\".\n\
+               000000 01 T PIC X(5) VALUE \".....\".\n\
+               000000 01 P PIC 9(2) VALUE 3.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A DELIMITED BY SIZE INTO T WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" T \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[..XYZ]\n06\nNON"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: a partial STRING transfer updates its pointer before ON OVERFLOW.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(5) VALUE \"abcde\".\n\
+               000000 01 T PIC X(6) VALUE \"......\".\n\
+               000000 01 P PIC 9(2) VALUE 4.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A DELIMITED BY SIZE INTO T WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" T \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[...abc]\n07\nYES"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: zero STRING pointer transfers nothing and remains unchanged.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 A PIC X(3) VALUE \"abc\".\n\
+               000000 01 T PIC X(6) VALUE \"......\".\n\
+               000000 01 P PIC 9(2) VALUE 0.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING A DELIMITED BY SIZE INTO T WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" T \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[......]\n00\nYES"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: UNSTRING starts at a middle field and reports remaining input.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"a,b,c\".\n\
+               000000 01 R1 PIC X(3) VALUE \"...\".\n\
+               000000 01 P PIC 9(2) VALUE 3.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" R1 \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[b  ]\n05\nYES"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: UNSTRING exhaustion advances past the end and runs the success clause.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(3) VALUE \"a,b\".\n\
+               000000 01 R1 PIC X(3) VALUE \"...\".\n\
+               000000 01 R2 PIC X(3) VALUE \"...\".\n\
+               000000 01 P PIC 9(2) VALUE 1.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 UNSTRING S DELIMITED BY \",\" INTO R1 R2 WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" R1 \"]\".\n\
+               000000 DISPLAY \"[\" R2 \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[a  ]\n[b  ]\n04\nNON"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: a past-end UNSTRING pointer leaves receiver and pointer unchanged.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"a,b,c\".\n\
+               000000 01 R1 PIC X(3) VALUE \"ZZZ\".\n\
+               000000 01 P PIC 9(2) VALUE 6.\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" R1 \"]\".\n\
+               000000 DISPLAY P.\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[ZZZ]\n06\nYES"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL pointer/overflow: a trailing delimiter leaves an empty field and therefore overflows.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(4) VALUE \"A,B,\".\n\
+               000000 01 R1 PIC X(3) VALUE \"...\".\n\
+               000000 01 R2 PIC X(3) VALUE \"...\".\n\
+               000000 01 F PIC X(3) VALUE \"???\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 UNSTRING S DELIMITED BY \",\" INTO R1 R2\n\
+               000000 ON OVERFLOW MOVE \"YES\" TO F\n\
+               000000 NOT ON OVERFLOW MOVE \"NON\" TO F.\n\
+               000000 DISPLAY \"[\" R1 \"]\".\n\
+               000000 DISPLAY \"[\" R2 \"]\".\n\
+               000000 DISPLAY F.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[A  ]\n[B  ]\nYES"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // INSPECT all accumulates: observe counters after each operation.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(11) VALUE \"MISSISSIPPI\".\n\
+               000000 01 DL PIC X VALUE \"S\".\n\
+               000000 01 C PIC 9(3) VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL DL.\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"Z\".\n\
+               000000 DISPLAY C.\n\
+               000000 MOVE \"I\" TO DL.\n\
+               000000 INSPECT S TALLYING C FOR ALL DL.\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("009\n009\n013"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT characters counts padding: observe counters after each operation.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB\".\n\
+               000000 01 C PIC 9(3) VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR CHARACTERS.\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR CHARACTERS.\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("011\n017"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT leading stops at first mismatch: observe counters after each operation.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"00X00\".\n\
+               000000 01 DL PIC X VALUE \"0\".\n\
+               000000 01 C PIC 9(3) VALUE 5.\n\
+               000000 01 A PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR LEADING DL.\n\
+               000000 INSPECT S TALLYING A FOR ALL DL.\n\
+               000000 DISPLAY C.\n\
+               000000 DISPLAY A.\n\
+               000000 MOVE \"X0000\" TO S.\n\
+               000000 INSPECT S TALLYING C FOR LEADING DL.\n\
+               000000 DISPLAY C.\n\
+               000000 MOVE \"00000\" TO S.\n\
+               000000 INSPECT S TALLYING C FOR LEADING DL.\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("007\n004\n007\n012"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT replace all items: observe the rebuilt source text.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"ABABA\".\n\
+               000000 01 A PIC X VALUE \"A\".\n\
+               000000 01 B PIC X VALUE \"X\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL A BY B.\n\
+               000000 DISPLAY S.\n\
+               000000 INSPECT S REPLACING ALL \"Z\" BY \"Q\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"B\" TO A.\n\
+               000000 MOVE \"Y\" TO B.\n\
+               000000 INSPECT S REPLACING ALL A BY B.\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("XBXBX\nXBXBX\nXYXYX"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT replace leading gap: observe the rebuilt source text.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"00X00\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING LEADING \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"00X00\" TO S.\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"X0000\" TO S.\n\
+               000000 INSPECT S REPLACING LEADING \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("**X00\n**X**\nX0000"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT replace characters padding: observe the rebuilt source text.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"AB\".\n\
+               000000 01 R PIC X VALUE \"*\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 INSPECT S REPLACING CHARACTERS BY R.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 MOVE \"Q\" TO R.\n\
+               000000 INSPECT S REPLACING CHARACTERS BY R.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[AB   ]\n[*****]\n[QQQQQ]"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT replace no rechaining: observe the rebuilt source text.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"abQab\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL \"a\" BY \"b\" ALL \"b\" BY \"z\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("bzQbz"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // INSPECT replace first match: observe the rebuilt source text.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"aQaaa\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"a\" BY \"y\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("xQxxx"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // VM-057: STRING with a single sending field that is also the INTO receiver
+    // lowers to a truncating `str_slice` whose destination register is the SAME
+    // register as its source (`concat` is the receiver's own register when
+    // there is exactly one sending field — no intermediate temp is created).
+    // The receiver's total content exactly fills its own width, so the correct
+    // observation is the field completely unchanged; the pre-fix WASM lowering
+    // wrote the fresh allocation handle into that shared register before
+    // copying the source bytes, so the copy read back its own new, uninitialized
+    // block instead of the original characters.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. STRING-SELF-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"ABCDE\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING S DELIMITED BY SIZE INTO S.\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("ABCDE"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // VM-047c: INSPECT TALLYING FOR ALL ... BEFORE region — the count is bounded to
+    // the sub-slice left of the FIRST occurrence of the region delimiter. "AB0CD0"
+    // has one "0" before the first "C" (the "AB0" prefix), so the first op adds 1.
+    // The second op uses an ABSENT region delimiter ("Z" never occurs): per the ISO
+    // not-found asymmetry, a BEFORE region with no delimiter match is the WHOLE
+    // source, so it counts BOTH "0"s (indices 2 and 5) and adds 2 more (001 -> 003).
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY-BEFORE.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 01 C PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\".\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"Z\".\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("001\n003"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // VM-047c: INSPECT TALLYING FOR ALL ... AFTER region — the asymmetric partner of
+    // the BEFORE row above. "AB0CD0" has one "0" after the first "C" (the "D0"
+    // suffix), so the first op adds 1. The second op's region delimiter ("Z") is
+    // ABSENT: per the ISO not-found asymmetry an AFTER region with no delimiter
+    // match is EMPTY (not the whole source), so it adds 0 and the counter is
+    // unchanged (001 -> 001) — the defining asymmetry this row pins.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY-AFTER.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 01 C PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" AFTER \"C\".\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\".\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("001\n001"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // VM-047c: INSPECT REPLACING ALL ... BEFORE region — the rewrite is bounded to
+    // the sub-slice left of the first delimiter match. Bracket markers make the
+    // untouched trailing "0" visible. BEFORE "C" only reaches the "AB0" prefix, so
+    // just the index-2 "0" becomes "*". Resetting S and replacing BEFORE an ABSENT
+    // "Z" covers the WHOLE source (the not-found asymmetry), so both "0"s become "*".
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-BEFORE.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"C\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 MOVE \"AB0CD0\" TO S.\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"Z\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[AB0CD0]\n[AB*CD0]\n[AB*CD*]"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // VM-047c: INSPECT REPLACING ALL ... AFTER region — the asymmetric partner of
+    // the REPLACING BEFORE row above. AFTER "C" only reaches the "D0" suffix, so
+    // just the index-5 "0" becomes "*". Resetting S and replacing AFTER an ABSENT
+    // "Z" covers an EMPTY region (the not-found asymmetry), so NOTHING changes — the
+    // final bracketed line is byte-identical to the original, the defining asymmetry
+    // this row pins for REPLACING.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-AFTER.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"C\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 MOVE \"AB0CD0\" TO S.\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"Z\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("[AB0CD0]\n[AB0CD*]\n[AB0CD0]"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
+    // VM-047c: BEFORE and AFTER together in ONE INSPECT statement — the combined
+    // TALLYING...REPLACING form, each half carrying its OWN independent region kind.
+    // Both windows are derived over the SAME original "0A0B0" bytes (the tally never
+    // mutates the source), in ISO tally-then-replace order. TALLYING FOR ALL "0"
+    // BEFORE "B" restricts the count to "0A0" (indices 0/2) -> C = 002. REPLACING ALL
+    // "0" BY "*" AFTER "B" restricts the rewrite to the "0" AFTER the first "B"
+    // (index 4 only) -> "0A0B*". This is the standard's genuine "BEFORE and AFTER
+    // together" combination: two independently-regioned phrases in one statement, not
+    // two region keywords on a single delimiter phrase (see the VM-047c backlog
+    // contract for why a single-phrase `BEFORE x AFTER y` intersection stays
+    // unimplemented and out of this slice's scope).
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. COMBINED-REGIONS.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"0A0B0\".\n\
+               000000 01 C PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"B\"\n\
+               000000    REPLACING ALL \"0\" BY \"*\" AFTER \"B\".\n\
+               000000 DISPLAY C.\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.",
+        expect: Expect::Stdout("002\n0A0B*"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

@@ -9,12 +9,13 @@ and you can read almost any word aloud correctly.
 - **Every letter is sounded**, and vowels are pure: *a* (ah), *e* (eh), *i*
   (ee), *o* (oh), *u* (oo) — never the English glide.
 - **c** and **g** are soft (*ch*, *j*) before *e/i* (*ciao*, *giorno*), hard
-  (*k*, *g*) before *a/o/u*. **ch**/**gh** force the hard sound (*chi* = "kee").
+  (*k*, *g*) before *a/o/u* (*casa*, *gatto*). **ch**/**gh** force the hard
+  sound (*chi* = "kee").
 - **gli** = the *lli* of *million*; **gn** = the *ny* of *canyon*; **sc** before
   *e/i* = *sh* (*sciare* = "shee-AH-reh").
 - **z** = *ts* or *dz* (*grazie* = "GRAH-tsyeh").
-- **Double consonants are held longer** and change meaning: *notte* (night) vs.
-  *note* (notes); *nonno* (grandfather) vs. *nono* (ninth).
+- **Double consonants are held longer** and change meaning: *no**tt**e* (night)
+  vs. *note* (notes); *no**nn**o* (grandfather) vs. *nono* (ninth).
 - **h** is always silent — it exists only to harden *c*/*g*.
 
 ## Stress

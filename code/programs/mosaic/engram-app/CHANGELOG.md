@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Fixed: XAML layout variants generated duplicate partial classes.** The
+  touch layout now emits its own `EngramAppTouch` class and event union, so the
+  WinUI project can compile both layouts without duplicate members (#14234).
+
 - The deck list on the home screen shows each deck's due and new counts, so the
   screen answers "what should I study?" without selecting each deck in turn.
 - `onSelectDeck` carries a row index; see the `mosaic-pkg-deck-stats` changelog

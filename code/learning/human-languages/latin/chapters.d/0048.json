@@ -1,0 +1,21 @@
+{
+  "chapter": 48,
+  "title": "Nescio, Male, Malus, Sed, Aut",
+  "label": "ch:la-negatio",
+  "canDo": "I can say that I do not know, that something went badly, and I can set one thing against another or offer a choice between two.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C48-aut",
+    "kind": "task",
+    "summary": "The fifth word of the group, taken apart against the four before it.",
+    "assesses": [
+      "LA-LEX-C48-DENY-01",
+      "LA-LEX-C48-DENY-02",
+      "LA-LEX-C48-DENY-03",
+      "LA-LEX-C48-DENY-04",
+      "LA-LEX-C48-DENY-05"
+    ]
+  }
+}

@@ -9,9 +9,8 @@
 //       Text [message]
 //       If (dismissible) HostButton [close-btn]
 //
-// The variant slot doesn't appear in the .mll — it routes through
-// the part-level styling in Alert.{theme}.msl. Same convention as
-// Button.mll (see Button.mll's commentary).
+// The variant slot doesn't appear in the .mll — UI49 routes its
+// closed values through slot-owned states in Alert.{theme}.msl.
 
 layout Alert {
   Box [ alert ] {

@@ -1,0 +1,20 @@
+{
+  "chapter": 43,
+  "title": "Near, Opposite, Far",
+  "label": "ch:mr-near-opposite-far",
+  "canDo": "I can place something near or in front of a landmark, say that it is far, and tell a postposition apart from an ordinary word by whether it bends the noun in front of it.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R43-how-far",
+    "kind": "production",
+    "summary": "Complete MR-R43-how-far and answer one where-question three ways -- near Pune, in front of the room, far -- naming which of the three needed no ending at all.",
+    "assesses": [
+      "MR-POSTP-JAVAL",
+      "MR-POSTP-SAMOR",
+      "MR-LEX-LAAMB"
+    ],
+    "note": "lāmb is in this chapter precisely because it is NOT a postposition: the contrast is what makes the oblique rule falsifiable rather than decorative."
+  }
+}

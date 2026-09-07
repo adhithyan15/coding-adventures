@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:f67bf8a16cebb728",
+  "lessonIds": [
+    "RU-C17-no",
+    "RU-C17-a",
+    "RU-C17-odin",
+    "RU-C17-drugoy",
+    "RU-W08-tochka"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "russian/narration/ch17.txt",
+  "json": "russian/narration/ch17.json",
+  "textHash": "fnv1a64:f2d2e9183fe56d7b",
+  "jsonHash": "fnv1a64:70baabaee4982d6f",
+  "findings": []
+}

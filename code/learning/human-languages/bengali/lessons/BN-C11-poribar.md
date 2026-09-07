@@ -47,7 +47,7 @@ whole group.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**পরিবার** is **প** (*pô*) + **রি** (*ri*) + **বা** (*bā*) + **র** (*r*,
+**পরিবার** is **প** (*pô*) + **রি** (*ri*) + বা (*bā*) + **র** (*r*,
 silent at the end, a bare consonant with nothing written after it). Four
 syllables in the spelling, three said aloud: *pô-ri-bār*.
 

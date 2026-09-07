@@ -1,0 +1,820 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 18,
+  "title": "One Word, and a Whole Sentence After It",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:2bcedccda9405442",
+  "lessons": [
+    {
+      "id": "RU-C18-chto-vopros",
+      "sequence": 900,
+      "title": "что (shto) — (tire) \"what,\" spelled with a ч and said with a sh",
+      "headword": "что",
+      "romanization": "shto",
+      "gloss": "what — the question word, and the one Russian spells with a ч and says with a sh",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff3796bfeecb51bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two parts of the face, and the mark that closes a question."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "нос, inherited straight from the root behind English nose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *нос*, inherited straight from the root behind English *nose*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "рот, probably from a verb meaning to dig — (tire) a snout rooting the ground",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *рот*, probably from a verb meaning **to dig** — a snout rooting the ground]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the one question mark at the end, and но, the but with no cousin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the one question mark at the **end**, and *но*, the *but* with no cousin]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — что",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "что — (tire) shto — (tire) what."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the spelling and then read the sound again, because they disagree. The word is written with ч, and it is said with a ш: shto, never chto."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not carelessness. It is one of a small handful of Russian words where the old spelling was kept after the pronunciation moved, and it is the commonest of them, so it is worth learning as a fact about this word rather than as a rule."
+            },
+            {
+              "kind": "speech",
+              "text": "что (shto)? on its own is already a whole question, and it is the plainest way to ask somebody to say a word again. A single word, a rising voice, and one mark at the end."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — the question family opens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "что (shto) goes back to PIE kʷid, \"what\" — (tire) the same word as Latin quid and English what itself."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met this family before. The farewell пока was built on the ancient question-stem kʷo-, the one behind как and the entire English wh- set. что (shto) is that family's plainest member, and the book collects the rest of it over the chapters that follow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "что — (tire) shto, with a ш sound and a ч on the page",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *что* — *shto*, with a **ш** sound and a **ч** on the page]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it as a one-word question, voice rising",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it as a one-word question, voice rising]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three you own — (tire) как, пока, что (shto) — (tire) one ancient stem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three you own — *как*, *пока*, *что* — one ancient stem]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"what.\" (It is что, said shto.) Which letter is on the page and which sound comes out? (ч on the page, ш in the mouth.) Which two words you already own belong to the same ancient family? (They are как and пока.) And one look back: which part of the face is a straight inheritance from the root behind nose? (That is нос.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C18-chto-soyuz",
+      "sequence": 910,
+      "title": "что (shto) as a hinge — (tire) one word carrying a whole sentence",
+      "headword": "…, что …",
+      "romanization": "…, shto …",
+      "gloss": "that — the same word again, now carrying a whole sentence, and said the way it is spelled",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1537286251f8db6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two more of the body, and the newest word in the book."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "глаз, which began as slang for a ball and pushed the true eye-word out of the language",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *глаз*, which began as slang for a **ball** and pushed the true eye-word out of the language]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "сердце, English heart barely disguised, and the letter ц inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *сердце*, English *heart* barely disguised, and the letter **ц** inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "что said shto, and а, the whereas word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *что* said *shto*, and *а*, the *whereas* word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the first letters you wrote — (tire) р с н б д е т — (tire) and the one that looks like an English R and is not one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the first letters you wrote — **р с н б д е т** — and the one that looks like an English R and is not one]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens — the same word, doing the other job",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put что (shto) between two clauses instead of at the front of a question, and it stops asking and starts carrying:"
+            },
+            {
+              "kind": "speech",
+              "text": "я знаю, что ты понимаешь — (tire) ya znáyu, shto ty panimáyesh — (tire) I know that you understand."
+            },
+            {
+              "kind": "speech",
+              "text": "Three things to notice, and the third is the one to hold on to."
+            },
+            {
+              "kind": "speech",
+              "text": "The comma is compulsory. Russian puts one in front of что (shto) every single time, with no exceptions of the kind English allows."
+            },
+            {
+              "kind": "speech",
+              "text": "The English that can be dropped — (tire) I know you understand is perfectly good English. The Russian что (shto) cannot. Leave it out and the sentence breaks."
+            },
+            {
+              "kind": "speech",
+              "text": "As a joining word it is said the way it is spelled: chto, not shto. Same letters, two jobs, two pronunciations."
+            },
+            {
+              "kind": "speech",
+              "text": "English plays the same trick, twice: what and that both began as question words and one of them settled into this job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "я знаю, что (shto) ты понимаешь",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *я знаю, что ты понимаешь*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "что twice — (tire) as the question shto, then as the hinge chto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *что* twice — as the question *shto*, then as the hinge *chto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "я знаю, что (shto) plus any sentence you can already make",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: *я знаю, что* plus any sentence you can already make]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "May the Russian что be dropped the way English drops that? (No — (tire) never.) What must always stand in front of it? (A comma.) Which of the two jobs is said shto? (The question.) And one look back: which eye-word did глаз push out of everyday Russian? (The word око, which survives inside очки, \"little eyes.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C18-dumayu-chto",
+      "sequence": 920,
+      "title": "я думаю, что … (ya dúmayu, shto …) — (tire) saying that an opinion is yours",
+      "headword": "я думаю, что …",
+      "romanization": "ya dúmayu, shto …",
+      "gloss": "I think that … — the frame that turns anything you can say into an opinion you own",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1939d82a8d134a5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The two farewells, formal and casual, and the number from the last chapter."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "до свидания, literally until the re-seeing, with до taking the genitive after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *до свидания*, literally **until the re-seeing**, with *до* taking the genitive after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "пока, whose root is ancient and whose use as a goodbye is a hundred years old",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *пока*, whose root is ancient and whose use as a goodbye is a hundred years old]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "один, and the five English words its root became",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *один*, and the five English words its root became]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "как вас зовут?, and the choice between ты and вы inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *как вас зовут?*, and the choice between *ты* and *вы* inside it]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens — the opinion frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "думать has been in this book since the verbs of the mind, and until this chapter it had nothing to think about — (tire) no object bigger than a single word could be attached to it. что (shto) fixes that in one move:"
+            },
+            {
+              "kind": "speech",
+              "text": "я думаю, что … — (tire) ya dúmayu, shto … — (tire) I think that …"
+            },
+            {
+              "kind": "speech",
+              "text": "Whatever you can already say in Russian, you can now say you think it. That is a genuine step up rather than one more phrase: it turns every sentence you own into an opinion you have marked as your own, which is the difference between reporting a fact and taking a position."
+            },
+            {
+              "kind": "speech",
+              "text": "я думаю, что ты понимаешь — (tire) ya dúmayu, shto ty panimáyesh — (tire) I think that you understand."
+            },
+            {
+              "kind": "speech",
+              "text": "The comma before что (shto) is compulsory here as everywhere."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "я думаю, что (shto) ты понимаешь",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *я думаю, что ты понимаешь*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "take any sentence you own and put я думаю, что (shto) in front of it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: take any sentence you own and put *я думаю, что* in front of it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "the same sentence without the frame, and hear it turn back into a flat claim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: the same sentence without the frame, and hear it turn back into a flat claim]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think that you understand.\" (That is я думаю, что (shto) ты понимаешь.) What had думать been missing until now? (Anything to think about that was bigger than one word.) Does the comma stay? (Yes — (tire) always.) And one look back: what does до свидания literally say? (Until the re-seeing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C18-znayu-chto",
+      "sequence": 930,
+      "title": "я не знаю, что … (ya ne znáyu, shto …) — (tire) admitting it, in a whole sentence",
+      "headword": "я не знаю, что …",
+      "romanization": "ya ne znáyu, shto …",
+      "gloss": "I do not know what … — the repair move the book has been one word short of since the first verbs",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c5b9dc62bcd28e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two more farewells, and the divider from the last chapter."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "до скорого, built on a word meaning quick with no English cousin at all",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *до скорого*, built on a word meaning **quick** with no English cousin at all]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "до завтра, and завтра built on the root behind English east and aurora",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *до завтра*, and *завтра* built on the root behind English *east* and *aurora*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "другой, and the split один … другой …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *другой*, and the split *один … другой …*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens — the other frame, and the negative one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "знать takes что (shto) exactly as думать does, and the negative is where it earns its place:"
+            },
+            {
+              "kind": "speech",
+              "text": "я знаю, что (shto) ты понимаешь — (tire) I know that you understand."
+            },
+            {
+              "kind": "speech",
+              "text": "я не знаю, что ты говоришь — (tire) ya ne znáyu, shto ty gavarísh — (tire) I do not know what you are saying."
+            },
+            {
+              "kind": "speech",
+              "text": "Read those two English translations again. The Russian word is the same word both times, and English needs that in the first and what in the second. Russian makes no such split, which is one distinction fewer for you to get wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "The second sentence is the useful one. Until now this book could say я не знаю and stop — (tire) a flat shrug. With что (shto) you can say what it is you do not know, which is what turns an admission into something the other person can act on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "я не знаю, что (shto) ты говоришь",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *я не знаю, что ты говоришь*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence without не, and hear it turn into a claim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence without **не**, and hear it turn into a claim]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "я не знаю, что (shto) plus anything you own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: *я не знаю, что* plus anything you own]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I do not know what you are saying.\" (That is я не знаю, что (shto) ты говоришь.) How many Russian words cover English's that and what here? (One — (tire) что (shto) does both.) Which two verbs now take a whole sentence after them? (думать and знать.) And one look back: which farewell is built on the word for morning? (That is до завтра.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W09-tire",
+      "sequence": 940,
+      "title": "— (tire) the dash that stands where the verb would have been",
+      "headword": "—",
+      "romanization": "tire",
+      "gloss": "the dash — the mark that stands exactly where the missing verb 'to be' would have been",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:b2a2bc47ea82f014",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last two farewells, and the marks from the previous writing lesson."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "до встречи, built from into plus with on a root with no secure English cousin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *до встречи*, built from **into** plus **with** on a root with no secure English cousin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "спокойной ночи, whose ночь is one of the most secure cognates in the family and whose покой is the root of English quiet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: *спокойной ночи*, whose *ночь* is one of the most secure cognates in the family and whose *покой* is the root of English *quiet*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the dot at the end, and the single question mark",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the dot at the end, and the single question mark]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "three letters from the middle of the alphabet — (tire) ж, ч, and the soft sign that makes no sound at all",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: three letters from the middle of the alphabet — **ж**, **ч**, and the soft sign that makes no sound at all]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one long stroke on the line",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Russian's dash is тире, and it is a genuinely long mark — (tire) longer than an English hyphen, with a space on each side of it:"
+            },
+            {
+              "kind": "speech",
+              "text": "брат — (tire) друг."
+            },
+            {
+              "kind": "speech",
+              "text": "Draw it at the height of the small letters, not at the top and not on the baseline, and give it the length of about two letters."
+            },
+            {
+              "kind": "speech",
+              "text": "The mark is a French loan, tiret, borrowed whole. What Russian does with it is not French at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar lens — the mark for a verb that is not there",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You learned early that Russian says I am a student with no verb in the middle: the present tense of быть is simply absent. On the page, that absence gets a mark of its own."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the sentence would have needed is, and both halves are nouns, a Russian writer puts a dash:"
+            },
+            {
+              "kind": "speech",
+              "text": "сестра — (tire) подруга."
+            },
+            {
+              "kind": "speech",
+              "text": "A sister is a friend. There is no verb in that sentence and there never will be. The dash is doing its work — (tire) and it is the only punctuation mark in the language whose job is to stand in for a word."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it aloud and there is a small pause exactly where the dash sits. The mark is not decoration; it is written-down silence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "сестра — (tire) подруга, with a space on each side of the dash",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *сестра — подруга*, with a space on each side of the dash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence, and put a small pause where the dash is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence, and put a small pause where the dash is]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one sentence of your own with two nouns and a dash between them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one sentence of your own with two nouns and a dash between them]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What word is the dash standing in for? (The verb to be, which Russian does not say in the present.) How is it drawn? (Long, on the level of the small letters, with a space each side.) And one look back: which farewell means calm plus night? (That is спокойной ночи.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

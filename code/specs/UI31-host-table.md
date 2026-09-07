@@ -452,12 +452,36 @@ row window in response must settle, not cause a resize/render feedback loop.
 6. Report native observer support honestly. React acceptance does not establish
    WinUI, Qt, Flutter, Compose or SwiftUI behavior; each needs its own resize gate.
 
-## 9. Row headers and data-cell coordinates (proposed extension)
+## 9. Row headers and data-cell coordinates
 
 Tracking: #14388 under #14277 and the VisiCalc reference-app epic #14267.
-This section is an implementation contract, not a claim of backend support.
+The React baseline is implemented; native acceptance remains under #14388.
 Section 2 describes the currently shipped section-only cell inference; that
 behavior remains the default for tables without authored row headers.
+
+### React authoring baseline
+
+Use `table-cell-role: row-header`, `column-header`, `corner` or `data` on
+a Text or structural Box directly inside a table Row, including a per-cell For
+body. Roles are literal keywords. Row and column headers become `th` with the
+corresponding scope; corner becomes an aria-hidden `td`; data becomes `td`.
+The part's authored styles apply to the cell wrapper with default padding zero.
+A structural Box becomes that wrapper and contributes its children directly;
+it may not carry other props whose behavior would be lost by removing the Box.
+Text remains an inner span, with its authored geometry on the wrapper.
+Unannotated nodes retain the original section-inferred wrapper and inner styles.
+
+`mosaic-pkg-grid::RowHeaderGrid` is an opt-in sibling of Grid using the same Cell
+component and event contract. It accepts a `row-headers: list<text>` parallel to
+viewport-rows. The Rust adapter derives these labels from absolute row identity;
+the layout does not calculate or insert domain row numbers into data values.
+Its separate 48px header column does not enter column-widths or column-headers.
+Consumers of the existing Grid need no new slots, events or changed markup.
+
+React reveal counts body `td` data cells and reserves sticky row-header bounds
+on the logical leading side. Other backends report
+`accessibility.authored-table-cell-unimplemented` for annotated cells; strict
+native-complete builds reject that degradation. Native support is not implied.
 
 ### Semantic intent and compatibility
 
@@ -543,3 +567,31 @@ adding a header must not create resize/dispatch feedback or duplicate row counts
 Whole-workbook physical scroll transport remains a separate requirement of
 #14277. Numbered labels and bounded rendering must not be described as completed
 virtual scrolling while the scrollbar can only traverse the current slice.
+
+## 10. Measured wheel routing for a row window (React baseline)
+
+Tracking: #14405 under #14277. A HostTable already using onViewportRows may
+also bind onViewportShift(rows: number), viewport-offset and total-rows. The
+metadata describes a zero-based row window and total logical row count; the
+event requests a signed, nonzero integer displacement. The application owns
+clamping and absolute selection/edit identity. Missing measured-capacity wiring
+or window metadata is a compile error when the shift event is forwarded.
+
+The generated listener uses measured uniform row pitch for pixel-mode wheel
+input, one row per line unit, and measured capacity per page unit. Fractional
+motion accumulates across React ref rebinding; reversing direction discards the
+old-direction remainder. Unmeasurable geometry does not invent a row pitch.
+The listener is scoped to its own table, ignores input controls and horizontal,
+shift-wheel or zoom gestures, and leaves boundary motion to the containing
+scroll surface. It prevents default only while it can move the logical window.
+Cleanup removes the wheel listener along with the measurement observer.
+
+RowHeaderGrid forwards this optional event. VisiCalc's Rust adapter saturates
+and clamps the displacement without retargeting the selected cell or committing
+pending edits. Subsequent cell clicks translate through the new viewport offset.
+Native routing is reported as interaction.table-wheel-shift-unimplemented.
+
+This is discrete row-window routing, not smooth pixel virtualization. The
+native scrollbar still describes the materialized table; a whole-workbook
+scrollbar thumb, touch dragging and broader scroll accessibility remain required
+under #14277. Do not infer their completion from wheel traversal alone.

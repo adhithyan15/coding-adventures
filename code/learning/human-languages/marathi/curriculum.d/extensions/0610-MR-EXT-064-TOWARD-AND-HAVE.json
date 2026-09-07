@@ -1,0 +1,15 @@
+{
+  "id": "MR-EXT-064-TOWARD-AND-HAVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can send somebody left or right with -kade, go to somebody's place, and say what I have and do not have without a verb for having.",
+  "prerequisites": [
+    "MR-EXT-063-OBJECT-MARKING"
+  ],
+  "lessons": [
+    "MR-C48-kade",
+    "MR-C48-possession",
+    "MR-R48-have-and-toward"
+  ]
+}

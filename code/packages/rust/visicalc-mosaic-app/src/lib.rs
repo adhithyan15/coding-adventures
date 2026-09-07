@@ -185,6 +185,7 @@ impl VisiCalcMosaicApp {
             "grid-edit-row": if edit_row < 0 { -1 } else { edit_row - i64::from(cursor.offset) },
             "viewport-offset": cursor.offset, "viewport-size": cursor.size,
             "viewport-rows": rows, "total-rows": ROWS, "total-cols": COLS,
+            "row-headers": (cursor.offset + 1..=cursor.offset + cursor.size).map(|row| row.to_string()).collect::<Vec<_>>(),
             "column-headers": (1..=COLS).map(column_index_to_letters).collect::<Vec<_>>(),
             "column-widths": vec![80; COLS as usize],
             "edit-row": edit_row, "edit-col": edit_col, "edit-content": edit_content,
@@ -284,6 +285,13 @@ impl MosaicApp for VisiCalcMosaicApp {
             "scroll" => {
                 let offset = index(&event, "offset", ROWS - self.cursor.size + 1)?;
                 self.cursor.offset = offset;
+                Ok(self.update())
+            }
+            "viewportShift" => {
+                let rows = event.payload.get("rows").and_then(Value::as_i64)
+                    .filter(|rows| *rows != 0).ok_or_else(|| invalid("viewport shift must be a nonzero integer"))?;
+                self.cursor.offset = i64::from(self.cursor.offset).saturating_add(rows)
+                    .clamp(0, i64::from(ROWS - self.cursor.size)) as u32;
                 Ok(self.update())
             }
             "viewportRows" => {
@@ -557,12 +565,36 @@ mod tests {
     }
 
     #[test]
+    fn wheel_shift_clamps_without_retargeting_selection_or_pending_edits() {
+        let mut app = VisiCalcMosaicApp::default();
+        dispatch(&mut app, "formulaChange", json!({"value":"27"}));
+        let scrolled = dispatch(&mut app, "viewportShift", json!({"rows":i64::MAX}));
+        assert_eq!(scrolled.props["viewport-offset"], 70);
+        assert_eq!(scrolled.props["cell-address"], "A1");
+        assert_eq!(scrolled.props["row-headers"][0], "71");
+        assert_eq!(scrolled.props["formula"], "27");
+        dispatch(&mut app, "commit", json!({}));
+        let returned = dispatch(&mut app, "viewportShift", json!({"rows":i64::MIN}));
+        assert_eq!(returned.props["viewport-offset"], 0);
+        assert_eq!(returned.props["viewport-rows"][0][0], "27");
+        dispatch(&mut app, "viewportShift", json!({"rows":70}));
+        let clicked = dispatch(&mut app, "gridNavigate", json!({"row":0,"col":25}));
+        assert_eq!(clicked.props["cell-address"], "Z71");
+        let before = app.snapshot().unwrap();
+        for rows in [json!(0), json!(1.5), json!("3")] {
+            assert!(app.dispatch(Event::new(1, "viewportShift", json!({"rows":rows}))).is_err());
+            assert_eq!(app.snapshot().unwrap(), before);
+        }
+    }
+
+    #[test]
     fn measured_capacity_clamps_to_workbook_and_preserves_selection() {
         let mut app = VisiCalcMosaicApp::default();
         dispatch(&mut app, "navigate", json!({"row":99,"col":25}));
         let small = dispatch(&mut app, "onViewportRows", json!({"rows":3}));
         assert_eq!(small.props["viewport-offset"], 97);
         assert_eq!(small.props["grid-selected-row"], 2);
+        assert_eq!(small.props["row-headers"], json!(["98", "99", "100"]));
         let big = dispatch(&mut app, "onViewportRows", json!({"rows":1000}));
         assert_eq!(big.props["viewport-rows"].as_array().unwrap().len(), 100);
         assert_eq!(big.props["cell-address"], "Z100");

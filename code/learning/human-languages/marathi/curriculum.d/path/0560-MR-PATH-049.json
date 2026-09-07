@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-049",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "MR-C46-huun",
+    "MR-C46-paasun",
+    "MR-C46-kuthun",
+    "MR-R46-from"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-062-WHERE-FROM"
+  ],
+  "after": []
+}

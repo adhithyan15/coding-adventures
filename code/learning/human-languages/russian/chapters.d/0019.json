@@ -1,0 +1,24 @@
+{
+  "chapter": 19,
+  "title": "Why, Because, When",
+  "label": "ch:ru-why-because-when",
+  "canDo": "I can ask why and when in one word each, give a reason with potomu chto, put two things at the same moment with kogda, and write the comma Russian requires at the seam of every subordinate clause.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "RU-W10-zapyataya",
+    "kind": "writing",
+    "summary": "The question family the book opened at poka closes here at five members -- kak, kakoy, chto, pochemu, kogda -- all one ancient stem, and two of them do double duty as joiners without changing a letter. potomu chto is pochemu with the question-stem swapped for the pointing-stem, so the answer is made out of the question. The chapter ends by stating the one Russian punctuation rule that has no exceptions, which is only sayable once the track owns the subordinators it applies to.",
+    "assesses": [
+      "RU-LEX-POCHEMU-01",
+      "RU-ETYMON-POCHEMU-PO-CHTO",
+      "RU-LEX-POTOMU-CHTO-01",
+      "RU-GRAMMAR-POTOMU-CHTO-CLAUSE-01",
+      "RU-LEX-KOGDA-01",
+      "RU-GRAMMAR-KOGDA-CLAUSE-01",
+      "RU-PUNCT-ZAPYATAYA-01"
+    ],
+    "note": "Realizes CONNECTIVE-BECAUSE on SPINE-SAY-WHY, an A1 node the track had omitted outright."
+  }
+}

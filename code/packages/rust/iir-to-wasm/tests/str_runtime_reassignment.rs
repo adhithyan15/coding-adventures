@@ -281,3 +281,80 @@ fn literal_only_strings_still_fold_at_compile_time() {
         .expect("wasm run failed");
     assert_eq!(result, vec![1], "'H' ++ 'I' must still fold equal to 'HI'");
 }
+
+
+/// A concat destination may also be either (or both) input locals. Compare the
+/// complete result, including its length, so zero-filled corruption cannot pass.
+#[test]
+fn runtime_concat_preserves_aliased_operands() {
+    for (dest, right, expected) in [("a", "b", "ABxy"), ("b", "b", "ABxy"), ("a", "a", "ABAB")] {
+        let join = IIRFunction::new("join", vec![("a".into(), "str".into()), ("b".into(), "str".into())], "str", vec![
+            IIRInstr::new("str_concat", Some(dest.into()), vec![Operand::Var("a".into()), Operand::Var(right.into())], "str"),
+            IIRInstr::new("ret", None, vec![Operand::Var(dest.into())], "str"),
+        ]);
+        let main = IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+            IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("xy".into())], "str"),
+            IIRInstr::new("call", Some("joined".into()), vec![Operand::Var("join".into()), Operand::Var("a".into()), Operand::Var("b".into())], "str"),
+            IIRInstr::new("str_const", Some("expected".into()), vec![Operand::Str(expected.into())], "str"),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![Operand::Var("joined".into()), Operand::Var("expected".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ]);
+        let module = IIRModule { name: "concat_alias".into(), functions: vec![join, main], entry_point: Some("main".into()), language: "test".into(), exports: vec![], imports: vec![] };
+        let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).unwrap();
+        let bytes = encode_module(&wasm).unwrap();
+        let result = WasmRuntime::new().load_and_run(&bytes, "main", &[]).unwrap();
+        assert_eq!(result, vec![1], "destination={dest}, right={right}");
+    }
+}
+
+/// VM-057 discriminating probe: a `str_slice` destination that is register-
+/// aliased with its own source (`reg_map` is keyed by variable *name*, one wasm
+/// local per name — so `str_slice s = s, start, end` reads and writes the same
+/// local, exactly like `str_concat`'s `dest == "a"` case above).
+///
+/// Unlike `str_concat`, `str_slice` reads its source only *once* — a single
+/// contiguous `[start, end)` run copied by one `memory.copy` — and every read of
+/// that source (the bounds checks, the length used for `ensure_capacity`, and the
+/// `memory.copy` source operand) happens through `push_src_len`/`push_src_base`,
+/// which both re-`local.get` the source slot from scratch rather than caching a
+/// value on the stack. The question this pins down: does the lowering assign the
+/// destination local (`rd`) *before* the final read of that shared local, the way
+/// pre-fix `str_concat` assigned `rd` before its second `memory.copy`?
+#[test]
+fn runtime_str_slice_preserves_aliased_operand() {
+    for (dest, expected) in [("out", "BCD"), ("s", "BCD")] {
+        let slice = IIRFunction::new(
+            "slice",
+            vec![("s".into(), "str".into()), ("start".into(), "i64".into()), ("end".into(), "i64".into())],
+            "str",
+            vec![
+                IIRInstr::new("str_slice", Some(dest.into()),
+                    vec![Operand::Var("s".into()), Operand::Var("start".into()), Operand::Var("end".into())], "str"),
+                IIRInstr::new("ret", None, vec![Operand::Var(dest.into())], "str"),
+            ],
+        );
+        let main = IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABCDE".into())], "str"),
+            IIRInstr::new("const", Some("start".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("end".into()), vec![Operand::Int(4)], "i64"),
+            IIRInstr::new("call", Some("sliced".into()),
+                vec![Operand::Var("slice".into()), Operand::Var("s".into()), Operand::Var("start".into()), Operand::Var("end".into())], "str"),
+            IIRInstr::new("str_const", Some("expected".into()), vec![Operand::Str(expected.into())], "str"),
+            IIRInstr::new("str_eq", Some("ok".into()), vec![Operand::Var("sliced".into()), Operand::Var("expected".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
+        ]);
+        let module = IIRModule {
+            name: "str_slice_alias".into(),
+            functions: vec![slice, main],
+            entry_point: Some("main".into()),
+            language: "test".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).unwrap();
+        let bytes = encode_module(&wasm).unwrap();
+        let result = WasmRuntime::new().load_and_run(&bytes, "main", &[]).unwrap();
+        assert_eq!(result, vec![1], "destination={dest}: slice(\"ABCDE\", 1, 4) must be {expected}");
+    }
+}

@@ -183,3 +183,38 @@ assert!(module.validate().is_empty());
   `cobol-runtime` oracle).
 * `lang-aot/tests/lang_matrix.rs` carries the COBOL rows proven across the backend
   columns.
+
+
+The VM-047a INSPECT tallying corpus compares ALL, CHARACTERS and LEADING with
+frontend oracle output and the seven standard LANG matrix backends. It observes
+nonzero counters, zero matches, padded field widths and reassigned items.
+These ASCII proofs do not establish replacement or BEFORE/AFTER region parity.
+
+
+VM-047b extends the ASCII INSPECT corpus to replacement: ALL, LEADING,
+CHARACTERS, first-match priority and non-rechaining multi-item rules. Five
+programs compare complete output with the oracle and seven standard backends;
+BEFORE/AFTER regions remain a separate proof slice.
+
+
+VM-047c promotes the already-implemented single-region `BEFORE`/`AFTER`
+window (`emit_inspect_region_window` in the compiler, `region_window` in the
+`cobol-runtime` oracle) to the seven standard LANG matrix backends: TALLYING
+FOR ALL narrowed BEFORE a delimiter, TALLYING narrowed AFTER a delimiter,
+REPLACING ALL narrowed BEFORE a delimiter, REPLACING narrowed AFTER a
+delimiter, and BEFORE/AFTER used together across the independently-regioned
+TALLYING/REPLACING halves of one combined `INSPECT` statement. Each BEFORE/
+AFTER pair also observes the ISO not-found asymmetry: an absent BEFORE
+delimiter covers the WHOLE source; an absent AFTER delimiter covers an EMPTY
+region. A single delimiter phrase carrying BOTH `BEFORE` and `AFTER` together
+(the ISO two-delimiter window intersection) parses but currently reads only
+the first region clause on both engines — a pinned, non-diverging limitation,
+tracked as a separate follow-up rather than implemented in this slice.
+
+
+VM-057 adds an oracle-agreement proof for `STRING S DELIMITED BY SIZE INTO
+S`: the sole sending field is also the `INTO` receiver, so the item's own
+register is both source and destination of the reshape with no intermediate
+temporary. `S` is unchanged on the generic JIT/interpreter path; the same
+construct exposed a WASM-lowering-only aliasing defect in `str_slice`, fixed
+and regression-tested separately in `iir-to-wasm`.

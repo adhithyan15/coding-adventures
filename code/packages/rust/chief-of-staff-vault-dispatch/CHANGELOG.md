@@ -7,6 +7,14 @@ this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+- `register_all` pre-flights both definitions before registering either,
+  matching what `register_into_host` already did at the host boundary. The
+  bare-runtime path had been missing it, and it became reachable when
+  `InMemoryToolRuntime` gained the S-I7 input refusal: `request_direct` names
+  a peer through `consumer_agent_id`, so on an agent surface the old loop
+  registered `request_lease`, refused `request_direct`, and left a vault
+  holding exactly the half that looks healthy.
+
 - `register_into_host` now fails for a V1 agent host: `vault.request_direct`
   requires a caller-supplied `consumer_agent_id`, and D18S S-I7 refuses a tool
   that lets an agent name a peer. Tier and capabilities are still satisfied --

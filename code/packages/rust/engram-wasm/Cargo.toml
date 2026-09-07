@@ -10,3 +10,8 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 engram-core-wasm = { path = "../engram-core-wasm" }
+
+[dev-dependencies]
+# Test-only: the export payload is base64 now, and the ABI round-trip decodes
+# it. Not a runtime dependency -- this crate ships no serialisation of its own.
+coding_adventures_base64 = { path = "../base64" }

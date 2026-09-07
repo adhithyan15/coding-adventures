@@ -2392,6 +2392,25 @@ fn layer_value(
     inner
 }
 
+/// Fold a numeric CSS value and parenthesize layered expressions before the
+/// Compose unit extension is appended.
+///
+/// Without the parentheses, `if (size == "lg") 12 else 8.dp` gives only the
+/// fallback arm a `Dp` type. Kotlin then infers `Comparable<*>`, which cannot
+/// be passed to `padding`, `width`, or the other unit-typed APIs.
+fn numeric_layer_value(
+    bucket: &PropBucket,
+    state_layers: &[StateLayer],
+    default_when_unset: &str,
+) -> String {
+    let value = layer_value(bucket, state_layers, default_when_unset);
+    if bucket.any_state_set {
+        format!("({value})")
+    } else {
+        value
+    }
+}
+
 /// The two `elevation` tiers (UI41, issue #12028 item 1), mapped to a
 /// Compose `Modifier.shadow` elevation. `androidx.compose.ui.draw.shadow`
 /// takes a `Dp` directly (not a CSS-shaped blur/spread/color/opacity
@@ -2613,13 +2632,13 @@ fn compose_box_style(
     if let Some(iw) = injected_width {
         modifier.push_str(&format!("\n{cpad}.width({iw}.dp)"));
     } else if !width.empty() {
-        let expr = layer_value(&width, state_layers, "0");
+        let expr = numeric_layer_value(&width, state_layers, "0");
         modifier.push_str(&format!("\n{cpad}.width({expr}.dp)"));
     }
 
     // .height
     if !height.empty() {
-        let expr = layer_value(&height, state_layers, "0");
+        let expr = numeric_layer_value(&height, state_layers, "0");
         modifier.push_str(&format!("\n{cpad}.height({expr}.dp)"));
     }
 
@@ -2641,7 +2660,7 @@ fn compose_box_style(
     // .border — needs at least the width.  Default color `Color.Gray`
     // when only the width is set.
     if !border_width.empty() {
-        let w_expr = layer_value(&border_width, state_layers, "0");
+        let w_expr = numeric_layer_value(&border_width, state_layers, "0");
         let c_expr = if border_color.empty() {
             "Color.Gray".to_string()
         } else {
@@ -2652,7 +2671,7 @@ fn compose_box_style(
 
     // .padding — LAST so content insets inside the bordered box.
     if !padding.empty() {
-        let expr = layer_value(&padding, state_layers, "0");
+        let expr = numeric_layer_value(&padding, state_layers, "0");
         modifier.push_str(&format!("\n{cpad}.padding({expr}.dp)"));
     }
 
@@ -2668,7 +2687,7 @@ fn compose_box_style(
     let font_size_out = if font_size.empty() {
         None
     } else {
-        Some(layer_value(&font_size, state_layers, "0"))
+        Some(numeric_layer_value(&font_size, state_layers, "0"))
     };
 
     ComposeStyle {
@@ -7179,7 +7198,11 @@ mod tests {
                 ),
                 part(
                     "button",
-                    vec![sprop("background", "#111111")],
+                    vec![
+                        sprop("background", "#111111"),
+                        sprop("padding", "8px"),
+                        sprop("font-size", "14px"),
+                    ],
                     // Reverse authored state order deliberately. UI49 ordering
                     // comes from the model slots: variant, then size.
                     vec![
@@ -7187,7 +7210,11 @@ mod tests {
                             slot: Some("size".to_string()),
                             state: "compact".to_string(),
                             transitions: vec![],
-                            props: vec![sprop("background", "#ffaa00")],
+                            props: vec![
+                                sprop("background", "#ffaa00"),
+                                sprop("padding", "6px"),
+                                sprop("font-size", "13px"),
+                            ],
                         },
                         StateStyle {
                             slot: Some("variant".to_string()),
@@ -7218,6 +7245,14 @@ mod tests {
         assert!(out.contains(
             ".background(if (_mosaicTruthy(( selected ))) Color(0xFFFFFFFF) else if (size == \"compact\") Color(0xFFFFAA00) else if (variant == \"danger\") Color(0xFFDC3545) else Color(0xFF111111))"
         ), "model slot order or conditional style is wrong:\n{out}");
+        assert!(
+            out.contains(".padding((if (size == \"compact\") 6 else 8).dp)"),
+            "layered padding did not retain a Dp type:\n{out}"
+        );
+        assert!(
+            out.contains("fontSize = (if (size == \"compact\") 13 else 14).sp"),
+            "layered font size did not retain a TextUnit type:\n{out}"
+        );
         assert!(
             out.contains(
                 ".background(if (variant == \"danger\") Color(0xFF333333) else Color(0xFF222222))"

@@ -9,6 +9,7 @@ default = []
 serde = ["dep:serde"]
 
 [dependencies]
+coding_adventures_base64 = { path = "../base64" }
 fsrs = { path = "../fsrs" }
 regex-engine = { path = "../regex-engine" }
 serde = { version = "1", features = ["derive"], optional = true }

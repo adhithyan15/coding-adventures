@@ -13,7 +13,7 @@ description = "Spreadsheet-style data grid built on UI29 kernel primitives (UI28
 license = "MIT OR Apache-2.0"
 
 [components]
-exports = ["Grid", "Cell", "Column"]
+exports = ["Grid", "Cell", "Column", "RowHeaderGrid"]
 
 [dependencies]
 # no other packages — built only from UI29 kernel primitives

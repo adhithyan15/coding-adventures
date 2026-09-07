@@ -10716,3 +10716,362 @@ fn const_refmod_replacing_characters_by() {
     ));
     assert_eq!(out, "***\n");
 }
+
+// Same complete observation as the seven-backend LANG matrix tallying proof.
+#[test]
+fn inspect_matrix_all_accumulates() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(11) VALUE \"MISSISSIPPI\".\n\
+               000000 01 DL PIC X VALUE \"S\".\n\
+               000000 01 C PIC 9(3) VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL DL.\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"Z\".\n\
+               000000 DISPLAY C.\n\
+               000000 MOVE \"I\" TO DL.\n\
+               000000 INSPECT S TALLYING C FOR ALL DL.\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "009\n009\n013\n");
+}
+
+// Same complete observation as the seven-backend LANG matrix tallying proof.
+#[test]
+fn inspect_matrix_characters_counts_padding() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB\".\n\
+               000000 01 C PIC 9(3) VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR CHARACTERS.\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR CHARACTERS.\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "011\n017\n");
+}
+
+// Same complete observation as the seven-backend LANG matrix tallying proof.
+#[test]
+fn inspect_matrix_leading_stops_at_first_mismatch() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"00X00\".\n\
+               000000 01 DL PIC X VALUE \"0\".\n\
+               000000 01 C PIC 9(3) VALUE 5.\n\
+               000000 01 A PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR LEADING DL.\n\
+               000000 INSPECT S TALLYING A FOR ALL DL.\n\
+               000000 DISPLAY C.\n\
+               000000 DISPLAY A.\n\
+               000000 MOVE \"X0000\" TO S.\n\
+               000000 INSPECT S TALLYING C FOR LEADING DL.\n\
+               000000 DISPLAY C.\n\
+               000000 MOVE \"00000\" TO S.\n\
+               000000 INSPECT S TALLYING C FOR LEADING DL.\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "007\n004\n007\n012\n");
+}
+
+// Same complete observation as the seven-backend replacement proof.
+#[test]
+fn inspect_matrix_replace_all_items() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"ABABA\".\n\
+               000000 01 A PIC X VALUE \"A\".\n\
+               000000 01 B PIC X VALUE \"X\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL A BY B.\n\
+               000000 DISPLAY S.\n\
+               000000 INSPECT S REPLACING ALL \"Z\" BY \"Q\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"B\" TO A.\n\
+               000000 MOVE \"Y\" TO B.\n\
+               000000 INSPECT S REPLACING ALL A BY B.\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "XBXBX\nXBXBX\nXYXYX\n");
+}
+
+// Same complete observation as the seven-backend replacement proof.
+#[test]
+fn inspect_matrix_replace_leading_gap() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"00X00\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING LEADING \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"00X00\" TO S.\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 MOVE \"X0000\" TO S.\n\
+               000000 INSPECT S REPLACING LEADING \"0\" BY \"*\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "**X00\n**X**\nX0000\n");
+}
+
+// Same complete observation as the seven-backend replacement proof.
+#[test]
+fn inspect_matrix_replace_characters_padding() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"AB\".\n\
+               000000 01 R PIC X VALUE \"*\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 INSPECT S REPLACING CHARACTERS BY R.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 MOVE \"Q\" TO R.\n\
+               000000 INSPECT S REPLACING CHARACTERS BY R.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "[AB   ]\n[*****]\n[QQQQQ]\n");
+}
+
+// Same complete observation as the seven-backend replacement proof.
+#[test]
+fn inspect_matrix_replace_no_rechaining() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"abQab\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL \"a\" BY \"b\" ALL \"b\" BY \"z\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "bzQbz\n");
+}
+
+// Same complete observation as the seven-backend replacement proof.
+#[test]
+fn inspect_matrix_replace_first_match() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"aQaaa\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S REPLACING ALL \"a\" BY \"x\" ALL \"a\" BY \"y\".\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "xQxxx\n");
+}
+
+/// VM-057: `STRING` with a single sending field that is also the `INTO`
+/// receiver — the receiver's own register is both source and destination of
+/// the truncating reshape (`string_source` returns an item's live register
+/// directly, and a lone sending field skips the `str_concat` combining loop
+/// entirely). This is an oracle-agreement sanity check for the construct
+/// itself on the generic JIT/interpreter path; the WASM-specific aliasing
+/// hazard this exposed in the WASM backend's `str_slice` lowering has its own
+/// direct regression in `iir-to-wasm`'s `str_runtime_reassignment.rs` and a
+/// seven-backend `lang_matrix` cell.
+#[test]
+fn string_self_referential_source_and_receiver_is_unchanged() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. STRING-SELF-PROOF.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"ABCDE\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 STRING S DELIMITED BY SIZE INTO S.\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "ABCDE\n");
+}
+
+// VM-047c: INSPECT ... BEFORE/AFTER region-boundary semantics and the absent-
+// delimiter asymmetry, pinned once more here as direct `lang_matrix` mirrors (see
+// `code/packages/rust/lang-aot/tests/lang_matrix.rs`, rows declaring all seven
+// standard backends) so the cross-backend proof and the frontend/oracle proof stay
+// aligned on the exact same source and expected bytes. The underlying window
+// mechanics (`region_window` in the oracle, `emit_inspect_region_window` in the
+// compiler) were already exhaustively covered before this rung; these five cases
+// are the SAME scenarios the matrix rows execute on every code-generation backend.
+
+#[test]
+fn vm047c_tallying_before_region_matches_matrix_row() {
+    // "AB0CD0" BEFORE "C" reaches only the "AB0" prefix (one "0") -> 001; a second
+    // op with an ABSENT region delimiter ("Z") is the ISO not-found asymmetry for
+    // BEFORE -- the WHOLE source -- so it adds both "0"s (001 -> 003).
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY-BEFORE.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 01 C PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"C\".\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"Z\".\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "001\n003\n");
+}
+
+#[test]
+fn vm047c_tallying_after_region_matches_matrix_row() {
+    // "AB0CD0" AFTER "C" reaches only the "D0" suffix (one "0") -> 001; a second op
+    // with an ABSENT region delimiter ("Z") is the ISO not-found asymmetry for AFTER
+    // -- an EMPTY region, the asymmetric partner of BEFORE above -- so it adds
+    // nothing and the counter is unchanged (001 -> 001).
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. TALLY-AFTER.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 01 C PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" AFTER \"C\".\n\
+               000000 DISPLAY C.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" AFTER \"Z\".\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "001\n001\n");
+}
+
+#[test]
+fn vm047c_replacing_before_region_matches_matrix_row() {
+    // REPLACING ALL "0" BY "*" BEFORE "C" rewrites only the "AB0" prefix's "0"; after
+    // resetting S, replacing BEFORE an ABSENT "Z" covers the WHOLE source (the
+    // not-found asymmetry), so both "0"s become "*". Bracket markers keep the
+    // untouched trailing bytes visible.
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-BEFORE.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"C\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 MOVE \"AB0CD0\" TO S.\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE \"Z\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "[AB0CD0]\n[AB*CD0]\n[AB*CD*]\n");
+}
+
+#[test]
+fn vm047c_replacing_after_region_matches_matrix_row() {
+    // REPLACING ALL "0" BY "*" AFTER "C" rewrites only the "D0" suffix's "0"; after
+    // resetting S, replacing AFTER an ABSENT "Z" covers an EMPTY region (the
+    // not-found asymmetry), so NOTHING changes -- the final bracketed line is
+    // byte-identical to the original, the defining REPLACING asymmetry.
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. REPLACE-AFTER.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(6) VALUE \"AB0CD0\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"C\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 MOVE \"AB0CD0\" TO S.\n\
+               000000 INSPECT S REPLACING ALL \"0\" BY \"*\" AFTER \"Z\".\n\
+               000000 DISPLAY \"[\" S \"]\".\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "[AB0CD0]\n[AB0CD*]\n[AB0CD0]\n");
+}
+
+#[test]
+fn vm047c_combined_before_and_after_together_matches_matrix_row() {
+    // BEFORE and AFTER together in ONE INSPECT statement: the combined
+    // TALLYING...REPLACING form, each half carrying its OWN independent region kind
+    // over the SAME original "0A0B0" bytes (the tally never mutates the source), in
+    // ISO tally-then-replace order. This is the standard's real "BEFORE and AFTER
+    // together" combination -- two independently-regioned phrases in one statement --
+    // not two region keywords stacked on a single delimiter phrase (see
+    // `vm047c_single_phrase_before_and_after_uses_only_the_first_region` below for
+    // that unimplemented, separately tracked case).
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. COMBINED-REGIONS.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"0A0B0\".\n\
+               000000 01 C PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"B\"\n\
+               000000    REPLACING ALL \"0\" BY \"*\" AFTER \"B\".\n\
+               000000 DISPLAY C.\n\
+               000000 DISPLAY S.\n\
+               000000 STOP RUN.";
+    assert_eq!(assert_matches_oracle(src), "002\n0A0B*\n");
+}
+
+/// VM-D027 (discovered while validating VM-047c): a SINGLE delimiter phrase
+/// carrying BOTH a `BEFORE` and an `AFTER` region keyword (e.g. `FOR ALL "0" BEFORE
+/// "X" AFTER "X"`) is grammar-legal -- `cobol.grammar`'s `inspect_region` sits under
+/// a `{ }` repetition, so the reader sees TWO sibling `inspect_region` nodes -- but
+/// BOTH the oracle (`program.rs::read_inspect_region` callers) and the compiler
+/// (`lib.rs`'s seven `child_node(_, "inspect_region")` call sites) read only the
+/// FIRST such node via `child_node`, silently discarding a second one instead of
+/// computing the ISO-intended intersected window or rejecting the phrase as a later
+/// rung. Real COBOL (ISO/IEC 1989:2014, IBM Enterprise COBOL, GnuCOBOL, Micro Focus)
+/// allows exactly this: a tally/replace item may specify both phrases together to
+/// restrict scanning to characters that are simultaneously after one delimiter and
+/// before another. This test PINS the current shared (oracle == compiler, so not a
+/// cross-engine divergence) first-region-only behavior so it cannot silently change;
+/// it is NOT a claim that this is correct ISO semantics. Over "00X00" (a single "X"
+/// at index 2), `BEFORE "X" AFTER "X"` currently behaves as bare `BEFORE "X"`
+/// (region `[0, 2)` = "00" -> count 2) because the trailing `AFTER "X"` node is
+/// dropped; the correct ISO intersection of "before the (only) X" and "after the
+/// (same) X" would in fact be the empty set for this single-delimiter case, so a
+/// real fix must NOT simply be observable here without a second, distinct
+/// delimiter. Implementing genuine two-clause intersection touches every TALLYING/
+/// REPLACING/CONVERTING single- and multi-item region call site (nine call sites
+/// across `lib.rs`, plus the oracle's mirrored `program.rs`/`interp.rs`), which is
+/// its own bounded slice -- out of VM-047c's scope, which promotes the
+/// ALREADY-implemented single-region BEFORE/AFTER behavior to the seven-backend
+/// matrix. See the backlog's VM-D027 discovery entry and the follow-up item it ranks.
+#[test]
+fn vm047c_single_phrase_before_and_after_uses_only_the_first_region() {
+    let src = "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. PROBE.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01 S PIC X(5) VALUE \"00X00\".\n\
+               000000 01 C PIC 9(3) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000 INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"X\" AFTER \"X\".\n\
+               000000 DISPLAY C.\n\
+               000000 STOP RUN.";
+    // Both engines currently agree (co-total, not a divergence): the trailing
+    // `AFTER "X"` is silently ignored and the result is bare `BEFORE "X"` (count 2).
+    assert_eq!(assert_matches_oracle(src), "002\n");
+}

@@ -1,0 +1,11 @@
+{
+  "language": "marathi",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:18ab5697fc68aabd",
+  "lessonIds": [
+    "MR-W40-i-independent",
+    "MR-C40-ithe",
+    "MR-R40-asking-column"
+  ],
+  "tex": "marathi/book/chapters/ch40-here.tex"
+}

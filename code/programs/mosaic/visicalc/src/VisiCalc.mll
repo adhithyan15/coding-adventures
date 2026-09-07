@@ -23,7 +23,11 @@ layout VisiCalc {
       Text [sheet-hint] (content: "Enter to apply · Esc to cancel")
     }
     HostScroll [sheet-frame] {
-      pkg::mosaic-pkg-grid::Grid (
+      pkg::mosaic-pkg-grid::RowHeaderGrid (
+      viewport-offset: slot: viewport-offset,
+      total-rows: slot: total-rows,
+      onViewportShift: emit: onViewportShift,
+      row-headers: slot: row-headers,
       viewport-rows: slot: viewport-rows,
       column-headers: slot: column-headers,
       column-widths: slot: column-widths,

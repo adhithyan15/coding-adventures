@@ -1,0 +1,15 @@
+{
+  "id": "MR-EXT-055-HERE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can write the independent इ, say where I am with ithe, and read the k- / i- / t- series as one pattern rather than three words.",
+  "prerequisites": [
+    "MR-EXT-054-THERE"
+  ],
+  "lessons": [
+    "MR-W40-i-independent",
+    "MR-C40-ithe",
+    "MR-R40-asking-column"
+  ]
+}

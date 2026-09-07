@@ -126,7 +126,7 @@ You'll want to know: বোন.
 আমার বোন (āmār bon) — my sister.
 
 The letters in this word.
-বোন is ব with the vowel sign ো (bo) plus ন (n), silent at the end — one plain consonant, no cluster, so the inherent vowel drops just as it did on দুধ and ভাত: bon, not bono.
+বোন is ব with the vowel sign ো (bo) plus ন (n), silent at the end — one plain consonant, no cluster, so the inherent vowel drops exactly as it did on দুধ and ভাত: bon, not bono.
 
 The word, taken apart.
 English "sister" descends from PIE swésōr. বোন (bon) does not. It is a tadbhava through Magadhi Prakrit bahiṇī, from Old Indo-Aryan baghinī — a doublet of Sanskrit's own bhaginī, "one with a share," built on bhaga, "a share, a portion, good fortune." And bhaga is a noun from the very same verb that named this chapter's rice two lessons ago: √bhaj ("to divide, to share out"), PIE bʰeh₂g-. ভাত is "the portion given"; বোন (bon) is "the one with a portion." Bengali's word for sister and Bengali's word for rice are, underneath, cousins. Its word for sister and English's are not.

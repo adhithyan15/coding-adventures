@@ -286,15 +286,22 @@ mod tests {
         }
     }
 
+    /// The export payload is base64 now, not an array of decimal numbers.
+    ///
+    /// Parsed properly rather than by string-slicing: the previous form
+    /// scanned for `"apkg":[` and the next `]`, which only worked because the
+    /// payload happened to be the last array in the response.
     fn apkg_bytes(raw: &str) -> Vec<u8> {
-        let prefix = r#""apkg":["#;
+        let prefix = r#""apkg":""#;
         let start = raw.find(prefix).unwrap() + prefix.len();
-        let end = raw[start..].find(']').unwrap() + start;
-        raw[start..end]
-            .split(',')
-            .filter(|part| !part.is_empty())
-            .map(|part| part.parse::<u8>().unwrap())
-            .collect()
+        let end = raw[start..].find('"').unwrap() + start;
+        // No escaping to worry about: base64's alphabet is
+        // `A-Za-z0-9+/=`, none of which JSON escapes.
+        coding_adventures_base64::decode(
+            &raw[start..end],
+            &coding_adventures_base64::STANDARD,
+        )
+        .unwrap()
     }
 
     fn call_str1(f: unsafe extern "C" fn(*const u8, usize) -> *mut u8, value: &str) -> String {
@@ -506,7 +513,7 @@ mod tests {
         reset_demo();
         let exported = take(export_anki_apkg());
         assert!(exported.contains(r#""ok":true"#), "{exported}");
-        assert!(exported.contains(r#""apkg":["#), "{exported}");
+        assert!(exported.contains(r#""apkg":""#), "{exported}");
         let bytes = apkg_bytes(&exported);
 
         reset();

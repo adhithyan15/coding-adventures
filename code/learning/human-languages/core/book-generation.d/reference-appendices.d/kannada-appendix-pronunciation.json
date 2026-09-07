@@ -1,0 +1,9 @@
+{
+  "language": "kannada",
+  "title": "The Kannada script --- a reference",
+  "shortTitle": "The Kannada script (reference)",
+  "runningHead": "Kannada script",
+  "source": "kannada/pronunciation-reference.md",
+  "output": "kannada/book/chapters/appendix-pronunciation.tex",
+  "scriptSet": "kannada-comparisons"
+}

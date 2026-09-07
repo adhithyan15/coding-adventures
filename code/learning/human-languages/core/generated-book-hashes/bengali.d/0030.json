@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:1a9370fd1e64fb44",
+  "lessonIds": [
+    "BN-C19-je",
+    "BN-C19-jokhon",
+    "BN-C19-abar-bolben",
+    "BN-C19-dhire",
+    "BN-R19-lost-and-found"
+  ],
+  "tex": "bengali/book/chapters/ch30-when-you-are-lost.tex"
+}

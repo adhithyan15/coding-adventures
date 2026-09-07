@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Clamp relative viewport shifts without retargeting selection or pending edits.
+
+- Derive absolute row labels alongside the rendered window without adding a
+  workbook data column or changing selection/edit coordinates.
+
 - Accept positive measured viewportRows capacity, clamp to workbook bounds and
   preserve/reveal selection without weakening strict public resize validation.
 

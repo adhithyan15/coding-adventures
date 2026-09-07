@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 51,
+  "title": "Amicus, Pecunia, Medicus, Miles, Epistula",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:d9fffbe09435bbf4",
+  "lessons": [
+    {
+      "id": "LA-C51-amicus",
+      "sequence": 1300,
+      "title": "amīcus — from the verb to love, and the word the bread lesson pointed at and did not give",
+      "headword": "amīcus, amīcī",
+      "romanization": "amīcus, amīcī",
+      "gloss": "the friend — from the verb to love, and the word the bread lesson pointed at and did not give",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1a290671e448305",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ibi — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ibi* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hic — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hic* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sāl — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sāl* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sciō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sciō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say viridis — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *viridis* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quid agis? — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quid agis?* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amīcus — \"a friend.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The bread lesson traced pānis to companion — the one you share bread with — and to \"the friendship-word every Romance daughter still shares.\" This is that word, and it took forty-one chapters to arrive."
+            },
+            {
+              "kind": "speech",
+              "text": "It is built straight onto amō, \"I love,\" from the amō lesson: a friend is simply one who is loved. And its negative is the interesting half. In-amīcus becomes inimīcus, \"not-friend,\" and inimīcus is English enemy. The most hostile word in the language is the friendliest one with two letters in front of it."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish amigo, Italian amico, Portuguese amigo and French ami are all this word unchanged. English borrowed amicable, amity and amiable from it, and took enemy from its opposite by way of French."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amīcus, amīcī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amīcus, amīcī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What verb is amīcus built on? (Amō, I love.) What is inimīcus, and what English word is it? (Not-friend; enemy.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C51-pecunia",
+      "sequence": 1310,
+      "title": "pecūnia — and the cattle it is named after",
+      "headword": "pecūnia, pecūniae",
+      "romanization": "pecūnia, pecūniae",
+      "gloss": "money — and the cattle it is named after",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:980da2de1e8e35bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say amīcus — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *amīcus* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say iste — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *iste* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mel — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mel* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ut valēs? — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ut valēs?* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say valeō — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *valeō* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pecūnia — \"money.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The word is a fossil of what wealth used to be. Pecū meant \"cattle,\" and a Roman's pecūnia was originally his livestock. When Rome began to strike coins it stamped an ox on them, and the name of the herd became the name of the money."
+            },
+            {
+              "kind": "speech",
+              "text": "The English family is larger than it looks:"
+            },
+            {
+              "kind": "speech",
+              "text": "pecuniary — to do with money, straight from pecūnia."
+            },
+            {
+              "kind": "speech",
+              "text": "impecunious — having none."
+            },
+            {
+              "kind": "speech",
+              "text": "peculiar — from pecūlium, the private property a Roman slave or son was allowed to keep. \"One's own\" narrowed to \"odd\" over the centuries."
+            },
+            {
+              "kind": "speech",
+              "text": "fee — a Germanic cousin, not a loan: Old English feoh meant both cattle and property, from the same Proto-Indo-European root."
+            },
+            {
+              "kind": "speech",
+              "text": "The same picture is behind English capital, from caput — a head of cattle — and caput is the first body word this book taught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pecūnia, pecūniae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pecūnia, pecūniae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did pecūnia originally mean? (Cattle.) Is English fee a cousin or a loan? (A cousin.) And which body word tells the same story? (Caput — capital, a head of cattle.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C51-medicus",
+      "sequence": 1320,
+      "title": "medicus — from measuring, not from healing",
+      "headword": "medicus, medicī",
+      "romanization": "medicus, medicī",
+      "gloss": "the doctor — from measuring, not from healing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1006ec709f013394",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pecūnia — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pecūnia* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ille — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ille* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lac — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lac* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say cōgitō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *cōgitō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say salvē — quid agis? — valeō — valē — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *salvē — quid agis? — valeō — valē* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quid tibi nōmen est? / mihi nōmen est... — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quid tibi nōmen est? / mihi nōmen est...* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "medicus — \"a doctor.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Not, as you might expect, from a word for healing. Medicus is from medeor, \"I attend to,\" and behind that is Proto-Indo-European med-, \"to measure, to take the appropriate measures.\" A doctor, to a Roman, is someone who works out the right amount."
+            },
+            {
+              "kind": "speech",
+              "text": "The root spread widely on that meaning:"
+            },
+            {
+              "kind": "speech",
+              "text": "meditate — to measure a thing over in the mind."
+            },
+            {
+              "kind": "speech",
+              "text": "moderate and modest — kept within measure."
+            },
+            {
+              "kind": "speech",
+              "text": "mete, as in \"mete out\" — an inherited English cousin, not a loan."
+            },
+            {
+              "kind": "speech",
+              "text": "remedy — re- plus medeor, attending to a thing again."
+            },
+            {
+              "kind": "speech",
+              "text": "Every Romance language kept the word: Spanish médico, Italian medico, Portuguese médico. English took medicine, medical and medic from the same family, and French gave us medico back as slang."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "medicus, medicī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *medicus, medicī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the root behind medicus really mean? (To measure, to take the right measures.) Name two English words from it that are not about health. (Moderate, modest, meditate.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C51-miles",
+      "sequence": 1330,
+      "title": "mīles — the noun every Latin narrative turns on",
+      "headword": "mīles, mīlitis",
+      "romanization": "mīles, mīlitis",
+      "gloss": "the soldier — the noun every Latin narrative turns on",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2328531a372dae03",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say medicus — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *medicus* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say is — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *is* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ōvum — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ōvum* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say legō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *legō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quid tibi nōmen est? / mihi nōmen est... — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quid tibi nōmen est? / mihi nōmen est...* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say puerō nōmen est Mārcus / Mārcō — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *puerō nōmen est Mārcus / Mārcō* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mīles — \"a soldier.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The noun a reader of Latin meets on the first page of almost any history, and one this book went fifty chapters without."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the shape: nominative mīles, genitive mīlitis. The -t- that appears in the genitive is the real stem, and every English derivative is built on the genitive rather than the nominative — military, militia, militant, militarise. That is a general habit worth having: when an English word from Latin looks nothing like the Latin nominative, look at the genitive."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word came from is not settled. The old suggestion is mille, \"thousand\" — a soldier as one of a thousand-strong unit — and it is a guess with no evidence behind it. Some scholars propose an Etruscan borrowing. Treat the etymology as open."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīles, mīlitis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīles, mīlitis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form do the English derivatives come from? (The genitive, mīlitis — hence military.) Is the etymology settled? (No — the mille story is a guess.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C51-epistula",
+      "sequence": 1340,
+      "title": "epistula — a Greek word Rome borrowed, and the thing Cicero wrote in his letters",
+      "headword": "epistula, epistulae",
+      "romanization": "epistula, epistulae",
+      "gloss": "a letter — a Greek word Rome borrowed, and the thing Cicero wrote in his letters",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51ff089415d41c20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six recalls before the new word, at growing distances. They are not decoration: each one is the retrieval window this book measures, and each names a word far enough back that saying it is work."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mīles — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mīles* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ibi — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ibi* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say piscis — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *piscis* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say intellegō — R3, durable again, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *intellegō* — **R3**, durable again, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say puerō nōmen est Mārcus / Mārcō — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *puerō nōmen est Mārcus / Mārcō* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say volup est convēnisse — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *volup est convēnisse* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "epistula — \"a letter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The farewell lessons quoted two of Cicero's letters and never gave you the word for one. Here it is, and it is Greek: epistolē, \"a thing sent to somebody,\" from epi- (\"to, upon\") plus stellō (\"I send\"). Rome borrowed the object and the word together."
+            },
+            {
+              "kind": "speech",
+              "text": "The same stellō is inside apostle — apo-stolos, \"one sent away\" — so an epistle and an apostle are the same verb with opposite prefixes, which is why the letters of the apostles are called epistles twice over."
+            },
+            {
+              "kind": "speech",
+              "text": "scrībō, from the verbs of mind, is the verb this noun needed. Epistulam scrībō: \"I am writing a letter.\" The verbs of mind gave you the writing and the propediem lesson gave you the reading, and this is the thing itself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "epistula, epistulae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *epistula, epistulae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What language is epistula from? (Greek.) What do epistle and apostle share? (The verb stellō, send — with opposite prefixes.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

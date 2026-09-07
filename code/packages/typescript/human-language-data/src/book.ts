@@ -128,6 +128,10 @@ export interface BookReferenceAppendixTarget {
   title: string;
   source: string;
   output: string;
+  /** Table-of-contents line, when the chapter title is too long to sit on one. */
+  shortTitle?: string;
+  /** Running head, when `Pronunciation` misdescribes what the reference is about. */
+  runningHead?: string;
   /** Unicode Script property whose runs need the book's dedicated font command. */
   unicodeScript?: string;
   /** LaTeX command name, without the leading backslash, used for those runs. */
@@ -1403,12 +1407,39 @@ export function renderReferenceAppendix(
   }
   lines.splice(firstContent, 1);
 
+  // The chapter title, the table-of-contents line and the running head are three
+  // different jobs, and a book that was hand-set gave them three different
+  // strings: `The Tamil script --- a reference` over the page, `The Tamil script
+  // (reference)` in the contents (an em-dash reads as a hyphen at TOC size and
+  // the entry has one line to fit in), and a bare `Tamil script` in the running
+  // head, where "Pronunciation" would be a lie about a chapter that is mostly a
+  // writing system. Both overrides are optional and both default to the shape
+  // the first six generated references already emit, so those files are
+  // unchanged byte for byte.
+  //
+  // A declared-but-blank override is rejected rather than defaulted. `?? ` reads
+  // `""` as a deliberate value, which would blank every running head in the
+  // appendix or empty its contents line, and a reference whose contents entry is
+  // an empty dotted rule is not a failure anyone would go looking for.
+  const override = (value: string | undefined, field: string): string | undefined => {
+    if (value === undefined) return undefined;
+    if (value.trim() === "") {
+      throw new Error(`${target.language} reference appendix: ${field} must not be blank`);
+    }
+    return value;
+  };
+  const runningHead = renderInlineMarkdown(
+    override(target.runningHead, "runningHead") ?? "Pronunciation",
+    renderOptions,
+  );
+  const shortTitle = override(target.shortTitle, "shortTitle") ?? target.title;
+
   const output = [
     `% GENERATED FILE. Edit ${target.source}, then run npm run generate:books.`,
     "",
     `\\chapter*{${renderInlineMarkdown(target.title, renderOptions)}}`,
-    `\\addcontentsline{toc}{chapter}{${renderInlineMarkdown(target.title, renderOptions)}}`,
-    "\\markboth{Pronunciation}{Pronunciation}",
+    `\\addcontentsline{toc}{chapter}{${renderInlineMarkdown(shortTitle, renderOptions)}}`,
+    `\\markboth{${runningHead}}{${runningHead}}`,
     "",
   ];
   const body: string[] = [];

@@ -1,0 +1,24 @@
+{
+  "chapter": 40,
+  "title": "Here, and the Asking Column",
+  "label": "ch:mr-here",
+  "canDo": "I can write the independent इ, say where I am with ithe, and turn the lines of my own A1 message into the questions they answer.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R40-asking-column",
+    "kind": "production",
+    "summary": "Complete MR-R40-asking-column and interrogate your own named-reader message: turn its name, wellbeing and place lines into questions by changing one word each.",
+    "assesses": [
+      "MR-SCRIPT-I-INDEPENDENT-01",
+      "MR-LEX-ITHE",
+      "MR-QUESTION-KON",
+      "MR-QUESTION-KITI",
+      "MR-QUESTION-KUTHE",
+      "MR-QUESTION-KADHI",
+      "MR-GRAMMAR-WH-ORDER"
+    ],
+    "note": "The payoff is the whole asking column run against material the reader already wrote, not the two items this chapter introduces."
+  }
+}

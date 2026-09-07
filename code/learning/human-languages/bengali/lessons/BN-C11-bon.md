@@ -48,7 +48,7 @@ and where it comes from instead is the surprise this chapter has been saving.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-DUDH-01, BN-LEX-C10-BHAT-01, BN-SOUND-C10-DUDH-02] -->
 
 **বোন** is **ব** with the vowel sign **ো** (*bo*) plus **ন** (*n*), silent at
-the end — one plain consonant, no cluster, so the inherent vowel drops just as
+the end — one plain consonant, no cluster, so the inherent vowel drops exactly as
 it did on দুধ and ভাত: *bon*, not *bono*.
 
 ## The word, taken apart

@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 16,
+  "output": "russian/book/chapters/ch16-and-or-neither.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

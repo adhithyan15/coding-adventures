@@ -1,5 +1,48 @@
 # Changelog — `lang-aot`
 
+## Unreleased — COBOL INSPECT BEFORE/AFTER region proofs (VM-047c)
+
+Add five seven-backend cells promoting the already-implemented single-region
+`INSPECT ... BEFORE`/`AFTER` window to the unified matrix: TALLYING FOR ALL
+narrowed BEFORE a delimiter, TALLYING narrowed AFTER a delimiter, REPLACING
+ALL narrowed BEFORE a delimiter, REPLACING narrowed AFTER a delimiter, and
+BEFORE/AFTER used together across the independently-regioned TALLYING and
+REPLACING halves of one combined `INSPECT` statement. Each BEFORE/AFTER pair
+pins the ISO not-found asymmetry: an absent BEFORE delimiter covers the WHOLE
+source while an absent AFTER delimiter covers an EMPTY region.
+
+## Unreleased — COBOL STRING self-reference proof (VM-057)
+
+Add a seven-backend cell for `STRING <item> DELIMITED BY SIZE INTO <same
+item>`: a lone sending field that is also its own `INTO` receiver, the real
+COBOL shape that reaches WASM `str_slice`'s destination-aliases-source path
+with no intermediate temporary. Expects the receiver unchanged. This
+protects VM-057: WASM `str_slice` preserves the aliased source handle.
+
+
+## Unreleased — COBOL INSPECT replacement proofs (VM-047b)
+
+Add five matching oracle and seven-backend observations for ALL, LEADING,
+CHARACTERS, first-match priority and non-rechaining replacement. Cover item
+operands, reassignment, absent matches and padded spaces in observable output.
+These cases protect VM-056: WASM concat preserves aliased source handles.
+
+
+## Unreleased — COBOL INSPECT tallying proofs (VM-047a)
+
+Add matching oracle and seven-backend observations for ALL accumulation and
+zero matches, CHARACTERS including field padding, and LEADING stopping at the
+first mismatch. Reassigned source and delimiter items make later reads visible.
+
+
+## Unreleased — COBOL pointer/overflow proofs (VM-046c)
+
+Add eight seven-backend STRING/UNSTRING programs that jointly observe text,
+pointer writeback and overflow/success branches. Cover in-range offsets, exact
+fit, partial transfer, invalid starting pointers, exhausted input and a trailing
+delimiter. Bracketed output preserves spaces; normal non-ALGOL BUILD includes
+all new rows automatically.
+
 ## Unreleased — COBOL delimiter proofs (VM-046b)
 
 Add five seven-backend rows for STRING first/absent/leading delimiters and

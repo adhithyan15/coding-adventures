@@ -161,12 +161,33 @@ a gated reading course.
 
   `taughtGlyphs` 9 → 26, `neverTaughtGlyphs` **39 → 22**. **Authored.**
 
+- **Ch. 27 — Three Ways to Say No**: না after the verb (আমি জানি না) → নয় / নই,
+  the denial of a sentence that never had a verb → নেই, the fused denial of the
+  আছ- stem, which is also how Bengali says *I have no* → the yes-or-no question
+  made by pitch alone → review. **Authored.** Closes the negation column of the
+  A1 inventory outright (1/5 → 5/5) and empties SPINE-NEGATE-AND-ASK's omission
+  ledger.
+- **Ch. 28 — Two Things at Once**: আর (*and*) → -ও, the one-vowel clitic that
+  marks rather than joins → বা (*or*), which is what an offer needs → না … না,
+  the one construction where the negator goes first → review. **Authored.**
+- **Ch. 29 — Agreeing, Differing, and Saying Why**: কিন্তু (*but*, taken apart
+  into Sanskrit *kim-tu* so chapter three's কি is visible inside it) → একমত,
+  agreeing and — with নই — disagreeing → কেননা (*because*), which has
+  chapter twenty-seven's না inside it → review. **Authored.** Empties
+  SPINE-SAY-WHY's omission ledger.
+- **Ch. 30 — When You Are Lost**: যে, the complementiser ভাবা had been waiting
+  sixteen chapters for → যখন … তখন, the correlative pair Bengali completes
+  and English does not → আবার বলবেন (*say it again*), assembled out of three
+  things already in the book → ধীরে (*slowly*) → review. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
 | 20 | The script strand's fifth tranche: **য**, **়**, **ও**, **গ**, **ছ** — the five untaught glyphs the corpus shows most often, each with a word already glossed and waiting (হ্যাঁ, কাপড়, হওয়া, লাগা, আছি) |
 | 21 | Postpositions (*-e, -te, -r, -ke*); numbers 6–10 |
+| 31 | The demonstratives এই / ওই and এটা — the whole Nirdeshak column is 0/3, and এটা needs ট, so this is a script lesson before it is a vocabulary one |
+| 32 | The third person (সে / তিনি / ও) — the largest single hole left in the pronoun column, and the blocker under যে … সে |
 | 22+ | Verb tenses (the past and future of these fourteen verbs) — always tracing the sound-shift back to Sanskrit |
 
 Structural work, filed as **HL-C194** in `BACKLOG.d/`: the script strand sits

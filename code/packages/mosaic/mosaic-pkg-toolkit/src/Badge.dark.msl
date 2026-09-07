@@ -1,4 +1,6 @@
 // Badge.dark.msl — dark-theme styling for Badge.
+//
+// Same closed variant axis as the light theme, tuned for dark surfaces.
 
 style Badge {
   part badge {
@@ -8,6 +10,39 @@ style Badge {
     color         : "#0f172a" ;
     font-size     : 12 ;
     font-weight   : 600 ;
+
+    state primary {
+      background : "#3b82f6" ;
+      color      : "#0f172a" ;
+    }
+    state secondary {
+      background : "#64748b" ;
+      color      : "#ffffff" ;
+    }
+    state success {
+      background : "#22c55e" ;
+      color      : "#052e16" ;
+    }
+    state danger {
+      background : "#ef4444" ;
+      color      : "#ffffff" ;
+    }
+    state warning {
+      background : "#f59e0b" ;
+      color      : "#1c1917" ;
+    }
+    state info {
+      background : "#22d3ee" ;
+      color      : "#083344" ;
+    }
+    state light {
+      background : "#e2e8f0" ;
+      color      : "#0f172a" ;
+    }
+    state dark {
+      background : "#1e293b" ;
+      color      : "#f8fafc" ;
+    }
   }
   part badge-text {
   }

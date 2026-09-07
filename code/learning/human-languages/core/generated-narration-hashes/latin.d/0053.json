@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:981583f4f86847b8",
+  "lessonIds": [
+    "LA-C53-iterum",
+    "LA-C53-magister",
+    "LA-C53-discipulus",
+    "LA-C53-schola",
+    "LA-C53-liber"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch53.txt",
+  "json": "latin/narration/ch53.json",
+  "textHash": "fnv1a64:913e777bdfc5a795",
+  "jsonHash": "fnv1a64:25cf0c629d260827",
+  "findings": []
+}

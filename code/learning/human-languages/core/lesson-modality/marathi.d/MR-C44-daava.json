@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C44-daava",
+    "language": "marathi",
+    "chapter": 44,
+    "sequence": 1770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:452023e7e846a02d"
+  },
+  "findings": []
+}

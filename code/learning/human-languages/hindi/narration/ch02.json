@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ff6ef2b6dc4b2a15",
+  "sourceHash": "fnv1a64:64ecce3ceafbb3b0",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -963,16 +963,16 @@
       "id": "HI-C02-khushi",
       "sequence": 180,
       "title": "ख़ुशी (khushī) — \"happiness,\" and \"pleased to meet you\"",
-      "headword": "ख़ुशी",
-      "romanization": "khushī",
-      "gloss": "happiness / pleased to meet you",
+      "headword": "आपसे मिलकर ख़ुशी हुई / ख़ुशी",
+      "romanization": "āpse milkar khushī huī / khushī",
+      "gloss": "pleased to meet you / happiness",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4595c485c262ed66",
+      "sourceHash": "fnv1a64:8eaad70bda8fc9d5",
       "notice": null,
       "blocks": [
         {
