@@ -6957,7 +6957,13 @@ mod tests {
 
         assert_eq!(value["ok"], true);
         assert_eq!(value["snapshot"]["app"], "engram");
-        assert_eq!(value["snapshot"]["version"], 1);
+        // The constant, not a literal: the version moved to 2 with the base64
+        // media encoding (#13671), and a literal here would have to be chased
+        // every time the format changes.
+        assert_eq!(
+            value["snapshot"]["version"],
+            engram_core::ENGRAM_SNAPSHOT_VERSION
+        );
         assert_eq!(value["snapshot"]["exportedAt"], NOW + 1);
         assert_eq!(value["snapshot"]["decks"][0]["id"], "deck");
         assert!(value["snapshot"].get("activeSession").is_none());

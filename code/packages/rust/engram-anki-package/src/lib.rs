@@ -567,35 +567,31 @@ const MEDIA_EXPANSION_RATIO: u64 = 50;
 /// figure there would guarantee a trap on a *legitimate* import, never mind a
 /// hostile one.
 ///
-/// The amplification this compensated for is gone, so the ceiling has moved.
+/// This is a limit on browser media size, and it is deliberately visible as one
+/// rather than hidden.
 ///
-/// It was 32 MiB because every byte of media cost roughly 24-34 bytes of peak
-/// heap: `to_value` built one `serde_json::Value` per media BYTE, and the
-/// derived `Vec<u8>` serialisation spent 3.6 wire bytes on top. Both are fixed
-/// -- #14411 streams with `to_writer`, and media now travels as base64 -- and
-/// the result was measured with a counting allocator rather than estimated:
+/// #14411 and the base64 encoding removed the serialisation amplification this
+/// was sized around, and the ceiling was briefly raised to 128 MiB on the
+/// strength of a 1.34x figure. **That was the wrong number for this decision.**
+/// 1.34x is incremental allocation during serialisation; it excludes the
+/// retained media, the reducer's whole-state clone on every command, and the
+/// output buffer's doubling growth. Measured total live heap at 128 MiB of
+/// media is 429-939 MiB depending on media shape, not the ~172 MiB the
+/// arithmetic implied.
 ///
-/// ```text
-///   2048 x 16 KiB (32 MiB) | array 3.57x wire 2.00x peak | base64 1.33x wire 1.34x peak
-/// ```
+/// The `* MEDIA_EXPANSION_RATIO` term is also not the effective bound above a
+/// 2.56 MiB archive: zip padding is free, so an attacker reaches the ceiling
+/// with a small archive and the ceiling alone decides the maximum. On `wasm32`
+/// linear memory never shrinks and `panic = "abort"` means the `catch_unwind`
+/// in `catch_json` never runs, so the spike takes the user's unsaved
+/// collection with it.
 ///
-/// So 128 MiB of media now implies roughly 172 MiB of peak, against the 1 GiB+
-/// that the same figure would have cost before. Raised 4x rather than removed:
-/// `wasm32` still has a 32-bit address space and browsers cap the heap well
-/// below it, so an absolute bound is still worth having -- it is simply no
-/// longer set by a serialisation defect.
-///
-/// Note the one shape where base64 is worse: a SINGLE very large asset pays
-/// 2.67x peak, because the intermediate encoded string is the whole asset
-/// while the output buffer is too. Collections of many assets, which is what
-/// an `.apkg` actually contains, sit at 1.34x.
-///
-/// The zip-bomb guard is unchanged and does not live here: it is the
-/// `archive_len * MEDIA_EXPANSION_RATIO` term below, which still bounds any
-/// individual archive to 50x its own compressed size. This constant only caps
-/// the absolute maximum for very large archives.
+/// So it stays at 32 MiB. Raising it needs the multiplier removed first --
+/// pre-reserving the response buffer, `encode_into` rather than `encode` per
+/// asset, and not deep-cloning `media_assets` on every dispatch -- rather than
+/// a smaller serialisation constant.
 #[cfg(target_arch = "wasm32")]
-const MEDIA_EXPANSION_CEILING: u64 = 128 * 1024 * 1024;
+const MEDIA_EXPANSION_CEILING: u64 = 32 * 1024 * 1024;
 
 /// See the wasm variant above for why these differ.
 #[cfg(not(target_arch = "wasm32"))]
