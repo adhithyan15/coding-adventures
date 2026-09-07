@@ -344,7 +344,22 @@ function recordFrom(value) {
   return typeof value === "object" && value !== null ? value : {};
 }
 
+// Read a byte payload that may be base64 or a legacy array of numbers.
+//
+// Media and the exported `.apkg` moved to base64 because a JSON array of
+// decimal numbers costs 3.6 wire bytes per byte (#13671). Both spellings are
+// accepted so a host and the engine can be updated independently -- and
+// because the failure mode otherwise is an EMPTY file rather than an error,
+// which reads as a successful export of nothing.
 function jsonByteArray(value) {
+  if (typeof value === "string") {
+    const binary = atob(value);
+    const out = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) {
+      out[index] = binary.charCodeAt(index);
+    }
+    return out;
+  }
   if (!Array.isArray(value)) {
     return new Uint8Array();
   }

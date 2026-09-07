@@ -514,8 +514,19 @@ QString MosaicHost::suggestedAnkiFileName(const QVariantMap &hostIntent) const {
   return name;
 }
 
+// Read a byte payload that may be base64 or a legacy array of numbers.
+//
+// Media and the exported `.apkg` moved to base64 because a JSON array of
+// decimal numbers costs 3.6 wire bytes per byte (#13671). Both spellings are
+// accepted so a host and the engine can be updated independently -- and
+// because the failure mode otherwise is an EMPTY file rather than an error,
+// which reads as a successful export of nothing.
 QByteArray MosaicHost::jsonByteArray(const QJsonObject &root, const QString &property) const {
-  const QJsonArray array = root.value(property).toArray();
+  const QJsonValue payload = root.value(property);
+  if (payload.isString()) {
+    return QByteArray::fromBase64(payload.toString().toLatin1());
+  }
+  const QJsonArray array = payload.toArray();
   QByteArray out;
   out.reserve(array.size());
   for (const QJsonValue &value : array) {
