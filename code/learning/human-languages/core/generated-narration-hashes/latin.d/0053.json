@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 53,
-  "sourceHash": "fnv1a64:981583f4f86847b8",
+  "sourceHash": "fnv1a64:fc7271a95b40be7d",
   "lessonIds": [
     "LA-C53-iterum",
     "LA-C53-magister",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch53.txt",
   "json": "latin/narration/ch53.json",
-  "textHash": "fnv1a64:913e777bdfc5a795",
-  "jsonHash": "fnv1a64:25cf0c629d260827",
+  "textHash": "fnv1a64:5caa41c9c9aa1220",
+  "jsonHash": "fnv1a64:b03b63e70b0d3ee9",
   "findings": []
 }

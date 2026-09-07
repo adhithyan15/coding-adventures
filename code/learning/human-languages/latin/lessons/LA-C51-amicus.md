@@ -55,8 +55,8 @@ The bread lesson traced *pānis* to **companion** — the one you share bread wi
 "the friendship-word every Romance daughter still shares." This is that word, and
 it took forty-one chapters to arrive.
 
-It is built straight onto **amō**, "I love," from the *amō* lesson: a friend is simply
-one who is loved. And its negative is the interesting half. **In-amīcus** becomes
+It is built straight onto **amō**, "I love," from the *amō* lesson: a friend is
+one who is loved, and nothing more than that. And its negative is the interesting half. **In-amīcus** becomes
 **inimīcus**, "not-friend," and *inimīcus* is English **enemy**. The most hostile
 word in the language is the friendliest one with two letters in front of it.
 
