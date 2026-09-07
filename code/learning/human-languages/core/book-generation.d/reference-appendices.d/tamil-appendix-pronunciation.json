@@ -1,0 +1,9 @@
+{
+  "language": "tamil",
+  "title": "The Tamil script --- a reference",
+  "shortTitle": "The Tamil script (reference)",
+  "runningHead": "Tamil script",
+  "source": "tamil/pronunciation-reference.md",
+  "output": "tamil/book/chapters/appendix-pronunciation.tex",
+  "scriptSet": "tamil-comparisons"
+}

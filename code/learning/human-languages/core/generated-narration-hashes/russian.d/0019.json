@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:643e8d654f6c89dd",
+  "lessonIds": [
+    "RU-C19-pochemu",
+    "RU-C19-potomu-chto",
+    "RU-C19-kogda-vopros",
+    "RU-C19-kogda-soyuz",
+    "RU-W10-zapyataya"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "russian/narration/ch19.txt",
+  "json": "russian/narration/ch19.json",
+  "textHash": "fnv1a64:09ebb58198895296",
+  "jsonHash": "fnv1a64:29c4fc21ceaa29f8",
+  "findings": []
+}

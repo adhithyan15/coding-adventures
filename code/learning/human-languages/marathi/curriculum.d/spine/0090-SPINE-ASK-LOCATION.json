@@ -2,7 +2,11 @@
   "segments": [
     "MR-PATH-040",
     "MR-PATH-041",
-    "MR-PATH-042"
+    "MR-PATH-042",
+    "MR-PATH-044",
+    "MR-PATH-045",
+    "MR-PATH-046",
+    "MR-PATH-047"
   ],
   "omits": [],
   "relocates": {}

@@ -201,6 +201,14 @@ describe("corpus snapshot", () => {
       "VERB-UNDERSTAND",
       "VERB-READ",
       "VERB-WRITE",
+      // Chapter 20. мочь had been PRINTED since chapter 5 without ever being
+      // taught: the помогать lesson spells out that the verb is по- plus мочь
+      // and then moves on, so a reader had been reading the word for fifteen
+      // chapters. The joining tranche gives it a lesson, and it lands beside
+      // хотеть because the pattern both of them need — a bare infinitive after
+      // a finite verb — did not exist in the track either. VERB-WANT is not in
+      // this list because хотеть is not one of the canonical core verbs.
+      "VERB-CAN",
       "VERB-TAKE",
       "VERB-LIVE",
       "VERB-ASK",

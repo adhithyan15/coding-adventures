@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C20-khotet",
+    "language": "russian",
+    "chapter": 20,
+    "sequence": 1000,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:59b1581e8737a04c"
+  },
+  "findings": []
+}

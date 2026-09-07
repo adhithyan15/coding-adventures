@@ -1,0 +1,9 @@
+{
+  "language": "telugu",
+  "title": "The Telugu script --- a reference",
+  "shortTitle": "The Telugu script (reference)",
+  "runningHead": "Telugu script",
+  "source": "telugu/pronunciation-reference.md",
+  "output": "telugu/book/chapters/appendix-pronunciation.tex",
+  "scriptSet": "telugu-comparisons"
+}

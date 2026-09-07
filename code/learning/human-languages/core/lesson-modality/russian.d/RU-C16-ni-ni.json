@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C16-ni-ni",
+    "language": "russian",
+    "chapter": 16,
+    "sequence": 830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69d2cb95cb423d80"
+  },
+  "findings": []
+}

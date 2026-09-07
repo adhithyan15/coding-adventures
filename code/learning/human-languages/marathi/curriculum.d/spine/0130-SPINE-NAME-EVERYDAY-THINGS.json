@@ -1,10 +1,9 @@
 {
   "segments": [
     "MR-PATH-021",
-    "MR-PATH-023"
+    "MR-PATH-023",
+    "MR-PATH-043"
   ],
-  "omits": [
-    "LODGING-ROOM"
-  ],
+  "omits": [],
   "relocates": {}
 }

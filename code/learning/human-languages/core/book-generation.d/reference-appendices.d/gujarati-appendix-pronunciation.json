@@ -1,0 +1,10 @@
+{
+  "language": "gujarati",
+  "title": "The Gujarati script --- a reference",
+  "shortTitle": "The Gujarati script (reference)",
+  "runningHead": "Gujarati script",
+  "source": "gujarati/pronunciation-reference.md",
+  "output": "gujarati/book/chapters/appendix-pronunciation.tex",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu"
+}

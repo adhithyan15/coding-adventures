@@ -1,0 +1,17 @@
+{
+  "id": "RU-EXT-029-QUESTION-FAMILY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask who, which and how many, describe a noun with a whole clause using kotoryy, and ask or embed a yes-or-no question with li.",
+  "prerequisites": [
+    "RU-EXT-028-REPAIR"
+  ],
+  "lessons": [
+    "RU-C22-kto",
+    "RU-C22-kakoy",
+    "RU-C22-skolko",
+    "RU-C22-kotoryy",
+    "RU-C22-li"
+  ]
+}

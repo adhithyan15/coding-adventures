@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C17-odin",
+    "language": "russian",
+    "chapter": 17,
+    "sequence": 870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3662e692b5941210"
+  },
+  "findings": []
+}

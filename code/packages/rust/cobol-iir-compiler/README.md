@@ -195,3 +195,11 @@ VM-047b extends the ASCII INSPECT corpus to replacement: ALL, LEADING,
 CHARACTERS, first-match priority and non-rechaining multi-item rules. Five
 programs compare complete output with the oracle and seven standard backends;
 BEFORE/AFTER regions remain a separate proof slice.
+
+
+VM-057 adds an oracle-agreement proof for `STRING S DELIMITED BY SIZE INTO
+S`: the sole sending field is also the `INTO` receiver, so the item's own
+register is both source and destination of the reshape with no intermediate
+temporary. `S` is unchanged on the generic JIT/interpreter path; the same
+construct exposed a WASM-lowering-only aliasing defect in `str_slice`, fixed
+and regression-tested separately in `iir-to-wasm`.

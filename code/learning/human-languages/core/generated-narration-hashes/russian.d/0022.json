@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:0c3c70c854a56ddf",
+  "lessonIds": [
+    "RU-C22-kto",
+    "RU-C22-kakoy",
+    "RU-C22-skolko",
+    "RU-C22-kotoryy",
+    "RU-C22-li"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "russian/narration/ch22.txt",
+  "json": "russian/narration/ch22.json",
+  "textHash": "fnv1a64:3538808f749a541e",
+  "jsonHash": "fnv1a64:4a3e381d819faeca",
+  "findings": []
+}

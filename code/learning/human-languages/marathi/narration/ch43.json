@@ -1,0 +1,578 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 43,
+  "title": "Near, Opposite, Far",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:516aa999785d88c6",
+  "lessons": [
+    {
+      "id": "MR-C43-javal",
+      "sequence": 1720,
+      "title": "जवळ (javaḷ) — near, close to",
+      "headword": "जवळ",
+      "romanization": "javaḷ",
+      "gloss": "near, close to — the postposition a direction-asker actually gets answered with",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3400668ac0bbc5bd",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last chapter stacked things above and below each other. Real directions are almost never that tidy."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say khālī, then var, then bend घर and glue each on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *khālī*, then *var*, then bend **घर** and glue each on]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जवळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जवळ — javaḷ — near, close to."
+            },
+            {
+              "kind": "speech",
+              "text": "माझं घर पुण्याजवळ आहे. — mājhaṁ ghar puṇyājavaḷ āhe. — my house is near Pune."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the answer a real person gives when you ask कुठे? and the true answer is not a single named point. It takes the same oblique stem as everything else in this column — पुणे becomes पुण्या- — so nothing new has to be learned about the noun."
+            },
+            {
+              "kind": "speech",
+              "text": "जवळ (javaḷ) carries the ळ, the retroflex l that is Marathi's own letter and that Hindi does not have. Say it with the tongue curled back, the way you learned it in chapter three, or the word will sound like a different one."
+            },
+            {
+              "kind": "speech",
+              "text": "It has a second job you will need in the next chapter: X जवळ (javaḷ) can also mean in X's keeping — near enough to reach — which is how Marathi gets close to saying somebody HAS something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "javaḷ — near, with the tongue curled on the ळ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *javaḷ* — near, with the tongue curled on the **ळ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhaṁ ghar puṇyājavaḷ āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhaṁ ghar puṇyājavaḷ āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitrājavaḷ — near my friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitrājavaḷ* — near my friend]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C43-javal-r1",
+              "prompt": "Say that your house is near Pune.",
+              "assesses": [
+                "MR-POSTP-JAVAL",
+                "MR-GRAMMAR-OBLIQUE"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "mājhaṁ ghar puṇyājavaḷ āhe",
+                "माझं घर पुण्याजवळ आहे"
+              ],
+              "feedback": {
+                "correct": "A location given without a street.",
+                "incorrect": "puṇe bends to puṇyā- before javaḷ."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter in जवळ (javaḷ) is the one Hindi does not have? (ळ.) What does पुणे become before it? (पुण्या-.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: जवळ (javaḷ)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C43-samor",
+      "sequence": 1730,
+      "title": "समोर (samor) — in front of, opposite",
+      "headword": "समोर",
+      "romanization": "samor",
+      "gloss": "in front of, opposite, facing — and a word built out of a face you have already been taught",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:624aeaac64f5a828",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "जवळ (javaḷ) says close by, which does not say which side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: समोर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समोर — samor — in front of, opposite, facing."
+            },
+            {
+              "kind": "speech",
+              "text": "घरासमोर — gharāsamor — in front of the house."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the postposition a set of directions is actually made of. Opposite the station, in front of the shop — a Marathi speaker giving you a landmark reaches for समोर (samor) before anything else."
+            },
+            {
+              "kind": "speech",
+              "text": "Take the word apart and it pays you back. It is Sanskrit सम्मुख (sammukha) — सम् together plus मुख face. Chapter nineteen told you that मुख is the formal doublet of तोंड, the everyday mouth. So समोर (samor) is, quite literally, face-to-face: the thing whose face is turned toward yours."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why it means opposite as well as in front of. English keeps those apart; Marathi does not need to, because a face has only one direction."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samor — in front of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samor* — in front of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāsamor, then gharājavaḷ — a side, then a distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāsamor*, then *gharājavaḷ* — a side, then a distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which body part is inside this word — मुख, the formal tond",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which body part is inside this word — ***मुख***, the formal *tond*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C43-samor-r1",
+              "prompt": "Say 'in front of the house' and 'near the house', and name the difference.",
+              "assesses": [
+                "MR-POSTP-SAMOR",
+                "MR-POSTP-JAVAL"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "gharāsamor; gharājavaḷ",
+                "घरासमोर घराजवळ"
+              ],
+              "feedback": {
+                "correct": "One names a side; the other only a distance.",
+                "incorrect": "Same stem gharā-; only the tail changes."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two pieces is समोर (samor) built from? (सम् together and मुख face.) Why does one word cover both in front of and opposite? (A face points one way; both meanings are that.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: समोर (samor)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C43-laamb",
+      "sequence": 1740,
+      "title": "लांब (lāmb) — far, and long",
+      "headword": "लांब",
+      "romanization": "lāmb",
+      "gloss": "far, and also long — one Marathi word where English needs two, and the answer to how far",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1867485547092c01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "जवळ (javaḷ) answers near. Nothing yet answers the other half of the question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लांब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लांब — lāmb — far; long."
+            },
+            {
+              "kind": "speech",
+              "text": "माझं घर लांब आहे. — mājhaṁ ghar lāmb āhe. — my house is far away."
+            },
+            {
+              "kind": "speech",
+              "text": "लांब (lāmb) is जवळ (javaḷ)'s opposite and does not behave like it. जवळ (javaḷ) is a postposition and wants a noun bent in front of it; लांब (lāmb) is an ordinary word that can simply stand in the sentence, which is why the example above needs no oblique stem at all."
+            },
+            {
+              "kind": "speech",
+              "text": "The second meaning is the one to hold onto, because it explains the first. Sanskrit लम्ब (lamba) means \"hanging down, extended\" — so लांब (lāmb) is long before it is far, and far is only long applied to a distance. A Marathi speaker uses the one word for a long rope and a distant town without feeling any jump."
+            },
+            {
+              "kind": "speech",
+              "text": "Pair the two and you can answer a real question:"
+            },
+            {
+              "kind": "speech",
+              "text": "जवळ, की लांब? — javaḷ, kī lāmb? — near, or far?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāmb — far, and long",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāmb* — far, and long]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhaṁ ghar lāmb āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhaṁ ghar lāmb āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "javaḷ, kī lāmb? — and answer it about where you live",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *javaḷ, kī lāmb?* — and answer it about where you live]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C43-laamb-r1",
+              "prompt": "Say that your house is far, then that it is near Pune.",
+              "assesses": [
+                "MR-LEX-LAAMB",
+                "MR-POSTP-JAVAL"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "mājhaṁ ghar lāmb āhe; mājhaṁ ghar puṇyājavaḷ āhe",
+                "माझं घर लांब आहे माझं घर पुण्याजवळ आहे"
+              ],
+              "feedback": {
+                "correct": "One needs no stem; the other does.",
+                "incorrect": "lāmb stands alone; javaḷ needs puṇyā- in front of it."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of जवळ (javaḷ) and लांब (lāmb) needs the oblique stem? (जवळ (javaḷ) — it is a postposition; लांब (lāmb) is not.) What does लांब (lāmb) mean before it means far? (Long.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: लांब (lāmb)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R43-how-far",
+      "sequence": 1750,
+      "title": "Give somebody a direction",
+      "headword": "जवळ · समोर · लांब",
+      "romanization": "javaḷ · samor · lāmb",
+      "gloss": "a distance, a side, and the other end of the distance — enough to give a direction",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c4007a2a6731a34",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words landed in this chapter and only two of them are postpositions. Name all three, then say which one is the odd one out and why."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghar kuṭhe āhe? — then answer puṇyājavaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghar kuṭhe āhe?* — then answer *puṇyājavaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoolīsamor — in front of the room",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoolīsamor* — in front of the room]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāmb — and notice you added no ending to anything",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāmb* — and notice you added no ending to anything]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask kadhī? and kitī? about the same house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask *kadhī?* and *kitī?* about the same house]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R43-how-far-run",
+              "prompt": "Ask where a house is, then answer three ways: near Pune, in front of the room, far.",
+              "assesses": [
+                "MR-POSTP-JAVAL",
+                "MR-POSTP-SAMOR",
+                "MR-LEX-LAAMB"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "ghar kuṭhe āhe? — puṇyājavaḷ; khoolīsamor; lāmb",
+                "घर कुठे आहे? पुण्याजवळ खोलीसमोर लांब"
+              ],
+              "feedback": {
+                "correct": "A distance, a side, and the far end.",
+                "incorrect": "Two of the three bend the noun in front of them; lāmb does not."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can now answer कुठे? five ways without naming a street. Which of this chapter's three words is not a postposition? (लांब (lāmb).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 22,
+  "output": "russian/book/chapters/ch22-question-family.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

@@ -1,0 +1,7 @@
+{
+  "language": "latin",
+  "title": "How Latin sounds --- a reference",
+  "shortTitle": "How Latin sounds (reference)",
+  "source": "latin/pronunciation-reference.md",
+  "output": "latin/book/chapters/appendix-pronunciation.tex"
+}

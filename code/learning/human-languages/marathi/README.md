@@ -291,6 +291,19 @@ first-person can-do sentence and the lesson that pays it off.
   payoff that turns the reader's own A1 message into the interview it answers.
   `SPINE-ASK-LOCATION`, an A1 core node with no realization at all, stops being
   omitted. A1 exam coverage 111/301 → **124/301**.
+- **Chapters 41–44 — the place column** ([`lessons/MR-C41-*`, `MR-C42-*`,
+  `MR-C43-*`, `MR-C44-*`](./lessons/)): the track could point at a place and not
+  put anything in one. **41** **घर** and **खोली**, and then the rule those two
+  nouns make visible — **the oblique stem**, which the inventory calls the
+  largest structural gap in the track because almost every Marathi postposition
+  demands it first; **42** **मध्ये**, **वर** and **खाली**, three postpositions
+  run off one bent stem, two of which double as bare adverbs (*up*, *down*) when
+  there is no noun to glue them to; **43** **जवळ**, **समोर** — literally
+  *face-to-face*, built on the **मुख** doublet of **तोंड** this book taught in
+  chapter nineteen — and **लांब**, which is *long* before it is *far*; **44**
+  **उजवा** and **डावा**, adjectives that agree the way **माझा** does.
+  `SPINE-NAME-EVERYDAY-THINGS` stops being omitted. A1 exam coverage 124/301 →
+  **133/301**.
 
 Chapters 9–12 **are** in the ledger with scored payoffs, and that is a change
 worth recording rather than quietly editing. This paragraph used to say the

@@ -1,0 +1,23 @@
+{
+  "chapter": 18,
+  "title": "One Word, and a Whole Sentence After It",
+  "label": "ch:ru-chto",
+  "canDo": "I can ask what, say I think that something is so, say what it is I do not know, and write the dash that stands where the missing verb to be would have been.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "RU-W09-tire",
+    "kind": "writing",
+    "summary": "chto is the cheapest sentence-level word in the queue: one syllable that turns dumat and znat -- both taught chapters ago and both stuck without an object -- into verbs that carry a whole clause. It is also the word Russian spells with a ch and says with a sh in one job and not the other, and the word English splits into that and what while Russian does not. The chapter ends on the dash, which is the only mark in the language whose job is to stand in for a word the sentence never says.",
+    "assesses": [
+      "RU-LEX-CHTO-01",
+      "RU-ETYMON-CHTO-KWID",
+      "RU-GRAMMAR-CHTO-COMPLEMENTISER-01",
+      "RU-GRAMMAR-DUMAYU-CHTO-01",
+      "RU-GRAMMAR-ZNAYU-CHTO-01",
+      "RU-PUNCT-TIRE-01"
+    ],
+    "note": "Carried on SPINE-EXCHANGE-NAMES, a pre-A1 node whose QUESTION-WHAT concept the track had omitted: chto is that concept's realization, and the three frames built on it ride the same segment because they cannot be taught before it."
+  }
+}

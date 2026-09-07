@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:717feb14774bfd23",
+  "lessonIds": [
+    "MR-C43-javal",
+    "MR-C43-samor",
+    "MR-C43-laamb",
+    "MR-R43-how-far"
+  ],
+  "tex": "marathi/book/chapters/ch43-near-opposite-far.tex"
+}

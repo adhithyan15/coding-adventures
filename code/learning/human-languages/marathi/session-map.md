@@ -387,11 +387,40 @@ of three- and four-lesson chapters systematically misses **R2 (distance 5–15)*
 and lands inside it. Marathi's R2 miss count did not move while the track grew
 by thirteen lessons, which is the number that says the reach works.
 
+## Chapters 41–44 — the place column
+
+| Session | Lesson | Job |
+|---|---|---|
+| 244 | C41-ghar | **घर** — a place that can be named, not only pointed at |
+| 245 | C41-kholi | **खोली** — the inside of it, and `LODGING-ROOM` realized |
+| 246 | C41-oblique | **घरा-** — the stem a noun takes before any postposition |
+| 247 | R41-in-the-house | ask **कुठे?**, answer with a room |
+| 248 | C42-madhye | **मध्ये** — the written partner of the spoken **-त** |
+| 249 | C42-var | **वर** — on; up; and where Marathi puts love |
+| 250 | C42-khaali | **खाली** — its exact mirror, twice over |
+| 251 | R42-inside-outside | one stem, three relations, and *there is* |
+| 252 | C43-javal | **जवळ** — the answer a real person gives |
+| 253 | C43-samor | **समोर** — face-to-face, out of **सम्** and **मुख** |
+| 254 | C43-laamb | **लांब** — *long* before it is *far*, and no stem |
+| 255 | R43-how-far | a distance, a side, and the far end |
+| 256 | C44-ujva | **उजवा** — the straight hand, agreeing like **माझा** |
+| 257 | C44-daava | **डावा** — the pair closed for the cost of one sound |
+| 258 | R44-directions | bend **घर** once and run all five off it |
+
+The two nouns come BEFORE the rule, which is the whole shape of chapter 41. An
+oblique stem is invisible except on a noun the reader already owns, so **घर**
+and **खोली** are taught first and then made to demonstrate the two halves of the
+rule — one bends, one does not.
+
+Three of the eleven items are deliberately NOT postpositions. **लांब**,
+**उजवा** and **डावा** take no oblique stem, and a rule that every new word obeys
+is a rule the reader cannot test. The contrast is the teaching.
+
 ## Next
 
-The next Marathi tranche should take the **oblique stem** (`MR-A1-N-09`) and the
-postpositions built on it — the locative **-त** / **-वर**, **मध्ये**, **खाली**,
-**जवळ**, **समोर**, the accompaniment **-शी** / **बरोबर**, the ablative
-**-हून** / **पासून** and the goal **-कडे**. Around seventeen uncovered inventory
-points sit behind that one stem change, and it is the largest structural gap the
-inventory names.
+The next Marathi tranche should take the postpositions the oblique stem has
+unblocked: the accompaniment **-शी** / **बरोबर** and the instrumental **-ने**,
+the ablative **-हून** / **पासून**, and the goal **-कडे** / **पर्यंत**. **-कडे**
+alone carries possession, existence and direction, because Marathi has no verb
+*to have*; **पर्यंत** needs the reph, which closes `MR-A1-OR-21` together with
+its rakaar partner.

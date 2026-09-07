@@ -1,0 +1,25 @@
+{
+  "chapter": 20,
+  "title": "The Verb That Takes Another Verb",
+  "label": "ch:ru-want-can-must",
+  "canDo": "I can say what I want, put a bare infinitive after it with nothing in between, give the purpose of an action with chtoby, say what I can and cannot do, and state an obligation in a sentence with no subject at all.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT",
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "RU-C20-nado",
+    "kind": "task",
+    "summary": "Fourteen infinitives had been taught and not one of them had ever stood after another verb, because the track had no khochu, mogu or nado to put one after: the pattern was missing, not the words. moch had been worse off than missing -- the pomogat lesson spelled out that the verb is po- plus moch and then never taught moch, so the reader had been reading it for fifteen chapters. nado closes the chapter on a sentence with no subject in it, which is the same freedom as the absent copula the track already teaches.",
+    "assesses": [
+      "RU-LEX-KHOTET-01",
+      "RU-GRAMMAR-INFINITIVE-AFTER-VERB-01",
+      "RU-GRAMMAR-CHTOBY-01",
+      "RU-LEX-MOCH-01",
+      "RU-ETYMON-MOCH-MAGH",
+      "RU-LEX-NADO-01",
+      "RU-GRAMMAR-NADO-IMPERSONAL-01"
+    ],
+    "note": "Two spine nodes, two path segments: khotet realizes VERB-WANT on SPINE-SAY-WHAT-I-WANT and moch realizes VERB-CAN on SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO, both A1 nodes the track had omitted. VERB-HAVE stays omitted -- Russian expresses it with a case the track has not opened."
+  }
+}

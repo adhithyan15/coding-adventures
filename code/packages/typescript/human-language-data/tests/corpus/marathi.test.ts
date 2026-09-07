@@ -57,7 +57,14 @@ it("pins Marathi lesson-content budgets", () =>
     // senses and culture claims stay at 5 / 4 / 7 for the same reason as
     // above: an interrogative is not an idiom, and naming the k- / i- / t-
     // series is a grammar statement rather than a culture claim.
-    lessons: 243,
+    //
+    // 243 -> 258: the place tranche (chapters 41-44) adds fifteen lessons --
+    // eleven items and four reviews. RE-MEASURED against the tree. Idioms,
+    // senses and culture claims stay at 5 / 4 / 7 once more: a postposition is
+    // none of the three, and the one lesson that could have claimed a culture
+    // note (samor, built on the mukh/tond doublet) states a WORD history, which
+    // is etymology and already has its own strand.
+    lessons: 258,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -238,6 +245,16 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["38", 4],
     ["39", 3],
     ["40", 3],
+    // Chapters 41-44 are the place tranche: a house and a room, the oblique
+    // stem those two nouns make visible, then five postpositions run off it and
+    // three ordinary place words that are NOT postpositions. lāmb, ujvā and
+    // ḍāvā sit in the same tranche on purpose -- the contrast with a
+    // postposition is what makes the oblique rule falsifiable rather than
+    // decorative.
+    ["41", 4],
+    ["42", 4],
+    ["43", 4],
+    ["44", 3],
   ]);
 });
 

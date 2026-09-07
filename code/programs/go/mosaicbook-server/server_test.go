@@ -200,15 +200,24 @@ func TestParseStoriesJSON_Valid(t *testing.T) {
 
 func TestParseStoriesJSON_Empty(t *testing.T) {
 	dir := tempDir(t)
-	// stories array is present but empty — should auto-generate Default.
+	// An empty stories array is reported as empty (#14031).
+	//
+	// This assertion is inverted from what it used to be, deliberately.
+	// loadStoriesFile previously synthesised a Default here, which made a file
+	// declaring `"stories": []` indistinguishable from one declaring a single
+	// story named Default — so an authoring mistake was silently absorbed at
+	// the one layer able to notice it. The loader now reports what the file
+	// declares; the "UI always needs at least one story" rule moved to the
+	// callers, which is also where the difference is surfaced
+	// (Component.StoriesError). Callers are covered in threefile_test.go.
 	writeFile(t, dir, "Card.stories.json", `{"stories": []}`)
 
 	stories, _, err := loadStoriesFile(filepath.Join(dir, "Card.stories.json"))
 	if err != nil {
 		t.Fatalf("loadStoriesFile: %v", err)
 	}
-	if len(stories) != 1 || stories[0].Name != "Default" {
-		t.Errorf("empty stories array should yield Default story; got %v", stories)
+	if len(stories) != 0 {
+		t.Errorf("loader should report the file's own empty list; got %v", stories)
 	}
 }
 
