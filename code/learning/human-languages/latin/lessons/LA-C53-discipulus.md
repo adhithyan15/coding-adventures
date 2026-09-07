@@ -55,7 +55,7 @@ Built on **discō**, "I learn," which is itself a reduplicated form of the same 
 as *doceō*, "I teach." Learning and teaching are one word split in two, and the
 pupil is named for the learning half.
 
-Then the word that grew out of it. **Disciplīna** originally meant simply
+Then the word that grew out of it. **Disciplīna** originally meant no more than
 "teaching, instruction" — what a *discipulus* receives. Only later did it narrow to
 the training that keeps order, and later still to punishment. English **discipline**
 carries all three senses at once, and a **disciple** is the *discipulus* of the

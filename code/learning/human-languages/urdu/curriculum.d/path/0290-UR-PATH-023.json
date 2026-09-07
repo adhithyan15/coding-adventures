@@ -1,0 +1,15 @@
+{
+  "id": "UR-PATH-023",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "UR-C22-kahna",
+    "UR-C22-kya-kaha",
+    "UR-C22-aram-se",
+    "UR-R22-when-you-are-lost"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-033-REPAIR-KIT"
+  ],
+  "after": []
+}

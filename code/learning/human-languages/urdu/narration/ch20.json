@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 20,
+  "title": "Two Things at Once",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:75a85176c45a06e6",
+  "lessons": [
+    {
+      "id": "UR-C20-aur",
+      "sequence": 1060,
+      "title": "اور (aur) — and",
+      "headword": "اور",
+      "romanization": "aur",
+      "gloss": "and — the commonest word in Urdu, asked for once in a chapter-15 practice line and never taught",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a21e817762ceac09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last chapter gave you a way to refuse two things at once. There has never been a way to accept two things at once."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the double refusal — na pānī, na hawā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the double refusal — *na pānī, na hawā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پانی اور ہوا — pānī aur hawā — water and air."
+            },
+            {
+              "kind": "speech",
+              "text": "bārish aur hawā, rain and wind, is the same shape: the first noun's letters are still ahead of you in the script ladder, so it is printed in romanization."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter fifteen already asked you to say this. Its practice line reads bārish, dhūp, aur hawā — and the book had never taught اور, so the learner was told to say a word they had never met and could not read. This lesson pays that back."
+            },
+            {
+              "kind": "speech",
+              "text": "Three letters, all of them yours: ا, و, ر. The middle one is the vāʾo of chapter eight, doing its vowel job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اور (aur) is inherited, not borrowed — Sanskrit aparam, \"the other one, the further one,\" worn through Prakrit into one syllable. The counting sense is still there when the word stands alone in front of a noun: اور (aur) پانی means more water, not and water. Bengali's ār is the same word by the same road, which is the sort of relative Urdu's Persian layer usually hides."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bārish aur hawā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bārish aur hawā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chapter-fifteen line, this time knowing every word — bārish, dhūp, aur hawā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chapter-fifteen line, this time knowing every word — *bārish, dhūp, aur hawā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānī aur dūdh — water and milk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānī aur dūdh* — water and milk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aur pānī — and hear it mean more water",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aur pānī* — and hear it mean *more water*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did اور (aur) mean before it meant and? (More, the other one — Sanskrit aparam.) What does it mean standing alone before a noun? (More.) And which word refuses the two things اور (aur) joins? (نہ, doubled.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C20-ya",
+      "sequence": 1070,
+      "title": "یا (yā) — or",
+      "headword": "یا",
+      "romanization": "yā",
+      "gloss": "or — two letters, borrowed from Persian, and the word an offer cannot be made without",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2a1b5380088c591",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "اور (aur) gives somebody both things. Nothing in this book has ever made anybody choose."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the joiner from the lesson before — aur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the joiner from the lesson before — *aur*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: یا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پانی یا ہوا — pānī yā hawā — water or air."
+            },
+            {
+              "kind": "speech",
+              "text": "And with a noun whose letters are still ahead of you, in romanization: pānī yā dūdh, water or milk."
+            },
+            {
+              "kind": "speech",
+              "text": "Two letters — ی and ا — and it sits exactly where اور (aur) sits, between the two things. Nothing else in the sentence changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The word hides inside one you already read every day: کیا, what, ends in these same two letters, and every raw search for یا (yā) in the first eighteen chapters of this book turned up that tail and nothing else. The word was everywhere on the page and nowhere in the book."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "یا (yā) is Persian, taken whole. Urdu's two ordinary coordinators come from opposite directions — اور (aur) inherited from Sanskrit through Prakrit, یا (yā) borrowed from Persian — and a learner uses them in the same breath without noticing the seam. That seam is the language."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānī yā dūdh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānī yā dūdh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same pair joined instead of split — pānī aur dūdh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same pair joined instead of split — *pānī aur dūdh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāy yā dūdh — tea or milk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāy yā dūdh* — tea or milk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it as an offer — kyā āp chāy yā dūdh leṅge?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it as an offer — *kyā āp chāy yā dūdh leṅge?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which joiner adds and which one chooses? (اور (aur) adds; یا (yā) chooses.) Which of the two is inherited and which borrowed? (اور (aur) inherited from Sanskrit; یا (yā) borrowed from Persian.) And which word already on every page ends in the same two letters? (کیا.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C20-lekin",
+      "sequence": 1080,
+      "title": "لیکن (lekin) — but",
+      "headword": "لیکن",
+      "romanization": "lekin",
+      "gloss": "but — the first word in this book that can set one clause against another, and four letters the reader can already write",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20f991b45bb230f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two joiners so far. One adds, one chooses, and neither of them can disagree with anything."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the two items before this one — aur, yā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the two items before this one — *aur*, *yā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لیکن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پانی ہے، لیکن ہوا نہیں — pānī hai, lekin hawā nahīṅ — there is water, but no air."
+            },
+            {
+              "kind": "speech",
+              "text": "And with the two clauses chapters four and nineteen taught, whose verbs carry letters still ahead of you in the script ladder: maiṅ ṭhīk hūṅ, lekin maiṅ nahīṅ samajhtā — I am well, but I do not understand."
+            },
+            {
+              "kind": "speech",
+              "text": "اور (aur) puts two clauses on the same side. لیکن (lekin) turns the second one against the first. It stands at the head of the clause it turns, after a comma in writing and after a small drop of the voice in speech."
+            },
+            {
+              "kind": "speech",
+              "text": "Four letters, and every one of them is already yours: ل، ی، ک، ن."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لیکن (lekin) is Arabic lākin, and there is a negator inside it: Arabic lā, \"not,\" plus an old particle. English did the same thing by a different road — but is Old English be-ūtan, \"be out, except.\" Two unrelated languages built their adversative out of a word for leaving something aside."
+            },
+            {
+              "kind": "speech",
+              "text": "Urdu has a second word for but, magar, which is Persian and slightly more literary. Its middle letter has no lesson in the script ladder yet, so it is named here and left in romanization; لیکن (lekin) is the one to reach for anyway."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ ṭhīk hūṅ, lekin maiṅ nahīṅ samajhtā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṅ ṭhīk hūṅ, lekin maiṅ nahīṅ samajhtā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same two clauses with the other joiner — maiṅ ṭhīk hūṅ aur maiṅ samajhtā hūṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same two clauses with the other joiner — *maiṅ ṭhīk hūṅ aur maiṅ samajhtā hūṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "and hear what changed — the second clause no longer argues",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: and hear what changed — the second clause no longer argues]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānī hai, lekin chāy nahīṅ — there is water, but no tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānī hai, lekin chāy nahīṅ* — there is water, but no tea]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is buried inside لیکن (lekin)? (Arabic lā, \"not\".) Which English word was built the same way? (But, from be-ūtan, \"be out.\") And what does لیکن (lekin) do that اور (aur) cannot? (Turn the second clause against the first.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C20-thik-hai",
+      "sequence": 1090,
+      "title": "ٹھیک ہے (ṭhīk hai) — all right",
+      "headword": "ٹھیک ہے",
+      "romanization": "ṭhīk hai",
+      "gloss": "all right, agreed — the wellbeing word of chapter four doing a second job, and the first way this book can agree with somebody",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:182eb799fdf482b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ٹھیک has meant fine since chapter four, and only ever about your health. It has a second life, and it needs one more word."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the joiner from the lesson before — lekin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the joiner from the lesson before — *lekin*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ٹھیک ہے",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹھیک ہے — ṭhīk hai — all right; that's right; agreed."
+            },
+            {
+              "kind": "speech",
+              "text": "ٹھیک ہے، لیکن … — ṭhīk hai, lekin … — all right, but …"
+            },
+            {
+              "kind": "speech",
+              "text": "The copula of chapter two, ہے, does all the work. ṭhīk hai is what a speaker says to accept a plan, to agree with a claim, and to end a phone call — one phrase covering everything English spreads across okay, fine, right and deal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: agreeing, and taking it back",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "said",
+                "means"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "ṭhīk hai means agreed.",
+                "ṭhīk nahīṅ hai means that is not right.",
+                "ṭhīk hai, lekin … means agreed as far as it goes."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The middle row is the negator of the last chapter dropped in front of the copula, which is exactly where chapter nineteen said it goes. The third row is the shape almost every real disagreement takes: accept first, then turn."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhīk hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhīk hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhīk nahīṅ hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhīk nahīṅ hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the half-agreement — ṭhīk hai, lekin …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the half-agreement — *ṭhīk hai, lekin …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one-word answers it replaces — jī hāṅ … nahīṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one-word answers it replaces — *jī hāṅ* … *nahīṅ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What word does ٹھیک need to become an agreement? (ہے, the copula from chapter two.) How do you disagree with it? (Put نہیں in front of the copula — ṭhīk nahīṅ hai.) And what does ṭhīk hai, lekin … do that a flat nahīṅ does not? (Accepts first, and then turns.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R20-joined-and-turned",
+      "sequence": 1100,
+      "title": "Two things at once",
+      "headword": "اور · یا · لیکن",
+      "romanization": "aur · yā · lekin",
+      "gloss": "adding, choosing, turning — and the whole noun inventory of chapters eight to eighteen becoming combinable for the first time",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66c45304b855ab94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three joiners landed in this chapter. Name them, and say for each one whether it adds, chooses, or turns."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chapter-fifteen line, whole — bārish, dhūp, aur hawā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chapter-fifteen line, whole — *bārish, dhūp, aur hawā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same three as a choice — bārish yā dhūp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same three as a choice — *bārish yā dhūp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all three refused — na bārish, na dhūp, na hawā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all three refused — *na bārish, na dhūp, na hawā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the half-agreement — ṭhīk hai, lekin …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the half-agreement — *ṭhīk hai, lekin …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "five lessons back, the question this book learned to ask — kyā āp ṭhīk haiṅ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: five lessons back, the question this book learned to ask — *kyā āp ṭhīk haiṅ?*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — every noun in the book, two at a time",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is what the chapter actually bought. Chapters eight to eighteen taught thirty-odd nouns that could only ever be named one at a time, and every one of them is now combinable. Go back and take them two at a time, cold, from memory — most of these were taught between twenty and sixty lessons ago and have not been asked for since."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two foods joined, then the same two as a choice — pānī aur chāy … dūdh yā roṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two foods joined, then the same two as a choice — *pānī aur chāy* … *dūdh yā roṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two colours, and mind the agreement — kālā aur nīlā, lāl aur safed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two colours, and mind the agreement — *kālā aur nīlā*, *lāl aur safed*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two garments, then two refused — qamīz aur jūtā … na ṭopī, na koṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two garments, then two refused — *qamīz aur jūtā* … *na ṭopī, na koṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two people, then the word that holds them all — bhāī aur bahan … dost aur khāndān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two people, then the word that holds them all — *bhāī aur bahan* … *dost aur khāndān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the face, four parts at once — kān, nāk, āṅkh aur muṅh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the face, four parts at once — *kān, nāk, āṅkh aur muṅh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that is not on the face — dil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that is not on the face — *dil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heat against cold, joined and then chosen — garmī aur sardī … garmī yā sardī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: heat against cold, joined and then chosen — *garmī aur sardī* … *garmī yā sardī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three from chapter eighteen — ām, āsmān aur purānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three from chapter eighteen — *ām, āsmān aur purānā*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of this chapter's joiners is inherited and which two are borrowed? (اور (aur) inherited; یا (yā) from Persian, لیکن (lekin) from Arabic.) Which one can disagree? (لیکن (lekin).) And what turns any of these sentences into a question? (کیا at the front, and nothing else moved.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

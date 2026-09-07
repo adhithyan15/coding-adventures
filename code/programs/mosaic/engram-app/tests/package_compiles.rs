@@ -2015,11 +2015,17 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&xaml_markup, "MaxWidth=\"980\"");
     assert_contains(
         &xaml_markup,
-        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">\n                                                <StackPanel Orientation=\"Vertical\">",
+        // Indentation is one level deeper than it used to be, and that is
+        // correct rather than incidental. engram-app depends on
+        // mosaic-pkg-card-browser, which uses the toolkit's Input; Input.size
+        // became a real `one-of` axis (UI49/#14036), so XAML now has to lower
+        // that slot-state -- emitting a StringEqualsConverter and a
+        // VisualStateManager wrapper, which nests this subtree once more.
+        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">\n                                                    <StackPanel Orientation=\"Vertical\">",
     );
     assert_contains(
         &xaml_markup,
-        "<DataTemplate x:DataType=\"local:EngramApp_ItemVm\">\n                                                    <StackPanel Orientation=\"Vertical\">",
+        "<DataTemplate x:DataType=\"local:EngramApp_ItemVm\">\n                                                        <StackPanel Orientation=\"Vertical\">",
     );
     for invalid in [
         "Property=\"Gap\"",

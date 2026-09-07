@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d5610fff27cd01b3",
+  "sourceHash": "fnv1a64:5b82cd2eda58c56a",
   "lessons": [
     {
       "id": "UR-C04-kaise-kaisi",
@@ -342,7 +342,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:346cac317c82c911",
+      "sourceHash": "fnv1a64:5e3020615dc2d0e5",
       "notice": null,
       "blocks": [
         {
@@ -373,7 +373,7 @@
             },
             {
               "kind": "speech",
-              "text": "The order is you + how + are? Keep ہیں haiṅ final, just as ہے hai stayed final in the name question. Respectful āp takes this plural-shaped copula even when speaking to one person."
+              "text": "The order is you + how + are? Keep ہیں haiṅ final, exactly as ہے hai stayed final in the name question. Respectful āp takes this plural-shaped copula even when speaking to one person."
             }
           ]
         },
@@ -611,7 +611,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:028b61756e5c44da",
+      "sourceHash": "fnv1a64:672bb9392000d396",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -729,7 +729,7 @@
               ],
               "feedback": {
                 "correct": "Once -- before the long slash.",
-                "incorrect": "ONCE, just before the slash."
+                "incorrect": "ONCE, immediately before the slash."
               }
             }
           ]

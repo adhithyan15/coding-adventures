@@ -120,7 +120,15 @@ describe("HL10 §7.4 — banned words in learner-facing prose", () => {
     // lessons carrying ZERO banned words, and paid down all fourteen Bengali
     // already had while it was in the track. The ceiling has never been raised
     // to accommodate new prose and is not raised here.
-    expect(total).toBeLessThanOrEqual(1063);
+    //
+    // 1063 -> 1056: the Russian joining tranche (#14432) had landed AFTER the
+    // 1076 pin carrying seven of these, which left this gate red on main until
+    // Bengali's fourteen masked it. All seven Russian sentences are rewritten
+    // here rather than absorbed -- "completes the pair as securely as брат did",
+    // "the obligation is stated and left hanging in the air", "the present tense
+    // of быть is absent altogether" -- so the seven come off the total as well.
+    // The Chinese asking chapter in the same branch carries none.
+    expect(total).toBeLessThanOrEqual(1056);
     expect(lessonsAffected).toBeLessThanOrEqual(875);
   });
 

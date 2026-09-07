@@ -1,0 +1,20 @@
+{
+  "chapter": 19,
+  "title": "The Word That Was Deferred",
+  "label": "ch:ur-word-that-was-deferred",
+  "canDo": "I can say that I do not understand, put نہیں in front of any verb this book has taught, turn any statement into a yes-or-no question with کیا at the front, and refuse two things at once with نہ … نہ.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "UR-R19-three-refusals",
+    "kind": "speaking",
+    "summary": "The sentence chapter one explicitly deferred -- میں نہیں سمجھتا -- is said at last, and the question جی ہاں and نہیں were taught to answer eighteen chapters ago can finally be asked.",
+    "assesses": [
+      "UR-GRAMMAR-NAHIN-VERB",
+      "UR-GRAMMAR-KYA-POLAR",
+      "UR-GRAMMAR-NA-NA"
+    ],
+    "note": "Every piece of the payoff sentence was already in the book: میں from chapter 4, نہیں from chapter 1, سمجھنا from chapter 7 and the present-tense agreement from chapter 6."
+  }
+}

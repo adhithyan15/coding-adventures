@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 21,
+  "output": "urdu/book/chapters/ch21-why-and-what-for.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

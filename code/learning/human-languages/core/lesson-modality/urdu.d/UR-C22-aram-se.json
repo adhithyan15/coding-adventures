@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C22-aram-se",
+    "language": "urdu",
+    "chapter": 22,
+    "sequence": 1190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b170e33f76f4797b"
+  },
+  "findings": []
+}

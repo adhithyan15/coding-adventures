@@ -1,0 +1,16 @@
+{
+  "id": "ZH-EXT-051-ASKING-MEANING-FIRST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can hear and say the question particle, the greeting made into a question, the two-syllable way of checking what I was told, and the word-not-word question.",
+  "prerequisites": [
+    "ZH-EXT-050-LOOKING-READING-FOUR-SKILL"
+  ],
+  "lessons": [
+    "ZH-C19-hear-ma",
+    "ZH-C19-hear-nihaoma",
+    "ZH-C19-hear-shima",
+    "ZH-C19-hear-haobuhao"
+  ]
+}

@@ -19,7 +19,15 @@ it("pins Urdu lesson-content budgets", () =>
     // budget can see it. Re-measured against the tree, never derived. Idioms,
     // senses and culture claims are again unchanged at 2 / 4 / 4: the
     // migration declared an atom, it did not author vocabulary.
-    lessons: 89,
+    //
+    // 89 -> 108: the negation-and-joining tranche (chapters 19-22) adds nineteen
+    // lessons -- fifteen items and four reviews. RE-MEASURED against the tree.
+    // Idioms, senses and culture claims stay at 2 / 4 / 4: a conjunction is
+    // none of the three, and the one lesson that could have claimed a culture
+    // note (ārām se, whose politeness comes from asking for ease rather than
+    // slowness) states what the WORD means, which is etymology and already has
+    // its own strand.
+    lessons: 108,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,

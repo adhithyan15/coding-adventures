@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "People You'd Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7f19b27a6286e117",
+  "sourceHash": "fnv1a64:8e5736cf32056b40",
   "lessons": [
     {
       "id": "UR-C09-bhai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:407f0a2fe9c1312d",
+      "sourceHash": "fnv1a64:6a3b7bdcf8ebd2fd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -169,7 +169,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does بھائی (bhāī) mean, and is بھائی (bhāī) masculine or feminine? (Brother; masculine.) Which English word is its real cousin, not just a resemblance? (Brother.) Name the four jobs of the ye family now. (Consonantal y, long ī, final e, and hamza-glide.)"
+              "text": "What does بھائی (bhāī) mean, and is بھائی (bhāī) masculine or feminine? (Brother; masculine.) Which English word is its real cousin, not only a resemblance? (Brother.) Name the four jobs of the ye family now. (Consonantal y, long ī, final e, and hamza-glide.)"
             },
             {
               "kind": "speech",
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0a1e1aa3beb49e5",
+      "sourceHash": "fnv1a64:498af195e9d84c0b",
       "notice": null,
       "blocks": [
         {
@@ -410,7 +410,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bhāī was masculine and needed merā. bahan was feminine and needed merī. دوست breaks the pattern on purpose: it takes the same form for a male or a female friend, and merā dost works for either. Native Urdu nouns almost always commit to a gender; this Persian loan simply does not carry the machinery that would make it agree."
+              "text": "bhāī was masculine and needed merā. bahan was feminine and needed merī. دوست breaks the pattern on purpose: it takes the same form for a male or a female friend, and merā dost works for either. Native Urdu nouns almost always commit to a gender; this Persian loan does not carry the machinery that would make it agree."
             }
           ]
         },
@@ -436,7 +436,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Chapter 3 taught āp / tum / tū and told you to move to tum once familiarity is safe. A دوست (dost) is exactly that relationship: someone you have moved off āp for. You do not need a new rule — just the word for the person the old rule was describing."
+              "text": "Chapter 3 taught āp / tum / tū and told you to move to tum once familiarity is safe. A دوست (dost) is exactly that relationship: someone you have moved off āp for. You do not need a new rule — only the word for the person the old rule was describing."
             }
           ]
         },

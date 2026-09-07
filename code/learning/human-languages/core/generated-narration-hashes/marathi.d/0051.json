@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:33406bb90af94966",
+  "lessonIds": [
+    "MR-C51-changla",
+    "MR-C51-kharaab",
+    "MR-C51-hushaar",
+    "MR-R51-good-and-bad"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch51.txt",
+  "json": "marathi/narration/ch51.json",
+  "textHash": "fnv1a64:65338d83b572f766",
+  "jsonHash": "fnv1a64:ad5aae8ac0ab87f1",
+  "findings": []
+}

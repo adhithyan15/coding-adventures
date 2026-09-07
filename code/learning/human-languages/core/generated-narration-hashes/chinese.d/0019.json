@@ -1,0 +1,30 @@
+{
+  "language": "chinese",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:27b0118b3806ff32",
+  "lessonIds": [
+    "ZH-C19-hear-ma",
+    "ZH-W19-ma-observe",
+    "ZH-W19-ma-guided",
+    "ZH-W19-ma-delayed",
+    "ZH-C19-ma",
+    "ZH-C19-hear-nihaoma",
+    "ZH-C19-nihaoma",
+    "ZH-R19-ma-two-r1",
+    "ZH-C19-hear-shima",
+    "ZH-C19-shima",
+    "ZH-C19-hear-haobuhao",
+    "ZH-C19-haobuhao",
+    "ZH-R19-ma-three-r2",
+    "ZH-R19-listening-three",
+    "ZH-R19-reading-three",
+    "ZH-C19-practice"
+  ],
+  "voiceLessons": 12,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch19.txt",
+  "json": "chinese/narration/ch19.json",
+  "textHash": "fnv1a64:4c8033d063251b19",
+  "jsonHash": "fnv1a64:c38ad2af1f658a40",
+  "findings": []
+}

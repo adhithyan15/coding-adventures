@@ -832,7 +832,11 @@
       "id": "ZH-A1-PART-01",
       "category": "Zhuci - the particles",
       "label": "the question particle ma, which turns any statement into a yes/no question",
-      "probe": null,
+      "probe": [
+        "ZH-LEX-MA-01",
+        "ZH-SCRIPT-MA-01",
+        "ZH-GRAMMAR-MA-QUESTION-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -842,7 +846,7 @@
         "A1-OS-02",
         "A1-F1-04"
       ],
-      "note": "ABSENT, and it is the single cheapest sentence-level gain available to this track. ma occurs zero times in the 175 files. One character at the end of a sentence the reader can already say - ni hao ma - turns every statement in the book into a question, and it also answers the Spanish tag-question point."
+      "note": "TAUGHT, and it was the cheapest sentence-level gain in the file as the previous note said. ma now has the track's full five-lesson character cycle - hear, observe, guided copy, delayed copy, and the reading that meets the shape - and the grammar atom states the rule the character exists for: 吗 goes at the END of a finished statement and moves nothing else, so every statement the track already teaches is now also a question."
     },
     {
       "id": "ZH-A1-PART-02",
@@ -886,7 +890,7 @@
       ],
       "derivedFrom": [],
       "chineseSpecific": true,
-      "note": "Chinese-specific, and it exists to record a corpus-level finding rather than a single form. NOT ONE PARTICLE IS TAUGHT IN THIS TRACK: de, le, ma, ne, ba, guo, zhe all return zero occurrences across the 175 lesson files. Spanish carries its grammar in endings and Mandarin carries almost all of its grammar in this handful of toneless syllables, so a Mandarin course with no particles has taught vocabulary and script and not yet grammar. That is a fair summary of chapters 1 to 18 and it is why the sentence columns below read as they do."
+      "note": "STILL ABSENT AS A CLASS, and the corpus-level finding it records has moved rather than closed. ONE particle of the seven is now taught: ma has a character, a sound and a grammar atom. de, le, ne, ba, guo and zhe remain at zero occurrences across the corpus. A class point is not answered by one member, so this stays open - but the sentence it was written to support, that a Mandarin course with no particles has taught vocabulary and script and not yet grammar, is no longer quite true of this track."
     },
     {
       "id": "ZH-A1-NP-01",
@@ -1014,7 +1018,11 @@
       "id": "ZH-A1-S-02",
       "category": "Danju - the simple sentence",
       "label": "the yes/no question with ma, and the verb-not-verb question",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-MA-QUESTION-01",
+        "ZH-GRAMMAR-V-NOT-V-01",
+        "ZH-LEX-HAOBUHAO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -1023,7 +1031,7 @@
       "derivedFrom": [
         "A1-OS-02"
       ],
-      "note": "Absent in both forms. Mandarin has TWO ways to ask a polar question and the track teaches neither, although shi bu shi - the A-not-A form - is two taught pieces away."
+      "note": "TAUGHT IN BOTH FORMS, which is what the point asks for. 吗 is one new character; the A-not-A question is none at all - the previous note said it was two taught pieces away, and it was: 好不好 is 好, the 不 the negation lesson taught, and 好 again. The two are contrasted in one lesson rather than taught apart, because an English speaker meeting only the first will never reach for the second."
     },
     {
       "id": "ZH-A1-S-03",
@@ -1178,7 +1186,7 @@
       ],
       "derivedFrom": [],
       "chineseSpecific": true,
-      "note": "Chinese-specific, and it carries a corpus-level measurement. NO CONJUNCTION AND NO SUBORDINATOR IS TAUGHT: he, gen, huozhe, haishi, keshi, danshi, yinwei, suoyi and suiran all return zero occurrences across the 175 lesson files, in characters and in pinyin. That makes Chinese the seventh track in a row to report an empty joining column and the second outside South Asia, which puts the finding well past the point where it could be a fact about Indo-Aryan or Dravidian grammar. It is a fact about how this corpus is authored: chapters are built around a word family, and a conjunction belongs to no family."
+      "note": "STILL ABSENT, and the reason is now MEASURED rather than assumed. Every joining word this column needs - he, gen, huozhe, haishi, keshi, danshi, yinwei, suoyi, suiran - requires at least one character the track does not teach, and in this track a character is not a cheap thing: it costs a five-lesson cycle, a source-verified stroke record in data/scripts/chinese.json, a hand-fitted ductus path checked against the vendored font outline, and a regeneration of the subset font itself. That is the finding this column now carries. The Russian tranche closed thirteen joining devices in thirty-five lessons because every one of them was spelled in letters the track already taught; Chinese cannot borrow that shape, and pretending otherwise would put untaught characters on the page. he is the cheapest of the nine and is the natural next tranche."
     },
     {
       "id": "ZH-A1-F1-01",
@@ -1238,7 +1246,11 @@
       "id": "ZH-A1-F1-04",
       "category": "Gei he qiu xinxi - giving and asking for information",
       "label": "ask for confirmation",
-      "probe": null,
+      "probe": [
+        "ZH-LEX-SHIMA-01",
+        "ZH-ORTHO-SHIMA-01",
+        "ZH-GRAMMAR-MA-QUESTION-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -1248,7 +1260,7 @@
       "derivedFrom": [
         "A1-F1-04"
       ],
-      "note": "Absent - needs ma or the A-not-A question (ZH-A1-S-02)."
+      "note": "TAUGHT. 是吗 is the two-syllable way of checking what you were just told, and both its characters were already the reader's - 是 since the copula lesson and 吗 from earlier in this chapter."
     },
     {
       "id": "ZH-A1-F1-05",
@@ -1308,7 +1320,10 @@
       "id": "ZH-A1-F2-03",
       "category": "Biaoda yijian - opinions, attitudes and knowledge",
       "label": "ask how something is, or how somebody is",
-      "probe": null,
+      "probe": [
+        "ZH-LEX-NIHAOMA-01",
+        "ZH-ORTHO-NIHAOMA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -1318,7 +1333,7 @@
       "derivedFrom": [
         "A1-F2-03"
       ],
-      "note": "Absent, and one character away: ni hao ma is ni hao - the first thing in the book - plus ma. The reader can greet and cannot ask."
+      "note": "TAUGHT, and it cost exactly what the previous note predicted: one character. 你好吗 is 你好 - the first thing in the book - with 吗 on the end, and no new word arrives in it at all."
     },
     {
       "id": "ZH-A1-F2-04",
@@ -3009,7 +3024,7 @@
       ],
       "derivedFrom": [],
       "chineseSpecific": true,
-      "note": "Chinese-specific, and the point carries a MEASUREMENT rather than a demand, so it is deliberately null. Walking every CJK character any of the 175 lesson files prints, against the set the writing lessons teach: 42 characters and components have their own script atom, and 15 more appear only inside an explanation - shi ('ten') under zao, qing under the phonetic lesson, shi ('pig') under jia, and the bare radicals mian, chuo, ge, cun, pie and the small-grass form. Those 15 are exposure, not debt. The debt is the size of the taught set against what any reading task needs: 42 characters will not read a sign, a menu or a form, and no arrangement of them will. THIS IS THE COLUMN THE PROXY IS LEAST ABLE TO SCORE, because Spanish closes its letter inventory at 27 and Mandarin's is open, so a percentage here would be meaningless and the raw number is the honest report."
+      "note": "RE-MEASURED after Chapter 19: 43 characters and components have their own script atom, up from 42, and 吗 was added as a TAUGHT character with the track's full writing cycle rather than shown inside an explanation. The 马 in its stroke-order prose has no script atom of its own, so the atom count does not credit it; the closure measurement does, because that measurement credits a writing lesson with every target-script character in its body. The two numbers disagree on 马 by design, and the honest reading is the atom one: a reader who has met 吗's right half named as its sound component has not been taught to write 马."
     },
     {
       "id": "ZH-A1-H-06",

@@ -1,0 +1,19 @@
+{
+  "id": "ZH-EXT-052-ASKING-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write 吗 in six strokes with the left mouth finished first, and read and write the three questions built on it.",
+  "prerequisites": [
+    "ZH-EXT-051-ASKING-MEANING-FIRST"
+  ],
+  "lessons": [
+    "ZH-W19-ma-observe",
+    "ZH-W19-ma-guided",
+    "ZH-W19-ma-delayed",
+    "ZH-C19-ma",
+    "ZH-C19-nihaoma",
+    "ZH-C19-shima",
+    "ZH-C19-haobuhao"
+  ]
+}

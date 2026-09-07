@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:99d3d7e2599c5de4",
+  "sourceHash": "fnv1a64:2916ce0858ca600b",
   "lessons": [
     {
       "id": "UR-W07-alif-madda",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:796146538e120a61",
+      "sourceHash": "fnv1a64:ce21d55eaf452ff9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -242,7 +242,7 @@
             },
             {
               "kind": "speech",
-              "text": "Strip the -nā and the stem is soch-. That stem is also a noun: سوچ soch, “a thought” — and, just as ordinarily, “a worry.” Both meanings matter; the history explains them."
+              "text": "Strip the -nā and the stem is soch-. That stem is also a noun: سوچ soch, “a thought” — and, no less ordinarily, “a worry.” Both meanings matter; the history explains them."
             }
           ]
         },
@@ -767,7 +767,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b2fa26405519f511",
+      "sourceHash": "fnv1a64:fa3f6995ee6ff51b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -849,7 +849,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "paṛhnā comes from Prakrit paḍhaï, from Sanskrit paṭh-, “to recite; to read aloud.” Its ṭh softened into the flapped ṛh you have just learned, and the meaning widened from reciting to reading to studying."
+              "text": "paṛhnā comes from Prakrit paḍhaï, from Sanskrit paṭh-, “to recite; to read aloud.” Its ṭh softened into the flapped ṛh you have learned, and the meaning widened from reciting to reading to studying."
             },
             {
               "kind": "speech",

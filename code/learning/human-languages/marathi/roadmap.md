@@ -183,7 +183,25 @@ lesson is `coreVoice` and both chapters stay fully drivable.
   reph and the rakaar that **मित्र** has carried unnamed since chapter 18 —
   close both points at once.
 
-## Planned
+## Chapters 49–52 — the adjective
+
+- **Authored.** Twelve items across four chapters: **मोठा** and its two rules;
+  **लहान · सुंदर** and the invariable class; **चांगला · खराब · हुशार**;
+  **सोपा · कठीण · उंच**. A1 exam coverage 142/301 → 151/301, which is exactly
+  half, and `SPINE-DESCRIBE-QUALITIES` — a third A1 **core** node — stops being
+  unrealized.
+
+  The shape is a CONTRAST rather than a list. Six of the nine adjectives do not
+  agree, so the invariable class is taught in the chapter immediately after the
+  agreeing one and every lesson afterwards names which class its word is in.
+  A learner who meets only **मोठा** says *लहानी खोली*, which no Marathi speaker
+  has ever heard.
+
+  This tranche also paid an old debt it exposed: `MR-C07-khane` had demonstrated
+  three-gender agreement since chapter 14 on **चांगला**, a word the reader would
+  not meet for another 180 lessons. Its table now runs on **माझा / माझी / माझं**.
+
+## Planned## Planned
 
 | Chapter | Theme |
 |---|---|
@@ -191,7 +209,8 @@ lesson is `coreVoice` and both chapters stay fully drivable.
 | 10 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
 | 11 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
 | 12+ | The rest of `SPINE-SAY-WHAT-I-DO` — *aikṇe* and the remaining core verbs now that *deṇe*, *sāṅgṇe* and *shikṇe* are authored — then past and future tenses (where gender returns on the verb), always with the Hindi/Dravidian contrast thread. Negation and yes-or-no questions are done: chapters 32 and 33 |
-| next | The **reph** and the **rakaar** (`MR-A1-OR-21`), two script lessons that also unlock *पर्यंत* and with it `MR-A1-P-05` — the last open point in the postposition column. The rakaar has been shown in *मित्र* since chapter 18 and never named |
+| next | Degree and quantity: **खूप**, **जरा**, **थोडा**, **पुरेसा**, **बराच** (`MR-A1-ADJ-06`, `MR-A1-AP-01`, `MR-A1-QU-05`, `MR-A1-QU-06`, `MR-A1-ADV-03`), plus the exclamative **किती!** now that both its ingredients exist (`MR-A1-PRON-07`). Six points behind roughly six words, because the adjectives they modify have just arrived |
+| then | The **reph** and the **rakaar** (`MR-A1-OR-21`), two script lessons that also unlock *पर्यंत* and with it `MR-A1-P-05` — the last open point in the postposition column. The rakaar has been shown in *मित्र* since chapter 18 and never named |
 | after that | The **adjective** (`SPINE-DESCRIBE-QUALITIES`, an A1 core node with no realization), which unblocks roughly fifteen further points including the exclamative *किती!*, colour, age, quality and physical description |
 
 Note: Marathi marks "you" by **register** (*tū* familiar / *tumhī* respectful,

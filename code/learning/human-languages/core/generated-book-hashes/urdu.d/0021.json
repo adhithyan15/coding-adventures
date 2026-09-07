@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:a648f7d11c5650d5",
+  "lessonIds": [
+    "UR-C21-kyun",
+    "UR-C21-kaun",
+    "UR-C21-kyunki",
+    "UR-C21-ki",
+    "UR-C21-ke-liye",
+    "UR-R21-why-and-what-for"
+  ],
+  "tex": "urdu/book/chapters/ch21-why-and-what-for.tex"
+}

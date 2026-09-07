@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C19-ma",
+    "language": "chinese",
+    "chapter": 19,
+    "sequence": 1860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d1acb1e36c31345"
+  },
+  "findings": []
+}

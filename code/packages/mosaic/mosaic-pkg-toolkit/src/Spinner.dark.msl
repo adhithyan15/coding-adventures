@@ -1,12 +1,51 @@
 // Spinner.dark.msl — dark-theme styling for Spinner.
 
 style Spinner {
+  // `size` is the closed axis from Spinner.mil; UI49 states own it.
   part spinner {
     width  : 24 ;
     height : 24 ;
+
+    state sm {
+      width  : 16 ;
+      height : 16 ;
+    }
+    state md {
+      width  : 24 ;
+      height : 24 ;
+    }
+    state lg {
+      width  : 40 ;
+      height : 40 ;
+    }
   }
   part spinner-glyph {
     color     : "#3b82f6" ;
     font-size : 24 ;
+
+    state primary {
+      color : "#3d8bfd" ;
+    }
+    state secondary {
+      color : "#8c959d" ;
+    }
+    state success {
+      color : "#3dad76" ;
+    }
+    state danger {
+      color : "#e35d6a" ;
+    }
+    state warning {
+      color : "#ffcd39" ;
+    }
+    state info {
+      color : "#3dd5f3" ;
+    }
+    state light {
+      color : "#3a3f44" ;
+    }
+    state dark {
+      color : "#1a1d20" ;
+    }
   }
 }

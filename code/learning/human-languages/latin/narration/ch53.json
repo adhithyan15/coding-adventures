@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "Iterum, Magister, Discipulus, Schola, Liber",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:981583f4f86847b8",
+  "sourceHash": "fnv1a64:fc7271a95b40be7d",
   "lessons": [
     {
       "id": "LA-C53-iterum",
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef1b27cce7d15a08",
+      "sourceHash": "fnv1a64:1f46b24f63dd29d8",
       "notice": null,
       "blocks": [
         {
@@ -436,7 +436,7 @@
             },
             {
               "kind": "speech",
-              "text": "Then the word that grew out of it. Disciplīna originally meant simply \"teaching, instruction\" — what a discipulus receives. Only later did it narrow to the training that keeps order, and later still to punishment. English discipline carries all three senses at once, and a disciple is the discipulus of the Latin Bible."
+              "text": "Then the word that grew out of it. Disciplīna originally meant no more than \"teaching, instruction\" — what a discipulus receives. Only later did it narrow to the training that keeps order, and later still to punishment. English discipline carries all three senses at once, and a disciple is the discipulus of the Latin Bible."
             },
             {
               "kind": "speech",

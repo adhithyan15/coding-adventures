@@ -66,7 +66,7 @@ Latin relative, and saying so plainly is better than inventing one.
 > *mujhe roṭī pasand hai.* — **I like bread.**
 
 The dative-experiencer frame from Chapter 8 was built for **-nā**
-infinitives — *paṛhnā*, *likhnā*. It works just as well for a plain noun:
+infinitives — *paṛhnā*, *likhnā*. It works as well for a plain noun:
 whatever pleases you sits in the subject slot, and **ہے** agrees with it,
 not with you.
 

@@ -3383,6 +3383,77 @@ mod tests {
             "a production model tool names another agent"
         );
     }
+
+    #[test]
+    fn the_production_model_tool_surface_has_two_unverifiable_inputs() {
+        // S-I7's second clause -- *the agent cannot supply one* -- is
+        // established only for positions a schema DESCRIBES. An `Any` input is
+        // a position where the agent supplies arbitrary structure and only the
+        // narrower value-level vocabulary looks at it, which deliberately
+        // allows `agent`, `principal` and the `*_by` forms because in a
+        // foreign document those are the blob's own annotation.
+        //
+        // So the honest statement about this surface's INPUTS is not "no
+        // holes". It is "these two, and here is why each is allowed to stay".
+        // Both are pairing metadata: a document the bridge authored, passed
+        // through, exactly the case that leniency exists for.
+        // `command.arguments` used to be a third and no longer is -- the tool
+        // owns that bag's meaning, so it declares `AnyWithoutIdentity` and
+        // gets the strict vocabulary.
+        //
+        // Inputs only, and deliberately. This surface also has undescribed
+        // OUTPUT positions -- `command`'s `message`, and `vault_ref` plus
+        // `metadata` on both pairing tools. Those belong to S-I7's FIRST
+        // clause (what reaches the agent's view) rather than its second (what
+        // the agent can supply), they are walked with the lenient vocabulary,
+        // and the pairing tools already strip `requested_by` structurally.
+        // Pinning them is a separate question from this one; naming them here
+        // keeps the filter below from reading as "there are none".
+        //
+        // A new production tool with an undescribed input fails here, which is
+        // the point: the question gets asked at review rather than after.
+        let definitions = PRODUCTION_SMART_HOME_MODEL_TOOLS
+            .iter()
+            .filter_map(|tool_id| {
+                chief_of_staff_smart_home_tools::smart_home_tool_definition(tool_id)
+            })
+            .collect::<Vec<_>>();
+        // Independent of the sibling test: a `filter_map` that silently
+        // dropped an unresolvable id would make the assertion below pass by
+        // measuring fewer tools than the surface has.
+        assert_eq!(
+            definitions.len(),
+            PRODUCTION_SMART_HOME_MODEL_TOOLS.len(),
+            "every production tool id must resolve to a definition"
+        );
+        let input_holes = chief_of_staff_tool_api::tools_with_unverifiable_schema(&definitions)
+            .into_iter()
+            .map(|(tool_id, positions)| {
+                (
+                    tool_id,
+                    positions
+                        .into_iter()
+                        .filter(|position| !position.starts_with("output:"))
+                        .collect::<Vec<_>>(),
+                )
+            })
+            .filter(|(_, positions)| !positions.is_empty())
+            .collect::<Vec<_>>();
+        assert_eq!(
+            input_holes,
+            vec![
+                (
+                    "smart_home.complete_pairing".to_string(),
+                    vec!["metadata".to_string()]
+                ),
+                (
+                    "smart_home.pair_bridge".to_string(),
+                    vec!["metadata".to_string()]
+                ),
+            ],
+            "the set of undescribed inputs on the production surface changed"
+        );
+    }
     use super::*;
     use chief_of_staff_channel_endpoints::AgentId as ChannelAgentId;
     use chief_of_staff_host_control_protocol::{LaunchBindings, LevelOneModelBinding};

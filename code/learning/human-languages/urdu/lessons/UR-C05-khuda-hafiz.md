@@ -53,7 +53,7 @@ whole expression smoothly.
 <!-- hl-knowledge: introduces=[UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS, UR-PRAGMATICS-STANDARD-FAREWELL]; assesses=[] -->
 
 The protective sense is “God [be] guardian,” but everyday speakers use the
-formula simply as **goodbye**. No new verb or agreement ending is needed. It is
+formula as **goodbye** and nothing more. No new verb or agreement ending is needed. It is
 a reliable polite close for the short interaction learned so far.
 
 ## Script Bridge — shared history, local spacing

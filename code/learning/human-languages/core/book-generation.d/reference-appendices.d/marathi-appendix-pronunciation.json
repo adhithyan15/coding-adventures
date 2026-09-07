@@ -1,0 +1,10 @@
+{
+  "language": "marathi",
+  "title": "Devanagari for Marathi --- a reference",
+  "shortTitle": "Devanagari for Marathi (reference)",
+  "runningHead": "Devanagari",
+  "source": "marathi/pronunciation-reference.md",
+  "output": "marathi/book/chapters/appendix-pronunciation.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

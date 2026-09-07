@@ -9,27 +9,27 @@ headword: खाणे
 romanization: khāṇe
 gloss: to eat — and an infinitive that doubles as a noun of the third gender Hindi lost
 concept_tag: VERB-EAT
-prerequisites: [MR-C07-yene]
+prerequisites: [MR-C07-yene, MR-C02-majhe, MR-C01-baram]
 sounds: [matra-aa, retroflex-na, aspirated-kha]
 roots: [sanskrit-khadati-eat]
 etymology_hook: "खाणे is both to eat and the eating — every -णे infinitive is a neuter noun, and neuter is the third gender Marathi kept where Hindi is down to two"
 duration:
   max_seconds: 250
 requires:
-  knowledge: [MR-LEX-YENE, MR-LEX-JANE]
+  knowledge: [MR-LEX-YENE, MR-LEX-JANE, MR-LEX-MAJHE, MR-GRAMMAR-POSSESSIVE-THREE-GENDERS, MR-LEX-BARAM-01]
 introduces:
   knowledge: [MR-LEX-KHANE, MR-GRAMMAR-NE-NEUTER-NOUN]
 introduces_idioms: []
 introduces_senses: [MR-SENSE-KHANE-EAT-EATING-01]
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-LEX-JANE, MR-LEX-YENE, MR-LEX-KHANE, MR-GRAMMAR-NE-NEUTER-NOUN]
+  knowledge: [MR-LEX-JANE, MR-LEX-YENE, MR-LEX-KHANE, MR-GRAMMAR-NE-NEUTER-NOUN, MR-LEX-MAJHE, MR-GRAMMAR-POSSESSIVE-THREE-GENDERS, MR-LEX-BARAM-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [MR-C07-yene, MR-C05-bolne]
+reviews_of: [MR-C07-yene, MR-C05-bolne, MR-C02-majhe, MR-C01-baram]
 ---
 
 # खाणे (khāṇe) — "to eat," and Marathi's third gender
@@ -61,9 +61,9 @@ different letter, not an accent. Add the long-*ā* stroke and the familiar **ण
 *khā-ṇe*.
 
 ## Grammar Lens: the infinitive is a neuter noun
-<!-- hl-knowledge: introduces=[MR-GRAMMAR-NE-NEUTER-NOUN]; assesses=[] -->
+<!-- hl-knowledge: introduces=[MR-GRAMMAR-NE-NEUTER-NOUN]; assesses=[MR-LEX-MAJHE, MR-GRAMMAR-POSSESSIVE-THREE-GENDERS, MR-LEX-BARAM-01] -->
 
-**खाणे** also simply means "eating" — the thing, not the act of doing it. Every
+**खाणे** also means "eating" — the thing, not the act of doing it. Every
 *-णे* infinitive works this way; *खाणंपिणं* (*khāṇaṁ-piṇaṁ*), "eating and
 drinking," is how Marathi says food and drink.
 
@@ -71,22 +71,25 @@ And as a noun it carries a gender — **neuter**, the third one. Hindi has two
 genders, masculine and feminine. Marathi kept all three that Sanskrit had, so
 words agreeing with a noun come in three shapes:
 
-| gender | "good" | said |
+| gender | "my" | said |
 |---|---|---|
-| masculine | चांगला | *chāṅglā* |
-| feminine | चांगली | *chāṅglī* |
-| neuter | चांगलं | *chāṅglaṁ* |
+| masculine | माझा | *mājhā* |
+| feminine | माझी | *mājhī* |
+| neuter | माझं | *mājhaṁ* |
 
-So "eating is good" is **खाणं चांगलं आहे** — *khāṇaṁ chāṅglaṁ āhe*, with the
+You met the neuter one five chapters ago in **माझं नाव**, so this table is a
+word you already own being shown in its other two shapes rather than a new one.
+
+So "eating is fine" is **खाणं बरं आहे** — *khāṇaṁ baraṁ āhe*, with the
 neuter ending twice over and the verb, as always, last.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-KHANE, MR-GRAMMAR-NE-NEUTER-NOUN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-KHANE, MR-GRAMMAR-NE-NEUTER-NOUN, MR-LEX-MAJHE, MR-GRAMMAR-POSSESSIVE-THREE-GENDERS, MR-LEX-BARAM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "khāṇe" — to eat — then "I eat" in your own gender]
-- [YOU SAY: the three shapes — "chāṅglā … chāṅglī … chāṅglaṁ"]
-- [YOU SAY: "eating is good" — "khāṇaṁ chāṅglaṁ āhe"]
+- [YOU SAY: the three shapes — "mājhā … mājhī … mājhaṁ"]
+- [YOU SAY: "eating is fine" — "khāṇaṁ baraṁ āhe"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-KHANE, MR-GRAMMAR-NE-NEUTER-NOUN] -->

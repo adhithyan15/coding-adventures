@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:b856f98b04778ec2",
+  "lessonIds": [
+    "MR-C50-lahaan",
+    "MR-C50-adj-invariable",
+    "MR-C50-sundar",
+    "MR-R50-small"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch50.txt",
+  "json": "marathi/narration/ch50.json",
+  "textHash": "fnv1a64:4c1752c032d2fe0d",
+  "jsonHash": "fnv1a64:de60a2e836906bdd",
+  "findings": []
+}

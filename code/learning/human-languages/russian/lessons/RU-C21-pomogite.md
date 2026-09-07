@@ -59,7 +59,7 @@ in any emergency, built entirely out of parts you owned already.
 Say it once out loud. A course that can greet, thank, apologise, ask for a
 repeat, ask for slower speech and ask for help has covered every move a beginner
 needs to survive a conversation that goes wrong — and every one of those moves
-arrived in this chapter or the ones just behind it.
+arrived in this chapter or the two behind it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POMOGITE-01, RU-LEX-IZVINITE-01, RU-LEX-POZHALUYSTA] -->

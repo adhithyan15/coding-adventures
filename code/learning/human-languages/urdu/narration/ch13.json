@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Four Colors",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:af1c6caafb2a00ff",
+  "sourceHash": "fnv1a64:5f4e839d920a8b5e",
   "lessons": [
     {
       "id": "UR-C13-lal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:355896e11df95d13",
+      "sourceHash": "fnv1a64:7b5e6939ae2a421b",
       "notice": null,
       "blocks": [
         {
@@ -72,7 +72,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "لال (lāl) is borrowed from Classical Persian لَال, \"red.\" No further ancestor is documented for the Persian word itself — the trail simply stops, the same honest kind of dead end roṭī's Sanskrit root hit last lesson, except this time on the Persian side of the book's two layers rather than the inherited one."
+              "text": "لال (lāl) is borrowed from Classical Persian لَال, \"red.\" No further ancestor is documented for the Persian word itself — the trail stops, the same honest kind of dead end roṭī's Sanskrit root hit last lesson, except this time on the Persian side of the book's two layers rather than the inherited one."
             }
           ]
         },
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1288a3b47713887e",
+      "sourceHash": "fnv1a64:d3951c1a8c57abd0",
       "notice": null,
       "blocks": [
         {
@@ -265,7 +265,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does سفید (safed) mean? (White.) Name its two settled cousins in other languages. (Sanskrit śvetá; English white.) Recall ṭhīk and how a short Urdu word once bridged to a Hindi cognate — how is that bridge different from what سفید (safed) just did? (ṭhīk's bridge was Urdu-to-Hindi, the same modern language pair; سفید (safed)'s is a PIE root three languages deep.) How did the earlier take-leave dialogue end? (With khudā hāfiz, spoken by both voices.)"
+              "text": "What does سفید (safed) mean? (White.) Name its two settled cousins in other languages. (Sanskrit śvetá; English white.) Recall ṭhīk and how a short Urdu word once bridged to a Hindi cognate — how is that bridge different from what سفید (safed) did? (ṭhīk's bridge was Urdu-to-Hindi, the same modern language pair; سفید (safed)'s is a PIE root three languages deep.) How did the earlier take-leave dialogue end? (With khudā hāfiz, spoken by both voices.)"
             },
             {
               "kind": "speech",
@@ -288,7 +288,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ad3620fb4787a3f",
+      "sourceHash": "fnv1a64:6c21f0cbf6aedfa5",
       "notice": null,
       "blocks": [
         {
@@ -405,7 +405,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does کالا (kālā) mean, and what does it become before a feminine noun? (Black; kālī.) Is کالا (kālā)'s ultimate root Indo-European? (No — Proto-Dravidian, borrowed into Sanskrit.) Which two colors so far never change their ending? (لال (lāl) and safed.) Does khudā hāfiz need a verb or an agreement ending to work as a farewell? (No — speakers use the fixed formula simply as \"goodbye,\" no conjugation required.) When choosing kaise or kaisī, whose gender decides the choice — yours, or the person you're addressing? (The person you're addressing.)"
+              "text": "What does کالا (kālā) mean, and what does it become before a feminine noun? (Black; kālī.) Is کالا (kālā)'s ultimate root Indo-European? (No — Proto-Dravidian, borrowed into Sanskrit.) Which two colors so far never change their ending? (لال (lāl) and safed.) Does khudā hāfiz need a verb or an agreement ending to work as a farewell? (No — speakers use the fixed formula as \"goodbye\" and nothing more, no conjugation required.) When choosing kaise or kaisī, whose gender decides the choice — yours, or the person you're addressing? (The person you're addressing.)"
             },
             {
               "kind": "speech",

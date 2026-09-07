@@ -56,7 +56,7 @@ that phrase meant.
 needed **merī**. **دوست** breaks the pattern on purpose: it takes **the
 same form** for a male or a female friend, and **merā dost** works for
 either. Native Urdu nouns almost always commit to a gender; this Persian
-loan simply does not carry the machinery that would make it agree.
+loan does not carry the machinery that would make it agree.
 
 ## The word, taken apart — a friend is someone chosen
 <!-- hl-knowledge: introduces=[UR-ETYMON-DOST-CHOOSE]; assesses=[UR-LEX-DOST, UR-ETYMON-TUM-THOU] -->
@@ -79,7 +79,7 @@ Persian road alone.
 
 Chapter 3 taught **āp / tum / tū** and told you to move to **tum** once
 familiarity is safe. A **دوست** is exactly that relationship: someone you
-have moved off **āp** for. You do not need a new rule — just the word for
+have moved off **āp** for. You do not need a new rule — only the word for
 the person the old rule was describing.
 
 ## Guided Practice

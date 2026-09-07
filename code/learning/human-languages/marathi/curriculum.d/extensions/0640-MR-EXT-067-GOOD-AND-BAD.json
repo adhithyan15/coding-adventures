@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-067-GOOD-AND-BAD",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can judge a thing good or bad, call a person clever, and deny any of those judgements.",
+  "prerequisites": [
+    "MR-EXT-066-INVARIABLE-ADJECTIVES"
+  ],
+  "lessons": [
+    "MR-C51-changla",
+    "MR-C51-kharaab",
+    "MR-C51-hushaar",
+    "MR-R51-good-and-bad"
+  ]
+}

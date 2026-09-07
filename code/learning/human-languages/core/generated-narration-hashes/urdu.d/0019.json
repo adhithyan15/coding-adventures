@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:91d7e9b51ca4e503",
+  "lessonIds": [
+    "UR-C19-nahin-verb",
+    "UR-C19-kya-polar",
+    "UR-C19-na-na",
+    "UR-R19-three-refusals"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "urdu/narration/ch19.txt",
+  "json": "urdu/narration/ch19.json",
+  "textHash": "fnv1a64:5019a6b3438ec998",
+  "jsonHash": "fnv1a64:1e99aa7a181a7000",
+  "findings": []
+}

@@ -1,5 +1,10 @@
 {
-  "segments": [],
+  "segments": [
+    "MR-PATH-052",
+    "MR-PATH-053",
+    "MR-PATH-054",
+    "MR-PATH-055"
+  ],
   "omits": [],
   "relocates": {}
 }

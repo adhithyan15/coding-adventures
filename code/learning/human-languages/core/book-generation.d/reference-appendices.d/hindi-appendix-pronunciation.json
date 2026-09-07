@@ -1,0 +1,9 @@
+{
+  "language": "hindi",
+  "title": "Devanagari --- a reference",
+  "shortTitle": "Devanagari (reference)",
+  "runningHead": "Devanagari",
+  "source": "hindi/pronunciation-reference.md",
+  "output": "hindi/book/chapters/appendix-pronunciation.tex",
+  "scriptSet": "hindi-main"
+}

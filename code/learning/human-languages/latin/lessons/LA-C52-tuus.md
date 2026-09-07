@@ -53,8 +53,8 @@ a word far enough back that saying it is work.
 
 The *tū / vōs* lesson made a point of it: in Classical Latin
 the difference is **number only**, with no politeness in it at all. This is *tū*'s
-possessive, and it inherits that: **tuus** is not familiar or rude, it simply means
-the thing belongs to one person. For several, Latin says **vester**.
+possessive, and it inherits that: **tuus** is not familiar or rude; it means only
+that the thing belongs to one person. For several, Latin says **vester**.
 
 > **Quid tibi nōmen est?** — the name question, with *tibi*, the dative.
 > **Liber tuus.** — Your book, with the adjective.

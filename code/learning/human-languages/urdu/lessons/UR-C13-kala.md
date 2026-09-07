@@ -88,7 +88,7 @@ feminine noun? (**Black**; **kālī**.) Is **کالا**'s ultimate root
 Indo-European? (**No — Proto-Dravidian, borrowed into Sanskrit.**) Which
 two colors so far never change their ending? (**لال and safed.**) Does
 *khudā hāfiz* need a verb or an agreement ending to work as a farewell?
-(**No — speakers use the fixed formula simply as "goodbye," no
+(**No — speakers use the fixed formula as "goodbye" and nothing more, no
 conjugation required.**) When choosing **kaise** or **kaisī**, whose
 gender decides the choice — yours, or the person you're addressing?
 (**The person you're addressing.**)

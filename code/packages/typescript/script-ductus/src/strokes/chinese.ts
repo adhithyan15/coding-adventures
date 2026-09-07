@@ -4228,4 +4228,143 @@ export const entries: DuctusEntry[] = [
       source: chineseCharacterSource("书"),
     },
   ],
+  // 吗 is 口 + 马, and the pinned medians draw the left component FIRST and
+  // whole: medians 1-3 are the standalone 口 route -- left vertical, joined top
+  // and right side, closing bottom bar. Medians 4-6 then draw 马: a horizontal
+  // that turns down, a long stroke that turns right, turns down again and hooks
+  // back to the left below the baseline, and a wide finishing héng. Six strokes,
+  // five lifts. The paths below are fitted to the vendored Noto Sans SC outline
+  // -- the source's Arphic-derived proportions differ, and in this face the 口
+  // is tall rather than compressed and the finishing héng stops short of the
+  // right descender instead of crossing it -- with the source's order,
+  // directions and two joined corners preserved.
+  [
+    "chinese:吗",
+    {
+      script: "chinese",
+      glyph: "吗",
+      strokes: [
+        simpleStroke("draw 口's left vertical shù stroke from top to bottom", [
+          { x: 110, y: 730 },
+          { x: 110, y: 610 },
+          { x: 110, y: 480 },
+          { x: 110, y: 350 },
+          { x: 110, y: 230 },
+          { x: 110, y: 120 },
+        ]),
+        {
+          segments: [
+            {
+              label: "lift, then draw 口's top bar from left to right",
+              path: [
+                { x: 100, y: 705 },
+                { x: 155, y: 705 },
+                { x: 210, y: 705 },
+                { x: 260, y: 705 },
+                { x: 300, y: 705 },
+              ],
+            },
+            {
+              label:
+                "turn the corner without lifting and descend 口's right side",
+              path: [
+                { x: 300, y: 705 },
+                { x: 300, y: 585 },
+                { x: 300, y: 465 },
+                { x: 300, y: 340 },
+                { x: 300, y: 215 },
+              ],
+            },
+          ],
+        },
+        simpleStroke("lift, then close 口's bottom from left to right", [
+          { x: 100, y: 220 },
+          { x: 155, y: 220 },
+          { x: 210, y: 220 },
+          { x: 260, y: 220 },
+          { x: 300, y: 220 },
+        ]),
+        {
+          segments: [
+            {
+              label: "lift, then draw 马's top horizontal from left to right",
+              path: [
+                { x: 440, y: 750 },
+                { x: 530, y: 750 },
+                { x: 620, y: 750 },
+                { x: 715, y: 750 },
+                { x: 800, y: 750 },
+              ],
+            },
+            {
+              label:
+                "turn the corner without lifting and descend to the right",
+              path: [
+                { x: 800, y: 750 },
+                { x: 800, y: 665 },
+                { x: 800, y: 580 },
+                { x: 800, y: 500 },
+                { x: 800, y: 430 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then descend 马's inner vertical",
+              path: [
+                { x: 500, y: 630 },
+                { x: 500, y: 555 },
+                { x: 500, y: 480 },
+                { x: 500, y: 400 },
+              ],
+            },
+            {
+              label: "turn without lifting and cross to the right",
+              path: [
+                { x: 500, y: 400 },
+                { x: 600, y: 375 },
+                { x: 700, y: 372 },
+                { x: 800, y: 370 },
+                { x: 880, y: 370 },
+              ],
+            },
+            {
+              label: "turn again without lifting and descend the right side",
+              path: [
+                { x: 880, y: 370 },
+                { x: 880, y: 290 },
+                { x: 875, y: 210 },
+                { x: 868, y: 130 },
+                { x: 858, y: 60 },
+                { x: 845, y: 5 },
+              ],
+            },
+            {
+              label:
+                "finish with the hook, which turns back below the baseline",
+              path: [
+                { x: 845, y: 5 },
+                { x: 820, y: -20 },
+                { x: 770, y: -30 },
+                { x: 710, y: -32 },
+              ],
+            },
+          ],
+        },
+        simpleStroke(
+          "lift, then draw 马's wide finishing horizontal from left to right",
+          [
+            { x: 420, y: 170 },
+            { x: 510, y: 170 },
+            { x: 600, y: 170 },
+            { x: 690, y: 170 },
+            { x: 770, y: 170 },
+          ],
+        ),
+      ],
+      source: chineseCharacterSource("吗"),
+    },
+  ],
 ];

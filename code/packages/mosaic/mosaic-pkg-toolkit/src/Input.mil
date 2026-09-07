@@ -17,8 +17,8 @@ component Input {
   // firing onChange.
   slot disabled : bool ;
 
-  // Size keyword. One of: sm, md, lg. Default: md.
-  slot size : text ;
+  // Size keyword. Default: md.
+  slot size : one-of sm md lg ;
 
   // Fired on every character change. Payload is the new text value.
   emit onChange ( value : text ) ;

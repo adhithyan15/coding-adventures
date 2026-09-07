@@ -1,0 +1,54 @@
+# Dependabot: an update channel for the actions this repo SHA-pins.
+#
+# This repo references 30 distinct actions, 19 of them third-party, and
+# #14452 pins every third-party one to a 40-character commit SHA -- which
+# is what makes a compromised upstream tag a non-event. It also means none
+# of them will ever receive a security fix on its own: a pin without an
+# update channel trades one risk for another, quieter one. This file is
+# that channel. Dependabot rewrites the SHA and its trailing `# vX.Y.Z`
+# comment together, so a bump arrives as a reviewable diff naming the
+# version it moves to -- which is also why that comment convention is
+# worth keeping.
+#
+# github-actions ONLY, deliberately. `directory: "/"` covers every file in
+# `.github/workflows/`, which is the whole surface for this ecosystem. The
+# language ecosystems are not listed because Dependabot wants one entry per
+# manifest directory and this repo has ~1384 `Cargo.toml`, ~531
+# `pyproject.toml`, ~506 `package.json`, ~315 `go.mod` and ~286 `Gemfile`
+# files. Enumerating those is a separate decision about scale, not an
+# oversight.
+#
+# KNOWN INTERACTION -- read before merging a checkout bump.
+# `.github/workflows/build-ocaml.yml` is a closed contract. Its action SHAs
+# are pinned in three places that must agree:
+#
+#   1. the workflow itself
+#   2. code/specs/fixtures/ocaml-toolchain/toolchain-lock.json
+#   3. the ACTIONS map in code/scripts/ocaml_toolchain_lock.py
+#
+# Dependabot edits only the first, so a bump touching `actions/checkout`,
+# `actions/upload-artifact` or `ocaml/setup-ocaml` WILL turn the "Validate
+# OCAML03 contract" check red. That is the contract working, not a broken
+# bot: update the other two in the same PR. Note also that the OCAML03
+# workflow's pins carry their version on the line ABOVE, not trailing --
+# its restricted YAML reader does not strip trailing comments.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    # One grouped PR rather than thirty. Measured: 30 distinct actions are
+    # referenced across the 39 workflows. Ungrouped, a single upstream
+    # runtime deprecation would open one PR per action and the review would
+    # be spread too thin to be a review.
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - "dependencies"

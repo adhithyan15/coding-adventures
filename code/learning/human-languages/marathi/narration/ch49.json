@@ -1,0 +1,559 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 49,
+  "title": "Big, and How an Adjective Agrees",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:9a83e98f73028b28",
+  "lessons": [
+    {
+      "id": "MR-C49-motha",
+      "sequence": 1940,
+      "title": "मोठा (moṭhā) — big",
+      "headword": "मोठा",
+      "romanization": "moṭhā",
+      "gloss": "big, large — the first adjective this book teaches on purpose, and a false friend to anyone who knows Hindi",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b747208a906db1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Forty-eight chapters in you can name a house, put a room in it, say who it belongs to and how to get there. You cannot say one thing about what it is like."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mājhyākaḍe ghar āhe, then mī mitrālā pāṇī deto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mājhyākaḍe ghar āhe*, then *mī mitrālā pāṇī deto*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मोठा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोठा — moṭhā — big, large."
+            },
+            {
+              "kind": "speech",
+              "text": "मोठं घर — moṭhaṁ ghar — a big house."
+            },
+            {
+              "kind": "speech",
+              "text": "Start with the ending. The headword is मोठा (moṭhā), and the example says मोठं. Nothing is wrong: the adjective took the shape of the noun it sits in front of, and घर is neuter. The next lesson is about nothing but that."
+            },
+            {
+              "kind": "speech",
+              "text": "मोठा (moṭhā) covers size in every direction — a big house, a big city, a big brother. Where लांब measured a distance, this measures a thing."
+            },
+            {
+              "kind": "speech",
+              "text": "One warning worth having early. If you know Hindi you will meet मोटा (moṭā) there and reach for it: it means fat, not big, and the two words are a genuine trap between the languages. Marathi's मोठा (moṭhā) is the neutral, everyday word; nothing about it is about a body."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭhā — big",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭhā* — big]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭhaṁ ghar — a big house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭhaṁ ghar* — a big house]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say झोपणे and then ask for a big room to do it in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **झोपणे** and then ask for a big room to do it in]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C49-motha-r1",
+              "prompt": "Say 'a big house', then 'my house is big'.",
+              "assesses": [
+                "MR-LEX-MOTHA",
+                "MR-LEX-GHAR"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "moṭhaṁ ghar; mājhaṁ ghar moṭhaṁ āhe",
+                "मोठं घर माझं घर मोठं आहे"
+              ],
+              "feedback": {
+                "correct": "In front of the noun, and after it.",
+                "incorrect": "ghar is neuter, so the adjective ends in -aṁ both times."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word measures a distance, and which measures a thing? (लांब; मोठा (moṭhā).) What does the Hindi look-alike मोटा mean? (Fat — not the same word.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: मोठा (moṭhā)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C49-adj-agreement",
+      "sequence": 1950,
+      "title": "मोठा (moṭhā), मोठी, मोठं — three endings, one rule",
+      "headword": "मोठा · मोठी · मोठं",
+      "romanization": "moṭhā · moṭhī · moṭhaṁ",
+      "gloss": "how a Marathi adjective agrees — three endings you have already used twice, now named",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa1ef97ec66ff124",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "माझा, माझी, माझं from chapter nine. उजवा, उजवी, उजवं from chapter forty-four. The same three endings, twice, and never named."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the adjective takes the gender of its noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोठा moṭhā — with a masculine noun मोठी moṭhī — with a feminine noun मोठं moṭhaṁ — with a neuter noun."
+            },
+            {
+              "kind": "speech",
+              "text": "Marathi has three genders where most European languages have two, and an adjective that ends in -आ in its dictionary form changes to match all three. You have owned the machinery since chapter nine; what you did not have was permission to use it on a new word."
+            },
+            {
+              "kind": "speech",
+              "text": "मोठा (moṭhā) मित्र — a big friend (masculine) मोठी खोली — a big room (feminine) मोठं घर — a big house (neuter)."
+            },
+            {
+              "kind": "speech",
+              "text": "Say those three aloud and hear that only the last syllable moves. That is what makes the rule cheap: learn one adjective and you have learned three forms, and every -आ adjective after this costs you nothing extra."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭhā mitra, moṭhī khoolī, moṭhaṁ ghar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭhā mitra*, *moṭhī khoolī*, *moṭhaṁ ghar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same three endings on ujvā — and hear that nothing new happened",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same three endings on *ujvā* — and hear that nothing new happened]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say चालणे, and the chālel that means that will do",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **चालणे**, and the *chālel* that means *that will do*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C49-adj-agreement-r1",
+              "prompt": "Put moṭhā on a friend, a room and a house, changing only the ending.",
+              "assesses": [
+                "MR-GRAMMAR-ADJ-AGREEMENT",
+                "MR-LEX-MOTHA"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "moṭhā mitra; moṭhī khoolī; moṭhaṁ ghar",
+                "मोठा मित्र मोठी खोली मोठं घर"
+              ],
+              "feedback": {
+                "correct": "One word, three genders.",
+                "incorrect": "-ā masculine, -ī feminine, -aṁ neuter."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which part of the adjective moves? (Only the last syllable.) How many genders does it have to match? (Three.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C49-adj-prenominal",
+      "sequence": 1960,
+      "title": "मोठं … आहे (moṭhaṁ … āhe) — where the adjective stands",
+      "headword": "मोठं … आहे",
+      "romanization": "moṭhaṁ … āhe",
+      "gloss": "where a Marathi adjective stands — always before its noun, which is the opposite of Spanish and French",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6efc3bcf488b374c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every adjective this book has shown you — माझा, उजवा, डावा, मोठा (moṭhā) — has stood in the same place, and nobody has said so."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: in front, always",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A Marathi adjective goes before its noun and never after it."
+            },
+            {
+              "kind": "speech",
+              "text": "मोठं घर — a big house. Never घर मोठं."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth saying out loud because it is the opposite of what a Romance language does: Spanish writes una casa grande and French une maison grande, noun first. English happens to agree with Marathi here, which makes this one of the few places an English speaker can trust the order they already have."
+            },
+            {
+              "kind": "speech",
+              "text": "The second position is different, and you have used it since chapter ten without noticing. When the adjective is the whole point of the sentence rather than a label on a noun, it goes at the END, in front of आहे:"
+            },
+            {
+              "kind": "speech",
+              "text": "माझं घर मोठं आहे. — mājhaṁ ghar moṭhaṁ āhe. — my house is big."
+            },
+            {
+              "kind": "speech",
+              "text": "Two positions, two jobs: in front describes a thing you are naming, at the end before आहे makes the description the claim. The ending agrees in both."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭhaṁ ghar — the label",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭhaṁ ghar* — the label]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhaṁ ghar moṭhaṁ āhe — the claim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhaṁ ghar moṭhaṁ āhe* — the claim]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mājhyākaḍe moṭhaṁ ghar āhe — I have a big house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mājhyākaḍe moṭhaṁ ghar āhe* — I have a big house]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C49-adj-prenominal-r1",
+              "prompt": "Name a big house, then claim that your house is big.",
+              "assesses": [
+                "MR-GRAMMAR-ADJ-PRENOMINAL",
+                "MR-LEX-MOTHA"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "moṭhaṁ ghar; mājhaṁ ghar moṭhaṁ āhe",
+                "मोठं घर माझं घर मोठं आहे"
+              ],
+              "feedback": {
+                "correct": "Label in front; claim before āhe.",
+                "incorrect": "The adjective never follows the noun it labels."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does an adjective stand when it labels a noun? (Before it.) And when it is the claim of the sentence? (At the end, before आहे.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R49-big",
+      "sequence": 1970,
+      "title": "Describe a thing for the first time",
+      "headword": "मोठा · मोठी · मोठं",
+      "romanization": "moṭhā · moṭhī · moṭhaṁ",
+      "gloss": "one adjective, three genders and two positions — the whole machine, run once",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e61caa5fe59b8e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One adjective arrived in this chapter and two rules came with it. Name the rules before you use the word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭhī khoolī — and hear the feminine ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭhī khoolī* — and hear the feminine ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhaṁ ghar moṭhaṁ āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhaṁ ghar moṭhaṁ āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāvī khoolī — the left room, with the same machinery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāvī khoolī* — the left room, with the same machinery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say सांगणे and tell somebody your house is big",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **सांगणे** and tell somebody your house is big]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R49-big-run",
+              "prompt": "Label a big room, claim that your house is big, and say that you have a big house.",
+              "assesses": [
+                "MR-GRAMMAR-ADJ-AGREEMENT",
+                "MR-GRAMMAR-ADJ-PRENOMINAL",
+                "MR-LEX-MOTHA"
+              ],
+              "responseSeconds": 32,
+              "acceptedResponses": [
+                "moṭhī khoolī; mājhaṁ ghar moṭhaṁ āhe; mājhyākaḍe moṭhaṁ ghar āhe",
+                "मोठी खोली माझं घर मोठं आहे माझ्याकडे मोठं घर आहे"
+              ],
+              "feedback": {
+                "correct": "Label, claim, possession — one adjective in all three.",
+                "incorrect": "The ending follows the noun; the position follows the job."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many endings does an -आ adjective have, and how many positions? (Three endings; two positions.) Then stop."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -142,8 +142,15 @@ describe("the committed Urdu A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(234);
-    expect(coverage.covered).toBe(101);
-    expect(coverage.unmapped).toBe(133);
+    // 101 -> 116: the negation-and-joining tranche (chapters 19-22). Fifteen
+    // items closed fifteen points, and the design constraint was the SCRIPT
+    // rather than the vocabulary: every headword was tested against the fifteen
+    // letters the ladder has actually taught before it was written, so نہیں,
+    // اور, یا, لیکن, کیوں, کون, کیونکہ, کہ, کے لیے, کہنا and آرام سے all landed
+    // inside the taught set, while معاف, مہربانی, مگر, جب and بھی did not and
+    // are named in romanization beside the letters that block them.
+    expect(coverage.covered).toBe(116);
+    expect(coverage.unmapped).toBe(118);
     expect(coverage.partial).toBe(0);
     // THE HEADLINE. Not one numeral is taught: ایک and دو both return zero
     // occurrences as words (the two raw matches for دو are inside دوست), and
@@ -153,15 +160,22 @@ describe("the committed Urdu A1 inventory", () => {
       enumerated: 5,
       covered: 0,
     });
-    // اور ("and") returns ZERO occurrences in Urdu script and appears exactly
+    // اور ("and") returned ZERO occurrences in Urdu script and appeared exactly
     // once in the whole corpus — romanised, inside a chapter-15 production
-    // prompt that asks the learner to SAY a word the book never taught. یا's
-    // thirteen raw matches are all the tail of کیا; لیکن, مگر, کہ, کیونکہ and
-    // جب all return zero. The two covered points are covered by a chunk and by
-    // an ellipsis lesson, not by a connective.
+    // prompt that asked the learner to SAY a word the book never taught. That
+    // line is now quoted inside UR-C20-aur and paid back in its practice.
+    // 2 -> 8. The three that remain each name a LETTER rather than an omission:
+    // جو and جب need جیم, جب also needs بے, and ایک … دوسرا needs the numerals.
     expect(coverage.byCategory["Rabt (joining and subordination)"]!).toEqual({
       enumerated: 11,
-      covered: 2,
+      covered: 8,
+    });
+    // The negation column goes 1/4 to 3/4. The one that remains, نہ and مت,
+    // is blocked twice over: مت belongs in front of an imperative this track
+    // still does not teach, and its second letter has no script lesson.
+    expect(coverage.byCategory["Nafi (negation)"]!).toEqual({
+      enumerated: 4,
+      covered: 3,
     });
     // The script column is where this track looks best and measures worst.
     // measureScriptClosure reports only 4 violations — the best of the three —
@@ -177,7 +191,7 @@ describe("the committed Urdu A1 inventory", () => {
     expect(coverage.byCategory["Tarz-e-kalam (register, and the Perso-Arabic layer the caveat names)"]!)
       .toEqual({ enumerated: 6, covered: 4 });
     expect(formatExamCoverage(coverage)).toContain(
-      "urdu A1 (partial inventory): 101/234 points covered (43%)",
+      "urdu A1 (partial inventory): 116/234 points covered (50%)",
     );
   }, 60_000);
 });

@@ -10,6 +10,20 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- `smart_home.command` declares its `arguments` bag identity-free
+  (`JsonSchema::AnyWithoutIdentity`). The bag is a device command VALUE --
+  a brightness percentage, a colour, a setpoint -- whose meaning
+  `json_to_smart_value_for_command` defines. It is not a document authored
+  elsewhere, so the names that mean "the blob's own annotation" in a foreign
+  document can only be a peer reference here.
+- This one matters more than the peer-naming tools it follows: `command` IS on
+  the daemon's production model surface, so an agent can actually reach it.
+  `{"arguments": {"requested_by": "agent:some-other-peer"}}` passed every
+  check and reached the handler.
+- The remaining undescribed inputs -- `pair_bridge.metadata` and
+  `complete_pairing.metadata` -- stay lenient and are now pinned by a test in
+  the daemon. Both are metadata the bridge authored and the tool passes
+  through, which is the case the leniency exists for.
 - `invoke_for_agent` now refuses the fifteen peer-naming smart-home tools
   before their handlers run, inheriting the input-side S-I7 check added to
   `InMemoryToolRuntime::register_handler`. It returns
