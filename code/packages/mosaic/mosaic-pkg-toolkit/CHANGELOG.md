@@ -1,5 +1,24 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased]
+
+### Fixed — the last three inert variant/size axes (#14036)
+
+`Toast.variant`, `Spinner.size`, `Spinner.variant`, and `Input.size` were
+declared `text` with their legal values in a comment, so the values were
+accepted and discarded — every Toast rendered identically, every Spinner was
+one size, every Input one scale.
+
+They now declare `one-of` and carry UI49 state blocks in both themes, finishing
+the migration Button, Alert, and Badge began. No component in this package
+declares an inert `variant`/`size` axis any more.
+
+Spinner's `size` drives diameter (16/24/40) and its `variant` drives glyph
+colour. Input's `size` drives padding, radius, and font-size, matching Button's
+existing sm/md/lg scale. Toast's `variant` tints the **border** rather than the
+surface: a notification has to stay readable, and the colour is a category cue
+rather than the content.
+
 ## [Unreleased] — make Badge's variant axis real (#14402)
 
 `Badge.variant` is now the closed UI49 axis `primary | secondary | success |

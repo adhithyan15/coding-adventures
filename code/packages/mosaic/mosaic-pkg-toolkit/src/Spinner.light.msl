@@ -7,12 +7,51 @@
 // rotation in its own stylesheet/style overlay.
 
 style Spinner {
+  // `size` is the closed axis from Spinner.mil; UI49 states own it.
   part spinner {
     width  : 24 ;
     height : 24 ;
+
+    state sm {
+      width        : 16 ;
+      height       : 16 ;
+    }
+    state md {
+      width        : 24 ;
+      height       : 24 ;
+    }
+    state lg {
+      width        : 40 ;
+      height       : 40 ;
+    }
   }
   part spinner-glyph {
     color     : "#0d6efd" ;
     font-size : 24 ;
+
+    state primary {
+      color        : "#0d6efd" ;
+    }
+    state secondary {
+      color        : "#6c757d" ;
+    }
+    state success {
+      color        : "#198754" ;
+    }
+    state danger {
+      color        : "#dc3545" ;
+    }
+    state warning {
+      color        : "#ffc107" ;
+    }
+    state info {
+      color        : "#0dcaf0" ;
+    }
+    state light {
+      color        : "#f8f9fa" ;
+    }
+    state dark {
+      color        : "#212529" ;
+    }
   }
 }
