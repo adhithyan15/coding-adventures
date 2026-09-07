@@ -396,7 +396,17 @@ import AppKit
         }
     }
 
+    /// Read a byte payload that may be base64 or a legacy array of numbers.
+    ///
+    /// Media and the exported `.apkg` moved to base64 because a JSON array of
+    /// decimal numbers costs 3.6 wire bytes per byte (#13671). Both spellings
+    /// are accepted so a host and the engine can be updated independently --
+    /// and because the failure mode otherwise is an EMPTY file rather than an
+    /// error, which reads as a successful export of nothing.
     private func jsonByteArray(_ root: [String: Any], property: String) -> Data {
+        if let encoded = root[property] as? String {
+            return Data(base64Encoded: encoded) ?? Data()
+        }
         guard let values = root[property] as? [Any] else {
             return Data()
         }
