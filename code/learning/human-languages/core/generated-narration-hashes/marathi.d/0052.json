@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:59de720427c14cf0",
+  "lessonIds": [
+    "MR-C52-sopa",
+    "MR-C52-kathin",
+    "MR-C52-unch",
+    "MR-R52-easy-hard-tall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch52.txt",
+  "json": "marathi/narration/ch52.json",
+  "textHash": "fnv1a64:b0fc25f4878ecc84",
+  "jsonHash": "fnv1a64:3c63ddee92717deb",
+  "findings": []
+}

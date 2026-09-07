@@ -63,7 +63,7 @@ long *-ī* stroke, which leans forward ahead of its letter. **त** is *ta*:
 **मला माहीत आहे** — *malā māhīt āhe* — "I know."
 
 Word by word: "**to me** known **is**." *Malā* is "to me," and the knower sits
-there, not in the subject slot. Nobody acts; a fact is simply in your possession,
+there, not in the subject slot. Nobody acts; a fact is in your possession,
 and *āhe* closes the line.
 
 The same frame carries a language: **मला मराठी येते** — *malā marāṭhī yete* — "I

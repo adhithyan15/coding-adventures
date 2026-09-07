@@ -1,0 +1,572 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 51,
+  "title": "Good, Bad, Clever",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:b2ba5b3e807826fd",
+  "lessons": [
+    {
+      "id": "MR-C51-changla",
+      "sequence": 2020,
+      "title": "चांगला (chāṅglā) — good",
+      "headword": "चांगला",
+      "romanization": "chāṅglā",
+      "gloss": "good — the ordinary word of approval, and the one बरं could never quite be",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b3c690fb85ef553",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "बरं has been in this book since chapter four and it can only say that a STATE is fine — मी बरा आहे. It cannot call a thing good."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sundar khoolī, then name the class सुंदर belongs to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sundar khoolī*, then name the class **सुंदर** belongs to]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चांगला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चांगला — chāṅglā — good."
+            },
+            {
+              "kind": "speech",
+              "text": "चांगला चहा, चांगली खोली, चांगलं घर — chāṅglā chahā, chāṅglī khoolī, chāṅglaṁ ghar."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in -आ, so it agrees, and you already know all three forms without being told them. That is the second time the rule has paid for itself."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep it apart from बरं. बरं answers how are you and closes a turn — fine, all right, okay. चांगला (chāṅglā) is a judgement about a thing: this tea is good, that room is good, he is a good friend. English blurs the two under good and Marathi does not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāṅglā chahā — good tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāṅglā chahā* — good tea]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāṅglī khoolī, chāṅglaṁ ghar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāṅglī khoolī*, *chāṅglaṁ ghar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baraṁ and chāṅglā back to back, and name what each is for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baraṁ* and *chāṅglā* back to back, and name what each is for]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C51-changla-r1",
+              "prompt": "Say 'good tea' and 'a good room', then claim the tea is good.",
+              "assesses": [
+                "MR-LEX-CHANGLA",
+                "MR-GRAMMAR-ADJ-AGREEMENT"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "chāṅglā chahā; chāṅglī khoolī; chahā chāṅglā āhe",
+                "चांगला चहा चांगली खोली चहा चांगला आहे"
+              ],
+              "feedback": {
+                "correct": "An -ā adjective, agreeing twice.",
+                "incorrect": "chahā is masculine, khoolī feminine — the ending follows."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of बरं and चांगला (chāṅglā) judges a THING? (चांगला (chāṅglā).) Which class does चांगला (chāṅglā) belong to? (The agreeing one — it ends in -आ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: चांगला (chāṅglā)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C51-kharaab",
+      "sequence": 2030,
+      "title": "खराब (kharāb) — bad, spoiled",
+      "headword": "खराब",
+      "romanization": "kharāb",
+      "gloss": "bad, spoiled — an Arabic word that reached Marathi through Persian, and a third one that never agrees",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d9a471e59e9a861",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Half a judgement is not a judgement. You can say a thing is good and not that it is not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खराब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खराब — kharāb — bad, spoiled, ruined."
+            },
+            {
+              "kind": "speech",
+              "text": "खराब पाणी — kharāb pāṇī — bad water."
+            },
+            {
+              "kind": "speech",
+              "text": "Its last letter tells you it will not agree, before you ever hear it used: खराब (kharāb) खोली, खराब (kharāb) घर, no ending anywhere. Three adjectives into the class now, and the test has not failed you once."
+            },
+            {
+              "kind": "speech",
+              "text": "This one carries its history on its face. It is the Arabic kharāb, \"ruined, in ruins,\" and it reached Marathi through Persian — the same road that brought मदत and हरकत, both of which this book has already taught. Centuries of Persian administration in the Deccan left several hundred such words in ordinary Marathi."
+            },
+            {
+              "kind": "speech",
+              "text": "The original sense survives in the modern one. खराब (kharāb) is closer to spoiled than to evil: bad water, a bad road, a phone that has stopped working."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharāb pāṇī — bad water",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharāb pāṇī* — bad water]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṇī kharāb āhe, then pāṇī chāṅglaṁ nāhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṇī kharāb āhe*, then *pāṇī chāṅglaṁ nāhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which language it came from, and by which road — Arabic, through Persian",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which language it came from, and by which road — **Arabic, through Persian**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C51-kharaab-r1",
+              "prompt": "Say the water is bad, then that the water is not good.",
+              "assesses": [
+                "MR-LEX-KHARAAB",
+                "MR-LEX-CHANGLA"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "pāṇī kharāb āhe; pāṇī chāṅglaṁ nāhī",
+                "पाणी खराब आहे पाणी चांगलं नाही"
+              ],
+              "feedback": {
+                "correct": "A judgement, and its negation.",
+                "incorrect": "kharāb never changes; chāṅglā agrees with neuter pāṇī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does खराब (kharāb) agree? (No — it does not end in -आ.) Which two taught words came by the same road? (मदत and हरकत.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: खराब (kharāb)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C51-hushaar",
+      "sequence": 2040,
+      "title": "हुशार (hushār) — clever",
+      "headword": "हुशार",
+      "romanization": "hushār",
+      "gloss": "clever, sharp — the first word this book has for what a PERSON is like rather than a thing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41904e3c539e8c29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything you can describe so far is a thing. The A1 speaking paper asks you to describe a person for a minute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हुशार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हुशार — hushār — clever, sharp, quick-witted."
+            },
+            {
+              "kind": "speech",
+              "text": "माझा मित्र हुशार आहे. — mājhā mitra hushār āhe. — my friend is clever."
+            },
+            {
+              "kind": "speech",
+              "text": "Another one that does not agree, and by now you saw that coming from the last letter. This is the fourth adjective and the third invariable one; the class is bigger than the agreeing class, which is worth knowing so the endings stop feeling like the default."
+            },
+            {
+              "kind": "speech",
+              "text": "हुशार (hushār) is the Persian hushyār, \"alert, wide awake,\" built on hush, \"consciousness, wits.\" Marathi kept the alertness inside the cleverness: a हुशार (hushār) person is quick rather than merely learned, and it is what a teacher says about a child who catches on fast."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a compliment you can pay out loud without awkwardness, which is not true of every word in this area, and it is exactly the kind of thing the speaking paper's one-minute description wants."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hushār — clever",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hushār* — clever]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhā mitra hushār āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhā mitra hushār āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say puṇyāhūn and that your clever friend comes from Pune",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *puṇyāhūn* and that your clever friend comes from Pune]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C51-hushaar-r1",
+              "prompt": "Say that your friend is clever and good.",
+              "assesses": [
+                "MR-LEX-HUSHAAR",
+                "MR-LEX-MITRA"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "mājhā mitra hushār āhe; mājhā mitra chāṅglā āhe",
+                "माझा मित्र हुशार आहे माझा मित्र चांगला आहे"
+              ],
+              "feedback": {
+                "correct": "One agrees, one does not, in the same frame.",
+                "incorrect": "hushār never changes; chāṅglā matches masculine mitra."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the Persian hush inside it mean? (Wits, consciousness — so clever is awake.) Does it agree? (No.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: हुशार (hushār)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R51-good-and-bad",
+      "sequence": 2050,
+      "title": "Say what you think of something",
+      "headword": "चांगला · खराब · हुशार",
+      "romanization": "chāṅglā · kharāb · hushār",
+      "gloss": "judge a thing, judge a person, and negate either one",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e5fdc73baffcd50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three more adjectives. Two of them cannot change and one can. Say which is which before you use any of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chahā chāṅglā āhe — and hear the masculine ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chahā chāṅglā āhe* — and hear the masculine ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṇī kharāb āhe — and hear that nothing was added",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṇī kharāb āhe* — and hear that nothing was added]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhā mitra hushār āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhā mitra hushār āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sundar, lahān, kharāb, hushār — the four that never move",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sundar*, *lahān*, *kharāb*, *hushār* — the four that never move]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say udyāpāsūn and promise something from tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *udyāpāsūn* and promise something from tomorrow]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R51-good-and-bad-run",
+              "prompt": "Judge a thing good, judge a thing bad, judge a person clever, then deny one of them.",
+              "assesses": [
+                "MR-LEX-CHANGLA",
+                "MR-LEX-KHARAAB",
+                "MR-LEX-HUSHAAR"
+              ],
+              "responseSeconds": 32,
+              "acceptedResponses": [
+                "chahā chāṅglā āhe; pāṇī kharāb āhe; mājhā mitra hushār āhe; pāṇī chāṅglaṁ nāhī",
+                "चहा चांगला आहे पाणी खराब आहे माझा मित्र हुशार आहे पाणी चांगलं नाही"
+              ],
+              "feedback": {
+                "correct": "Two judgements, a person, and a denial.",
+                "incorrect": "Only chāṅglā takes an ending; negate by ending on nāhī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Of the six adjectives you now own, how many agree? (Two — मोठा and चांगला (chāṅglā).) What do the other four have in common? (None of them ends in -आ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

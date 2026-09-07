@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:a8cbf7dc5624cf09",
+  "lessonIds": [
+    "MR-C50-lahaan",
+    "MR-C50-adj-invariable",
+    "MR-C50-sundar",
+    "MR-R50-small"
+  ],
+  "tex": "marathi/book/chapters/ch50-invariable-adjectives.tex"
+}

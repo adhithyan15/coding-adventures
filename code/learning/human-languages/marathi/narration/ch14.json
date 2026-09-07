@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:be9d78aa065ec6bb",
+  "sourceHash": "fnv1a64:55a03576ca1b9463",
   "lessons": [
     {
       "id": "MR-C07-asne",
@@ -484,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:098d12527c76a6c1",
+      "sourceHash": "fnv1a64:3962fff2881749f7",
       "notice": null,
       "blocks": [
         {
@@ -541,7 +541,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "खाणे (khāṇe) also simply means \"eating\" — the thing, not the act of doing it. Every -णे infinitive works this way; खाणंपिणं (khāṇaṁ-piṇaṁ), \"eating and drinking,\" is how Marathi says food and drink."
+              "text": "खाणे (khāṇe) also means \"eating\" — the thing, not the act of doing it. Every -णे infinitive works this way; खाणंपिणं (khāṇaṁ-piṇaṁ), \"eating and drinking,\" is how Marathi says food and drink."
             },
             {
               "kind": "speech",
@@ -551,20 +551,24 @@
               "kind": "table",
               "headers": [
                 "gender",
-                "\"good\"",
+                "\"my\"",
                 "said"
               ],
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "gender: masculine. \"good\": चांगला. said: chāṅglā.",
-                "gender: feminine. \"good\": चांगली. said: chāṅglī.",
-                "gender: neuter. \"good\": चांगलं. said: chāṅglaṁ."
+                "gender: masculine. \"my\": माझा. said: mājhā.",
+                "gender: feminine. \"my\": माझी. said: mājhī.",
+                "gender: neuter. \"my\": माझं. said: mājhaṁ."
               ]
             },
             {
               "kind": "speech",
-              "text": "So \"eating is good\" is खाणं चांगलं आहे — khāṇaṁ chāṅglaṁ āhe, with the neuter ending twice over and the verb, as always, last."
+              "text": "You met the neuter one five chapters ago in माझं नाव, so this table is a word you already own being shown in its other two shapes rather than a new one."
+            },
+            {
+              "kind": "speech",
+              "text": "So \"eating is fine\" is खाणं बरं आहे — khāṇaṁ baraṁ āhe, with the neuter ending twice over and the verb, as always, last."
             }
           ]
         },
@@ -591,20 +595,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three shapes — \"chāṅglā … chāṅglī … chāṅglaṁ\"",
+              "instruction": "the three shapes — \"mājhā … mājhī … mājhaṁ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three shapes — \"chāṅglā … chāṅglī … chāṅglaṁ\"]"
+              "source": "[YOU SAY: the three shapes — \"mājhā … mājhī … mājhaṁ\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"eating is good\" — \"khāṇaṁ chāṅglaṁ āhe\"",
+              "instruction": "\"eating is fine\" — \"khāṇaṁ baraṁ āhe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"eating is good\" — \"khāṇaṁ chāṅglaṁ āhe\"]"
+              "source": "[YOU SAY: \"eating is fine\" — \"khāṇaṁ baraṁ āhe\"]"
             }
           ]
         },
@@ -781,7 +785,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b1e59f243978983",
+      "sourceHash": "fnv1a64:f377f52a7ff6d00d",
       "notice": null,
       "blocks": [
         {
@@ -842,7 +846,7 @@
             },
             {
               "kind": "speech",
-              "text": "Word by word: \"to me known is.\" Malā is \"to me,\" and the knower sits there, not in the subject slot. Nobody acts; a fact is simply in your possession, and āhe closes the line."
+              "text": "Word by word: \"to me known is.\" Malā is \"to me,\" and the knower sits there, not in the subject slot. Nobody acts; a fact is in your possession, and āhe closes the line."
             },
             {
               "kind": "speech",

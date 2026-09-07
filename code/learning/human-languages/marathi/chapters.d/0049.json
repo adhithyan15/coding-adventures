@@ -1,0 +1,20 @@
+{
+  "chapter": 49,
+  "title": "Big, and How an Adjective Agrees",
+  "label": "ch:mr-the-adjective",
+  "canDo": "I can call a thing big in all three genders, and I can say where a Marathi adjective stands both when it labels a noun and when it is the claim of the sentence.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-R49-big",
+    "kind": "production",
+    "summary": "Complete MR-R49-big and describe a thing three ways -- label a big room, claim that your house is big, and say that you have a big house -- with one adjective doing all three.",
+    "assesses": [
+      "MR-LEX-MOTHA",
+      "MR-GRAMMAR-ADJ-AGREEMENT",
+      "MR-GRAMMAR-ADJ-PRENOMINAL"
+    ],
+    "note": "SPINE-DESCRIBE-QUALITIES is an A1 core node this track had never realized: forty-eight chapters could name a house and say nothing about what it was like."
+  }
+}

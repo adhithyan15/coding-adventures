@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-065-THE-ADJECTIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can call a thing big in all three genders, and say where a Marathi adjective stands both as a label on a noun and as the claim of a sentence.",
+  "prerequisites": [
+    "MR-EXT-064-TOWARD-AND-HAVE"
+  ],
+  "lessons": [
+    "MR-C49-motha",
+    "MR-C49-adj-agreement",
+    "MR-C49-adj-prenominal",
+    "MR-R49-big"
+  ]
+}

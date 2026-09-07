@@ -1,0 +1,23 @@
+{
+  "chapter": 52,
+  "title": "Easy, Hard, Tall",
+  "label": "ch:mr-easy-hard-tall",
+  "canDo": "I can say a thing is easy or difficult and a person is tall, and I can sort every adjective I own into the two classes by looking at its last letter.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-R52-easy-hard-tall",
+    "kind": "production",
+    "summary": "Complete MR-R52-easy-hard-tall and describe a person in three sentences -- tall, clever, a good friend -- which is the shape the A1 speaking paper's one-minute description asks for.",
+    "assesses": [
+      "MR-LEX-SOPA",
+      "MR-LEX-KATHIN",
+      "MR-LEX-UNCH",
+      "MR-GRAMMAR-ADJ-AGREEMENT",
+      "MR-GRAMMAR-ADJ-PRENOMINAL",
+      "MR-GRAMMAR-ADJ-INVARIABLE"
+    ],
+    "note": "The payoff is a described PERSON, not a described thing: uMch against moTHaa is the distinction English blurs and the speaking paper needs."
+  }
+}

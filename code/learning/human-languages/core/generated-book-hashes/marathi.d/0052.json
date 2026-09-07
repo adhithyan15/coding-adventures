@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:7f342ab5e3d24bba",
+  "lessonIds": [
+    "MR-C52-sopa",
+    "MR-C52-kathin",
+    "MR-C52-unch",
+    "MR-R52-easy-hard-tall"
+  ],
+  "tex": "marathi/book/chapters/ch52-easy-hard-tall.tex"
+}

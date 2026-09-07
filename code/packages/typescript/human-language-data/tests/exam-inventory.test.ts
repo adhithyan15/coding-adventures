@@ -1068,6 +1068,14 @@ describe("the committed Marathi A1 inventory", () => {
     // stale note was corrected. Work therefore leaves the empty-category list
     // -- on a note fix, not on a lesson, which is worth saying plainly.
     //
+    // 142 -> 151, which is exactly half. The adjective tranche (chapters
+    // 49-52) closes SPINE-DESCRIBE-QUALITIES, an A1 CORE node this track had
+    // never realized: forty-eight chapters could name a house, put a room in
+    // it and say who it belonged to, and could not say one thing about what
+    // it was like. Twelve items, nine points. The adjective went 2/7 to 5/7,
+    // Evaluative notions 4/8 to 7/8, "The person: the body" to 3/3 and "The
+    // person: character" off the empty-category list.
+    //
     // 133 -> 142: the accompaniment tranche (chapters 45-48). Eleven items --
     // three "with" endings that English collapses into one, the pronoun's own
     // oblique, two ablatives and their question word, the animate object
@@ -1089,8 +1097,8 @@ describe("the committed Marathi A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(142);
-    expect(coverage.unmapped).toBe(159);
+    expect(coverage.covered).toBe(151);
+    expect(coverage.unmapped).toBe(150);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1101,7 +1109,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 142/301 points covered (47%)",
+      "marathi A1 (partial inventory): 151/301 points covered (50%)",
     );
   }, 60_000);
 });

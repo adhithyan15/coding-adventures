@@ -1,0 +1,20 @@
+{
+  "chapter": 51,
+  "title": "Good, Bad, Clever",
+  "label": "ch:mr-good-and-bad",
+  "canDo": "I can judge a thing good or bad, call a person clever, and deny any of those judgements.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-R51-good-and-bad",
+    "kind": "production",
+    "summary": "Complete MR-R51-good-and-bad and make three judgements plus a denial -- the tea is good, the water is bad, my friend is clever, the water is not good.",
+    "assesses": [
+      "MR-LEX-CHANGLA",
+      "MR-LEX-KHARAAB",
+      "MR-LEX-HUSHAAR"
+    ],
+    "note": "baraM has been in the book since chapter 4 and can only say a STATE is fine; chaanglaa is the first word that judges a thing."
+  }
+}

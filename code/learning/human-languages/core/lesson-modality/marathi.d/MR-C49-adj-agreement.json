@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C49-adj-agreement",
+    "language": "marathi",
+    "chapter": 49,
+    "sequence": 1950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa1ef97ec66ff124"
+  },
+  "findings": []
+}

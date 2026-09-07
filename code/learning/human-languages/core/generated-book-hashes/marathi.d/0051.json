@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:3a61802b3293e030",
+  "lessonIds": [
+    "MR-C51-changla",
+    "MR-C51-kharaab",
+    "MR-C51-hushaar",
+    "MR-R51-good-and-bad"
+  ],
+  "tex": "marathi/book/chapters/ch51-good-and-bad.tex"
+}

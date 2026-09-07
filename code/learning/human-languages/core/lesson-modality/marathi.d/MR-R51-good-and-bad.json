@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R51-good-and-bad",
+    "language": "marathi",
+    "chapter": 51,
+    "sequence": 2050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e5fdc73baffcd50"
+  },
+  "findings": []
+}

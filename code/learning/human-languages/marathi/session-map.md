@@ -449,10 +449,46 @@ landed in chapter 44 as descriptions, with the gap named on the page. **-कड�
 closes it in chapter 48. Deferring the payoff by four chapters is what makes the
 second half feel like an answer rather than a list.
 
+## Chapters 49–52 — the adjective
+
+| Session | Lesson | Job |
+|---|---|---|
+| 274 | C49-motha | **मोठा** — the first adjective taught on purpose |
+| 275 | C49-adj-agreement | **मोठा · मोठी · मोठं** — three endings, named at last |
+| 276 | C49-adj-prenominal | in front to label, before **आहे** to claim |
+| 277 | R49-big | one adjective, three genders, two positions |
+| 278 | C50-lahaan | **लहान** — small, young, and it never moves |
+| 279 | C50-adj-invariable | the class that never agrees, and how to spot it |
+| 280 | C50-sundar | **सुंदर** — predicted before it was met |
+| 281 | R50-small | the last letter decides |
+| 282 | C51-changla | **चांगला** — the first word that judges a THING |
+| 283 | C51-kharaab | **खराब** — Arabic, by the Persian road |
+| 284 | C51-hushaar | **हुशार** — the first word for a PERSON |
+| 285 | R51-good-and-bad | judge, judge, judge, deny |
+| 286 | C52-sopa | **सोपा** — and *marāṭhī sopī āhe* |
+| 287 | C52-kathin | **कठीण** — a pair whose halves behave differently |
+| 288 | C52-unch | **उंच** — the word *big* was blurring |
+| 289 | R52-easy-hard-tall | describe a person for a minute |
+
+The method here is a CONTRAST held open across four chapters. Marathi's
+adjectives fall into two classes and only one of them agrees; six of the eight
+taught here do not. So the invariable class is introduced in the chapter
+immediately after the agreeing one, and every lesson from **सुंदर** onwards
+states which class its word belongs to before using it. A learner who meets only
+**मोठा** produces *लहानी खोली* by analogy, and no Marathi speaker has ever heard
+that form.
+
+The tranche also paid an old debt it exposed. `MR-C07-khane` had demonstrated
+three-gender agreement since chapter 14 on **चांगला** — a word the reader would
+not meet for another 180 lessons — and teaching **चांगला** turned that into a
+measurable forward reference. The table now runs on **माझा / माझी / माझं**,
+which the reader has owned since chapter 9.
+
 ## Next
 
-The next Marathi tranche should teach the **reph** and the **rakaar** — two
-script lessons that close `MR-A1-OR-21` and, with them, **पर्यंत** and
-`MR-A1-P-05`, the last open point in the postposition column. The rakaar has
-been shown in **मित्र** since chapter 18 and never named, so one of the two is
-already earning its keep before it is taught.
+Degree and quantity — **खूप**, **जरा**, **थोडा**, **पुरेसा**, **बराच** — and the
+exclamative **किती!**. Six inventory points sit behind roughly six words, and
+they are worth taking now precisely because the adjectives they modify have just
+arrived: `MR-A1-AP-01` and `MR-A1-ADJ-06` were both blocked behind
+`SPINE-DESCRIBE-QUALITIES` and are not any more. After that, the **reph** and
+the **rakaar** (`MR-A1-OR-21`), which also unlock **पर्यंत** and `MR-A1-P-05`.

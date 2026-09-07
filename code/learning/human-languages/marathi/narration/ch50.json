@@ -1,0 +1,560 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 50,
+  "title": "Small, and the Words That Never Change",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:b856f98b04778ec2",
+  "lessons": [
+    {
+      "id": "MR-C50-lahaan",
+      "sequence": 1980,
+      "title": "लहान (lahān) — small",
+      "headword": "लहान",
+      "romanization": "lahān",
+      "gloss": "small — the opposite of मोठा, and an adjective that refuses to agree with anything",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ed36d80f9d3a1bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last chapter gave you मोठा and the two rules it obeys. This word is its opposite and it breaks one of them."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say moṭhaṁ ghar, then mājhaṁ ghar moṭhaṁ āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *moṭhaṁ ghar*, then *mājhaṁ ghar moṭhaṁ āhe*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लहान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लहान — lahān — small, little; young."
+            },
+            {
+              "kind": "speech",
+              "text": "लहान घर, लहान खोली, लहान मित्र — lahān ghar, lahān khoolī, lahān mitra."
+            },
+            {
+              "kind": "speech",
+              "text": "Three genders, one form. लहान (lahān) does not end in -आ, so it has nothing to change, and it stays exactly as it is in front of any noun at all. Compare it with मोठा, which moved three ways one lesson ago, and the contrast tells you which kind of adjective you are holding."
+            },
+            {
+              "kind": "speech",
+              "text": "It also does the work English splits between small and young: लहान (lahān) भाऊ is a younger brother, not a short one. Marathi treats age and size as the same scale for people."
+            },
+            {
+              "kind": "speech",
+              "text": "Its history is a good one. Sanskrit लघु (laghu) meant \"light, slight, small\" — the same ancient word as Latin levis and English light. The Marathi form wore लघु down to लहान (lahān) over two thousand years, and the meaning barely moved."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lahān ghar, lahān khoolī, lahān mitra — nothing moved",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lahān ghar*, *lahān khoolī*, *lahān mitra* — nothing moved]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭhaṁ ghar, moṭhī khoolī — and hear that something did",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭhaṁ ghar*, *moṭhī khoolī* — and hear that something did]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say म्हणणे and report that your room is small",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **म्हणणे** and report that your room is small]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C50-lahaan-r1",
+              "prompt": "Put lahān on all three genders, then moṭhā on all three, and name the difference.",
+              "assesses": [
+                "MR-LEX-LAHAAN",
+                "MR-LEX-MOTHA"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "lahān ghar / khoolī / mitra; moṭhaṁ ghar, moṭhī khoolī, moṭhā mitra",
+                "लहान घर लहान खोली लहान मित्र मोठं घर मोठी खोली मोठा मित्र"
+              ],
+              "feedback": {
+                "correct": "One never moves; the other moves three ways.",
+                "incorrect": "lahān has no -ā to change."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many forms does लहान (lahān) have? (One.) What does लहान (lahān) भाऊ mean? (A younger brother.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: लहान (lahān)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C50-adj-invariable",
+      "sequence": 1990,
+      "title": "The adjectives that never change",
+      "headword": "लहान · लहान · लहान",
+      "romanization": "lahān · lahān · lahān",
+      "gloss": "the adjectives that never agree — the class a learner who has met only मोठा will over-apply endings to",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa505a845ef612f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two adjectives, two behaviours. That is not an accident about those two words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: only the -आ adjectives agree",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Marathi's adjectives fall into two classes, and you can tell which class a word is in by looking at its last letter."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective ending in -आ agrees: मोठा, मोठी, मोठं. An adjective ending in anything else does not agree at all, in any gender, ever: लहान (lahān) is लहान (lahān) in front of every noun in the language."
+            },
+            {
+              "kind": "speech",
+              "text": "That second class is large, and most of it is words Marathi borrowed — from Sanskrit, from Persian, from Arabic. A borrowed word arrived without a Marathi ending to change, and it never grew one."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the mistake to watch for in yourself. Having met मोठा first, the temptation is to say लहानी खोली by analogy. It is wrong, and it is wrong in a way a listener notices immediately, because no Marathi speaker has ever heard that form. Check the last letter before you reach for an ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lahān khoolī — and add nothing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lahān khoolī* — and add nothing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭhī khoolī — and hear where the ending was earned",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭhī khoolī* — and hear where the ending was earned]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say शिकणे and that you are learning with a friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **शिकणे** and that you are learning with a friend]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C50-adj-invariable-r1",
+              "prompt": "Say 'a small room' and then say what you must NOT say.",
+              "assesses": [
+                "MR-GRAMMAR-ADJ-INVARIABLE",
+                "MR-LEX-LAHAAN"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "lahān khoolī — never lahānī khoolī",
+                "लहान खोली"
+              ],
+              "feedback": {
+                "correct": "No -ā, no ending.",
+                "incorrect": "lahān does not end in -ā, so nothing is added."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What tells you whether an adjective will agree? (Its last letter — only -आ agrees.) Where do most of the non-agreeing ones come from? (Other languages — Sanskrit, Persian, Arabic.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C50-sundar",
+      "sequence": 2000,
+      "title": "सुंदर (sundar) — beautiful",
+      "headword": "सुंदर",
+      "romanization": "sundar",
+      "gloss": "beautiful — a Sanskrit word Marathi took whole, endings and all, which is why it has none",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6c590fb555ede62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have one word that never agrees. Here is a second, and knowing the class means you already know how it behaves before you meet it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुंदर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुंदर — sundar — beautiful, lovely."
+            },
+            {
+              "kind": "speech",
+              "text": "सुंदर घर, सुंदर खोली — sundar ghar, sundar khoolī — a beautiful house, a beautiful room."
+            },
+            {
+              "kind": "speech",
+              "text": "No ending, in either gender, because सुंदर (sundar) does not end in -आ. You could predict that from the last letter one lesson before meeting the word, which is the whole return on having a class rather than a list."
+            },
+            {
+              "kind": "speech",
+              "text": "The word came into Marathi from Sanskrit सुन्दर (sundara) unchanged, and that is exactly why it does not bend: it arrived already finished. Sanskrit built it from सु- (su-), \"good, well\" — the same prefix behind सुद्धा — so beautiful is, underneath, well-made."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a wide word in use. Marathi says सुंदर (sundar) of a person, a room, a song and a day, where English would reach for beautiful, lovely, nice and fine in turn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sundar khoolī, sundar ghar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sundar khoolī*, *sundar ghar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhyākaḍe sundar ghar āhe — I have a beautiful house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhyākaḍe sundar ghar āhe* — I have a beautiful house]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say मिळणे and how it puts you in the dative",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **मिळणे** and how it puts you in the dative]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C50-sundar-r1",
+              "prompt": "Say 'a beautiful room' and 'a small beautiful house'.",
+              "assesses": [
+                "MR-LEX-SUNDAR",
+                "MR-GRAMMAR-ADJ-INVARIABLE"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "sundar khoolī; lahān sundar ghar",
+                "सुंदर खोली लहान सुंदर घर"
+              ],
+              "feedback": {
+                "correct": "Neither of them moved.",
+                "incorrect": "Both are invariable: no ending in any gender."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does सुंदर (sundar) not agree? (It does not end in -आ; it arrived from Sanskrit already finished.) What does the सु- in it mean? (Good, well — as in सुद्धा.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: सुंदर (sundar)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R50-small",
+      "sequence": 2010,
+      "title": "The last letter decides",
+      "headword": "मोठा · लहान · सुंदर",
+      "romanization": "moṭhā · lahān · sundar",
+      "gloss": "three adjectives, two classes, and one test that tells them apart",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bef4d5019fd1316",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three adjectives are now yours. Sort them into two classes before you say anything with them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭhī khoolī, lahān khoolī, sundar khoolī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭhī khoolī*, *lahān khoolī*, *sundar khoolī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three moved, and why — मोठा, because it ends in -आ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three moved, and why — ***मोठा***, because it ends in **-आ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhyākaḍe lahān sundar ghar āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhyākaḍe lahān sundar ghar āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mitrāśī and tell your friend the room is beautiful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mitrāśī* and tell your friend the room is beautiful]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R50-small-run",
+              "prompt": "Put all three adjectives on khoolī, and say which one changed.",
+              "assesses": [
+                "MR-GRAMMAR-ADJ-INVARIABLE",
+                "MR-LEX-MOTHA",
+                "MR-LEX-LAHAAN",
+                "MR-LEX-SUNDAR"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "moṭhī khoolī; lahān khoolī; sundar khoolī — only moṭhā changed",
+                "मोठी खोली लहान खोली सुंदर खोली"
+              ],
+              "feedback": {
+                "correct": "One agrees, two do not.",
+                "incorrect": "Only the -ā adjective takes an ending."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the one test that sorts every Marathi adjective into its class? (Does it end in -आ?) Where do all three of them stand? (Before the noun.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
