@@ -1,0 +1,21 @@
+{
+  "chapter": 56,
+  "title": "Ten, Eleven, Twelve, and the au Sign",
+  "label": "ch:mr-ten-to-twelve",
+  "canDo": "I can count to twelve, hear the worn-down ten at the end of the teens, and write the au vowel sign.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "MR-R56-ten-to-twelve",
+    "kind": "production",
+    "summary": "Complete MR-R56-ten-to-twelve and count to twelve, then name the worn-down dahaa hiding at the end of akraa and baaraa.",
+    "assesses": [
+      "MR-LEX-DAHA",
+      "MR-LEX-AKRA",
+      "MR-LEX-BARA",
+      "MR-SCRIPT-AU-MATRA-01"
+    ],
+    "note": "The au vowel sign is here rather than with its ai partner because chapter 57's chaudaa cannot be written without it and nothing else in the book needs ai yet."
+  }
+}

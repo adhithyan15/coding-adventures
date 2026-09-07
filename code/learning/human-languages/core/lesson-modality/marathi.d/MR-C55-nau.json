@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C55-nau",
+    "language": "marathi",
+    "chapter": 55,
+    "sequence": 2230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69a0bd5af06f8fc1"
+  },
+  "findings": []
+}

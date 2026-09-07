@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:235c8e2d6260720e",
+  "lessonIds": [
+    "MR-C56-daha",
+    "MR-C56-akra",
+    "MR-C56-bara",
+    "MR-W56-au-matra",
+    "MR-R56-ten-to-twelve"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "marathi/narration/ch56.txt",
+  "json": "marathi/narration/ch56.json",
+  "textHash": "fnv1a64:9a129ae9f609af40",
+  "jsonHash": "fnv1a64:a436b6cd2dd3bc79",
+  "findings": []
+}

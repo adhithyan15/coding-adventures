@@ -1,0 +1,17 @@
+{
+  "id": "MR-EXT-071-SIX-TO-NINE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can count from six to nine.",
+  "prerequisites": [
+    "MR-EXT-070-AMOUNTS"
+  ],
+  "lessons": [
+    "MR-C55-saha",
+    "MR-C55-saat",
+    "MR-C55-aath",
+    "MR-C55-nau",
+    "MR-R55-six-to-nine"
+  ]
+}

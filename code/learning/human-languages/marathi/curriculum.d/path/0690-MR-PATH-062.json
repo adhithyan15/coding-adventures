@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-062",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "MR-W59-ai-matra",
+    "MR-C59-paise",
+    "MR-C59-rupaya",
+    "MR-R59-what-it-costs"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-075-WHAT-IT-COSTS"
+  ],
+  "after": []
+}

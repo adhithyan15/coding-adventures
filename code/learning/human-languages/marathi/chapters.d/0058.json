@@ -1,0 +1,21 @@
+{
+  "chapter": 58,
+  "title": "Seventeen to Twenty",
+  "label": "ch:mr-seventeen-to-twenty",
+  "canDo": "I can count to twenty, and I can build nineteen the way Marathi does -- one less than twenty rather than nine and ten.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "MR-R58-seventeen-to-twenty",
+    "kind": "production",
+    "summary": "Complete MR-R58-seventeen-to-twenty and count one to twenty, then take ekoNiis apart into ek plus uun plus viis.",
+    "assesses": [
+      "MR-LEX-SATRA",
+      "MR-LEX-ATHRA",
+      "MR-LEX-EKONIS",
+      "MR-LEX-VIS"
+    ],
+    "note": "ekoNiis counts DOWN from twenty, which is a different idea from every number before it and the one that buys every other nineteen in the language."
+  }
+}

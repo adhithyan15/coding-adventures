@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:ea265a45fe8e4d88",
+  "lessonIds": [
+    "MR-C57-tera",
+    "MR-C57-chauda",
+    "MR-C57-pandhra",
+    "MR-C57-sola",
+    "MR-R57-thirteen-to-sixteen"
+  ],
+  "tex": "marathi/book/chapters/ch57-thirteen-to-sixteen.tex"
+}

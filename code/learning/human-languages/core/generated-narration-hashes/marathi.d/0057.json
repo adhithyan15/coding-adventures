@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:a308462df33e106f",
+  "lessonIds": [
+    "MR-C57-tera",
+    "MR-C57-chauda",
+    "MR-C57-pandhra",
+    "MR-C57-sola",
+    "MR-R57-thirteen-to-sixteen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch57.txt",
+  "json": "marathi/narration/ch57.json",
+  "textHash": "fnv1a64:98c6b83b4cbbd974",
+  "jsonHash": "fnv1a64:a6765fc843d4c376",
+  "findings": []
+}

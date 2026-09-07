@@ -509,10 +509,63 @@ modifies an adjective and never changes; **थोडा** measures a noun and ag
 English calls both *a little*, so chapter 54 names the difference on its first
 page rather than leaving a learner to find it.
 
+## Chapters 55–59 — the numbers, six to twenty
+
+| Session | Lesson | Job |
+|---|---|---|
+| 299 | C55-saha | **सहा** — the first number past five since chapter 13 |
+| 300 | C55-saat | **सात** — Sanskrit *sapta* with the p worn away |
+| 301 | C55-aath | **आठ** — where a Sanskrit cluster became one retroflex |
+| 302 | C55-nau | **नऊ** — the same word as *new*, then and now |
+| 303 | R55-six-to-nine | count to nine |
+| 304 | C56-daha | **दहा** — the ten every teen is built out of |
+| 305 | C56-akra | **अकरा** — *one-ten*, with both halves still audible |
+| 306 | C56-bara | **बारा** — the same construction, second time |
+| 307 | W56-au-matra | **ौ** — taught here because चौदा needs it next chapter |
+| 308 | R56-ten-to-twelve | the worn-down **दश** at the end of the teens |
+| 309 | C57-tera | **तेरा** — three-ten |
+| 310 | C57-chauda | **चौदा** — the word the **ौ** was for |
+| 311 | C57-pandhra | **पंधरा** — with **पाच** squeezed into its front |
+| 312 | C57-sola | **सोळा** — six-ten, on Marathi's own **ळ** |
+| 313 | R57-thirteen-to-sixteen | take each teen apart |
+| 314 | C58-satra | **सतरा** — seven-ten |
+| 315 | C58-athra | **अठरा** — eight-ten, the last of the **-रा** family |
+| 316 | C58-vis | **वीस** — the round number, taught before nineteen |
+| 317 | C58-ekonis | **एकोणीस** — **एक** + **ऊन** + **वीस**, counted backwards |
+| 318 | R58-seventeen-to-twenty | one to twenty, without stopping |
+| 319 | W59-ai-matra | **ै** — one lesson before the word that spends it |
+| 320 | C59-paise | **पैसे** — money, and plural only |
+| 321 | C59-rupaya | **रुपया** — Sanskrit *rūpya*, wrought silver |
+| 322 | R59-what-it-costs | ask a price and answer it |
+
+**One numeral per lesson** looks extravagant until you see why it is
+affordable. Marathi's numbers are the Sanskrit ones worn down, and every one
+still shows the wear: **अकरा** is *one-ten*, **पंधरा** has **पाच** inside it,
+**सोळा** has **सहा**. By the third teen the reader is learning one construction
+rather than fifteen words, which is why the etymology is load-bearing here and
+not decoration.
+
+**Twenty comes before nineteen.** **एकोणीस** counts DOWN from **वीस**, so the
+round number has to exist first. Teaching them in numerical order would also
+have put **वीस** in bold one lesson before it was taught — a forward reference
+the order change removes for free.
+
+**The two vowel signs are not taught together.** **ौ** sits in chapter 56
+because **चौदा** needs it in chapter 57; **ै** sits in chapter 59 one lesson
+before **पैसे**. Pairing them would have left one idle for fifteen lessons,
+which is exactly what the letter ledger's unspent-window check is for.
+
+**The retrieval bullets in a numeral lesson look unrelated to numbers, and
+that is the design.** Twenty-four added lessons opened 37 reinforcement windows
+that did not previously fit; each was assigned to the earliest lesson inside its
+own window, computed from the arithmetic rather than guessed. Total misses did
+not move: 342 before, 342 after.
+
 ## Next
 
-**The numbers.** `MR-A1-QU-03` — cardinals to a hundred — is now the single most
-blocking gap in the inventory: age, value and price, personal data on a form,
-and the A1 interview's opening question all wait on a number above five. The
-Devanagari digits of `MR-A1-OR-24` sit behind the same tranche and unlock the
-writing paper's practical form.
+**The tens.** *तीस, चाळीस, पन्नास, साठ, सत्तर, ऐंशी, नव्वद* and *शंभर*, plus the
+rule that a unit fuses onto the front of a ten, close `MR-A1-QU-03` and with it
+age, the interview's opening question and half of price. *ऐंशी* needs the
+INDEPENDENT **ऐ** of `MR-A1-OR-12`, so that script debt rides along with it.
+After that, the **Devanagari digits** (`MR-A1-OR-24`), which unlock the writing
+paper's practical form, and the ordinals.

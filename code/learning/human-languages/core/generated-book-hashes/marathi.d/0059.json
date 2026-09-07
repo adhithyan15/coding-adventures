@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:8dcac2ce7cbd8196",
+  "lessonIds": [
+    "MR-W59-ai-matra",
+    "MR-C59-paise",
+    "MR-C59-rupaya",
+    "MR-R59-what-it-costs"
+  ],
+  "tex": "marathi/book/chapters/ch59-what-it-costs.tex"
+}

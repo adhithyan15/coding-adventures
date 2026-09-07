@@ -79,7 +79,13 @@ it("pins Marathi lesson-content budgets", () =>
     // 289 -> 298: the degree-and-amount tranche (chapters 53-54) adds nine
     // lessons -- seven items and two reviews. RE-MEASURED. Idioms, senses and
     // culture claims stay at 5 / 4 / 7 for the fifth tranche running.
-    lessons: 298,
+    //
+    // 298 -> 322: the numbers tranche (chapters 55-59) adds twenty-four
+    // lessons -- nineteen items and five reviews. RE-MEASURED. Idioms, senses
+    // and culture claims stay at 5 / 4 / 7 for the sixth tranche running: a
+    // numeral is none of the three, and the rupee's Sanskrit history is
+    // etymology, which has its own strand.
+    lessons: 322,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -294,6 +300,17 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // the book has had since chapter 37.
     ["53", 4],
     ["54", 5],
+    // Chapters 55-59 are the numbers. Fifteen numerals at one per lesson,
+    // because Marathi's are the Sanskrit ones worn down and each has to be
+    // learned rather than derived -- and two vowel SIGNS, placed where the
+    // words that need them are: au in 56 for chaudaa, ai in 59 for paise.
+    // Twenty comes before nineteen on purpose: ekoNiis is built as one LESS
+    // than twenty, so the round number has to exist first.
+    ["55", 5],
+    ["56", 5],
+    ["57", 5],
+    ["58", 5],
+    ["59", 4],
   ]);
 });
 
