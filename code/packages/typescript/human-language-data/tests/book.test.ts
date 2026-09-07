@@ -257,6 +257,23 @@ A [repository note](../data/script.json) and an [external source](https://exampl
     expect(generated).toContain("\\markboth{Test script}{Test script}");
   });
 
+  it("rejects a declared-but-blank contents line or running head", () => {
+    for (const field of ["shortTitle", "runningHead"] as const) {
+      expect(() =>
+        renderReferenceAppendix(
+          {
+            language: "test",
+            title: "Reference",
+            [field]: "   ",
+            source: "test/pronunciation-reference.md",
+            output: "test/book/chapters/appendix-pronunciation.tex",
+          },
+          "# Test\n\nBody.\n",
+        ),
+      ).toThrow(new RegExp(`${field} must not be blank`));
+    }
+  });
+
   it("renders a deduplicated, romanization-sorted glossary from content lessons", () => {
     const devanagari = (id: string, sequence: number, headword: string, romanization: string, gloss: string) =>
       parseLesson(

@@ -1416,13 +1416,29 @@ export function renderReferenceAppendix(
   // writing system. Both overrides are optional and both default to the shape
   // the first six generated references already emit, so those files are
   // unchanged byte for byte.
-  const runningHead = renderInlineMarkdown(target.runningHead ?? "Pronunciation", renderOptions);
+  //
+  // A declared-but-blank override is rejected rather than defaulted. `?? ` reads
+  // `""` as a deliberate value, which would blank every running head in the
+  // appendix or empty its contents line, and a reference whose contents entry is
+  // an empty dotted rule is not a failure anyone would go looking for.
+  const override = (value: string | undefined, field: string): string | undefined => {
+    if (value === undefined) return undefined;
+    if (value.trim() === "") {
+      throw new Error(`${target.language} reference appendix: ${field} must not be blank`);
+    }
+    return value;
+  };
+  const runningHead = renderInlineMarkdown(
+    override(target.runningHead, "runningHead") ?? "Pronunciation",
+    renderOptions,
+  );
+  const shortTitle = override(target.shortTitle, "shortTitle") ?? target.title;
 
   const output = [
     `% GENERATED FILE. Edit ${target.source}, then run npm run generate:books.`,
     "",
     `\\chapter*{${renderInlineMarkdown(target.title, renderOptions)}}`,
-    `\\addcontentsline{toc}{chapter}{${renderInlineMarkdown(target.shortTitle ?? target.title, renderOptions)}}`,
+    `\\addcontentsline{toc}{chapter}{${renderInlineMarkdown(shortTitle, renderOptions)}}`,
     `\\markboth{${runningHead}}{${runningHead}}`,
     "",
   ];
