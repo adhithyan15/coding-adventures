@@ -7,14 +7,15 @@ vowels** and soft consonants surprise English speakers.
 ## The traps for an English speaker
 
 - **Nasal vowels.** A vowel before *m/n* (or under a tilde ~) goes through the
-  nose: *bom* = *bõ*, *sim* ("yes") = *sĩ*, *pão* ("bread") = *pãw*.
+  nose: *bom* = *bõ*, *sim* ("yes") = *sĩ*, *pão* ("bread") = *pãw*. English
+  has no exact match — hum the vowel.
 - **Vowels reduce.** Unstressed *e* often fades to a whisper or *i*; final *o*
   sounds like *u* (*obrigado* ≈ "oh-bree-GAH-doo").
 - **s** between vowels = *z*; at a syllable's end, often *sh* (European
   Portuguese) or *s* (most of Brazil).
 - **lh** = the *lli* of *million*; **nh** = the *ny* of *canyon*; **ç** = *s*.
-- **r/rr** at word-start or doubled is a strong guttural (like a French *r* or
-  even *h*); a single *r* between vowels is a light tap.
+- **r/rr** at word-start or doubled is a strong guttural (like a Scottish/French
+  *r* or even an *h*); a single *r* between vowels is a light tap.
 
 ## Stress
 
