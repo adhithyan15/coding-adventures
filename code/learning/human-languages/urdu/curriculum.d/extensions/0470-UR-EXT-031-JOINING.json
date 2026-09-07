@@ -1,0 +1,17 @@
+{
+  "id": "UR-EXT-031-JOINING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can add two things, offer a choice between them, turn a clause against the one before it, and agree.",
+  "prerequisites": [
+    "UR-EXT-030-THREE-REFUSALS"
+  ],
+  "lessons": [
+    "UR-C20-aur",
+    "UR-C20-ya",
+    "UR-C20-lekin",
+    "UR-C20-thik-hai",
+    "UR-R20-joined-and-turned"
+  ]
+}

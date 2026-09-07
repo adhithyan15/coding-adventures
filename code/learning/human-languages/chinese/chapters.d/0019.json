@@ -1,0 +1,26 @@
+{
+  "chapter": 19,
+  "title": "Asking",
+  "label": "ch:zh-asking",
+  "canDo": "I can understand, say, read and write 吗, 你好吗, 是吗 and 好不好, turn any statement I already own into a yes-or-no question by either of Mandarin's two patterns, and score listening, speaking, reading and writing separately.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C19-practice",
+    "kind": "task",
+    "summary": "Before this chapter the track could greet, name, count to five and say what it read, and could not ask a yes-or-no question about any of it. One character closes that and does more than its own weight: 吗 goes on the end of a finished sentence and changes nothing else, so every statement already taught becomes a question. The second pattern costs no character at all -- it is 不, held since the negation lesson, placed between two copies of a word.",
+    "assesses": [
+      "ZH-PERFORMANCE-ASKING-FOUR-FOUR-SKILL-01",
+      "ZH-LEX-MA-01",
+      "ZH-SCRIPT-MA-01",
+      "ZH-GRAMMAR-MA-QUESTION-01",
+      "ZH-LEX-NIHAOMA-01",
+      "ZH-ORTHO-NIHAOMA-01",
+      "ZH-LEX-SHIMA-01",
+      "ZH-ORTHO-SHIMA-01",
+      "ZH-LEX-HAOBUHAO-01",
+      "ZH-GRAMMAR-V-NOT-V-01"
+    ]
+  }
+}

@@ -82,7 +82,7 @@ by three.
 [PAUSE 3s] What does **سفید** mean? (**White**.) Name its two settled
 cousins in other languages. (**Sanskrit śvetá; English white.**) Recall
 *ṭhīk* and how a short Urdu word once bridged to a Hindi cognate — how is
-that bridge different from what **سفید** just did? (*ṭhīk*'s bridge
+that bridge different from what **سفید** did? (*ṭhīk*'s bridge
 was Urdu-to-Hindi, the same modern language pair; **سفید**'s is a PIE root
 three languages deep.) How did the earlier take-leave dialogue end?
 (**With khudā hāfiz, spoken by both voices.**)

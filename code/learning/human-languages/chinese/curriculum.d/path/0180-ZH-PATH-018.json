@@ -1,0 +1,29 @@
+{
+  "id": "ZH-PATH-018",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ZH-C19-hear-ma",
+    "ZH-W19-ma-observe",
+    "ZH-W19-ma-guided",
+    "ZH-W19-ma-delayed",
+    "ZH-C19-ma",
+    "ZH-C19-hear-nihaoma",
+    "ZH-C19-nihaoma",
+    "ZH-R19-ma-two-r1",
+    "ZH-C19-hear-shima",
+    "ZH-C19-shima",
+    "ZH-C19-hear-haobuhao",
+    "ZH-C19-haobuhao",
+    "ZH-R19-ma-three-r2",
+    "ZH-R19-listening-three",
+    "ZH-R19-reading-three",
+    "ZH-C19-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-051-ASKING-MEANING-FIRST",
+    "ZH-EXT-052-ASKING-SCRIPT",
+    "ZH-EXT-053-ASKING-FOUR-SKILL"
+  ],
+  "after": []
+}

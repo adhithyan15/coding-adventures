@@ -41,7 +41,7 @@ reviews_of: [RU-C17-odin, RU-C16-ni-ni, RU-C07-brat, RU-C07-sestra]
 
 - [YOU RECALL: *брат*, one of the most secure cognate sets in the whole family —
   *brother*, *frater*, *bhrātar*]
-- [YOU RECALL: *сестра*, which completes the pair just as securely]
+- [YOU RECALL: *сестра*, which completes the pair as securely as *брат* did]
 - [YOU RECALL: *один*, and *ни … ни …* standing in front of both halves]
 
 ## You'll want to know first — другой

@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "The Verb That Takes Another Verb",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ab70e48e709002cf",
+  "sourceHash": "fnv1a64:d6e71ea5670ea447",
   "lessons": [
     {
       "id": "RU-C20-khotet",
@@ -200,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cbc559f75e08961",
+      "sourceHash": "fnv1a64:ffa6da5b2e4bdba7",
       "notice": null,
       "blocks": [
         {
@@ -288,7 +288,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count the words between the two verbs: none. English needs to; Russian needs nothing at all. The second verb simply stays in the form you learned it in."
+              "text": "Count the words between the two verbs: none. English needs to; Russian needs nothing at all. The second verb stays in the form you learned it in."
             },
             {
               "kind": "speech",
@@ -726,7 +726,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9341ec52d9d925f1",
+      "sourceHash": "fnv1a64:bff21aa75a38534f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -809,7 +809,7 @@
             },
             {
               "kind": "speech",
-              "text": "Russian is allowed. надо (náda) is an impersonal word: the obligation is simply stated, hanging in the air, belonging to nobody in particular. This is the same freedom you met when the present tense of быть turned out to be missing altogether — Russian is content to leave out what it does not need."
+              "text": "Russian is allowed. надо (náda) is an impersonal word: the obligation is stated and left hanging in the air, belonging to nobody in particular. This is the same freedom you met when the present tense of быть turned out to be missing altogether — Russian is content to leave out what it does not need."
             },
             {
               "kind": "speech",

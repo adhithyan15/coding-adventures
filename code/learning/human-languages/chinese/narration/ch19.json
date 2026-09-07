@@ -1,0 +1,1576 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 19,
+  "title": "Asking",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:27b0118b3806ff32",
+  "lessons": [
+    {
+      "id": "ZH-C19-hear-ma",
+      "sequence": 1820,
+      "title": "Hear ma — the syllable that asks",
+      "headword": "ma",
+      "romanization": "ma",
+      "gloss": "the question particle, heard first as a neutral-tone syllable at the end of a sentence",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:828166f07190c779",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say look, book, and read a book in Mandarin. Name your four scores from the looking-and-reading payoff, and which of the four was lowest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ma — the question particle."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it light, short and flat. It carries no tone, which makes it the first syllable in this book with none — every earlier one has been first, second, third or fourth. Give it none at all, and no stress either."
+            },
+            {
+              "kind": "speech",
+              "text": "It also carries no meaning on its own. There is nothing to translate. What it does is turn the sentence in front of it into a question, and it does that without moving a single other word."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear kàn shū and then kàn shū ma. The words are identical and in the same order; only the light syllable at the end is new, and only the second one is asking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C19-hear-ma-tone",
+              "prompt": "Which tone does ma carry?",
+              "assesses": [
+                "ZH-LEX-MA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "none — it is neutral",
+                "none",
+                "neutral",
+                "no tone",
+                "neutral tone"
+              ],
+              "feedback": {
+                "correct": "Right: ma is neutral — no tone at all.",
+                "incorrect": "It carries no tone: say it light and short."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W19-ma-observe",
+      "sequence": 1830,
+      "title": "吗 (ma) — the mouth, then the horse",
+      "headword": "吗",
+      "romanization": "ma",
+      "gloss": "the question particle, observed and traced in six strokes",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:80824268f37c3a61",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the neutral question syllable. Then write 口 in three strokes, and write 书 once from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write 吗 (ma) in six strokes, left part first and complete:"
+            },
+            {
+              "kind": "speech",
+              "text": "口 on the left, small and lifted toward the top: the left vertical, then the horizontal that turns down the right side without lifting, then the closing bottom bar. Three strokes, as you already write it."
+            },
+            {
+              "kind": "speech",
+              "text": "马 on the right, which supplies only the sound: a horizontal that turns down, then a long stroke that turns twice and hooks, then one wide horizontal across the whole right side. Three strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "Six strokes, five lifts. The 口 shrinks to about a third of the square and sits high; the wide final horizontal is the widest thing in the character and runs almost to the right edge."
+            },
+            {
+              "kind": "speech",
+              "text": "The left half is doing real work even though it is not saying anything: 口 means mouth, and it marks 吗 as one of a family of characters that exist only to be spoken."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace 吗 once. Say mouth, mouth, mouth — turn, turn-and-hook, long bar. Finish the whole 口 before starting the right half, and keep it small."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 吗 (ma), pinned stroke paths and medians."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W19-ma-observe-count",
+              "prompt": "How many strokes does 吗 use, and which half is written first?",
+              "assesses": [
+                "ZH-SCRIPT-MA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "six, and the left 口 is written first",
+                "six left",
+                "6 left",
+                "six, 口 first",
+                "6, kou first"
+              ],
+              "feedback": {
+                "correct": "Right: six strokes, and 口 is finished before 马 begins.",
+                "incorrect": "Three strokes for 口 and three for 马, left half first."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W19-ma-guided",
+      "sequence": 1840,
+      "title": "吗 — copy it, and keep the mouth small",
+      "headword": "吗",
+      "romanization": "ma",
+      "gloss": "the question particle, copied with the six-part route visible",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:d26446bb6fdd5322",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read 看书 and give its meaning. Then air-write mouth, mouth, mouth — turn, turn-and-hook, long bar. Say see and primary school, and write 看见."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 吗 (ma) twice beside the model. On the second copy, stop after the third stroke and check two things before going on: the 口 fills about a third of the width, and its bottom sits above the middle of the square."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — Spaced Return",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear read a book and write 看书 once without a model."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 吗 (ma), pinned stroke paths and medians."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W19-ma-guided-last",
+              "prompt": "What is the final stroke of 吗 (ma)?",
+              "assesses": [
+                "ZH-SCRIPT-MA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "the long horizontal across the right half",
+                "the long horizontal",
+                "long bar",
+                "the wide horizontal",
+                "horizontal"
+              ],
+              "feedback": {
+                "correct": "Right: one wide horizontal finishes 吗.",
+                "incorrect": "The turning-and-hooking stroke is fifth; the wide bar finishes it."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W19-ma-delayed",
+      "sequence": 1850,
+      "title": "吗 (ma) — wait, then write the bar",
+      "headword": "吗",
+      "romanization": "ma",
+      "gloss": "the question particle, recovered after a short delay",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a289f3252d426363",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the neutral question syllable, then write 书 once from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 吗 (ma) for five seconds. Cover it, wait five more, then write it once. Uncover and check the order: all three strokes of 口 before anything on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "Most characters give you a meaning to hang the shape on. This one does not — it means nothing by itself — so the route is all you have, and that is why it gets its own delay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 吗 (ma), pinned stroke paths and medians."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W19-ma-delayed-order",
+              "prompt": "Which half of 吗 (ma) is completed first?",
+              "assesses": [
+                "ZH-SCRIPT-MA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "the left 口",
+                "left",
+                "口",
+                "the mouth",
+                "kou",
+                "the left half"
+              ],
+              "feedback": {
+                "correct": "Right: finish 口, then start 马.",
+                "incorrect": "Left before right: all of 口 first."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C19-ma",
+      "sequence": 1860,
+      "title": "吗 (ma) — the sound meets the shape",
+      "headword": "吗",
+      "romanization": "ma",
+      "gloss": "the question particle, recovered without pinyin",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d1acb1e36c31345",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the neutral question syllable. Then say look and read a book. Say good-looking and primary-school pupil, write 小, and recall your four looking-and-reading scores."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "吗 — ma — the question particle."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide the pinyin. Read 吗 (ma), give it no tone at all, and say what it does rather than what it means."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar lens — one character, every statement",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put 吗 (ma) at the end of a statement and the statement becomes a yes-or-no question. Nothing else changes:"
+            },
+            {
+              "kind": "speech",
+              "text": "你看书 — nǐ kàn shū — you read books."
+            },
+            {
+              "kind": "speech",
+              "text": "你看书吗 — nǐ kàn shū ma — do you read books?"
+            },
+            {
+              "kind": "speech",
+              "text": "Same words. Same order. One character added at the end."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth stopping on, because it is not how English works: English moves words about and borrows a helper verb — you read becomes do you read — and Mandarin does neither. Every statement you can already make is now also a question you can ask, and there are no new words to learn to ask any of them."
+            },
+            {
+              "kind": "speech",
+              "text": "Chinese closes both of those lines with a mark of its own — a small hollow circle for the statement and a question mark for the question. Neither mark is taught yet, so neither is printed here."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ma. Wait three seconds, then write 吗 once without a model. Then take any sentence you own and put 吗 on the end of it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C19-ma-read-write",
+              "prompt": "Where in the sentence does 吗 (ma) go, and what does it change?",
+              "assesses": [
+                "ZH-LEX-MA-01",
+                "ZH-SCRIPT-MA-01",
+                "ZH-GRAMMAR-MA-QUESTION-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "at the end, and it turns the statement into a yes-or-no question",
+                "at the end",
+                "end, makes it a question",
+                "at the end - question"
+              ],
+              "feedback": {
+                "correct": "Right: 吗 goes last and asks the whole sentence.",
+                "incorrect": "Last position, and nothing else moves."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C19-hear-nihaoma",
+      "sequence": 1870,
+      "title": "Hear nǐ hǎo ma — how are you",
+      "headword": "nǐ hǎo ma",
+      "romanization": "nǐ hǎo ma",
+      "gloss": "how are you, heard as the greeting you already own with one syllable added",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff92343571f8d311",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say hello. Then say the neutral syllable that turns a statement into a question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nǐ hǎo ma — how are you?"
+            },
+            {
+              "kind": "speech",
+              "text": "The very first thing this book taught you, with the very newest thing on the end of it. No new word arrives here at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones in a row still slide the first one up, exactly as they do in nǐ hǎo on its own — the light ma on the end changes nothing about that."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C19-hear-nihaoma-meaning",
+              "prompt": "What does nǐ hǎo ma mean?",
+              "assesses": [
+                "ZH-LEX-NIHAOMA-01"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "how are you",
+                "how are you?",
+                "are you well"
+              ],
+              "feedback": {
+                "correct": "Right: nǐ hǎo ma asks how somebody is.",
+                "incorrect": "It is the hello you know, made into a question."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C19-nihaoma",
+      "sequence": 1880,
+      "title": "你好吗 (nǐ hǎo ma) — the greeting, asked",
+      "headword": "你好吗",
+      "romanization": "nǐ hǎo ma",
+      "gloss": "how are you, written from three characters already yours",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3e8ea3882a668ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say how are you. Then write 你 and 好. Write 好看 too, and say what the 好 is doing in it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "你好吗 — nǐ hǎo ma — how are you?"
+            },
+            {
+              "kind": "speech",
+              "text": "Read the three known shapes from left to right: 你, 好, and the new 吗 (ma) on the end. Every one of them is a character you have already written."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole of what 吗 (ma) buys you. The book has been able to write 你好 since its first page and has never once been able to ask anything. One character, six strokes, and the greeting turns into a question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 你好吗 (nǐ hǎo ma) once. Keep the three characters the same size. 吗 is not written smaller for meaning nothing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C19-nihaoma-write",
+              "prompt": "Write how are you, without pinyin.",
+              "assesses": [
+                "ZH-LEX-NIHAOMA-01",
+                "ZH-ORTHO-NIHAOMA-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "你好吗",
+                "你好吗 nǐ hǎo ma",
+                "ni hao ma 你好吗"
+              ],
+              "feedback": {
+                "correct": "Right: 你好吗.",
+                "incorrect": "Write the greeting 你好, then add 吗."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R19-ma-two-r1",
+      "sequence": 1890,
+      "title": "Retrieval 1 — greeting, or question?",
+      "headword": "你好 — 你好吗",
+      "romanization": "nǐ hǎo — nǐ hǎo ma",
+      "gloss": "first cold contrast of the greeting and the question built on it",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:fd3826974b78caf9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say hello, then how are you, and name the difference between them. Then say book, and recall your four scores from the primary-school payoff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the two meanings in mixed order. Say each Mandarin answer, read its unpointed card, then write it. Look at the last character before deciding whether you were greeted or asked."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-R19-ma-two-r1-order",
+              "prompt": "Write hello, then how are you.",
+              "assesses": [
+                "ZH-LEX-NIHAO",
+                "ZH-LEX-NIHAOMA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "你好 — 你好吗",
+                "你好 你好吗",
+                "你好, 你好吗"
+              ],
+              "feedback": {
+                "correct": "Right: 你好, then 你好吗.",
+                "incorrect": "The second is the first with 吗 on the end."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C19-hear-shima",
+      "sequence": 1900,
+      "title": "Hear shì ma — is that so?",
+      "headword": "shì ma",
+      "romanization": "shì ma",
+      "gloss": "is that so, heard as the two-syllable way of checking what you were just told",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:125f5f9b4c797c91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to be, then say how are you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shì ma — is that so? really?"
+            },
+            {
+              "kind": "speech",
+              "text": "Two syllables: the verb to be, falling hard, then the light question syllable. Nothing else."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the move you make when somebody tells you something and you want to show you heard it and to invite them to go on. English spends a whole phrase on it — is that so, really, oh yes? — and Mandarin spends two syllables, one of which you learned yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it with the voice going down on shì and staying light on ma. Said flat it checks a fact; said with the fall exaggerated it registers surprise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C19-hear-shima-use",
+              "prompt": "When do you say shì ma?",
+              "assesses": [
+                "ZH-LEX-SHIMA-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "after somebody tells you something, to check it and invite them to go on",
+                "to check what you were told",
+                "really",
+                "is that so",
+                "to show you heard"
+              ],
+              "feedback": {
+                "correct": "Right: it checks what you were just told.",
+                "incorrect": "It is the two-syllable really? — a way of taking in what was said."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C19-shima",
+      "sequence": 1910,
+      "title": "是吗 (shì ma) — checking what you were told",
+      "headword": "是吗",
+      "romanization": "shì ma",
+      "gloss": "is that so, written from two characters already yours",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b17e8e488c39857a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say is that so. Then write 是, finishing 日 before the lower body. Write 书 and 中 as well."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "是吗 — shì ma — is that so? really?"
+            },
+            {
+              "kind": "speech",
+              "text": "Two known shapes, in the order you hear them: the nine-stroke 是, then the six-stroke 吗 (ma)."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the shortest sentence in the book and it is a complete turn in a conversation. Somebody says something; you say 是吗 (shì ma); they keep going. Nothing about it is a fixed phrase to memorise — it is the yes-or-no rule applied to a one-word sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 是吗 (shì ma) once. Leave a clear boundary between the two characters, and keep 是 the wider of the pair."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C19-shima-write",
+              "prompt": "Write is that so, without pinyin.",
+              "assesses": [
+                "ZH-LEX-SHIMA-01",
+                "ZH-ORTHO-SHIMA-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "是吗",
+                "是吗 shì ma",
+                "shi ma 是吗"
+              ],
+              "feedback": {
+                "correct": "Right: 是吗.",
+                "incorrect": "Write to-be, then the question particle: 是 + 吗."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C19-hear-haobuhao",
+      "sequence": 1920,
+      "title": "Hear hǎo bu hǎo — the question with the answer inside it",
+      "headword": "hǎo bu hǎo",
+      "romanization": "hǎo bu hǎo",
+      "gloss": "is it good, heard as the second way Mandarin asks a yes-or-no question",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bf1b6d1bb2ccb4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say good, say not, and say is that so."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hǎo bu hǎo — is it good? all right?"
+            },
+            {
+              "kind": "speech",
+              "text": "Three syllables and no new word in any of them: good, not, good."
+            },
+            {
+              "kind": "speech",
+              "text": "This is Mandarin's second way of asking a yes-or-no question, and it is completely unlike the first. Where ma adds a syllable that means nothing, this one says the word, then denies it, then says it again — and hands the listener both possible answers so they can pick one."
+            },
+            {
+              "kind": "speech",
+              "text": "The bu in the middle goes light and toneless when it is caught between two copies of the same word. Say hǎo-bu-hǎo with the stress on the first and last and the middle syllable almost swallowed."
+            },
+            {
+              "kind": "speech",
+              "text": "Both questions ask the same thing. ma is the neutral one; this one presses a little harder for a decision, which is why it is the one you hear at the end of a suggestion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C19-hear-haobuhao-shape",
+              "prompt": "What three pieces make hǎo bu hǎo?",
+              "assesses": [
+                "ZH-LEX-HAOBUHAO-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "good, not, good",
+                "good not good",
+                "hao bu hao",
+                "the word, its negative, the word again"
+              ],
+              "feedback": {
+                "correct": "Right: the word, its negative, the word again.",
+                "incorrect": "Say the word, deny it, say it again."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C19-haobuhao",
+      "sequence": 1930,
+      "title": "好不好 (hǎo bu hǎo) — the question that needed no new character",
+      "headword": "好不好",
+      "romanization": "hǎo bu hǎo",
+      "gloss": "is it good, written from three characters already yours and no new shape at all",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78495e9b466e4bb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say is it good. Then write 好 and 不, keeping all four strokes of 不 separate. Say secondary school."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens — say it, deny it, say it again",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "好不好 — hǎo bu hǎo — is it good? all right?"
+            },
+            {
+              "kind": "speech",
+              "text": "Three known shapes, and the pattern behind them works on anything:"
+            },
+            {
+              "kind": "speech",
+              "text": "是不是 — shì bu shì — is it, or isn't it?"
+            },
+            {
+              "kind": "speech",
+              "text": "看不看 — kàn bu kàn — will you look, or won't you?"
+            },
+            {
+              "kind": "speech",
+              "text": "Take any word that can be denied, put 不 in the middle, and repeat it. That is the whole rule, and it needs no new character because you have had 不 since the negation lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Mandarin now gives you two ways to ask a yes-or-no question, and this book hands you both in this one chapter:"
+            },
+            {
+              "kind": "speech",
+              "text": "看书吗 — the light syllable on the end."
+            },
+            {
+              "kind": "speech",
+              "text": "看不看书 — the word, denied, and said again."
+            },
+            {
+              "kind": "speech",
+              "text": "They mean the same thing. Neither moves a word, and neither borrows a helper verb the way English does."
+            },
+            {
+              "kind": "speech",
+              "text": "Both would be written with a question mark of Chinese's own at the end. That mark is not taught yet, so it is left off here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 好不好 (hǎo bu hǎo) once. Then build one more of your own: take a word you can write, put 不 in the middle, and write it again."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C19-haobuhao-two-ways",
+              "prompt": "Name Mandarin's two ways of asking a yes-or-no question.",
+              "assesses": [
+                "ZH-GRAMMAR-V-NOT-V-01",
+                "ZH-GRAMMAR-MA-QUESTION-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "put 吗 at the end, or say the word, 不, and the word again",
+                "ma at the end and verb-not-verb",
+                "吗 or 不",
+                "ma, or the word not the word"
+              ],
+              "feedback": {
+                "correct": "Right: 吗 at the end, or the word-不-word pattern.",
+                "incorrect": "One adds 吗; the other repeats the word around 不."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R19-ma-three-r2",
+      "sequence": 1940,
+      "title": "Retrieval 2 — which question was that?",
+      "headword": "你好吗 — 是吗 — 好不好",
+      "romanization": "nǐ hǎo ma — shì ma — hǎo bu hǎo",
+      "gloss": "second cold contrast of the chapter's three questions",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9493d36e9d36cd09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say how are you, is that so, and is it good, in that order. Then say read a book and write 中学."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the three meanings in mixed order. Say each Mandarin answer, read its unpointed card, then write it. Before you write, decide which of the two question patterns it uses — the light syllable on the end, or the word denied in the middle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-R19-ma-three-r2-sort",
+              "prompt": "Which of the three does NOT end in 吗 (ma)?",
+              "assesses": [
+                "ZH-LEX-NIHAOMA-01",
+                "ZH-LEX-SHIMA-01",
+                "ZH-LEX-HAOBUHAO-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "好不好",
+                "好不好 hǎo bu hǎo",
+                "hao bu hao",
+                "the good-not-good one"
+              ],
+              "feedback": {
+                "correct": "Right: 好不好 uses the other pattern.",
+                "incorrect": "Two end in 吗; the third repeats a word around 不."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R19-listening-three",
+      "sequence": 1950,
+      "title": "Listening score — catch the question",
+      "headword": "你好吗 — 是吗 — 好不好",
+      "romanization": "nǐ hǎo ma — shì ma — hǎo bu hǎo",
+      "gloss": "listening-only score for the chapter's three questions",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00b9271ce3be16fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the light syllable that turns a statement into a question, and say where it goes. Then read 看书 and 看见 aloud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No cards and no writing. Hear each of the three, six times over in mixed order, and say the English meaning aloud before the next one starts."
+            },
+            {
+              "kind": "speech",
+              "text": "Score listening on its own. A miss here is not a reading miss and not a writing miss, and it is repaired by hearing the item again rather than by looking at it."
+            },
+            {
+              "kind": "speech",
+              "text": "The light ma is the thing most often missed, because it is short, toneless and last. If you lose one, that is almost certainly the one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-R19-listening-three-score",
+              "prompt": "How many of the three did you catch by ear alone?",
+              "assesses": [
+                "ZH-LEX-NIHAOMA-01",
+                "ZH-LEX-SHIMA-01",
+                "ZH-LEX-HAOBUHAO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "three of three",
+                "3",
+                "3/3",
+                "three",
+                "two",
+                "2",
+                "one",
+                "1",
+                "zero",
+                "0"
+              ],
+              "feedback": {
+                "correct": "Recorded. Repair a miss by hearing it again, not by reading it.",
+                "incorrect": "Any honest number is the right answer here; write it down."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R19-reading-three",
+      "sequence": 1960,
+      "title": "Reading score — no pinyin on the card",
+      "headword": "你好吗 — 是吗 — 好不好",
+      "romanization": "nǐ hǎo ma — shì ma — hǎo bu hǎo",
+      "gloss": "reading-only score, with no pinyin anywhere on the card",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52d5237992fed133",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 吗 (ma) once from memory, then 是. Then say secondary-school pupil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the three cards cold. No pinyin is printed on any of them. For each one, say it aloud and then give the English."
+            },
+            {
+              "kind": "speech",
+              "text": "Score reading on its own. Reading and hearing fail differently here: by ear the light ma is easy to lose, and on the page it is the most visible thing in the sentence because it is a whole character. The one you miss reading is more likely to be 好不好 (hǎo bu hǎo), where nothing is added and the clue is a repetition."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-R19-reading-three-clue",
+              "prompt": "Reading cold, what tells you a sentence is a question?",
+              "assesses": [
+                "ZH-GRAMMAR-MA-QUESTION-01",
+                "ZH-GRAMMAR-V-NOT-V-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "a 吗 at the end, or a word repeated around 不",
+                "吗 at the end or 不 in the middle",
+                "ma or bu",
+                "the last character, or the repetition"
+              ],
+              "feedback": {
+                "correct": "Right: the final 吗, or the word-不-word repetition.",
+                "incorrect": "Look at the last character first, then look for a repeated word."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C19-practice",
+      "sequence": 1970,
+      "title": "Payoff — the book can ask",
+      "headword": "吗 — 你好吗 — 是吗 — 好不好",
+      "romanization": "ma — nǐ hǎo ma — shì ma — hǎo bu hǎo",
+      "gloss": "four-skill payoff for the chapter that made the book able to ask",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f245344f3c28dfc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep four scores. Repair one missed skill without erasing the other passes."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say hello, to be, good, not, and the light question syllable. Then write 中学生."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four passes over the same four items, scored separately:"
+            },
+            {
+              "kind": "speech",
+              "text": "Listening. Hear each of the four and give its English."
+            },
+            {
+              "kind": "speech",
+              "text": "Speaking. Be given the English and say the Mandarin, tones and all."
+            },
+            {
+              "kind": "speech",
+              "text": "Reading. Read four unpointed cards cold and give their meanings."
+            },
+            {
+              "kind": "speech",
+              "text": "Writing. Hear each one and write it with no model."
+            },
+            {
+              "kind": "speech",
+              "text": "Record four numbers, not one. A reader who hears all four and writes none has a writing problem, and averaging the two hides it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Before this chapter the book had no way to ask a yes-or-no question at all. It could greet, name, count to five, say what it saw and say what it read, and it could not ask about any of it."
+            },
+            {
+              "kind": "speech",
+              "text": "One character closed that, and it did more than its own weight: every statement this book has taught you is now also a question, because 吗 (ma) goes on the end of a finished sentence and changes nothing else. The second pattern, 好不好 (hǎo bu hǎo), needed no new character whatsoever — it is 不, which you have had for chapters, put between two copies of a word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C19-practice-four-scores",
+              "prompt": "Give your four scores as listening, speaking, reading, writing.",
+              "assesses": [
+                "ZH-PERFORMANCE-ASKING-FOUR-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "four separate numbers out of four",
+                "4 4 4 4",
+                "4/4 4/4 4/4 4/4",
+                "three four four three",
+                "3 4 4 3"
+              ],
+              "feedback": {
+                "correct": "Recorded. Repair the lowest skill on its own.",
+                "incorrect": "Four numbers, not an average - the point is to see which skill lags."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

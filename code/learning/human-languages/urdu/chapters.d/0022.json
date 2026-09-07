@@ -1,0 +1,21 @@
+{
+  "chapter": 22,
+  "title": "When You Are Lost",
+  "label": "ch:ur-when-you-are-lost",
+  "canDo": "I can say I have not understood, ask what somebody said, and ask them to say it again gently -- three sentences that need no letter this book has not taught.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "UR-R22-when-you-are-lost",
+    "kind": "speaking",
+    "summary": "A learner who has stopped following says so, asks for the words back, and asks for them slower: maiṅ nahīṅ samajhtā, kyā kahā, ārām se kaheṅ -- a repair kit this track did not have at all four chapters ago.",
+    "assesses": [
+      "UR-LEX-KAHNA",
+      "UR-FUNC-KYA-KAHA",
+      "UR-LEX-ARAM-SE",
+      "UR-GRAMMAR-NAHIN-VERB"
+    ],
+    "note": "Two of the three sentences introduce no new vocabulary beyond کہنا, and the third is one Persian noun plus a postposition the book has shown since chapter three."
+  }
+}

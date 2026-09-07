@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C51-changla",
+    "language": "marathi",
+    "chapter": 51,
+    "sequence": 2020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b3c690fb85ef553"
+  },
+  "findings": []
+}

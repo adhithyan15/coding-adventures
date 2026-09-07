@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:9a83e98f73028b28",
+  "lessonIds": [
+    "MR-C49-motha",
+    "MR-C49-adj-agreement",
+    "MR-C49-adj-prenominal",
+    "MR-R49-big"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch49.txt",
+  "json": "marathi/narration/ch49.json",
+  "textHash": "fnv1a64:969621fd20d0de06",
+  "jsonHash": "fnv1a64:736dee101f5c8f99",
+  "findings": []
+}

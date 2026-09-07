@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-055",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "MR-C52-sopa",
+    "MR-C52-kathin",
+    "MR-C52-unch",
+    "MR-R52-easy-hard-tall"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-068-EASY-HARD-TALL"
+  ],
+  "after": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 12,
-  "sourceHash": "fnv1a64:b05966d398592d60",
+  "sourceHash": "fnv1a64:f3fa9503de7831ff",
   "lessonIds": [
     "UR-C12-pani",
     "UR-C12-chai",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "urdu/narration/ch12.txt",
   "json": "urdu/narration/ch12.json",
-  "textHash": "fnv1a64:4668ec2b969f8f8e",
-  "jsonHash": "fnv1a64:4945f33b18095724",
+  "textHash": "fnv1a64:634143cd51ba23f2",
+  "jsonHash": "fnv1a64:740fbf58d0568552",
   "findings": []
 }

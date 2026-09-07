@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-053",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "MR-C50-lahaan",
+    "MR-C50-adj-invariable",
+    "MR-C50-sundar",
+    "MR-R50-small"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-066-INVARIABLE-ADJECTIVES"
+  ],
+  "after": []
+}

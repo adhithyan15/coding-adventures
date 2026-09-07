@@ -37,7 +37,7 @@ reviews_of: [UR-C12-pani, UR-C09-bhai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-PANI, UR-ETYMON-PANI-DRINK, UR-SCRIPT-HAMZA-YE] -->
 
-[PAUSE 2s] Say **merā pānī** — my water, underneath just "the drinkable
+[PAUSE 2s] Say **merā pānī** — my water, underneath "the drinkable
 thing." Here is the drink you would politely ask for right after it, and a
 letter from Chapter 9 makes a second appearance.
 
@@ -65,7 +65,7 @@ the vowel after it from colliding.
 **چائے** is borrowed from Classical Persian **چای** (*chāy*), which traces
 back to Northern Chinese **chá**, carried overland through Central Asia
 into Persian before Urdu ever had it. That is the same road *khudā* and
-*dil* travelled in earlier chapters — Persian into Urdu — just with a
+*dil* travelled in earlier chapters — Persian into Urdu — with a
 Chinese starting point this time instead of one further west.
 
 Tea that instead reached Europe by **sea** kept a different form, from

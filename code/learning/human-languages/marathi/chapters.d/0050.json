@@ -1,0 +1,20 @@
+{
+  "chapter": 50,
+  "title": "Small, and the Words That Never Change",
+  "label": "ch:mr-invariable-adjectives",
+  "canDo": "I can call a thing small or beautiful, and I can tell from an adjective's last letter whether it will take an ending at all.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-R50-small",
+    "kind": "production",
+    "summary": "Complete MR-R50-small and put all three adjectives on khoolī, naming which one changed and why.",
+    "assesses": [
+      "MR-LEX-LAHAAN",
+      "MR-GRAMMAR-ADJ-INVARIABLE",
+      "MR-LEX-SUNDAR"
+    ],
+    "note": "The invariable class is taught immediately after the agreeing one because a learner who meets only moTHaa over-applies its endings; the contrast is the teaching."
+  }
+}

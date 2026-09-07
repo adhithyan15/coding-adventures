@@ -9,7 +9,6 @@
   "omits": [
     "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",
-    "VERB-SAY",
     "VERB-SEE",
     "VERB-HEAR",
     "VERB-LEARN",
@@ -24,5 +23,7 @@
     "VERB-ANSWER",
     "VERB-MEET"
   ],
-  "relocates": {}
+  "relocates": {
+    "VERB-SAY": "SPINE-POLITE-REQUEST-REPAIR"
+  }
 }

@@ -175,7 +175,7 @@ Six recalls before the new word, at growing distances. They are not decoration: 
 
 The word, taken apart.
 tuus, tua, tuum — "your," to one person.
-The tū / vōs lesson made a point of it: in Classical Latin the difference is number only, with no politeness in it at all. This is tū's possessive, and it inherits that: tuus is not familiar or rude, it simply means the thing belongs to one person. For several, Latin says vester.
+The tū / vōs lesson made a point of it: in Classical Latin the difference is number only, with no politeness in it at all. This is tū's possessive, and it inherits that: tuus is not familiar or rude; it means only that the thing belongs to one person. For several, Latin says vester.
 Quid tibi nōmen est? — the name question, with tibi, the dative. Liber tuus. — Your book, with the adjective.
 Tibi and tuus are the same pronoun by two routes, which is worth hearing once: the case form and the adjective come from one word, and Latin lets you choose.
 Spanish tu, Italian tuo, French ton and Portuguese teu all descend from this — and every one of them acquired the politeness dimension that Latin's had not got.

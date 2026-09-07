@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 19,
+  "output": "urdu/book/chapters/ch19-the-word-that-was-deferred.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

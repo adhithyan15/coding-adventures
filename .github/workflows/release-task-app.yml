@@ -242,7 +242,7 @@ jobs:
 
       - name: Set up Flutter
         if: matrix.backend == 'flutter'
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           flutter-version: "3.44.0"
           channel: stable
@@ -262,7 +262,7 @@ jobs:
 
       - name: Set up Gradle
         if: matrix.backend == 'compose'
-        uses: gradle/actions/setup-gradle@v6.3.0
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
 
       - name: Install Linux Rust build dependencies
         if: runner.os == 'Linux'

@@ -100,7 +100,7 @@ outlast them:
 - **what is added matters**: nūn's dot, kāf's slash, and ye's bare curve are the
   identification, not the decoration
 
-Seven of Urdu's letters. The rest are mostly more of what you just did.
+Seven of Urdu's letters. The rest are mostly more of what you did here.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-SEVEN-READ-01] -->

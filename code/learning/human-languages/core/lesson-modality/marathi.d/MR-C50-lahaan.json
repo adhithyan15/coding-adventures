@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C50-lahaan",
+    "language": "marathi",
+    "chapter": 50,
+    "sequence": 1980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ed36d80f9d3a1bb"
+  },
+  "findings": []
+}

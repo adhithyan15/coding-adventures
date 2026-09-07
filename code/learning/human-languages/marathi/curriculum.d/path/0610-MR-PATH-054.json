@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-054",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "MR-C51-changla",
+    "MR-C51-kharaab",
+    "MR-C51-hushaar",
+    "MR-R51-good-and-bad"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-067-GOOD-AND-BAD"
+  ],
+  "after": []
+}

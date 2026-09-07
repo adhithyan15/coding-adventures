@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2a823848f13a927c",
+  "sourceHash": "fnv1a64:0f9671c8dda6c6aa",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c68e406602c415a3",
+      "sourceHash": "fnv1a64:4603d1c6c8c35415",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -472,7 +472,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The protective sense is “God [be] guardian,” but everyday speakers use the formula simply as goodbye. No new verb or agreement ending is needed. It is a reliable polite close for the short interaction learned so far."
+              "text": "The protective sense is “God [be] guardian,” but everyday speakers use the formula as goodbye and nothing more. No new verb or agreement ending is needed. It is a reliable polite close for the short interaction learned so far."
             }
           ]
         },

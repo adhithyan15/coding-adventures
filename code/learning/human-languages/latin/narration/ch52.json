@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Ubi, Cur, Quia, Meus, Tuus",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:13eaaec597490330",
+  "sourceHash": "fnv1a64:81df81b2909de671",
   "lessons": [
     {
       "id": "LA-C52-ubi",
@@ -675,7 +675,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc978ae7e84775cd",
+      "sourceHash": "fnv1a64:ffadb5a2fd01b111",
       "notice": null,
       "blocks": [
         {
@@ -760,7 +760,7 @@
             },
             {
               "kind": "speech",
-              "text": "The tū / vōs lesson made a point of it: in Classical Latin the difference is number only, with no politeness in it at all. This is tū's possessive, and it inherits that: tuus is not familiar or rude, it simply means the thing belongs to one person. For several, Latin says vester."
+              "text": "The tū / vōs lesson made a point of it: in Classical Latin the difference is number only, with no politeness in it at all. This is tū's possessive, and it inherits that: tuus is not familiar or rude; it means only that the thing belongs to one person. For several, Latin says vester."
             },
             {
               "kind": "speech",

@@ -72,7 +72,7 @@ arrive by accident on the same idea. They are the **same PIE root**, split
 at the Indo-Iranian fork: one branch went east into Sanskrit and became
 *hṛdaya*; the other went west into Iranian and became *dil*, then travelled
 back into Urdu as a loan. Persian and Sanskrit both keep the family's
-heart-word — Urdu just happens to have taken the Iranian branch's copy.
+heart-word — Urdu happens to have taken the Iranian branch's copy.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-DIL, UR-ETYMON-DIL-HEART-PIE, UR-LEX-MUNH, UR-ETYMON-BHAI-BROTHER, UR-ETYMON-AANKH-EYE, UR-ETYMON-NAAK-NOSE] -->

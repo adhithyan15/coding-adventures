@@ -1,0 +1,17 @@
+{
+  "id": "ZH-EXT-053-ASKING-FOUR-SKILL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can keep the chapter's four asking forms distinct across expanding retrieval and separate four-skill scores.",
+  "prerequisites": [
+    "ZH-EXT-052-ASKING-SCRIPT"
+  ],
+  "lessons": [
+    "ZH-R19-ma-two-r1",
+    "ZH-R19-ma-three-r2",
+    "ZH-R19-listening-three",
+    "ZH-R19-reading-three",
+    "ZH-C19-practice"
+  ]
+}

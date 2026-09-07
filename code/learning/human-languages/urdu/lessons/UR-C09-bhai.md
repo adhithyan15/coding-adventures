@@ -95,7 +95,7 @@ real relatives, not two languages landing on the same idea by accident.
 
 [PAUSE 3s] What does **بھائی** mean, and is **بھائی** masculine or feminine?
 (**Brother**; **masculine**.) Which English word is its real cousin, not
-just a resemblance? (**Brother**.) Name the four jobs of the *ye* family
+only a resemblance? (**Brother**.) Name the four jobs of the *ye* family
 now. (**Consonantal *y*, long *ī*, final *e*, and hamza-glide.**)
 
 Sources: [Wiktionary: بھائی](https://en.wiktionary.org/wiki/%D8%A8%DA%BE%D8%A7%D8%A6%DB%8C).

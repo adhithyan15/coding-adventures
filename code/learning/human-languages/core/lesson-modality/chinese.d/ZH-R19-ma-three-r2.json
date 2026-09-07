@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R19-ma-three-r2",
+    "language": "chinese",
+    "chapter": 19,
+    "sequence": 1940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9493d36e9d36cd09"
+  },
+  "findings": []
+}
