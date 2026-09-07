@@ -13,6 +13,8 @@ name = "engram-host-cli"
 path = "src/bin/engram_host_cli.rs"
 
 [dependencies]
+coding_adventures_base64 = { path = "../base64" }
+serde = "1"
 engram-anki-package = { path = "../engram-anki-package" }
 engram-core = { path = "../engram-core", features = ["serde"] }
 engram-core-wasm = { path = "../engram-core-wasm" }

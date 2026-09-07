@@ -15,7 +15,7 @@ use engram_anki_package::{
 };
 use engram_core::{merge_app_states, AppState};
 use engram_core_wasm::EngramSession;
-use serde_json::{json, Value};
+use serde_json::json;
 
 pub struct EgSession {
     inner: EngramSession,
@@ -682,24 +682,21 @@ unsafe fn with_session(
 
 fn inspect_anki_apkg_json(bytes: &[u8]) -> String {
     match inspect_apkg(bytes) {
-        Ok(manifest) => ok_json_with(
-            "manifest",
-            serde_json::to_value(manifest).unwrap_or(Value::Null),
-        ),
+        Ok(manifest) => ok_json_with("manifest", &manifest),
         Err(error) => error_json(&error.message),
     }
 }
 
 fn read_anki_apkg_media_json(bytes: &[u8], archive_name: &str) -> String {
     match read_media_file(bytes, archive_name) {
-        Ok(media) => ok_json_with("media", serde_json::to_value(media).unwrap_or(Value::Null)),
+        Ok(media) => ok_json_with("media", &media),
         Err(error) => error_json(&error.message),
     }
 }
 
 fn parse_anki_apkg_json(bytes: &[u8]) -> String {
     match read_v11_collection_as_engram_state(bytes) {
-        Ok(state) => ok_json_with("state", serde_json::to_value(state).unwrap_or(Value::Null)),
+        Ok(state) => ok_json_with("state", &state),
         Err(error) => error_json(&error.message),
     }
 }
@@ -731,14 +728,14 @@ fn load_merged_state(session: &mut EngramSession, imported: AppState) -> String 
 
 fn export_anki_apkg_json(session: &EngramSession) -> String {
     match write_legacy_apkg_from_engram_state(session.state(), &[]) {
-        Ok(apkg) => ok_json_with("apkg", serde_json::to_value(apkg).unwrap_or(Value::Null)),
+        Ok(apkg) => ok_json_with("apkg", &Base64Bytes(apkg)),
         Err(error) => error_json(&error.message),
     }
 }
 
 fn export_modern_anki_apkg_json(session: &EngramSession) -> String {
     match write_modern_apkg_from_engram_state(session.state(), &[]) {
-        Ok(apkg) => ok_json_with("apkg", serde_json::to_value(apkg).unwrap_or(Value::Null)),
+        Ok(apkg) => ok_json_with("apkg", &Base64Bytes(apkg)),
         Err(error) => error_json(&error.message),
     }
 }
@@ -746,16 +743,57 @@ fn export_modern_anki_apkg_json(session: &EngramSession) -> String {
 fn analyze_media_references_json(session: &EngramSession) -> String {
     ok_json_with(
         "mediaReferences",
-        serde_json::to_value(analyze_engram_media_references(session.state()))
-            .unwrap_or(Value::Null),
+        &analyze_engram_media_references(session.state()),
     )
 }
 
-fn ok_json_with(key: &str, value: Value) -> String {
-    let mut object = serde_json::Map::new();
-    object.insert("ok".to_string(), Value::Bool(true));
-    object.insert(key.to_string(), value);
-    Value::Object(object).to_string()
+/// Build `{"ok":true,"<key>":<value>}` in a single serialisation pass.
+///
+/// This crate had its own copy of the response builder, and it carried both
+/// bugs that #14411 fixed in `engram-core-wasm::ok_with`. Worth stating
+/// plainly, because every NATIVE host reaches the engine through this file and
+/// not through that one:
+///
+/// **`to_value` built an intermediate tree.** One `serde_json::Value` per
+/// array element, and the exported `.apkg` is a `Vec<u8>` -- so one heap
+/// `Value` per byte of a payload that carries the collection's entire media
+/// set. `to_writer` streams into the output buffer instead.
+///
+/// **`unwrap_or(Value::Null)` returned success for a failure.**
+/// `{"ok":true,"apkg":null}` is indistinguishable to a caller from a genuinely
+/// empty export.
+fn ok_json_with(key: &str, value: &impl serde::Serialize) -> String {
+    let mut buffer = Vec::new();
+    buffer.extend_from_slice(b"{\"ok\":true,");
+    if let Err(error) = serde_json::to_writer(&mut buffer, key) {
+        return error_json(&format!("could not serialise response key: {error}"));
+    }
+    buffer.push(b':');
+    if let Err(error) = serde_json::to_writer(&mut buffer, value) {
+        return error_json(&format!("could not serialise {key}: {error}"));
+    }
+    buffer.push(b'}');
+    match String::from_utf8(buffer) {
+        Ok(json) => json,
+        Err(error) => error_json(&format!("response was not valid UTF-8: {error}")),
+    }
+}
+
+/// A `Vec<u8>` that serialises as base64 rather than a JSON array of numbers.
+///
+/// Mirrors the newtype in `engram-core-wasm`: the exported `.apkg` costs 4.00x
+/// wire and 5.5-8.25x peak through the derive (#14438). Every host adapter
+/// accepts base64 or the legacy array, so the two crates can converge without
+/// either side breaking.
+struct Base64Bytes(Vec<u8>);
+
+impl serde::Serialize for Base64Bytes {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&coding_adventures_base64::encode(
+            &self.0,
+            &coding_adventures_base64::STANDARD,
+        ))
+    }
 }
 
 fn error_json(message: &str) -> String {
@@ -1174,12 +1212,11 @@ CREATE TABLE graves (
 
             let exported = take(eg_export_anki_apkg(session));
             let exported: Value = serde_json::from_str(&exported).unwrap();
-            let exported_apkg = exported["apkg"]
-                .as_array()
-                .unwrap()
-                .iter()
-                .map(|byte| byte.as_u64().unwrap() as u8)
-                .collect::<Vec<_>>();
+            let exported_apkg = coding_adventures_base64::decode(
+                    exported["apkg"].as_str().unwrap(),
+                    &coding_adventures_base64::STANDARD,
+                )
+                .unwrap();
             let inspected = take(eg_inspect_anki_apkg(
                 session,
                 exported_apkg.as_ptr(),
@@ -1358,12 +1395,11 @@ CREATE TABLE graves (
             let exported = take(eg_export_anki_apkg(session));
             let exported: Value = serde_json::from_str(&exported).unwrap();
             assert_eq!(exported["ok"], true);
-            let apkg = exported["apkg"]
-                .as_array()
-                .unwrap()
-                .iter()
-                .map(|byte| byte.as_u64().unwrap() as u8)
-                .collect::<Vec<_>>();
+            let apkg = coding_adventures_base64::decode(
+                    exported["apkg"].as_str().unwrap(),
+                    &coding_adventures_base64::STANDARD,
+                )
+                .unwrap();
 
             let parsed = take(eg_parse_anki_apkg(session, apkg.as_ptr(), apkg.len()));
             let parsed: Value = serde_json::from_str(&parsed).unwrap();
@@ -1375,12 +1411,11 @@ CREATE TABLE graves (
             let modern_exported = take(eg_export_anki_apkg_modern(session));
             let modern_exported: Value = serde_json::from_str(&modern_exported).unwrap();
             assert_eq!(modern_exported["ok"], true);
-            let modern_apkg = modern_exported["apkg"]
-                .as_array()
-                .unwrap()
-                .iter()
-                .map(|byte| byte.as_u64().unwrap() as u8)
-                .collect::<Vec<_>>();
+            let modern_apkg = coding_adventures_base64::decode(
+                    modern_exported["apkg"].as_str().unwrap(),
+                    &coding_adventures_base64::STANDARD,
+                )
+                .unwrap();
             let inspected = take(eg_inspect_anki_apkg(
                 session,
                 modern_apkg.as_ptr(),
@@ -1470,12 +1505,12 @@ CREATE TABLE graves (
             let exported = take(eg_export_anki_package(session));
             let exported: Value = serde_json::from_str(&exported).unwrap();
             assert_eq!(exported["ok"], true);
-            assert!(!exported["apkg"].as_array().unwrap().is_empty());
+            assert!(!exported["apkg"].as_str().unwrap().is_empty());
 
             let modern_exported = take(eg_export_anki_package_modern(session));
             let modern_exported: Value = serde_json::from_str(&modern_exported).unwrap();
             assert_eq!(modern_exported["ok"], true);
-            assert!(!modern_exported["apkg"].as_array().unwrap().is_empty());
+            assert!(!modern_exported["apkg"].as_str().unwrap().is_empty());
 
             let media_apkg = media_apkg_fixture();
             let archive_name = cstr("0");
