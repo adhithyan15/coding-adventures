@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 6,
-  "sourceHash": "fnv1a64:d50f6c0ac4fa6ed5",
+  "sourceHash": "fnv1a64:b56b0ddbe9302ee8",
   "lessonIds": [
     "GE-C06-eins",
     "GE-C06-zwei",
@@ -24,7 +24,7 @@
   "drivablePrefix": 16,
   "text": "german/narration/ch06.txt",
   "json": "german/narration/ch06.json",
-  "textHash": "fnv1a64:eea7ae574e0928a4",
-  "jsonHash": "fnv1a64:dc4fde5befc77dc6",
+  "textHash": "fnv1a64:896ff94a78ed74a0",
+  "jsonHash": "fnv1a64:6de0c732b6aac820",
   "findings": []
 }

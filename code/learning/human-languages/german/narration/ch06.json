@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Ten",
   "drivablePrefix": 16,
-  "sourceHash": "fnv1a64:d50f6c0ac4fa6ed5",
+  "sourceHash": "fnv1a64:b56b0ddbe9302ee8",
   "lessons": [
     {
       "id": "GE-C06-eins",
@@ -730,7 +730,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c6a4f42ba22cc6e",
+      "sourceHash": "fnv1a64:18a38eb02e80fe6a",
       "notice": null,
       "blocks": [
         {
@@ -791,7 +791,7 @@
             },
             {
               "kind": "speech",
-              "text": "old p becomes Germanic f: five / fünf, against Latin's quinque."
+              "text": "old p becomes Germanic f: five and fünf, against Latin's quinque."
             },
             {
               "kind": "speech",

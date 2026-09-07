@@ -65,7 +65,7 @@ one in the middle — and Germanic turned every one of those **p**s into an **f*
 So English got *five* and German got *fünf*, both starting with the letter that
 was once a *p*:
 
-> old **p** → Germanic **f**: **f**ive / *f*ünf, against Latin's *quinque*
+> old **p** → Germanic **f**: **five** and *fünf*, against Latin's *quinque*
 
 Say *fünf* and *five* one after the other. They are the same word, and the whole
 distance between them and the Latin one is that single turn.
