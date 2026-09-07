@@ -887,23 +887,25 @@ impl<B: StorageBackend + 'static> SmartHomeToolBridge<B> {
 
     /// Register every smart-home tool into `tool_runtime`.
     ///
-    /// Pre-flights the whole catalog before registering any of it. On an agent
-    /// surface the sixteen peer-naming tools are refused, and registering as
-    /// we go would return on the first of them with everything ahead of it
-    /// already wired -- a half-wired runtime whose contents depend on catalog
-    /// order. `HostProfileRuntime::check_registration` was written to avoid
-    /// exactly that; this is the same rule for the same reason.
+    /// Pre-flights the whole catalog before registering any of it, through
+    /// `InMemoryToolRuntime::check_registration` -- the same predicate
+    /// `register_handler` applies, so the two cannot drift.
+    ///
+    /// Registering as we go would return on the first refusal with everything
+    /// ahead of it already wired: a runtime whose contents depend on catalog
+    /// order. On an agent surface that is the fifteen peer-naming tools, but
+    /// it is not only those -- a duplicate id or an invalid definition strands
+    /// the runtime exactly the same way.
+    /// `HostProfileRuntime::check_registration` was written to avoid this;
+    /// this is the same rule for the same reason.
     ///
     /// The pre-flight refuses rather than skipping. A surface that silently
     /// received a smaller catalog than it asked for is the loud-to-silent
     /// trade this codebase does not make.
     pub fn register_all(&self, tool_runtime: &mut InMemoryToolRuntime) -> Result<(), ToolApiError> {
         let definitions = smart_home_tool_definitions();
-        if tool_runtime.is_agent_surface() {
-            let named = chief_of_staff_tool_api::tools_naming_another_agent(&definitions);
-            if let Some((tool_id, positions)) = named.into_iter().next() {
-                return Err(ToolApiError::ToolNamesAnotherAgent { tool_id, positions });
-            }
+        for definition in &definitions {
+            tool_runtime.check_registration(definition)?;
         }
         for definition in definitions {
             let handler = self.handler_for(&definition.tool_id);
@@ -952,9 +954,10 @@ impl<B: StorageBackend + 'static> SmartHomeToolBridge<B> {
     ///
     /// Deliberately a separate entry point rather than a flag on `invoke`.
     /// `invoke` serves non-agent callers and accepts any smart-home tool id,
-    /// including the sixteen audit, access-review and capability-grant tools
-    /// that report on principals by design. Those must keep working; only the
-    /// model-facing caller is an agent surface.
+    /// including the fifteen tools that name a principal by design -- the
+    /// audit, access-review and capability-grant readers, plus the
+    /// desired-state pair. Those must keep working; only the model-facing
+    /// caller is an agent surface.
     pub fn invoke_for_agent(
         &self,
         request: &ToolInvocationRequest,
@@ -96624,23 +96627,53 @@ mod tests {
         //
         // Asserting the error alone would not show that. The readback is the
         // test: the write must never have happened.
+        // The byte-identical call both halves of this test use.
+        let peer_write = |call_id: &str| {
+            request(
+                call_id,
+                SMART_HOME_SET_DESIRED_STATE_TOOL_ID,
+                object([
+                    ("entity_id", string("entity-light-1")),
+                    (
+                        "desired",
+                        JsonValue::Array(vec![object([
+                            ("capability_id", string("light.on_off")),
+                            ("value", JsonValue::Bool(true)),
+                        ])]),
+                    ),
+                    ("requested_by", string("agent:some-other-peer")),
+                ]),
+                1_000,
+            )
+        };
+
+        // Positive control FIRST, on its own bridge. Without it a `count` of
+        // zero below proves nothing: any future fixture change that stopped
+        // this write from landing -- a grant tier, a missing state snapshot, a
+        // `desired` shape -- would leave the test green while the input gate
+        // regressed. This pins that these exact arguments DO land when the
+        // refusal is not in the way.
+        let control = granted_bridge();
+        let landed = control
+            .invoke(&peer_write("call-peer-write-control"))
+            .expect("the non-agent entry point serves this tool");
+        assert!(landed.ok, "control write failed: {:?}", landed.error);
+        let control_readback = control
+            .invoke(&request(
+                "call-peer-write-control-readback",
+                SMART_HOME_LIST_DESIRED_STATES_TOOL_ID,
+                object([]),
+                1_100,
+            ))
+            .expect("control readback");
+        assert_eq!(
+            field(control_readback.output.as_ref().expect("output"), "count"),
+            Some(&integer(1)),
+            "the control write did not land, so the assertion below is vacuous"
+        );
+
         let bridge = granted_bridge();
-        let refused = bridge.invoke_for_agent(&request(
-            "call-peer-write",
-            SMART_HOME_SET_DESIRED_STATE_TOOL_ID,
-            object([
-                ("entity_id", string("entity-light-1")),
-                (
-                    "desired",
-                    JsonValue::Array(vec![object([
-                        ("capability_id", string("light.on_off")),
-                        ("value", JsonValue::Bool(true)),
-                    ])]),
-                ),
-                ("requested_by", string("agent:some-other-peer")),
-            ]),
-            1_000,
-        ));
+        let refused = bridge.invoke_for_agent(&peer_write("call-peer-write"));
         assert!(
             matches!(
                 refused,
@@ -96692,7 +96725,7 @@ mod tests {
 
     #[test]
     fn register_all_refuses_an_agent_surface_without_half_wiring_it() {
-        // Registering as we go would stop at the first of the sixteen
+        // Registering as we go would stop at the first of the fifteen
         // peer-naming tools with everything alphabetically ahead of it already
         // wired -- a surface whose contents depend on catalog order. The
         // registry must be untouched, not merely incomplete.

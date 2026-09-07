@@ -5182,7 +5182,7 @@ impl InMemoryToolRuntime {
     /// surface. Refusing them would trade this hole for an outage.
     ///
     /// Those positions are covered only by the value-level check in
-    /// `validate_supplied_value`, which uses the broader
+    /// `validate_supplied_value`, which uses the NARROWER
     /// `value_key_names_a_peer` vocabulary -- and that vocabulary deliberately
     /// allows `requested_by`, since in an undescribed blob it is usually the
     /// author's own annotation. So a handler that reaches into an `Any` bag
@@ -5197,15 +5197,48 @@ impl InMemoryToolRuntime {
     where
         H: ToolHandler + 'static,
     {
+        self.check_registration(&definition)?;
+        let tool_id = definition.tool_id.clone();
+        self.registry.register(definition)?;
+        self.handlers.insert(tool_id, Box::new(handler));
+        Ok(())
+    }
+
+    /// Decide, without mutating anything, whether `definition` would register.
+    ///
+    /// Exists so a BULK registrar can pre-flight its whole catalog and refuse
+    /// as a unit, rather than wiring tools until one is rejected and leaving a
+    /// runtime whose contents depend on catalog order.
+    ///
+    /// It must stay co-total with [`InMemoryToolRuntime::register_handler`],
+    /// which is why that method calls this one instead of repeating the
+    /// checks. A pre-flight that tested a SUBSET would report "this catalog
+    /// will register" and then half-wire the runtime anyway -- the failure it
+    /// was added to prevent, now with a check in front of it saying otherwise.
+    /// So this mirrors every rejection `InMemoryToolRegistry::register` can
+    /// make -- invalid definition, built-in mismatch, duplicate id -- plus the
+    /// agent-surface S-I7 refusal.
+    pub fn check_registration(&self, definition: &ToolDefinition) -> Result<(), ToolApiError> {
         if self.agent_surface {
-            let named = tools_naming_another_agent(std::slice::from_ref(&definition));
+            let named = tools_naming_another_agent(std::slice::from_ref(definition));
             if let Some((tool_id, positions)) = named.into_iter().next() {
                 return Err(ToolApiError::ToolNamesAnotherAgent { tool_id, positions });
             }
         }
-        let tool_id = definition.tool_id.clone();
-        self.registry.register(definition)?;
-        self.handlers.insert(tool_id, Box::new(handler));
+        let report = definition.validate();
+        if !report.ok {
+            return Err(ToolApiError::InvalidDefinition(report.errors));
+        }
+        if let Some(canonical) = builtin_tool_definition(&definition.tool_id) {
+            if canonical != *definition {
+                return Err(ToolApiError::BuiltinDefinitionMismatch(
+                    definition.tool_id.clone(),
+                ));
+            }
+        }
+        if self.registry.get(&definition.tool_id).is_some() {
+            return Err(ToolApiError::DuplicateToolId(definition.tool_id.clone()));
+        }
         Ok(())
     }
 

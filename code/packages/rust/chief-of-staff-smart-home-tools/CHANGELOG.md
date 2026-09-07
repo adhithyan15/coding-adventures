@@ -10,7 +10,7 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
-- `invoke_for_agent` now refuses the sixteen peer-naming smart-home tools
+- `invoke_for_agent` now refuses the fifteen peer-naming smart-home tools
   before their handlers run, inheriting the input-side S-I7 check added to
   `InMemoryToolRuntime::register_handler`. It returns
   `ToolApiError::ToolNamesAnotherAgent` rather than a failed `ToolResult`.
@@ -26,10 +26,12 @@ All notable changes to this package will be documented in this file.
   `set_desired_state` is not in. That allowlist was the only thing holding,
   and it lives in another crate -- so the guarantee now sits on the method
   whose name promises it, where a second caller inherits it.
-- `register_all` pre-flights the catalog before registering any of it. On an
-  agent surface it would otherwise return on the first peer-naming tool with
-  everything ahead of it already wired, leaving a runtime whose contents
-  depend on catalog order.
+- `register_all` pre-flights the catalog through
+  `InMemoryToolRuntime::check_registration` before registering any of it.
+  It would otherwise return on the first refusal with everything ahead of it
+  already wired, leaving a runtime whose contents depend on catalog order --
+  on an agent surface that is the fifteen peer-naming tools, but a duplicate
+  id or an invalid definition strands it the same way.
 - Correct the `invoke_for_agent` doc, which described the output walk as the
   whole mechanism and undercounted the peer-naming tools as ten.
 

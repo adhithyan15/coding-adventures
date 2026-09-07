@@ -144,6 +144,37 @@ fn runtime_with(delivery: Arc<dyn VaultDirectDelivery>) -> InMemoryToolRuntime {
     runtime
 }
 
+/// `register_all` must refuse an agent surface as a UNIT.
+///
+/// `request_direct` names a peer through `consumer_agent_id`, so on an agent
+/// surface it cannot register. Without a pre-flight the loop wires
+/// `request_lease` first and then fails -- leaving a vault holding exactly the
+/// half that looks healthy, which is worse than an unwired one because the
+/// failure surfaces later and somewhere else.
+#[test]
+fn register_all_refuses_an_agent_surface_without_half_wiring_it() {
+    let bridge = VaultToolBridge::new(vault_with_secret(), Arc::new(RecordingDelivery::default()));
+    let mut runtime = InMemoryToolRuntime::agent_surface();
+    let refused = bridge.register_all(&mut runtime);
+    assert!(
+        matches!(
+            refused,
+            Err(ToolApiError::ToolNamesAnotherAgent { ref tool_id, .. })
+                if tool_id == VAULT_REQUEST_DIRECT_TOOL_ID
+        ),
+        "expected an S-I7 refusal naming request_direct, got {refused:?}"
+    );
+    assert!(
+        runtime.list().is_empty(),
+        "register_all left {:?} behind on a refused agent surface",
+        runtime
+            .list()
+            .iter()
+            .map(|d| &d.tool_id)
+            .collect::<Vec<_>>()
+    );
+}
+
 fn object(fields: Vec<(&str, JsonValue)>) -> JsonValue {
     JsonValue::Object(
         fields

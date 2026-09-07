@@ -3358,9 +3358,9 @@ mod tests {
         // list that actually reaches a model on the shipping path, so this is
         // the one place the rule has to hold today.
         //
-        // Sixteen tools in the wider smart-home catalog DO name a peer, via
+        // Fifteen tools in the wider smart-home catalog DO name a peer, via
         // `principal_id` or `requested_by` -- the audit, access-review and
-        // capability-grant tools. None is in this list, and this test is what
+        // capability-grant readers, plus the desired-state pair. None is in this list, and this test is what
         // keeps one from being added without the S-I7 question being asked.
         //
         // They are also refused by the agent-surface runtime itself now, so

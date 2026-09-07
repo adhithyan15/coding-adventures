@@ -23,8 +23,13 @@ All notable changes to this package will be documented in this file.
   refusal exists to exclude. Every call site already constructed-then-marked,
   so nothing was broken -- but the type permitted the wrong order while the
   docs described the guarantee as unconditional.
-- Add `is_agent_surface()`, so a bulk registrar can pre-flight its catalog
-  against the same rule instead of failing partway through.
+- Add `is_agent_surface()` and `check_registration()`. The latter decides
+  without mutating whether a definition would register, so a bulk registrar
+  can pre-flight its whole catalog and refuse as a unit. `register_handler`
+  calls it rather than repeating the checks, so the two cannot drift -- a
+  pre-flight testing a SUBSET would report "this catalog will register" and
+  then half-wire the runtime anyway, which is the failure it exists to
+  prevent with a check in front of it saying otherwise.
 - SCOPE, stated because the doc previously implied more: the refusal covers
   only positions the schema DECLARES. `Any` and `allow_unknown_fields`
   positions are not refused, because `smart_home.command`, `pair_bridge` and
