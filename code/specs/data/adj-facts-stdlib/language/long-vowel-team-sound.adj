@@ -87,17 +87,17 @@
 % with the sounds associated with them. The lessons also build students’
 % proficiency in reading and spelling words that contain these vowel teams."
 %
-% The `<U+00A0>` marks are NOTATION, not text: the page uses NO-BREAK SPACES
-% at those 1 positions and the `source` field carries the real character.
-% They are written out here because a literal U+00A0 inside a wrapped
-% comment is invisible to a reader and a break opportunity to a rewrapper —
-% the two ways this byte has already gone missing once.
+% The `<U+00A0>` mark is NOTATION, not text: the page uses a NO-BREAK SPACE
+% at that one position and the `source` field carries the real character.
+% It is written out here because a literal U+00A0 inside a wrapped comment
+% is invisible to a reader and a break opportunity to a rewrapper — the two
+% ways this byte has already gone missing once.
 %
 % It says what a vowel team IS and which vowel teams the unit covers. It
 % names no spelling and no sound, so it grounds none of the ten rows. Those
 % come from the unit's lesson table, whose "Concept" column names each
 % lesson's spellings with their sound, in macron-marked long-vowel notation
-% — the source's own, not IPA. Those cells extract as SEPARATE BLOCKS, one
+% — the page's own, not IPA. Those cells extract as SEPARATE BLOCKS, one
 % per cell, which is exactly the cross-block/table-row class held open on
 % #14111 ("is a table row a verbatim span?"), so they are deliberately NOT
 % presented here as a quoted span, and each row below names the cell it

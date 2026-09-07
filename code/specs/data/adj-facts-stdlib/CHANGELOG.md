@@ -16,7 +16,7 @@ landed and why, not a semver-tracked API.
 
   ```
   A consonant digraph is … speech sound. Digraphs Unit Resources (Lessons 42-53): 44 ck /k/, 45 sh …
-  ^---------- page block 26 ------------^ ^---------- heading and table cells, welded ----------^
+  ^-- block 26 minus its last sentence --^ ^--------- heading and table cells, welded ---------^
   ```
 
   No page contains that string. Across the five values the weld invented a colon after the unit
@@ -134,8 +134,14 @@ landed and why, not a semver-tracked API.
   The post-repair sweep was first launched from the scratchpad rather than the repo root. Its file
   glob is relative, so it matched no libraries, and it printed **`NOT CONTIGUOUS: 0`** and exited
   **0** — a perfect result from a sweep that examined nothing, in the same shape as a cargo filter
-  matching zero tests and printing "test result: ok". `verbatim_screen.py` now refuses to report on
-  fewer than 200 libraries, the guard `scratch_tag_screen.py` has carried since 4d.
+  matching zero tests and printing "test result: ok". The sweep script now refuses to report on
+  fewer than 200 libraries — the guard the scratch-tag screen has carried since 4d.
+
+  **A caveat that belongs next to every figure in this entry**: these screens are working-tree
+  instruments, not repository guards. They live in a scratchpad, so "now refuses" is not something
+  a reader can go and watch, and the sweep totals below are reported from them rather than
+  reproducible from a commit. Whether they should be committed under the stdlib's tooling is
+  filed as #14444 rather than decided inside a content fix.
 
   **The re-run was then thrown out too**, for a different reason: it ran CONCURRENTLY with edits to
   the very files it was sweeping. It reported `other-vowel-team-sound` non-contiguous; re-screened
@@ -163,8 +169,13 @@ landed and why, not a semver-tracked API.
   waits, being two MathWorld definitions concatenated with an authored third sentence — a different
   page and a different weld). **Two** are prose *describing* a table ("MathWorld's Platonic Solid
   table gives, for each solid, its number of vertices: …") sitting in a field that claims to quote.
-  **Three** are mangled table dumps — `chemistry/atomic-weights:73` ships `6tCtcarbont 12.011 ±
-  0.002`, tab characters flattened into a literal `t`. **Three** are rendered math the extractor
+  **Three** are table dumps — `chemistry/atomic-weights:73` ships
+  `6\tC\tcarbon\t 12.011 ± 0.002    8\tO\toxygen\t 15.999 ± 0.001`: two element rows joined by tab
+  escapes, which the reader turns into real tabs. Round 3 corrected that description twice over.
+  The first draft rendered it `6tCtcarbont`, silently dropping the backslashes — **a non-verbatim
+  quotation inside the entry documenting a repair for non-verbatim quotation** — and then
+  explained it as "tab characters flattened into a literal `t`", which is not what the field does
+  at all. **Three** are rendered math the extractor
   drops, and **one** is an invented `|` separator.
 
   Groups two and three are the same defect as this one and repairable the same way. The rest waits

@@ -32,21 +32,22 @@
 %
 % DESIGN NOTE — why the reverse direction is genuinely one-key-per-answer but
 % MANY-KEYS-per-sound (the mirror image of `digraph-sound.adj`'s `th` case):
-% the cited source pairs TWO different spellings with the SAME sound in each
+% the cited page's lesson table pairs TWO different spellings with the SAME
+% sound in each
 % of its two diphthong lessons -- lesson 95 gives "oi /oi/, oy /oi/" (both
 % spellings of the SAME sound) and lesson 96 gives "ou /ow/, ow /ow/" (same
 % pattern again). So a FORWARD query on any one spelling returns exactly one
 % sound, but a BACKWARD query on a sound returns BOTH spellings that carry
 % it -- the opposite shape from `digraph-sound.adj`'s `th`, which forward-
 % recalled two sounds from one spelling. Both are honest reflections of the
-% same source, read in opposite directions.
+% same lesson table, read in opposite directions.
 %
 % DESIGN NOTE — why lesson 98 ("kn /n/, wr /r/, mb /m/") is NOT a row here
 % even though it sits on the SAME cited page: the page's own heading splits
 % it out as a separate "Silent Letters Unit", and its own opening paragraph
 % describes it as "three common silent letter patterns" -- a silent
 % CONSONANT-cluster spelling convention, not a vowel diphthong. Including it
-% here would misrepresent the source's own categorization. Lesson 97
+% here would misrepresent the cited page's own categorization. Lesson 97
 % ("Vowel Teams and Diphthongs Review") is a cumulative review lesson, not a
 % new digraph-sound pairing, and is likewise deliberately not a row -- the
 % SAME review-lesson exclusion `digraph-sound.adj` already established for

@@ -178,11 +178,12 @@ fn digraph_sound_abstains_honestly_on_an_untabled_digraph() {
 ///
 /// The POSITIVE needle is the paragraph's closing sentence, which the
 /// stitch dropped, with the page's own U+2019 apostrophe. The FIRST
-/// negative needle SPANS THE SEAM, joining the paragraph's own last words
-/// to the heading welded after them, so it matches only if the weld is
-/// back; a needle wholly inside either side would not discriminate. The
-/// other two are artifacts the stitch invented outright, and they are not
-/// the same kind of artifact. The colon after the unit heading occurs
+/// negative needle SPANS THE SEAM, joining the last words the stitch DID
+/// carry to the heading welded after them — mid-paragraph, since this
+/// file's stitch dropped the closing sentences, so it matches only if the
+/// weld is back; a needle wholly inside either side would not discriminate.
+/// The other two are artifacts the stitch invented outright, and they are
+/// not the same kind of artifact. The colon after the unit heading occurs
 /// nowhere on the page under any normalisation. The lesson number welded to
 /// the Concept cell after it is subtler, and worth being exact about: it is
 /// NOT absent from the page. Normalise the page's whitespace and "44 ck
@@ -217,7 +218,7 @@ fn digraph_sound_source_is_the_page_paragraph_not_a_stitched_lesson_table() {
     );
     assert!(
         !out.contains("speech sound. Digraphs"),
-        "the seam itself: the paragraph's last words welded to the unit heading: {out}"
+        "the seam itself: the last words the stitch carried, welded to the unit heading: {out}"
     );
     assert!(
         !out.contains("(Lessons 42-53):"),
