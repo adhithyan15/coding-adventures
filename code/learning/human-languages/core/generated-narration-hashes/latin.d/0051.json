@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 51,
-  "sourceHash": "fnv1a64:d9fffbe09435bbf4",
+  "sourceHash": "fnv1a64:d22f07983aaa3348",
   "lessonIds": [
     "LA-C51-amicus",
     "LA-C51-pecunia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "latin/narration/ch51.txt",
   "json": "latin/narration/ch51.json",
-  "textHash": "fnv1a64:ba796cead91a7cf4",
-  "jsonHash": "fnv1a64:e6f294f0297ce764",
+  "textHash": "fnv1a64:a81e9aad10cffac7",
+  "jsonHash": "fnv1a64:cbf22602b4441152",
   "findings": []
 }

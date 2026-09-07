@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Amicus, Pecunia, Medicus, Miles, Epistula",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d9fffbe09435bbf4",
+  "sourceHash": "fnv1a64:d22f07983aaa3348",
   "lessons": [
     {
       "id": "LA-C51-amicus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1a290671e448305",
+      "sourceHash": "fnv1a64:f100b67024a3e463",
       "notice": null,
       "blocks": [
         {
@@ -108,7 +108,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is built straight onto amō, \"I love,\" from the amō lesson: a friend is simply one who is loved. And its negative is the interesting half. In-amīcus becomes inimīcus, \"not-friend,\" and inimīcus is English enemy. The most hostile word in the language is the friendliest one with two letters in front of it."
+              "text": "It is built straight onto amō, \"I love,\" from the amō lesson: a friend is one who is loved, and nothing more than that. And its negative is the interesting half. In-amīcus becomes inimīcus, \"not-friend,\" and inimīcus is English enemy. The most hostile word in the language is the friendliest one with two letters in front of it."
             },
             {
               "kind": "speech",
