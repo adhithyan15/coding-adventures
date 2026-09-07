@@ -10,10 +10,10 @@ in one spot.
 1. **Consonants carry a built-in "a".** क = "ka," न = "na," म = "ma." You never
    write the short *a* — it's already there.
 2. **A vowel sign (*mātrā*) changes that built-in vowel.** Attached to a
-   consonant, it swaps the *a* for another vowel:
-   - **ा** = ā (का = kā) · **ि** = i (कि = ki, written *before*, read *after*)
-     · **ी** = ī · **ु** = u · **ू** = ū · **े** = e (के = ke) · **ै** = ai ·
-     **ो** = o · **ौ** = au.
+   consonant, it swaps the *a* for another vowel: **ा** = ā (का = kā) ·
+   **ि** = i (कि = ki, written *before*, read *after*) · **ी** = ī ·
+   **ु** = u · **ू** = ū · **े** = e (के = ke) · **ै** = ai · **ो** = o ·
+   **ौ** = au.
 3. **A *halant* (्) removes the built-in vowel.** क् = bare "k." A vowel-less
    consonant leans onto the next, forming a **conjunct**: स् + त → स्त ("st"),
    न् + य → न्य ("ny"), क् + र → क्र ("kr").
