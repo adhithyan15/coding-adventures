@@ -18,9 +18,9 @@ component Toast {
   // The toast's message body. Required.
   slot message : text ;
 
-  // Variant keyword. One of: primary, secondary, success, danger,
-  // warning, info, light, dark. Default: info.
-  slot variant : text ;
+  // Variant keyword. Default: info. The closed set is declared here rather
+  // than described in prose, so an undeclared value cannot compile (UI49).
+  slot variant : one-of primary secondary success danger warning info light dark ;
 
   // Whether the toast is currently visible. Hosts flip this slot
   // to control show/hide. (Auto-dismiss timers + show animations

@@ -7,13 +7,11 @@
 // this component just declares the surface.
 
 component Spinner {
-  // Size keyword. One of: sm, md, lg. Default: md.
-  // Affects the diameter of the rendered spinner.
-  slot size : text ;
+  // Size keyword. Default: md. Affects the diameter of the rendered spinner.
+  slot size : one-of sm md lg ;
 
-  // Variant keyword (one of: primary, secondary, success, danger,
-  // warning, info, light, dark). Default: primary. Drives color.
-  slot variant : text ;
+  // Variant keyword. Default: primary. Drives color.
+  slot variant : one-of primary secondary success danger warning info light dark ;
 
   // Optional accessibility label read by screen readers. When
   // empty, the spinner falls back to a generic "Loading" announce
