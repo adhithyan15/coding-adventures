@@ -1,9 +1,11 @@
 //! End-to-end test for the language FACTS library
 //! (`adj-facts-stdlib/language/digraph-sound.adj`) driven through the built
 //! CLI: a native `table` naming nine common consonant digraph lessons and
-//! the single speech sound each represents, quoted verbatim from the
+//! the single speech sound each represents, read off the lesson table of the
 //! University of Florida Literacy Institute (UFLI) Foundations Toolbox's
-//! "Digraphs Unit Resources (Lessons 42-53)" page. `th` carries TWO rows
+//! "Digraphs Unit Resources (Lessons 42-53)" page. The library's `source` is
+//! that page's definition paragraph, which grounds the DEFINITION and not the
+//! rows -- see its Provenance block, and the 4g pin at the bottom of this file. `th` carries TWO rows
 //! (voiced and unvoiced), an honest one-key/many-values reflection of the
 //! source's own lesson split. Abstains honestly on `qu`, a real digraph the
 //! same UFLI scope-and-sequence covers elsewhere but not one of these nine
@@ -149,5 +151,55 @@ fn digraph_sound_abstains_honestly_on_an_untabled_digraph() {
         out.contains("\"abstained\":true"),
         "qu is a real digraph the same UFLI scope-and-sequence covers elsewhere, \
          but not one of these nine lessons -- honest abstention, never invented: {out}"
+    );
+}
+
+/// Installment 4g (#13934): the `source` is the cited page's definition
+/// PARAGRAPH, not that paragraph with the unit's lesson table stitched
+/// onto it.
+///
+/// Until 4g the field read "...speech sound. Digraphs Unit Resources (Lessons 42-53): 44 ck /k/, 45 sh /sh/, ..." -- a string that
+/// appears nowhere on the page. It invented a colon after the unit
+/// heading, invented separators between each lesson number and the cell
+/// before it, and flattened the page's U+2019 apostrophe to an ASCII one.
+///
+/// The POSITIVE needle is the paragraph's closing sentence, which the stitch dropped, with the page's own U+2019 apostrophe. The NEGATIVE needles SPAN
+/// THE SEAM -- each joins the paragraph's own last words to the heading
+/// welded after them -- so they can only match if the stitch comes back;
+/// a needle wholly inside either side would still pass a half-undone
+/// repair.
+///
+/// This pin does NOT assert that the rows are cited by that span. They
+/// are not: the rows read the page's lesson-table Concept cells, whose
+/// status as verbatim spans is the question held open on #14111, and the
+/// library's Provenance block says so.
+#[test]
+fn digraph_sound_source_is_the_page_paragraph_not_a_stitched_lesson_table() {
+    let dir = scratch("span_not_stitch");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"digraph-sound.adj\"\n\
+         ? digraph_sound(sh, $Sound)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("The lessons in this unit are designed to strengthen students\u{2019} familiarity with consonant digraphs."),
+        "the citation carries the page paragraph whole: {out}"
+    );
+    assert!(
+        !out.contains("speech sound. Digraphs"),
+        "the seam itself: the paragraph's last words welded to the unit heading: {out}"
+    );
+    assert!(
+        !out.contains("(Lessons 42-53):"),
+        "the colon after the heading, which no cell on the page contains: {out}"
+    );
+    assert!(
+        !out.contains("44 ck /k/"),
+        "a lesson number stitched to the Concept cell that follows it: {out}"
     );
 }

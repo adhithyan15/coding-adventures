@@ -26,8 +26,8 @@
 % relation `other_vowel_team_sound(spelling, sound)` carrying the source
 % citation, so the lookup above is the ordinary SLD binding query — the
 % engine returns the sound WITH its source, on the CPU, with zero model
-% calls, and abstains on any spelling not one of these eleven source-cited
-% lessons. The query also runs BACKWARD — bind a sound and recall EVERY
+% calls, and abstains on any spelling the cited page's lesson table does
+% not name. The query also runs BACKWARD — bind a sound and recall EVERY
 % spelling that carries it:
 %
 %     ? other_vowel_team_sound($Sp, long_u_sound)
@@ -60,7 +60,7 @@
 % lesson 94 as "ea /ĕ/, a /ŏ/" — the SAME two-letter spelling "ea" that
 % `long-vowel-team-sound.adj` already tables (lesson 85 of the neighboring
 % "Long Vowel Teams" unit) as the steady LONG-e sound in "team"/"rain". Both
-% are real, independently source-cited English facts about the identical two
+% are real English facts, each tabled by UFLI on its own unit page, about the
 % letters — "ea" genuinely IS pronounced two different ways depending on the
 % word ("team"/"rain" vs. "bread"/"head") — and UFLI itself teaches them as
 % two separate lessons in two separate units. Because these are two
@@ -74,7 +74,7 @@
 % which predicate governs it. Rather than risk that silent misread, this
 % table disambiguates the one genuinely overlapping spelling with an
 % explicit `_short_e` suffix on the atom itself, naming which of the two
-% source-cited senses it stands for right in the key — the identical
+% tabled senses it stands for right in the key — the identical
 % source-driven atom-label convention `long-vowel-team-sound.adj`'s
 % `ow_long_o` and `suffix-meaning.adj`'s `_er_agentive` already established.
 % A query on the bare atom `ea` against THIS table's predicate honestly
@@ -115,23 +115,46 @@
 % 97), and `long-vowel-team-sound.adj` (its own lesson 88) already
 % established for this stdlib.
 %
-% Provenance: quoted verbatim from the University of Florida Literacy
-% Institute (UFLI)'s Foundations Toolbox, "Other Vowel Teams Unit Resources
-% (Lessons 89-94)" page — the same source family as `digraph-sound.adj`/
-% `diphthong-sound.adj`/`long-vowel-team-sound.adj`/`silent-letter-
-% sound.adj`, a different page, the direct sequel to `long-vowel-team-
-% sound.adj`'s own cited page. curl-fetched directly (not just an
-% AI-summarized WebFetch) and confirmed byte-for-byte before writing this
-% file — the raw HTML's own opening definition reads, verbatim: "A vowel
-% team is a combination of letters that represents a vowel sound. These
-% lessons focus on vowel teams that represent a new sound (e.g., draw, book)
-% and vowel teams that include letters that aren't vowels (e.g., dew,
-% high)." Its own lesson table reads, verbatim: "89 u /oo/, oo /oo/ ... 90
-% oo /ū/ ... 91 ew /ū/, ui /ū/, ue /ū/ ... 93 au /aw/, aw /aw/, augh /aw/
-% ... 94 ea /ĕ/, a /ŏ/" (macron/breve-marked vowel symbols, the source's
-% own notation — not IPA slash symbols).
+% Provenance — the `source` and the ROWS are not grounded by the same thing,
+% and this note says which is which. Both come from the University of
+% Florida Literacy Institute (UFLI)'s Foundations Toolbox, "Other Vowel
+% Teams Unit Resources (Lessons 89-94)" page — the same source family as
+% `digraph-sound.adj`/`diphthong-sound.adj`/`long-vowel-team-sound.adj`/`silent-letter-sound.adj`,
+% the direct sequel to `long-vowel-team-sound.adj`'s own cited page —
+% curl-fetched directly rather than through an AI-summarized WebFetch.
 %
-%     spelling (atom label)   sound (atom label)   lesson concept (verbatim)
+% The `source` is that page's opening definition paragraph, quoted WHOLE and
+% byte for byte: "A vowel team is a combination of letters that represents a
+% vowel sound. These lessons focus on vowel teams that represent a new sound
+% (e.g., draw, book) and vowel teams that include letters that aren’t vowels
+% (e.g., dew, high). These lessons are designed to build students’ accuracy
+% and automaticity in connecting these vowel teams with the sounds
+% associated with them. The lessons also build students’ proficiency in
+% reading and spelling words that contain these vowel teams."
+%
+% It says what a vowel team IS and which vowel teams the unit covers. It
+% names no spelling and no sound, so it grounds none of the eleven rows.
+% Those come from the unit's lesson table, whose "Concept" column names each
+% lesson's spellings with their sound, in macron/breve-marked notation — the
+% source's own, not IPA. Those cells extract as SEPARATE BLOCKS, one per
+% cell, which is exactly the cross-block/table-row class held open on #14111
+% ("is a table row a verbatim span?"), so they are deliberately NOT
+% presented here as a quoted span, and each row below names the cell it
+% reads instead.
+%
+% Until installment 4g the `source` field carried the definition sentences
+% with a hand-assembled rendering of that table STITCHED ONTO THEM, a string
+% that appears nowhere on the page: it invented a colon after the unit
+% heading, invented a separator between each lesson number and the previous
+% cell, dropped the paragraph's two closing sentences, and flattened the
+% page's U+2019 apostrophe to an ASCII one in "aren't" — the one apostrophe
+% it did reach. A composition presented as a quotation is a defect in the
+% FIELD, not a position on the held question — removing it takes no position
+% either way. In this file the stitch also inserted a space the page does
+% not have: lesson 91's cell breaks the line after the second comma, so it
+% reads "ui /ū/,ue /ū/", and the old value wrote "ui /ū/, ue /ū/".
+%
+%     spelling (atom label)   sound (atom label)   part of the Concept cell
 %     -----------------------  --------------------  --------------------------
 %     u                        short_oo_sound         "u /oo/" (lesson 89)
 %     oo                       short_oo_sound         "oo /oo/" (lesson 89)
@@ -144,6 +167,11 @@
 %     augh                     aw_sound               "augh /aw/" (lesson 93)
 %     ea_short_e               short_e_sound          "ea /ĕ/" (lesson 94 -- disambiguated, see design note)
 %     a                        short_o_sound          "a /ŏ/" (lesson 94)
+%
+% The third column is the part of the Concept cell each row reads, not the
+% whole cell. The cells themselves are: lesson 89 is "u /oo/, oo /oo/";
+% lesson 90 is "oo /ū/"; lesson 91 is "ew /ū/, ui /ū/,ue /ū/"; lesson 93 is
+% "au /aw/, aw /aw/, augh /aw/"; lesson 94 is "ea /ĕ/, a /ŏ/".
 %
 % `trust authoritative` — UFLI is a university literacy research center
 % (University of Florida, .edu), the same tier and same source family
@@ -170,19 +198,19 @@
 table other_vowel_team_sound {
     columns spelling, sound
 
-    row (u, short_oo_sound)
-    row (oo, short_oo_sound)
-    row (oo, long_u_sound)
-    row (ew, long_u_sound)
-    row (ui, long_u_sound)
-    row (ue, long_u_sound)
-    row (au, aw_sound)
-    row (aw, aw_sound)
-    row (augh, aw_sound)
-    row (ea_short_e, short_e_sound)
-    row (a, short_o_sound)
+    row (u, short_oo_sound)       % lesson 89 cell: "u /oo/, oo /oo/"
+    row (oo, short_oo_sound)      % lesson 89 cell: "u /oo/, oo /oo/"
+    row (oo, long_u_sound)        % lesson 90 cell: "oo /ū/"
+    row (ew, long_u_sound)        % lesson 91 cell: "ew /ū/, ui /ū/,ue /ū/"
+    row (ui, long_u_sound)        % lesson 91 cell: "ew /ū/, ui /ū/,ue /ū/"
+    row (ue, long_u_sound)        % lesson 91 cell: "ew /ū/, ui /ū/,ue /ū/"
+    row (au, aw_sound)            % lesson 93 cell: "au /aw/, aw /aw/, augh /aw/"
+    row (aw, aw_sound)            % lesson 93 cell: "au /aw/, aw /aw/, augh /aw/"
+    row (augh, aw_sound)          % lesson 93 cell: "au /aw/, aw /aw/, augh /aw/"
+    row (ea_short_e, short_e_sound) % lesson 94 cell: "ea /ĕ/, a /ŏ/"
+    row (a, short_o_sound)        % lesson 94 cell: "ea /ĕ/, a /ŏ/"
 
-    source "A vowel team is a combination of letters that represents a vowel sound. These lessons focus on vowel teams that represent a new sound (e.g., draw, book) and vowel teams that include letters that aren't vowels (e.g., dew, high). Other Vowel Teams Unit Resources (Lessons 89-94): 89 u /oo/, oo /oo/, 90 oo /ū/, 91 ew /ū/, ui /ū/, ue /ū/, 93 au /aw/, aw /aw/, augh /aw/, 94 ea /ĕ/, a /ŏ/."
+    source "A vowel team is a combination of letters that represents a vowel sound. These lessons focus on vowel teams that represent a new sound (e.g., draw, book) and vowel teams that include letters that aren’t vowels (e.g., dew, high). These lessons are designed to build students’ accuracy and automaticity in connecting these vowel teams with the sounds associated with them. The lessons also build students’ proficiency in reading and spelling words that contain these vowel teams."
     locator "https://ufli.education.ufl.edu/foundations/toolbox/89-94/"
     trust authoritative
 }

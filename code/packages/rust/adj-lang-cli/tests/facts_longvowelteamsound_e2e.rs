@@ -89,7 +89,7 @@ fn long_vowel_team_sound_recall_binds_the_sound_with_citation() {
     // citation, an assertion either one satisfies pins neither.
     // See issues #13916 and #13918.
     assert!(
-        out.contains("\"source\":\"A vowel team is a combination of letters that represents a vowel sound. These lessons focus on vowel teams that represent the sound of the first vowel (e.g., team, rain). Long Vowel Teams Unit Resources (Lessons 84-88): 84 ai /ā/, ay /ā/, 85 ee /ē/, ea /ē/, ey /ē/, 86 oa /ō/, ow /ō/, oe /ō/, 87 ie /ī/, igh /ī/.\""),
+        out.contains("\"source\":\"A vowel team is a combination of letters that represents a vowel sound. These lessons focus on vowel teams that represent the sound of the first vowel (e.g., team, rain). These lessons are designed to build students\u{2019} accuracy and automaticity in connecting these vowel teams with the sounds associated with them. The lessons also build students\u{2019} proficiency in reading and spelling words that contain these vowel teams.\""),
         "the citation is the whole source sentence, exactly: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
@@ -198,5 +198,55 @@ fn long_vowel_team_sound_abstains_honestly_on_a_different_ufli_unit() {
         "au is tabled by UFLI under a DIFFERENT unit (Other Vowel Teams, \
          lesson 93), not this cited Long Vowel Teams page -- honest \
          abstention, never invented: {out}"
+    );
+}
+
+/// Installment 4g (#13934): the `source` is the cited page's definition
+/// PARAGRAPH, not that paragraph with the unit's lesson table stitched
+/// onto it.
+///
+/// Until 4g the field read "...(e.g., team, rain). Long Vowel Teams Unit Resources (Lessons 84-88): 84 ai /a/, ay /a/, ..." -- a string that
+/// appears nowhere on the page. It invented a colon after the unit
+/// heading, invented separators between each lesson number and the cell
+/// before it, and flattened the page's U+2019 apostrophe to an ASCII one.
+///
+/// The POSITIVE needle is one of the two closing sentences the stitch dropped, with the page's own U+2019 apostrophe. The NEGATIVE needles SPAN
+/// THE SEAM -- each joins the paragraph's own last words to the heading
+/// welded after them -- so they can only match if the stitch comes back;
+/// a needle wholly inside either side would still pass a half-undone
+/// repair.
+///
+/// This pin does NOT assert that the rows are cited by that span. They
+/// are not: the rows read the page's lesson-table Concept cells, whose
+/// status as verbatim spans is the question held open on #14111, and the
+/// library's Provenance block says so.
+#[test]
+fn long_vowel_team_sound_source_is_the_page_paragraph_not_a_stitched_lesson_table() {
+    let dir = scratch("span_not_stitch");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"long-vowel-team-sound.adj\"\n\
+         ? long_vowel_team_sound(ai, $Sound)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("These lessons are designed to build students\u{2019} accuracy and automaticity in connecting these vowel teams with the sounds associated with them."),
+        "the citation carries the page paragraph whole: {out}"
+    );
+    assert!(
+        !out.contains("rain). Long Vowel Teams"),
+        "the seam itself: the paragraph's last words welded to the unit heading: {out}"
+    );
+    assert!(
+        !out.contains("(Lessons 84-88):"),
+        "the colon after the heading, which no cell on the page contains: {out}"
+    );
+    assert!(
+        !out.contains("84 ai "),
+        "a lesson number stitched to the Concept cell that follows it: {out}"
     );
 }

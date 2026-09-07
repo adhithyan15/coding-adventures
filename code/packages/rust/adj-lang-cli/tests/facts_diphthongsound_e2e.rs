@@ -68,7 +68,7 @@ fn diphthong_sound_recall_binds_the_sound_with_citation() {
     // citation, an assertion either one satisfies pins neither.
     // See issues #13916 and #13918.
     assert!(
-        out.contains("\"source\":\"A Diphthong is sound produced by combining two vowels, gliding the tongue from one position to another during articulation (e.g., /ow/, /oy/). These lessons are designed to build students' accuracy and automaticity in recognizing diphthongs. The lessons also build students' proficiency in reading and spelling words that contain diphthongs. Diphthongs and Silent Letters Units (Lessons 95-98): 95 oi /oi/, oy /oi/, 96 ou /ow/, ow /ow/.\""),
+        out.contains("\"source\":\"A Diphthong is sound produced by combining two vowels, gliding the tongue from one position to another during articulation (e.g., /ow/, /oy/). These lessons are designed to build students\u{2019} accuracy and automaticity in recognizing diphthongs. The lessons also build students\u{2019} proficiency in reading and spelling words that contain diphthongs.\""),
         "the citation is the whole source sentence, exactly: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
@@ -157,5 +157,55 @@ fn diphthong_sound_abstains_honestly_on_a_different_ufli_unit() {
         "au is tabled by UFLI under a DIFFERENT unit (Other Vowel Teams, \
          lesson 93), not this cited Diphthongs page -- honest abstention, \
          never invented: {out}"
+    );
+}
+
+/// Installment 4g (#13934): the `source` is the cited page's definition
+/// PARAGRAPH, not that paragraph with the unit's lesson table stitched
+/// onto it.
+///
+/// Until 4g the field read "...contain diphthongs. Diphthongs and Silent Letters Units (Lessons 95-98): 95 oi /oi/, oy /oi/, ..." -- a string that
+/// appears nowhere on the page. It invented a colon after the unit
+/// heading, invented separators between each lesson number and the cell
+/// before it, and flattened the page's U+2019 apostrophe to an ASCII one.
+///
+/// The POSITIVE needle is the page's U+2019 apostrophe in "students'", which the stitch flattened to ASCII -- this paragraph is otherwise carried whole by both the old value and the new, so the apostrophe is the discriminating byte. The NEGATIVE needles SPAN
+/// THE SEAM -- each joins the paragraph's own last words to the heading
+/// welded after them -- so they can only match if the stitch comes back;
+/// a needle wholly inside either side would still pass a half-undone
+/// repair.
+///
+/// This pin does NOT assert that the rows are cited by that span. They
+/// are not: the rows read the page's lesson-table Concept cells, whose
+/// status as verbatim spans is the question held open on #14111, and the
+/// library's Provenance block says so.
+#[test]
+fn diphthong_sound_source_is_the_page_paragraph_not_a_stitched_lesson_table() {
+    let dir = scratch("span_not_stitch");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"diphthong-sound.adj\"\n\
+         ? diphthong_sound(oi, $Sound)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("build students\u{2019} accuracy and automaticity in recognizing diphthongs."),
+        "the citation carries the page paragraph whole: {out}"
+    );
+    assert!(
+        !out.contains("diphthongs. Diphthongs and Silent Letters"),
+        "the seam itself: the paragraph's last word welded to the unit heading: {out}"
+    );
+    assert!(
+        !out.contains("(Lessons 95-98):"),
+        "the colon after the heading, which no cell on the page contains: {out}"
+    );
+    assert!(
+        !out.contains("95 oi /oi/"),
+        "a lesson number stitched to the Concept cell that follows it: {out}"
     );
 }

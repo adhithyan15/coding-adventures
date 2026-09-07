@@ -24,7 +24,7 @@
 % relation `digraph_sound(digraph, sound)` carrying the source citation, so
 % the lookup above is the ordinary SLD binding query — the engine returns the
 % sound WITH its source, on the CPU, with zero model calls, and abstains on
-% any digraph not one of these nine source-cited lessons. The query also runs
+% any digraph the cited page's lesson table does not name. The query also runs
 % BACKWARD — bind a sound and recall which digraph carries it:
 %
 %     ? digraph_sound($D, ch_sound)
@@ -42,22 +42,43 @@
 % forward query on `th` therefore yields BOTH rows, not one — an honest
 % reflection of the source, not an omission.
 %
-% Provenance: quoted verbatim from the University of Florida Literacy
-% Institute (UFLI)'s Foundations Toolbox, "Digraphs Unit Resources (Lessons
-% 42-53)" page, whose own lesson table names each digraph lesson with its
-% sound directly in the "Concept" column, alongside the page's own opening
-% definition sentence: "A consonant digraph is a combination of two
-% consonant letters that represent a single consonant speech sound." curl-
-% fetched directly (not just an AI-summarized WebFetch) and confirmed
-% byte-for-byte before writing this file — the raw HTML's lesson table reads,
-% verbatim: "44 ck /k/ ... 45 sh /sh/ ... 46 th /th/ (voiced) ... 47 th /th/
-% (unvoiced) ... 48 ch /ch/ ... 50 wh /w/, ph /f/ ... 51 ng /ŋ/ ... 52 nk
-% /ŋk/". Two lessons in the same unit (42 "FLSZ Spelling Rule", 43 "-all,
-% -oll, -ull", 49 "Digraphs Review 1", 53 "Digraphs Review 2") are review or
+% Provenance — the `source` and the ROWS are not grounded by the same thing,
+% and this note says which is which. Both come from the University of
+% Florida Literacy Institute (UFLI)'s Foundations Toolbox, "Digraphs Unit
+% Resources (Lessons 42-53)" page, curl-fetched directly rather than through
+% an AI-summarized WebFetch.
+%
+% The `source` is that page's opening definition paragraph, quoted WHOLE and
+% byte for byte: "A consonant digraph is a combination of two consonant
+% letters that represent a single consonant speech sound. The lessons in
+% this unit are designed to strengthen students’ familiarity with consonant
+% digraphs."
+%
+% It states what a consonant digraph IS. It names no individual digraph and
+% no sound, so it grounds none of the nine rows. Those come from elsewhere
+% on the same page — the unit's lesson table, whose "Concept" column names
+% each lesson's digraph with its sound. Those cells extract as SEPARATE
+% BLOCKS, one per cell, which is exactly the cross-block/table-row class
+% held open on #14111 ("is a table row a verbatim span?"), so they are
+% deliberately NOT presented here as a quoted span, and each row below names
+% the cell it reads instead.
+%
+% Until installment 4g the `source` field carried the definition sentences
+% with a hand-assembled rendering of that table STITCHED ONTO THEM, a string
+% that appears nowhere on the page: it invented a colon after the unit
+% heading, invented a separator between each lesson number and the previous
+% cell, and dropped the paragraph's closing sentence. It never reached an
+% apostrophe, so unlike three of its four sibling libraries it flattened
+% none. A composition presented as a quotation is a defect in the FIELD, not
+% a position on the held question — removing it takes no position either
+% way.
+%
+% Four lessons in the same unit (42 "FLSZ Spelling Rule", 43 "-all, -oll,
+% -ull", 49 "Digraphs Review 1", 53 "Digraphs Review 2") are review or
 % spelling-rule lessons, not individual digraph-sound lessons, and are
 % deliberately NOT rows here.
 %
-%     digraph (atom label)   sound (atom label)    lesson concept (verbatim)
+%     digraph (atom label)   sound (atom label)    Concept cell it reads
 %     ----------------------  ---------------------  ---------------------------
 %     ck                      k_sound                "ck /k/"
 %     sh                      sh_sound               "sh /sh/"
@@ -86,17 +107,17 @@
 table digraph_sound {
     columns digraph, sound
 
-    row (ck, k_sound)
-    row (sh, sh_sound)
-    row (th, th_voiced_sound)
-    row (th, th_unvoiced_sound)
-    row (ch, ch_sound)
-    row (wh, w_sound)
-    row (ph, f_sound)
-    row (ng, ng_sound)
-    row (nk, nk_sound)
+    row (ck, k_sound)             % lesson 44 cell: "ck /k/"
+    row (sh, sh_sound)            % lesson 45 cell: "sh /sh/"
+    row (th, th_voiced_sound)     % lesson 46 cell: "th /th/ (voiced)"
+    row (th, th_unvoiced_sound)   % lesson 47 cell: "th /th/ (unvoiced)"
+    row (ch, ch_sound)            % lesson 48 cell: "ch /ch/"
+    row (wh, w_sound)             % lesson 50 cell: "wh /w/, ph /f/"
+    row (ph, f_sound)             % lesson 50 cell: "wh /w/, ph /f/"
+    row (ng, ng_sound)            % lesson 51 cell: "ng /ŋ/"
+    row (nk, nk_sound)            % lesson 52 cell: "nk /ŋk/"
 
-    source "A consonant digraph is a combination of two consonant letters that represent a single consonant speech sound. Digraphs Unit Resources (Lessons 42-53): 44 ck /k/, 45 sh /sh/, 46 th /th/ (voiced), 47 th /th/ (unvoiced), 48 ch /ch/, 50 wh /w/, ph /f/, 51 ng /ŋ/, 52 nk /ŋk/."
+    source "A consonant digraph is a combination of two consonant letters that represent a single consonant speech sound. The lessons in this unit are designed to strengthen students’ familiarity with consonant digraphs."
     locator "https://ufli.education.ufl.edu/foundations/toolbox-aus/42-53/"
     trust authoritative
 }
