@@ -626,7 +626,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Dart
-        uses: dart-lang/setup-dart@v1
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
 
       - name: Verify generated fixtures and Dart consumers
         shell: bash
@@ -655,7 +655,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v10.0.1
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -715,7 +715,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v10.0.1
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -775,7 +775,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v10.0.1
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -842,7 +842,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v10.0.1
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1185,7 +1185,7 @@ jobs:
 
       - name: Install uv
         if: needs.detect.outputs.needs_python == 'true'
-        uses: astral-sh/setup-uv@v10.0.1
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1249,7 +1249,7 @@ jobs:
 
       - name: Set up LuaRocks (Unix)
         if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        uses: leafo/gh-actions-luarocks@v4
+        uses: leafo/gh-actions-luarocks@e65774a6386cb4f24e293dca7fc4ff89165b64c5 # v4.3.0
 
       - name: Set up LuaRocks (Windows)
         if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
@@ -1510,11 +1510,11 @@ jobs:
 
       - name: Set up Dart
         if: needs.detect.outputs.needs_dart == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
-        uses: dart-lang/setup-dart@v1
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
 
       - name: Set up Flutter
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           flutter-version: '3.44.0'
           channel: stable
@@ -1629,7 +1629,7 @@ jobs:
 
       - name: Set up Gradle
         if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
-        uses: gradle/actions/setup-gradle@v6.3.0
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
 
       - name: Disable long-lived Gradle services on Windows CI
         if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
@@ -1655,7 +1655,7 @@ jobs:
 
       - name: Set up Haskell
         if: needs.detect.outputs.needs_haskell == 'true'
-        uses: haskell-actions/setup@v2
+        uses: haskell-actions/setup@6037f33647c3f17758a2356c80fc4a53d7e0685d # v2.12.0
         with:
           ghc-version: '9.4'
           cabal-version: '3.10'
@@ -1826,7 +1826,7 @@ jobs:
       # the specific platform (API 35 / 36) on first build.
       - name: Set up Android SDK
         if: needs.detect.outputs.needs_kotlin == 'true'
-        uses: android-actions/setup-android@v4.0.1
+        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4.0.1
 
       - name: Build and test affected Swift packages on Windows
         if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
