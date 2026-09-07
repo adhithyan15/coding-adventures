@@ -14,11 +14,7 @@ type nfa_trace_record = {
   states_after : state list;
 }
 
-type action = {
-  name : string;
-  run : state -> event -> state -> unit;
-}
-
+type action = { name : string; run : state -> event -> state -> unit }
 type dfa_transition = { source : state; event : event; target : state }
 type action_binding = { source : state; event : event; action : action }
 
@@ -71,8 +67,9 @@ end
 module Event_map = Map.Make (Event_key)
 
 let sorted_unique values =
-  List.fold_left (fun set value -> String_set.add value set) String_set.empty
-    values
+  List.fold_left
+    (fun set value -> String_set.add value set)
+    String_set.empty values
 
 let first_missing set values =
   List.find_opt (fun value -> not (String_set.mem value set)) values
@@ -101,8 +98,7 @@ module Dfa = struct
   let current_state machine = machine.current
   let trace machine = List.rev machine.trace_rev
 
-  let add_transition state_set alphabet_set (map, rows)
-      (row : dfa_transition) =
+  let add_transition state_set alphabet_set (map, rows) (row : dfa_transition) =
     if not (String_set.mem row.source state_set) then
       Error (Unknown_transition_source row.source)
     else if not (String_set.mem row.event alphabet_set) then
@@ -110,7 +106,7 @@ module Dfa = struct
     else if not (String_set.mem row.target state_set) then
       Error (Unknown_transition_target row.target)
     else
-      let key = row.source, row.event in
+      let key = (row.source, row.event) in
       if Event_map.mem key map then
         Error (Duplicate_transition (row.source, Some row.event))
       else Ok (Event_map.add key row.target map, row :: rows)
@@ -122,8 +118,8 @@ module Dfa = struct
         | Error error -> Error error
         | Ok next -> fold_result function_ next tail)
 
-  let create ?(actions = []) ?(max_trace_entries = 100_000) ~states
-      ~alphabet ~transitions ~initial ~accepting () =
+  let create ?(actions = []) ?(max_trace_entries = 100_000) ~states ~alphabet
+      ~transitions ~initial ~accepting () =
     let state_set = sorted_unique states in
     let alphabet_set = sorted_unique alphabet in
     if String_set.is_empty state_set then Error Empty_states
@@ -141,16 +137,15 @@ module Dfa = struct
               (Event_map.empty, []) transitions
           with
           | Error error -> Error error
-          | Ok (transition_map, transition_rows_rev) ->
+          | Ok (transition_map, transition_rows_rev) -> (
               let add_action map (binding : action_binding) =
-                let key = binding.source, binding.event in
+                let key = (binding.source, binding.event) in
                 if not (Event_map.mem key transition_map) then
                   Error
-                    (Action_without_transition
-                       (binding.source, binding.event))
+                    (Action_without_transition (binding.source, binding.event))
                 else Ok (Event_map.add key binding.action map)
               in
-              (match fold_result add_action Event_map.empty actions with
+              match fold_result add_action Event_map.empty actions with
               | Error error -> Error error
               | Ok action_map ->
                   Ok
@@ -159,8 +154,7 @@ module Dfa = struct
                       alphabet_set;
                       transition_map;
                       transition_rows =
-                        List.sort Stdlib.compare
-                          (List.rev transition_rows_rev);
+                        List.sort Stdlib.compare (List.rev transition_rows_rev);
                       action_map;
                       initial_state = initial;
                       accepting_set = sorted_unique accepting;
@@ -174,11 +168,13 @@ module Dfa = struct
   let plan_from machine start remaining events =
     let rec loop current records remaining = function
       | [] -> Ok (current, List.rev records)
-      | event :: rest ->
+      | event :: rest -> (
           if not (String_set.mem event machine.alphabet_set) then
             Error (Unknown_event event)
-          else (
-            match Event_map.find_opt (current, event) machine.transition_map with
+          else
+            match
+              Event_map.find_opt (current, event) machine.transition_map
+            with
             | None -> Error (Missing_transition (current, event))
             | Some _ when remaining = 0 ->
                 Error (Trace_limit_exceeded machine.max_trace_entries)
@@ -190,8 +186,7 @@ module Dfa = struct
                 loop target
                   ({ source = current; event = Some event; target; action_name }
                   :: records)
-                  (remaining - 1)
-                  rest)
+                  (remaining - 1) rest)
     in
     loop start [] remaining events
 
@@ -207,9 +202,7 @@ module Dfa = struct
       records
 
   let process_sequence machine events =
-    let remaining =
-      machine.max_trace_entries - List.length machine.trace_rev
-    in
+    let remaining = machine.max_trace_entries - List.length machine.trace_rev in
     match plan_from machine machine.current remaining events with
     | Error error -> Error error
     | Ok (target, records) ->
@@ -227,11 +220,13 @@ module Dfa = struct
   let accepts machine events =
     let rec loop current = function
       | [] -> Ok (String_set.mem current machine.accepting_set)
-      | event :: rest ->
+      | event :: rest -> (
           if not (String_set.mem event machine.alphabet_set) then
             Error (Unknown_event event)
-          else (
-            match Event_map.find_opt (current, event) machine.transition_map with
+          else
+            match
+              Event_map.find_opt (current, event) machine.transition_map
+            with
             | None -> Ok false
             | Some target -> loop target rest)
     in
@@ -323,16 +318,15 @@ module Dfa = struct
           if String_set.mem state machine.accepting_set then "doublecircle"
           else "circle"
         in
-        lines :=
-          !lines @ [ "  " ^ quote state ^ " [shape=" ^ shape ^ "];" ])
+        lines := !lines @ [ "  " ^ quote state ^ " [shape=" ^ shape ^ "];" ])
       (states machine);
     List.iter
       (fun (row : dfa_transition) ->
         lines :=
           !lines
           @ [
-              "  " ^ quote row.source ^ " -> " ^ quote row.target
-              ^ " [label=" ^ quote row.event ^ "];";
+              "  " ^ quote row.source ^ " -> " ^ quote row.target ^ " [label="
+              ^ quote row.event ^ "];";
             ])
       machine.transition_rows;
     String.concat "\n" (!lines @ [ "}" ])
@@ -428,7 +422,7 @@ module Nfa = struct
       | None -> (
           match first_missing state_set accepting with
           | Some value -> Error (Unknown_accepting value)
-          | None ->
+          | None -> (
               let add (map, rows) (row : nfa_transition) =
                 if not (String_set.mem row.source state_set) then
                   Error (Unknown_transition_source row.source)
@@ -440,19 +434,20 @@ module Nfa = struct
                       match first_missing state_set row.targets with
                       | Some value -> Error (Unknown_transition_target value)
                       | None ->
-                          let key = row.source, row.event in
+                          let key = (row.source, row.event) in
                           if Nfa_map.mem key map then
                             Error (Duplicate_transition (row.source, row.event))
                           else
                             let targets = sorted_unique row.targets in
                             Ok
                               ( Nfa_map.add key targets map,
-                                { row with targets = String_set.elements targets }
+                                {
+                                  row with
+                                  targets = String_set.elements targets;
+                                }
                                 :: rows ))
               in
-              (match
-                 Dfa.fold_result add (Nfa_map.empty, []) transitions
-               with
+              match Dfa.fold_result add (Nfa_map.empty, []) transitions with
               | Error error -> Error error
               | Ok (transition_map, rows_rev) ->
                   let current =
@@ -498,7 +493,9 @@ module Nfa = struct
       Error (Unknown_event event)
     else
       let next = next_set machine machine.current event in
-      let cost = String_set.cardinal machine.current + String_set.cardinal next in
+      let cost =
+        String_set.cardinal machine.current + String_set.cardinal next
+      in
       if List.length machine.trace_rev >= machine.max_trace_entries then
         Error (Trace_limit_exceeded machine.max_trace_entries)
       else if machine.trace_cells + cost > machine.max_trace_state_cells then
@@ -619,12 +616,12 @@ module Nfa = struct
                 else name :: result)
               !seen []
           in
-          Dfa.create ~states:(List.map snd (State_set_map.bindings !seen))
+          Dfa.create
+            ~states:(List.map snd (State_set_map.bindings !seen))
             ~alphabet:(alphabet machine) ~transitions:(List.rev !rows)
             ~initial:"S0" ~accepting ()
 
   let quote value = "\"" ^ String.escaped value ^ "\""
-
   let event_name = function None -> "ε" | Some value -> value
 
   let to_dot machine =
@@ -643,8 +640,7 @@ module Nfa = struct
           if String_set.mem state machine.accepting_set then "doublecircle"
           else "circle"
         in
-        lines :=
-          !lines @ [ "  " ^ quote state ^ " [shape=" ^ shape ^ "];" ])
+        lines := !lines @ [ "  " ^ quote state ^ " [shape=" ^ shape ^ "];" ])
       (states machine);
     List.iter
       (fun row ->
@@ -653,8 +649,9 @@ module Nfa = struct
             lines :=
               !lines
               @ [
-                  "  " ^ quote row.source ^ " -> " ^ quote target
-                  ^ " [label=" ^ quote (event_name row.event) ^ "];";
+                  "  " ^ quote row.source ^ " -> " ^ quote target ^ " [label="
+                  ^ quote (event_name row.event)
+                  ^ "];";
                 ])
           (List.sort String.compare row.targets))
       machine.transition_rows;
@@ -667,7 +664,8 @@ let minimize machine =
   let accepting = String_set.inter reachable machine.Dfa.accepting_set in
   let rejecting = String_set.diff reachable accepting in
   let partitions =
-    [ rejecting; accepting ] |> List.filter (fun set -> not (String_set.is_empty set))
+    [ rejecting; accepting ]
+    |> List.filter (fun set -> not (String_set.is_empty set))
     |> ref
   in
   let block_index state =
@@ -713,7 +711,9 @@ let minimize machine =
     partitions := List.sort Stdlib.compare next
   done;
   let named_blocks =
-    List.mapi (fun index block -> block, "M" ^ string_of_int index) !partitions
+    List.mapi
+      (fun index block -> (block, "M" ^ string_of_int index))
+      !partitions
   in
   let name_for state =
     named_blocks
@@ -727,15 +727,10 @@ let minimize machine =
         let representative = String_set.min_elt block in
         List.filter_map
           (fun event ->
-            Event_map.find_opt
-              (representative, event)
+            Event_map.find_opt (representative, event)
               machine.Dfa.transition_map
             |> Option.map (fun target ->
-                   {
-                     source = name;
-                     event;
-                     target = name_for target;
-                   }))
+                   { source = name; event; target = name_for target }))
           (Dfa.alphabet machine))
       named_blocks
   in
@@ -747,7 +742,8 @@ let minimize machine =
   in
   match
     Dfa.create ~states ~alphabet:(Dfa.alphabet machine) ~transitions
-      ~initial:(name_for (Dfa.initial machine)) ~accepting ()
+      ~initial:(name_for (Dfa.initial machine))
+      ~accepting ()
   with
   | Ok reduced -> reduced
   | Error _ -> assert false
@@ -802,8 +798,12 @@ module Pda = struct
   let accepting machine = String_set.elements machine.accepting_set
   let current_state machine = machine.current
   let stack machine = List.map Fun.id machine.current_stack
+
   let stack_top machine =
-    match List.rev machine.current_stack with [] -> None | value :: _ -> Some value
+    match List.rev machine.current_stack with
+    | [] -> None
+    | value :: _ -> Some value
+
   let trace machine = List.rev machine.trace_rev
 
   let create ?(max_stack_depth = 4_096) ?(max_trace_entries = 2_048)
@@ -835,7 +835,7 @@ module Pda = struct
       | None -> (
           match first_missing state_set accepting with
           | Some value -> Error (Unknown_accepting value)
-          | None ->
+          | None -> (
               let add (map, rows) (row : transition) =
                 if not (String_set.mem row.source state_set) then
                   Error (Unknown_transition_source row.source)
@@ -851,14 +851,14 @@ module Pda = struct
                       match first_missing stack_set row.stack_push with
                       | Some value -> Error (Unknown_stack_push value)
                       | None ->
-                          let key = row.source, row.event, row.stack_read in
+                          let key = (row.source, row.event, row.stack_read) in
                           if Pda_map.mem key map then
                             Error
                               (Duplicate_pda_transition
                                  (row.source, row.event, row.stack_read))
                           else Ok (Pda_map.add key row map, row :: rows))
               in
-              (match Dfa.fold_result add (Pda_map.empty, []) transitions with
+              match Dfa.fold_result add (Pda_map.empty, []) transitions with
               | Error error -> Error error
               | Ok (transition_map, rows_rev) ->
                   Ok
@@ -896,8 +896,7 @@ module Pda = struct
     else
       let stack_symbol = top machine.current_stack in
       match stack_symbol with
-      | None ->
-          Error (Missing_pda_transition (machine.current, event, None))
+      | None -> Error (Missing_pda_transition (machine.current, event, None))
       | Some symbol -> (
           match
             Pda_map.find_opt
@@ -906,8 +905,7 @@ module Pda = struct
           with
           | None ->
               Error
-                (Missing_pda_transition
-                   (machine.current, event, Some symbol))
+                (Missing_pda_transition (machine.current, event, Some symbol))
           | Some row ->
               let next_stack = Option.get (apply row machine.current_stack) in
               if List.length machine.trace_rev >= machine.max_trace_entries then
@@ -949,14 +947,17 @@ module Pda = struct
           | None -> continue := false
           | Some row ->
               if !steps >= machine.max_epsilon_steps then
-                failure := Some (Epsilon_limit_exceeded machine.max_epsilon_steps)
+                failure :=
+                  Some (Epsilon_limit_exceeded machine.max_epsilon_steps)
               else
                 let next_stack = Option.get (apply row machine.current_stack) in
-                if List.length machine.trace_rev >= machine.max_trace_entries then
-                  failure := Some (Trace_limit_exceeded machine.max_trace_entries)
+                if List.length machine.trace_rev >= machine.max_trace_entries
+                then
+                  failure :=
+                    Some (Trace_limit_exceeded machine.max_trace_entries)
                 else if List.length next_stack > machine.max_stack_depth then
                   failure := Some (Stack_limit_exceeded machine.max_stack_depth)
-                else (
+                else
                   let entry =
                     {
                       source = row.source;
@@ -970,7 +971,7 @@ module Pda = struct
                   machine.current <- row.target;
                   machine.current_stack <- next_stack;
                   machine.trace_rev <- entry :: machine.trace_rev;
-                  incr steps))
+                  incr steps)
     done;
     match !failure with Some error -> Error error | None -> Ok ()
 
@@ -986,8 +987,7 @@ module Pda = struct
     match named events with
     | Error error -> Error error
     | Ok () ->
-        trace machine
-        |> List.filteri (fun index _ -> index >= before)
+        trace machine |> List.filteri (fun index _ -> index >= before)
         |> fun records -> Ok records
 
   let accepts machine events =
@@ -1028,25 +1028,25 @@ module Pda = struct
       events;
     let epsilon_steps = ref 0 in
     let continue = ref true in
-    while
-      !continue && Option.is_none !failure && not !rejected
-    do
+    while !continue && Option.is_none !failure && not !rejected do
       match top !stack with
       | None -> continue := false
       | Some symbol -> (
-          match Pda_map.find_opt (!state, None, symbol) machine.transition_map with
+          match
+            Pda_map.find_opt (!state, None, symbol) machine.transition_map
+          with
           | None -> continue := false
           | Some row ->
               if !epsilon_steps >= machine.max_epsilon_steps then
-                failure := Some (Epsilon_limit_exceeded machine.max_epsilon_steps)
+                failure :=
+                  Some (Epsilon_limit_exceeded machine.max_epsilon_steps)
               else (
                 incr epsilon_steps;
                 apply_pure row))
     done;
     match !failure with
     | Some error -> Error error
-    | None ->
-        Ok ((not !rejected) && String_set.mem !state machine.accepting_set)
+    | None -> Ok ((not !rejected) && String_set.mem !state machine.accepting_set)
 
   let reset machine =
     machine.current <- machine.initial_state;
@@ -1057,11 +1057,7 @@ end
 module Mode_graph = Coding_adventures_directed_graph.Make (String)
 
 module Modal = struct
-  type trace_entry = {
-    from_mode : string;
-    trigger : event;
-    to_mode : string;
-  }
+  type trace_entry = { from_mode : string; trigger : event; to_mode : string }
 
   type t = {
     modes : Dfa.t String_map.t;
@@ -1096,7 +1092,7 @@ module Modal = struct
       | Error error -> Error error
       | Ok mode_map when not (String_map.mem initial_mode mode_map) ->
           Error (Unknown_initial_mode initial_mode)
-      | Ok mode_map ->
+      | Ok mode_map -> (
           let graph = Mode_graph.Labeled.create ~allow_self_loops:true () in
           String_map.iter
             (fun name _ -> Mode_graph.Labeled.add_node graph name)
@@ -1109,15 +1105,13 @@ module Modal = struct
             else if Event_map.mem (source, trigger) map then
               Error (Duplicate_mode_transition (source, trigger))
             else
-              match
-                Mode_graph.Labeled.add_edge graph source target trigger
-              with
+              match Mode_graph.Labeled.add_edge graph source target trigger with
               | Error _ -> Error (Unknown_mode_target target)
               | Ok () -> Ok (Event_map.add (source, trigger) target map)
           in
-          (match
-             Dfa.fold_result add_transition Event_map.empty mode_transitions
-           with
+          match
+            Dfa.fold_result add_transition Event_map.empty mode_transitions
+          with
           | Error error -> Error error
           | Ok transitions ->
               String_map.iter (fun _ machine -> Dfa.reset machine) mode_map;
@@ -1140,15 +1134,17 @@ module Modal = struct
     match Event_map.find_opt (machine.current, trigger) machine.transitions with
     | None -> Error (Missing_mode_transition (machine.current, trigger))
     | Some target ->
-        assert
-          (Mode_graph.Labeled.has_edge_with_label machine.graph machine.current
-             target trigger);
+        assert (
+          Mode_graph.Labeled.has_edge_with_label machine.graph machine.current
+            target trigger);
         if List.length machine.trace_rev >= machine.max_trace_entries then
           Error (Trace_limit_exceeded machine.max_trace_entries)
         else
           let target_machine = String_map.find target machine.modes in
           Dfa.reset target_machine;
-          let entry = { from_mode = machine.current; trigger; to_mode = target } in
+          let entry =
+            { from_mode = machine.current; trigger; to_mode = target }
+          in
           machine.current <- target;
           machine.trace_rev <- entry :: machine.trace_rev;
           Ok target
