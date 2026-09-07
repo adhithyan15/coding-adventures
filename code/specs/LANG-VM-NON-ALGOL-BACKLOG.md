@@ -92,6 +92,73 @@ No further executed failure or lowering defect was found. VM-047c (INSPECT
 BEFORE/AFTER regions and absent-delimiter asymmetry) is next per the existing
 ranked queue.
 
+## VM-047c implementation contract (selected after #14426 merged)
+
+Refreshed main is `9aa15c97e9` (VM-057 merged as `5206f8ce2a`). No further
+executed failure or lowering defect was found; INSPECT BEFORE/AFTER region
+proofs are next per the existing ranked queue.
+
+Investigation before writing any matrix row found the region window itself
+already fully implemented and already exhaustively tested against the
+`cobol-runtime` oracle: `emit_inspect_region_window` (compiler) and
+`region_window` (oracle) both derive a single `{BEFORE|AFTER} x` window with
+the documented ISO not-found asymmetry — `BEFORE` with an absent delimiter is
+the WHOLE source, `AFTER` with an absent delimiter is an EMPTY region — across
+TALLYING FOR ALL/LEADING/CHARACTERS, REPLACING ALL/LEADING/CHARACTERS,
+CONVERTING, their multi-item forms, and the combined TALLYING…REPLACING
+statement with an independent region per half. This item's actual bounded
+proof is therefore promoting that already-implemented, already-tested
+behavior to the seven-backend `lang_matrix` columns, not new frontend design.
+
+Add five ASCII canonical programs on all seven standard backends: TALLYING
+FOR ALL narrowed BEFORE a present delimiter, then BEFORE an absent one
+(whole-source asymmetry); TALLYING FOR ALL narrowed AFTER a present
+delimiter, then AFTER an absent one (empty-region asymmetry); REPLACING ALL
+narrowed BEFORE a present/absent delimiter with bracket markers showing the
+untouched tail; REPLACING ALL narrowed AFTER a present/absent delimiter,
+where the absent case leaves the bracketed source byte-identical to the
+original; and BEFORE used on a TALLYING half together with AFTER on a
+REPLACING half in one combined `INSPECT` statement, proving the ISO
+tally-then-replace ordering over the identical original bytes.
+
+Investigating the fourth item — "a combined case if the language allows
+BEFORE and AFTER together in one clause" — surfaced a genuine, previously
+unexercised gap, logged as **VM-D027**: `cobol.grammar`'s `inspect_region` is
+wrapped in a `{ }` repetition, so a single delimiter phrase carrying BOTH
+`BEFORE x` and `AFTER y` (e.g. `FOR ALL "0" BEFORE "X" AFTER "X"`) parses into
+two sibling `inspect_region` nodes, but every reader — the oracle's
+`program.rs` and all seven of the compiler's `child_node(_, "inspect_region")`
+call sites in `lib.rs` — takes only the FIRST node via `child_node`, silently
+discarding a second one instead of computing the ISO-intended two-delimiter
+intersection or rejecting the phrase as a later rung. A discriminating probe
+(`FOR ALL "0" BEFORE "X" AFTER "X"` over `"00X00"`) confirmed both engines
+agree on the current (incomplete) behavior — bare `BEFORE "X"`, count 2 — so
+this is a shared, non-diverging limitation, not a compiler-vs-oracle
+conformance failure; it does not block or reprioritize this slice. Real
+two-clause intersection support touches nine region-parsing call sites across
+both the oracle and the compiler (every TALLYING/REPLACING/CONVERTING single-
+and multi-item form), which is its own bounded slice, ranked separately below
+as VM-058. A regression test pins the current first-region-only behavior so
+it cannot silently change shape before VM-058 lands. The COMBINED case this
+item actually promotes to the matrix — `BEFORE` on one phrase and `AFTER` on
+a different phrase within the same `INSPECT` statement, each independently
+regioned — is the standard's other, already-fully-implemented "BEFORE and
+AFTER together" reading, and is not affected by the VM-D027 gap.
+
+VM-047c local execution: all 30 available cells (rows 433–437 × NativeAot,
+LLVM, WASM, JVM, VM, JIT) pass in fresh processes via the single-cell
+`matrix_every_proven_cell_agrees --exact` re-verification path with positive
+ran-cell sentinels and zero failures; CLR is an explicit missing-tool skip on
+this host (`ilasm` not locatable in the NuGet runtime-pack cache), reproduced
+identically on the pre-existing row 432, so it is not a regression. All 649
+`cobol-iir-compiler` package tests (83 unit + 22 backend-compat + 638 JIT/
+oracle, six of them new for VM-047c and VM-D027, plus zero doctests) pass.
+Focused Clippy on `cobol-iir-compiler` and `lang-aot` with all targets and
+warnings denied is clean. The full non-ALGOL matrix (`non_algol_matrix_every_
+proven_cell_agrees`) passed 206 programs, 1256 cells exercised and 206
+skipped — every program's CLR cell, consistent with the host-wide missing
+`ilasm` tool rather than any new gap — with zero failures, in 501.12 seconds.
+
 ## VM-047b implementation contract (selected after #14400 merged)
 
 Refreshed main is `2755b36eb5`. PR #14400 merged after all current-head checks
@@ -675,7 +742,7 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | done #14363 | VM-044 | Promote Oct while/loop/break and returned function values to observable seven-column programs; prove u8 wrap and actual branch/call effects. |
 | done #14370 | VM-045 | Promote COBOL reference modification to standard columns: constant and dynamic bounds, result text and explicit invalid-bound behavior, compared with its existing oracle. |
 | done #14394 | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
-| sliced below | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
+| done (see PR below) | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
 | 7 | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |
 | 8 | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
 | 9 | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
@@ -683,6 +750,16 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | 11 | VM-042 | Pin Brainfuck's intentional BEAM exclusion with a driver-level error assertion for mutable tape operations; distinguish supported frontend compilation from backend refusal. |
 | 12 | VM-041 | Isolate Twig captured/reassigned runtime-string lowering from existing source-local string metadata; add one captured-string value proof before wider dynamic-string expansion. |
 | 13 | VM-048 | Define a representation-neutral observation for Macsyma's implemented inert symbolic Apply, then promote one oracle-derived symbolic result per backend; do not compare raw pointer/tag identities. |
+| 14 | VM-058 | Implement genuine COBOL INSPECT `BEFORE x AFTER y` two-delimiter window intersection on a single delimiter phrase (discovered as VM-D027): both the `cobol-runtime` oracle and the compiler currently read only the first of two grammar-legal `inspect_region` siblings. Touches all nine region-parsing call sites (TALLYING/REPLACING/CONVERTING, single- and multi-item) in both engines; add a discriminating two-distinct-delimiter proof (present/present, one absent) plus a matrix cell once implemented. |
+
+VM-047c (region proofs, including BEFORE/AFTER used together across a
+combined statement's independently-regioned TALLYING/REPLACING halves)
+completed VM-047. The genuine, separate "single phrase carries both BEFORE
+and AFTER" intersection gap it exposed is VM-058, ranked with the other new-
+frontend-semantics items above rather than blocking VM-047c: no executed
+red cell or CI-protection gap outranks it, so VM-049 (rank 7, already ahead
+of VM-058 in this ordering) is the next selection unless a future audit finds
+a higher-priority red cell first.
 
 BASIC two-dimensional numeric arrays were verified in the matrix and lowerer,
 so their stale README description is corrected here rather than creating a new
@@ -690,6 +767,24 @@ implementation item. The known DEF FN-global and print-zone semantics remain
 future frontend design scope, not missing proofs for already-implemented code.
 
 ## Discovery log
+
+- **VM-D027 — confirmed 2026-09-07:** while validating VM-047c's "BEFORE and
+  AFTER together" test coverage, a discriminating probe (`INSPECT S TALLYING C
+  FOR ALL "0" BEFORE "X" AFTER "X"` over `S = "00X00"`) found that a SINGLE
+  delimiter phrase carrying BOTH region keywords parses (`cobol.grammar`'s
+  `inspect_region` sits under a `{ }` repetition, producing two sibling
+  `inspect_region` nodes) but both engines read only the FIRST node via
+  `child_node(_, "inspect_region")` — the oracle's `program.rs` and all seven
+  matching call sites in the compiler's `lib.rs` — silently discarding the
+  second keyword instead of intersecting the two windows or rejecting the
+  phrase as a later rung. The oracle and compiler agree (bare `BEFORE "X"`,
+  count 2), so this is a shared, non-diverging limitation, not a cross-engine
+  conformance failure; it does not block VM-047c. Real ISO COBOL allows this
+  combination to restrict scanning to characters simultaneously after one
+  delimiter and before another. Promoted to VM-058, ranked alongside the other
+  new-frontend-semantics items; a regression test pins the current
+  first-region-only behavior in the interim.
+
 
 - **VM-D026 — confirmed 2026-09-05:** source/document inspection for VM-026
   confirms ten driver variants but only eight unified corpus languages;
