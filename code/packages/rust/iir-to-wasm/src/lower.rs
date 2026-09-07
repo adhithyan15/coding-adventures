@@ -1795,11 +1795,46 @@ fn emit_instr(
                 code.push(I64_ADD);
                 code.extend(encode_call(ensure_capacity));
 
-                // rd = new = i32.wrap(bump)  — the fresh block's base handle.
+                // Keep the source local intact: rd may equal src_slot. `reg_map` keys
+                // one wasm local per variable *name*, so a `str_slice` whose dest and
+                // source share a name reads and writes the identical local — reached by
+                // COBOL's `STRING <item> DELIMITED BY SIZE INTO <same item>` (a lone
+                // sending field is used as its own concatenation, so `string_source`
+                // hands back the receiver's own register with no intermediate
+                // temporary). The unchanged bump pointer addresses the fresh block
+                // while we write its header and copy bytes from the still-original
+                // source handle.
+                //
+                // mem[new] = end - start  — write the i32 length header, addressing
+                // the fresh block through the (not-yet-advanced) bump global rather
+                // than through `rd`, so this cannot observe a clobbered source.
                 code.extend(encode_global_get(bump));
                 code.extend(encode_i32_wrap_i64());
-                code.extend(encode_local_set(rd));
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_start);
+                code.push(I32_SUB);
+                code.extend(encode_i32_store(0));
 
+                // memory.copy(new+4, src_base + start, end - start)  — splice the run.
+                // `push_src_base` re-reads `src_slot` from scratch; it must still hold
+                // the original handle here, which is why `rd` is not assigned yet.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_wrap_i64());
+                code.extend(encode_i32_const(4));
+                code.extend(encode_i32_add());
+                code.extend_from_slice(&push_src_base);
+                code.extend_from_slice(&push_start);
+                code.extend(encode_i32_add());
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_start);
+                code.push(I32_SUB);
+                code.extend(encode_memory_copy());
+
+                // Save the new handle on the stack, then reserve the allocation using
+                // the original bump base and run length. Assign `rd` only after the
+                // final source read above, so in-place reference modification is safe.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_wrap_i64());
                 // bump = bump + i64(4 + (end - start))  — reserve header + the run.
                 code.extend(encode_global_get(bump));
                 code.extend(encode_i32_const(4));
@@ -1811,24 +1846,7 @@ fn emit_instr(
                 code.push(I64_ADD);
                 code.extend(encode_global_set(bump));
 
-                // mem[new] = end - start  — write the i32 length header.
-                code.extend(encode_local_get(rd));
-                code.extend_from_slice(&push_end);
-                code.extend_from_slice(&push_start);
-                code.push(I32_SUB);
-                code.extend(encode_i32_store(0));
-
-                // memory.copy(new+4, src_base + start, end - start)  — splice the run.
-                code.extend(encode_local_get(rd));
-                code.extend(encode_i32_const(4));
-                code.extend(encode_i32_add());
-                code.extend_from_slice(&push_src_base);
-                code.extend_from_slice(&push_start);
-                code.extend(encode_i32_add());
-                code.extend_from_slice(&push_end);
-                code.extend_from_slice(&push_start);
-                code.push(I32_SUB);
-                code.extend(encode_memory_copy());
+                code.extend(encode_local_set(rd));
             }
         }
 

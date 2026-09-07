@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — STRING self-reference oracle proof (VM-057)
+
+Add an oracle-agreement regression for `STRING S DELIMITED BY SIZE INTO S`: a
+lone sending field that is also its own `INTO` receiver. `string_source`
+returns an item's live register directly and a single field skips the
+combining loop, so the receiver's own register is both source and
+destination. Confirms the generic JIT/interpreter path leaves `S` unchanged;
+the WASM-specific aliasing hazard this construct exposed in `str_slice`'s
+WASM lowering is fixed and regression-tested in `iir-to-wasm`.
+
+
 ## Unreleased — COBOL INSPECT replacement proofs (VM-047b)
 
 Add five matching oracle and seven-backend observations for ALL, LEADING,

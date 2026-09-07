@@ -235,3 +235,18 @@ and bytes have been read, then assigns the destination. This supports a
 result local that is also the left operand, right operand or both. Executable
 regressions compare complete output for all three cases; COBOL INSPECT
 replacement adds five seven-backend conformance programs.
+
+## Runtime substring operand aliasing (VM-057)
+
+The same hazard existed in runtime `str_slice`: the destination local was
+assigned the fresh block's handle before the header write and the
+`memory.copy` that reads the source's bytes, so a destination that aliases
+the source (the wasm local for a variable name is shared by every write to
+that name) copied from its own new, uninitialized block instead of the
+original bytes. Fixed the same way as VM-056 — address the fresh block
+through the not-yet-advanced bump global while both writes still need the
+source local, and assign the destination only after the last read. COBOL's
+`STRING <item> DELIMITED BY SIZE INTO <same item>` reaches this exact shape
+(a lone sending field is used as its own concatenation with no intermediate
+temporary), and is now a direct regression alongside the destination-aliases-
+source unit test.
