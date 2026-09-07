@@ -144,7 +144,9 @@ fn silent_letter_sound_abstains_honestly_on_an_untabled_pattern() {
 /// Until 4g the field read "...contain silent letter patterns. Diphthongs and Silent Letters Units (Lessons 95-98): 98 kn /n/, wr /r/, mb /m/." -- a string that
 /// appears nowhere on the page. It invented a colon after the unit
 /// heading, invented separators between each lesson number and the cell
-/// before it, and flattened the page's U+2019 apostrophe to an ASCII one.
+/// before it, and flattened the page's U+2019 apostrophe to an ASCII one,
+/// twice. It carried all three of the paragraph's sentences and dropped
+/// none.
 ///
 /// The POSITIVE needle is the page's U+2019 apostrophe in "students'",
 /// which the stitch flattened to ASCII -- this paragraph is otherwise
@@ -152,11 +154,18 @@ fn silent_letter_sound_abstains_honestly_on_an_untabled_pattern() {
 /// the discriminating byte. The FIRST negative needle SPANS THE SEAM,
 /// joining the paragraph's own last words to the heading welded after them,
 /// so it matches only if the weld is back; a needle wholly inside either
-/// side would not discriminate. The other two are artifacts the stitch
-/// invented outright — the colon after the unit heading, and a lesson
-/// number welded to the Concept cell that follows it — neither of which
-/// occurs anywhere on the page, checked against the raw HTML rather than
-/// the extractor, which normalises whitespace.
+/// side would not discriminate. are artifacts the stitch invented outright,
+/// and they are not the same kind of artifact. The colon after the unit
+/// heading occurs nowhere on the page under any normalisation. The lesson
+/// number welded to the Concept cell after it is subtler, and worth being
+/// exact about: it is NOT absent from the page. Normalise the page's
+/// whitespace and "98 kn /n/" appears, because the lesson cell and the
+/// Concept cell are adjacent. What the old value invented was that string
+/// as a CONTIGUOUS span with the cell boundary erased, in a field whose
+/// whole contract is that it holds one. (Checking an ABSENCE against
+/// tag-bearing raw HTML would be the WEAKER test, not the stronger one:
+/// embedded markup guarantees a non-match. Raw HTML is the right tool for a
+/// PRESENCE claim, which is the opposite direction.)
 ///
 /// This pin does NOT assert that the rows are cited by that span. They
 /// are not: the rows read the page's lesson-table Concept cells, whose

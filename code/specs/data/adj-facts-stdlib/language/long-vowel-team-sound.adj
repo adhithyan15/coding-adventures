@@ -107,13 +107,18 @@
 % with a hand-assembled rendering of that table STITCHED ONTO THEM, a string
 % that appears nowhere on the page: it invented a colon after the unit
 % heading, invented a separator between each lesson number and the previous
-% cell, and dropped the paragraph's two closing sentences. Those are where
-% the page's U+2019 apostrophes live, so this file never reached one to
-% flatten. A composition presented as a quotation is a defect in the FIELD,
+% cell, dropped the paragraph's two closing sentences, and collapsed the
+% page's U+00A0-plus-space after "a vowel sound." into one ASCII space —
+% the defect security review found after the first repair, since the
+% extractor the repair read from normalises that byte away. The paragraph's
+% U+2019 apostrophes live in the two dropped sentences, so this file never
+% reached one to flatten. A composition presented as a quotation is a defect in the FIELD,
 % not a position on the held question — removing it takes no position either
-% way. In this file the stitch also inserted a space the page does not have:
-% lesson 85's cell breaks the line after the second comma, so it reads "ea
-% /ē/,ey /ē/", and the old value wrote "ea /ē/, ey /ē/".
+% way. In this file the stitch also inserted TWO spaces the page does not
+% have. Lessons 85 AND 86 both break the line inside the cell after the
+% second comma, so the page reads "ea /ē/,ey /ē/" and "ow /ō/,oe /ō/", and
+% the old value wrote both with a space. The cell listing below has always
+% shown both correctly; this sentence named only one of them.
 %
 %     spelling (atom label)   sound (atom label)   part of the Concept cell
 %     -----------------------  --------------------  --------------------------

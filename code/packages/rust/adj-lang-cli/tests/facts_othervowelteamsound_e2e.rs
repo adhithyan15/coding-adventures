@@ -12,7 +12,8 @@
 //! (lesson 93); and lesson 94 gives two short-vowel exceptions, `ea /ĕ/`
 //! and `a /ŏ/`. The lesson-94 "ea" row ships as the disambiguated atom
 //! `ea_short_e`, NOT a bare `ea`, because the bare spelling "ea" already
-//! carries a DIFFERENT, genuinely distinct source-cited sound in the
+//! carries a DIFFERENT, genuinely distinct sound, tabled by UFLI on its own
+//! unit page, in the
 //! sibling `long-vowel-team-sound.adj` library (the steady long-E reading
 //! in "team"/"rain", vs. this table's short-E reading in "bread"/"head") --
 //! a real heteronym-in-spelling the header's own design note documents in
@@ -231,7 +232,8 @@ fn other_vowel_team_sound_abstains_honestly_on_a_different_ufli_unit() {
 /// Until 4g the field read "...(e.g., dew, high). Other Vowel Teams Unit Resources (Lessons 89-94): 89 u /oo/, oo /oo/, ..." -- a string that
 /// appears nowhere on the page. It invented a colon after the unit
 /// heading, invented separators between each lesson number and the cell
-/// before it, and flattened the page's U+2019 apostrophe to an ASCII one.
+/// before it, dropped the paragraph's two closing sentences, and flattened
+/// the page's U+2019 apostrophe in "aren't" to an ASCII one.
 ///
 /// The POSITIVE needle is one of the two closing sentences the stitch
 /// dropped, plus the page's U+2019 apostrophe in "aren't" inside the
@@ -239,11 +241,18 @@ fn other_vowel_team_sound_abstains_honestly_on_a_different_ufli_unit() {
 /// The FIRST negative needle SPANS THE SEAM, joining the paragraph's own
 /// last words to the heading welded after them, so it matches only if the
 /// weld is back; a needle wholly inside either side would not discriminate.
-/// The other two are artifacts the stitch invented outright — the colon
-/// after the unit heading, and a lesson number welded to the Concept cell
-/// that follows it — neither of which occurs anywhere on the page, checked
-/// against the raw HTML rather than the extractor, which normalises
-/// whitespace.
+/// are artifacts the stitch invented outright, and they are not the same
+/// kind of artifact. The colon after the unit heading occurs nowhere on the
+/// page under any normalisation. The lesson number welded to the Concept
+/// cell after it is subtler, and worth being exact about: it is NOT absent
+/// from the page. Normalise the page's whitespace and "89 u /oo/" appears,
+/// because the lesson cell and the Concept cell are adjacent. What the old
+/// value invented was that string as a CONTIGUOUS span with the cell
+/// boundary erased, in a field whose whole contract is that it holds one.
+/// (Checking an ABSENCE against tag-bearing raw HTML would be the WEAKER
+/// test, not the stronger one: embedded markup guarantees a non-match. Raw
+/// HTML is the right tool for a PRESENCE claim, which is the opposite
+/// direction.)
 ///
 /// This pin does NOT assert that the rows are cited by that span. They
 /// are not: the rows read the page's lesson-table Concept cells, whose

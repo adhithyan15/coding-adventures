@@ -74,9 +74,12 @@
 % with a hand-assembled rendering of that table STITCHED ONTO THEM, a string
 % that appears nowhere on the page: it invented a colon after the unit
 % heading, invented a separator between each lesson number and the previous
-% cell, and dropped the paragraph's closing sentence. It never reached an
+% cell, dropped the paragraph's closing sentence, and flattened the page's
+% U+00A0 between "consonant" and "speech" to an ASCII space — the defect
+% security review found after the first repair, since the extractor the
+% repair read from normalises that byte away. It never reached an
 % apostrophe, so unlike three of its four sibling libraries it flattened
-% none. A composition presented as a quotation is a defect in the FIELD, not
+% none of those. A composition presented as a quotation is a defect in the FIELD, not
 % a position on the held question — removing it takes no position either
 % way.
 %
