@@ -844,8 +844,37 @@ fn with_base_b0_correction_at_every_single_position() {
 }
 
 #[test]
-fn with_base_invalid_n_check_still_rejected() {
-    assert!(build_generator_with_base(3, 0).is_err());
+fn with_base_zero_n_check_still_rejected() {
+    // n_check=0 is rejected by every variant, base-parameterized or not —
+    // it's the one restriction that IS a genuine mathematical requirement
+    // (a zero-check-symbol "RS code" isn't a code at all).
     assert!(build_generator_with_base(0, 0).is_err());
-    assert!(decode_with_base(&[0u8; 3], 4, 0).is_err());
+    assert!(decode_with_base(&[0u8; 3], 0, 0).is_err());
+}
+
+#[test]
+fn with_base_odd_n_check_is_accepted_unlike_the_b1_wrapper() {
+    // Unlike build_generator/decode (the b=1-only wrappers, which keep the
+    // even-n_check restriction to stay byte-for-byte compatible with their
+    // pre-existing tested behavior), the _with_base variants accept odd
+    // n_check — QR Code's own ECC-per-block table genuinely uses odd values
+    // (e.g. 7 check codewords per block at version 1 / ECC level L), so a
+    // hard even-only restriction here would make decode_with_base unusable
+    // for some of the most common real QR codes.
+    assert!(build_generator_with_base(3, 0).is_ok());
+    assert!(build_generator(3).is_err()); // the b=1 wrapper still rejects it
+
+    let message = b"odd n_check b0";
+    let n_check = 7; // matches real QR V1-L block size
+    let codeword = rs_encode_with_base(message, n_check, 0);
+    assert_eq!(codeword.len(), message.len() + n_check);
+
+    let recovered = decode_with_base(&codeword, n_check, 0).unwrap();
+    assert_eq!(recovered.as_slice(), message.as_slice());
+
+    // t = n_check/2 = 3 for n_check=7: exactly 3 errors must still recover.
+    let mut corrupted = codeword.clone();
+    corrupt(&mut corrupted, &[0, 3, 6], 0x5A);
+    let recovered = decode_with_base(&corrupted, n_check, 0).unwrap();
+    assert_eq!(recovered.as_slice(), message.as_slice());
 }

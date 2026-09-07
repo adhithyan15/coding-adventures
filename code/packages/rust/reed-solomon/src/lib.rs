@@ -177,6 +177,11 @@ impl std::error::Error for RSError {}
 ///
 /// Verify root α¹: g(2) = 8 XOR GF256.mul(6,2) XOR GF256.mul(1,4) = 8 XOR 12 XOR 4 = 0 ✓
 pub fn build_generator(n_check: usize) -> Result<Vec<u8>, RSError> {
+    if n_check == 0 || !n_check.is_multiple_of(2) {
+        return Err(RSError::InvalidInput(format!(
+            "n_check must be a positive even number, got {n_check}"
+        )));
+    }
     build_generator_with_base(n_check, 1)
 }
 
@@ -196,15 +201,26 @@ pub fn build_generator(n_check: usize) -> Result<Vec<u8>, RSError> {
 /// entirely different roots, so syndromes computed against it would be
 /// meaningless for codewords built under the other convention.
 ///
+/// Unlike `build_generator`, this function does **not** require `n_check` to
+/// be even. That restriction in the b=1 wrapper is this crate's own original
+/// API choice, not a mathematical requirement of Reed-Solomon codes in
+/// general (`t = n_check/2` errors are still correctable via integer
+/// division when `n_check` is odd — one syndrome degree of freedom simply
+/// goes unused). QR Code's own ECC-codewords-per-block table
+/// (`ECC_CODEWORDS_PER_BLOCK` in `qr-code`) genuinely contains odd values —
+/// e.g. version 1 at ECC level L uses 7 check codewords per block — so a
+/// hard even-only requirement here would make `decode_with_base` unusable
+/// for some of the most common real QR codes.
+///
 /// ## Return value
 ///
 /// A **little-endian** coefficient array (index = degree), length `n_check + 1`.
 /// The leading coefficient (last element) is always `1` (monic).
 pub fn build_generator_with_base(n_check: usize, b: u32) -> Result<Vec<u8>, RSError> {
-    if n_check == 0 || !n_check.is_multiple_of(2) {
-        return Err(RSError::InvalidInput(format!(
-            "n_check must be a positive even number, got {n_check}"
-        )));
+    if n_check == 0 {
+        return Err(RSError::InvalidInput(
+            "n_check must be a positive number, got 0".to_string(),
+        ));
     }
 
     // Start with g(x) = 1.
@@ -715,6 +731,11 @@ fn forney(
 ///    ▼ Return first k = len - n_check bytes (strip check bytes)
 /// ```
 pub fn decode(received: &[u8], n_check: usize) -> Result<Vec<u8>, RSError> {
+    if n_check == 0 || !n_check.is_multiple_of(2) {
+        return Err(RSError::InvalidInput(format!(
+            "n_check must be a positive even number, got {n_check}"
+        )));
+    }
     decode_with_base(received, n_check, 1)
 }
 
@@ -734,11 +755,17 @@ pub fn decode(received: &[u8], n_check: usize) -> Result<Vec<u8>, RSError> {
 /// convention — which is why the plain, uncorrected formula was correct for
 /// every pre-existing test — but not at `b=0`, so `forney` now takes `b`
 /// explicitly (see its own doc comment).
+///
+/// Like `build_generator_with_base`, this does **not** require `n_check` to
+/// be even (unlike the b=1-only `decode`) — QR Code's own ECC-per-block
+/// table contains odd values (e.g. 7 for version 1 / ECC level L), and
+/// `t = n_check/2` (integer division) is still well-defined and correct for
+/// odd `n_check`.
 pub fn decode_with_base(received: &[u8], n_check: usize, b: u32) -> Result<Vec<u8>, RSError> {
-    if n_check == 0 || !n_check.is_multiple_of(2) {
-        return Err(RSError::InvalidInput(format!(
-            "n_check must be a positive even number, got {n_check}"
-        )));
+    if n_check == 0 {
+        return Err(RSError::InvalidInput(
+            "n_check must be a positive number, got 0".to_string(),
+        ));
     }
     if received.len() < n_check {
         return Err(RSError::InvalidInput(format!(
