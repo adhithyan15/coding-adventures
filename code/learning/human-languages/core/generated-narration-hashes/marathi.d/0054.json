@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:07bce70c46719fd4",
+  "lessonIds": [
+    "MR-C54-thoda",
+    "MR-C54-puresa",
+    "MR-C54-barach",
+    "MR-C54-kiti-excl",
+    "MR-R54-how-much"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch54.txt",
+  "json": "marathi/narration/ch54.json",
+  "textHash": "fnv1a64:0efe253e73d69502",
+  "jsonHash": "fnv1a64:c9e0a9824c2caee8",
+  "findings": []
+}

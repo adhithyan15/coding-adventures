@@ -1068,6 +1068,14 @@ describe("the committed Marathi A1 inventory", () => {
     // stale note was corrected. Work therefore leaves the empty-category list
     // -- on a note fix, not on a lesson, which is worth saying plainly.
     //
+    // 151 -> 157: the degree-and-amount tranche (chapters 53-54), which
+    // teaches no adjective at all and multiplies the eight the previous one
+    // taught. Seven items, six points, and the ratio is the point: khuup and
+    // jaraa alone close three (ADJ-06, AP-01, ADV-03), because every one of
+    // those points was blocked behind SPINE-DESCRIBE-QUALITIES rather than
+    // behind its own vocabulary. The adjective 5/7 to 6/7, "The adjective
+    // phrase" off the empty-category list at 1/1, Adverbs 6/8 to 7/8.
+    //
     // 142 -> 151, which is exactly half. The adjective tranche (chapters
     // 49-52) closes SPINE-DESCRIBE-QUALITIES, an A1 CORE node this track had
     // never realized: forty-eight chapters could name a house, put a room in
@@ -1097,8 +1105,8 @@ describe("the committed Marathi A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(151);
-    expect(coverage.unmapped).toBe(150);
+    expect(coverage.covered).toBe(157);
+    expect(coverage.unmapped).toBe(144);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1109,7 +1117,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 151/301 points covered (50%)",
+      "marathi A1 (partial inventory): 157/301 points covered (52%)",
     );
   }, 60_000);
 });

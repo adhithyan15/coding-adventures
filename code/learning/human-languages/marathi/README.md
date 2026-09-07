@@ -331,6 +331,16 @@ first-person can-do sentence and the lesson that pays it off.
   person the book can produce. `SPINE-DESCRIBE-QUALITIES`, a third A1 **core**
   node, stops being unrealized. A1 exam coverage 142/301 → **151/301**, which is
   exactly half.
+- **Chapters 53–54 — degree and amount** ([`lessons/MR-C53-*`,
+  `MR-C54-*`](./lessons/)): two chapters that teach no adjective and multiply the
+  nine that came before. **53** **खूप** and **जरा**, which turn any adjective up
+  or down from the same slot without touching its ending, and the repetition
+  that strengthens a word further still — **खूप खूप धन्यवाद**; **54** the
+  four-step scale of amount, **थोडं · पुरेसं · बरंच · खूप**, where **थोडा**
+  agrees because it measures a noun and **जरा** never does because it modifies an
+  adjective, and finally **किती** in front of an adjective instead of a noun,
+  which is the whole of the exclamative. A1 exam coverage 151/301 →
+  **157/301**.
 
 Chapters 9–12 **are** in the ledger with scored payoffs, and that is a change
 worth recording rather than quietly editing. This paragraph used to say the

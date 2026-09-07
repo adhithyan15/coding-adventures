@@ -75,7 +75,11 @@ it("pins Marathi lesson-content budgets", () =>
     // one lesson that touched an existing declaration (MR-C07-khane, whose
     // gender table was retargeted onto a word the reader owns) kept its
     // single sense atom and added none.
-    lessons: 289,
+    //
+    // 289 -> 298: the degree-and-amount tranche (chapters 53-54) adds nine
+    // lessons -- seven items and two reviews. RE-MEASURED. Idioms, senses and
+    // culture claims stay at 5 / 4 / 7 for the fifth tranche running.
+    lessons: 298,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -284,6 +288,12 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["50", 4],
     ["51", 4],
     ["52", 4],
+    // Chapters 53-54 teach NO adjective at all: they multiply the eight the
+    // previous tranche taught. Three degrees (jaraa, khuup, and repetition),
+    // a four-step scale of amount, and the exclamative use of a question word
+    // the book has had since chapter 37.
+    ["53", 4],
+    ["54", 5],
   ]);
 });
 

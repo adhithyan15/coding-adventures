@@ -1,0 +1,20 @@
+{
+  "chapter": 53,
+  "title": "Very, a Little, and Saying It Twice",
+  "label": "ch:mr-degree",
+  "canDo": "I can turn any adjective I own up or down without learning a new one, and I can strengthen a word further by repeating it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-R53-very",
+    "kind": "production",
+    "summary": "Complete MR-R53-very and run one adjective through three strengths -- jaraa uMch, khuup uMch, khuup khuup uMch -- with the ending untouched every time.",
+    "assesses": [
+      "MR-LEX-KHUP",
+      "MR-LEX-JARA",
+      "MR-GRAMMAR-ADJ-REDUPLICATION"
+    ],
+    "note": "The chapter teaches no adjective at all: it multiplies the eight the reader already has, which is why it belongs immediately after them."
+  }
+}

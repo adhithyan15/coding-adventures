@@ -1,5 +1,51 @@
 # Changelog
 
+## 2026-09-07 — Degree and amount: 151 → 157 of 301 A1 points
+
+- **Chapters 53–54 teach no adjective at all.** They multiply the nine the
+  previous tranche taught: three settings of DEGREE and a four-step scale of
+  AMOUNT, plus the exclamative use of a question word the book has had since
+  chapter 37. A1 exam coverage moves 151/301 (50%) → **157/301 (52%)**.
+- **Seven items, six points, and the ratio is the point.** `ADJ-06` (degree),
+  `AP-01` (degree modifiers), `ADV-03` (quantity adverbs), `QU-05`
+  (thoḍā/khūp), `QU-06` (sufficiency) and `PRON-07` (the exclamative). **खूप**
+  and **जरा** alone close three of them, because every one was blocked behind
+  `SPINE-DESCRIBE-QUALITIES` rather than behind its own vocabulary — which is
+  what "choose the tranche that unblocks the most" looks like when it works.
+  **The adjective 5/7 → 6/7**, **The adjective phrase off the empty-category
+  list at 1/1**, **Adverbs 6/8 → 7/8**.
+- **What is taught, one item per lesson:**
+
+  | ch. | items |
+  |---|---|
+  | 53 | **खूप** very · **जरा** a little · saying a word twice |
+  | 54 | **थोडा** a little of · **पुरेसा** enough · **बराच** quite a lot · **किती!** the exclamative |
+
+- **The distinction the chapters are built on is *degree* against *amount*.**
+  **जरा** softens an adjective and never changes; **थोडा** measures a noun and
+  agrees. They are close enough in English (*a little*) that a learner will use
+  one for the other, so chapter 54 opens by naming the difference rather than
+  leaving it to be discovered.
+- **The exclamative costs one item and no new word.** **किती** has asked for a
+  number since chapter 37; put an adjective after it instead of a noun and it
+  exclaims. The **?** / **!** pair from chapter 33 is what tells them apart on
+  the page, and the falling tune is what tells them apart out loud.
+- **Two regressions, both caught by re-measuring.** The Hindi cognates
+  **ज़रा** and **थोड़ा** carry a nukta, which no Marathi lesson teaches — two
+  script-closure violations, now written as *zarā* and *thoṛā*; and
+  `MR-C54-thoda` derived `sight` on the phrase *"Look at the ending"*, now
+  `voice`, so both chapters open hands-free.
+- **`reinforcementWindowMisses` 344 → 342, and the tranche's own debt is zero.**
+  R4 fell 78 → 76. Decomposed: **0 created**, **22 exposed** by the added length
+  and all retrieved on purpose, **2 pre-existing misses cleared**.
+- **`atomsTaught` 284 → 291; `atomsNeverRevisited` 1; `scriptClosureViolations`
+  0; `forwardReferences` 4; `durationViolations` 0.**
+- **Still uncovered in this column, and why:** `QU-02`, `QU-03` and `QU-04` —
+  the numbers. Every one of them is vocabulary this tranche did not touch, and
+  `QU-03` is now the single most blocking gap left in the file: age
+  (`NG5-04`), value and price (`NG6-02`), personal data (`NE03-01`) and the
+  interview's opening question (`F1-03`) all wait on a number above five.
+
 ## 2026-09-07 — The adjective: 142 → 151 of 301 A1 points, which is exactly half
 
 - **Chapters 49–52 realize `SPINE-DESCRIBE-QUALITIES`, an A1 CORE node this

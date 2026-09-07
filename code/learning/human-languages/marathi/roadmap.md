@@ -201,6 +201,20 @@ lesson is `coreVoice` and both chapters stay fully drivable.
   three-gender agreement since chapter 14 on **चांगला**, a word the reader would
   not meet for another 180 lessons. Its table now runs on **माझा / माझी / माझं**.
 
+## Chapters 53–54 — degree and amount
+
+- **Authored.** Seven items across two chapters, and not one of them is an
+  adjective: **खूप · जरा · the doubling**; **थोडा · पुरेसा · बराच · किती!**.
+  A1 exam coverage 151/301 → 157/301.
+
+  Six points from seven items, and the ratio came from WHERE the points were
+  blocked rather than from the words. `ADJ-06`, `AP-01` and `ADV-03` were all
+  waiting on `SPINE-DESCRIBE-QUALITIES` and not on their own vocabulary, so two
+  words released three points the moment the adjectives existed.
+
+  The distinction the tranche is built on: **जरा** is a DEGREE word and never
+  changes; **थोडा** is an AMOUNT word and agrees. English calls both *a little*.
+
 ## Planned## Planned
 
 | Chapter | Theme |
@@ -209,7 +223,7 @@ lesson is `coreVoice` and both chapters stay fully drivable.
 | 10 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
 | 11 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
 | 12+ | The rest of `SPINE-SAY-WHAT-I-DO` — *aikṇe* and the remaining core verbs now that *deṇe*, *sāṅgṇe* and *shikṇe* are authored — then past and future tenses (where gender returns on the verb), always with the Hindi/Dravidian contrast thread. Negation and yes-or-no questions are done: chapters 32 and 33 |
-| next | Degree and quantity: **खूप**, **जरा**, **थोडा**, **पुरेसा**, **बराच** (`MR-A1-ADJ-06`, `MR-A1-AP-01`, `MR-A1-QU-05`, `MR-A1-QU-06`, `MR-A1-ADV-03`), plus the exclamative **किती!** now that both its ingredients exist (`MR-A1-PRON-07`). Six points behind roughly six words, because the adjectives they modify have just arrived |
+| next | **The numbers** (`MR-A1-QU-02`, `QU-03`, `QU-04`). `QU-03` — cardinals to a hundred — is now the single most blocking gap in the file: age (`NG5-04`), value and price (`NG6-02`), personal data (`NE03-01`) and the interview's opening question (`F1-03`) all wait on a number above five, and the Devanagari digits of `OR-24` sit behind the same tranche |
 | then | The **reph** and the **rakaar** (`MR-A1-OR-21`), two script lessons that also unlock *पर्यंत* and with it `MR-A1-P-05` — the last open point in the postposition column. The rakaar has been shown in *मित्र* since chapter 18 and never named |
 | after that | The **adjective** (`SPINE-DESCRIBE-QUALITIES`, an A1 core node with no realization), which unblocks roughly fifteen further points including the exclamative *किती!*, colour, age, quality and physical description |
 

@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:87aca468c7747b79",
+  "lessonIds": [
+    "MR-C53-khuup",
+    "MR-C53-jara",
+    "MR-C53-reduplication",
+    "MR-R53-very"
+  ],
+  "tex": "marathi/book/chapters/ch53-degree.tex"
+}

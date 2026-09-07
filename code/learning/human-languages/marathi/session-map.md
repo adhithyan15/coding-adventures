@@ -484,11 +484,35 @@ not meet for another 180 lessons — and teaching **चांगला** turned 
 measurable forward reference. The table now runs on **माझा / माझी / माझं**,
 which the reader has owned since chapter 9.
 
+## Chapters 53–54 — degree and amount
+
+| Session | Lesson | Job |
+|---|---|---|
+| 290 | C53-khuup | **खूप** — every adjective gains a second strength |
+| 291 | C53-jara | **जरा** — the other direction, and a softened request |
+| 292 | C53-reduplication | say it twice: **खूप खूप धन्यवाद** |
+| 293 | R53-very | one adjective, three strengths |
+| 294 | C54-thoda | **थोडा** — an AMOUNT word, so it agrees |
+| 295 | C54-puresa | **पुरेसा** — and **पुरे!**, which stops the pouring |
+| 296 | C54-barach | **बराच** — **बरा** with the emphatic **-च** |
+| 297 | C54-kiti-excl | **किती** before an adjective stops asking |
+| 298 | R54-how-much | the amount scale, the degree scale, the exclamation |
+
+Neither chapter teaches an adjective. They multiply the nine the previous
+tranche taught, which is why they sit immediately after it: `MR-A1-ADJ-06`,
+`MR-A1-AP-01` and `MR-A1-ADV-03` were blocked behind
+`SPINE-DESCRIBE-QUALITIES` and not behind their own vocabulary, so **खूप** and
+**जरा** released three points between them.
+
+The contrast the tranche turns on is **degree** against **amount**. **जरा**
+modifies an adjective and never changes; **थोडा** measures a noun and agrees.
+English calls both *a little*, so chapter 54 names the difference on its first
+page rather than leaving a learner to find it.
+
 ## Next
 
-Degree and quantity — **खूप**, **जरा**, **थोडा**, **पुरेसा**, **बराच** — and the
-exclamative **किती!**. Six inventory points sit behind roughly six words, and
-they are worth taking now precisely because the adjectives they modify have just
-arrived: `MR-A1-AP-01` and `MR-A1-ADJ-06` were both blocked behind
-`SPINE-DESCRIBE-QUALITIES` and are not any more. After that, the **reph** and
-the **rakaar** (`MR-A1-OR-21`), which also unlock **पर्यंत** and `MR-A1-P-05`.
+**The numbers.** `MR-A1-QU-03` — cardinals to a hundred — is now the single most
+blocking gap in the inventory: age, value and price, personal data on a form,
+and the A1 interview's opening question all wait on a number above five. The
+Devanagari digits of `MR-A1-OR-24` sit behind the same tranche and unlock the
+writing paper's practical form.

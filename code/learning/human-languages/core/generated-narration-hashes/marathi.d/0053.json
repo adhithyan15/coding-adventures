@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:c0699664373ecfa0",
+  "lessonIds": [
+    "MR-C53-khuup",
+    "MR-C53-jara",
+    "MR-C53-reduplication",
+    "MR-R53-very"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch53.txt",
+  "json": "marathi/narration/ch53.json",
+  "textHash": "fnv1a64:6bbb435ecfb1e607",
+  "jsonHash": "fnv1a64:e244b3982663e435",
+  "findings": []
+}

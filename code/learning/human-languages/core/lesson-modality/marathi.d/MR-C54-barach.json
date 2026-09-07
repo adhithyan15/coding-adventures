@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C54-barach",
+    "language": "marathi",
+    "chapter": 54,
+    "sequence": 2160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a4f96280c8a776e"
+  },
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": "MR-EXT-070-AMOUNTS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can measure out an amount on a four-step scale, stop somebody pouring, and exclaim how big or beautiful a thing is.",
+  "prerequisites": [
+    "MR-EXT-069-DEGREE"
+  ],
+  "lessons": [
+    "MR-C54-thoda",
+    "MR-C54-puresa",
+    "MR-C54-barach",
+    "MR-C54-kiti-excl",
+    "MR-R54-how-much"
+  ]
+}

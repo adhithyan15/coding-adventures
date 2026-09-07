@@ -1,0 +1,21 @@
+{
+  "chapter": 54,
+  "title": "A Little, Enough, Quite a Lot",
+  "label": "ch:mr-amounts",
+  "canDo": "I can measure out an amount of something on a four-step scale, stop somebody pouring, and exclaim how big or how beautiful a thing is.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-R54-how-much",
+    "kind": "production",
+    "summary": "Complete MR-R54-how-much and run the amount scale, the degree scale and the exclamative in one pass -- thoDaM paaNii dyaa, khuup paaNii aahe, kitii lahaan!",
+    "assesses": [
+      "MR-LEX-THODA",
+      "MR-LEX-PURESA",
+      "MR-LEX-BARACH",
+      "MR-EXCLAM-KITI"
+    ],
+    "note": "kitii has asked for a number since chapter 37; putting an adjective after it instead of a noun is the whole of the exclamative, and the ? / ! pair from chapter 33 is what tells them apart on the page."
+  }
+}

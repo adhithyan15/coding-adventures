@@ -335,8 +335,10 @@
       "id": "MR-A1-ADJ-06",
       "category": "The adjective",
       "label": "degree: khuup and the intensifying reduplication",
-      "probe": null,
-      "note": "Untaught. Spanish's absolute superlative in muy is the same demand: making an adjective stronger. The adjectives to strengthen now exist (chapters 49-52); khuup and the intensifying reduplication do not.",
+      "probe": [
+        "MR-LEX-KHUP",
+        "MR-GRAMMAR-ADJ-REDUPLICATION"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -524,8 +526,11 @@
       "id": "MR-A1-QU-05",
       "category": "Quantifiers",
       "label": "thodaa and khuup, and their agreement",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-LEX-THODA",
+        "MR-LEX-KHUP",
+        "MR-GRAMMAR-ADJ-AGREEMENT"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -539,8 +544,10 @@
       "id": "MR-A1-QU-06",
       "category": "Quantifiers",
       "label": "sufficiency: puresaa, baraach",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-LEX-PURESA",
+        "MR-LEX-BARACH"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -642,8 +649,9 @@
       "id": "MR-A1-PRON-07",
       "category": "Pronouns",
       "label": "the exclamative kitii with an adjective or adverb",
-      "probe": null,
-      "note": "Still uncovered, and the blocker named here has cleared. kitii is taught (MR-QUESTION-KITI, chapter 37) and adjectives arrived in chapters 49-52, so both halves of the exclamative now exist as words. What no lesson supplies is the CONSTRUCTION -- kitii in front of an adjective as an exclamation rather than a question -- and it is not scored as covered on the strength of its two ingredients.",
+      "probe": [
+        "MR-EXCLAM-KITI"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -718,8 +726,10 @@
       "id": "MR-A1-ADV-03",
       "category": "Adverbs",
       "label": "quantity adverbs: khuup, jaraa",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-LEX-KHUP",
+        "MR-LEX-JARA"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-lexis"
@@ -1273,8 +1283,11 @@
       "id": "MR-A1-AP-01",
       "category": "The adjective phrase",
       "label": "degree modifiers: khuup, jaraa, puresaa",
-      "probe": null,
-      "note": "No longer blocked behind MR-A1-ADJ-01, which closed in chapter 49 -- there is now plenty to modify. What is missing is the modifiers themselves: khuup, jaraa and puresaa have no exponent, so an adjective can be applied and not graded.",
+      "probe": [
+        "MR-LEX-KHUP",
+        "MR-LEX-JARA",
+        "MR-LEX-PURESA"
+      ],
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
