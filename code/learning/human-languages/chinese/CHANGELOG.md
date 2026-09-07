@@ -5,6 +5,61 @@ tracks: one entry per authored tranche, describing what was added and why.
 
 ## [Unreleased]
 
+### Added — 吗, and the chapter that made the book able to ask (chapter 19)
+
+Sixteen lessons, one new character, and the two ways Mandarin asks a yes-or-no
+question. Chinese: 18 chapters and 175 lessons -> 19 and 191.
+
+**What the A1 inventory measured, re-verified before anything was designed.**
+Not one particle was taught — de, le, ma, ne, ba, guo and zhe each returned zero
+occurrences across all 175 lesson files, in characters and in tone-marked
+pinyin. The track could greet, name, count to five, say what it saw and say what
+it read, and could not ask a yes-or-no question about any of it. The inventory
+called 吗 "the single cheapest sentence-level gain available to this track", and
+it was right.
+
+**One character, and it does more than its own weight.** 吗 goes at the END of a
+finished statement and moves nothing else, so every statement the track already
+teaches is now also a question. English cannot do that — it moves words about
+and borrows a helper verb — and saying so is the point of the grammar lesson.
+The second pattern cost no character at all: 好不好 is 好, the 不 the negation
+lesson taught, and 好 again.
+
+**WHY THIS TRANCHE IS SIXTEEN LESSONS AND NOT THIRTY-FIVE.** In this track a
+character is not a word — it is a five-lesson cycle (hear, observe-trace,
+guided copy, delayed copy, and the reading that meets the shape), plus a
+source-verified stroke record in `data/scripts/chinese.json`, plus a ductus path
+checked against the vendored font outline, plus a regeneration of the subset
+font itself. All four were paid here: the stroke order is derived from the
+pinned Hanzi Writer Data snapshot 68d10a4, the ductus was fitted to the real
+Noto Sans SC 吗 outline, and `_fonts/NotoSansSC-Subset.ttf` was rebuilt with
+`subset-cjk.sh`. That cost is now written into the joining column's own note so
+a future tranche budgets for it rather than rediscovering it.
+
+**Coverage 66/191 to 70/191 (35% to 37%).**
+
+| Column | Before | After |
+|---|---|---|
+| Zhuci — the particles | 0/4 | 1/4 |
+| Danju — the simple sentence | 2/4 | 3/4 |
+| Gei he qiu xinxi — giving and asking for information | 2/5 | 3/5 |
+| Biaoda yijian — opinions, attitudes and knowledge | 3/9 | 4/9 |
+| Shejiao — social contact | 4/7 | 4/7 |
+| Hanzi — the characters | 5/10 | 5/10 |
+
+**Reinforcement fell while the track grew.** Window misses 234 -> 227: the
+tranche's own ten atoms miss nothing the corpus is long enough to measure, seven
+pre-existing misses are closed, and every window the added length exposed was
+closed with it. Atoms never revisited 11 -> 11. Script-closure violations 4 -> 4
+and never-taught glyphs 0 -> 0.
+
+**Left uncovered, with the reason in the inventory file.** The whole joining
+column (J-01 to J-08) — every one of he, gen, huozhe, haishi, keshi, danshi,
+yinwei, suoyi and suiran needs at least one untaught character, and putting one
+on the page without its writing cycle is the debt this corpus exists to avoid.
+he is the cheapest of the nine and is the natural next tranche. PART-04, the
+particles as a class, is not answered by one member of the class.
+
 ### Added — four school compounds with four-stage retrieval (#12789)
 
 - Added 17 super-gentle lessons for **中学**, **中学生**, **同学**, and

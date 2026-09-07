@@ -44,6 +44,7 @@ const CHINESE_WRITING = DUCTUS[ductusKey("chinese", "文")];
 const CHINESE_COUNTRY = DUCTUS[ductusKey("chinese", "国")];
 const CHINESE_LOOK = DUCTUS[ductusKey("chinese", "看")];
 const CHINESE_BOOK = DUCTUS[ductusKey("chinese", "书")];
+const CHINESE_QUESTION = DUCTUS[ductusKey("chinese", "吗")];
 
 const OWNER_SCRIPTS = new Set(["chinese"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -144,14 +145,22 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("书", CHINESE_BOOK.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
+    expect(verifiedLetterFont("吗", CHINESE_QUESTION.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
   });
 
   it("marks Chinese complete with every current-corpus row source-verified", () => {
     const chinese = SCRIPTS.find((script) => script.script === "chinese")!;
     expect(chinese.complete).toBe(true);
-    expect(chinese.letters).toHaveLength(43);
+    // 43 -> 44: 吗, the yes-or-no question particle, taught in Chapter 19. It is
+    // the first Chinese character this corpus has added for a GRAMMATICAL word
+    // rather than a lexical one, and the subset font was regenerated to cover
+    // it -- `complete` means the inventory covers the current lesson corpus, so
+    // it has to grow with the corpus rather than being asserted once.
+    expect(chinese.letters).toHaveLength(44);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      43,
+      44,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),

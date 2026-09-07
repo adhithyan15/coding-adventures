@@ -85,3 +85,31 @@ by ear before revealing a dense new character, then add staged handwriting and
 active retrieval. The opening greeting still keeps its component-first order
 because its job is to teach what a character is before the learner meets a wider
 spoken vocabulary.
+
+## Chapter 19 — asking
+
+One character and sixteen lessons, in the track's own shape: 吗 gets the full
+cycle — hear the sound, observe and trace the shape, copy it with the model
+visible, recover it after a delay, then read it cold — and the three questions
+built on it each cost two lessons, because every other character in them was
+already the reader's.
+
+Retrieval is wired the same way the Russian joining tranche wired it, and for
+the same reason: within-chapter recall reaches only the nearest few lessons, so
+each lesson here also names something from Chapters 14, 15 and 18 chosen to land
+inside its open R3 or R4 window. The assignment was computed against the
+measured defect list rather than chosen by feel, which is why the track's
+reinforcement debt FALLS across a tranche that adds sixteen lessons.
+
+| Position in chapter | New | Reaches back to |
+|---|---|---|
+| hear ma | the toneless syllable | 看, 书, 看书, and the looking-and-reading scores |
+| 吗 observe / guided / delayed | the six-stroke route, 口 first | 口, 书, 看见, 看书, 小学 |
+| 吗 | the sound meets the shape | 好看, 小学生, 小 |
+| 你好吗 | the greeting, asked | 你, 好, 好看 |
+| retrieval 1 | greeting against question | 书, and the primary-school scores |
+| 是吗 | checking what you were told | 是, 书, 中 |
+| 好不好 | the question with no new character | 好, 不, 中学 |
+| retrieval 2 | three questions, sorted | 看书, 中学 |
+| listening / reading scores | each skill on its own | 看书, 看见, 中学生 |
+| payoff | four separate scores | 中学生 |
