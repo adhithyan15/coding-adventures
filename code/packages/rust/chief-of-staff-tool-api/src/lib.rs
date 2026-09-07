@@ -317,6 +317,30 @@ pub struct ToolSchemaDocument {
 #[derive(Debug, Clone, PartialEq)]
 pub enum JsonSchema {
     Any,
+    /// An opaque position the tool DECLARES carries no agent identity.
+    ///
+    /// Accepts the same arbitrary structure as [`JsonSchema::Any`], and is
+    /// walked with the strict `names_an_agent` vocabulary rather than the
+    /// narrower `value_key_names_a_peer` one.
+    ///
+    /// The difference is the whole point. In an undescribed position the keys
+    /// `agent`, `principal`, `host_id` and the `*_by` forms are allowed
+    /// through, because there they are usually the blob's OWN annotation --
+    /// `agent` is a first-class key in this repo's skill-manifest format, and
+    /// pairing metadata carrying `initiated_by: "chief-of-staff-test"` is a
+    /// label, not a peer reference. Refusing those would make `skill.install`
+    /// unable to accept a real manifest.
+    ///
+    /// That leniency is a hole wherever the bag is NOT a foreign document: a
+    /// handler that reaches into it for `requested_by` receives whatever peer
+    /// the caller named, and neither S-I7 half objects. `Any` cannot tell the
+    /// two cases apart because nothing in it says which one it is. This
+    /// variant is the tool saying so.
+    ///
+    /// Use it for a bag the tool defines the meaning of -- device command
+    /// arguments, a filter expression. Keep [`JsonSchema::Any`] for a
+    /// document authored elsewhere and passed through.
+    AnyWithoutIdentity,
     Null,
     Boolean,
     Integer,
@@ -343,7 +367,9 @@ impl JsonSchema {
     /// back into D18D internals.
     pub fn to_json_schema_value(&self) -> JsonValue {
         match self {
-            Self::Any => JsonValue::Bool(true),
+            // Projects identically: the distinction is an internal S-I7
+            // control, not something a model provider can act on.
+            Self::Any | Self::AnyWithoutIdentity => JsonValue::Bool(true),
             Self::Null => json_schema_type("null"),
             Self::Boolean => json_schema_type("boolean"),
             Self::Integer => json_schema_type("integer"),
@@ -431,6 +457,7 @@ impl JsonSchema {
     ) {
         match (self, value) {
             (Self::Any, _) => reject_agent_identity_keys(value, path, errors),
+            (Self::AnyWithoutIdentity, _) => reject_declared_identity_keys(value, path, errors),
             (
                 Self::Object {
                     properties,
@@ -513,6 +540,7 @@ impl JsonSchema {
                 errors.push(issue(path, "enum must contain at least one value"));
             }
             Self::Any
+            | Self::AnyWithoutIdentity
             | Self::Null
             | Self::Boolean
             | Self::Integer
@@ -529,7 +557,7 @@ impl JsonSchema {
         errors: &mut Vec<ToolValidationIssue>,
     ) {
         match self {
-            Self::Any => {}
+            Self::Any | Self::AnyWithoutIdentity => {}
             Self::Null => {
                 if !matches!(value, JsonValue::Null) {
                     errors.push(type_issue(path, "null", value));
@@ -1018,6 +1046,17 @@ const AGENT_IDENTITY_PROPERTY_NAMES: &[&str] = &[
     "principalid",
     "hostid",
     "hostname",
+    // Bare `host` too, and for the same reason `host_id` and `hostname` are
+    // here: on a `HostProfile` the host name IS the agent id in this system.
+    // Reviewing the declared/undeclared split turned this up as the one name
+    // the strict vocabulary was missing while the lenient one already listed
+    // it defensively -- so a tool declaring `host: String` was unchecked in an
+    // ORDINARY object position, not only an undescribed one.
+    //
+    // Safe to add: no tool in the repo declares a property named `host`, and
+    // `value_key_names_a_peer` still excludes it via `SELF_OR_MACHINE`, so a
+    // job spec naming a machine inside an opaque blob is unaffected.
+    "host",
     "originatorid",
     "receiverid",
 ];
@@ -1061,6 +1100,57 @@ fn reject_agent_identity_keys(
         JsonValue::Array(items) => {
             for (index, item) in items.iter().enumerate() {
                 reject_agent_identity_keys(item, &format!("{path}[{index}]"), errors);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// The strict twin of [`reject_agent_identity_keys`], for a position the tool
+/// has declared identity-free ([`JsonSchema::AnyWithoutIdentity`]).
+///
+/// Same walk, but matches with `names_an_agent` instead of
+/// `value_key_names_a_peer` -- so all twelve names that mean "the blob's own
+/// annotation" in a foreign document (`agent`, `agents`, `principal`, `host`,
+/// `host_id`, `hostname` and the five `*_by` forms) are refused here, where
+/// the tool owns the bag's meaning and they can only be a peer reference.
+///
+/// The confusable check is kept: a non-ASCII key is unmatchable by either
+/// vocabulary, and in a position claiming to be identity-free that is exactly
+/// the claim it would defeat.
+///
+/// # What this does NOT establish
+///
+/// Key NAMES only. Neither this nor its lenient twin inspects values, so
+/// `{"arguments": "agent:peer-7"}` passes both -- no key names anything. A
+/// declaration buys the key half of the position, not the whole of it.
+fn reject_declared_identity_keys(
+    value: &JsonValue,
+    path: &str,
+    errors: &mut Vec<ToolValidationIssue>,
+) {
+    match value {
+        JsonValue::Object(fields) => {
+            for (name, child) in fields {
+                let child_path = format!("{path}.{name}");
+                if key_is_confusable(name) {
+                    errors.push(issue(
+                        child_path.clone(),
+                        "field name is not ASCII and cannot be checked in a position \
+                         declared identity-free",
+                    ));
+                } else if names_an_agent(name) {
+                    errors.push(issue(
+                        child_path.clone(),
+                        "field names an agent other than the caller",
+                    ));
+                }
+                reject_declared_identity_keys(child, &child_path, errors);
+            }
+        }
+        JsonValue::Array(items) => {
+            for (index, item) in items.iter().enumerate() {
+                reject_declared_identity_keys(item, &format!("{path}[{index}]"), errors);
             }
         }
         _ => {}
@@ -1248,6 +1338,20 @@ fn agent_identity_properties(
     let here = if path.is_empty() { "$" } else { path };
     match schema {
         JsonSchema::Any => holes.push(here.to_string()),
+        // Not reported, and the exact reason matters. This position is walked
+        // at call time with the strict vocabulary, so an identity cannot be
+        // supplied under a KEY that names one -- which an `Any` position
+        // above cannot say.
+        //
+        // It is not a clean bill of health. Both walkers match key NAMES;
+        // neither inspects values. `{"arguments": "agent:peer-7"}` passes here
+        // exactly as it passes an `Any`, because no key names anything. What
+        // the declaration buys is the key half, and the report says only that.
+        //
+        // Stated rather than left to the `_` arm below, because "the checker
+        // considered this and cleared it" and "the checker never saw it" look
+        // identical from a fallthrough.
+        JsonSchema::AnyWithoutIdentity => {}
         JsonSchema::Object {
             properties,
             allow_unknown_fields,
@@ -5177,9 +5281,11 @@ impl InMemoryToolRuntime {
     /// reports the `named` half of the walk; the `holes` half -- `Any` and
     /// `allow_unknown_fields` positions, see
     /// [`tools_with_unverifiable_schema`] -- is deliberately not refused here,
-    /// because `smart_home.command`, `pair_bridge` and `complete_pairing` all
-    /// carry an `Any` argument bag and all three are on the shipping model
-    /// surface. Refusing them would trade this hole for an outage.
+    /// because `pair_bridge` and `complete_pairing` both carry an `Any`
+    /// metadata bag and both are on the shipping model surface. Refusing them
+    /// would trade this hole for an outage. (`smart_home.command` was a third
+    /// until it declared [`JsonSchema::AnyWithoutIdentity`]; the daemon pins
+    /// those two as the only undescribed inputs left there.)
     ///
     /// Those positions are covered only by the value-level check in
     /// `validate_supplied_value`, which uses the NARROWER
@@ -6011,6 +6117,171 @@ mod tests {
         assert!(
             runtime.get("smart_home.set_desired_state").is_none(),
             "a refused tool must not remain in the registry"
+        );
+    }
+
+    /// The twelve names `value_key_names_a_peer` lets through in an
+    /// UNDESCRIBED position, because there they are usually the blob's own
+    /// annotation rather than a peer reference -- and which the strict
+    /// vocabulary has to catch once a tool declares it owns the bag.
+    ///
+    /// All twelve, with no exceptions: reviewing this split is what turned up
+    /// that bare `host` was in neither vocabulary, and it is now in the
+    /// strict one.
+    const SELF_OR_MACHINE_NAMES: &[&str] = &[
+        "agent",
+        "agents",
+        "host_id",
+        "hostname",
+        "host",
+        "principal",
+        "requested_by",
+        "requester",
+        "started_by",
+        "created_by",
+        "initiated_by",
+        "owned_by",
+    ];
+
+    fn bag(key: &str) -> JsonValue {
+        obj(vec![(key, text("agent:some-other-peer"))])
+    }
+
+    #[test]
+    fn a_plain_any_still_admits_the_self_or_machine_names() {
+        // The negative control, and the reason `AnyWithoutIdentity` had to be
+        // a separate variant rather than a tightening of `Any`. `agent` is a
+        // first-class key in this repo's skill-manifest format and
+        // `initiated_by` is a label pairing metadata writes about itself --
+        // refusing them here would make `skill.install` unable to accept a
+        // real manifest.
+        for name in SELF_OR_MACHINE_NAMES {
+            assert!(
+                JsonSchema::Any.validate_supplied_value(&bag(name)).ok,
+                "an opaque document must still be allowed to carry `{name}`"
+            );
+        }
+    }
+
+    #[test]
+    fn a_declared_identity_free_position_refuses_them() {
+        // Same twelve names, opposite verdict, because the tool has said it
+        // owns this bag's meaning. There they can only be a peer reference.
+        for name in SELF_OR_MACHINE_NAMES {
+            let report = JsonSchema::AnyWithoutIdentity.validate_supplied_value(&bag(name));
+            assert!(
+                !report.ok,
+                "a position declared identity-free must refuse `{name}`"
+            );
+            assert!(
+                report
+                    .errors
+                    .iter()
+                    .any(|error| error.path == format!("$.{name}")),
+                "the error must name the offending key, got {:?}",
+                report.errors
+            );
+        }
+    }
+
+    #[test]
+    fn both_variants_agree_on_everything_else() {
+        // The declaration must buy S-I7 coverage, not general strictness. A
+        // command bag is still arbitrary structure, and a key that names no
+        // agent is still fine -- otherwise tools would stop declaring.
+        let ordinary = vec![
+            obj(vec![(
+                "brightness",
+                JsonValue::Number(JsonNumber::Integer(80)),
+            )]),
+            obj(vec![(
+                "color",
+                obj(vec![
+                    ("hue", JsonValue::Number(JsonNumber::Integer(120))),
+                    ("saturation", JsonValue::Number(JsonNumber::Integer(50))),
+                ]),
+            )]),
+            JsonValue::Array(vec![text("a"), JsonValue::Bool(true)]),
+            text("a bare string"),
+            JsonValue::Null,
+        ];
+        for value in ordinary {
+            assert!(
+                JsonSchema::Any.validate_supplied_value(&value).ok
+                    && JsonSchema::AnyWithoutIdentity
+                        .validate_supplied_value(&value)
+                        .ok,
+                "both variants must accept {value:?}"
+            );
+        }
+
+        // And both still refuse the names that mean a peer anywhere.
+        for name in ["agent_id", "peer_id", "on_behalf_of", "delegate"] {
+            assert!(!JsonSchema::Any.validate_supplied_value(&bag(name)).ok);
+            assert!(
+                !JsonSchema::AnyWithoutIdentity
+                    .validate_supplied_value(&bag(name))
+                    .ok
+            );
+        }
+    }
+
+    #[test]
+    fn a_declared_position_is_refused_nested_and_in_arrays() {
+        // A peer buried at `$.color.requested_by` authorizes exactly as much
+        // as one at the top, and is easier to miss.
+        let nested = obj(vec![(
+            "scene",
+            obj(vec![("requested_by", text("agent:some-other-peer"))]),
+        )]);
+        let in_array = JsonValue::Array(vec![obj(vec![("principal", text("agent:peer"))])]);
+        for value in [nested, in_array] {
+            assert!(
+                !JsonSchema::AnyWithoutIdentity
+                    .validate_supplied_value(&value)
+                    .ok,
+                "the walk must recurse: {value:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_declared_position_is_not_reported_as_a_hole() {
+        // A hole is a position where the agent could supply an identity
+        // unchallenged. This one is checked -- just by a vocabulary rather
+        // than a shape -- so reporting it would drown the real holes.
+        let declared = ToolDefinition {
+            input_schema: JsonSchema::Object {
+                properties: vec![SchemaProperty::new(
+                    "arguments",
+                    JsonSchema::AnyWithoutIdentity,
+                )],
+                required: vec![],
+                allow_unknown_fields: false,
+            },
+            ..peer_naming_definition("smart_home.command", false)
+        };
+        assert!(
+            tools_with_unverifiable_schema(std::slice::from_ref(&declared)).is_empty(),
+            "a declared identity-free position is not a hole"
+        );
+
+        // ...but an undeclared one still is, or the report would stop meaning
+        // anything.
+        let undeclared = ToolDefinition {
+            input_schema: JsonSchema::Object {
+                properties: vec![SchemaProperty::new("metadata", JsonSchema::Any)],
+                required: vec![],
+                allow_unknown_fields: false,
+            },
+            ..peer_naming_definition("smart_home.pair_bridge", false)
+        };
+        assert_eq!(
+            tools_with_unverifiable_schema(std::slice::from_ref(&undeclared)),
+            vec![(
+                "smart_home.pair_bridge".to_string(),
+                vec!["metadata".to_string()]
+            )]
         );
     }
 

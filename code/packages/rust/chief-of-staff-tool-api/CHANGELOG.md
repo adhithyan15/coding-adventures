@@ -4,6 +4,36 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add `JsonSchema::AnyWithoutIdentity`: an opaque position the TOOL declares
+  carries no agent identity. Accepts the same arbitrary structure as `Any`,
+  but is walked with the strict `names_an_agent` vocabulary instead of the
+  narrower `value_key_names_a_peer` one.
+- This closes the residual the previous entry names. In an undescribed
+  position `agent`, `agents`, `principal`, `host`, `host_id`, `hostname` and
+  the five `*_by` forms -- twelve names -- are deliberately allowed through,
+  because in a document authored elsewhere they are the blob's own annotation;
+  `agent` is a first-class key in this repo's skill-manifest format.
+- Measured, against a handler that reaches into the bag on an agent surface:
+  `requested_by`, `agent`, `principal` and `host_id` each reached it with
+  `ok: true`, neither S-I7 half objecting. `agent_id` was refused, as the
+  control. The other eight follow from `SELF_OR_MACHINE` by construction
+  rather than from a measurement.
+- `Any` cannot tell a foreign document from a bag the tool defines the meaning
+  of, because nothing in it says which. The variant is the tool saying so, and
+  the leniency stays exactly where it was earned.
+- A declared position is NOT reported by `tools_with_unverifiable_schema`,
+  because an identity cannot be supplied there under a key that names one.
+  That is the whole of what it buys: both walkers match key NAMES and neither
+  inspects values, so `{"arguments": "agent:peer-7"}` passes a declared
+  position exactly as it passes an `Any`.
+- Add bare `host` to the strict vocabulary. Reviewing the declared/undeclared
+  split turned up that `names_an_agent` carried `host_id` and `hostname` but
+  not `host` -- so a tool declaring `host: String` in an ORDINARY object
+  position was unchecked, not just an undescribed one. `host_id` and
+  `hostname` are on that list precisely because a host name IS the agent id
+  here. No tool in the repo declares a `host` property, and
+  `value_key_names_a_peer` still excludes it, so the lenient path is
+  unchanged.
 - Refuse a peer-naming tool at REGISTRATION on an agent surface, not only at
   its output. The output walk is enough for a reader -- the handler runs and
   the walk withholds the answer -- but withholds nothing that matters for a
