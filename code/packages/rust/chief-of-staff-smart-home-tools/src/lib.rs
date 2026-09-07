@@ -11309,7 +11309,14 @@ fn command_definition() -> ToolDefinition {
             vec![
                 SchemaProperty::new("entity_id", JsonSchema::String),
                 SchemaProperty::new("command_type", JsonSchema::String),
-                SchemaProperty::new("arguments", JsonSchema::Any),
+                // Declared identity-free: this bag is a device command VALUE
+                // -- a brightness percentage, a colour, a setpoint -- whose
+                // meaning `json_to_smart_value_for_command` defines. It is not
+                // a document authored elsewhere and passed through, so the
+                // names that mean "the blob's own annotation" in a foreign
+                // document (`agent`, `principal`, `host_id`, the `*_by` forms)
+                // can only be a peer reference here.
+                SchemaProperty::new("arguments", JsonSchema::AnyWithoutIdentity),
                 SchemaProperty::new("idempotency_key", JsonSchema::String),
                 SchemaProperty::new("timeout_ms", JsonSchema::Integer),
             ],
@@ -96747,6 +96754,103 @@ mod tests {
             .register_all(&mut plain)
             .expect("a non-agent surface takes the whole catalog");
         assert_eq!(plain.list().len(), smart_home_tool_definitions().len());
+    }
+
+    #[test]
+    fn a_peer_smuggled_through_the_command_bag_is_refused() {
+        // `smart_home.command` IS on the daemon's production model surface,
+        // so unlike the peer-naming tools this one an agent can actually
+        // reach. Its `arguments` bag was `JsonSchema::Any`, and in an
+        // undescribed position `requested_by`, `agent` and `principal` are
+        // allowed through by design -- there they are usually the blob's own
+        // annotation. A handler that read one would have received whatever
+        // peer the caller named, with neither S-I7 half objecting.
+        //
+        // Declaring the bag identity-free is the tool saying it owns this
+        // bag's meaning, which makes the strict vocabulary the right one.
+        let bridge = granted_bridge();
+        for key in ["requested_by", "agent", "principal", "agent_id"] {
+            let refused = bridge
+                .invoke_for_agent(&request(
+                    "call-command-smuggle",
+                    SMART_HOME_COMMAND_TOOL_ID,
+                    object([
+                        ("entity_id", string("entity-light-1")),
+                        ("command_type", string("set_brightness")),
+                        (
+                            "arguments",
+                            object([(key, string("agent:some-other-peer"))]),
+                        ),
+                    ]),
+                    1_000,
+                ))
+                .expect("the tool itself must still register");
+            assert!(
+                !refused.ok,
+                "`{key}` reached the handler through the command bag"
+            );
+        }
+    }
+
+    #[test]
+    fn an_ordinary_command_still_goes_through() {
+        // The control this whole item turns on. Tightening the bag is only
+        // correct if it costs nothing a real caller does -- `command` ships on
+        // the model surface, so a false refusal here is an outage.
+        let served = granted_bridge()
+            .invoke_for_agent(&request(
+                "call-command-ordinary",
+                SMART_HOME_COMMAND_TOOL_ID,
+                object([
+                    ("entity_id", string("entity-light-1")),
+                    ("command_type", string("set_brightness")),
+                    ("arguments", integer(80)),
+                ]),
+                1_000,
+            ))
+            .expect("command must register");
+        assert!(
+            served.ok,
+            "an ordinary command was refused: {:?}",
+            served.error
+        );
+
+        // ...and the OBJECT-shaped bags, checked against the schema rather
+        // than driven through a handler. A scalar has no keys to collide with
+        // the vocabulary, so `80` alone establishes nothing about the
+        // tightening -- and routing real objects through the bridge would test
+        // the fixture's device capabilities instead of this change. These are
+        // the argument shapes the catalog's own command types take.
+        let definition =
+            smart_home_tool_definition(SMART_HOME_COMMAND_TOOL_ID).expect("command definition");
+        for arguments in [
+            object([
+                ("hue", integer(120)),
+                ("saturation", integer(50)),
+                ("brightness", integer(80)),
+            ]),
+            object([
+                ("direction", string("left")),
+                ("speed", integer(3)),
+                ("duration_ms", integer(500)),
+            ]),
+            object([
+                ("sensor", string("pm02")),
+                ("algorithm", string("epa_2021")),
+                ("scaling_factor", integer(1)),
+            ]),
+        ] {
+            let report = definition.input_schema.validate_supplied_value(&object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("set_color")),
+                ("arguments", arguments.clone()),
+            ]));
+            assert!(
+                report.ok,
+                "a real command bag was refused: {arguments:?} -> {:?}",
+                report.errors
+            );
+        }
     }
 
     #[test]
