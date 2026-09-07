@@ -1,0 +1,10 @@
+[package]
+name = "qr-decoder"
+version = "0.1.0"
+edition = "2021"
+description = "QR Code decoder -- inverts qr-code's own encoder (ModuleGrid -> data). Does not locate a QR code within a larger image; see MA04-qr-decoder.md §6."
+
+[dependencies]
+qr-code = { path = "../qr-code" }
+reed-solomon = { path = "../reed-solomon" }
+barcode-2d = { path = "../barcode-2d" }

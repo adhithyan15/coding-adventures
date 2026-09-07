@@ -562,6 +562,7 @@ members = [
     "gf256",
     "micro-qr",
     "qr-code",
+    "qr-decoder",
     "data-matrix",
     "pdf417",
     "image-raw-pipeline",
