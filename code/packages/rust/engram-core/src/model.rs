@@ -440,7 +440,61 @@ pub struct MediaAssetRecord {
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub filename: Option<String>,
+    /// The asset's bytes.
+    ///
+    /// Serialised as base64 rather than through the derive, which emits a JSON
+    /// array of decimal numbers: 4.6 wire bytes per byte of media against
+    /// base64's 1.33. On `wasm32` that difference is why `engram-anki-package`
+    /// carries a media ceiling at all (#13671).
+    ///
+    /// Reading accepts BOTH encodings. Snapshots already exist on users'
+    /// machines at `~/.engram/mosaic-snapshot.v1.json` holding the numeric
+    /// array, and a decoder that only understood base64 would fail to load
+    /// every one of them.
+    #[cfg_attr(feature = "serde", serde(with = "media_data"))]
     pub data: Vec<u8>,
+}
+
+/// Base64 on write, base64 *or* the legacy numeric array on read.
+#[cfg(feature = "serde")]
+mod media_data {
+    use coding_adventures_base64::{decode, encode, STANDARD};
+    use serde::de::{Error, SeqAccess, Visitor};
+    use serde::{Deserializer, Serializer};
+    use std::fmt;
+
+    pub fn serialize<S: Serializer>(data: &[u8], serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&encode(data, &STANDARD))
+    }
+
+    pub fn deserialize<'de, D: Deserializer<'de>>(
+        deserializer: D,
+    ) -> Result<Vec<u8>, D::Error> {
+        deserializer.deserialize_any(MediaDataVisitor)
+    }
+
+    struct MediaDataVisitor;
+
+    impl<'de> Visitor<'de> for MediaDataVisitor {
+        type Value = Vec<u8>;
+
+        fn expecting(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.write_str("a base64 string, or an array of byte values (legacy)")
+        }
+
+        fn visit_str<E: Error>(self, value: &str) -> Result<Self::Value, E> {
+            decode(value, &STANDARD).map_err(E::custom)
+        }
+
+        /// The pre-base64 encoding, still on disk in every existing snapshot.
+        fn visit_seq<A: SeqAccess<'de>>(self, mut seq: A) -> Result<Self::Value, A::Error> {
+            let mut out = Vec::with_capacity(seq.size_hint().unwrap_or(0));
+            while let Some(byte) = seq.next_element::<u8>()? {
+                out.push(byte);
+            }
+            Ok(out)
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -540,4 +594,111 @@ pub struct DeckStats {
     pub suspended_count: usize,
     pub buried_count: usize,
     pub average_ease_factor: f64,
+}
+
+
+#[cfg(all(test, feature = "serde"))]
+mod media_data_tests {
+    use super::MediaAssetRecord;
+
+    fn record(data: Vec<u8>) -> MediaAssetRecord {
+        MediaAssetRecord {
+            id: "asset-1".into(),
+            archive_name: "cat.png".into(),
+            filename: Some("cat.png".into()),
+            data,
+        }
+    }
+
+    /// Media now travels as base64, not a JSON array of decimal numbers.
+    #[test]
+    fn media_serialises_as_base64() {
+        let json = serde_json::to_string(&record(b"foobar".to_vec())).unwrap();
+        assert!(
+            json.contains(r#""data":"Zm9vYmFy""#),
+            "expected base64, got {json}"
+        );
+    }
+
+    /// Snapshots already on disk hold the numeric array, and must still load.
+    ///
+    /// `~/.engram/mosaic-snapshot.v1.json` exists on users' machines. A decoder
+    /// that only understood base64 would fail to read every one of them, which
+    /// reads to the user as losing their collection.
+    #[test]
+    fn a_legacy_numeric_array_snapshot_still_loads() {
+        let legacy = r#"{
+            "id": "asset-1",
+            "archiveName": "cat.png",
+            "filename": "cat.png",
+            "data": [102, 111, 111, 98, 97, 114]
+        }"#;
+        let parsed: MediaAssetRecord = serde_json::from_str(legacy).unwrap();
+        assert_eq!(parsed.data, b"foobar");
+    }
+
+    #[test]
+    fn both_encodings_round_trip_to_the_same_record() {
+        let original = record((0..=255u8).collect());
+        let json = serde_json::to_string(&original).unwrap();
+        let back: MediaAssetRecord = serde_json::from_str(&json).unwrap();
+        assert_eq!(back, original);
+
+        // And the legacy spelling of the same bytes lands in the same place.
+        let numbers: Vec<String> = original.data.iter().map(|b| b.to_string()).collect();
+        let legacy = format!(
+            r#"{{"id":"asset-1","archiveName":"cat.png","filename":"cat.png","data":[{}]}}"#,
+            numbers.join(",")
+        );
+        let from_legacy: MediaAssetRecord = serde_json::from_str(&legacy).unwrap();
+        assert_eq!(from_legacy, original);
+    }
+
+    #[test]
+    fn empty_media_round_trips() {
+        let json = serde_json::to_string(&record(Vec::new())).unwrap();
+        assert!(json.contains(r#""data":"""#), "{json}");
+        let back: MediaAssetRecord = serde_json::from_str(&json).unwrap();
+        assert!(back.data.is_empty());
+    }
+
+    /// A corrupt payload is an error, not silently-empty media.
+    #[test]
+    fn malformed_base64_is_rejected() {
+        let bad = r#"{"id":"a","archiveName":"b","filename":null,"data":"not base64!"}"#;
+        assert!(serde_json::from_str::<MediaAssetRecord>(bad).is_err());
+    }
+
+    /// The wire size difference, measured rather than described.
+    ///
+    /// Both encodings of the SAME record are built and compared, so the number
+    /// comes from the serialiser rather than from arithmetic about offsets.
+    #[test]
+    fn base64_is_smaller_than_the_array_encoding_it_replaced() {
+        let data: Vec<u8> = (0..3000u32).map(|i| (i % 251) as u8).collect();
+        let bytes = data.len();
+
+        let base64_json = serde_json::to_string(&record(data.clone())).unwrap();
+
+        // The legacy spelling of the identical record.
+        let numbers: Vec<String> = data.iter().map(|b| b.to_string()).collect();
+        let legacy_json = format!(
+            r#"{{"id":"asset-1","archiveName":"cat.png","filename":"cat.png","data":[{}]}}"#,
+            numbers.join(",")
+        );
+
+        // Both must decode to the same record, or the comparison is between
+        // two different things.
+        let from_base64: MediaAssetRecord = serde_json::from_str(&base64_json).unwrap();
+        let from_legacy: MediaAssetRecord = serde_json::from_str(&legacy_json).unwrap();
+        assert_eq!(from_base64, from_legacy);
+
+        let base64_ratio = base64_json.len() as f64 / bytes as f64;
+        let legacy_ratio = legacy_json.len() as f64 / bytes as f64;
+        assert!(
+            base64_ratio < 1.5 && legacy_ratio > 3.0,
+            "expected ~1.33 vs ~4.6 wire bytes per media byte, \
+             got {base64_ratio:.2} vs {legacy_ratio:.2}"
+        );
+    }
 }

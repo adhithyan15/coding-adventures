@@ -6492,7 +6492,9 @@ mod tests {
             value["state"]["mediaAssets"][0]["filename"],
             "audio/hola-v2.mp3"
         );
-        assert_eq!(value["state"]["mediaAssets"][0]["data"], json!([118, 50]));
+        // base64 of `v2`. Media no longer travels as a JSON array of
+        // decimal numbers: 4.6 wire bytes per byte of media (#13671).
+        assert_eq!(value["state"]["mediaAssets"][0]["data"], json!("djI="));
 
         let value: Value = serde_json::from_str(&session.dispatch(
             r#"{
@@ -6955,7 +6957,13 @@ mod tests {
 
         assert_eq!(value["ok"], true);
         assert_eq!(value["snapshot"]["app"], "engram");
-        assert_eq!(value["snapshot"]["version"], 1);
+        // The constant, not a literal: the version moved to 2 with the base64
+        // media encoding (#13671), and a literal here would have to be chased
+        // every time the format changes.
+        assert_eq!(
+            value["snapshot"]["version"],
+            engram_core::ENGRAM_SNAPSHOT_VERSION
+        );
         assert_eq!(value["snapshot"]["exportedAt"], NOW + 1);
         assert_eq!(value["snapshot"]["decks"][0]["id"], "deck");
         assert!(value["snapshot"].get("activeSession").is_none());
@@ -7947,7 +7955,7 @@ mod tests {
         assert_eq!(
             pruned["state"]["mediaAssets"],
             json!([
-                {"id":"media:audio","archiveName":"0","filename":"audio/hola.mp3","data":[109,112,51]}
+                {"id":"media:audio","archiveName":"0","filename":"audio/hola.mp3","data":"bXAz"}
             ])
         );
         assert_eq!(pruned["props"]["collection-media-count-value"], "1");
