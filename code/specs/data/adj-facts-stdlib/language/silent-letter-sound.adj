@@ -28,8 +28,8 @@
 % relation `silent_letter_sound(spelling, sound)` carrying the source
 % citation, so the lookup above is the ordinary SLD binding query — the
 % engine returns the sound WITH its source, on the CPU, with zero model
-% calls, and abstains on any spelling not one of these three source-cited
-% patterns. The query also runs BACKWARD — bind a sound and recall which
+% calls, and abstains on any spelling the cited page's lesson table does
+% not name. The query also runs BACKWARD — bind a sound and recall which
 % spelling carries it:
 %
 %     ? silent_letter_sound($Sp, r_sound)
@@ -53,24 +53,48 @@
 % silent-consonant pattern as a vowel diphthong; a new predicate keeps each
 % table's own name an honest description of what it grounds.
 %
-% Provenance: quoted verbatim from the University of Florida Literacy
-% Institute (UFLI)'s Foundations Toolbox, "Diphthongs and Silent Letters
-% Units (Lessons 95-98)" page — the SAME page `diphthong-sound.adj` already
-% cites, a different lesson. curl-fetched directly (not just an
-% AI-summarized WebFetch) and confirmed byte-for-byte before writing this
-% file. The page's own prose reads, verbatim: "The Silent Letters Unit only
-% consists of one lesson, but this lesson instructs students on three
-% common silent letter patterns (e.g., kn-, wr-, and -mb). This lesson is
-% designed to build students' accuracy and automaticity in recognizing
-% silent letter patterns. The lesson also builds students' proficiency in
-% reading and spelling words that contain silent letter patterns." Its own
-% lesson table reads, verbatim: "98 kn /n/, wr /r/, mb /m/".
+% Provenance — the `source` and the ROWS are not grounded by the same thing,
+% and this note says which is which. Both come from the University of
+% Florida Literacy Institute (UFLI)'s Foundations Toolbox, "Diphthongs and
+% Silent Letters Units (Lessons 95-98)" page — the SAME page
+% `diphthong-sound.adj` cites, a different lesson — curl-fetched directly
+% rather than through an AI-summarized WebFetch.
 %
-%     spelling (atom label)   sound (atom label)   lesson concept (verbatim)
+% The `source` is that page's silent-letters paragraph, quoted WHOLE and
+% byte for byte: "The Silent Letters Unit only consists of one lesson, but
+% this lesson instructs students on three common silent letter patterns
+% (e.g., kn-, wr-, and -mb). This lesson is designed to build students’
+% accuracy and automaticity in recognizing silent letter patterns. The
+% lesson also builds students’ proficiency in reading and spelling words
+% that contain silent letter patterns."
+%
+% It says what the unit covers, and it names the three patterns as affixes —
+% "kn-, wr-, and -mb" — without giving any of them a sound. The sounds come
+% from the unit's lesson table, whose "Concept" column pairs each pattern
+% with its sound. Those cells extract as SEPARATE BLOCKS, one per cell,
+% which is exactly the cross-block/table-row class held open on #14111 ("is
+% a table row a verbatim span?"), so they are deliberately NOT presented
+% here as a quoted span, and each row below names the cell it reads instead.
+%
+% Until installment 4g the `source` field carried the definition sentences
+% with a hand-assembled rendering of that table STITCHED ONTO THEM, a string
+% that appears nowhere on the page: it invented a colon after the unit
+% heading, invented a separator between each lesson number and the previous
+% cell, and flattened the page's U+2019 apostrophe to an ASCII one, twice.
+% It carried all three of the paragraph's sentences, so unlike three of its
+% four sibling libraries it dropped none. A composition presented as a
+% quotation is a defect in the FIELD, not a position on the held question —
+% removing it takes no position either way.
+%
+%     spelling (atom label)   sound (atom label)   part of the Concept cell
 %     -----------------------  --------------------  --------------------------
 %     kn                       n_sound                "kn /n/" (lesson 98)
 %     wr                       r_sound                "wr /r/" (lesson 98)
 %     mb                       m_sound                "mb /m/" (lesson 98)
+%
+% The third column is the part of the Concept cell each row reads, not the
+% whole cell. The cells themselves are: lesson 98 is "kn /n/, wr /r/, mb
+% /m/".
 %
 % `trust authoritative` — UFLI is a university literacy research center
 % (University of Florida, .edu), the same tier and same source family
@@ -93,11 +117,11 @@
 table silent_letter_sound {
     columns spelling, sound
 
-    row (kn, n_sound)
-    row (wr, r_sound)
-    row (mb, m_sound)
+    row (kn, n_sound)             % lesson 98 cell: "kn /n/, wr /r/, mb /m/"
+    row (wr, r_sound)             % lesson 98 cell: "kn /n/, wr /r/, mb /m/"
+    row (mb, m_sound)             % lesson 98 cell: "kn /n/, wr /r/, mb /m/"
 
-    source "The Silent Letters Unit only consists of one lesson, but this lesson instructs students on three common silent letter patterns (e.g., kn-, wr-, and -mb). This lesson is designed to build students' accuracy and automaticity in recognizing silent letter patterns. The lesson also builds students' proficiency in reading and spelling words that contain silent letter patterns. Diphthongs and Silent Letters Units (Lessons 95-98): 98 kn /n/, wr /r/, mb /m/."
+    source "The Silent Letters Unit only consists of one lesson, but this lesson instructs students on three common silent letter patterns (e.g., kn-, wr-, and -mb). This lesson is designed to build students’ accuracy and automaticity in recognizing silent letter patterns. The lesson also builds students’ proficiency in reading and spelling words that contain silent letter patterns."
     locator "https://ufli.education.ufl.edu/foundations/toolbox/95-98/"
     trust authoritative
 }

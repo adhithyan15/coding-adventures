@@ -1,11 +1,13 @@
 //! End-to-end test for the language FACTS library
 //! (`adj-facts-stdlib/language/digraph-sound.adj`) driven through the built
 //! CLI: a native `table` naming nine common consonant digraph lessons and
-//! the single speech sound each represents, quoted verbatim from the
+//! the single speech sound each represents, read off the lesson table of the
 //! University of Florida Literacy Institute (UFLI) Foundations Toolbox's
-//! "Digraphs Unit Resources (Lessons 42-53)" page. `th` carries TWO rows
+//! "Digraphs Unit Resources (Lessons 42-53)" page. The library's `source` is
+//! that page's definition paragraph, which grounds the DEFINITION and not the
+//! rows -- see its Provenance block, and the 4g pin at the bottom of this file. `th` carries TWO rows
 //! (voiced and unvoiced), an honest one-key/many-values reflection of the
-//! source's own lesson split. Abstains honestly on `qu`, a real digraph the
+//! page's own lesson split. Abstains honestly on `qu`, a real digraph the
 //! same UFLI scope-and-sequence covers elsewhere but not one of these nine
 //! lessons. 0 answer-time model calls.
 
@@ -52,6 +54,17 @@ fn digraph_sound_recall_binds_the_sound_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
+    // FULL ANCHORED CITATION PIN, the shape #13916/#13918 established and
+    // the one library of these five that lacked it. Anchoring on the
+    // `"source":"` key and closing on the terminating quote pins head, tail,
+    // punctuation, whitespace and length at once -- a fragment needle would
+    // let the citation be truncated at that point while the test stayed green.
+    // The three `\u{a0}` are the page's own no-break spaces, spelled as
+    // escapes so a reader can see which byte is meant.
+    assert!(
+        out.contains("\"source\":\"A consonant digraph is a combination of two consonant letters that represent a single consonant\u{a0}speech sound.\u{a0} The lessons in this unit are designed to strengthen students\u{2019} familiarity with\u{a0}consonant digraphs.\""),
+        "the citation is the page's paragraph, exactly: {out}"
+    );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"Sound\":\"sh_sound\""),
@@ -95,7 +108,8 @@ fn digraph_sound_th_recalls_both_voiced_and_unvoiced() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
-    // th is a genuine one-key/many-values row pair -- the source splits it
+    // th is a genuine one-key/many-values row pair -- the page's lesson
+    // table splits it
     // into a voiced lesson (as in "this") and an unvoiced lesson (as in
     // "think"), so a forward recall yields BOTH sounds, not just one.
     assert!(
@@ -109,7 +123,7 @@ fn digraph_sound_th_recalls_both_voiced_and_unvoiced() {
 }
 
 #[test]
-fn digraph_sound_wh_and_ph_share_the_same_source_lesson() {
+fn digraph_sound_wh_and_ph_share_the_same_lesson_cell() {
     let dir = scratch("wh_ph");
     place_lib(&dir);
     std::fs::write(
@@ -149,5 +163,70 @@ fn digraph_sound_abstains_honestly_on_an_untabled_digraph() {
         out.contains("\"abstained\":true"),
         "qu is a real digraph the same UFLI scope-and-sequence covers elsewhere, \
          but not one of these nine lessons -- honest abstention, never invented: {out}"
+    );
+}
+
+/// Installment 4g (#13934): the `source` is the cited page's definition
+/// PARAGRAPH, not that paragraph with the unit's lesson table stitched
+/// onto it.
+///
+/// Until 4g the field read "...speech sound. Digraphs Unit Resources (Lessons 42-53): 44 ck /k/, 45 sh /sh/, ..." -- a string that
+/// appears nowhere on the page. It invented a colon after the unit
+/// heading, invented separators between each lesson number and the cell
+/// before it, dropped the paragraph's closing sentence, and flattened the
+/// page's U+00A0 between "consonant" and "speech" to an ASCII space. It
+/// never reached an apostrophe.
+///
+/// The POSITIVE needle is the paragraph's closing sentence, which the
+/// stitch dropped, with the page's own U+2019 apostrophe. The FIRST
+/// negative needle SPANS THE SEAM, joining the last words the stitch DID
+/// carry to the heading welded after them — mid-paragraph, since this
+/// file's stitch dropped the closing sentence, so it matches only if the
+/// weld is back; a needle wholly inside either side would not discriminate.
+/// The other two are artifacts the stitch invented outright, and they are
+/// not the same kind of artifact. The colon after the unit heading occurs
+/// nowhere on the page under any normalisation. The lesson number welded to
+/// the Concept cell after it is subtler, and worth being exact about: it is
+/// NOT absent from the page. Normalise the page's whitespace and "44 ck
+/// /k/" appears, because the lesson cell and the Concept cell are adjacent.
+/// What the old value invented was that string as a CONTIGUOUS span with
+/// the cell boundary erased, in a field whose whole contract is that it
+/// holds one. (Checking an ABSENCE against tag-bearing raw HTML would be
+/// the WEAKER test, not the stronger one: embedded markup guarantees a
+/// non-match. Raw HTML is the right tool for a PRESENCE claim, which is the
+/// opposite direction.)
+///
+/// This pin does NOT assert that the rows are cited by that span. They
+/// are not: the rows read the page's lesson-table Concept cells, whose
+/// status as verbatim spans is the question held open on #14111, and the
+/// library's Provenance block says so.
+#[test]
+fn digraph_sound_source_is_the_page_paragraph_not_a_stitched_lesson_table() {
+    let dir = scratch("span_not_stitch");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"digraph-sound.adj\"\n\
+         ? digraph_sound(sh, $Sound)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("The lessons in this unit are designed to strengthen students\u{2019} familiarity with\u{a0}consonant digraphs."),
+        "the citation carries the page paragraph whole: {out}"
+    );
+    assert!(
+        !out.contains("speech sound. Digraphs"),
+        "the seam itself: the last words the stitch carried, welded to the unit heading: {out}"
+    );
+    assert!(
+        !out.contains("(Lessons 42-53):"),
+        "the colon after the heading, which no cell on the page contains: {out}"
+    );
+    assert!(
+        !out.contains("44 ck /k/"),
+        "a lesson number stitched to the Concept cell that follows it: {out}"
     );
 }

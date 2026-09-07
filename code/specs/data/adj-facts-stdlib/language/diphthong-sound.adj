@@ -23,7 +23,7 @@
 % relation `diphthong_sound(diphthong, sound)` carrying the source citation,
 % so the lookup above is the ordinary SLD binding query — the engine returns
 % the sound WITH its source, on the CPU, with zero model calls, and abstains
-% on any diphthong spelling not one of these four source-cited lessons. The
+% on any diphthong spelling the cited page's table does not name. The
 % query also runs BACKWARD — bind a sound and recall EVERY diphthong
 % spelling that carries it:
 %
@@ -32,21 +32,22 @@
 %
 % DESIGN NOTE — why the reverse direction is genuinely one-key-per-answer but
 % MANY-KEYS-per-sound (the mirror image of `digraph-sound.adj`'s `th` case):
-% the cited source pairs TWO different spellings with the SAME sound in each
+% the cited page's lesson table pairs TWO different spellings with the SAME
+% sound in each
 % of its two diphthong lessons -- lesson 95 gives "oi /oi/, oy /oi/" (both
 % spellings of the SAME sound) and lesson 96 gives "ou /ow/, ow /ow/" (same
 % pattern again). So a FORWARD query on any one spelling returns exactly one
 % sound, but a BACKWARD query on a sound returns BOTH spellings that carry
 % it -- the opposite shape from `digraph-sound.adj`'s `th`, which forward-
 % recalled two sounds from one spelling. Both are honest reflections of the
-% same source, read in opposite directions.
+% same lesson table, read in opposite directions.
 %
 % DESIGN NOTE — why lesson 98 ("kn /n/, wr /r/, mb /m/") is NOT a row here
 % even though it sits on the SAME cited page: the page's own heading splits
 % it out as a separate "Silent Letters Unit", and its own opening paragraph
 % describes it as "three common silent letter patterns" -- a silent
 % CONSONANT-cluster spelling convention, not a vowel diphthong. Including it
-% here would misrepresent the source's own categorization. Lesson 97
+% here would misrepresent the cited page's own categorization. Lesson 97
 % ("Vowel Teams and Diphthongs Review") is a cumulative review lesson, not a
 % new digraph-sound pairing, and is likewise deliberately not a row -- the
 % SAME review-lesson exclusion `digraph-sound.adj` already established for
@@ -61,24 +62,49 @@
 % diphthong, so a recall on `au`/`aw` honestly ABSTAINS rather than
 % asserting UFLI's own categorization for it.
 %
-% Provenance: quoted verbatim from the University of Florida Literacy
-% Institute (UFLI)'s Foundations Toolbox, "Diphthongs and Silent Letters
-% Units (Lessons 95-98)" page. curl-fetched directly (not just an
-% AI-summarized WebFetch) and confirmed byte-for-byte before writing this
-% file. The page's own opening definition reads, verbatim: "A Diphthong is
-% sound produced by combining two vowels, gliding the tongue from one
-% position to another during articulation (e.g., /ow/, /oy/). These lessons
-% are designed to build students' accuracy and automaticity in recognizing
-% diphthongs. The lessons also build students' proficiency in reading and
-% spelling words that contain diphthongs." Its own lesson table reads,
-% verbatim: "95 oi /oi/, oy /oi/ ... 96 ou /ow/, ow /ow/".
+% Provenance — the `source` and the ROWS are not grounded by the same thing,
+% and this note says which is which. Both come from the University of
+% Florida Literacy Institute (UFLI)'s Foundations Toolbox, "Diphthongs and
+% Silent Letters Units (Lessons 95-98)" page, curl-fetched directly rather
+% than through an AI-summarized WebFetch.
 %
-%     diphthong (atom label)  sound (atom label)   lesson concept (verbatim)
+% The `source` is that page's diphthong paragraph, quoted WHOLE and byte for
+% byte: "A Diphthong is sound produced by combining two vowels, gliding the
+% tongue from one position to another during articulation (e.g., /ow/,
+% /oy/). These lessons are designed to build students’ accuracy and
+% automaticity in recognizing diphthongs. The lessons also build students’
+% proficiency in reading and spelling words that contain diphthongs."
+%
+% It says what a diphthong IS and what the unit is for. It does name two
+% SOUNDS — its own "(e.g., /ow/, /oy/)", and /ow/ is what two of these four
+% rows bind — but it pairs no SPELLING with a sound, so it still grounds
+% none of the four rows. Those come from the
+% unit's lesson table, whose "Concept" column names each lesson's spellings
+% with their sound. Those cells extract as SEPARATE BLOCKS, one per cell,
+% which is exactly the cross-block/table-row class held open on #14111 ("is
+% a table row a verbatim span?"), so they are deliberately NOT presented
+% here as a quoted span, and each row below names the cell it reads instead.
+%
+% Until installment 4g the `source` field carried the definition sentences
+% with a hand-assembled rendering of that table STITCHED ONTO THEM, a string
+% that appears nowhere on the page: it invented a colon after the unit
+% heading, invented a separator between each lesson number and the previous
+% cell, and flattened the page's U+2019 apostrophe to an ASCII one, twice.
+% It carried all three of the paragraph's sentences, so unlike three of its
+% four sibling libraries it dropped none. A composition presented as a
+% quotation is a defect in the FIELD, not a position on the held question —
+% removing it takes no position either way.
+%
+%     diphthong (atom label)  sound (atom label)   part of the Concept cell
 %     -----------------------  --------------------  --------------------------
 %     oi                       oi_sound               "oi /oi/" (lesson 95)
 %     oy                       oi_sound               "oy /oi/" (lesson 95)
 %     ou                       ow_sound               "ou /ow/" (lesson 96)
 %     ow                       ow_sound               "ow /ow/" (lesson 96)
+%
+% The third column is the part of the Concept cell each row reads, not the
+% whole cell. The cells themselves are: lesson 95 is "oi /oi/, oy /oi/";
+% lesson 96 is "ou /ow/, ow /ow/".
 %
 % `trust authoritative` — UFLI is a university literacy research center
 % (University of Florida, .edu), the SAME tier and SAME source family
@@ -100,12 +126,12 @@
 table diphthong_sound {
     columns diphthong, sound
 
-    row (oi, oi_sound)
-    row (oy, oi_sound)
-    row (ou, ow_sound)
-    row (ow, ow_sound)
+    row (oi, oi_sound)            % lesson 95 cell: "oi /oi/, oy /oi/"
+    row (oy, oi_sound)            % lesson 95 cell: "oi /oi/, oy /oi/"
+    row (ou, ow_sound)            % lesson 96 cell: "ou /ow/, ow /ow/"
+    row (ow, ow_sound)            % lesson 96 cell: "ou /ow/, ow /ow/"
 
-    source "A Diphthong is sound produced by combining two vowels, gliding the tongue from one position to another during articulation (e.g., /ow/, /oy/). These lessons are designed to build students' accuracy and automaticity in recognizing diphthongs. The lessons also build students' proficiency in reading and spelling words that contain diphthongs. Diphthongs and Silent Letters Units (Lessons 95-98): 95 oi /oi/, oy /oi/, 96 ou /ow/, ow /ow/."
+    source "A Diphthong is sound produced by combining two vowels, gliding the tongue from one position to another during articulation (e.g., /ow/, /oy/). These lessons are designed to build students’ accuracy and automaticity in recognizing diphthongs. The lessons also build students’ proficiency in reading and spelling words that contain diphthongs."
     locator "https://ufli.education.ufl.edu/foundations/toolbox/95-98/"
     trust authoritative
 }
