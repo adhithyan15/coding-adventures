@@ -1,0 +1,3115 @@
+{
+  "version": 1,
+  "language": "persian",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO AMFA. core/exam-levels.json names AMFA as this track's exam and maps A1 to AMFA 1, and its own caveat says that the six-to-six correspondence is this project's judgement and not AMFA's, that AMFA is administered chiefly for study in Iran, and that its bands are not published against CEFR descriptors. THIS INVENTORY DOES NOT DEPEND ON THAT MAPPING AND DOES NOT TEST IT: no point below is derived from an AMFA specification, because this project has read none. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT PERSIAN: they published a Spanish syllabus and have said nothing whatever about this language. READ THE THREE CLAIMS APART. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, this project's restatement of the A1 inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing here and all it establishes is a LEVEL. (2) THE PERSIAN EXPONENTS are editorial throughout. Deciding that Spanish's four article points collapse into the single fact that Persian has none, that its noun-phrase-complement point is answered by the ezafe, that its diacritic-tilde point is answered by the silent vav, and that its inverted opening question mark is answered by Persian's MIRRORED closing one -- all of that is chosen here. (3) THE COVERAGE NUMBER is a measure of the corpus against this list, not an exam-readiness claim. ONE STRUCTURAL FACT GOVERNS THIS TRACK'S NUMBERS AND SHOULD BE READ BEFORE THEM: fourteen infinitives and eleven present stems are taught, and NOT ONE VERB IS EVER CONJUGATED. The mi- prefix and the personal endings are never given, so the learner holds the two hardest parts of the Persian verb -- the infinitive and the unpredictable present stem -- and can use neither. A great many points below are covered as VOCABULARY and would be covered as GRAMMAR by one lesson; FA-A1-V-05 says so, and the notes on the functional points say so wherever it matters. THE REGISTER COLUMN WAS MEASURED, NOT IMPORTED, because the caveat is about the AMFA mapping and says nothing about register. This is the only track in its batch that declares TWO varieties -- 61 lessons contemporary-iranian-persian and 10 standard-persian-tehrani -- and eight distinct register values, including one lesson that declares formal-informal-contrast and is the chapter 3 shoma/to lesson labelling itself. NOT SEARCHED, BY INSTRUCTION: no external search for an AMFA content syllabus was performed for this file; code/learning/human-languages/BACKLOG.d records the sourcing question as settled and directs that it not be repeated per track (HL-C287, HL-C290).",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Persian is attributed to DELE, the Instituto Cervantes or the Plan Curricular, and nothing whatever is attributed to AMFA. EXAM ENVELOPE: ONE EXISTS AND IT IS PROJECT-DEFINED. Like latin/ and marwadi/ and unlike italian/ and portuguese/, the persian/ track ships assessment-spec.md, assessment.json, task-shapes/ and track.json, so a project-internal contract does bound this file. It is a contract and not evidence. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.persian -- exam 'AMFA', basis 'editorial', with an explicit per-level mapping to AMFA 1 through 6 and the caveat FA-A1-REG-04 records. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 71 lesson files in code/learning/human-languages/persian/lessons/, which introduce 156 distinct atoms between them -- 57 LEX, 42 ETYMON, 28 SCRIPT, 11 STEM, 10 GRAMMAR, 3 DIALOGUE, 3 PRAGMATICS, 1 MORPH and 1 PHRASE. The STEM kind is this track's own and is what makes FA-A1-V-02 possible to state at all. NOT SEARCHED, BY INSTRUCTION: see `about`.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "This project's restatement of the A1 inventories the Instituto Cervantes publishes behind DELE. The only inventory in this repository that restates a real awarding body's published syllabus, so it is the only one that can lend a LEVEL. It lends a level and never a language."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "Public, third-party and language-neutral. It can anchor a can-do and can never anchor a Persian form. Used here only where a point is a can-do rather than a structure -- notably FA-A1-F2-11, saying that you have not understood, which the proxy has no A1 slot for."
+    },
+    {
+      "id": "FA-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/persian/ -- 71 lessons across 15 chapters, curriculum.d and chapters.d",
+      "note": "Our own work. It is what every probe resolves against and it is finite and auditable, but agreeing with it is not corroboration. Where a point's note says a word is missing, that absence was read out of this directory."
+    },
+    {
+      "id": "FA-ENVELOPE",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/persian/assessment-spec.md, assessment.json, task-shapes/ and track.json",
+      "note": "The project-internal contract for this track, which italian/ and portuguese/ do not have. It bounds what this file may claim and it is not external evidence -- and specifically, it is not AMFA."
+    },
+    {
+      "id": "ED-PERSIAN",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Persian",
+      "note": "Every Persian exponent below. Deciding that the ezafe answers the noun-phrase-complement point, that the silent vav answers the diacritic point, that Persian's mirrored question mark answers Spanish's inverted one, and that a corpus which teaches fourteen infinitives and conjugates none of them is covered for the infinitive and empty for the present -- all of that is chosen here. A working default to be corrected, not a standard."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [],
+    "note": "EMPTY. Every one of the 273 Spanish points names a demand a Persian A1 learner also faces, and the interesting ones are the demands that arrive INVERTED. Spanish's four article points become the fact that Persian has no definite article and marks the specific object with ra instead (FA-A1-ART-01). Its gender points become the fact that Persian has NO grammatical gender at all -- a whole demand the proxy makes and this language does not, which is exactly what a learner coming from Spanish or Arabic needs told (FA-A1-N-04). Its written-accent points become the tanvin Persian keeps on a handful of Arabic loans (FA-A1-KH-08) and the silent vav, a written letter that changes nothing you say and everything you look up (FA-A1-KH-07). Its INVERTED opening question mark becomes Persian's MIRRORED closing one, which is the same demand arriving from the other side (FA-A1-KH-09). Its capital-letter points become the fact that the Perso-Arabic script has no letter case (FA-A1-KH-10). RESTATING A POINT AROUND THE TARGET LANGUAGE'S MACHINERY IS DERIVING IT, not dropping it, and an empty list here is that rule carried to its end rather than a walk that was not done."
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points) and the Council of Europe CEFR Companion Volume A1 descriptors",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Persian is our choice every time. One function is enumerated that the proxy has no A1 slot for: saying that you have understood and that you have not (FA-A1-F2-11), which is empty and is the sharpest near-miss in the file -- fahmidan, na and the -am ending are all separately taught and no lesson assembles them."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
+      "note": "Walking the Spanish grammar column surfaced demands no reading of the Persian corpus alone would have named: that no verb is ever conjugated, that nothing is plural, that ra and ke both return zero occurrences, that in and an -- the demonstratives -- are entirely absent. It does not close, because Persian makes demands Spanish cannot see: the ezafe, the unpredictable present stem, the compound verb built on kardan, and the na- prefix that negates a verb. Those are enumerated on the project's judgement and, where the proxy has no slot at all, marked persianSpecific."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "The Perso-Arabic block of Unicode for the letter inventory, code/learning/human-languages/core/exam-inventory-es-a1.json for the orthographic demands, and persian/pronunciation-reference.md",
+      "note": "THE DIMENSION WHERE THE PROXY IS LEAST USEFUL AND THE CORPUS IS MOST INTERESTING. Spanish's orthography column is about an alphabet that writes every vowel; Persian's central fact is that it writes none of the short ones, which the track states in chapter 1 and then makes the learner live with in chapter 2, because the ezafe is a short vowel and nothing on the page marks it. Joining, the alef madde, the silent vav and the mirrored question mark are all taught. The gap is the letter inventory itself: NINE letters of thirty-two are taught as letters, and chapter 15's own gloss says so."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's general and specific notion inventories)",
+      "note": "Walked at the granularity of the proxy's numbered subsections. It does not close: which Persian words an A1 candidate must hold is what an AMFA word list would say and this project has read none. The corpus's profile is unusual -- an etymological spine (42 ETYMON atoms for 57 LEX) that traces almost every word to its Indo-European or Arabic source, five sky words, eight kinship words, five body words, three foods, two words for name -- and nothing at all for the shop, the school, the journey, the clock or the calendar. For a language whose literature is its main draw, the arts notion being empty is the gap to fix first."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped, and its note is written as a work queue. Every atom named in every probe was checked mechanically against the 156 atoms the persian track actually introduces; an id was never invented to fill a point. TWO HABITS ARE NAMED SO THEY ARE NOT HIDDEN GENEROSITIES. First, this track carries a great deal on ETYMON atoms -- 42 of them against 57 LEX -- because nearly every word lesson is built around where the word came from, so probing a vocabulary point sometimes names an etymology id. Second, and this one changes how the whole file should be read: A COVERED VERB POINT HERE MEANS THE LEARNER HAS AN INFINITIVE AND A STEM, NOT A USABLE VERB. Fourteen infinitives and eleven present stems are introduced and none is ever conjugated (FA-A1-V-05), so raftan, danestan, fahmidan and dust dashtan are all covered as vocabulary and none of them can appear in a sentence. Every point that leans on a verb says so. A POINT IS NOT COUNTED AS COVERED WHEN ONLY PART OF WHAT IT NAMES IS TAUGHT: khub without bad leaves evaluation uncovered; chetor without koja leaves the interrogative adverbs uncovered; the ezafe linking a possessor but never an adjective leaves attributive modification uncovered. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or an empty list with `persianSpecific: true`. `anchorIds` records which anchor each point leans on, and the anchor's `kind` says whether that was something read or something decided.",
+  "points": [
+    {
+      "id": "FA-A1-N-01",
+      "category": "Esm (the noun)",
+      "label": "proper nouns: a personal name, given and asked for",
+      "probe": [
+        "FA-LEX-ESM-E-MAN-AST",
+        "FA-DIALOGUE-NAME-EXCHANGE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "esm-e man ... ast and the exchange that uses it, chapters 2 and 3."
+    },
+    {
+      "id": "FA-A1-N-02",
+      "category": "Esm (the noun)",
+      "label": "place names",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "Not one place name in 71 files. Iran, Tehran and the country the language is spoken in are all absent."
+    },
+    {
+      "id": "FA-A1-N-03",
+      "category": "Esm (the noun)",
+      "label": "common nouns naming periods of time",
+      "probe": [
+        "FA-LEX-MAH"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "note": "mah, which chapter 13 teaches as moon AND month, exactly as Persian uses it. It is the only time noun; ruz, shab and sa'at are absent, so the learner has the calendar unit and not the day."
+    },
+    {
+      "id": "FA-A1-N-04",
+      "category": "Esm (the noun)",
+      "label": "gender",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ],
+      "note": "PERSIAN HAS NO GRAMMATICAL GENDER AT ALL -- not on the noun, not on the adjective, not on the pronoun. That is a whole demand the proxy makes and this language does not, and it is exactly the kind of absence a learner arriving from Spanish or Arabic needs told. No lesson says it. Restated rather than dropped, on the Tamil precedent."
+    },
+    {
+      "id": "FA-A1-N-05",
+      "category": "Esm (the noun)",
+      "label": "gender by heteronymy: the paired kinship words",
+      "probe": [
+        "FA-LEX-PEDAR",
+        "FA-LEX-MADAR",
+        "FA-LEX-BARADAR",
+        "FA-LEX-KHAHAR",
+        "FA-LEX-PESAR",
+        "FA-LEX-DOKHTAR",
+        "FA-LEX-MARD",
+        "FA-LEX-ZAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "note": "EIGHT, in four pairs: pedar/madar, baradar/khahar, pesar/dokhtar, mard/zan. Persian marks sex only lexically, which makes this the point that carries the whole of what Spanish spreads across three."
+    },
+    {
+      "id": "FA-A1-N-06",
+      "category": "Esm (the noun)",
+      "label": "number: the plural in -ha and -an",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "No plural anywhere in 71 files. Twenty-six nouns are taught and every one is singular."
+    },
+    {
+      "id": "FA-A1-ADJ-01",
+      "category": "Sefat (the adjective)",
+      "label": "the adjective used predicatively",
+      "probe": [
+        "FA-LEX-KHUB",
+        "FA-GRAMMAR-PERSONAL-COPULA-AM",
+        "FA-LEX-KHUBAM-REPLY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "note": "khub-am -- I am good. Chapter 4 attaches the personal copula directly to the adjective, which is how Persian does it and which no Romance proxy point predicts."
+    },
+    {
+      "id": "FA-A1-ADJ-02",
+      "category": "Sefat (the adjective)",
+      "label": "the adjective used attributively, after its noun and linked by the ezafe",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "note": "The ezafe IS taught (FA-A1-EZ-01) and never once used to link an adjective to a noun -- only a possessor. ketab-e khub is unsayable although both halves and the linker are separately taught. The cheapest structural repair in this file."
+    },
+    {
+      "id": "FA-A1-ADJ-03",
+      "category": "Sefat (the adjective)",
+      "label": "adjective agreement",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03",
+        "A1-ADJ-04"
+      ],
+      "note": "Persian adjectives do not agree, for gender or for number. Two proxy points restate into one fact and the fact is never stated."
+    },
+    {
+      "id": "FA-A1-ADJ-04",
+      "category": "Sefat (the adjective)",
+      "label": "relational adjectives: the gentilic",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ],
+      "note": "irani, farsi as an adjective: absent. zaban is taught as tongue and language and there is no way to say which language."
+    },
+    {
+      "id": "FA-A1-ADJ-05",
+      "category": "Sefat (the adjective)",
+      "label": "degree: kheyli, and the -tar comparative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01"
+      ],
+      "note": "kheyli returns zero occurrences and no comparative is formed. khub is taught in chapter 4 and can never be made very good or better."
+    },
+    {
+      "id": "FA-A1-ART-01",
+      "category": "Article: Persian has none",
+      "label": "Persian has no definite article, and marks the indefinite with -i or yek",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-02",
+        "A1-ART-03",
+        "A1-ART-04"
+      ],
+      "note": "FOUR PROXY POINTS COLLAPSE INTO ONE FACT AND THE FACT IS NEVER STATED. Persian has no definite article at all, marks specific objects with the postposition ra instead, and builds an indefinite with yek or an unstressed -i. None of ra, yek or -i appears anywhere in 71 files."
+    },
+    {
+      "id": "FA-A1-EZ-01",
+      "category": "Ezafe (the linker Spanish has no counterpart for)",
+      "label": "the ezafe: the vowel that links a noun to what belongs with it",
+      "probe": [
+        "FA-GRAMMAR-EZAFE-OWNER",
+        "FA-LEX-ESM-E-MAN-AST",
+        "FA-GRAMMAR-HAL-E-SHOMA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SN-01"
+      ],
+      "note": "PERSIAN'S CENTRAL PIECE OF SYNTAX AND THE PROXY HAS NO POINT FOR IT. esm-e man (the name of me) and hal-e shoma (the state of you), taught in chapters 2 and 4 as the ownership linker. Derived from the noun-phrase-complement point because that is the demand it answers -- Spanish uses a de-phrase where Persian uses an unwritten vowel."
+    },
+    {
+      "id": "FA-A1-EZ-02",
+      "category": "Ezafe (the linker Spanish has no counterpart for)",
+      "label": "the ezafe linking a noun to an ADJECTIVE",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SN-02"
+      ],
+      "note": "The other half of the same machinery, and it is absent; see FA-A1-ADJ-02."
+    },
+    {
+      "id": "FA-A1-EZ-03",
+      "category": "Ezafe (the linker Spanish has no counterpart for)",
+      "label": "the ezafe is heard and not written",
+      "probe": [
+        "FA-GRAMMAR-EZAFE-OWNER",
+        "FA-SCRIPT-ESM-MAN-AST"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "It is a short vowel, and Persian does not write short vowels (FA-A1-KH-02), so اسم من is read esm-e man with nothing on the page to say so. Chapter 2 teaches the written form and the spoken form together, which is the only way this can be taught at all."
+    },
+    {
+      "id": "FA-A1-DEM-01",
+      "category": "Eshare (pointing)",
+      "label": "the demonstratives: in and an",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01",
+        "A1-DEM-02",
+        "A1-DEM-03"
+      ],
+      "note": "THREE PROXY POINTS, ZERO OCCURRENCES. Neither in (this) nor an (that) appears anywhere in 71 files. Persian's deixis is two-way against Spanish's three-way, so the demand is restated and it is still completely empty: nothing in this track can point at anything."
+    },
+    {
+      "id": "FA-A1-POS-01",
+      "category": "Malekiyat (possession)",
+      "label": "possession by ezafe plus a pronoun: esm-e man",
+      "probe": [
+        "FA-GRAMMAR-EZAFE-OWNER",
+        "FA-LEX-ESM-E-MAN-AST"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-POS-01",
+        "A1-POS-03"
+      ],
+      "note": "Persian has no possessive adjective standing before its noun; it links the noun to a pronoun with the ezafe. Two proxy points restate onto that construction and chapter 2 teaches it as the first sentence in the course."
+    },
+    {
+      "id": "FA-A1-POS-02",
+      "category": "Malekiyat (possession)",
+      "label": "the possessive suffixes: -am, -at, -ash",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-POS-02"
+      ],
+      "note": "Persian's second way of saying whose -- esm-am for my name -- is absent, although the identical-looking personal copula -am IS taught in chapter 4, which is exactly the confusion a lesson would need to head off."
+    },
+    {
+      "id": "FA-A1-Q-01",
+      "category": "Adad (quantity and number)",
+      "label": "cardinal numerals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "note": "THREE PROXY POINTS AND NOT ONE NUMERAL. yek, do, se, chahar all return ZERO occurrences in 71 files. A learner cannot give an age, a price, a telephone number, a quantity or a time."
+    },
+    {
+      "id": "FA-A1-Q-02",
+      "category": "Adad (quantity and number)",
+      "label": "ordinal numerals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-Q-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-Q-03",
+      "category": "Adad (quantity and number)",
+      "label": "quantifiers: kam, ziad, kheyli",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-Q-03",
+        "A1-Q-04",
+        "A1-NG2-02",
+        "A1-NG2-03"
+      ],
+      "note": "Four proxy points, no exponent. There is no more, no less, no much, no little and no enough in this corpus."
+    },
+    {
+      "id": "FA-A1-PRON-01",
+      "category": "Zamir (pronouns)",
+      "label": "the personal pronouns: man, to, shoma",
+      "probe": [
+        "FA-LEX-ESM-E-MAN-AST",
+        "FA-LEX-SHOMA-TO",
+        "FA-ETYMON-TO-THOU"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "man inside esm-e man, and shoma and to taught together in chapter 3 with to named as the cousin of English thou. The third person and the plurals are absent, so the paradigm is three cells of six -- and they are the three an introduction needs."
+    },
+    {
+      "id": "FA-A1-PRON-02",
+      "category": "Zamir (pronouns)",
+      "label": "pro-drop: the copula ending carries the subject",
+      "probe": [
+        "FA-GRAMMAR-PERSONAL-COPULA-AM",
+        "FA-LEX-KHUBAM-REPLY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "khub-am means I am good with no pronoun in it, and chapter 4 teaches the ending as the thing that says I."
+    },
+    {
+      "id": "FA-A1-PRON-03",
+      "category": "Zamir (pronouns)",
+      "label": "object pronouns, and the ra that marks a definite object",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02",
+        "A1-SV-04"
+      ],
+      "note": "ra returns zero occurrences. Two proxy points on one absence: no verb in this track ever takes an object at all."
+    },
+    {
+      "id": "FA-A1-PRON-04",
+      "category": "Zamir (pronouns)",
+      "label": "the experiencer, and the indirect object",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-05"
+      ],
+      "note": "Absent. dust dashtan (to like) IS taught in chapter 8, as an infinitive, and is never conjugated for a person, so nobody in this corpus likes anything."
+    },
+    {
+      "id": "FA-A1-PRON-05",
+      "category": "Zamir (pronouns)",
+      "label": "the reflexive: khod",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-PRON-06",
+      "category": "Zamir (pronouns)",
+      "label": "the relative marker ke",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05"
+      ],
+      "note": "ke returns ZERO occurrences in 71 files, in any of its jobs -- relative, complementiser or because. One missing word takes four proxy points with it; see FA-A1-CJ-04."
+    },
+    {
+      "id": "FA-A1-PRON-07",
+      "category": "Zamir (pronouns)",
+      "label": "interrogative pronouns: chi, ki, chand",
+      "probe": [
+        "FA-LEX-CHIST",
+        "FA-GRAMMAR-CHI-AST-FUSION"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "note": "chist -- che + ast fused into one word -- taught in chapter 3 with the fusion named. ki (who) and chand (how many) are both absent, so the WHAT question is available and no other."
+    },
+    {
+      "id": "FA-A1-PRON-08",
+      "category": "Zamir (pronouns)",
+      "label": "the exclamative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-PRON-09",
+      "category": "Zamir (pronouns)",
+      "label": "pronouns after a preposition",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-PRON-08"
+      ],
+      "note": "No preposition in the corpus takes a pronoun; the ezafe does the linking work instead."
+    },
+    {
+      "id": "FA-A1-ADV-01",
+      "category": "Qeyd (adverbs)",
+      "label": "place deictics: inja, anja",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "note": "Both absent, and behind the missing demonstratives they are built from."
+    },
+    {
+      "id": "FA-A1-ADV-02",
+      "category": "Qeyd (adverbs)",
+      "label": "time deictics: emruz, diruz, farda",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "note": "All three ZERO occurrences. The corpus has no way to place anything in time at all."
+    },
+    {
+      "id": "FA-A1-ADV-03",
+      "category": "Qeyd (adverbs)",
+      "label": "quantity adverbs",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03"
+      ],
+      "note": "Absent; see FA-A1-Q-03."
+    },
+    {
+      "id": "FA-A1-ADV-04",
+      "category": "Qeyd (adverbs)",
+      "label": "manner adverbs: khub, and its opposite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04"
+      ],
+      "note": "khub is taught in chapter 4 and bad is absent, so the manner scale has one end. A candidate asked how something went can only say well."
+    },
+    {
+      "id": "FA-A1-ADV-05",
+      "category": "Qeyd (adverbs)",
+      "label": "polarity: bale and na",
+      "probe": [
+        "FA-LEX-BALE-01",
+        "FA-LEX-NA-01",
+        "FA-ETYMON-NA-INDO-IRANIAN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "note": "COVERED IN CHAPTER 1, BOTH HALVES, each with a lesson of its own -- and the na lesson traces it to the Indo-Iranian negator, which is the same morpheme the verbal negative prefix is made of. Marwadi has no word for no at all; Italian teaches si and not no; this track has both on day one."
+    },
+    {
+      "id": "FA-A1-ADV-06",
+      "category": "Qeyd (adverbs)",
+      "label": "connective adverbs: ham",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-ADV-07",
+      "category": "Qeyd (adverbs)",
+      "label": "interrogative adverbs: chetor, koja, chera",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07",
+        "A1-ADV-08"
+      ],
+      "note": "chetor (how) has a lesson of its own in chapter 4, with its etymology from che + tor taken apart. koja (where) and chera (why) both return ZERO occurrences. Two proxy points land here and one third of what they ask for is present, so the point is uncovered: a learner who can ask how somebody is cannot ask where anything is."
+    },
+    {
+      "id": "FA-A1-V-01",
+      "category": "Fe'l (the verb)",
+      "label": "the infinitive, and the -tan / -dan ending every Persian verb wears",
+      "probe": [
+        "FA-GRAMMAR-INFINITIVE-TAN-DAN",
+        "FA-LEX-BUDAN",
+        "FA-LEX-RAFTAN",
+        "FA-LEX-NEVESHTAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ],
+      "note": "Chapter 6 states the rule on budan and then applies it to thirteen more verbs across chapters 6 to 8. This is the citation form, and it is the form a dictionary lists."
+    },
+    {
+      "id": "FA-A1-V-02",
+      "category": "Fe'l (the verb)",
+      "label": "the present stem, and that it must be learned separately",
+      "probe": [
+        "FA-GRAMMAR-PRESENT-STEM",
+        "FA-STEM-RAV",
+        "FA-STEM-GU",
+        "FA-STEM-DAN",
+        "FA-STEM-KHAN",
+        "FA-STEM-NEVIS"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [],
+      "persianSpecific": true,
+      "note": "THE SINGLE MOST IMPORTANT THING ABOUT THE PERSIAN VERB AND THE PROXY HAS NO SLOT FOR IT. raftan has the stem rav-, goftan has gu-, neveshtan has nevis-: the present is not predictable from the infinitive, and chapter 6 says so on raftan and then supplies eleven stems as separate atoms. Spanish stem changes are exceptions to a rule; Persian's are the rule, so no PCIC point states this demand."
+    },
+    {
+      "id": "FA-A1-V-03",
+      "category": "Fe'l (the verb)",
+      "label": "the regular -idan class, whose stem IS predictable",
+      "probe": [
+        "FA-GRAMMAR-IDAN-REGULAR-STEM",
+        "FA-STEM-FAHM",
+        "FA-STEM-PORS"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [],
+      "persianSpecific": true,
+      "note": "The one class that behaves: fahmidan gives fahm-, porsidan gives pors-. Chapter 7 names it as the exception to FA-A1-V-02, which is the right order to teach them in."
+    },
+    {
+      "id": "FA-A1-V-04",
+      "category": "Fe'l (the verb)",
+      "label": "the compound verb: a noun bolted to kardan",
+      "probe": [
+        "FA-GRAMMAR-COMPOUND-VERB-KARDAN",
+        "FA-LEX-FEKR-KARDAN",
+        "FA-LEX-KOMAK-KARDAN",
+        "FA-STEM-KON"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [],
+      "persianSpecific": true,
+      "note": "fekr kardan (to think), komak kardan (to help), and kon- as the stem. Persian makes most of its modern vocabulary this way and the corpus teaches the pattern rather than the two words -- chapter 7 introduces it and chapter 8 tests it on a second instance. No proxy point exists for it."
+    },
+    {
+      "id": "FA-A1-V-05",
+      "category": "Fe'l (the verb)",
+      "label": "the present tense, conjugated for a person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-03"
+      ],
+      "note": "THE GAP THAT MAKES EVERY VERB IN THIS TRACK INERT. Fourteen infinitives and eleven present stems are taught and NOT ONE VERB IS EVER CONJUGATED. The mi- prefix and the personal endings are never given, so miravam, migu-yam and mifahmam are all unsayable. A learner holds the two hardest parts of the Persian verb -- the infinitive and the unpredictable stem -- and cannot use either. It is also the cheapest large gain available: one lesson on mi- plus the six endings would light up eleven stems at once."
+    },
+    {
+      "id": "FA-A1-V-06",
+      "category": "Fe'l (the verb)",
+      "label": "budan, and the personal copula",
+      "probe": [
+        "FA-LEX-BUDAN",
+        "FA-GRAMMAR-PERSONAL-COPULA-AM",
+        "FA-LEX-ESM-E-MAN-AST"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-02"
+      ],
+      "note": "ast in esm-e man ... ast, and the enclitic -am in khubam. Two persons of the copula, and Persian's copula is the one verb that does get conjugated here."
+    },
+    {
+      "id": "FA-A1-V-07",
+      "category": "Fe'l (the verb)",
+      "label": "dashtan, and the have-verb",
+      "probe": [
+        "FA-LEX-DASHTAN",
+        "FA-STEM-DAR"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-NG1-01"
+      ],
+      "note": "dashtan with its stem dar-, taught in chapter 8 inside dust dashtan. Never conjugated, so nobody has anything; see FA-A1-V-05."
+    },
+    {
+      "id": "FA-A1-V-08",
+      "category": "Fe'l (the verb)",
+      "label": "raftan and amadan: going and coming",
+      "probe": [
+        "FA-LEX-RAFTAN",
+        "FA-LEX-AMADAN",
+        "FA-STEM-RAV",
+        "FA-STEM-A"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-02",
+        "A1-NG3-04"
+      ],
+      "note": "Both, with both stems, chapter 6."
+    },
+    {
+      "id": "FA-A1-V-09",
+      "category": "Fe'l (the verb)",
+      "label": "the past tense",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08",
+        "A1-V-09",
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "note": "EIGHT PROXY POINTS, ONE ABSENCE -- and it is a cheaper absence in Persian than in Spanish, because the past stem IS the infinitive minus -an and every learner here already has fourteen infinitives. Nothing in 71 files reports anything that has happened."
+    },
+    {
+      "id": "FA-A1-V-10",
+      "category": "Fe'l (the verb)",
+      "label": "the imperative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-11"
+      ],
+      "note": "Absent. Persian builds it from the present stem, which the track supplies eleven of, so this too is one lesson away."
+    },
+    {
+      "id": "FA-A1-V-11",
+      "category": "Fe'l (the verb)",
+      "label": "the negative verb: the na- prefix",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "na is taught as the WORD for no in chapter 1, and its lesson even traces it to the Indo-Iranian negator. The PREFIX that negates a verb is never taught, and neither is nist, the negative copula. So nemifahmam (I do not understand) and nist (it is not) are both out of reach, which is the finding this series checks separately. See FA-A1-F2-11."
+    },
+    {
+      "id": "FA-A1-V-12",
+      "category": "Fe'l (the verb)",
+      "label": "the subjunctive, and the modal frame",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-V-13"
+      ],
+      "note": "mikhaham, mitavanam, bayad: none of them. Restated onto the proxy's gerund point, which Persian has no counterpart for at all."
+    },
+    {
+      "id": "FA-A1-OS-01",
+      "category": "Jomle (the simple sentence)",
+      "label": "the affirmative declarative",
+      "probe": [
+        "FA-LEX-ESM-E-MAN-AST",
+        "FA-LEX-KHUBAM-REPLY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-01",
+        "A1-OS-05",
+        "A1-SV-02",
+        "A1-SV-03",
+        "A1-NG1-03"
+      ],
+      "note": "FIVE PROXY POINTS ON ONE PATTERN. Persian has one copula where Spanish has ser and estar, so the copular sentence, the attribute, the general-quality notion and the plain declarative all land on esm-e man ... ast and khub-am."
+    },
+    {
+      "id": "FA-A1-OS-02",
+      "category": "Jomle (the simple sentence)",
+      "label": "the negative declarative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "See FA-A1-V-11: no negated verb and no negative copula anywhere."
+    },
+    {
+      "id": "FA-A1-OS-03",
+      "category": "Jomle (the simple sentence)",
+      "label": "yes-or-no questions, by intonation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "note": "Every question in the corpus takes an asking word. bale and na are taught in chapter 1 as answers to a question the track never asks."
+    },
+    {
+      "id": "FA-A1-OS-04",
+      "category": "Jomle (the simple sentence)",
+      "label": "questions with an asking word",
+      "probe": [
+        "FA-LEX-NAME-QUESTION",
+        "FA-GRAMMAR-NAME-QUESTION-ORDER",
+        "FA-LEX-WELLBEING-QUESTION"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "note": "esm-e shoma chist? and hal-e shoma chetor ast?, with chapter 3 naming the word order the question takes -- Persian puts the asking word where the answer will go, not at the front."
+    },
+    {
+      "id": "FA-A1-OS-05",
+      "category": "Jomle (the simple sentence)",
+      "label": "there is, there are",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-02"
+      ],
+      "note": "hast and vojud darad are both absent."
+    },
+    {
+      "id": "FA-A1-OS-06",
+      "category": "Jomle (the simple sentence)",
+      "label": "transitive and intransitive sentences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-OS-06"
+      ],
+      "note": "No verb in the corpus is ever put in a sentence, so no sentence in the corpus has an object; see FA-A1-V-05 and FA-A1-PRON-03."
+    },
+    {
+      "id": "FA-A1-OS-07",
+      "category": "Jomle (the simple sentence)",
+      "label": "word order: Persian is subject-object-verb",
+      "probe": [
+        "FA-GRAMMAR-NAME-QUESTION-ORDER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ],
+      "note": "Chapter 3 states the order for the question, which is the only place in the corpus where a full clause is built. The general rule is never given and no declarative in the track has enough parts to show it."
+    },
+    {
+      "id": "FA-A1-OS-08",
+      "category": "Jomle (the simple sentence)",
+      "label": "subject-verb agreement",
+      "probe": [
+        "FA-GRAMMAR-PERSONAL-COPULA-AM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SN-03"
+      ],
+      "note": "Taught on the copula alone: -am for I, ast for it. Unreachable for any other verb while FA-A1-V-05 is empty."
+    },
+    {
+      "id": "FA-A1-OS-09",
+      "category": "Jomle (the simple sentence)",
+      "label": "the vocative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SN-04"
+      ],
+      "note": "Nobody is addressed by name in 71 files."
+    },
+    {
+      "id": "FA-A1-CJ-01",
+      "category": "Rabt (joining and subordination)",
+      "label": "copulative coordination: va, and the enclitic -o",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "note": "THE JOINING COLUMN IS FLAT ZERO. Every match for و in 71 files is the LETTER vav being discussed as a letter -- its shape in chapter 15's writing lesson, its silence inside khandan and khahar, its vowel duty inside khorshid. Not one occurrence is the conjunction. Twenty-six nouns are taught and a learner cannot say bread and water."
+    },
+    {
+      "id": "FA-A1-CJ-02",
+      "category": "Rabt (joining and subordination)",
+      "label": "negative coordination: na ... na",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "note": "Absent, and behind FA-A1-V-11."
+    },
+    {
+      "id": "FA-A1-CJ-03",
+      "category": "Rabt (joining and subordination)",
+      "label": "disjunctive coordination: ya",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-CO-03"
+      ],
+      "note": "ZERO occurrences."
+    },
+    {
+      "id": "FA-A1-CJ-04",
+      "category": "Rabt (joining and subordination)",
+      "label": "adversative coordination: amma, vali",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-CO-04"
+      ],
+      "note": "Both ZERO."
+    },
+    {
+      "id": "FA-A1-CJ-05",
+      "category": "Rabt (joining and subordination)",
+      "label": "distributive coordination",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-CJ-06",
+      "category": "Rabt (joining and subordination)",
+      "label": "the complement clause with ke",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03"
+      ],
+      "note": "ke returns ZERO occurrences. fekr kardan (to think) is taught in chapter 7 as a compound verb and nothing may follow it."
+    },
+    {
+      "id": "FA-A1-CJ-07",
+      "category": "Rabt (joining and subordination)",
+      "label": "the relative clause with ke",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "note": "Same missing word; see FA-A1-PRON-06."
+    },
+    {
+      "id": "FA-A1-CJ-08",
+      "category": "Rabt (joining and subordination)",
+      "label": "causal clauses: chun, chon ke",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ],
+      "note": "ZERO."
+    },
+    {
+      "id": "FA-A1-CJ-09",
+      "category": "Rabt (joining and subordination)",
+      "label": "the infinitive clause, as subject and as object",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-01",
+        "A1-SUB-02"
+      ],
+      "note": "Fourteen infinitives are taught and not one is ever put inside a clause. Persian actually prefers a subjunctive here rather than an infinitive, which is a difference from Spanish worth a lesson; neither is present."
+    },
+    {
+      "id": "FA-A1-CJ-10",
+      "category": "Rabt (joining and subordination)",
+      "label": "purpose clauses: baraye",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-CJ-11",
+      "category": "Rabt (joining and subordination)",
+      "label": "simultaneity: vaqti ke",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "note": "vaqt IS taught, in chapter 3, as the Arabic root inside khoshvaqtam -- and never as a word for time and never as the head of a when-clause."
+    },
+    {
+      "id": "FA-A1-F1-01",
+      "category": "Karkard: ettela'at dadan va porsidan",
+      "label": "identify oneself by name",
+      "probe": [
+        "FA-LEX-ESM-E-MAN-AST",
+        "FA-DIALOGUE-NAME-EXCHANGE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F1-01"
+      ]
+    },
+    {
+      "id": "FA-A1-F1-02",
+      "category": "Karkard: ettela'at dadan va porsidan",
+      "label": "ask for information about a person",
+      "probe": [
+        "FA-LEX-NAME-QUESTION",
+        "FA-LEX-WELLBEING-QUESTION"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "note": "esm-e shoma chist? and hal-e shoma chetor ast?. Nothing in the corpus asks about a thing or a place."
+    },
+    {
+      "id": "FA-A1-F1-03",
+      "category": "Karkard: ettela'at dadan va porsidan",
+      "label": "give personal information: name, age, origin",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NE03-01"
+      ],
+      "note": "The name is sayable and nothing else is: no numeral for the age (FA-A1-Q-01), no place name for the origin (FA-A1-N-02), no address and no telephone number. One field of five."
+    },
+    {
+      "id": "FA-A1-F1-04",
+      "category": "Karkard: ettela'at dadan va porsidan",
+      "label": "ask for confirmation with a tag",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-F1-05",
+      "category": "Karkard: ettela'at dadan va porsidan",
+      "label": "confirm or deny the previous statement",
+      "probe": [
+        "FA-LEX-BALE-01",
+        "FA-LEX-NA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F1-05"
+      ],
+      "note": "bale and na, both chapter 1. Both halves, which is more than most tracks in this series hold -- and note the limit at FA-A1-V-11: the learner can say no and cannot negate a sentence."
+    },
+    {
+      "id": "FA-A1-F2-01",
+      "category": "Karkard: nazar va danesh",
+      "label": "ask for an opinion by handing the turn back",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-01"
+      ],
+      "note": "Absent; the exchanges do not return the question."
+    },
+    {
+      "id": "FA-A1-F2-02",
+      "category": "Karkard: nazar va danesh",
+      "label": "give an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "note": "fekr kardan is taught as an infinitive and can be neither conjugated (FA-A1-V-05) nor completed by a clause (FA-A1-CJ-06). The verb of opinion is present twice over and opinion is unsayable."
+    },
+    {
+      "id": "FA-A1-F2-03",
+      "category": "Karkard: nazar va danesh",
+      "label": "ask for an evaluation",
+      "probe": [
+        "FA-LEX-WELLBEING-QUESTION",
+        "FA-LEX-CHETOR"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-03"
+      ],
+      "note": "hal-e shoma chetor ast?, and chetor on its own from chapter 4."
+    },
+    {
+      "id": "FA-A1-F2-04",
+      "category": "Karkard: nazar va danesh",
+      "label": "evaluate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-04",
+        "A1-NG6-01",
+        "A1-NG6-04"
+      ],
+      "note": "khub is the only evaluation word and bad is absent, so the scale has one end; three proxy points land here and none of them can be met by a one-sided scale."
+    },
+    {
+      "id": "FA-A1-F2-05",
+      "category": "Karkard: nazar va danesh",
+      "label": "express approval and disapproval",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-F2-06",
+      "category": "Karkard: nazar va danesh",
+      "label": "express agreement",
+      "probe": [
+        "FA-LEX-BALE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-NG6-06"
+      ],
+      "note": "bale. Thin, and it is the A1 exponent."
+    },
+    {
+      "id": "FA-A1-F2-07",
+      "category": "Karkard: nazar va danesh",
+      "label": "express disagreement",
+      "probe": [
+        "FA-LEX-NA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-07"
+      ],
+      "note": "na as a bare answer. The learner can contradict a question and cannot contradict a statement, because there is no negated verb; see FA-A1-V-11."
+    },
+    {
+      "id": "FA-A1-F2-08",
+      "category": "Karkard: nazar va danesh",
+      "label": "show scepticism: nemidanam",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-08"
+      ],
+      "note": "danestan (to know) IS taught, with its stem dan-, in chapter 6 -- and the negative prefix and the personal ending are both missing, so I do not know cannot be built from parts the learner already owns. The most frustrating near-miss in this file."
+    },
+    {
+      "id": "FA-A1-F2-09",
+      "category": "Karkard: nazar va danesh",
+      "label": "offer a counter-argument",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-09"
+      ],
+      "note": "Needs amma; see FA-A1-CJ-04."
+    },
+    {
+      "id": "FA-A1-F2-10",
+      "category": "Karkard: nazar va danesh",
+      "label": "express certainty by plain assertion",
+      "probe": [
+        "FA-LEX-ESM-E-MAN-AST"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-10"
+      ]
+    },
+    {
+      "id": "FA-A1-F2-11",
+      "category": "Karkard: nazar va danesh",
+      "label": "say that you have understood, and that you have not",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [],
+      "persianSpecific": true,
+      "note": "THE REPAIR COLUMN, CHECKED SEPARATELY, AND THE PIECES ARE ALL PRESENT AND UNJOINED. fahmidan (to understand) is taught in chapter 7 WITH its stem fahm- and WITH the rule that -idan verbs have predictable stems; na is taught in chapter 1 and its lesson names it as the Indo-Iranian negator; the personal copula ending -am is taught in chapter 4. nemifahmam needs the negative prefix, the mi- prefix and the ending -- three morphemes, two of which the learner has met -- and no lesson assembles them. So the commonest sentence a beginner needs is one lesson away and is not there. The proxy has no A1 slot for this and CEFR's A1 descriptors do."
+    },
+    {
+      "id": "FA-A1-F2-12",
+      "category": "Karkard: nazar va danesh",
+      "label": "ask whether somebody knows something",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-13"
+      ],
+      "note": "Absent; needs a polar question (FA-A1-OS-03)."
+    },
+    {
+      "id": "FA-A1-F2-13",
+      "category": "Karkard: nazar va danesh",
+      "label": "express knowledge",
+      "probe": [
+        "FA-LEX-DANESTAN",
+        "FA-STEM-DAN",
+        "FA-LEX-FEKR-KARDAN",
+        "FA-LEX-FAHMIDAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-14",
+        "A1-NG7-01"
+      ],
+      "note": "danestan, fekr kardan, fahmidan -- knowing, thinking and understanding, all in chapters 6 and 7 with their stems. Covered as VOCABULARY; read it with FA-A1-V-05, because none of the three can be conjugated."
+    },
+    {
+      "id": "FA-A1-F2-14",
+      "category": "Karkard: nazar va danesh",
+      "label": "express ignorance",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-15"
+      ],
+      "note": "See FA-A1-F2-08."
+    },
+    {
+      "id": "FA-A1-F2-15",
+      "category": "Karkard: nazar va danesh",
+      "label": "ability: asking about it and expressing it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09"
+      ],
+      "note": "tavanestan is absent. Three proxy points, no exponent."
+    },
+    {
+      "id": "FA-A1-F2-16",
+      "category": "Karkard: nazar va danesh",
+      "label": "express possibility",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F2-12"
+      ],
+      "note": "shayad and momken ast are both absent, and so is the subjunctive they take."
+    },
+    {
+      "id": "FA-A1-F3-01",
+      "category": "Karkard: alaqe va khast",
+      "label": "express likes",
+      "probe": [
+        "FA-LEX-DUST-DASHTAN",
+        "FA-LEX-DUST"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-SV-01"
+      ],
+      "note": "dust dashtan -- literally to have as friend -- taught in chapter 8, with dust itself given its own lesson in chapter 14. Covered as vocabulary; nobody can actually like anything until FA-A1-V-05 is closed."
+    },
+    {
+      "id": "FA-A1-F3-02",
+      "category": "Karkard: alaqe va khast",
+      "label": "ask about a preference by offering alternatives",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F3-02"
+      ],
+      "note": "Needs ya; see FA-A1-CJ-03."
+    },
+    {
+      "id": "FA-A1-F3-03",
+      "category": "Karkard: alaqe va khast",
+      "label": "express a preference",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F3-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-F3-04",
+      "category": "Karkard: alaqe va khast",
+      "label": "express a wish: khastan",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F3-04"
+      ],
+      "note": "Absent -- and it is the verb that would turn the noun-plus-lotfan request of chapter 9 into a full one."
+    },
+    {
+      "id": "FA-A1-F3-05",
+      "category": "Karkard: alaqe va khast",
+      "label": "ask about plans",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F3-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-F3-06",
+      "category": "Karkard: alaqe va khast",
+      "label": "express plans and intentions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F3-06"
+      ],
+      "note": "Absent; there is no future and no modal."
+    },
+    {
+      "id": "FA-A1-F4-01",
+      "category": "Karkard: bar digari asar gozashtan",
+      "label": "give an order or instruction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ],
+      "note": "See FA-A1-V-10: no imperative, although eleven present stems are taught and the imperative is built from one."
+    },
+    {
+      "id": "FA-A1-F4-02",
+      "category": "Karkard: bar digari asar gozashtan",
+      "label": "ask for an object, softened",
+      "probe": [
+        "FA-PHRASE-LOTFAN",
+        "FA-LEX-AB"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "note": "COVERED, AND THE LESSON IS EXPLICIT ABOUT WHY IT WORKS: ab, lotfan -- name the thing you want, add please, and the request is complete, no verb required. Chapter 9 says exactly that, which is the right thing to teach a learner who has no imperative and no modal. Italian's inventory reports no word for please at all."
+    },
+    {
+      "id": "FA-A1-F4-03",
+      "category": "Karkard: bar digari asar gozashtan",
+      "label": "ask for help",
+      "probe": [
+        "FA-LEX-KOMAK-KARDAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "note": "komak kardan is taught in chapter 8, as an infinitive, so the learner has the word and cannot form the cry. komak! on its own would do it and no lesson gives it."
+    },
+    {
+      "id": "FA-A1-F4-04",
+      "category": "Karkard: bar digari asar gozashtan",
+      "label": "respond to an order or request",
+      "probe": [
+        "FA-LEX-BALE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-04"
+      ],
+      "note": "bale. cheshm, the idiomatic Persian yes-of-compliance, is ABSENT -- and cheshm the body part IS taught, in chapter 11, which makes this a one-line addition to an existing lesson."
+    },
+    {
+      "id": "FA-A1-F4-05",
+      "category": "Karkard: bar digari asar gozashtan",
+      "label": "grant permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-F4-06",
+      "category": "Karkard: bar digari asar gozashtan",
+      "label": "refuse permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-06"
+      ],
+      "note": "na alone would do it and is never presented that way."
+    },
+    {
+      "id": "FA-A1-F4-07",
+      "category": "Karkard: bar digari asar gozashtan",
+      "label": "offer and invite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "note": "Absent, and behind the missing imperative."
+    },
+    {
+      "id": "FA-A1-F4-08",
+      "category": "Karkard: bar digari asar gozashtan",
+      "label": "accept an offer",
+      "probe": [
+        "FA-LEX-BALE-01",
+        "FA-LEX-MAMNUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-08"
+      ],
+      "note": "bale and mamnun, both chapter 1."
+    },
+    {
+      "id": "FA-A1-F4-09",
+      "category": "Karkard: bar digari asar gozashtan",
+      "label": "decline an offer",
+      "probe": [
+        "FA-LEX-NA-01",
+        "FA-LEX-MAMNUN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F4-09"
+      ],
+      "note": "na, mamnun. Both words are taught in the same chapter and the combination is never modelled; counted covered because the two exponents this move needs are separately introduced and a candidate can put them side by side."
+    },
+    {
+      "id": "FA-A1-F5-01",
+      "category": "Karkard: ravabet-e ejtema'i",
+      "label": "greet",
+      "probe": [
+        "FA-LEX-SALAM-01",
+        "FA-ETYMON-SALAM-SLM-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "note": "salam, chapter 1, with the Arabic root traced. Persian has no time-of-day greeting set at A1 and salam covers the whole day, which the corpus is right not to complicate."
+    },
+    {
+      "id": "FA-A1-F5-02",
+      "category": "Karkard: ravabet-e ejtema'i",
+      "label": "respond to a greeting",
+      "probe": [
+        "FA-DIALOGUE-WELLBEING",
+        "FA-LEX-KHUBAM-REPLY"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-02"
+      ],
+      "note": "khubam, mamnun -- and chapter 4's exchange models the whole return turn."
+    },
+    {
+      "id": "FA-A1-F5-03",
+      "category": "Karkard: ravabet-e ejtema'i",
+      "label": "address somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "note": "aqa and khanom are absent, and so is the vocative. shoma carries the respect instead (FA-A1-REG-01), which is a real Persian answer and is not a form of address."
+    },
+    {
+      "id": "FA-A1-F5-04",
+      "category": "Karkard: ravabet-e ejtema'i",
+      "label": "introduce oneself",
+      "probe": [
+        "FA-LEX-ESM-E-MAN-AST",
+        "FA-LEX-KHOSHVAGHTAM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-04"
+      ]
+    },
+    {
+      "id": "FA-A1-F5-05",
+      "category": "Karkard: ravabet-e ejtema'i",
+      "label": "introduce a third person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-04"
+      ],
+      "note": "Absent, and behind the missing demonstrative and third-person pronoun."
+    },
+    {
+      "id": "FA-A1-F5-06",
+      "category": "Karkard: ravabet-e ejtema'i",
+      "label": "respond to an introduction",
+      "probe": [
+        "FA-LEX-KHOSHVAGHTAM",
+        "FA-MORPH-KHOSH-VAQT-AM"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ],
+      "note": "khoshvaqtam, taken apart in chapter 3 into khosh + vaqt + am -- good + time + I am. The morphology lesson is what makes it memorable and it is also the first place the -am ending appears."
+    },
+    {
+      "id": "FA-A1-F5-07",
+      "category": "Karkard: ravabet-e ejtema'i",
+      "label": "apologise",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "note": "bebakhshid returns ZERO occurrences. Persian's apology is also its excuse-me and its attention-getter, so this one missing word costs three moves."
+    },
+    {
+      "id": "FA-A1-F5-08",
+      "category": "Karkard: ravabet-e ejtema'i",
+      "label": "thank",
+      "probe": [
+        "FA-LEX-MAMNUN-01",
+        "FA-ETYMON-MAMNUN-MNN-02"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "note": "mamnun, chapter 1. The reply to thanks (khahesh mikonam) is absent."
+    },
+    {
+      "id": "FA-A1-F5-09",
+      "category": "Karkard: ravabet-e ejtema'i",
+      "label": "offer condolences, propose a toast, congratulate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-08",
+        "A1-F5-09",
+        "A1-F5-10"
+      ],
+      "note": "Three proxy points, no exponent. Persian's ritual formulas are among the most elaborate of any language in this series and none is taught."
+    },
+    {
+      "id": "FA-A1-F5-10",
+      "category": "Karkard: ravabet-e ejtema'i",
+      "label": "take leave",
+      "probe": [
+        "FA-LEX-KHODAHAFEZ",
+        "FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS",
+        "FA-DIALOGUE-TAKE-LEAVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "note": "khodahafez, chapter 5 -- and the lesson takes it apart into khoda (God) and hafez (guardian) and names the ellipsis that dropped the verb between them."
+    },
+    {
+      "id": "FA-A1-F6-01",
+      "category": "Karkard: goftogu ra edare kardan (discourse and repair)",
+      "label": "open a conversation",
+      "probe": [
+        "FA-DIALOGUE-NAME-EXCHANGE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-01"
+      ]
+    },
+    {
+      "id": "FA-A1-F6-02",
+      "category": "Karkard: goftogu ra edare kardan (discourse and repair)",
+      "label": "greet and respond within a conversation",
+      "probe": [
+        "FA-DIALOGUE-WELLBEING",
+        "FA-DIALOGUE-TAKE-LEAVE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-02"
+      ]
+    },
+    {
+      "id": "FA-A1-F6-03",
+      "category": "Karkard: goftogu ra edare kardan (discourse and repair)",
+      "label": "ask for a person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-F6-04",
+      "category": "Karkard: goftogu ra edare kardan (discourse and repair)",
+      "label": "show that one is following",
+      "probe": [
+        "FA-LEX-BALE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "bale can do it and is never presented as a backchannel; counted covered because the exponent exists, and read the limit at FA-A1-F2-11."
+    },
+    {
+      "id": "FA-A1-F6-05",
+      "category": "Karkard: goftogu ra edare kardan (discourse and repair)",
+      "label": "REPAIR: ask for a repetition",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "dobare, lotfan (again, please) would be built from lotfan, which chapter 9 teaches, plus one word. The word is absent, and so are bebakhshid and chi goftid. A learner who mishears has one move -- FA-A1-F6-04's bale -- and it is the wrong one."
+    },
+    {
+      "id": "FA-A1-F6-06",
+      "category": "Karkard: goftogu ra edare kardan (discourse and repair)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "note": "Absent; behind the imperative."
+    },
+    {
+      "id": "FA-A1-F6-07",
+      "category": "Karkard: goftogu ra edare kardan (discourse and repair)",
+      "label": "propose closing the conversation",
+      "probe": [
+        "FA-DIALOGUE-TAKE-LEAVE",
+        "FA-PRAGMATICS-STANDARD-FAREWELL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-F6-06"
+      ],
+      "note": "Chapter 5's exchange opens with salam and closes with khodahafez, and the pragmatics atom says khodahafez is the standard closing."
+    },
+    {
+      "id": "FA-A1-NG-01",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "existence and having",
+      "probe": [
+        "FA-LEX-DASHTAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-01"
+      ],
+      "note": "dashtan is taught as an infinitive in chapter 8; hast and vojud darad are absent. Covered as vocabulary only -- see FA-A1-V-07."
+    },
+    {
+      "id": "FA-A1-NG-02",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "presence and absence: ba and bedun-e",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-NG-03",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "locating an event in time, and certainty",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04",
+        "A1-NG1-05"
+      ],
+      "note": "Two proxy points, no exponent. mah is taught as month and nothing is ever placed in one."
+    },
+    {
+      "id": "FA-A1-NG-04",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "note": "Absent, and unreachable without numerals."
+    },
+    {
+      "id": "FA-A1-NG-05",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "relative position, distance, direction and order",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-03",
+        "A1-NG3-05",
+        "A1-NG3-06"
+      ],
+      "note": "FOUR PROXY POINTS AND NO EXPONENT. There is no near, no far, no left, no right, no before and no after in 71 files."
+    },
+    {
+      "id": "FA-A1-NG-06",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "movement and stability",
+      "probe": [
+        "FA-LEX-RAFTAN",
+        "FA-LEX-AMADAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04"
+      ],
+      "note": "raftan and amadan, chapter 6, as a pair. Covered as vocabulary; nobody goes anywhere while FA-A1-V-05 is empty."
+    },
+    {
+      "id": "FA-A1-NG-07",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "origin: where somebody is from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07"
+      ],
+      "note": "No place name, no gentilic and no az. Three gaps, one unanswerable question."
+    },
+    {
+      "id": "FA-A1-NG-08",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "the clock and the parts of the day",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "note": "Absent, and doubly out of reach without numerals. vaqt (time) is taught only as the Arabic root inside khoshvaqtam."
+    },
+    {
+      "id": "FA-A1-NG-09",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "locating in time: today, weekdays, months, seasons",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02",
+        "A1-NG4-03"
+      ],
+      "note": "TWO PROXY POINTS AND ONE WORD BETWEEN THEM: mah, which means both moon and month. No weekday, no month name, no season, no today, no yesterday, no tomorrow, no before and no after. The Persian calendar -- Nowruz and the solar Hijri months -- is one of the most culturally load-bearing things about the language and it is entirely absent."
+    },
+    {
+      "id": "FA-A1-NG-10",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "sight and hearing",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "note": "cheshm (eye) is taught in chapter 11 as a body part and there is no verb of seeing or hearing. The organ without the verb, which the Italian inventory reports in the same shape."
+    },
+    {
+      "id": "FA-A1-NG-11",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "colour",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "note": "Not one colour word in 71 files."
+    },
+    {
+      "id": "FA-A1-NG-12",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "note": "Unreachable without numerals."
+    },
+    {
+      "id": "FA-A1-NG-13",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "open and closed, way in and way out",
+      "probe": [
+        "FA-LEX-DAR",
+        "FA-LEX-KELID"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "note": "dar (door) and kelid (key), chapters 9 and 12 -- the two nouns this notion is built on. baz and baste, open and closed, are absent, so the learner has the door and cannot open it."
+    },
+    {
+      "id": "FA-A1-NG-14",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "value and price",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02"
+      ],
+      "note": "Absent; unreachable without numerals."
+    },
+    {
+      "id": "FA-A1-NG-15",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "attractiveness, acceptability, correctness, interest, ease",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03",
+        "A1-NG6-05",
+        "A1-NG6-07",
+        "A1-NG6-08",
+        "A1-NG6-10"
+      ],
+      "note": "Five proxy points, no exponent. khub is the whole of this track's evaluative vocabulary."
+    },
+    {
+      "id": "FA-A1-NG-16",
+      "category": "Mafahim-e omumi (general notions)",
+      "label": "verbal expression: saying, reading and writing",
+      "probe": [
+        "FA-LEX-GOFTAN",
+        "FA-LEX-KHANDAN",
+        "FA-LEX-NEVESHTAN",
+        "FA-LEX-PORSIDAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "note": "goftan, khandan, neveshtan, porsidan -- and chapter 7 makes the point that khandan is to read AND to recite AND to sing, because all three are the same act in Persian."
+    },
+    {
+      "id": "FA-A1-NE-01",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "parts of the body",
+      "probe": [
+        "FA-LEX-CHESHM",
+        "FA-LEX-DAST",
+        "FA-LEX-PA",
+        "FA-LEX-ZABAN",
+        "FA-LEX-DEL"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "cheshm, dast, pa, zaban, del -- five, chapters 11 and 12, and zaban is taught as tongue AND language, which is how Persian uses it."
+    },
+    {
+      "id": "FA-A1-NE-02",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "physical characteristics, and character",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02",
+        "A1-NE02-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-NE-03",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "actions and positions of the body",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE01-03"
+      ],
+      "note": "gereftan (to take) is the nearest and it is a hand action rather than a posture; sitting, standing and lying are absent."
+    },
+    {
+      "id": "FA-A1-NE-04",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "personal data beyond the name",
+      "probe": [
+        "FA-LEX-NAM",
+        "FA-LEX-ESM-E-MAN-AST"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "note": "TWO WORDS FOR NAME AND NOTHING ELSE: esm, the Arabic loan used in the exchange, and nam, Persian's own inherited word, which chapter 12 teaches beside it. That doublet is the interesting part and the rest of the identity slot -- surname, address, telephone, age -- is empty."
+    },
+    {
+      "id": "FA-A1-NE-05",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "documents, and personal objects",
+      "probe": [
+        "FA-LEX-KELID",
+        "FA-LEX-KETAB"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02",
+        "A1-NE03-03"
+      ],
+      "note": "kelid (key) and ketab (book) -- two personal objects, and chapter 9 traces kelid to a Greek word Persian has held since Alexander. Documents are absent."
+    },
+    {
+      "id": "FA-A1-NE-06",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "family relationships",
+      "probe": [
+        "FA-LEX-PEDAR",
+        "FA-LEX-MADAR",
+        "FA-LEX-BARADAR",
+        "FA-LEX-KHAHAR",
+        "FA-LEX-PESAR",
+        "FA-LEX-DOKHTAR"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "Six, in three pairs, chapters 10 and 14 -- and chapter 6 promises them in advance as the Indo-European cousins the learner will meet, which is a rare piece of forward scheduling."
+    },
+    {
+      "id": "FA-A1-NE-07",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "social relationships",
+      "probe": [
+        "FA-LEX-DUST",
+        "FA-ETYMON-DUST"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "note": "dust, the friend, chapter 14 -- and it is the same word already met inside dust dashtan, to like, which the lesson points out. Boss, colleague and neighbour are absent."
+    },
+    {
+      "id": "FA-A1-NE-08",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "celebrations and occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "note": "Absent, Nowruz included."
+    },
+    {
+      "id": "FA-A1-NE-09",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "food and drink",
+      "probe": [
+        "FA-LEX-AB",
+        "FA-LEX-CHAY",
+        "FA-LEX-NAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02",
+        "A1-NE05-03"
+      ],
+      "note": "ab, chay, nan -- water, tea, bread, all in chapter 9, and chay is traced along Persian's own leg of the overland road from Chinese. Three, and they are the three a Persian table starts with."
+    },
+    {
+      "id": "FA-A1-NE-10",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "meals, dishes and eating out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01",
+        "A1-NE05-04",
+        "A1-NE05-05"
+      ],
+      "note": "Three proxy points, no exponent -- and no verb for eating or drinking either, so the three foodstuffs above cannot be consumed."
+    },
+    {
+      "id": "FA-A1-NE-11",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "school, teaching and learning",
+      "probe": [
+        "FA-LEX-KETAB"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-02",
+        "A1-NE06-03",
+        "A1-NE06-04",
+        "A1-NE06-05",
+        "A1-NE06-06",
+        "A1-NE06-07"
+      ],
+      "note": "SEVEN PROXY POINTS AND ONE WORD: ketab, the book, chapter 12. No school, no teacher, no pupil, no classroom language."
+    },
+    {
+      "id": "FA-A1-NE-12",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "work",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01",
+        "A1-NE07-02",
+        "A1-NE07-03",
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "note": "Six proxy points, no exponent. kar, the word inside the compound-verb pattern kardan that chapter 7 teaches, is never taught as the noun work."
+    },
+    {
+      "id": "FA-A1-NE-13",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "free time, games, sport and entertainment",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01",
+        "A1-NE08-02",
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "note": "Four proxy points, no exponent."
+    },
+    {
+      "id": "FA-A1-NE-14",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "media, correspondence, telephone and internet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-02",
+        "A1-NE09-03",
+        "A1-NE09-04",
+        "A1-NE09-05",
+        "A1-NE09-06"
+      ],
+      "note": "Six proxy points, no exponent -- although neveshtan (to write) is taught in chapter 7, so the verb a letter needs is present and there is nothing to write and nobody to write to."
+    },
+    {
+      "id": "FA-A1-NE-15",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "the dwelling",
+      "probe": [
+        "FA-LEX-DAR"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01",
+        "A1-NE10-02",
+        "A1-NE10-03",
+        "A1-NE10-04"
+      ],
+      "note": "dar, the door, chapter 12. Four proxy points and one part of a house; khane, the house itself, is absent."
+    },
+    {
+      "id": "FA-A1-NE-16",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "services: post, bank, health, security",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-02",
+        "A1-NE11-03",
+        "A1-NE11-04"
+      ],
+      "note": "Four proxy points, no exponent."
+    },
+    {
+      "id": "FA-A1-NE-17",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "shopping, clothing and payment",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01",
+        "A1-NE12-02",
+        "A1-NE12-03",
+        "A1-NE15-01",
+        "A1-NE15-02"
+      ],
+      "note": "FIVE PROXY POINTS AND NOTHING. No shop, no garment, no money and no price -- and lotfan, the one request word this track has, is exactly what a shop needs."
+    },
+    {
+      "id": "FA-A1-NE-18",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "health, illness, medicine and hygiene",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01",
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE13-04"
+      ],
+      "note": "Four proxy points, no exponent. Five body words ARE taught and chapter 11 says explicitly that cheshm is the body part behind the family a doctor's question would use, which makes the absence a deliberate forward reference rather than an oversight."
+    },
+    {
+      "id": "FA-A1-NE-19",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "travel, accommodation and transport",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01",
+        "A1-NE14-02",
+        "A1-NE14-03"
+      ],
+      "note": "Three proxy points, no exponent."
+    },
+    {
+      "id": "FA-A1-NE-20",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "businesses, industry and technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE15-03",
+        "A1-NE15-04",
+        "A1-NE16-02"
+      ],
+      "note": "Three proxy points, no exponent."
+    },
+    {
+      "id": "FA-A1-NE-21",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "government, politics, law and justice",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-NE-22",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "the arts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-04",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "note": "SIX PROXY POINTS AND NO EXPONENT, and for THIS language that is the gap to fix first: Persian's literary tradition is the reason most learners come to it, chapter 5 teaches hafez as the common noun guardian while never mentioning that it is also the name of the poet every Iranian home keeps a copy of, and chapter 7 says khandan means to read, recite and sing without naming a single thing to recite."
+    },
+    {
+      "id": "FA-A1-NE-23",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "religion",
+      "probe": [
+        "FA-LEX-KHODA",
+        "FA-ETYMON-KHODA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "note": "khoda, God, taught in chapter 5 as the inherited Persian half of khodahafez. One word, and it is the one the farewell is built on."
+    },
+    {
+      "id": "FA-A1-NE-24",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "the sky and the natural world",
+      "probe": [
+        "FA-LEX-ASEMAN",
+        "FA-LEX-KHORSHID",
+        "FA-LEX-MAH",
+        "FA-LEX-SETARE",
+        "FA-LEX-BARAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01",
+        "A1-NE20-04"
+      ],
+      "note": "aseman, khorshid, mah, setare, baran -- sky, sun, moon, star, rain. Chapter 13 is a whole chapter of them and it is the best-covered notion in the file."
+    },
+    {
+      "id": "FA-A1-NE-25",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "country, town, city and the land",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02",
+        "A1-NE20-03"
+      ],
+      "note": "Two proxy points and nothing: no shahr, no keshvar, no zamin. The learner can name the sky and not the ground under it."
+    },
+    {
+      "id": "FA-A1-NE-26",
+      "category": "Mafahim-e khas (specific notions)",
+      "label": "fauna and flora",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05",
+        "A1-NE20-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "FA-A1-KH-01",
+      "category": "Khatt (script and orthography)",
+      "label": "the direction of the script, and that it runs right to left",
+      "probe": [
+        "FA-SCRIPT-RTL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-01"
+      ],
+      "note": "Taught in chapter 1, on the very first word, which is the right place for it."
+    },
+    {
+      "id": "FA-A1-KH-02",
+      "category": "Khatt (script and orthography)",
+      "label": "short vowels are not written",
+      "probe": [
+        "FA-SCRIPT-SHORT-VOWELS-01",
+        "FA-GRAMMAR-EZAFE-OWNER"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "THE DEMAND THE PROXY CANNOT SEE AT ALL AND THE ONE THAT MOST CHANGES WHAT READING MEANS. Chapter 1 states it on mamnun and chapter 2 makes the learner live with the consequence: the ezafe is a short vowel, so esm-e man has nothing on the page to mark the linker. A Spanish orthography column is about an alphabet that writes every vowel; this is a different contract entirely."
+    },
+    {
+      "id": "FA-A1-KH-03",
+      "category": "Khatt (script and orthography)",
+      "label": "the letters, and their names",
+      "probe": [
+        "FA-SCRIPT-ALEF-01",
+        "FA-SCRIPT-BE-01",
+        "FA-SCRIPT-SIN-01",
+        "FA-SCRIPT-LAM-01",
+        "FA-SCRIPT-MIM-01",
+        "FA-SCRIPT-HE-01",
+        "FA-SCRIPT-TE-01",
+        "FA-SCRIPT-NUN-01",
+        "FA-SCRIPT-VAV-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "NINE LETTERS ARE TAUGHT AS LETTERS, in chapter 15's writing block -- alef, be, sin, lam, mim, he, te, nun, vav -- and chapter 15's practice lesson says so in its own gloss: nine letters, and seven words you have been saying all along. The Persian alphabet has 32. Twenty-three letters are read in words the learner has been shown and never taught as signs."
+    },
+    {
+      "id": "FA-A1-KH-04",
+      "category": "Khatt (script and orthography)",
+      "label": "the four Persian letters Arabic does not have",
+      "probe": [
+        "FA-SCRIPT-GAF",
+        "FA-SCRIPT-CHE-AND-YE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "gaf, taught in chapter 6 on goftan and explicitly named as the Persian-only letter, and che in chapter 3. pe and zhe are absent, so two of the four are named."
+    },
+    {
+      "id": "FA-A1-KH-05",
+      "category": "Khatt (script and orthography)",
+      "label": "joining: letters hold hands, and some refuse",
+      "probe": [
+        "FA-SCRIPT-JOINING-01",
+        "FA-SCRIPT-KHODAHAFEZ-JOINED"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "The single hardest mechanical fact about this script, taught in chapter 15 on salam with the non-joining letters named, and then shown again on khodahafez. A Latin-alphabet proxy has no point that predicts this and the corpus meets it head on."
+    },
+    {
+      "id": "FA-A1-KH-06",
+      "category": "Khatt (script and orthography)",
+      "label": "alef madde, and the long a at the start of a word",
+      "probe": [
+        "FA-SCRIPT-ALEF-MADDE"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "Taught in chapter 6 on amadan -- the hat-wearing alef."
+    },
+    {
+      "id": "FA-A1-KH-07",
+      "category": "Khatt (script and orthography)",
+      "label": "letters that are written and not pronounced",
+      "probe": [
+        "FA-SCRIPT-SILENT-VAV"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O2-02"
+      ],
+      "note": "The silent vav in khandan, taught in chapter 7 and then reused in chapter 14 on khahar. This is Persian's counterpart of the Spanish diacritic point: a written mark that changes nothing you say and everything you look up."
+    },
+    {
+      "id": "FA-A1-KH-08",
+      "category": "Khatt (script and orthography)",
+      "label": "the tanvin, and the Arabic marks Persian keeps",
+      "probe": [
+        "FA-PHRASE-LOTFAN"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O2-01"
+      ],
+      "note": "Chapter 9 teaches lotfan and names the hooked mark at its end as tanvin, and says that Persian keeps it on only a handful of Arabic loans. Persian writes no accent at all, so the proxy's general accentuation point is restated onto the one diacritic system the language does use."
+    },
+    {
+      "id": "FA-A1-KH-09",
+      "category": "Khatt (script and orthography)",
+      "label": "the Persian question mark, which is mirrored",
+      "probe": [
+        "FA-SCRIPT-PERSIAN-QUESTION-MARK"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O3-04"
+      ],
+      "note": "Taught in chapter 3. Spanish's point is about an INVERTED opening mark; Persian's is about a MIRRORED closing one, which is the same demand arriving from the other direction, and the corpus meets it."
+    },
+    {
+      "id": "FA-A1-KH-10",
+      "category": "Khatt (script and orthography)",
+      "label": "the other punctuation marks, and capital letters",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05",
+        "A1-O3-01",
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "note": "TEN PROXY POINTS COLLAPSE HERE AND NONE IS TAUGHT. The Perso-Arabic script has no letter case at all, which restates the two capital-letter points into a fact a learner needs told and never is; the Persian comma is mirrored like the question mark and is used throughout the corpus without comment; the rest are absent."
+    },
+    {
+      "id": "FA-A1-KH-11",
+      "category": "Khatt (script and orthography)",
+      "label": "the Persian digits",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-Q-02",
+        "A1-O4-03"
+      ],
+      "note": "The digits have their own signs and none is taught -- and no Latin digit either. The same hole as FA-A1-Q-01, seen from the script side."
+    },
+    {
+      "id": "FA-A1-KH-12",
+      "category": "Khatt (script and orthography)",
+      "label": "abbreviations and initialisms",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02",
+        "A1-O1-06"
+      ],
+      "note": "Three proxy points, no exponent."
+    },
+    {
+      "id": "FA-A1-REG-01",
+      "category": "Sath-e sokhan (register: shoma against to)",
+      "label": "shoma against to, taught as a choice",
+      "probe": [
+        "FA-LEX-SHOMA-TO",
+        "FA-PRAGMATICS-SHOMA-REGISTER",
+        "FA-ETYMON-TO-THOU"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [],
+      "persianSpecific": true,
+      "note": "Chapter 3 gives both pronouns one lesson, names shoma as respectful-or-plural and to as familiar singular, and carries a PRAGMATICS atom of its own for when each is used. Latin's inventory reports the same contrast as a pure number distinction with no politeness in it; Persian's is the politeness one, and the track is explicit about which it is teaching."
+    },
+    {
+      "id": "FA-A1-REG-02",
+      "category": "Sath-e sokhan (register: shoma against to)",
+      "label": "the careful register the whole track is written in",
+      "probe": [
+        "FA-PRAGMATICS-WELLBEING-FORMAL",
+        "FA-LEX-WELLBEING-QUESTION"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [],
+      "persianSpecific": true,
+      "note": "hal-e shoma chetor ast? is the careful, respectful form and the corpus says so. Its colloquial counterpart -- chetori? -- is never given, so the learner has the form that is always safe and none of the forms that are usual between friends."
+    },
+    {
+      "id": "FA-A1-REG-03",
+      "category": "Sath-e sokhan (register: shoma against to)",
+      "label": "the two varieties this track declares, and the split between them",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [],
+      "persianSpecific": true,
+      "note": "MEASURED, NOT IMPORTED. exam-levels.json's caveat for persian is about the AMFA mapping and says nothing about register or variety, so this column was read out of the frontmatter directly. What it found: this is the only track in this batch that declares TWO varieties -- 61 lessons contemporary-iranian-persian and 10 standard-persian-tehrani -- and eight distinct register values across 15 lessons, including one lesson declaring formal-informal-contrast, which is the chapter 3 shoma/to lesson labelling itself. The FIELD is informative here in a way it is not in latin or portuguese. What no lesson does is tell the learner that Persian's written and spoken registers differ sharply -- that ast becomes -e and mirevam becomes miram in speech -- and for a language with that gap, saying so is an A1 demand."
+    },
+    {
+      "id": "FA-A1-REG-04",
+      "category": "Sath-e sokhan (register: shoma against to)",
+      "label": "THE CAVEAT IS ABOUT THE MAPPING, AND IT IS RIGHT TO BE",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "FA-CORPUS",
+        "ED-PERSIAN"
+      ],
+      "derivedFrom": [],
+      "persianSpecific": true,
+      "note": "Recorded rather than deferred to or overridden. exam-levels.json maps A1 to AMFA 1 and says in as many words that a straight six-to-six correspondence is this project's judgement, not AMFA's, that AMFA is administered chiefly for study in Iran, and that its bands are not published against CEFR descriptors -- so the rungs should be treated as evenly spaced only until somebody checks them. THIS FILE DOES NOT CHECK THEM AND CANNOT. Nothing here is derived from AMFA, nothing is attributed to it, and the level in this inventory comes from the Spanish proxy and nowhere else. The caveat is therefore neither stale nor overstated: it is accurate, it is load-bearing, and the honest thing this point can add is that the inventory does not depend on the mapping it qualifies."
+    }
+  ]
+}

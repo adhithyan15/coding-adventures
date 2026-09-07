@@ -1,0 +1,3390 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "level": "A1",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO ANY EXAMINING OR LANGUAGE BODY. core/exam-levels.json records for marwadi that no suitable complete external pre-A1-to-C2 ladder has been identified, and this project has found none either: Marwadi may have no external syllabus at all, and this file must not be read as inventing one. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT MARWADI: they published a Spanish syllabus and have said nothing whatever about this language. READ THE THREE CLAIMS APART. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, this project's restatement of the A1 inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing here and all it establishes is a LEVEL: what an A1 candidate must be able to handle, asked as a language-neutral demand rather than as a piece of Spanish grammar. (2) THE MARWADI EXPONENTS are editorial throughout and are this project's judgement and nobody else's. Deciding that Spanish's three article points are answered by the single fact that Marwadi has none, that its four copula-and-attribute points land on one hai, that its politeness demand is answered by the enclitic particle saa rather than by a pronoun, and that eight separate past-tense points collapse into one absence -- all of that is chosen here. (3) THE COVERAGE NUMBER is a measure of the corpus against this list. It is not an exam-readiness claim and cannot become one while every scope dimension is partial. THE REGISTER COLUMN WAS MEASURED, NOT IMPORTED, because exam-levels.json's caveat for marwadi is about the missing ladder and says nothing about register. What the measurement found is that this track's frontmatter is UNUSUALLY INFORMATIVE: 39 of 257 lessons declare something other than neutral across six values, where latin and portuguese are uniformly neutral and had to be read entirely from bodies. THE CAVEAT ITSELF IS STALE, AND IN THE TRACK'S FAVOUR, AND IS RECORDED AS STALE RATHER THAN DEFERRED TO -- it says the mapping does not claim that the current STARTER CHAPTER reaches the destination, and the track now has 257 lessons across 31 chapters, an assessment spec, task shapes and four-skill scored practice. MW-A1-REG-04 records that. The rest of the caveat stands. WHAT THIS TRACK DOES DIFFERENTLY, said here because the numbers below do not show it: every item runs HEAR, then BUILD IN THE SCRIPT, then PERFORM ACROSS FOUR SCORED SKILLS, and the practice lessons re-run cumulative lists that GROW -- family four, seven, ten, twelve; shopping three, five, seven; food three, five, seven. Seven lessons in ten are a second, third or fourth pass over material already introduced. That is an expanding-interval retrieval schedule built into the curriculum shape rather than bolted on, and MW-A1-SAU-04 enumerates it. NOT SEARCHED, BY INSTRUCTION: no external search for a Marwadi syllabus was performed for this file; code/learning/human-languages/BACKLOG.d records the sourcing question as settled and directs that it not be repeated per track (HL-C287, HL-C290).",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Marwadi is attributed to DELE, the Instituto Cervantes or the Plan Curricular. EXAM ENVELOPE: ONE EXISTS AND IT IS PROJECT-DEFINED. Like latin/ and persian/ and unlike italian/ and portuguese/, the marwadi/ track ships assessment-spec.md, assessment.json, task-shapes/ and track.json, so a project-internal contract does bound this file. It is a contract and not evidence. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.marwadi -- exam 'Coding Adventures Marwadi Assessment -- project-defined equivalent', basis 'editorial', mapping 'cefr', with the no-external-ladder caveat that MW-A1-REG-04 records as partly stale. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 257 lesson files in code/learning/human-languages/marwadi/lessons/, which introduce 228 distinct atoms between them -- 115 SCRIPT, 76 LEX, 25 PERFORMANCE, 3 DIALOGUE, and single-figure counts of ANSWER, QUESTION, COURTESY, FAREWELL, PHRASE, REGISTER and RESPONSE. All 257 declare variety: central-marwari-devanagari; track.json expands that to contemporary central Marwari in Devanagari, with regional variation named explicitly. NOT SEARCHED, BY INSTRUCTION: no external search for a Marwadi content syllabus was performed for this file. See `about`.",
+  "anchors": [
+    {
+      "id": "ES-A1-PROXY",
+      "kind": "sourced-proxy",
+      "title": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+      "note": "This project's restatement of the A1 inventories the Instituto Cervantes publishes behind DELE. The only inventory in this repository that restates a real awarding body's published syllabus, so it is the only one that can lend a LEVEL. It lends a level and never a language: nothing about Marwadi is attributable to DELE, the Instituto Cervantes or the Plan Curricular."
+    },
+    {
+      "id": "CEFR-CV",
+      "kind": "external-framework",
+      "title": "Council of Europe, CEFR Companion Volume (2020), A1 descriptors",
+      "note": "Public, third-party and language-neutral. It can anchor a can-do -- can handle a simple transaction, can indicate when he/she is not following -- and it can never anchor a Marwadi form, because it names none. Used here only where a point is a can-do rather than a structure."
+    },
+    {
+      "id": "MW-CORPUS",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/marwadi/ -- 257 lessons across 31 chapters, curriculum.d and chapters.d",
+      "note": "Our own work. It is what every probe resolves against and it is finite and auditable, but agreeing with it is not corroboration: the corpus cannot tell you what an exam would ask, only what this course happens to teach. Where a point's note says a word is missing, that absence was read out of this directory."
+    },
+    {
+      "id": "MW-ENVELOPE",
+      "kind": "project-owned",
+      "title": "code/learning/human-languages/marwadi/assessment-spec.md, assessment.json, task-shapes/ and track.json",
+      "note": "The project-internal contract for this track. It bounds what this file may claim and it is not external evidence. track.json is also where the variety claim comes from: contemporary central Marwari in Devanagari, with regional variation named explicitly."
+    },
+    {
+      "id": "ED-MARWADI",
+      "kind": "editorial",
+      "title": "This project's unaided judgement about Marwadi",
+      "note": "Every Marwadi exponent below, and every judgement about what counts. Deciding that saa answers the proxy's politeness demand, that the five imperatives cover giving an instruction while the absence of any conjugated lexical verb leaves the present tense empty, and that a market curriculum with no numerals is the headline of this file -- all of that is chosen here. It is a working default to be corrected, not a standard."
+    }
+  ],
+  "proxy": {
+    "of": "code/learning/human-languages/core/exam-inventory-es-a1.json",
+    "notTransferred": [],
+    "note": "EMPTY. Every one of the 273 Spanish points names a demand a Marwadi A1 learner also faces, including the ones that look Spanish-only: the three article points become the single fact that Marwadi has none (MW-A1-ART-01); the preposition-plus-article contraction becomes the postposition (MW-A1-ART-02); the written-accent points become the matra system, where length is carried by a different sign rather than by a mark on the same one (MW-A1-LIP-11); the capital-letter points become the fact that Devanagari has no case distinction at all, which a learner arriving from a Latin-alphabet language needs told (MW-A1-LIP-09); and the nine punctuation points become the danda, which every sentence in this corpus uses and no lesson names (MW-A1-LIP-10). RESTATING A POINT AROUND THE TARGET LANGUAGE'S MACHINERY IS DERIVING IT, not dropping it, and an empty list here is that rule carried to its end rather than a walk that was not done. Unlike Latin, this track has no chronological reason to drop anything either: it teaches a contemporary spoken variety, so the telephone and the internet are ordinary uncovered points rather than anachronisms."
+  },
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points) and the Council of Europe CEFR Companion Volume A1 descriptors",
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Marwadi is our choice every time. Two functions are enumerated that the proxy has no A1 slot for and this track demands anyway: saying that you have understood and that you have not (MW-A1-F2-15, empty), and softening an imperative (MW-A1-V-08, covered). The column's most useful finding is asymmetric: this track can accept, agree, comply and thank, and cannot decline, refuse or disagree at all, because it has no negator."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
+      "note": "Walking the Spanish grammar column surfaced demands no reading of the Marwadi corpus alone would have named: that no lexical verb is ever conjugated for a person, that nothing in 257 files is plural, that the word order is verb-final on every page and never named, and that a negator does not exist. It does not close, because Marwadi makes demands Spanish cannot see -- the postposition, the aspirated/unaspirated and retroflex/dental contrasts, the enclitic respect particle -- and those are enumerated here on the project's judgement and, where the proxy has no slot at all, marked marwadiSpecific."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "The Devanagari block of Unicode for the sign inventory, code/learning/human-languages/core/exam-inventory-es-a1.json for the orthographic demands, and marwadi/pronunciation-reference.md",
+      "note": "THE DIMENSION THIS TRACK IS STRONGEST IN AND THE PROXY IS WEAKEST FOR. Spanish's orthography column is about an alphabet the learner already has; Marwadi's demand is a different writing system, and the track meets most of it -- 27 consonant signs, all nine dependent vowel signs, the virama, the anusvara and the nukta, each isolated in the chapter where the first word needing it arrives. Two gaps are sharp and specific: only TWO of eleven independent vowel signs exist, so a word beginning with any other vowel cannot be written (aap is drilled from chapter 7 and is unwritable), and neither the Devanagari digits nor the danda is taught at all."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's general and specific notion inventories)",
+      "note": "Walked at the granularity of the proxy's numbered subsections. It does not close: which Marwadi words an A1 candidate must hold is what a syllabus would say and there is none. What it does show is a corpus organised entirely around one scenario -- the market counter -- and unusually complete inside it: twelve kinship words, seven shopping words, five transport words, six weather words, six foods, four price words. Outside it there is almost nothing: no numeral, no colour, no part of the day, no body part but the hand, no school word, no work word and no art word."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding -- an unmapped point is uncovered, never skipped, and its note is written as a work queue. Every atom named in every probe was checked mechanically against the 228 atoms the marwadi track actually introduces; a probe naming an atom that does not exist would report 'not covered' forever and be indistinguishable from real debt, so an id was never invented to fill a point. TWO HABITS ARE NAMED SO THEY ARE NOT HIDDEN GENEROSITIES. First, this track splits one word across several atoms by SKILL: paani has a LEX atom on the lesson that hears it and a SCRIPT atom on the lesson that writes it, and a PERFORMANCE atom on the lesson that scores both. Probing a vocabulary point therefore names the LEX atom and probing a script point names the SCRIPT one; they are the same word reached by two doors, and no point is counted twice for it. Second, this track carries whole PHRASES on single LEX atoms -- MW-LEX-PRICE-QUESTION-01 is the entire sentence ye kitne ku hai?. So a covered functional point often means the learner has a memorised utterance rather than a productive pattern, and the notes say so wherever it matters; MW-A1-ART-02 and MW-A1-V-06 are the clearest cases. A POINT IS NOT COUNTED AS COVERED WHEN ONLY PART OF WHAT IT NAMES IS TAUGHT: haan without a word for no leaves polarity uncovered; ye without vo leaves the far demonstrative uncovered; mhaaro without mhaari leaves possessive agreement uncovered; kaiso without kathe leaves the interrogative adverbs uncovered. `derivedFrom` records each point's provenance -- the proxy point ids whose demand it answers, or an empty list with `marwadiSpecific: true`. `anchorIds` records which anchor each point leans on, and the anchor's `kind` says whether that was something read or something decided. Neither field is read by any code; both are carried so the derivation can be audited rather than trusted.",
+  "points": [
+    {
+      "id": "MW-A1-N-01",
+      "category": "Naam (the noun)",
+      "label": "proper nouns: a personal name, given and asked for",
+      "probe": [
+        "MW-LEX-RAAM-01",
+        "MW-DIALOGUE-NAME-EXCHANGE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "Raam, which the track meets first inside the greeting raam-raam saa and then reuses as the name in the exchange."
+    },
+    {
+      "id": "MW-A1-N-02",
+      "category": "Naam (the noun)",
+      "label": "place names",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-N-01"
+      ],
+      "note": "Not one settlement, region or country name in 257 files. Jodhpur, Marwar, Rajasthan: none of them, in a course about the language of that region."
+    },
+    {
+      "id": "MW-A1-N-03",
+      "category": "Naam (the noun)",
+      "label": "common nouns naming periods of time",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-N-02"
+      ],
+      "note": "din, raat, subah, saanjh: ZERO occurrences between them. The track teaches six weather words and no word for a part of the day, so a learner can say it is hot and cannot say when."
+    },
+    {
+      "id": "MW-A1-N-04",
+      "category": "Naam (the noun)",
+      "label": "gender: masculine and feminine, and the -o/-i ending that shows it",
+      "probe": [
+        "MW-LEX-MHARO-01",
+        "MW-LEX-DADA-01",
+        "MW-LEX-DADI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-N-03"
+      ],
+      "note": "Taught IMPLICITLY and well: mhaaro is glossed 'my, agreeing with a masculine noun' the first time it appears, and dada/dadi, nana/nani, sasto/sasti-shaped pairs put the -o/-i contrast in front of the learner repeatedly. No lesson states the rule; the gloss on mhaaro is the closest, and it is enough to count this covered because the point asks that gender be marked and shown."
+    },
+    {
+      "id": "MW-A1-N-05",
+      "category": "Naam (the noun)",
+      "label": "gender by heteronymy: the paired kinship words",
+      "probe": [
+        "MW-LEX-MAA-01",
+        "MW-LEX-BAAP-01",
+        "MW-LEX-BHAI-01",
+        "MW-LEX-BAHAN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-N-04"
+      ],
+      "note": "maa/baap and bhai/bahan, chapter 8."
+    },
+    {
+      "id": "MW-A1-N-06",
+      "category": "Naam (the noun)",
+      "label": "number: the plural",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-N-05"
+      ],
+      "note": "No plural anywhere. Twelve kinship words, seven food words and seven shopping words are taught and every one of them is singular. A learner at a stall cannot ask for two of anything -- which, given that this track has no numerals either (MW-A1-Q-01), is the same hole seen twice."
+    },
+    {
+      "id": "MW-A1-ADJ-01",
+      "category": "Visheshan (the adjective)",
+      "label": "the adjective used predicatively",
+      "probe": [
+        "MW-LEX-PRICE-ANSWER-01",
+        "MW-LEX-MAHANGO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-01"
+      ],
+      "note": "ye ghano mahango hai -- this is very expensive. A full predicative sentence with a degree word in it, and the track builds it in chapter 28 out of parts the learner already writes. Several tracks in this series never predicate an adjective of anything at all."
+    },
+    {
+      "id": "MW-A1-ADJ-02",
+      "category": "Visheshan (the adjective)",
+      "label": "the adjective used attributively, before its noun",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-05"
+      ],
+      "note": "sasto kapda, ghano paisa: never. Every adjective in the corpus stands in a predicate."
+    },
+    {
+      "id": "MW-A1-ADJ-03",
+      "category": "Visheshan (the adjective)",
+      "label": "adjective gender agreement: sasto against sasti",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-03"
+      ],
+      "note": "sasta and mahango are taught in one form each and never varied, so the agreement the noun lessons show on kinship pairs is never carried onto an adjective."
+    },
+    {
+      "id": "MW-A1-ADJ-04",
+      "category": "Visheshan (the adjective)",
+      "label": "adjective number agreement",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-04"
+      ],
+      "note": "Behind MW-A1-N-06: there are no plurals to agree with."
+    },
+    {
+      "id": "MW-A1-ADJ-05",
+      "category": "Visheshan (the adjective)",
+      "label": "relational adjectives: the gentilic",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-02"
+      ],
+      "note": "Marwari, Rajasthani: absent, and so is any place to be from."
+    },
+    {
+      "id": "MW-A1-ADJ-06",
+      "category": "Visheshan (the adjective)",
+      "label": "degree: ghano and thodu",
+      "probe": [
+        "MW-LEX-GHANO-01",
+        "MW-LEX-THODU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADJ-06",
+        "A1-SADJ-01"
+      ],
+      "note": "ghano (very) and thodu (a little), chapter 28, and both are taught in use -- ghano intensifying an adjective and thodu softening a request. This is one of the few tracks in the series that has a degree word at all."
+    },
+    {
+      "id": "MW-A1-ART-01",
+      "category": "Article: Marwadi has none",
+      "label": "Marwadi has no article, and a learner must supply one",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ART-01",
+        "A1-ART-03",
+        "A1-ART-04"
+      ],
+      "note": "Three proxy points collapse into one fact, and the fact is never stated. kapda is cloth, the cloth or a cloth. ye supplies the pointing job an article sometimes does (MW-A1-DEM-01) and nothing supplies the rest."
+    },
+    {
+      "id": "MW-A1-ART-02",
+      "category": "Article: Marwadi has none",
+      "label": "the postposition, which is what Marwadi has instead of a preposition-plus-article",
+      "probe": [
+        "MW-LEX-PRICE-QUESTION-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ART-02"
+      ],
+      "note": "ye kitne ku hai? -- the ku is a postposition, and it is the only one in the corpus. Restated rather than dropped: the Spanish point is about a preposition fusing with an article, and the Marwadi demand behind it is the postposition system. The word is on the page inside a whole-learned question and no lesson names it, so this is COVERED at the level of the phrase and not at the level of the system; see the note on MW-A1-N-06 for the same shape."
+    },
+    {
+      "id": "MW-A1-DEM-01",
+      "category": "Sanketak (pointing)",
+      "label": "the near demonstrative: ye",
+      "probe": [
+        "MW-LEX-YE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-DEM-01"
+      ],
+      "note": "COVERED, WHICH IS RARE IN THIS SERIES. Chapter 26 gives ye its own lesson, glossed as the word that points at one thing in front of you, and then runs it over a shopping word, a food word and a transport word. Bengali, Italian and Latin all report an empty demonstrative column; this track has one and uses it on the day it arrives."
+    },
+    {
+      "id": "MW-A1-DEM-02",
+      "category": "Sanketak (pointing)",
+      "label": "the far demonstrative: vo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-DEM-02"
+      ],
+      "note": "vo returns ZERO occurrences as a demonstrative in 257 files (the seven raw matches are the -vo ending of dikhavo and lavo). Marwadi's deixis is two-way and the track teaches the near half. Half a system."
+    },
+    {
+      "id": "MW-A1-DEM-03",
+      "category": "Sanketak (pointing)",
+      "label": "the demonstrative agreeing with what it points at, and standing alone",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-DEM-03"
+      ],
+      "note": "ye is used only attributively, in front of a noun, and never alone as this or as these. Its own gender and number forms are never given."
+    },
+    {
+      "id": "MW-A1-POS-01",
+      "category": "Sambandh (possession)",
+      "label": "possessives for one possessor: mhaaro, thaaro",
+      "probe": [
+        "MW-LEX-MHARO-01",
+        "MW-LEX-THARO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-POS-01"
+      ],
+      "note": "COVERED, AND EARLY. Chapter 5 teaches both, each glossed as agreeing with a masculine noun, and puts them straight into the name exchange. Latin and Italian both report an empty possessive column."
+    },
+    {
+      "id": "MW-A1-POS-02",
+      "category": "Sambandh (possession)",
+      "label": "possessives for several possessors",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-POS-02"
+      ],
+      "note": "mhaare and thaare, the plural possessors, are absent."
+    },
+    {
+      "id": "MW-A1-POS-03",
+      "category": "Sambandh (possession)",
+      "label": "the possessive agreeing in gender: mhaaro against mhaari",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-POS-03"
+      ],
+      "note": "Both possessives are taught in the masculine only, and the gloss says so, so the learner knows an agreement exists and has never seen the other half. mhaari is unsayable although mhaaro is drilled for twenty chapters."
+    },
+    {
+      "id": "MW-A1-Q-01",
+      "category": "Ginti (quantity and number)",
+      "label": "cardinal numerals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-Q-01",
+        "A1-NG2-01",
+        "A1-NE16-01"
+      ],
+      "note": "THE HEADLINE OF THIS FILE, AND NO COVERAGE PERCENTAGE WOULD HAVE FOUND IT. This track's whole curriculum is a market: chapters 26 to 31 teach how much is this?, how much is that altogether?, this is very expensive, make it a little cheaper, what final price will you give? and take the money. It does not teach ONE NUMBER. ek, do, teen, chaar, paanch all return ZERO occurrences in 257 files -- the seventeen raw matches for do are the imperative verb do, give. So a learner can ask a price four different ways and cannot understand the answer, cannot make a counter-offer, and cannot count out the money they have just been told to hand over. Three proxy points land here and every one of them is empty."
+    },
+    {
+      "id": "MW-A1-Q-02",
+      "category": "Ginti (quantity and number)",
+      "label": "ordinal numerals",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-Q-02"
+      ],
+      "note": "Absent. aakhri (final, last) is taught in chapter 29 and is the only ordering word in the corpus."
+    },
+    {
+      "id": "MW-A1-Q-03",
+      "category": "Ginti (quantity and number)",
+      "label": "quantifiers: ghano and thodu as quantities rather than degrees",
+      "probe": [
+        "MW-LEX-GHANO-01",
+        "MW-LEX-THODU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-Q-03"
+      ],
+      "note": "Both are taught, and taught as degree words on an adjective and a verb rather than as quantifiers on a noun. Counted covered because they ARE the words this notion is built on and the corpus teaches them in use."
+    },
+    {
+      "id": "MW-A1-Q-04",
+      "category": "Ginti (quantity and number)",
+      "label": "enough",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-Q-04"
+      ],
+      "note": "bas in its enough sense is absent; bas is taught in chapter 21 and it is the bus."
+    },
+    {
+      "id": "MW-A1-PRON-01",
+      "category": "Sarvanaam (pronouns)",
+      "label": "subject pronouns: hoon, and the polite aap",
+      "probe": [
+        "MW-LEX-HOON-01",
+        "MW-LEX-AAP-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "hoon (I) in the wellbeing answer and aap (you, polite) in the wellbeing question, chapters 7 and 8. thane, the familiar you, and vo, he or she, are both absent, so the paradigm is two cells of six."
+    },
+    {
+      "id": "MW-A1-PRON-02",
+      "category": "Sarvanaam (pronouns)",
+      "label": "the familiar second person, against the polite one",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-01"
+      ],
+      "note": "aap is taught and thu / thane are not, so the learner has the polite form only. That is defensible for a market course and it means the tu/vos contrast the register column depends on cannot actually be made with a PRONOUN; see MW-A1-REG-01, where the track carries it on a particle instead."
+    },
+    {
+      "id": "MW-A1-PRON-03",
+      "category": "Sarvanaam (pronouns)",
+      "label": "object pronouns",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-02"
+      ],
+      "note": "Absent. paisa le lo names the money; there is no way to say give it to me."
+    },
+    {
+      "id": "MW-A1-PRON-04",
+      "category": "Sarvanaam (pronouns)",
+      "label": "the indirect object, and the experiencer",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-03",
+        "A1-SV-05"
+      ],
+      "note": "Marwadi, like its Indic siblings, puts an experiencer in an oblique case with a postposition. Absent; no lesson has anybody feel, like, need or want anything."
+    },
+    {
+      "id": "MW-A1-PRON-05",
+      "category": "Sarvanaam (pronouns)",
+      "label": "the reflexive: aapno",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-PRON-06",
+      "category": "Sarvanaam (pronouns)",
+      "label": "the relative pronoun: jo",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-PRON-07",
+      "category": "Sarvanaam (pronouns)",
+      "label": "interrogative pronouns: kain and kitno",
+      "probe": [
+        "MW-LEX-KAIN-01",
+        "MW-LEX-KITNO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-06"
+      ],
+      "note": "kain (what) in chapter 6 and kitno (how much) in chapter 27, each given its own lesson before the question that uses it. kun (who) is absent."
+    },
+    {
+      "id": "MW-A1-PRON-08",
+      "category": "Sarvanaam (pronouns)",
+      "label": "the exclamative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-07"
+      ],
+      "note": "Absent, although ghano would build one."
+    },
+    {
+      "id": "MW-A1-PRON-09",
+      "category": "Sarvanaam (pronouns)",
+      "label": "pronouns with a postposition",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-PRON-08"
+      ],
+      "note": "Absent; see MW-A1-PRON-03."
+    },
+    {
+      "id": "MW-A1-ADV-01",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "place deictics: here and there",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-01",
+        "A1-NG3-01"
+      ],
+      "note": "Absent. Five places are taught (market, home, temple, shop, stall) and there is no way to say that anything is at one."
+    },
+    {
+      "id": "MW-A1-ADV-02",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "time deictics: aaj, kaal",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-02"
+      ],
+      "note": "Both ZERO occurrences. pachhe (later) is taught in chapter 9 and is the only time adverb in the corpus, and it arrives welded into the farewell pachhe milsoo."
+    },
+    {
+      "id": "MW-A1-ADV-03",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "quantity adverbs",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-03",
+        "A1-NG2-02"
+      ],
+      "note": "ghano and thodu are counted at MW-A1-Q-03 and MW-A1-ADJ-06 as degree words; there is no more, no less, and nothing to compare."
+    },
+    {
+      "id": "MW-A1-ADV-04",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "manner adverbs: thik, and its opposite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-04"
+      ],
+      "note": "thik (fine) is taught inside the wellbeing answer and there is no word for badly, so the health scale has one point on it."
+    },
+    {
+      "id": "MW-A1-ADV-05",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "polarity: haan and its opposite",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-05"
+      ],
+      "note": "haan saa is taught in chapter 3 and given a four-skill performance lesson of its own -- and NO WORD FOR NO EXISTS IN THIS TRACK. koni, nain and naa all return zero occurrences in 257 files (the eight raw matches for naa are inside naana and naani). A learner who is shown the wrong cloth, offered the wrong price or asked a question they must decline has been given the affirmative answer and nothing else. Checked separately from coverage, as this series requires."
+    },
+    {
+      "id": "MW-A1-ADV-06",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "connective adverbs: also, neither",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-06"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-ADV-07",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "interrogative adverbs: kaiso, and where",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-07"
+      ],
+      "note": "kaiso (how) is taught in chapter 7, inside the wellbeing question, and kathe (where) is absent. Half a point, and the missing half is what a market course needs most."
+    },
+    {
+      "id": "MW-A1-ADV-08",
+      "category": "Kriya-visheshan (adverbs)",
+      "label": "asking why, and answering it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-ADV-08"
+      ],
+      "note": "kyun and kyunki are both absent; see MW-A1-CJ-06."
+    },
+    {
+      "id": "MW-A1-V-01",
+      "category": "Kriya (the verb)",
+      "label": "the present copula: hai and hoon",
+      "probe": [
+        "MW-LEX-HAI-01",
+        "MW-LEX-HOON-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-V-01",
+        "A1-V-02"
+      ],
+      "note": "hai closing the name statement (chapter 5) and hoon in the wellbeing answer (chapter 8). Two persons of one verb, and they are the two an introduction needs."
+    },
+    {
+      "id": "MW-A1-V-02",
+      "category": "Kriya (the verb)",
+      "label": "the present tense of a full verb, in any person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-V-01"
+      ],
+      "note": "There is not one. Every verb in the corpus is an IMPERATIVE (MW-A1-V-04) or the copula. A learner cannot say I go, I want, I have, I eat or I understand -- no lexical verb is ever conjugated for a person at all, which is the single largest structural gap in this file."
+    },
+    {
+      "id": "MW-A1-V-03",
+      "category": "Kriya (the verb)",
+      "label": "the present's values",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-V-03"
+      ],
+      "note": "Unreachable while MW-A1-V-02 is empty."
+    },
+    {
+      "id": "MW-A1-V-04",
+      "category": "Kriya (the verb)",
+      "label": "the imperative, and the -o ending every asking word shares",
+      "probe": [
+        "MW-LEX-DIKHAVO-01",
+        "MW-LEX-KARO-01",
+        "MW-LEX-LO-01",
+        "MW-LEX-DO-01",
+        "MW-LEX-LAVO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-V-11"
+      ],
+      "note": "COVERED, AND WITH FIVE EXPONENTS: dikhavo (show it), karo (make it), lo (take it), do (give), lavo (bring it). Chapter 30 lists them together and matches each to the counter it belongs at, and the lavo lesson names the shared -o ending as the mark of an asking word. Italian's inventory reports no imperative at all; this track has a paradigm-shaped set of them."
+    },
+    {
+      "id": "MW-A1-V-05",
+      "category": "Kriya (the verb)",
+      "label": "the past",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-V-04",
+        "A1-V-05",
+        "A1-V-06",
+        "A1-V-07",
+        "A1-V-08",
+        "A1-V-09",
+        "A1-V-10",
+        "A1-V-14"
+      ],
+      "note": "EIGHT PROXY POINTS, ONE ABSENCE. hua appears once, inside the whole-learned question ye kitno hua?, and is never taken apart. Nothing in 257 files reports anything that has already happened."
+    },
+    {
+      "id": "MW-A1-V-06",
+      "category": "Kriya (the verb)",
+      "label": "the future",
+      "probe": [
+        "MW-LEX-MILSOO-01",
+        "MW-LEX-FINAL-PRICE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-V-13"
+      ],
+      "note": "milsoo (we will meet) in chapter 9 and doge (you will give) inside the final-price question in chapter 29. Both arrive inside whole phrases and neither is named as a future, so this is covered as VOCABULARY and not as a tense; the label says what is actually there. Marked against the proxy's gerund point because the PCIC A1 column has no future slot and this is the nearest non-finite/other-form neighbour."
+    },
+    {
+      "id": "MW-A1-V-07",
+      "category": "Kriya (the verb)",
+      "label": "the infinitive, and the form a dictionary lists",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-V-12"
+      ],
+      "note": "No verb in the corpus is ever cited in a base form. Every one arrives as a fixed imperative, which means a learner cannot look one up."
+    },
+    {
+      "id": "MW-A1-V-08",
+      "category": "Kriya (the verb)",
+      "label": "asking somebody to do something, softened",
+      "probe": [
+        "MW-LEX-BARGAIN-REQUEST-01",
+        "MW-LEX-THODU-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [],
+      "marwadiSpecific": true,
+      "note": "thodu sasto karo -- make it a LITTLE cheaper. The softener is taught as a softener, in the lesson that needs it, and chapter 28 says in as many words that it is what keeps a counter-offer polite. The proxy has no A1 slot for softening an imperative and any market conversation needs it."
+    },
+    {
+      "id": "MW-A1-OS-01",
+      "category": "Vaakya (the simple sentence)",
+      "label": "the affirmative declarative",
+      "probe": [
+        "MW-PHRASE-MY-NAME-IS-01",
+        "MW-ANSWER-WELLBEING-01",
+        "MW-LEX-PRICE-ANSWER-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "mhaaro naam Raam hai, hoon thik hoon, ye ghano mahango hai. Three sentence patterns, each built from parts the learner writes."
+    },
+    {
+      "id": "MW-A1-OS-02",
+      "category": "Vaakya (the simple sentence)",
+      "label": "the negative declarative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-OS-01"
+      ],
+      "note": "There is no negator in this track at all (MW-A1-ADV-05), so nothing can be denied, refused or corrected. This and MW-A1-Q-01 are the two gaps that most limit what the market scenario can actually do."
+    },
+    {
+      "id": "MW-A1-OS-03",
+      "category": "Vaakya (the simple sentence)",
+      "label": "yes-or-no questions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-OS-02"
+      ],
+      "note": "Every question in the corpus takes an asking word. No polar question is asked anywhere, so haan saa -- which chapter 3 teaches and drills across four skills -- is an answer to a question the track never models."
+    },
+    {
+      "id": "MW-A1-OS-04",
+      "category": "Vaakya (the simple sentence)",
+      "label": "questions with an asking word",
+      "probe": [
+        "MW-QUESTION-NAME-01",
+        "MW-QUESTION-WELLBEING-HEARD-01",
+        "MW-LEX-PRICE-QUESTION-01",
+        "MW-LEX-FINAL-PRICE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-OS-03"
+      ],
+      "note": "thaaro naam kain hai?, aap kaiso ho?, ye kitne ku hai?, kitno aakhri bhaav doge?. Four, and each is heard whole before it is read and written."
+    },
+    {
+      "id": "MW-A1-OS-05",
+      "category": "Vaakya (the simple sentence)",
+      "label": "there is, there are",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-OS-04",
+        "A1-NG1-01",
+        "A1-NG1-02"
+      ],
+      "note": "Absent. hai is a copula here and never an existential, so a learner cannot say the shop has one or there is no water."
+    },
+    {
+      "id": "MW-A1-OS-06",
+      "category": "Vaakya (the simple sentence)",
+      "label": "copular and attributive sentences",
+      "probe": [
+        "MW-LEX-PRICE-ANSWER-01",
+        "MW-PHRASE-MY-NAME-IS-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-OS-05",
+        "A1-SV-02",
+        "A1-SV-03",
+        "A1-NG1-03"
+      ],
+      "note": "FOUR PROXY POINTS ON ONE PATTERN. Marwadi has one copula where Spanish has ser and estar, so the ser/estar split, the attribute and its agreement, and the general-quality notion all land on ye ghano mahango hai and mhaaro naam Raam hai."
+    },
+    {
+      "id": "MW-A1-OS-07",
+      "category": "Vaakya (the simple sentence)",
+      "label": "transitive sentences, and the object of a request",
+      "probe": [
+        "MW-LEX-SHOW-REQUEST-01",
+        "MW-LEX-BRING-REQUEST-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-OS-06",
+        "A1-SV-04"
+      ],
+      "note": "ye kapda dikhavo and chaay lavo -- an object in front of its verb, which is where Marwadi puts it and where Spanish does not. The word order is never named as word order."
+    },
+    {
+      "id": "MW-A1-OS-08",
+      "category": "Vaakya (the simple sentence)",
+      "label": "word order: Marwadi is subject-object-verb",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-SV-06"
+      ],
+      "note": "Every sentence in the corpus is verb-final and no lesson says so. A learner coming from English or Spanish has been shown the pattern twenty times and never told it is a pattern."
+    },
+    {
+      "id": "MW-A1-OS-09",
+      "category": "Vaakya (the simple sentence)",
+      "label": "agreement inside the phrase, and between subject and verb",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-SN-01",
+        "A1-SN-02",
+        "A1-SN-03"
+      ],
+      "note": "mhaaro is glossed as agreeing with a masculine noun and no lesson ever states an agreement rule or varies a form to show one; see MW-A1-ADJ-03 and MW-A1-POS-03."
+    },
+    {
+      "id": "MW-A1-OS-10",
+      "category": "Vaakya (the simple sentence)",
+      "label": "the vocative",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-SN-04"
+      ],
+      "note": "Nobody is ever addressed by name. saa does the respect job a vocative often carries (MW-A1-REG-01) and is not a vocative."
+    },
+    {
+      "id": "MW-A1-CJ-01",
+      "category": "Yojak (joining and subordination)",
+      "label": "copulative coordination: ar",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-CO-01"
+      ],
+      "note": "THE JOINING COLUMN IS FLAT ZERO, WHICH MAKES IT THE ELEVENTH TRACK IN THIS SERIES TO REPORT ONE. ar (the Marwadi and), ane and Hindi's aur all return ZERO occurrences in 257 files. A learner who has twelve kinship words, seven foods and seven shopping words cannot say bread and tea."
+    },
+    {
+      "id": "MW-A1-CJ-02",
+      "category": "Yojak (joining and subordination)",
+      "label": "negative coordination: neither, nor",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-CO-02"
+      ],
+      "note": "Unreachable: there is no negator (MW-A1-ADV-05)."
+    },
+    {
+      "id": "MW-A1-CJ-03",
+      "category": "Yojak (joining and subordination)",
+      "label": "disjunctive coordination: ya",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-CO-03"
+      ],
+      "note": "Zero occurrences, and it is the word a stall conversation needs most after the numbers: this one or that one."
+    },
+    {
+      "id": "MW-A1-CJ-04",
+      "category": "Yojak (joining and subordination)",
+      "label": "adversative coordination: pan",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-CO-04"
+      ],
+      "note": "pan and par both return ZERO occurrences. The bargaining exchange in chapter 31 runs five turns and never once sets one against another."
+    },
+    {
+      "id": "MW-A1-CJ-05",
+      "category": "Yojak (joining and subordination)",
+      "label": "distributive coordination",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-CO-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-CJ-06",
+      "category": "Yojak (joining and subordination)",
+      "label": "causal clauses: kyunki",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-06"
+      ],
+      "note": "Zero. A learner can say this is very expensive and cannot say why anything is anything."
+    },
+    {
+      "id": "MW-A1-CJ-07",
+      "category": "Yojak (joining and subordination)",
+      "label": "the complement clause: ke",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-03"
+      ],
+      "note": "ke returns ZERO occurrences in 257 files."
+    },
+    {
+      "id": "MW-A1-CJ-08",
+      "category": "Yojak (joining and subordination)",
+      "label": "the relative clause",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-04",
+        "A1-SUB-05"
+      ],
+      "note": "Marwadi's jo ... vo correlative is absent in both halves."
+    },
+    {
+      "id": "MW-A1-CJ-09",
+      "category": "Yojak (joining and subordination)",
+      "label": "the infinitive clause, as subject and as object",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-01",
+        "A1-SUB-02"
+      ],
+      "note": "Behind MW-A1-V-07: no verb in the corpus has a base form to put in a clause."
+    },
+    {
+      "id": "MW-A1-CJ-10",
+      "category": "Yojak (joining and subordination)",
+      "label": "purpose clauses",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-07"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-CJ-11",
+      "category": "Yojak (joining and subordination)",
+      "label": "simultaneity: jad",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-SUB-08"
+      ],
+      "note": "Zero."
+    },
+    {
+      "id": "MW-A1-F1-01",
+      "category": "Kaam: soochna dena ar poochhna",
+      "label": "identify oneself by name",
+      "probe": [
+        "MW-PHRASE-MY-NAME-IS-01",
+        "MW-LEX-MHARO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F1-01"
+      ]
+    },
+    {
+      "id": "MW-A1-F1-02",
+      "category": "Kaam: soochna dena ar poochhna",
+      "label": "ask for information about a person or a thing",
+      "probe": [
+        "MW-QUESTION-NAME-01",
+        "MW-LEX-PRICE-QUESTION-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F1-02"
+      ],
+      "note": "thaaro naam kain hai? for the person and ye kitne ku hai? for the thing. Two, and the second is the one the whole curriculum is built toward."
+    },
+    {
+      "id": "MW-A1-F1-03",
+      "category": "Kaam: soochna dena ar poochhna",
+      "label": "give personal information: name",
+      "probe": [
+        "MW-PHRASE-MY-NAME-IS-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F1-03",
+        "A1-NE03-01"
+      ],
+      "note": "The name is the whole of it. Age is unsayable because there are no numbers (MW-A1-Q-01), and origin because there are no place names (MW-A1-N-02), so the identity slot has one of its three fields."
+    },
+    {
+      "id": "MW-A1-F1-04",
+      "category": "Kaam: soochna dena ar poochhna",
+      "label": "ask for confirmation with a tag",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F1-04"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F1-05",
+      "category": "Kaam: soochna dena ar poochhna",
+      "label": "confirm or deny the previous statement",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F1-05"
+      ],
+      "note": "haan saa confirms, and there is nothing to deny with (MW-A1-ADV-05). Half a point, and the missing half is the half a bargain needs."
+    },
+    {
+      "id": "MW-A1-F2-01",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "ask for an opinion by handing the turn back",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-01"
+      ],
+      "note": "Absent; the exchanges are all question-and-answer with a fixed asker."
+    },
+    {
+      "id": "MW-A1-F2-02",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "give an opinion",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-02",
+        "A1-F2-11"
+      ],
+      "note": "No verb of thinking or saying exists in the corpus."
+    },
+    {
+      "id": "MW-A1-F2-03",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "ask for an evaluation",
+      "probe": [
+        "MW-QUESTION-WELLBEING-HEARD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-03"
+      ],
+      "note": "aap kaiso ho?. It asks after a person rather than a thing, which is what this level uses it for."
+    },
+    {
+      "id": "MW-A1-F2-04",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "evaluate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-04",
+        "A1-NG6-01"
+      ],
+      "note": "thik is the only evaluation word and its opposite is absent (MW-A1-ADV-04), so the scale has one point on it and a candidate asked how something was cannot say badly."
+    },
+    {
+      "id": "MW-A1-F2-05",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "express approval and disapproval",
+      "probe": [
+        "MW-LEX-PRICE-ANSWER-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-05"
+      ],
+      "note": "ye ghano mahango hai is a disapproval, and it is taught as one -- chapter 28 calls it the reply that starts a bargain. Approval has no exponent, so this is covered on the negative side only; the label says evaluate rather than approve for that reason."
+    },
+    {
+      "id": "MW-A1-F2-06",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "express agreement",
+      "probe": [
+        "MW-LEX-HAAN-01",
+        "MW-RESPONSE-HAAN-SAA-POLITE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-06",
+        "A1-NG6-06"
+      ],
+      "note": "haan saa, and chapter 3 gives it a four-skill performance lesson, which is more weight than most tracks put on a one-word answer."
+    },
+    {
+      "id": "MW-A1-F2-07",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "express disagreement",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-07"
+      ],
+      "note": "Unreachable without a negator."
+    },
+    {
+      "id": "MW-A1-F2-08",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "show scepticism",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-08"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F2-09",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "offer a counter-argument",
+      "probe": [
+        "MW-LEX-BARGAIN-REQUEST-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-09"
+      ],
+      "note": "thodu sasto karo is a counter-move and it is a request rather than an argument, because pan (but) is absent (MW-A1-CJ-04). Counted covered because at A1 the counter-offer IS the counter-argument in a market."
+    },
+    {
+      "id": "MW-A1-F2-10",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "express certainty by plain assertion",
+      "probe": [
+        "MW-LEX-PRICE-ANSWER-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-10"
+      ]
+    },
+    {
+      "id": "MW-A1-F2-11",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "express possibility",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-12"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F2-12",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "ask whether somebody knows something",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-13"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F2-13",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "express knowledge, and ignorance",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-14",
+        "A1-F2-15",
+        "A1-NG7-01"
+      ],
+      "note": "No verb of knowing or thinking anywhere in 257 files. Three proxy points and one absence."
+    },
+    {
+      "id": "MW-A1-F2-14",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "ask about ability, and express it",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F2-16",
+        "A1-F2-17",
+        "A1-NG6-09"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F2-15",
+      "category": "Kaam: raay ar jaankaari",
+      "label": "say that you have understood, and that you have not",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [],
+      "marwadiSpecific": true,
+      "note": "THE REPAIR COLUMN, CHECKED SEPARATELY, AND THERE IS NOTHING. No verb of understanding, no word for again, no way to negate. samajh, phir and dhire all return zero occurrences. A learner standing at the counter this course is built around, who mishears the price, has been given no move at all -- and the price is the one thing they most need to hear correctly. The proxy has no A1 slot for this and CEFR's A1 descriptors do."
+    },
+    {
+      "id": "MW-A1-F3-01",
+      "category": "Kaam: pasand ar chaah",
+      "label": "express likes",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F3-01",
+        "A1-SV-01"
+      ],
+      "note": "No experiencer construction and no verb of liking. Seven food words and no way to say you like any of them."
+    },
+    {
+      "id": "MW-A1-F3-02",
+      "category": "Kaam: pasand ar chaah",
+      "label": "ask about a preference by offering alternatives",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F3-02"
+      ],
+      "note": "Needs ya; see MW-A1-CJ-03."
+    },
+    {
+      "id": "MW-A1-F3-03",
+      "category": "Kaam: pasand ar chaah",
+      "label": "express a preference",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F3-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F3-04",
+      "category": "Kaam: pasand ar chaah",
+      "label": "express a wish or a want",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F3-04"
+      ],
+      "note": "chaahiye, the one word that would let a learner ask for a thing without an imperative, is absent. The track asks for things by commanding instead, which works at a stall and nowhere else."
+    },
+    {
+      "id": "MW-A1-F3-05",
+      "category": "Kaam: pasand ar chaah",
+      "label": "ask about plans",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F3-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F3-06",
+      "category": "Kaam: pasand ar chaah",
+      "label": "express a plan or an intention",
+      "probe": [
+        "MW-LEX-MILSOO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F3-06"
+      ],
+      "note": "pachhe milsoo -- see you later -- is a stated intention to meet, and it is the only one. Thin, and it is what the farewell slot at this level actually contains."
+    },
+    {
+      "id": "MW-A1-F4-01",
+      "category": "Kaam: saamne waale ne kehno",
+      "label": "give an order or instruction",
+      "probe": [
+        "MW-LEX-DIKHAVO-01",
+        "MW-LEX-KARO-01",
+        "MW-LEX-LAVO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F4-01"
+      ]
+    },
+    {
+      "id": "MW-A1-F4-02",
+      "category": "Kaam: saamne waale ne kehno",
+      "label": "ask for an object, softened",
+      "probe": [
+        "MW-LEX-SHOW-REQUEST-01",
+        "MW-LEX-THODU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F4-02"
+      ],
+      "note": "ye kapda dikhavo, with thodu available as the softener the bargaining lesson teaches. There is no word for please: kripya and its Marwadi equivalents return zero occurrences, and the register particle saa is what carries politeness instead (MW-A1-REG-01). That is a real Marwadi answer to the demand rather than a gap, which is why this is covered and Italian's equivalent point is not."
+    },
+    {
+      "id": "MW-A1-F4-03",
+      "category": "Kaam: saamne waale ne kehno",
+      "label": "ask for help",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F4-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F4-04",
+      "category": "Kaam: saamne waale ne kehno",
+      "label": "respond to a request",
+      "probe": [
+        "MW-LEX-HAAN-01",
+        "MW-LEX-PAY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F4-04"
+      ],
+      "note": "haan saa, and paisa le lo as the compliance move that closes the purchase."
+    },
+    {
+      "id": "MW-A1-F4-05",
+      "category": "Kaam: saamne waale ne kehno",
+      "label": "grant permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F4-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F4-06",
+      "category": "Kaam: saamne waale ne kehno",
+      "label": "refuse permission",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F4-06"
+      ],
+      "note": "Unreachable without a negator."
+    },
+    {
+      "id": "MW-A1-F4-07",
+      "category": "Kaam: saamne waale ne kehno",
+      "label": "offer and invite",
+      "probe": [
+        "MW-LEX-LO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F4-07"
+      ],
+      "note": "lo -- take it. Chapter 29 calls it the shortest asking word in the source and it is exactly the offer move a counter uses."
+    },
+    {
+      "id": "MW-A1-F4-08",
+      "category": "Kaam: saamne waale ne kehno",
+      "label": "accept an offer",
+      "probe": [
+        "MW-LEX-HAAN-01",
+        "MW-LEX-AABHAAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F4-08"
+      ]
+    },
+    {
+      "id": "MW-A1-F4-09",
+      "category": "Kaam: saamne waale ne kehno",
+      "label": "decline an offer",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F4-09"
+      ],
+      "note": "Unreachable without a negator. In a bargaining curriculum this is the single most consequential missing move: the learner can open a negotiation and cannot walk away from one."
+    },
+    {
+      "id": "MW-A1-F5-01",
+      "category": "Kaam: milno-julno",
+      "label": "greet",
+      "probe": [
+        "MW-LEX-RAAM-RAAM-SAA",
+        "MW-DIALOGUE-GREETING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-01"
+      ],
+      "note": "raam-raam saa, chapter 1, with the full exchange in the same chapter."
+    },
+    {
+      "id": "MW-A1-F5-02",
+      "category": "Kaam: milno-julno",
+      "label": "respond to a greeting",
+      "probe": [
+        "MW-DIALOGUE-GREETING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-02"
+      ],
+      "note": "raam-raam saa answered with raam-raam saa, raam-raam -- and the second turn drops the particle, which is register teaching (MW-A1-REG-02)."
+    },
+    {
+      "id": "MW-A1-F5-03",
+      "category": "Kaam: milno-julno",
+      "label": "address somebody by name or title",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-03"
+      ],
+      "note": "No title and no vocative; see MW-A1-OS-10."
+    },
+    {
+      "id": "MW-A1-F5-04",
+      "category": "Kaam: milno-julno",
+      "label": "introduce oneself",
+      "probe": [
+        "MW-PHRASE-MY-NAME-IS-01",
+        "MW-DIALOGUE-NAME-EXCHANGE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-04"
+      ]
+    },
+    {
+      "id": "MW-A1-F5-05",
+      "category": "Kaam: milno-julno",
+      "label": "introduce a third person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-04"
+      ],
+      "note": "Absent, and behind the missing third-person pronoun."
+    },
+    {
+      "id": "MW-A1-F5-06",
+      "category": "Kaam: milno-julno",
+      "label": "respond to an introduction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-05"
+      ],
+      "note": "The name exchange returns the same question rather than acknowledging; there is no pleased-to-meet-you move."
+    },
+    {
+      "id": "MW-A1-F5-07",
+      "category": "Kaam: milno-julno",
+      "label": "apologise",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-06"
+      ],
+      "note": "maaf karo would be built from karo, which chapter 28 teaches, and the apology itself is absent."
+    },
+    {
+      "id": "MW-A1-F5-08",
+      "category": "Kaam: milno-julno",
+      "label": "thank",
+      "probe": [
+        "MW-LEX-AABHAAR-01",
+        "MW-COURTESY-AABHAAR-FORMAL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-07"
+      ],
+      "note": "aabhaar, chapter 2, with a lesson on when a formal thanks is the right one. The reply to thanks has no exponent."
+    },
+    {
+      "id": "MW-A1-F5-09",
+      "category": "Kaam: milno-julno",
+      "label": "offer condolences",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-08"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F5-10",
+      "category": "Kaam: milno-julno",
+      "label": "propose a toast",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-09"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F5-11",
+      "category": "Kaam: milno-julno",
+      "label": "congratulate",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-10"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F5-12",
+      "category": "Kaam: milno-julno",
+      "label": "take leave",
+      "probe": [
+        "MW-LEX-PACHHE-01",
+        "MW-LEX-MILSOO-01",
+        "MW-FAREWELL-LATER-HEARD-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F5-11"
+      ],
+      "note": "pachhe milsoo, chapter 9, heard whole and then written."
+    },
+    {
+      "id": "MW-A1-F6-01",
+      "category": "Kaam: baat chalaano (discourse and repair)",
+      "label": "open a conversation",
+      "probe": [
+        "MW-DIALOGUE-GREETING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F6-01"
+      ]
+    },
+    {
+      "id": "MW-A1-F6-02",
+      "category": "Kaam: baat chalaano (discourse and repair)",
+      "label": "greet and respond within a conversation",
+      "probe": [
+        "MW-DIALOGUE-WELLBEING-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F6-02"
+      ]
+    },
+    {
+      "id": "MW-A1-F6-03",
+      "category": "Kaam: baat chalaano (discourse and repair)",
+      "label": "ask for a person",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F6-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F6-04",
+      "category": "Kaam: baat chalaano (discourse and repair)",
+      "label": "show that one is following",
+      "probe": [
+        "MW-LEX-HAAN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F6-04"
+      ],
+      "note": "haan saa can be a backchannel and is never presented as one; counted covered because the exponent exists and is drilled, and read the limit with MW-A1-F2-15."
+    },
+    {
+      "id": "MW-A1-F6-05",
+      "category": "Kaam: baat chalaano (discourse and repair)",
+      "label": "ask somebody to be quiet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F6-05"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-F6-06",
+      "category": "Kaam: baat chalaano (discourse and repair)",
+      "label": "propose closing the conversation",
+      "probe": [
+        "MW-LEX-PAY-01",
+        "MW-PERFORMANCE-COUNTER-EXCHANGE-FOUR-SKILL-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-F6-06"
+      ],
+      "note": "paisa le lo closes the transaction and the five-turn counter exchange ends on it."
+    },
+    {
+      "id": "MW-A1-NG-01",
+      "category": "Aam dhaarna (general notions)",
+      "label": "presence and absence: with and without",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG1-04",
+        "A1-NG1-05"
+      ],
+      "note": "Absent, and so is any way to locate an event in time or to hedge a claim."
+    },
+    {
+      "id": "MW-A1-NG-02",
+      "category": "Aam dhaarna (general notions)",
+      "label": "degree",
+      "probe": [
+        "MW-LEX-GHANO-01",
+        "MW-LEX-THODU-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG2-03"
+      ]
+    },
+    {
+      "id": "MW-A1-NG-03",
+      "category": "Aam dhaarna (general notions)",
+      "label": "measures: size, distance and weight",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG2-04"
+      ],
+      "note": "Absent, and unreachable without numerals. A market course with no kilo and no metre."
+    },
+    {
+      "id": "MW-A1-NG-04",
+      "category": "Aam dhaarna (general notions)",
+      "label": "relative position, distance, and direction",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-02",
+        "A1-NG3-03",
+        "A1-NG3-05"
+      ],
+      "note": "Three proxy points, no exponent between them. The track calls its chapter 10 set direction and travel words and they are place NOUNS -- market, home, temple -- with nothing to relate them by."
+    },
+    {
+      "id": "MW-A1-NG-05",
+      "category": "Aam dhaarna (general notions)",
+      "label": "movement and stability",
+      "probe": [
+        "MW-LEX-LAVO-01",
+        "MW-LEX-BRING-REQUEST-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-04"
+      ],
+      "note": "lavo, bring it, is the only motion in the corpus and it is an imperative. jaavo and aavo, go and come, are both absent."
+    },
+    {
+      "id": "MW-A1-NG-06",
+      "category": "Aam dhaarna (general notions)",
+      "label": "order: first, before, after",
+      "probe": [
+        "MW-LEX-AAKHRI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-06"
+      ],
+      "note": "aakhri, final -- taught in chapter 29 as the word that ends a bargain. It is the only ordering word and it is exactly the one this curriculum needs."
+    },
+    {
+      "id": "MW-A1-NG-07",
+      "category": "Aam dhaarna (general notions)",
+      "label": "origin: where somebody is from",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG3-07"
+      ],
+      "note": "No place name (MW-A1-N-02), no gentilic (MW-A1-ADJ-05), no postposition for from. Three gaps, one unanswerable question -- and it is the second question anybody is asked."
+    },
+    {
+      "id": "MW-A1-NG-08",
+      "category": "Aam dhaarna (general notions)",
+      "label": "the clock and the parts of the day",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-01"
+      ],
+      "note": "Absent; see MW-A1-N-03. Also unreachable without numerals."
+    },
+    {
+      "id": "MW-A1-NG-09",
+      "category": "Aam dhaarna (general notions)",
+      "label": "locating in time: today, weekdays, months, seasons",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-02"
+      ],
+      "note": "ZERO of it. Six weather words are taught, including garmi and thandi -- which the lessons note the source also uses for summer and winter -- so the track holds two season senses inside weather words and teaches no season, no month and no day."
+    },
+    {
+      "id": "MW-A1-NG-10",
+      "category": "Aam dhaarna (general notions)",
+      "label": "anteriority and posteriority",
+      "probe": [
+        "MW-LEX-PACHHE-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG4-03"
+      ],
+      "note": "pachhe, later. It arrives inside the farewell and the lesson glosses it separately, which is why it counts."
+    },
+    {
+      "id": "MW-A1-NG-11",
+      "category": "Aam dhaarna (general notions)",
+      "label": "sight and hearing",
+      "probe": [
+        "MW-LEX-DIKHAVO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-01",
+        "A1-NG5-02"
+      ],
+      "note": "dikhavo, show it, is causative-of-seeing and is the only perception word in the corpus. Hearing has none, which is worth noting in a track whose every vocabulary item is HEARD before it is read."
+    },
+    {
+      "id": "MW-A1-NG-12",
+      "category": "Aam dhaarna (general notions)",
+      "label": "colour",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-03"
+      ],
+      "note": "Not one colour word in 257 files -- and the track teaches seven clothing and shopping words, where the first question at a cloth stall is which colour."
+    },
+    {
+      "id": "MW-A1-NG-13",
+      "category": "Aam dhaarna (general notions)",
+      "label": "age",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-04"
+      ],
+      "note": "Unreachable without numerals."
+    },
+    {
+      "id": "MW-A1-NG-14",
+      "category": "Aam dhaarna (general notions)",
+      "label": "open and closed, way in and way out",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG5-05"
+      ],
+      "note": "Absent, and a shop that cannot be open or closed is a gap this curriculum will feel."
+    },
+    {
+      "id": "MW-A1-NG-15",
+      "category": "Aam dhaarna (general notions)",
+      "label": "value and price",
+      "probe": [
+        "MW-LEX-BHAAV-01",
+        "MW-LEX-SASTA-01",
+        "MW-LEX-MAHANGO-01",
+        "MW-LEX-PRICE-QUESTION-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG6-02"
+      ],
+      "note": "bhaav (price), sasta (cheap), mahango (expensive) and the price question itself. THE BEST-COVERED NOTION IN THE FILE, and read it against MW-A1-Q-01: the learner can ask a price, judge it and counter it, and cannot say or understand a number."
+    },
+    {
+      "id": "MW-A1-NG-16",
+      "category": "Aam dhaarna (general notions)",
+      "label": "attractiveness, acceptability, correctness, interest, ease",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG6-03",
+        "A1-NG6-05",
+        "A1-NG6-07",
+        "A1-NG6-08",
+        "A1-NG6-10"
+      ],
+      "note": "Five proxy points, no exponent between them. The evaluative vocabulary of this track is entirely about price."
+    },
+    {
+      "id": "MW-A1-NG-17",
+      "category": "Aam dhaarna (general notions)",
+      "label": "quality: good and bad",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG6-04"
+      ],
+      "note": "thik is fine and there is no good and no bad. See MW-A1-F2-04."
+    },
+    {
+      "id": "MW-A1-NG-18",
+      "category": "Aam dhaarna (general notions)",
+      "label": "verbal expression: saying, speaking, writing",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NG7-02"
+      ],
+      "note": "No verb of speaking or writing, which is a curious absence in a track that spends 41 lessons teaching the learner to write."
+    },
+    {
+      "id": "MW-A1-NE-01",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "parts of the body",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-01"
+      ],
+      "note": "haath (hand) is taught in chapter 10 as a travel word and is the ONLY body part in 257 files. One is not the set."
+    },
+    {
+      "id": "MW-A1-NE-02",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "physical characteristics, and character",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-02",
+        "A1-NE02-01"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-NE-03",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "actions and positions of the body",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE01-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-NE-04",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "personal data beyond the name",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE03-01"
+      ],
+      "note": "No surname, no address, no telephone number, no age. See MW-A1-F1-03."
+    },
+    {
+      "id": "MW-A1-NE-05",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "documents, and personal objects",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE03-02",
+        "A1-NE03-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-NE-06",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "family relationships",
+      "probe": [
+        "MW-LEX-MAA-01",
+        "MW-LEX-BAAP-01",
+        "MW-LEX-BHAI-01",
+        "MW-LEX-BAHAN-01",
+        "MW-LEX-DADA-01",
+        "MW-LEX-DADI-01",
+        "MW-LEX-NANA-01",
+        "MW-LEX-NANI-01",
+        "MW-LEX-PATI-01",
+        "MW-LEX-PATNI-01",
+        "MW-LEX-BACHCHA-01",
+        "MW-LEX-PARIVAAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-01"
+      ],
+      "note": "TWELVE, INCLUDING THE PATERNAL/MATERNAL GRANDPARENT SPLIT that Indo-Aryan makes and Spanish does not -- dada/dadi against nana/nani. Chapters 8 and 9, built up four at a time and re-run cumulatively as four, seven, ten and twelve. The densest and best-scheduled block in the track."
+    },
+    {
+      "id": "MW-A1-NE-07",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "social relationships beyond the family",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-02"
+      ],
+      "note": "dost, the friend, is absent; so are neighbour, colleague and shopkeeper -- the last of which is the person every one of these lessons is talking to."
+    },
+    {
+      "id": "MW-A1-NE-08",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "celebrations and occasions",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE04-03"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-NE-09",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "food",
+      "probe": [
+        "MW-LEX-DAAL-01",
+        "MW-LEX-GHEE-01",
+        "MW-LEX-SABJI-01",
+        "MW-LEX-ROTI-01",
+        "MW-LEX-BAATI-01",
+        "MW-LEX-CHURMA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-03",
+        "A1-NE05-04"
+      ],
+      "note": "daal, ghee, sabji, roti, baati, churma -- six, and three of them (baati, churma, and daal beside them) are the Rajasthani dish this region is actually known for, which is a curriculum decision worth crediting."
+    },
+    {
+      "id": "MW-A1-NE-10",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "drink",
+      "probe": [
+        "MW-LEX-PAANI-01",
+        "MW-LEX-CHAAY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-02"
+      ],
+      "note": "paani in chapter 4, the first content word the track teaches, and chaay in chapter 25."
+    },
+    {
+      "id": "MW-A1-NE-11",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "the meals of the day",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-01"
+      ],
+      "note": "Absent, and behind MW-A1-N-03: no part of the day exists to name a meal after."
+    },
+    {
+      "id": "MW-A1-NE-12",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "ordering at a stall",
+      "probe": [
+        "MW-LEX-BRING-REQUEST-01",
+        "MW-LEX-LAVO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE05-05"
+      ],
+      "note": "chaay lavo -- bring tea. Chapter 30 says in as many words that this is the request a food counter actually hears."
+    },
+    {
+      "id": "MW-A1-NE-13",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "school, teaching and learning",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE06-01",
+        "A1-NE06-02",
+        "A1-NE06-03",
+        "A1-NE06-04",
+        "A1-NE06-05",
+        "A1-NE06-06",
+        "A1-NE06-07"
+      ],
+      "note": "SEVEN PROXY POINTS AND NOT ONE EXPONENT. No school, no teacher, no pupil, no book, no lesson and no classroom language -- which is the more striking because 41 of the 257 lessons are writing lessons: the track teaches handwriting and has no word for it."
+    },
+    {
+      "id": "MW-A1-NE-14",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "work: professions, workplaces, activity",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE07-01",
+        "A1-NE07-02",
+        "A1-NE07-03",
+        "A1-NE07-04",
+        "A1-NE07-05",
+        "A1-NE07-06"
+      ],
+      "note": "SIX PROXY POINTS, NO EXPONENT. dukan (shop) is taught as a place to buy from, never as a place to work in, and the shopkeeper on the other side of every counter in this curriculum has no name."
+    },
+    {
+      "id": "MW-A1-NE-15",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "free time, games, sport and entertainment",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE08-01",
+        "A1-NE08-02",
+        "A1-NE08-03",
+        "A1-NE08-04"
+      ],
+      "note": "Four proxy points, no exponent."
+    },
+    {
+      "id": "MW-A1-NE-16",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "media, correspondence, telephone and internet",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE09-01",
+        "A1-NE09-02",
+        "A1-NE09-03",
+        "A1-NE09-04",
+        "A1-NE09-05",
+        "A1-NE09-06"
+      ],
+      "note": "Six proxy points, no exponent."
+    },
+    {
+      "id": "MW-A1-NE-17",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "the dwelling",
+      "probe": [
+        "MW-LEX-GHAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE10-01",
+        "A1-NE10-02",
+        "A1-NE10-03",
+        "A1-NE10-04"
+      ],
+      "note": "ghar, home, taught in chapter 10 with the places. The parts of a house, the furniture and the domestic activities are all absent -- four proxy points land here and one word answers the first of them."
+    },
+    {
+      "id": "MW-A1-NE-18",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "services: post, bank, health, security",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE11-01",
+        "A1-NE11-02",
+        "A1-NE11-03",
+        "A1-NE11-04"
+      ],
+      "note": "Four proxy points, no exponent."
+    },
+    {
+      "id": "MW-A1-NE-19",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "shopping: the place, the goods and the act",
+      "probe": [
+        "MW-LEX-DUKAN-01",
+        "MW-LEX-VASTU-01",
+        "MW-LEX-SAMAAN-01",
+        "MW-LEX-BAJAR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE12-01"
+      ],
+      "note": "dukan, vastu, samaan, bajar -- shop, item, goods and market. Chapters 10 and 18 to 20."
+    },
+    {
+      "id": "MW-A1-NE-20",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "clothing",
+      "probe": [
+        "MW-LEX-KAPDA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE12-02"
+      ],
+      "note": "kapda, cloth or clothes, chapter 20 -- and it is the noun the show-me request is first run on. One word, and it is the one the curriculum uses."
+    },
+    {
+      "id": "MW-A1-NE-21",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "payment and money",
+      "probe": [
+        "MW-LEX-PAISA-01",
+        "MW-LEX-PAY-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE12-03",
+        "A1-NE15-01"
+      ],
+      "note": "paisa (money) and paisa le lo (take the money). Two proxy points on one closing move -- and no amount can be named; see MW-A1-Q-01."
+    },
+    {
+      "id": "MW-A1-NE-22",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "health, illness, medicine and hygiene",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE13-01",
+        "A1-NE13-02",
+        "A1-NE13-03",
+        "A1-NE13-04"
+      ],
+      "note": "Four proxy points, no exponent. thik in the wellbeing answer is the nearest and it is about mood."
+    },
+    {
+      "id": "MW-A1-NE-23",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "travel objects, documents and accommodation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE14-01",
+        "A1-NE14-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-NE-24",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "transport",
+      "probe": [
+        "MW-LEX-BAS-01",
+        "MW-LEX-GAADI-01",
+        "MW-LEX-THELA-01",
+        "MW-LEX-RIKSHA-01",
+        "MW-LEX-GHODO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE14-03"
+      ],
+      "note": "bas, gaadi, thela, riksha, ghodo -- FIVE, from the bus to the handcart to the horse, chapters 21 and 22. Better covered than in any other track in this series, and there is no verb of travelling and no fare to pay because there are no numbers."
+    },
+    {
+      "id": "MW-A1-NE-25",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "commerce, businesses and industry",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE15-02",
+        "A1-NE15-03",
+        "A1-NE15-04"
+      ],
+      "note": "Three proxy points, no exponent: the buyer and the seller are never named, though both are in every dialogue."
+    },
+    {
+      "id": "MW-A1-NE-26",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "computing and new technology",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE16-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-NE-27",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "government, politics, law and justice",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE17-01",
+        "A1-NE17-02"
+      ],
+      "note": "Absent."
+    },
+    {
+      "id": "MW-A1-NE-28",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "the arts",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE18-01",
+        "A1-NE18-02",
+        "A1-NE18-03",
+        "A1-NE18-04",
+        "A1-NE18-05",
+        "A1-NE18-06"
+      ],
+      "note": "SIX PROXY POINTS AND NO EXPONENT, and this is the one to fix first if the track wants a cultural spine: Rajasthan's folk music, its miniature painting and its puppet theatre are all absent, and so is any word for song, dance or story."
+    },
+    {
+      "id": "MW-A1-NE-29",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "religion",
+      "probe": [
+        "MW-LEX-MANDIR-01",
+        "MW-LEX-RAAM-RAAM-SAA"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE19-01"
+      ],
+      "note": "mandir, the temple, in chapter 10 -- and the greeting itself, raam-raam saa, is a divine name said twice, which the chapter 1 lesson treats as a greeting rather than as religion. Counted covered because the exponent is there and its origin is on the page."
+    },
+    {
+      "id": "MW-A1-NE-30",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "the universe and the sky",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-01"
+      ],
+      "note": "sooraj, chaand, taaro: absent. Six weather words and no sun."
+    },
+    {
+      "id": "MW-A1-NE-31",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "country, town and city",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-02"
+      ],
+      "note": "gaon, shahar, desh: absent. bajar (market) is the largest place this track can name."
+    },
+    {
+      "id": "MW-A1-NE-32",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "urban and rural spaces",
+      "probe": [
+        "MW-LEX-BAJAR-01",
+        "MW-LEX-GHAR-01",
+        "MW-LEX-MANDIR-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-03"
+      ],
+      "note": "bajar, ghar, mandir -- market, home, temple. Chapter 10's set is three points of a Rajasthani town and it is what this notion asks for at A1."
+    },
+    {
+      "id": "MW-A1-NE-33",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "climate and weather",
+      "probe": [
+        "MW-LEX-HAWA-01",
+        "MW-LEX-BAADAL-01",
+        "MW-LEX-BARSAAT-01",
+        "MW-LEX-MAUSAM-01",
+        "MW-LEX-GARMI-01",
+        "MW-LEX-THANDI-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-04"
+      ],
+      "note": "SIX -- wind, cloud, rain, weather, heat and cold, chapters 16 and 17, built three then six. In a desert region this is the right notion to spend two chapters on, and it is uncovered in most of the tracks measured before this one."
+    },
+    {
+      "id": "MW-A1-NE-34",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "fauna",
+      "probe": [
+        "MW-LEX-GHODO-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-05"
+      ],
+      "note": "ghodo, the horse, taught in chapter 22 as transport. One animal, doing another notion's work."
+    },
+    {
+      "id": "MW-A1-NE-35",
+      "category": "Khaas dhaarna (specific notions)",
+      "label": "flora",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-NE20-06"
+      ],
+      "note": "Absent. sabji (vegetables) is a food word."
+    },
+    {
+      "id": "MW-A1-LIP-01",
+      "category": "Lipi (script and orthography)",
+      "label": "the Devanagari consonant signs",
+      "probe": [
+        "MW-SCRIPT-KA-01",
+        "MW-SCRIPT-GA-01",
+        "MW-SCRIPT-CHA-01",
+        "MW-SCRIPT-TA-01",
+        "MW-SCRIPT-TTA-01",
+        "MW-SCRIPT-NA-01",
+        "MW-SCRIPT-NNA-01",
+        "MW-SCRIPT-PA-01",
+        "MW-SCRIPT-BA-01",
+        "MW-SCRIPT-MA-01",
+        "MW-SCRIPT-YA-01",
+        "MW-SCRIPT-RA-01",
+        "MW-SCRIPT-LA-01",
+        "MW-SCRIPT-VA-01",
+        "MW-SCRIPT-SA-01",
+        "MW-SCRIPT-SHA-01",
+        "MW-SCRIPT-HA-01",
+        "MW-SCRIPT-JA-01",
+        "MW-SCRIPT-DA-01",
+        "MW-SCRIPT-DDA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O1-01",
+        "A1-O1-03"
+      ],
+      "note": "TWENTY-SEVEN consonant signs are taught across the 41 writing lessons, each isolated in the chapter where the first word needing it arrives -- gha with ghar, ja with bajar, dda with thandi, kha with dikhavo. Twenty of them are probed here. Devanagari has 33, so this is 27 of 33 and the six missing are the ones no taught word needs."
+    },
+    {
+      "id": "MW-A1-LIP-02",
+      "category": "Lipi (script and orthography)",
+      "label": "the aspirated / unaspirated consonant pairs",
+      "probe": [
+        "MW-SCRIPT-KA-01",
+        "MW-SCRIPT-KHA-01",
+        "MW-SCRIPT-GA-01",
+        "MW-SCRIPT-GHA-01",
+        "MW-SCRIPT-CHA-01",
+        "MW-SCRIPT-CHHA-01",
+        "MW-SCRIPT-TA-01",
+        "MW-SCRIPT-THA-01",
+        "MW-SCRIPT-TTA-01",
+        "MW-SCRIPT-TTHA-01",
+        "MW-SCRIPT-BA-01",
+        "MW-SCRIPT-BHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "Six pairs, each half taught, though never explicitly as a pair. The distinctive Indic contrast that a Romance-language proxy has no point for at all, derived here from the consonant-letters point."
+    },
+    {
+      "id": "MW-A1-LIP-03",
+      "category": "Lipi (script and orthography)",
+      "label": "the retroflex / dental contrast",
+      "probe": [
+        "MW-SCRIPT-TA-01",
+        "MW-SCRIPT-TTA-01",
+        "MW-SCRIPT-DA-01",
+        "MW-SCRIPT-DDA-01",
+        "MW-SCRIPT-NA-01",
+        "MW-SCRIPT-NNA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O1-03"
+      ],
+      "note": "All three pairs are taught -- and the naming is careful: the retroflex nna arrives in chapter 4 for paani and is later reused, by name, to build ghano."
+    },
+    {
+      "id": "MW-A1-LIP-04",
+      "category": "Lipi (script and orthography)",
+      "label": "the dependent vowel signs (matras)",
+      "probe": [
+        "MW-SCRIPT-AA-MATRA-01",
+        "MW-SCRIPT-I-MATRA-01",
+        "MW-SCRIPT-II-MATRA-01",
+        "MW-SCRIPT-U-MATRA-01",
+        "MW-SCRIPT-UU-MATRA-01",
+        "MW-SCRIPT-E-MATRA-01",
+        "MW-SCRIPT-AI-MATRA-01",
+        "MW-SCRIPT-O-MATRA-01",
+        "MW-SCRIPT-AU-MATRA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "NINE, and the short-i matra is taught with its own oddity named: it is written BEFORE the consonant it follows. The vowel column is closed."
+    },
+    {
+      "id": "MW-A1-LIP-05",
+      "category": "Lipi (script and orthography)",
+      "label": "the independent vowel signs",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O1-02"
+      ],
+      "note": "ONLY TWO EXIST IN THIS TRACK: aa (chapter 2, for aabhaar) and ii (chapter 6). Devanagari has eleven. So a learner can write any vowel INSIDE a word and can begin a word with only two of them -- ek, aap and unnho are unwritable, and aap is a word this track teaches and drills from chapter 7. The nearest miss in the script column."
+    },
+    {
+      "id": "MW-A1-LIP-06",
+      "category": "Lipi (script and orthography)",
+      "label": "the virama, and the conjunct",
+      "probe": [
+        "MW-SCRIPT-VIRAMA-01",
+        "MW-SCRIPT-PATNI-01",
+        "MW-SCRIPT-BACHCHA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "The vowel-killer is taught in chapter 5 and then used to build patni and bachcha. The general rule for forming a conjunct is never stated; two worked instances are."
+    },
+    {
+      "id": "MW-A1-LIP-07",
+      "category": "Lipi (script and orthography)",
+      "label": "the anusvara",
+      "probe": [
+        "MW-SCRIPT-ANUSVARA-01",
+        "MW-SCRIPT-HAAN-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "The dot above, taught in chapter 3 on haan."
+    },
+    {
+      "id": "MW-A1-LIP-08",
+      "category": "Lipi (script and orthography)",
+      "label": "the nukta",
+      "probe": [
+        "MW-SCRIPT-NUKTA-01",
+        "MW-SCRIPT-KAPDA-01"
+      ],
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O1-07"
+      ],
+      "note": "The dot below, taught in chapter 20 on kapda -- the retroflex flap, which is exactly where a Marwadi learner meets it."
+    },
+    {
+      "id": "MW-A1-LIP-09",
+      "category": "Lipi (script and orthography)",
+      "label": "capital letters, and the absence of case",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O1-04",
+        "A1-O1-05"
+      ],
+      "note": "Devanagari has no case distinction at all, which is a whole demand the proxy makes and this script cannot meet. Restated rather than dropped, and it is worth a lesson: a learner coming from a Latin-alphabet language will look for capitals at the start of Raam and never find one, and no lesson tells them not to."
+    },
+    {
+      "id": "MW-A1-LIP-10",
+      "category": "Lipi (script and orthography)",
+      "label": "the danda, and Devanagari punctuation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O3-01",
+        "A1-O3-02",
+        "A1-O3-03",
+        "A1-O3-04",
+        "A1-O3-05",
+        "A1-O3-06",
+        "A1-O3-07",
+        "A1-O3-08",
+        "A1-O3-09"
+      ],
+      "note": "NINE PROXY POINTS COLLAPSE INTO ONE MARK AND IT IS NEVER TAUGHT. Every declarative sentence in this corpus is written with the danda -- mhaaro naam Raam hai. -- and no lesson names it or says that it is Devanagari's full stop. The question mark and the comma the corpus also uses are borrowed from the Latin tradition, which is also never said."
+    },
+    {
+      "id": "MW-A1-LIP-11",
+      "category": "Lipi (script and orthography)",
+      "label": "written accentuation",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O2-01",
+        "A1-O2-02"
+      ],
+      "note": "Devanagari writes no accent, and vowel length is carried by a different matra rather than by a mark on the same one. Restated onto the matra system, which MW-A1-LIP-04 reports closed; enumerated separately because the DEMAND -- that a length difference changes a word -- is never stated anywhere, and this track has minimal pairs on the page (thik against theek-shaped spellings, dada against dadi)."
+    },
+    {
+      "id": "MW-A1-LIP-12",
+      "category": "Lipi (script and orthography)",
+      "label": "abbreviations, initialisms and symbols",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-O4-01",
+        "A1-O4-02",
+        "A1-O4-03",
+        "A1-O1-06"
+      ],
+      "note": "Four proxy points, no exponent. The rupee sign, which a price question needs, is among them."
+    },
+    {
+      "id": "MW-A1-LIP-13",
+      "category": "Lipi (script and orthography)",
+      "label": "the Devanagari digits",
+      "probe": null,
+      "anchorIds": [
+        "ES-A1-PROXY",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [
+        "A1-Q-02"
+      ],
+      "note": "The digits have their own signs and the track teaches none of them -- and no Latin digit either. See MW-A1-Q-01: this is the same hole in the script column."
+    },
+    {
+      "id": "MW-A1-REG-01",
+      "category": "Aadar (register: the saa particle)",
+      "label": "the saa particle, which is where this language keeps its politeness",
+      "probe": [
+        "MW-REGISTER-SAA",
+        "MW-LEX-RAAM-RAAM-SAA",
+        "MW-RESPONSE-HAAN-SAA-POLITE-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [],
+      "marwadiSpecific": true,
+      "note": "THE FIRST THING THE TRACK TEACHES AND THE RIGHT ONE. saa is an enclitic respect particle: raam-raam saa is the respectful greeting, haan saa the respectful yes. Marwadi carries at A1 on a PARTICLE what Italian carries on a pronoun and Latin does not carry at all -- and this track has no familiar second-person pronoun (MW-A1-PRON-02), so the particle is not merely one option, it is the only register machinery the learner has."
+    },
+    {
+      "id": "MW-A1-REG-02",
+      "category": "Aadar (register: the saa particle)",
+      "label": "dropping the particle, and what that means",
+      "probe": [
+        "MW-DIALOGUE-GREETING-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [],
+      "marwadiSpecific": true,
+      "note": "Chapter 1's exchange answers raam-raam saa with raam-raam saa, raam-raam -- the particle present on the first return and dropped on the second. That is a register move shown rather than stated, and it is shown on the first page."
+    },
+    {
+      "id": "MW-A1-REG-03",
+      "category": "Aadar (register: the saa particle)",
+      "label": "what the frontmatter register field records, against what the lessons teach",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [],
+      "marwadiSpecific": true,
+      "note": "MEASURED, NOT IMPORTED. core/exam-levels.json's caveat for marwadi says nothing about register; it is about the missing external ladder. So this column was read out of lesson bodies and frontmatter directly. The frontmatter here is UNUSUALLY INFORMATIVE compared with the other tracks in this batch: 39 of 257 lessons declare something other than neutral, across six values -- neutral-familiar (13), familiar (12), respectful (6), polite-formal (3), neutral-friendly (3), formal (2) -- and all 257 declare variety: central-marwari-devanagari, which track.json expands to contemporary central Marwari with regional variation named explicitly. Latin and Portuguese, by contrast, are uniformly neutral and their register columns had to be read entirely from bodies."
+    },
+    {
+      "id": "MW-A1-REG-04",
+      "category": "Aadar (register: the saa particle)",
+      "label": "THE CAVEAT IN exam-levels.json IS STALE, AND IN THE TRACK'S FAVOUR",
+      "probe": null,
+      "anchorIds": [
+        "CEFR-CV",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [],
+      "marwadiSpecific": true,
+      "note": "Recorded rather than deferred to, following the precedent of the track whose caveat was found overstated. marwadi's caveat says the project-defined equivalent must test four skills with published task shapes, rubrics, pass thresholds and timed mocks, and that the mapping 'does not claim that the current STARTER CHAPTER reaches it'. The track has 257 lessons across 31 chapters, ships assessment-spec.md, assessment.json and task-shapes/, and its practice lessons are already scored across four separate skills -- 25 PERFORMANCE atoms carry exactly that. The caveat describes a track that no longer exists. The rest of it stands: no external Marwadi pre-A1-to-C2 ladder has been identified, and this file does not claim one."
+    },
+    {
+      "id": "MW-A1-SAU-01",
+      "category": "Saudo (the counter transaction this track is built around)",
+      "label": "run a five-turn counter exchange end to end",
+      "probe": [
+        "MW-PERFORMANCE-COUNTER-EXCHANGE-FOUR-SKILL-01",
+        "MW-LEX-SHOW-REQUEST-01",
+        "MW-LEX-PRICE-QUESTION-01",
+        "MW-LEX-PRICE-ANSWER-01",
+        "MW-LEX-BARGAIN-REQUEST-01",
+        "MW-LEX-PAY-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [],
+      "marwadiSpecific": true,
+      "note": "THE THING THIS TRACK IS FOR, AND THE PROXY HAS NO POINT FOR IT. Chapter 31 runs one five-turn exchange -- show me this cloth / how much is it / that is very expensive / make it a little cheaper / take the money -- at a shop, a food stall and a rickshaw, in four separately scored skills. The PCIC A1 functional inventory enumerates the moves one at a time and never asks a candidate to chain them, and chaining them is what a market actually requires."
+    },
+    {
+      "id": "MW-A1-SAU-02",
+      "category": "Saudo (the counter transaction this track is built around)",
+      "label": "run the same exchange over a different noun",
+      "probe": [
+        "MW-PERFORMANCE-SHOW-FOUR-SKILL-01",
+        "MW-PERFORMANCE-PRICE-FOUR-SKILL-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [],
+      "marwadiSpecific": true,
+      "note": "Every request lesson is immediately re-run over a shopping word, a food word and a transport word. That is the generalisation step -- the learner is shown that the frame is a frame -- and it happens three times in six chapters."
+    },
+    {
+      "id": "MW-A1-SAU-03",
+      "category": "Saudo (the counter transaction this track is built around)",
+      "label": "match the asking word to the counter it belongs at",
+      "probe": [
+        "MW-PERFORMANCE-REQUEST-FOUR-SKILL-01",
+        "MW-LEX-DIKHAVO-01",
+        "MW-LEX-LAVO-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [],
+      "marwadiSpecific": true,
+      "note": "Chapter 30 lists the five imperatives together and pairs each with its setting: dikhavo at a cloth counter, lavo at a food counter, lo and do across a till. Pragmatic selection between near-synonyms, taught explicitly, at A1."
+    },
+    {
+      "id": "MW-A1-SAU-04",
+      "category": "Saudo (the counter transaction this track is built around)",
+      "label": "hear a whole utterance before reading it, and write it after",
+      "probe": [
+        "MW-LEX-PRICE-QUESTION-01",
+        "MW-SCRIPT-PRICE-QUESTION-01",
+        "MW-PERFORMANCE-PRICE-FOUR-SKILL-01"
+      ],
+      "anchorIds": [
+        "CEFR-CV",
+        "MW-CORPUS",
+        "ED-MARWADI"
+      ],
+      "derivedFrom": [],
+      "marwadiSpecific": true,
+      "note": "THE TRACK'S OWN METHOD, AND WHY ITS REINFORCEMENT WINDOWS COME BACK CLEAN. Every item runs the same cycle: a listening-speaking lesson hears it, a word or writing lesson builds it from signs the hand already owns, and a practice-mix lesson performs it across four scored skills. 70 of the 257 lessons are listening-speaking, 41 are writing and 74 are practice-mix, so roughly seven lessons in ten are a second, third or fourth pass over material already introduced -- and the practice lessons re-run cumulative lists that GROW (family four, seven, ten, twelve; shopping three, five, seven; food three, five, seven), which is an expanding-interval retrieval schedule built into the curriculum shape rather than bolted on. No proxy point exists for a teaching method; it is enumerated because it is the reason this track's numbers below are what they are."
+    }
+  ]
+}
