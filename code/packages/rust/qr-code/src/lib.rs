@@ -219,13 +219,43 @@ static ALIGNMENT_POSITIONS: [&[u8]; 40] = [
 // Grid geometry
 // ─────────────────────────────────────────────────────────────────────────────
 
+/// Every function below that takes a bare `version: usize` requires it to be
+/// a real QR version, `1..=40` — out of that range there is no symbol size,
+/// no alignment-position table entry, and no ECC/block-count table entry to
+/// look up. These functions were private until this crate started exposing
+/// them for `qr-decoder` (MA04); their sole caller always passed an
+/// already-validated version, so the precondition was implicit. Now that
+/// they are public, callers must satisfy it themselves — checked here,
+/// explicitly, rather than left as a silent out-of-bounds table index or an
+/// unbounded allocation from an unvalidated size.
+///
+/// A pre-push security review flagged exactly this: indexing the
+/// alignment-position table by `version - 1` panics on `version == 0` or
+/// `version > 40`, and allocating a grid sized from `version` first would
+/// over-allocate before ever reaching that panic, for any of these entry
+/// points.
+fn assert_valid_version(version: usize) {
+    assert!(
+        (1..=40).contains(&version),
+        "QR version must be in 1..=40, got {version}"
+    );
+}
+
 /// The `(4V+17) × (4V+17)` side length of a QR Code symbol at `version`.
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
 pub fn symbol_size(version: usize) -> usize {
+    assert_valid_version(version);
     4 * version + 17
 }
 
 /// Total raw data+ECC bits (formula from Nayuki's reference, public domain).
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
 pub fn num_raw_data_modules(version: usize) -> usize {
+    assert_valid_version(version);
     let v = version as i64;
     let mut result = (16 * v + 128) * v + 64;
     if version >= 2 {
@@ -239,7 +269,11 @@ pub fn num_raw_data_modules(version: usize) -> usize {
 }
 
 /// Number of data (non-ECC) codewords available at `(version, ecc)`.
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
 pub fn num_data_codewords(version: usize, ecc: EccLevel) -> usize {
+    assert_valid_version(version);
     let e = ecc_idx(ecc);
     let raw_cw = num_raw_data_modules(version) / 8;
     let ecc_cw = (NUM_BLOCKS[e][version] * ECC_CODEWORDS_PER_BLOCK[e][version]) as usize;
@@ -248,17 +282,28 @@ pub fn num_data_codewords(version: usize, ecc: EccLevel) -> usize {
 
 /// Number of leftover bits after packing `num_raw_data_modules(version)` into
 /// whole bytes — these trailing bits are zero-padding, not data.
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
 pub fn num_remainder_bits(version: usize) -> usize {
     num_raw_data_modules(version) % 8
 }
 
 /// Number of ECC codewords per block at `(ecc, version)` (ISO 18004 Table 9).
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
 pub fn ecc_codewords_per_block(ecc: EccLevel, version: usize) -> usize {
+    assert_valid_version(version);
     ECC_CODEWORDS_PER_BLOCK[ecc_idx(ecc)][version] as usize
 }
 
 /// Number of error-correction blocks at `(ecc, version)` (ISO 18004 Table 9).
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40`.
 pub fn num_blocks(ecc: EccLevel, version: usize) -> usize {
+    assert_valid_version(version);
     NUM_BLOCKS[ecc_idx(ecc)][version] as usize
 }
 
@@ -655,6 +700,9 @@ fn place_dark_module(g: &mut WorkGrid, version: usize) {
 /// `qr_decoder` can read modules back in the identical order (one shared
 /// traversal source, not two independently-written loops that must happen to
 /// agree).
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40` (via `symbol_size`).
 pub fn data_module_order(version: usize) -> Vec<(usize, usize)> {
     let sz = symbol_size(version);
     let reserved = reserved_modules(version);
@@ -699,6 +747,10 @@ fn place_bits(g: &mut WorkGrid, codewords: &[u8], version: usize) {
 /// data/ECC. `result[r][c] == true` means reserved. Shared by `build_grid`
 /// (encode's own grid setup) so encode and decode agree on reservations by
 /// construction.
+///
+/// # Panics
+/// Panics unless `version` is in `1..=40` (via `symbol_size`, checked before
+/// any allocation proportional to `version` happens).
 pub fn reserved_modules(version: usize) -> Vec<Vec<bool>> {
     build_grid(version).reserved
 }
@@ -996,6 +1048,71 @@ pub fn render_png(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // --- Version-range validation on newly-public geometry functions -------
+    // (pre-push security review: these were private and only ever called
+    // internally with an already-validated version; now that they are
+    // public, out-of-range input must fail loudly and before any
+    // allocation, not silently index out of bounds or over-allocate.)
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn symbol_size_rejects_version_zero() {
+        symbol_size(0);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn symbol_size_rejects_version_41() {
+        symbol_size(41);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn reserved_modules_rejects_out_of_range_version_before_allocating() {
+        // version=0 would underflow ALIGNMENT_POSITIONS[version - 1] if the
+        // guard were missing; a huge version would allocate a huge grid
+        // before ever reaching that index. Confirm the guard fires first.
+        reserved_modules(0);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn data_module_order_rejects_out_of_range_version() {
+        data_module_order(41);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn ecc_codewords_per_block_rejects_out_of_range_version() {
+        ecc_codewords_per_block(EccLevel::M, 41);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn num_blocks_rejects_out_of_range_version() {
+        num_blocks(EccLevel::M, 0);
+    }
+
+    #[test]
+    #[should_panic(expected = "QR version must be in 1..=40")]
+    fn num_data_codewords_rejects_out_of_range_version() {
+        num_data_codewords(41, EccLevel::L);
+    }
+
+    #[test]
+    fn every_valid_version_is_accepted() {
+        for version in 1..=40 {
+            let _ = symbol_size(version);
+            let _ = reserved_modules(version);
+            let _ = data_module_order(version);
+            for ecc in [EccLevel::L, EccLevel::M, EccLevel::Q, EccLevel::H] {
+                let _ = num_data_codewords(version, ecc);
+                let _ = ecc_codewords_per_block(ecc, version);
+                let _ = num_blocks(ecc, version);
+            }
+        }
+    }
 
     // Helper: check finder pattern at (top, left)
     fn has_finder(mods: &[Vec<bool>], top: usize, left: usize) -> bool {

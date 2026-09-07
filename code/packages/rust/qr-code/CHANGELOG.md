@@ -34,13 +34,31 @@ existing signature changed; `encode()`'s observable behavior is unchanged
   existing private `ecc_indicator`.
 - `VERSION` bumped to `"0.3.0"`.
 
+### Security hardening (pre-merge review)
+
+- **MEDIUM — newly-`pub` geometry functions had no `version` range check.**
+  `symbol_size`/`num_raw_data_modules`/`num_data_codewords`/
+  `ecc_codewords_per_block`/`num_blocks`/`reserved_modules`/
+  `data_module_order` were private until this release; their sole caller
+  (`encode()`) always passed an already-validated `1..=40` version, so the
+  precondition was implicit and unenforced. Once public, any caller could
+  trigger an out-of-bounds table-index panic (`version == 0` or `> 40`) —
+  or, worse, an allocation sized proportionally to an arbitrary `version`
+  *before* ever reaching that panic (`WorkGrid::new(symbol_size(version))`
+  runs first). Fixed: every one of these functions now asserts
+  `(1..=40).contains(&version)` up front, documented as a `# Panics`
+  precondition rather than left implicit. 8 new regression tests prove
+  each function rejects `0`/`41` and that every version `1..=40` still
+  works.
+
 ### Testing
 
-- 12 new unit tests covering the new `pub` surface directly (reserved-
-  module/traversal self-consistency, format/version-info round-trips
-  against the existing write-direction BCH functions, the
-  `ecc_from_indicator`/`ecc_indicator` inverse relationship, and the
-  new table accessors against the raw private arrays).
+- 20 new unit tests: 12 covering the new `pub` surface's normal behavior
+  (reserved-module/traversal self-consistency, format/version-info
+  round-trips against the existing write-direction BCH functions, the
+  `ecc_from_indicator`/`ecc_indicator` inverse relationship, and the new
+  table accessors against the raw private arrays), plus 8 covering the
+  version-range validation above.
 - Found and documented (not fixed — out of this change's scope) a
   pre-existing, unrelated bug: `place_all_alignments` skips placing an
   alignment pattern whenever its center cell is already `reserved`, which
