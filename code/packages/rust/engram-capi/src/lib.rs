@@ -1149,7 +1149,7 @@ CREATE TABLE graves (
             );
             assert_eq!(
                 parsed["state"]["mediaAssets"][0]["data"],
-                json!([109, 112, 51])
+                json!("bXAz")
             );
             assert_eq!(
                 parsed["state"]["deckOptions"][0]["options"]["newCardsPerDay"],
@@ -1436,7 +1436,7 @@ CREATE TABLE graves (
             assert_eq!(media["ok"], true);
             assert_eq!(media["media"]["archiveName"], "0");
             assert_eq!(media["media"]["filename"], "audio/hola.mp3");
-            assert_eq!(media["media"]["data"], serde_json::json!([109, 112, 51]));
+            assert_eq!(media["media"]["data"], serde_json::json!("bXAz"));
 
             eg_session_free(session);
         }
@@ -1526,7 +1526,7 @@ CREATE TABLE graves (
                     "sessions": [],
                     "reviews": [],
                     "mediaAssets": [
-                        {"id":"audio","archiveName":"0","filename":"audio/hola.mp3","data":[109,112,51]},
+                        {"id":"audio","archiveName":"0","filename":"audio/hola.mp3","data":"bXAz"},
                         {"id":"image","archiveName":"1","filename":"images/card.png","data":[112,110,103]},
                         {"id":"unused","archiveName":"2","filename":"audio/unused.mp3","data":[117]}
                     ],

@@ -6492,7 +6492,9 @@ mod tests {
             value["state"]["mediaAssets"][0]["filename"],
             "audio/hola-v2.mp3"
         );
-        assert_eq!(value["state"]["mediaAssets"][0]["data"], json!([118, 50]));
+        // base64 of `v2`. Media no longer travels as a JSON array of
+        // decimal numbers: 4.6 wire bytes per byte of media (#13671).
+        assert_eq!(value["state"]["mediaAssets"][0]["data"], json!("djI="));
 
         let value: Value = serde_json::from_str(&session.dispatch(
             r#"{
@@ -7947,7 +7949,7 @@ mod tests {
         assert_eq!(
             pruned["state"]["mediaAssets"],
             json!([
-                {"id":"media:audio","archiveName":"0","filename":"audio/hola.mp3","data":[109,112,51]}
+                {"id":"media:audio","archiveName":"0","filename":"audio/hola.mp3","data":"bXAz"}
             ])
         );
         assert_eq!(pruned["props"]["collection-media-count-value"], "1");

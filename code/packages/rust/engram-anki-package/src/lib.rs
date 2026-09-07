@@ -259,7 +259,62 @@ pub struct MediaFile {
 pub struct ResolvedMediaFile {
     pub archive_name: String,
     pub filename: Option<String>,
+    /// The file's bytes, base64 on the wire.
+    ///
+    /// The SECOND media path, and it would have been missed by fixing only
+    /// `MediaAssetRecord`: `eg_read_anki_apkg_media` returns one media file,
+    /// so this response IS a media-sized payload. A derived `Vec<u8>`
+    /// serialises as an array of decimal numbers at 4.6 wire bytes per byte
+    /// (#13671); base64 is 1.33.
+    ///
+    /// Reads accept both spellings, for the same reason `MediaAssetRecord`
+    /// does -- anything already persisted holds the array form.
+    #[serde(with = "media_bytes")]
     pub data: Vec<u8>,
+}
+
+/// Base64 on write, base64 or the legacy numeric array on read.
+///
+/// Deliberately a copy of the module in `engram-core` rather than a shared
+/// helper: `engram-core` does not depend on this crate and this crate's serde
+/// is not optional, so hoisting it would mean a third crate existing only to
+/// hold twelve lines. If a third media-carrying type appears, that calculus
+/// changes.
+mod media_bytes {
+    use coding_adventures_base64::{decode, encode, STANDARD};
+    use serde::de::{Error, SeqAccess, Visitor};
+    use serde::{Deserializer, Serializer};
+    use std::fmt;
+
+    pub fn serialize<S: Serializer>(data: &[u8], serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&encode(data, &STANDARD))
+    }
+
+    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Vec<u8>, D::Error> {
+        deserializer.deserialize_any(MediaBytesVisitor)
+    }
+
+    struct MediaBytesVisitor;
+
+    impl<'de> Visitor<'de> for MediaBytesVisitor {
+        type Value = Vec<u8>;
+
+        fn expecting(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.write_str("a base64 string, or an array of byte values (legacy)")
+        }
+
+        fn visit_str<E: Error>(self, value: &str) -> Result<Self::Value, E> {
+            decode(value, &STANDARD).map_err(E::custom)
+        }
+
+        fn visit_seq<A: SeqAccess<'de>>(self, mut seq: A) -> Result<Self::Value, A::Error> {
+            let mut out = Vec::with_capacity(seq.size_hint().unwrap_or(0));
+            while let Some(byte) = seq.next_element::<u8>()? {
+                out.push(byte);
+            }
+            Ok(out)
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -512,13 +567,35 @@ const MEDIA_EXPANSION_RATIO: u64 = 50;
 /// figure there would guarantee a trap on a *legitimate* import, never mind a
 /// hostile one.
 ///
-/// This is a limit on browser media size, and it is deliberately visible as one
-/// rather than hidden. The real fix is to stop amplifying — serialise media as
-/// base64 and stream with `to_writer` instead of building a `Value` tree — which
-/// changes the wire format every host adapter reads and so belongs in its own
-/// change, not this one.
+/// The amplification this compensated for is gone, so the ceiling has moved.
+///
+/// It was 32 MiB because every byte of media cost roughly 24-34 bytes of peak
+/// heap: `to_value` built one `serde_json::Value` per media BYTE, and the
+/// derived `Vec<u8>` serialisation spent 3.6 wire bytes on top. Both are fixed
+/// -- #14411 streams with `to_writer`, and media now travels as base64 -- and
+/// the result was measured with a counting allocator rather than estimated:
+///
+/// ```text
+///   2048 x 16 KiB (32 MiB) | array 3.57x wire 2.00x peak | base64 1.33x wire 1.34x peak
+/// ```
+///
+/// So 128 MiB of media now implies roughly 172 MiB of peak, against the 1 GiB+
+/// that the same figure would have cost before. Raised 4x rather than removed:
+/// `wasm32` still has a 32-bit address space and browsers cap the heap well
+/// below it, so an absolute bound is still worth having -- it is simply no
+/// longer set by a serialisation defect.
+///
+/// Note the one shape where base64 is worse: a SINGLE very large asset pays
+/// 2.67x peak, because the intermediate encoded string is the whole asset
+/// while the output buffer is too. Collections of many assets, which is what
+/// an `.apkg` actually contains, sit at 1.34x.
+///
+/// The zip-bomb guard is unchanged and does not live here: it is the
+/// `archive_len * MEDIA_EXPANSION_RATIO` term below, which still bounds any
+/// individual archive to 50x its own compressed size. This constant only caps
+/// the absolute maximum for very large archives.
 #[cfg(target_arch = "wasm32")]
-const MEDIA_EXPANSION_CEILING: u64 = 32 * 1024 * 1024;
+const MEDIA_EXPANSION_CEILING: u64 = 128 * 1024 * 1024;
 
 /// See the wasm variant above for why these differ.
 #[cfg(not(target_arch = "wasm32"))]
