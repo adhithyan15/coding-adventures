@@ -1068,6 +1068,16 @@ describe("the committed Marathi A1 inventory", () => {
     // stale note was corrected. Work therefore leaves the empty-category list
     // -- on a note fix, not on a lesson, which is worth saying plainly.
     //
+    // 133 -> 142: the accompaniment tranche (chapters 45-48). Eleven items --
+    // three "with" endings that English collapses into one, the pronoun's own
+    // oblique, two ablatives and their question word, the animate object
+    // marker in its two remaining jobs, and -kade, which is how a language
+    // with no verb for HAVE says somebody has something. Case and
+    // postpositions went 3/6 to 5/6, Spatial notions 4/7 to 6/7, and The verb
+    // phrase 3/6 to 5/6. Only paryant keeps the postposition column open, and
+    // it is blocked on the same reph that MR-A1-OR-21 is: one script lesson
+    // pair closes both.
+    //
     // 124 -> 133: the place tranche (chapters 41-44). Eleven items -- two nouns,
     // the oblique stem, five postpositions and three ordinary place words --
     // closed nine points, and the ratio comes from the STEM rather than from the
@@ -1079,8 +1089,8 @@ describe("the committed Marathi A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(133);
-    expect(coverage.unmapped).toBe(168);
+    expect(coverage.covered).toBe(142);
+    expect(coverage.unmapped).toBe(159);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1091,7 +1101,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 133/301 points covered (44%)",
+      "marathi A1 (partial inventory): 142/301 points covered (47%)",
     );
   }, 60_000);
 });

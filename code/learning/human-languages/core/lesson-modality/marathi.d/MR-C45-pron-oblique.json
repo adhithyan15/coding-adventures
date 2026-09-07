@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C45-pron-oblique",
+    "language": "marathi",
+    "chapter": 45,
+    "sequence": 1800,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d4f5b74e0b7d34d8"
+  },
+  "findings": []
+}

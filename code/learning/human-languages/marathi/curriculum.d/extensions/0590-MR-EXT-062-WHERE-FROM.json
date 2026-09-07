@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-062-WHERE-FROM",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say where I come from, ask somebody else with kuthuun, and start a stretch of time with paasuun.",
+  "prerequisites": [
+    "MR-EXT-061-WITH-WHOM"
+  ],
+  "lessons": [
+    "MR-C46-huun",
+    "MR-C46-paasun",
+    "MR-C46-kuthun",
+    "MR-R46-from"
+  ]
+}

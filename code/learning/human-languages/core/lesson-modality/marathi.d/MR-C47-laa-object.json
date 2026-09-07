@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C47-laa-object",
+    "language": "marathi",
+    "chapter": 47,
+    "sequence": 1880,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b526ae60553aa024"
+  },
+  "findings": []
+}

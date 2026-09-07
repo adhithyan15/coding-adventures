@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C45-ne",
+    "language": "marathi",
+    "chapter": 45,
+    "sequence": 1820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a23935bf1530c0f4"
+  },
+  "findings": []
+}

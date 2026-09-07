@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C45-barobar",
+    "language": "marathi",
+    "chapter": 45,
+    "sequence": 1790,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6f158cc353653320"
+  },
+  "findings": []
+}

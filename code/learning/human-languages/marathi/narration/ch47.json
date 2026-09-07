@@ -1,0 +1,425 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 47,
+  "title": "Who You Give It To",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:7e238612c186eaab",
+  "lessons": [
+    {
+      "id": "MR-C47-laa-object",
+      "sequence": 1880,
+      "title": "मित्राला (mitrālā) — the object that is a person",
+      "headword": "मित्राला",
+      "romanization": "mitrālā",
+      "gloss": "the object marker -ला — put on a person, left off a thing, and Marathi is strict about the difference",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b526ae60553aa024",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "मला has been in this book since chapter sixteen, always in front of liking or knowing. The -ला inside it has a second job you have never been shown."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kuṭhūn, then udyāpāsūn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kuṭhūn*, then *udyāpāsūn*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a person you act on takes -ला; a thing does not",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी मित्राला पाहतो. — mī mitrālā pāhto. — I see my friend. मी पाणी पाहतो. — mī pāṇī pāhto. — I see the water."
+            },
+            {
+              "kind": "speech",
+              "text": "Read those two across. Same verb, same position, and the marker appears on one and not the other. Marathi puts -ला on a direct object when the object is animate — a person, and usually an animal — and leaves it bare when the object is a thing."
+            },
+            {
+              "kind": "speech",
+              "text": "If you know Spanish this is the personal a under another name, and it behaves the same way: it is not politeness and not emphasis, it is a rule, and dropping it on a person is a mistake rather than a shade."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem is the usual one: मित्र becomes मित्रा-, then -ला. And now the old मला makes sense: it is मी through its oblique, with this same -ला on the end."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī mitrālā pāhto — the friend is marked",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī mitrālā pāhto* — the friend is marked]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī pāṇī pāhto — the water is not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī pāṇī pāhto* — the water is not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malā — and hear the same -ला you have used since chapter sixteen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malā* — and hear the same **-ला** you have used since chapter sixteen]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C47-laa-object-r1",
+              "prompt": "Say that you see your friend, then that you see the water, and name the difference.",
+              "assesses": [
+                "MR-GRAMMAR-OBJECT-LAA",
+                "MR-LEX-MITRA",
+                "MR-LEX-PAANI"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "mī mitrālā pāhto; mī pāṇī pāhto",
+                "मी मित्राला पाहतो मी पाणी पाहतो"
+              ],
+              "feedback": {
+                "correct": "Animate marked, inanimate bare.",
+                "incorrect": "Only the person takes -lā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which objects take -ला? (Animate ones — people and animals.) Is leaving it off a person a shade of meaning or a mistake? (A mistake.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C47-laa-recipient",
+      "sequence": 1890,
+      "title": "मित्राला देतो (mitrālā deto) — giving it to somebody",
+      "headword": "मित्राला देतो",
+      "romanization": "mitrālā deto",
+      "gloss": "the indirect object — the same -ला again, this time for the person a thing goes TO",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:de3a86b1af8d3711",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "मित्राला (mitrālā) पाहतो marks the person as what you look at. The same ending marks a different role entirely, and the verb decides which."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the thing stays bare, the person takes -ला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी मित्राला पाणी देतो. — mī mitrālā pāṇī deto. — I give water to my friend."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, and each one is somewhere you can predict. The giver is first and bare. The receiver takes -ला. The thing given stays bare because it is not animate. The verb, as always, is last."
+            },
+            {
+              "kind": "speech",
+              "text": "English has two ways to say this — give my friend water, give water to my friend — and has to choose an order. Marathi has one marker and does not care very much about the order of the two objects, because -ला already says which is which. That is the payoff of marking rather than positioning."
+            },
+            {
+              "kind": "speech",
+              "text": "आणणे works the same way: मी मित्राला (mitrālā) पाणी आणतो, I bring water to my friend. Any verb of handing over takes this frame, and you already have three of them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī mitrālā pāṇī deto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī mitrālā pāṇī deto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence with āṇto — I bring it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence with *āṇto* — I bring it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two objects carries the marker — the person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two objects carries the marker — **the person**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C47-laa-recipient-r1",
+              "prompt": "Say that you give water to your friend, then that you bring it to him.",
+              "assesses": [
+                "MR-GRAMMAR-INDIRECT-OBJECT",
+                "MR-LEX-DENE",
+                "MR-LEX-PAANI"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "mī mitrālā pāṇī deto; mī mitrālā pāṇī āṇto",
+                "मी मित्राला पाणी देतो मी मित्राला पाणी आणतो"
+              ],
+              "feedback": {
+                "correct": "Receiver marked, thing bare, verb last.",
+                "incorrect": "-lā goes on the person, never on the water."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In I give water to my friend, which noun takes -ला? (The friend.) Why does Marathi not need to fix the order of the two objects? (The marker already says which is which.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R47-give-it-to",
+      "sequence": 1900,
+      "title": "One ending, three jobs",
+      "headword": "मित्राला",
+      "romanization": "mitrālā",
+      "gloss": "one ending, three jobs — the experiencer, the person acted on, and the person given to",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9cbaebff1b209ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "-ला has now appeared in three different sentences doing three different things. Name them before you read on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malā chahā āvaḍto — the experiencer carries it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malā chahā āvaḍto* — the **experiencer** carries it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī mitrālā pāhto — the person acted on carries it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī mitrālā pāhto* — the **person acted on** carries it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī mitrālā pāṇī deto — the receiver carries it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī mitrālā pāṇī deto* — the **receiver** carries it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ठेवणे and put something under the room — khoolīkhālī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **ठेवणे** and put something under the room — *khoolīkhālī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R47-give-it-to-run",
+              "prompt": "Say three sentences with -lā: I like tea, I see my friend, I give my friend water.",
+              "assesses": [
+                "MR-GRAMMAR-OBJECT-LAA",
+                "MR-GRAMMAR-INDIRECT-OBJECT",
+                "MR-GRAMMAR-DATIVE-LIKING"
+              ],
+              "responseSeconds": 32,
+              "acceptedResponses": [
+                "malā chahā āvaḍto; mī mitrālā pāhto; mī mitrālā pāṇī deto",
+                "मला चहा आवडतो मी मित्राला पाहतो मी मित्राला पाणी देतो"
+              ],
+              "feedback": {
+                "correct": "Experiencer, object, receiver.",
+                "incorrect": "Three roles, one ending; the verb decides which."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What decides which of the three jobs -ला is doing in a given sentence? (The verb.) Which of the two objects in I give my friend water carries it? (The friend.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

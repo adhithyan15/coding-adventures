@@ -64,7 +64,11 @@ it("pins Marathi lesson-content budgets", () =>
     // none of the three, and the one lesson that could have claimed a culture
     // note (samor, built on the mukh/tond doublet) states a WORD history, which
     // is etymology and already has its own strand.
-    lessons: 258,
+    //
+    // 258 -> 273: the accompaniment tranche (chapters 45-48) adds fifteen
+    // lessons -- eleven items and four reviews. RE-MEASURED. Idioms, senses
+    // and culture claims stay at 5 / 4 / 7 for the third tranche running.
+    lessons: 273,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -255,6 +259,14 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["42", 4],
     ["43", 4],
     ["44", 3],
+    // Chapters 45-48 are the accompaniment tranche: the three endings English
+    // calls "with", the pronoun's own oblique, the two ablatives and their
+    // question word, the animate object marker, and -kade, which carries
+    // possession in a language with no verb for having.
+    ["45", 5],
+    ["46", 4],
+    ["47", 3],
+    ["48", 3],
   ]);
 });
 

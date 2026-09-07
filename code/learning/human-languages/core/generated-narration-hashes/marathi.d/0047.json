@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:7e238612c186eaab",
+  "lessonIds": [
+    "MR-C47-laa-object",
+    "MR-C47-laa-recipient",
+    "MR-R47-give-it-to"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch47.txt",
+  "json": "marathi/narration/ch47.json",
+  "textHash": "fnv1a64:4384a9a0379a12f5",
+  "jsonHash": "fnv1a64:152f387080a81235",
+  "findings": []
+}

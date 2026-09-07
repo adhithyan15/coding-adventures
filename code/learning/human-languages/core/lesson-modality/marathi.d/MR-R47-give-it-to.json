@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R47-give-it-to",
+    "language": "marathi",
+    "chapter": 47,
+    "sequence": 1900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9cbaebff1b209ab"
+  },
+  "findings": []
+}

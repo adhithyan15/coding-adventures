@@ -416,11 +416,43 @@ Three of the eleven items are deliberately NOT postpositions. **लांब**,
 **उजवा** and **डावा** take no oblique stem, and a rule that every new word obeys
 is a rule the reader cannot test. The contrast is the teaching.
 
+## Chapters 45–48 — with, from, to whom, and having
+
+| Session | Lesson | Job |
+|---|---|---|
+| 259 | C45-barobar | **बरोबर** — alongside, and *that's right* |
+| 260 | C45-pron-oblique | **माझ्याबरोबर** — a pronoun bends from its POSSESSIVE |
+| 261 | C45-shii | **-शी** — engaged with, which speaking demands |
+| 262 | C45-ne | **-ने** — a tool, never a person |
+| 263 | R45-with | one question sorts all three |
+| 264 | C46-huun | **-हून** — a form field becomes a spoken answer |
+| 265 | C46-paasun | **पासून** — a starting point in place OR time |
+| 266 | C46-kuthun | **कुठून** — and now somebody can ask you |
+| 267 | R46-from | the interview's second exchange, both halves |
+| 268 | C47-laa-object | **मित्राला** — animate marked, inanimate bare |
+| 269 | C47-laa-recipient | the same **-ला** for the person given to |
+| 270 | R47-give-it-to | one ending, three jobs |
+| 271 | C48-kade | **-कडे** — a side becomes a direction |
+| 272 | C48-possession | **माझ्याकडे … आहे** — having, without a verb for it |
+| 273 | R48-have-and-toward | a direction, a possession, a handover |
+
+Two shapes in this tranche are worth naming as method rather than as content.
+
+**The three-way contrast is the lesson.** English collapses *with my friend*,
+*with the doctor* and *with my hand* into one word; Marathi keeps three. A
+learner who meets only one of them over-applies it, so the chapter teaches the
+QUESTION — companion, partner in the act, or tool? — and lets the question pick
+the ending.
+
+**A side is not a direction, and four chapters keep them apart.** उजवा and डावा
+landed in chapter 44 as descriptions, with the gap named on the page. **-कडे**
+closes it in chapter 48. Deferring the payoff by four chapters is what makes the
+second half feel like an answer rather than a list.
+
 ## Next
 
-The next Marathi tranche should take the postpositions the oblique stem has
-unblocked: the accompaniment **-शी** / **बरोबर** and the instrumental **-ने**,
-the ablative **-हून** / **पासून**, and the goal **-कडे** / **पर्यंत**. **-कडे**
-alone carries possession, existence and direction, because Marathi has no verb
-*to have*; **पर्यंत** needs the reph, which closes `MR-A1-OR-21` together with
-its rakaar partner.
+The next Marathi tranche should teach the **reph** and the **rakaar** — two
+script lessons that close `MR-A1-OR-21` and, with them, **पर्यंत** and
+`MR-A1-P-05`, the last open point in the postposition column. The rakaar has
+been shown in **मित्र** since chapter 18 and never named, so one of the two is
+already earning its keep before it is taught.

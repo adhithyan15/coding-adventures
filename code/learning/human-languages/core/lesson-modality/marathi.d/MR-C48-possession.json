@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C48-possession",
+    "language": "marathi",
+    "chapter": 48,
+    "sequence": 1920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2208d6b6574ffb91"
+  },
+  "findings": []
+}
