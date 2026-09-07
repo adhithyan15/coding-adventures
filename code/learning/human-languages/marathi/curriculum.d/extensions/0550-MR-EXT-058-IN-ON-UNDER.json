@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-058-IN-ON-UNDER",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say a thing is in, on or under a place, and use var and khālī on their own as the adverbs up and down.",
+  "prerequisites": [
+    "MR-EXT-057-THE-OBLIQUE-STEM"
+  ],
+  "lessons": [
+    "MR-C42-madhye",
+    "MR-C42-var",
+    "MR-C42-khaali",
+    "MR-R42-inside-outside"
+  ]
+}

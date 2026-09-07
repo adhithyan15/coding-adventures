@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:787892ed01ea7bcf",
+  "lessonIds": [
+    "MR-C42-madhye",
+    "MR-C42-var",
+    "MR-C42-khaali",
+    "MR-R42-inside-outside"
+  ],
+  "tex": "marathi/book/chapters/ch42-in-on-under.tex"
+}

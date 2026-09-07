@@ -1,0 +1,585 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 42,
+  "title": "In, On, Under",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:2cabd3f1860ef7e9",
+  "lessons": [
+    {
+      "id": "MR-C42-madhye",
+      "sequence": 1680,
+      "title": "मध्ये (madhye) — in, inside",
+      "headword": "मध्ये",
+      "romanization": "madhye",
+      "gloss": "in, inside, among — the free-standing partner of the -त you already have, and the one a sign is written with",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18412d3a56dcd729",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last chapter gave you the oblique stem and the room it was demonstrated on."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say khoolī, then khoolīt, and name what changed — nothing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *khoolī*, then *khoolīt*, and name what changed — **nothing**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मध्ये",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मध्ये — madhye — in, inside, among."
+            },
+            {
+              "kind": "speech",
+              "text": "घरामध्ये खोली आहे. — gharāmadhye khoolī āhe. — there is a room in the house."
+            },
+            {
+              "kind": "speech",
+              "text": "मध्ये (madhye) and the -त you already own do the same job, and Marathi keeps both. -त is short and is what speech reaches for; मध्ये (madhye) is longer, unmistakable, and is what a written sign or a form reaches for. A learner who knows only one of them can speak but not read a notice."
+            },
+            {
+              "kind": "speech",
+              "text": "Both demand the same oblique stem, which is the point of having met that rule first: घर becomes घरा-, then either ending. Nothing new has to be learned about the noun."
+            },
+            {
+              "kind": "speech",
+              "text": "It is Sanskrit मध्य (madhya), \"middle\" — the same ancient word behind Latin medius and English mid and middle. Its third sense follows from that literally: मध्ये (madhye) also means among, in the middle of a group."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhye — in, inside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhye* — in, inside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāmadhye khoolī āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāmadhye khoolī āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say -ल्यावर and put an event after coming home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **-ल्यावर** and put an event after coming home]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C42-madhye-r1",
+              "prompt": "Say 'in the house' twice: the short way and the sign way.",
+              "assesses": [
+                "MR-POSTP-MADHYE",
+                "MR-GRAMMAR-OBLIQUE"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "gharāt; gharāmadhye",
+                "घरात घरामध्ये"
+              ],
+              "feedback": {
+                "correct": "One stem, two endings.",
+                "incorrect": "Bend ghar to gharā- first, then attach either -t or madhye."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of -त and मध्ये (madhye) would you expect on a printed notice? (मध्ये (madhye).) What do both demand of the noun first? (The oblique stem.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: मध्ये (madhye)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C42-var",
+      "sequence": 1690,
+      "title": "वर (var) — on, above, up",
+      "headword": "वर",
+      "romanization": "var",
+      "gloss": "on, above, up — a postposition, a bare adverb, and the word Marathi puts under 'love for' as well as 'on top of'",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1555cca697ee870",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "मध्ये (madhye) put something inside. Nothing yet puts something on top."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वर — var — on, above, up."
+            },
+            {
+              "kind": "speech",
+              "text": "घरावर — gharāvar — on the house वर पाहा. — var pāhā. — look up."
+            },
+            {
+              "kind": "speech",
+              "text": "वर (var) earns two lessons' worth of use out of one word, and both are worth having now. Glued to an oblique stem it is the on of a surface. Standing alone in front of a verb it is the plain adverb up — no noun needed, and no oblique either, because there is nothing for it to be glued to."
+            },
+            {
+              "kind": "speech",
+              "text": "It descends from Sanskrit उपरि (upari), \"above,\" which is the same ancient word as English over and German über. The up in up is the same syllable."
+            },
+            {
+              "kind": "speech",
+              "text": "One more use, and it is the commonest of the three in ordinary speech: Marathi puts affection on its object rather than for it."
+            },
+            {
+              "kind": "speech",
+              "text": "मी मराठीवर प्रेम करतो. — mī marāṭhīvar prem karto. — I love Marathi."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a metaphor you have to decode each time; it is simply where the language puts the thing loved."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāvar — on the house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāvar* — on the house]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "var pāhā — look up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *var pāhā* — look up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī marāṭhīvar prem karto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī marāṭhīvar prem karto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say सुद्धा and add one more thing to that sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **सुद्धा** and add one more thing to that sentence]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C42-var-r1",
+              "prompt": "Say 'on the house', then 'look up', and name why only one needed the oblique stem.",
+              "assesses": [
+                "MR-POSTP-VAR",
+                "MR-GRAMMAR-OBLIQUE"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "gharāvar; var pāhā",
+                "घरावर वर पाहा"
+              ],
+              "feedback": {
+                "correct": "Glued it bends the noun; alone it does not.",
+                "incorrect": "gharā- then var; then var on its own with no noun at all."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When does वर NOT need an oblique stem in front of it? (When it stands alone as the adverb up.) What does Marathi put love on? (The thing loved — marāṭhīvar.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: वर (var)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C42-khaali",
+      "sequence": 1700,
+      "title": "खाली (khālī) — under, below, down",
+      "headword": "खाली",
+      "romanization": "khālī",
+      "gloss": "under, below, down — the exact opposite of वर, and it behaves the same way twice over",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cde8a47564d8d0e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have वर (var). Every language that has an on has an under, and in Marathi the two are built the same way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खाली",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खाली — khālī — under, below, down."
+            },
+            {
+              "kind": "speech",
+              "text": "खोलीखाली — khoolīkhālī — under the room खाली बसा. — khālī basā. — sit down."
+            },
+            {
+              "kind": "speech",
+              "text": "Learn it as वर (var)'s mirror and you get two facts for one. Glued to an oblique stem it means under; standing alone in front of a verb it is the adverb down. Marathi's up-and-down pair share one grammar, so what you learned about वर (var) transfers whole."
+            },
+            {
+              "kind": "speech",
+              "text": "खाली (khālī) बसा is worth saying aloud twice. It is one of the commonest things a Marathi host says to a guest, and you already own the polite imperative it is built on."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is the खाल of underside with the same -ी you saw on खोली. Marathi builds a good deal of its everyday vocabulary that way: a short base, a long form, and a job for each."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khālī — under, down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khālī* — under, down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khālī basā — sit down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khālī basā* — sit down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāvar, then gharākhālī — above it, below it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāvar*, then *gharākhālī* — above it, below it]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C42-khaali-r1",
+              "prompt": "Say 'on the house' and 'under the room', then the two bare adverbs.",
+              "assesses": [
+                "MR-POSTP-KHAALI",
+                "MR-POSTP-VAR"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "gharāvar; khoolīkhālī; var; khālī",
+                "घरावर खोलीखाली वर खाली"
+              ],
+              "feedback": {
+                "correct": "One grammar, two directions.",
+                "incorrect": "Same shape both times: oblique stem, then the word."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खाली (khālī) do when nothing is glued in front of it? (It is the adverb down.) What does a host say to a guest with it? (खाली (khālī) बसा.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: खाली (khālī)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R42-inside-outside",
+      "sequence": 1710,
+      "title": "There is a thing, and it is somewhere",
+      "headword": "मध्ये · वर · खाली",
+      "romanization": "madhye · var · khālī",
+      "gloss": "three postpositions, one stem, and the first Marathi sentence that says a thing is somewhere",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9451fb9222d200e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three postpositions landed in this chapter and all three sit in the same place. Name them in the order you met them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharāmadhye, gharāvar, gharākhālī — and change only the tail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharāmadhye*, *gharāvar*, *gharākhālī* — and change only the tail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoolīmadhye — and notice the stem did not move",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoolīmadhye* — and notice the stem did not move]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khoolīt kāhī āhe — there is something in the room",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khoolīt kāhī āhe* — there is something in the room]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask koṇ gharāt āhe? — who is in the house?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask *koṇ gharāt āhe?* — who is in the house?]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R42-inside-outside-run",
+              "prompt": "Put a room in, on and under the house, all from the same stem.",
+              "assesses": [
+                "MR-POSTP-MADHYE",
+                "MR-POSTP-VAR",
+                "MR-POSTP-KHAALI",
+                "MR-GRAMMAR-OBLIQUE"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "gharāmadhye; gharāvar; gharākhālī",
+                "घरामध्ये घरावर घराखाली"
+              ],
+              "feedback": {
+                "correct": "One stem, three relations.",
+                "incorrect": "Bend ghar to gharā- once, then change only the tail."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Marathi has no separate verb for there is. What does it use instead? (आहे, with a place in front of it.) What has to happen to the noun carrying that place? (It takes the oblique stem.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

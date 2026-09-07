@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-059-NEAR-OPPOSITE-FAR",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can place something near or in front of a landmark and say that it is far, and I can tell a postposition from an ordinary word by whether it bends the noun.",
+  "prerequisites": [
+    "MR-EXT-058-IN-ON-UNDER"
+  ],
+  "lessons": [
+    "MR-C43-javal",
+    "MR-C43-samor",
+    "MR-C43-laamb",
+    "MR-R43-how-far"
+  ]
+}

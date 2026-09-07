@@ -1066,25 +1066,32 @@ describe("the committed Marathi A1 inventory", () => {
     // name, asking how somebody is, asking for an evaluation, working
     // activity, and the imperative. Nothing was authored for those six; a
     // stale note was corrected. Work therefore leaves the empty-category list
-    // -- on a note fix, not on a lesson, which is worth saying plainly -- and
-    // Demonstratives, Temporal notions, Housing and Shopping stay in it, which
-    // is the remaining work.
+    // -- on a note fix, not on a lesson, which is worth saying plainly.
+    //
+    // 124 -> 133: the place tranche (chapters 41-44). Eleven items -- two nouns,
+    // the oblique stem, five postpositions and three ordinary place words --
+    // closed nine points, and the ratio comes from the STEM rather than from the
+    // vocabulary: MR-A1-N-09 is a single rule that four other points were
+    // sitting behind. Spatial notions went 1/7 to 4/7, Case and postpositions
+    // 1/6 to 3/6, Existential notions 0/5 to 2/5, and Housing leaves the
+    // empty-category list on its first lesson. Demonstratives, Temporal notions
+    // and Shopping stay in it, which is the remaining work.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(124);
-    expect(coverage.unmapped).toBe(177);
+    expect(coverage.covered).toBe(133);
+    expect(coverage.unmapped).toBe(168);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
-    for (const empty of ["Demonstratives", "Temporal notions", "Housing", "Shopping"]) {
+    for (const empty of ["Demonstratives", "Temporal notions", "Shopping"]) {
       expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
     }
     expect(coverage.byCategory["Coordination"]!.covered).toBe(5);
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 124/301 points covered (41%)",
+      "marathi A1 (partial inventory): 133/301 points covered (44%)",
     );
   }, 60_000);
 });
