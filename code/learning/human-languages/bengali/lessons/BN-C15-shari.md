@@ -29,7 +29,7 @@ variety: standard-colloquial
 reviews_of: [BN-C15-jama, BN-C15-kapor]
 ---
 
-# শাড়ি (shari) — "sari," a word English simply borrowed
+# শাড়ি (shari) — "sari," a word English borrowed whole
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-JAMA-01] -->
@@ -64,7 +64,7 @@ this book has traced so far — heart, nose, bind, come — went underground
 for thousands of years, worn down by sound change on both ends until only a
 shared ancient root connects them. This word took a different road. It
 entered English directly, in the modern era, as an ordinary borrowed word:
-**"sari."** No PIE root, no centuries of drift — just a garment's name,
+**"sari."** No PIE root, no centuries of drift — a garment's name,
 carried whole into another language's dictionary.
 
 ## Guided Practice

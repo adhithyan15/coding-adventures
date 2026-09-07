@@ -13,6 +13,34 @@ style Toast {
     border-width  : 1 ;
     border-color  : "#dee2e6" ;
     width         : 320 ;
+
+    // `variant` is the closed axis from Toast.mil. It tints the border
+    // rather than flooding the surface: a notification has to stay
+    // readable, and the colour is a category cue, not the content.
+    state primary {
+      border-color : "#0d6efd" ;
+    }
+    state secondary {
+      border-color : "#6c757d" ;
+    }
+    state success {
+      border-color : "#198754" ;
+    }
+    state danger {
+      border-color : "#dc3545" ;
+    }
+    state warning {
+      border-color : "#ffc107" ;
+    }
+    state info {
+      border-color : "#0dcaf0" ;
+    }
+    state light {
+      border-color : "#dee2e6" ;
+    }
+    state dark {
+      border-color : "#212529" ;
+    }
   }
   part toast-column {
     padding : 0 ;

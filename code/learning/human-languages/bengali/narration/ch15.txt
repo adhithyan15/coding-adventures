@@ -73,7 +73,7 @@ Grammar Lens: any noun plus করা is a verb.
 noun: কাজ (kāj), work. noun + করা: কাজ করা — to work.
 noun: জিজ্ঞাসা (jijñāsā), a wanting-to-know. noun + করা: জিজ্ঞাসা করা (jijñāsā kôrā) — to ask.
 Chapter 11 built kāj kôrā this way. It is more than a compound: it is the way Bengali makes verbs. The stock of true verbs is small and closed, while nouns pour in from Sanskrit, Persian, Arabic and English — each becoming a verb the moment করা stands behind it. Learn a noun, learn a verb.
-Last lesson’s compound stacks on top: জিজ্ঞাসা করে নেওয়া (jijñāsā kôre neowā) — "just go ahead and ask."
+Last lesson’s compound stacks on top: জিজ্ঞাসা করে নেওয়া (jijñāsā kôre neowā) — "go ahead and ask."
 
 Guided Practice.
 [pause 1 second]

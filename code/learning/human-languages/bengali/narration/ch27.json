@@ -1,0 +1,723 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 27,
+  "title": "Three Ways to Say No",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2461ad88fb71f6b4",
+  "lessons": [
+    {
+      "id": "BN-C16-na-verb",
+      "sequence": 1400,
+      "title": "না (nā) — the word that goes after",
+      "headword": "না",
+      "romanization": "nā",
+      "gloss": "not — the word you already own as \"no\", doing the other half of its job, and it stands after the verb",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41a8b8b5de357fa2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first chapter of this book taught না (nā) as an answer, and twenty-six chapters have gone by without it doing anything else. It is about to do the largest job in the language."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the cloth word — kāpoṛ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the cloth word — *kāpoṛ*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: না after the verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমি জানি না — āmi jāni nā — I do not know."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি ভাত খাই না — āmi bhāt khāi nā — I do not eat rice."
+            },
+            {
+              "kind": "speech",
+              "text": "Take any sentence in this book, keep every word exactly where it stands, and put না (nā) at the end. That is the whole operation. English drops not in front of the verb and rebuilds the sentence around it — I know becomes I do not know, with a do that came from nowhere. Bengali adds one syllable and moves nothing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "না is one of the oldest words a reader of English owns. Sanskrit na, Latin ne-, Greek nē-, Old English ne: it is the syllable behind no, not, never, none and nay. Chapter five already handed it over inside কোনো ব্যাপার না (kono bæpār nā), \"no matter\" — a whole phrase ending in the negator, exactly where this lesson puts it."
+            },
+            {
+              "kind": "speech",
+              "text": "One sentence this book cannot yet print is āmi bujhi nā, \"I do not understand\" — the most useful sentence a beginner can carry. The verb is taught, in chapter fourteen; the letter in the middle of it is not, so the words stay in romanization until a script lesson pays for that letter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmi jāni — then again with the negator — āmi jāni nā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmi jāni* — then again with the negator — *āmi jāni nā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmi bānglā bôli nā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmi bānglā bôli nā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmi khāi nā — I do not eat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmi khāi nā* — I do not eat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sentence in romanization — āmi bujhi nā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sentence in romanization — *āmi bujhi nā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where in the sentence does না (nā) stand? (After the verb, at the end — nothing else moves.) What did chapter one teach it as? (The answer \"no\" — one word doing two jobs.) And what does English have to borrow to negate I know? (A verb do that means nothing — Bengali borrows nothing.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C16-noy",
+      "sequence": 1410,
+      "title": "নয় (nôy) — denying a sentence with no verb in it",
+      "headword": "নয়",
+      "romanization": "nôy",
+      "gloss": "is not — the denial of a sentence that never had a verb in it, and the one negative that changes shape for the person speaking",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd42d7f8fdd28762",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lesson before this one put না (nā) after a verb. Now try it on আমার নাম রাম — and notice there is no verb there to put anything after."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the shirt word — jāmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the shirt word — *jāmā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নয়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমার নাম রাম নয় — āmār nām rām nôy — my name is not Ram."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি ভালো নই — āmi bhālo nôi — I am not well."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter three taught the frame আমার নাম … and said plainly that it carries no word for is. Bengali leaves the present-tense is out. To deny that sentence you cannot negate a verb that was never said, so the language supplies one, and it supplies it only here: নয় (nôy)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the form follows the person",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "about",
+                "say"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "about: me. say: নই (nôi).",
+                "about: you, or anybody else. say: নয় (nôy)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole paradigm a beginner needs. আমি ভালো নই denies your own state; রাম ভালো নয় (nôy) denies somebody else's. Notice what the affirmative looks like beside it: আমি ভালো is a complete Bengali sentence with no verb at all. The copula in this language is a ghost — it is audible only when you refuse it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: the dot under য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "নয় ends in য়, which is য wearing the dot chapter ten taught. Without the dot the letter says j; with it, a glide, so the word is nôy and not nôj. The dot is doing exactly the job that lesson gave it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār nām rām nôy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār nām rām nôy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmi bhālo nôi — then the affirmative it denies, āmi bhālo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmi bhālo nôi* — then the affirmative it denies, *āmi bhālo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verb kind beside the verbless kind — āmi jāni nā … āmi bhālo nôi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verb kind beside the verbless kind — *āmi jāni nā … āmi bhālo nôi*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which negator does a sentence with a verb take, and which does a sentence without one? (না (nā) after the verb; নয় (nôy) when there is none.) Which form goes with আমি? (নই.) And where is the is in আমি ভালো? (Nowhere — it exists only to be denied.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C16-nei",
+      "sequence": 1420,
+      "title": "নেই (nei) — the third negator, for things that are not there",
+      "headword": "নেই",
+      "romanization": "nei",
+      "gloss": "there is not, I have not — a separate word for denying existence, and the first way this book can say a thing is missing",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5d22a1d2d28b4fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two negators so far: one after a verb, one for a sentence with no verb. A third is coming, and it exists because Bengali refuses to build this one out of the first two."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the woven strip of cloth — shāṛi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the woven strip of cloth — *shāṛi*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: নেই",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমার চা নেই — āmār chā nei — I have no tea."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার ভাই নেই — āmār bhāi nei — I have no brother."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter five taught আমি ভালো আছি, \"I am well,\" on the stem আছ-, which means to be present. নেই (nei) is that stem's denial, and it comes as a single word rather than as আছি না (nā), which no Bengali says."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: having, in a language with no verb for it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bengali has no verb to have. It says of-me tea is-present, using the same আমার chapter three taught for my. So আমার চা নেই (nei) is literally of me, tea is not present — and the same shape covers I have no tea and there is no tea of mine, because in Bengali those were never different sentences."
+            },
+            {
+              "kind": "speech",
+              "text": "নেই (nei) does not change for the person. আমার নেই (nei), তোমার নেই (nei): one form for everybody, which makes it the easiest of the three negators and the one a traveller reaches for first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār chā nei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār chā nei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār jôl nei — I have no water",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār jôl nei* — I have no water]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all three in a row — jāni nā … bhālo nôi … chā nei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all three in a row — *jāni nā … bhālo nôi … chā nei*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which stem is নেই (nei) the denial of? (আছ-, the being present stem behind আছি.) Why is there no আছি না (nā)? (Because the negator and the stem fused into one word long ago.) And how does Bengali say I have? (With আমার — of me, and no verb to have at all.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C16-polar",
+      "sequence": 1430,
+      "title": "তুমি ভালো? (tumi bhālo?) — a question with nothing added",
+      "headword": "তুমি ভালো?",
+      "romanization": "tumi bhālo?",
+      "gloss": "are you well? — the yes-or-no question, made out of a statement by voice alone, with not one word moved",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e5a89b4f938f18b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three chapters have taught you how to say হ্যাঁ and না (nā) to a question nobody in this book has been able to ask."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the eye-thing — chôshmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the eye-thing — *chôshmā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the rising voice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তুমি ভালো — tumi bhālo. — you are well."
+            },
+            {
+              "kind": "speech",
+              "text": "তুমি ভালো? — tumi bhālo? — are you well?"
+            },
+            {
+              "kind": "speech",
+              "text": "Those are the same four syllables in the same order. The only difference is that the second one ends higher than it began. English rebuilds the sentence — you are becomes are you — and Bengali does not touch it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what the rise turns into a question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every frame in this book can now be asked as well as said, at no cost:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "said",
+                "asked"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "said: আমার চা নেই (nei). asked: তোমার চা নেই (nei)?",
+                "said: তুমি ভাত খাও. asked: তুমি ভাত খাও?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A negative asked this way is the ordinary way to check something you suspect: তোমার চা নেই (nei)? — you have no tea? And the answer is one of the two words chapter one taught."
+            },
+            {
+              "kind": "speech",
+              "text": "Bengali also has a written question particle, কি, which chapter three taught as the word for what. In a yes-or-no question it does the job the rising voice does in speech. The voice is what a speaker needs first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumi bhālo. flat — then tumi bhālo? rising",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumi bhālo.* flat — then *tumi bhālo?* rising]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomār chā nei? — and answer it hyã or nā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomār chā nei?* — and answer it *hyã* or *nā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpni bhālo? — the respectful one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpni bhālo?* — the respectful one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What moves when a Bengali statement becomes a yes-or-no question? (Nothing — only the pitch at the end.) What does English have to move? (The verb, in front of the subject.) And which two words answer it? (হ্যাঁ and না (nā), from the first chapter.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R16-three-noes",
+      "sequence": 1440,
+      "title": "Three ways to say no, and one way to ask",
+      "headword": "না · নয় · নেই",
+      "romanization": "nā · nôy · nei",
+      "gloss": "three negators, one question, and the first Bengali conversation in which somebody can disagree",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5626ed6e722df4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three negators arrived in this chapter and each one owns a different kind of sentence. Name them in the order you met them, and name what each one denies."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sentence with a verb — āmi jāni nā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sentence with a verb — *āmi jāni nā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sentence with none — āmār nām rām nôy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sentence with none — *āmār nām rām nôy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the thing that is missing — āmār chā nei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the thing that is missing — *āmār chā nei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each of those three again with a rising end, and hear a question",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each of those three again with a rising end, and hear a question]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the sentence chapter eleven taught, then deny it — āmi bānglā bôli nā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the sentence chapter eleven taught, then deny it — *āmi bānglā bôli nā*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which negator would you use to deny আমার নাম রাম, which for আমি জানি, and which for আমার চা আছে? (নয় (nôy), then না (nā), then নেই (nei).) What has to change to turn any of the three into a question? (The pitch at the end, and nothing else.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

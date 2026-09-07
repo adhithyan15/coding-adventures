@@ -98,7 +98,7 @@ describe("the committed Bengali A1 inventory", () => {
   });
 
   it("derives its register column from lesson BODIES, because BOTH frontmatter fields are artefacts", () => {
-    // All 139 lessons declare `register: neutral`, and `variety` takes three
+    // All 139 lessons at the time of measurement declared `register: neutral`, and `variety` takes three
     // values that carry no register information at all: "standard" for every
     // writing lesson, "standard-bengali" for chapters C01-C05, and
     // "standard-colloquial" for C06-C15 — predicted exactly by the lesson id
@@ -130,22 +130,37 @@ describe("the committed Bengali A1 inventory", () => {
     }
   });
 
-  it("reports an EMPTY joining column, no demonstrative at all, and a script 11 glyphs short", () => {
+  it("reports a FULL negation column, no demonstrative at all, and a script 11 glyphs short", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(244);
-    expect(coverage.covered).toBe(104);
-    expect(coverage.unmapped).toBe(140);
+    // 104 -> 121: the negation-and-joining tranche (chapters 27-30). Fifteen
+    // items closed seventeen points, and the ratio comes from the two columns
+    // being downstream of each other rather than from vocabulary -- the same
+    // না that negates a verb is the না inside কেননা and the না doubled in
+    // না … না, so three points ride on one word the track taught in chapter one
+    // and never used again.
+    expect(coverage.covered).toBe(121);
+    expect(coverage.unmapped).toBe(123);
     expect(coverage.partial).toBe(0);
-    // The headline, and the fifth empty joining column measured in this series.
-    // আর and এবং ("and"), কিন্তু ("but"), কারণ ("because"), যে ("that") and যখন
-    // ("when") all return ZERO occurrences in 139 files, and every raw match for
-    // বা ("or") was checked in context and is a substring of ভাবা or বোঝা. The
-    // ONE covered point is covered by accident: দয়া করে teaches the conjunctive
-    // participle because "please" happens to be built out of one.
+    // The headline was an EMPTY joining column: আর and এবং ("and"), কিন্তু
+    // ("but"), কারণ ("because"), যে ("that") and যখন ("when") all returned ZERO
+    // occurrences in 139 files, and the ONE covered point was covered by
+    // accident -- দয়া করে teaches the conjunctive participle because "please"
+    // happens to be built out of one. Eight of eleven now stand on lessons.
+    // The three that do not each name a blocker rather than an omission: the
+    // classifier for JOIN-05, the third-person pronoun for JOIN-07, and the
+    // purpose suffix for JOIN-10.
     expect(coverage.byCategory["Shomuchchoy (joining and subordination)"]!).toEqual({
       enumerated: 11,
-      covered: 1,
+      covered: 8,
+    });
+    // Negation goes from 1/5 to 5/5 -- the first column in this track to close
+    // completely. "I do not understand" is now sayable, and it is sayable in
+    // romanization only, because ঝ still has no letter lesson.
+    expect(coverage.byCategory["Nishedh (negation)"]!).toEqual({
+      enumerated: 5,
+      covered: 5,
     });
     // Nothing can be pointed at: এই and ওই both return zero matches.
     expect(coverage.byCategory["Nirdeshak (demonstratives and deixis)"]!).toEqual({
@@ -154,7 +169,11 @@ describe("the committed Bengali A1 inventory", () => {
     });
     // The script column is this track's strength AND carries its hardest gap.
     // measureScriptClosure reports 34 glyphs taught of 45 shown, 11 never
-    // taught, 21 violations, and headwordsWithoutRomanization exactly 0 — and
+    // taught, 21 violations, and headwordsWithoutRomanization exactly 0 — all
+    // four unchanged by the nineteen lessons of chapters 27-30, which were
+    // written against the taught glyph set rather than against the language: বা,
+    // আর, কিন্তু, কেননা, যে and যখন need no sign the track has not taught, while
+    // কারণ, এবং and একটা do and are named in romanization instead — and
     // separately, no Bengali ductus data exists anywhere in the repository, so
     // stroke order cannot be taught at all (HL-C212).
     expect(coverage.byCategory["Lipi (script and orthography)"]!).toEqual({
@@ -162,7 +181,7 @@ describe("the committed Bengali A1 inventory", () => {
       covered: 8,
     });
     expect(formatExamCoverage(coverage)).toContain(
-      "bengali A1 (partial inventory): 104/244 points covered (43%)",
+      "bengali A1 (partial inventory): 121/244 points covered (50%)",
     );
   }, 60_000);
 });

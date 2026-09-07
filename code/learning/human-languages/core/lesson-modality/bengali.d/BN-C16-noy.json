@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C16-noy",
+    "language": "bengali",
+    "chapter": 27,
+    "sequence": 1410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd42d7f8fdd28762"
+  },
+  "findings": []
+}

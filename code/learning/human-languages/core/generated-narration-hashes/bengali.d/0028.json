@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:1b6f754c0a3fa49f",
+  "lessonIds": [
+    "BN-C17-ar",
+    "BN-C17-o",
+    "BN-C17-ba",
+    "BN-C17-na-na",
+    "BN-R17-joined-and-refused"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch28.txt",
+  "json": "bengali/narration/ch28.json",
+  "textHash": "fnv1a64:617fe669a45e698d",
+  "jsonHash": "fnv1a64:ac5509c78b53358d",
+  "findings": []
+}

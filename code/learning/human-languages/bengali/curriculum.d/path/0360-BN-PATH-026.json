@@ -1,0 +1,13 @@
+{
+  "id": "BN-PATH-026",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "BN-C19-je",
+    "BN-C19-jokhon"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-027-REPORT-AND-TIME"
+  ],
+  "after": []
+}

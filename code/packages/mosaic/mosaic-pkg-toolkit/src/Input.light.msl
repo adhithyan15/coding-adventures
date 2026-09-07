@@ -9,5 +9,22 @@ style Input {
     border-width  : 1 ;
     border-color  : "#ced4da" ;
     font-size     : 14 ;
+
+    // `size` is the closed axis from Input.mil; UI49 states own it.
+    state sm {
+      padding      : 6 ;
+      border-radius: 3 ;
+      font-size    : 13 ;
+    }
+    state md {
+      padding      : 8 ;
+      border-radius: 4 ;
+      font-size    : 14 ;
+    }
+    state lg {
+      padding      : 12 ;
+      border-radius: 6 ;
+      font-size    : 16 ;
+    }
   }
 }

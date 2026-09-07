@@ -1,0 +1,16 @@
+{
+  "id": "BN-PATH-023",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "lessons": [
+    "BN-C16-na-verb",
+    "BN-C16-noy",
+    "BN-C16-nei",
+    "BN-C16-polar",
+    "BN-R16-three-noes"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-024-THREE-NEGATORS"
+  ],
+  "after": []
+}

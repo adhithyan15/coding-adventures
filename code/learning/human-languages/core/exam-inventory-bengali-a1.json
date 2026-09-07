@@ -759,7 +759,10 @@
       "id": "BN-A1-ADV-06",
       "category": "Kriya-bisheshon (adverbs)",
       "label": "additive connectives: -ও ('also'), আর ('and then')",
-      "probe": null,
+      "probe": [
+        "BN-GRAMMAR-C17-O-CLITIC-01",
+        "BN-LEX-C17-AR-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -769,7 +772,7 @@
         "A1-ADV-06"
       ],
       "bengaliSpecific": false,
-      "note": "Untaught. The clitic -ও is one character and would let a learner say 'me too', which is a stock A1 turn. See the joining column, which is empty for the same reason."
+      "note": "Closed by chapter 28, and it fell out of the joining tranche rather than being aimed at: the point needs both additive connectives and the joining column needed both anyway."
     },
     {
       "id": "BN-A1-ADV-07",
@@ -804,7 +807,7 @@
         "A1-SUB-06"
       ],
       "bengaliSpecific": false,
-      "note": "NEITHER EXISTS: কেন returns zero matches and কারণ returns zero. A learner cannot ask for a reason or give one, which is the point Spanish makes with por qué against porque and which no amount of vocabulary substitutes for."
+      "note": "কেন is now visible inside কেননা (BN-C18-kenona, chapter 29), which takes the word apart into কেন plus না — but neither কেন nor কারণ is taught as an item, and কারণ cannot be printed at all until a letter lesson teaches ণ. This point names its own fix, and it is a script lesson."
     },
     {
       "id": "BN-A1-V-01",
@@ -1194,7 +1197,10 @@
       "id": "BN-A1-SEN-02",
       "category": "Bakyo (the sentence)",
       "label": "the negative declarative",
-      "probe": null,
+      "probe": [
+        "BN-GRAMMAR-C16-NA-VERB-01",
+        "BN-GRAMMAR-C16-NOY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1204,13 +1210,15 @@
         "A1-OS-01"
       ],
       "bengaliSpecific": false,
-      "note": "SEE THE NEGATION COLUMN. না is taught only as the standalone answer 'no'; there is no negated sentence anywhere in the corpus."
+      "note": "Closed by chapter 27: both kinds of negative declarative, the one with a verb and the verbless one, are taught in the same chapter and the point needs both."
     },
     {
       "id": "BN-A1-SEN-03",
       "category": "Bakyo (the sentence)",
       "label": "the yes-or-no question, marked by intonation alone",
-      "probe": null,
+      "probe": [
+        "BN-GRAMMAR-C16-POLAR-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1220,7 +1228,7 @@
         "A1-OS-02"
       ],
       "bengaliSpecific": false,
-      "note": "Untaught. Bengali turns a statement into a question with intonation and no word order change, which is one sentence of explanation and would double what a learner can do with every frame already taught."
+      "note": "Closed by BN-C16-polar (chapter 27), which realizes QUESTION-POLAR on SPINE-NEGATE-AND-ASK: every affirmative and negative frame in the book becomes a question with a rising voice and no word moved."
     },
     {
       "id": "BN-A1-SEN-04",
@@ -1435,13 +1443,15 @@
         "A1-ADV-05"
       ],
       "bengaliSpecific": false,
-      "note": "Taught in chapter 1, written in chapter 4, retrieved in chapter 26. It is the only negation in the corpus."
+      "note": "Taught in chapter 1, written in chapter 4, retrieved in chapter 26, and joined by three more negators in chapter 27. It is no longer the only negation in the corpus."
     },
     {
       "id": "BN-A1-NEG-02",
       "category": "Nishedh (negation)",
       "label": "না after a verb, which is how Bengali negates a sentence",
-      "probe": null,
+      "probe": [
+        "BN-GRAMMAR-C16-NA-VERB-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1451,13 +1461,15 @@
         "A1-OS-01"
       ],
       "bengaliSpecific": false,
-      "note": "UNTAUGHT, AND THIS IS THE FUNCTIONAL HOLE A BEGINNER HITS FIRST. Bengali puts না AFTER the verb — আমি বুঝি না, 'I do not understand'. আমি বুঝি is taught, in chapter 14; না is taught, in chapter 1; the two are never put together anywhere in 139 lessons. The single most useful sentence a beginner can say cannot be said, and no coverage percentage surfaces that. One sentence in the বোঝা lesson would close it."
+      "note": "Closed by BN-C16-na-verb (chapter 27), which realizes VERB-NEGATE on SPINE-NEGATE-AND-ASK. The lesson negates আমি জানি and আমি ভাত খাই in Bengali script; আমি বুঝি না, the sentence this note originally named, is on the page in romanization only, because ঢ় has no letter lesson in the track and printing it would be a closure violation. The gap that remains is a SCRIPT gap, not a grammar gap."
     },
     {
       "id": "BN-A1-NEG-03",
       "category": "Nishedh (negation)",
       "label": "নয় / নই, the negative of the zero copula",
-      "probe": null,
+      "probe": [
+        "BN-GRAMMAR-C16-NOY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1467,13 +1479,15 @@
         "A1-OS-05"
       ],
       "bengaliSpecific": false,
-      "note": "Absent: নয় returns zero matches. আমার নাম … is taught as a frame with no verb, and the frame cannot be denied."
+      "note": "Closed by BN-C16-noy (chapter 27), which teaches নয় against নই and denies the chapter-three name frame that carries no verb."
     },
     {
       "id": "BN-A1-NEG-04",
       "category": "Nishedh (negation)",
       "label": "নেই, the negative of আছে",
-      "probe": null,
+      "probe": [
+        "BN-GRAMMAR-C16-NEI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1484,13 +1498,15 @@
         "A1-NG1-02"
       ],
       "bengaliSpecific": false,
-      "note": "Absent: নেই returns zero matches. Bengali uses a separate word rather than না for 'there is not', so this does not come free with BN-A1-NEG-02 and is recorded on its own."
+      "note": "Closed by BN-C16-nei (chapter 27). Taught as the fused denial of the আছ- stem rather than as আছি না, and used for the have-construction Bengali builds without a verb."
     },
     {
       "id": "BN-A1-NEG-05",
       "category": "Nishedh (negation)",
       "label": "negative coordination: না … না",
-      "probe": null,
+      "probe": [
+        "BN-GRAMMAR-C17-NA-NA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1500,13 +1516,15 @@
         "A1-CO-02"
       ],
       "bengaliSpecific": false,
-      "note": "Untaught, and downstream of the empty joining column below."
+      "note": "Closed by BN-C17-na-na (chapter 28), which is the one construction where না stands in FRONT of what it denies."
     },
     {
       "id": "BN-A1-JOIN-01",
       "category": "Shomuchchoy (joining and subordination)",
       "label": "আর / এবং ('and') joining two nouns",
-      "probe": null,
+      "probe": [
+        "BN-LEX-C17-AR-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1516,13 +1534,15 @@
         "A1-CO-01"
       ],
       "bengaliSpecific": false,
-      "note": "ABSENT. আর returns ZERO occurrences in 139 files and এবং returns zero. A learner who owns four family words, four body words, five colours, four garments and four foods cannot say 'rice and water'."
+      "note": "Closed by BN-C17-ar (chapter 28). এবং is named in the lesson in romanization only: its anusvara has no letter lesson in the track, so the point is carried by আর, which is the everyday coordinator anyway."
     },
     {
       "id": "BN-A1-JOIN-02",
       "category": "Shomuchchoy (joining and subordination)",
       "label": "-ও, the clitic that also means 'and'",
-      "probe": null,
+      "probe": [
+        "BN-GRAMMAR-C17-O-CLITIC-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1532,13 +1552,15 @@
         "A1-CO-01"
       ],
       "bengaliSpecific": false,
-      "note": "Untaught. Bengali's second coordinator is a single suffixed vowel, which makes it the cheapest possible lesson in this column, and it is not there."
+      "note": "Closed by BN-C17-o (chapter 28) — the cheapest lesson in this column, as the note predicted: one vowel, no new letter."
     },
     {
       "id": "BN-A1-JOIN-03",
       "category": "Shomuchchoy (joining and subordination)",
       "label": "বা ('or')",
-      "probe": null,
+      "probe": [
+        "BN-LEX-C17-BA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1549,13 +1571,15 @@
         "A1-F3-02"
       ],
       "bengaliSpecific": false,
-      "note": "ABSENT. The three raw matches for বা were checked in context and every one is a substring of ভাবা, বোঝা or a similar headword. Without it, no alternative can be offered, which also blocks BN-A1-FUN-F3-02."
+      "note": "Closed by BN-C17-ba (chapter 28). Teaching it as a headword made four earlier lessons report বা as a forward reference, because each spells a syllable বা inside ভাবা, বাংলা or পরিবার in bold; the emphasis was removed and the Bengali left on the page."
     },
     {
       "id": "BN-A1-JOIN-04",
       "category": "Shomuchchoy (joining and subordination)",
       "label": "কিন্তু ('but')",
-      "probe": null,
+      "probe": [
+        "BN-LEX-C18-KINTU-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1566,7 +1590,7 @@
         "A1-F2-09"
       ],
       "bengaliSpecific": false,
-      "note": "ABSENT: zero matches. Spanish gives adversative coordination its own A1 point and also uses pero as a counter-argument device (A1-F2-09); Bengali can do neither."
+      "note": "Closed by BN-C18-kintu (chapter 29), taken apart into Sanskrit kim-tu so that the কি of chapter three is visible inside it."
     },
     {
       "id": "BN-A1-JOIN-05",
@@ -1582,13 +1606,15 @@
         "A1-CO-05"
       ],
       "bengaliSpecific": false,
-      "note": "Untaught, and blocked behind the missing classifier as well."
+      "note": "Untaught, and now the only cheap null left in this column: the classifier it needs is still missing, and একটা cannot be printed until a letter lesson teaches ট."
     },
     {
       "id": "BN-A1-JOIN-06",
       "category": "Shomuchchoy (joining and subordination)",
       "label": "যে, the complementiser: 'I think THAT …'",
-      "probe": null,
+      "probe": [
+        "BN-GRAMMAR-C19-JE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1598,7 +1624,7 @@
         "A1-SUB-03"
       ],
       "bengaliSpecific": false,
-      "note": "ABSENT: zero matches. No opinion can be reported, which is why the whole opinion block of the functional column is null."
+      "note": "Closed by BN-C19-je (chapter 30). ভাবা had been in the book since chapter fourteen with nothing to attach a clause with."
     },
     {
       "id": "BN-A1-JOIN-07",
@@ -1616,13 +1642,15 @@
         "A1-SUB-05"
       ],
       "bengaliSpecific": false,
-      "note": "Untaught. Bengali's relative clause is a correlative pair rather than a Spanish-style postnominal que, so this is a restatement rather than a transfer — and the whole construction is absent."
+      "note": "Untaught. BN-C19-je teaches যে as a complementiser and says in as many words that the same syllable will later introduce a relative clause; the যে … সে correlative itself is still absent, and it also needs the third-person pronoun of BN-A1-PRON-03."
     },
     {
       "id": "BN-A1-JOIN-08",
       "category": "Shomuchchoy (joining and subordination)",
       "label": "কারণ ('because')",
-      "probe": null,
+      "probe": [
+        "BN-LEX-C18-KENONA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1632,13 +1660,15 @@
         "A1-SUB-06"
       ],
       "bengaliSpecific": false,
-      "note": "ABSENT: zero matches, on both halves of Spanish's por qué / porque pair."
+      "note": "Closed by BN-C18-kenona (chapter 29), which realizes CONNECTIVE-BECAUSE on SPINE-SAY-WHY. কারণ, the commoner word and the one this point was first written around, needs ণ, which no letter lesson teaches; it is named in romanization and the point is carried by কেননা, every piece of which the track already teaches. See BN-A1-ADV-08, which is still null for exactly that missing letter."
     },
     {
       "id": "BN-A1-JOIN-09",
       "category": "Shomuchchoy (joining and subordination)",
       "label": "যখন ('when') as a clause joiner",
-      "probe": null,
+      "probe": [
+        "BN-LEX-C19-JOKHON-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -1648,7 +1678,7 @@
         "A1-SUB-08"
       ],
       "bengaliSpecific": false,
-      "note": "ABSENT: zero matches."
+      "note": "Closed by BN-C19-jokhon (chapter 30), taught as the যখন … তখন correlative pair Bengali completes and English does not."
     },
     {
       "id": "BN-A1-JOIN-10",
@@ -1664,7 +1694,7 @@
         "A1-SUB-07"
       ],
       "bengaliSpecific": false,
-      "note": "Untaught. The verbal noun itself IS taught — লেখা's lesson is built on it — so the missing half is only the suffix, which makes this one of the cheaper nulls in the column."
+      "note": "Untaught. The verbal noun IS taught and the suffix is still missing, so this remains one of the cheaper nulls in the column — cheaper now that যে and যখন have shown the reader what a subordinate clause looks like."
     },
     {
       "id": "BN-A1-JOIN-11",
@@ -2547,7 +2577,10 @@
       "id": "BN-A1-FUN-18",
       "category": "Byabohar (communicative functions)",
       "label": "agree and disagree with an opinion",
-      "probe": null,
+      "probe": [
+        "BN-LEX-C18-EKMOT-01",
+        "BN-LEX-C18-KINTU-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2560,7 +2593,7 @@
         "A1-NG6-06"
       ],
       "bengaliSpecific": false,
-      "note": "Untaught beyond হ্যাঁ / না. There is no ঠিক আছে ('all right'), no একমত, and no adversative কিন্তু to disagree with, so a conversation cannot be had about anything."
+      "note": "Closed by chapter 29. একমত agrees, একমত নই disagrees off the copula negator taught two chapters earlier, and কিন্তু is the adversative this note named as missing."
     },
     {
       "id": "BN-A1-FUN-19",
@@ -2892,7 +2925,10 @@
       "id": "BN-A1-FUN-36",
       "category": "Byabohar (communicative functions)",
       "label": "give an opinion",
-      "probe": null,
+      "probe": [
+        "BN-GRAMMAR-C19-JE-01",
+        "BN-LEX-C08-BHABA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2905,7 +2941,7 @@
         "A1-F2-01"
       ],
       "bengaliSpecific": false,
-      "note": "UNTAUGHT, AND STRUCTURALLY BLOCKED. ভাবা ('to think') is taught in chapter 14, and there is no যে to attach a clause to it (BN-A1-JOIN-06), so 'I think that …' cannot be built even though its verb is in the book."
+      "note": "Closed by BN-C19-je (chapter 30) over ভাবা from chapter fourteen — the verb was never the blocker, the complementiser was."
     },
     {
       "id": "BN-A1-FUN-37",
@@ -2988,7 +3024,10 @@
       "id": "BN-A1-FUN-41",
       "category": "Byabohar (communicative functions)",
       "label": "ask somebody to repeat, or to speak slowly",
-      "probe": null,
+      "probe": [
+        "BN-FUNC-C19-ABAR-BOLBEN-01",
+        "BN-LEX-C19-DHIRE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2999,7 +3038,7 @@
         "A1-F6-04"
       ],
       "bengaliSpecific": false,
-      "note": "UNTAUGHT, AND IT IS A REPAIR GAP RATHER THAN A VOCABULARY ONE. বলা is taught in chapter 11 and আবার in chapter 7; আবার বলুন ('say it again') is two taught words away and is never assembled. With BN-A1-NEG-02 this is the second half of a beginner's whole repair kit and neither half exists."
+      "note": "Closed by BN-C19-abar-bolben and BN-C19-dhire (chapter 30). The first introduces no new vocabulary at all: আবার is from chapter seven, বলা from chapter eleven, and the polite -বেন from chapter twenty-two. With BN-A1-NEG-02 the beginner's repair kit is now whole."
     },
     {
       "id": "BN-A1-FUN-42",

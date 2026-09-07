@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9f7d272e33093b43",
+  "sourceHash": "fnv1a64:2b07af12ef9e2284",
   "lessons": [
     {
       "id": "BN-C02-naam",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e2e5665b03a74971",
+      "sourceHash": "fnv1a64:8b164ff6f3a1ea7d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -200,7 +200,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Note something Bengali does not do: আমার never changes for gender. Hindi and Punjabi have merā (m.) / merī (f.); Bengali has just āmār, for a man or a woman, a masculine or feminine thing. Bengali threw grammatical gender away entirely — you will see this again and again, and it makes Bengali, in this one respect, simpler than its western cousins."
+              "text": "Note something Bengali does not do: আমার never changes for gender. Hindi and Punjabi have merā (m.) / merī (f.); Bengali has one form, āmār, for a man or a woman, a masculine or feminine thing. Bengali threw grammatical gender away entirely — you will see this again and again, and it makes Bengali, in this one respect, simpler than its western cousins."
             }
           ]
         },
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a408f10013350849",
+      "sourceHash": "fnv1a64:51f36094f8387681",
       "notice": null,
       "blocks": [
         {
@@ -323,7 +323,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look at what is missing: there is no verb. Bengali sets \"my name\" beside \"Arun\" — āmār nām Arun — and the \"is\" is simply understood. This is the zero copula: for present-tense equational sentences (X is Y), Bengali needs no \"to be\" at all. (It is the same habit Tamil has — and unlike Hindi's merā nām … hai, which keeps the hai.) Bengali only brings back a verb when it talks about a state or place — you'll see that in Chapter 5."
+              "text": "Look at what is missing: there is no verb. Bengali sets \"my name\" beside \"Arun\" — āmār nām Arun — and the \"is\" is understood without being said. This is the zero copula: for present-tense equational sentences (X is Y), Bengali needs no \"to be\" at all. (It is the same habit Tamil has — and unlike Hindi's merā nām … hai, which keeps the hai.) Bengali only brings back a verb when it talks about a state or place — you'll see that in Chapter 5."
             }
           ]
         },
@@ -770,7 +770,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86d50e05e36118c1",
+      "sourceHash": "fnv1a64:9e6c1b3906d82489",
       "notice": null,
       "blocks": [
         {
@@ -797,7 +797,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "তোমার (tomār, \"your,\" from tumi) + নাম (nām) (name) + কি (ki) (what) becomes literally \"your name what?\" And note — still no \"is.\" The zero copula holds here too: Bengali simply lays \"your name\" beside \"what,\" and the question is complete."
+              "text": "তোমার (tomār, \"your,\" from tumi) + নাম (nām) (name) + কি (ki) (what) becomes literally \"your name what?\" And note — still no \"is.\" The zero copula holds here too: Bengali lays \"your name\" beside \"what,\" and the question is complete."
             }
           ]
         },
