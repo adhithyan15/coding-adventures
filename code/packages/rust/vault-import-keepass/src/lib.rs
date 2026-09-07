@@ -110,8 +110,32 @@
 //!   attacker-influenced ciphertext uses `subtle::ConstantTimeEq`, not
 //!   `==`.
 //! * **Plaintext residue.** Every secret-shaped intermediate — the
-//!   password, every KDF/HMAC key derivation step, and every decrypted
-//!   protected value — is held under [`Zeroizing`] end to end.
+//!   password, every KDF/HMAC key derivation step, the inner stream key,
+//!   and every decrypted protected value — is held under [`Zeroizing`]
+//!   until it reaches the final [`PortableRecord`]. Past that point, the
+//!   guarantee is only as strong as the shared vocabulary allows:
+//!   [`PortableRecord::password`]/`totp_seed`/`custom_fields` values stay
+//!   `Zeroizing`, but `title`/`username`/`url`/`notes` are plain `String`
+//!   by that type's own definition (every adapter in this workspace
+//!   shares it, and none of the other three ever puts secret-shaped data
+//!   in those fields). KDBX is the one format where that assumption can
+//!   be false — KeePass lets a user mark *any* `String` field
+//!   `Protected="True"`, not only `Password` — so a genuinely protected
+//!   `UserName`/`URL`/`Notes`/`Title` value is correctly decrypted under
+//!   `Zeroizing` and then necessarily copied into a non-zeroizing `String`
+//!   to fit that shared field, the same way it would be if a Bitwarden or
+//!   CSV export happened to carry a secret in one of those slots. This
+//!   crate does not special-case those four fields to work around a
+//!   limitation of a type it does not own; changing `PortableRecord`
+//!   itself is real, separable work affecting all four adapters, not a
+//!   silent partial fix scoped to this one.
+//! * **Protected-value collection is bounded before decryption, not only
+//!   after mapping.** [`MAX_PROTECTED_VALUES`] and a per-value
+//!   [`MAX_FIELD_LEN`] check apply during [`collect_protected_ciphertexts`]
+//!   — before [`decrypt_protected_values`] allocates a keystream sized to
+//!   their combined length — rather than relying solely on [`MAX_ENTRIES`]
+//!   / [`MAX_CUSTOM_FIELDS_PER_ENTRY`], which only bound the later
+//!   `build_records` pass over already-decrypted values.
 //!
 //! ## Usage
 //!
@@ -148,6 +172,8 @@
 
 use coding_adventures_vault_import_export::{ImportError, PortableRecord, PortableRecordKind};
 use coding_adventures_xml_parser::{parse_xml, XmlDocument, XmlElement, XmlNode};
+#[cfg(test)]
+use coding_adventures_xml_parser::XmlAttribute;
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use std::collections::BTreeMap;
 use subtle::ConstantTimeEq;
@@ -191,6 +217,20 @@ pub const MAX_ENTRIES: usize = 50_000;
 /// Maximum accepted bytes for any single string field this adapter reads
 /// (a `String/Key` name or its decoded value).
 pub const MAX_FIELD_LEN: usize = 64 * 1024;
+/// Maximum accepted `Protected="True"` values collected across the whole
+/// document, checked (along with each one's decoded length against
+/// [`MAX_FIELD_LEN`]) *before* [`decrypt_protected_values`] allocates a
+/// keystream buffer sized to their combined length -- [`MAX_ENTRIES`] and
+/// [`MAX_CUSTOM_FIELDS_PER_ENTRY`] alone only bound the *second* XML pass
+/// (`build_records`), which runs after every protected value in the
+/// document has already been decrypted in the first pass; this bound
+/// closes that gap so a password-authenticated file cannot force a large
+/// peak allocation via protected-field count alone, independent of the
+/// outer [`MAX_DECOMPRESSED_BYTES`] ceiling. A real database has one
+/// protected field (`Password`) per entry, occasionally a couple more;
+/// this is generous headroom over that, not an estimate of a plausible
+/// file, matching how every other bound in this crate is set.
+pub const MAX_PROTECTED_VALUES: usize = 200_000;
 
 /// Maximum accepted entries in one `VariantDictionary` (`KdfParameters` or
 /// `PublicCustomData`). Real files carry a handful; generous headroom over
@@ -867,7 +907,7 @@ fn decompress_body(data: &[u8], max_output: usize) -> Result<Zeroizing<Vec<u8>>,
 
 struct InnerHeaderFields {
     stream_id: u32,
-    stream_key: Vec<u8>,
+    stream_key: Zeroizing<Vec<u8>>,
 }
 
 /// Parse the inner header, returning it plus the byte offset of the first
@@ -876,7 +916,7 @@ struct InnerHeaderFields {
 fn parse_inner_header(data: &[u8]) -> Result<(InnerHeaderFields, usize), ImportError> {
     let mut r = ByteReader::new(data);
     let mut stream_id: Option<u32> = None;
-    let mut stream_key: Option<Vec<u8>> = None;
+    let mut stream_key: Option<Zeroizing<Vec<u8>>> = None;
 
     loop {
         let field_id = r.u8()?;
@@ -896,7 +936,7 @@ fn parse_inner_header(data: &[u8]) -> Result<(InnerHeaderFields, usize), ImportE
                         "InnerRandomStreamKey must be 32 or 64 bytes",
                     ));
                 }
-                stream_key = Some(value.to_vec());
+                stream_key = Some(Zeroizing::new(value.to_vec()));
             }
             // Binary entries (attachment bytes): parsed past, never
             // surfaced (VLT-PM49 §8.5) -- already consumed via `take(len)`.
@@ -1016,7 +1056,14 @@ fn collect_protected_ciphertexts(el: &XmlElement, out: &mut Vec<Vec<u8>>) -> Res
         for string_el in el.get_children(None, "String") {
             if let Some(value_el) = string_el.get_child(None, "Value") {
                 if is_protected(value_el) {
-                    out.push(decode_base64(&value_el.text_content())?);
+                    if out.len() >= MAX_PROTECTED_VALUES {
+                        return Err(ImportError::TooLarge("MAX_PROTECTED_VALUES"));
+                    }
+                    let ciphertext = decode_base64(&value_el.text_content())?;
+                    if ciphertext.len() > MAX_FIELD_LEN {
+                        return Err(ImportError::TooLarge("MAX_FIELD_LEN"));
+                    }
+                    out.push(ciphertext);
                 }
             }
         }
@@ -2318,6 +2365,94 @@ mod tests {
         // One byte past: rejected.
         let past_ceiling = decompress_body(&compressed, payload.len() - 1);
         assert!(matches!(past_ceiling, Err(ImportError::TooLarge("MAX_DECOMPRESSED_BYTES"))));
+    }
+
+    // --- Protected-value collection bounds (pre-merge security review) -----
+    //
+    // `collect_protected_ciphertexts` runs *before* `decrypt_protected_values`
+    // allocates a keystream sized to the combined ciphertext length, so both
+    // of its own bounds (MAX_PROTECTED_VALUES, and a per-value MAX_FIELD_LEN
+    // check) are exercised directly against that function, the same way
+    // `decompressed_size_at_and_past_the_ceiling_is_rejected_before_materializing`
+    // exercises `decompress_body` directly rather than through a full fixture.
+
+    fn protected_value_entry(base64_value: &str) -> XmlElement {
+        XmlElement {
+            namespace_uri: None,
+            local_name: "Entry".to_string(),
+            attributes: Vec::new(),
+            children: vec![XmlNode::Element(Box::new(XmlElement {
+                namespace_uri: None,
+                local_name: "String".to_string(),
+                attributes: Vec::new(),
+                children: vec![
+                    XmlNode::Element(Box::new(XmlElement {
+                        namespace_uri: None,
+                        local_name: "Key".to_string(),
+                        attributes: Vec::new(),
+                        children: vec![XmlNode::Text("Password".to_string())],
+                    })),
+                    XmlNode::Element(Box::new(XmlElement {
+                        namespace_uri: None,
+                        local_name: "Value".to_string(),
+                        attributes: vec![XmlAttribute {
+                            namespace_uri: None,
+                            local_name: "Protected".to_string(),
+                            value: "True".to_string(),
+                        }],
+                        children: vec![XmlNode::Text(base64_value.to_string())],
+                    })),
+                ],
+            }))],
+        }
+    }
+
+    fn wrap_root(children: Vec<XmlNode>) -> XmlElement {
+        XmlElement {
+            namespace_uri: None,
+            local_name: "Root".to_string(),
+            attributes: Vec::new(),
+            children,
+        }
+    }
+
+    #[test]
+    fn collect_protected_ciphertexts_rejects_a_single_oversized_value_before_decryption() {
+        let oversized = vec![b'x'; MAX_FIELD_LEN + 1];
+        let root = wrap_root(vec![XmlNode::Element(Box::new(protected_value_entry(
+            &encode_base64(&oversized),
+        )))]);
+        let mut out = Vec::new();
+        let err = collect_protected_ciphertexts(&root, &mut out).unwrap_err();
+        assert!(matches!(err, ImportError::TooLarge("MAX_FIELD_LEN")));
+    }
+
+    #[test]
+    fn collect_protected_ciphertexts_accepts_a_value_exactly_at_the_field_len_ceiling() {
+        let at_ceiling = vec![b'x'; MAX_FIELD_LEN];
+        let root = wrap_root(vec![XmlNode::Element(Box::new(protected_value_entry(
+            &encode_base64(&at_ceiling),
+        )))]);
+        let mut out = Vec::new();
+        collect_protected_ciphertexts(&root, &mut out).unwrap();
+        assert_eq!(out.len(), 1);
+        assert_eq!(out[0].len(), MAX_FIELD_LEN);
+    }
+
+    #[test]
+    fn collect_protected_ciphertexts_rejects_more_than_max_protected_values() {
+        // Every entry carries one empty (0-byte) protected value -- cheap to
+        // construct MAX_PROTECTED_VALUES + 1 of, and irrelevant to this
+        // bound: it is a pure count cap, independent of per-value size.
+        let empty_b64 = encode_base64(&[]);
+        let entries: Vec<XmlNode> = (0..=MAX_PROTECTED_VALUES)
+            .map(|_| XmlNode::Element(Box::new(protected_value_entry(&empty_b64))))
+            .collect();
+        let root = wrap_root(entries);
+        let mut out = Vec::new();
+        let err = collect_protected_ciphertexts(&root, &mut out).unwrap_err();
+        assert!(matches!(err, ImportError::TooLarge("MAX_PROTECTED_VALUES")));
+        assert_eq!(out.len(), MAX_PROTECTED_VALUES);
     }
 
     // --- gzip container stripper -------------------------------------------

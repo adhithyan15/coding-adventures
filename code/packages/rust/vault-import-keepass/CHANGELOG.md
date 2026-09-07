@@ -54,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   genuinely valid fixture without duplicating this byte-level encoder a
   second time; the feature is only pulled in via `vault-pm-cli`'s
   `[dev-dependencies]`, never for a production build.
-- 39 unit tests: a full round-trip matrix (both outer ciphers × both KDFs ×
+- 42 unit tests: a full round-trip matrix (both outer ciphers × both KDFs ×
   compressed/uncompressed), entry-kind mapping (login, secure note, TOTP
   field under both recognized key names, custom fields, multiple entries),
   wrong-password/corruption message-equality (gate 11), a block-stream HMAC
@@ -62,11 +62,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   proven to short-circuit before Argon2d/Argon2id is ever called via a
   thread-local call counter (gate 12), every named-rejection case
   (KDBX3/AES-KDF/AES128-CBC/Twofish-CBC/Salsa20/unsupported Argon2 version,
-  gate 13), and a structural/malformed-input matrix (oversized container,
+  gate 13), a structural/malformed-input matrix (oversized container,
   truncated header, truncated block stream, invalid UTF-8 in the
   decompressed XML, malformed base64 in a protected value, decompressed
-  size at and past `MAX_DECOMPRESSED_BYTES`, gate 15).
+  size at and past `MAX_DECOMPRESSED_BYTES`, gate 15), and the two bounds
+  added in pre-merge security review (`MAX_PROTECTED_VALUES`, and
+  `MAX_FIELD_LEN` enforced per-value during collection rather than only
+  after decryption).
 - `#![forbid(unsafe_code)]` + `#![deny(missing_docs)]`.
+
+### Security hardening (pre-merge review)
+
+A `/security-review` pass before pushing found two real gaps and one
+documented (not code-fixable) limitation:
+
+- **MEDIUM — inner stream key not zeroizing.** `InnerHeaderFields::stream_key`
+  (the `InnerRandomStreamKey` parsed from the inner header — the direct
+  SHA-512 preimage of the ChaCha20 key protecting every `Protected` XML
+  value, including `Password`) was stored as a plain `Vec<u8>`, unlike
+  every other key-derivation intermediate in this crate. Fixed: wrapped in
+  `Zeroizing<Vec<u8>>`.
+- **MEDIUM — protected-value collection unbounded before decryption.**
+  `MAX_ENTRIES`/`MAX_CUSTOM_FIELDS_PER_ENTRY`/`MAX_FIELD_LEN` were enforced
+  only in the second XML pass (`build_records`, over already-decrypted
+  values); the first pass (`collect_protected_ciphertexts` +
+  `decrypt_protected_values`) decrypted every `Protected` value in the
+  document — with no per-value or total-count cap of its own — before that
+  second pass ever ran, relying solely on the outer `MAX_DECOMPRESSED_BYTES`
+  ceiling to bound peak memory. Requires a password-authenticated file, so
+  this was a defense-in-depth gap, not an unauthenticated DoS. Fixed: added
+  `MAX_PROTECTED_VALUES` (200,000) and a per-ciphertext `MAX_FIELD_LEN`
+  check directly in `collect_protected_ciphertexts`, before
+  `decrypt_protected_values` allocates its keystream buffer.
+- **MEDIUM — plaintext residue in `title`/`username`/`url`/`notes` (not
+  fixed; documented).** A KeePass entry can mark *any* `String` field
+  `Protected="True"`, not only `Password`. A protected `UserName`/`URL`/
+  `Notes`/`Title` value is correctly decrypted under `Zeroizing` and then
+  necessarily copied into the corresponding `PortableRecord` field, which
+  is a plain `String` by that shared type's own definition (every adapter
+  in this workspace shares it; none of the other three ever puts
+  secret-shaped data in those slots). This is a limitation of
+  `PortableRecord` itself, not something this crate can fix without either
+  diverging from the shared vocabulary or changing it for all four
+  adapters — out of scope for this amendment, recorded here rather than
+  silently left unmentioned. See the crate doc comment's "Plaintext
+  residue" bullet and the README's Threat model section.
 
 ### Out of scope (documented, not silently dropped)
 

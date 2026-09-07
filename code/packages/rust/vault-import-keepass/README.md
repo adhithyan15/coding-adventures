@@ -107,8 +107,26 @@ pub fn decode(
 - **Plaintext residue.** The password and every KDF/HMAC key-derivation
   intermediate (`password_hash`, `composite_key`, `derived_key`,
   `encryption_key`, `hmac_key_base`, every per-block/header HMAC key, the
-  decompressed inner buffer, every decrypted protected value) is held
-  under `Zeroizing`.
+  inner stream key, the decompressed inner buffer, every decrypted
+  protected value) is held under `Zeroizing` — until it reaches the final
+  `PortableRecord`. Past that point the guarantee is only as strong as the
+  shared vocabulary: `password`/`totp_seed`/`custom_fields` stay
+  `Zeroizing`, but `title`/`username`/`url`/`notes` are plain `String` by
+  that shared type's own definition, since no other adapter in this
+  workspace ever puts secret-shaped data there. KDBX is the one format
+  where a user can mark *any* field `Protected="True"`, not only
+  `Password` — a genuinely protected `UserName`/`URL`/`Notes`/`Title`
+  value is correctly decrypted under `Zeroizing` and then must be copied
+  into a non-zeroizing `String` to fit that shared field. This is a
+  limitation of `PortableRecord` itself, shared by every adapter that
+  implements it, not something scoped to this crate to silently patch
+  around.
+- **Protected-value collection is bounded before decryption.**
+  `MAX_PROTECTED_VALUES` (200,000) and a per-value `MAX_FIELD_LEN` check
+  apply while *collecting* ciphertexts, before the keystream buffer sized
+  to their combined length is allocated — not only afterward, when
+  `MAX_ENTRIES`/`MAX_CUSTOM_FIELDS_PER_ENTRY` bound the mapping pass over
+  already-decrypted values.
 
 ## Usage
 
@@ -138,7 +156,8 @@ part of a production build.
 `MAX_SOURCE_BYTES = 16 MiB`, `MAX_KDF_MEMORY_KIB = 1 GiB`,
 `MAX_KDF_ITERATIONS = 64`, `MAX_KDF_PARALLELISM = 16`,
 `MAX_DECOMPRESSED_BYTES = 256 MiB`, `MAX_CUSTOM_FIELDS_PER_ENTRY = 64`,
-`MAX_ENTRIES = 50_000`, `MAX_FIELD_LEN = 64 KiB`.
+`MAX_ENTRIES = 50_000`, `MAX_FIELD_LEN = 64 KiB`,
+`MAX_PROTECTED_VALUES = 200_000`.
 
 ## Out of scope (documented, not silently dropped)
 
