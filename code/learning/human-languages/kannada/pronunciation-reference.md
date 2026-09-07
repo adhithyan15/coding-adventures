@@ -9,12 +9,14 @@ in one spot.
 
 1. **Consonants carry a built-in "a".** ಕ = "ka," ಮ = "ma," ರ = "ra." You never
    write the short *a* — it's already there.
-2. **A vowel sign changes that built-in vowel.** Attached to a consonant:
-   - **ಾ** = ā (ಕಾ = kā) · **ಿ** = i (ಕಿ = ki) · **ೀ** = ī · **ು** = u · **ೂ** =
-     ū · **ೆ** = e · **ೇ** = ē · **ೊ** = o · **ೋ** = ō · **ೌ** = au.
-3. **A *virama* strips the built-in vowel, and the bare consonant *stacks
-   under* the next as a conjunct (*ottakṣara*).** ಸ + ಕ → ಸ್ಕ (ska), ನ + ಯ →
-   ನ್ಯ (nya), ಲ + ಲ → ಲ್ಲ (lla). This vertical stacking is a signature of the
+2. **A vowel sign changes that built-in vowel.** Attached to a consonant it
+   gives ಕಾ = kā · ಕಿ = ki · ಕೀ = kī · ಕು = ku · ಕೂ = kū · ಕೆ = ke · ಕೇ = kē ·
+   ಕೊ = ko · ಕೋ = kō · ಕೌ = kau. The signs themselves are **ಾ** ā · **ಿ** i ·
+   **ೀ** ī · **ು** u · **ೂ** ū · **ೆ** e · **ೇ** ē · **ೊ** o · **ೋ** ō ·
+   **ೌ** au.
+3. **A *virama* (್) strips the built-in vowel, and the bare consonant *stacks
+   under* the next as a conjunct (*ottakṣara*).** ಸ್ + ಕ → ಸ್ಕ (ska), ನ್ + ಯ →
+   ನ್ಯ (nya), ಲ್ + ಲ → ಲ್ಲ (lla). This vertical stacking is a signature of the
    Kannada–Telugu scripts.
 
 ## Independent vowels (word-initial)
@@ -29,15 +31,15 @@ o · **ಓ** ō · **ಔ** au.
   real puff. Unlike Tamil, Kannada keeps separate letters for the Sanskrit
   aspirates and voiced stops, because it borrowed so many Sanskrit words.
 - **Round forms.** Kannada's looping letters were shaped for palm-leaf writing,
-  where straight strokes would split the leaf. Telugu, its closest script-
-  sister, shares the look — which is why the two scripts resemble each other
-  far more than either resembles Tamil.
+  where straight strokes would split the leaf. Telugu, its closest
+  script-sister, shares the look — which is why the two scripts resemble each
+  other far more than either resembles Tamil.
 
 ## Kannada in the Dravidian family
 
-**Dravidian** is a language family entirely separate from Indo-European
-(English, Latin, Sanskrit). Kannada shares grammar and much native vocabulary
-with its sisters Tamil, Telugu, and Malayalam — but, like Telugu and unlike
+Kannada is one of the four literary **Dravidian** languages, with Tamil, Telugu
+and Malayalam — a family entirely separate from the Indo-European one (English,
+Latin, Sanskrit). It shares grammar and much native vocabulary with its sisters — but, like Telugu and unlike
 Tamil, it borrowed **heavily** from Sanskrit. The lessons trace, word by word,
 which Kannada words are home-grown (*haudu*, *illa*, *sari*) and which came
 from Sanskrit (*namaskāra*, *dhanyavāda*).

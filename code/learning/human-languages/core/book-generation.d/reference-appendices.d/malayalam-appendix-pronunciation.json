@@ -1,0 +1,9 @@
+{
+  "language": "malayalam",
+  "title": "The Malayalam script --- a reference",
+  "shortTitle": "The Malayalam script (reference)",
+  "runningHead": "Malayalam script",
+  "source": "malayalam/pronunciation-reference.md",
+  "output": "malayalam/book/chapters/appendix-pronunciation.tex",
+  "scriptSet": "malayalam-comparisons"
+}
