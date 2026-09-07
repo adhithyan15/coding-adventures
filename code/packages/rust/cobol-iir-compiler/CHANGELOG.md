@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased — COBOL INSPECT BEFORE/AFTER region proofs (VM-047c)
+
+Add five matching oracle and seven-backend observations for `INSPECT ...
+TALLYING`/`REPLACING ... BEFORE`/`AFTER` region-boundary semantics, promoting
+the already-implemented single-region window behaviour to the unified matrix:
+TALLYING FOR ALL narrowed BEFORE a delimiter, TALLYING narrowed AFTER a
+delimiter, REPLACING ALL narrowed BEFORE a delimiter, REPLACING narrowed AFTER
+a delimiter, and BEFORE/AFTER used together across the independently-regioned
+TALLYING and REPLACING halves of one combined `INSPECT` statement. Each BEFORE/
+AFTER pair also pins the ISO not-found asymmetry: an absent BEFORE delimiter
+covers the WHOLE source, while an absent AFTER delimiter covers an EMPTY
+region — the opposite defaults.
+
+Also pins (VM-D027) that a SINGLE delimiter phrase carrying BOTH a `BEFORE`
+and an `AFTER` keyword together (e.g. `FOR ALL "0" BEFORE "X" AFTER "X"`) is
+grammar-legal but currently reads only the FIRST region node in both the
+oracle and the compiler — a shared, non-diverging limitation, not the ISO-
+intended two-delimiter intersection. A regression test pins the current
+first-region-only behaviour so it cannot silently change; genuine two-clause
+intersection support is out of this slice's scope and tracked as a follow-up.
+
 ## Unreleased — STRING self-reference oracle proof (VM-057)
 
 Add an oracle-agreement regression for `STRING S DELIMITED BY SIZE INTO S`: a

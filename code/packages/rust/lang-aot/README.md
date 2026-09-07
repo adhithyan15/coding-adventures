@@ -476,6 +476,16 @@ programs compare complete output with the oracle and seven standard backends;
 BEFORE/AFTER regions remain a separate proof slice.
 
 
+VM-047c promotes the already-implemented single-region BEFORE/AFTER window to
+the seven standard backends: TALLYING FOR ALL narrowed BEFORE a delimiter,
+TALLYING narrowed AFTER a delimiter, REPLACING ALL narrowed BEFORE a
+delimiter, REPLACING narrowed AFTER a delimiter, and BEFORE/AFTER used
+together across the independently-regioned TALLYING/REPLACING halves of one
+combined `INSPECT` statement. Each pair also observes the ISO not-found
+asymmetry: an absent BEFORE delimiter covers the WHOLE source, an absent
+AFTER delimiter covers an EMPTY region.
+
+
 VM-057 adds a seven-backend cell for `STRING S DELIMITED BY SIZE INTO S`: the
 sole sending field is also the receiver, so the frontend's own register (not a
 temporary) is both source and destination of the truncating reshape. Expects

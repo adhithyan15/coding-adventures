@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C16-polar",
+    "language": "bengali",
+    "chapter": 27,
+    "sequence": 1430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e5a89b4f938f18b"
+  },
+  "findings": []
+}

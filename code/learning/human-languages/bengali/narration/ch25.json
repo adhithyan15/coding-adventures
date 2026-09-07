@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Cloth, Shirt, Sari, and Glasses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bda239609eaa106e",
+  "sourceHash": "fnv1a64:9e2c064037d3d44a",
   "lessons": [
     {
       "id": "BN-C15-kapor",
@@ -312,7 +312,7 @@
     {
       "id": "BN-C15-shari",
       "sequence": 1290,
-      "title": "শাড়ি (shari) — \"sari,\" a word English simply borrowed",
+      "title": "শাড়ি (shari) — \"sari,\" a word English borrowed whole",
       "headword": "শাড়ি",
       "romanization": "shari",
       "gloss": "sari — a Sanskrit word for a strip of cloth that walked, almost unchanged, straight into English",
@@ -322,7 +322,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ea222e46e02000e0",
+      "sourceHash": "fnv1a64:c946ba971d40fcbe",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -384,7 +384,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "শাড়ি (shari) traces to Sanskrit śāṭī, \"a strip of cloth, a garment,\" worn down through Middle Indic সাড়ী (sāḍī) into Bengali and Hindi's shared śāṛī/sāṛī. Here is the unusual part: every English cousin this book has traced so far — heart, nose, bind, come — went underground for thousands of years, worn down by sound change on both ends until only a shared ancient root connects them. This word took a different road. It entered English directly, in the modern era, as an ordinary borrowed word: \"sari.\" No PIE root, no centuries of drift — just a garment's name, carried whole into another language's dictionary."
+              "text": "শাড়ি (shari) traces to Sanskrit śāṭī, \"a strip of cloth, a garment,\" worn down through Middle Indic সাড়ী (sāḍī) into Bengali and Hindi's shared śāṛī/sāṛī. Here is the unusual part: every English cousin this book has traced so far — heart, nose, bind, come — went underground for thousands of years, worn down by sound change on both ends until only a shared ancient root connects them. This word took a different road. It entered English directly, in the modern era, as an ordinary borrowed word: \"sari.\" No PIE root, no centuries of drift — a garment's name, carried whole into another language's dictionary."
             }
           ]
         },
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c2fffcacab95485e",
+      "sourceHash": "fnv1a64:7264407a9f9c6f5e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -529,7 +529,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "চশমা (choshma) is spelled চ (chô) + শ (shô, the second s-letter শাড়ি (shari) just introduced) + ম (mô) + া (ā) — four sounds by the spelling. Ordinary speech thins it to three: chôsh-mā, not chô-sho-mā — an everyday shortening this particular loanword has settled into."
+              "text": "চশমা (choshma) is spelled চ (chô) + শ (shô, the second s-letter শাড়ি (shari) introduced a moment ago) + ম (mô) + া (ā) — four sounds by the spelling. Ordinary speech thins it to three: chôsh-mā, not chô-sho-mā — an everyday shortening this particular loanword has settled into."
             }
           ]
         },

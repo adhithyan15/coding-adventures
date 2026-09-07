@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8e690aa14aa31ecf",
+  "sourceHash": "fnv1a64:49c0807f2cc14daa",
   "lessons": [
     {
       "id": "BN-C07-howa",
@@ -485,7 +485,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e7d26bc6cc93b67",
+      "sourceHash": "fnv1a64:d6ce56dafbdf46d3",
       "notice": null,
       "blocks": [
         {
@@ -531,7 +531,7 @@
             },
             {
               "kind": "speech",
-              "text": "Past Sanskrit the trail goes cold. Khād- has no secure Indo-European pedigree outside Indo-Aryan, so there is no English cousin here — and one will not be manufactured. Some roots are simply local, and saying so is part of the method."
+              "text": "Past Sanskrit the trail goes cold. Khād- has no secure Indo-European pedigree outside Indo-Aryan, so there is no English cousin here — and one will not be manufactured. Some roots are local and nothing more, and saying so is part of the method."
             }
           ]
         },
@@ -806,7 +806,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b159f2ccc469fb24",
+      "sourceHash": "fnv1a64:9cc6f999f1836a3c",
       "notice": null,
       "blocks": [
         {
@@ -859,7 +859,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Sanskrit writes the root with জ্ঞ, a knot of j and ñ. Bengali does not say jñ at all — it says gg, so jñāna comes out ggān. The plain verb spares you the knot: জানা (jānā) is simply জা + না, jā-nā."
+              "text": "Sanskrit writes the root with জ্ঞ, a knot of j and ñ. Bengali does not say jñ at all — it says gg, so jñāna comes out ggān. The plain verb spares you the knot: জানা (jānā) is জা + না, jā-nā, and nothing more."
             }
           ]
         },

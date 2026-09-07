@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:558a11d5c1ef1997",
+  "lessonIds": [
+    "BN-C17-ar",
+    "BN-C17-o",
+    "BN-C17-ba",
+    "BN-C17-na-na",
+    "BN-R17-joined-and-refused"
+  ],
+  "tex": "bengali/book/chapters/ch28-two-things-at-once.tex"
+}

@@ -39,7 +39,7 @@ itself.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[BN-CONCEPT-C05-AMIBANGLABOLI-01]; assesses=[BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C03-AMI-01] -->
 
-**বাংলা** (*bānglā*): **বা** (*bā*) + **ং** (the *anusvāra* nasal) + **লা** (*lā*).
+**বাংলা** (*bānglā*): বা (*bā*) + **ং** (the *anusvāra* nasal) + **লা** (*lā*).
 
 ## The sentence, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01] -->
