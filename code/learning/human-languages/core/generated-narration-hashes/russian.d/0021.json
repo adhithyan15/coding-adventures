@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:960fccf09fcbbafc",
+  "lessonIds": [
+    "RU-C21-izvinite",
+    "RU-C21-prostite",
+    "RU-C21-povtorite",
+    "RU-C21-medlenno",
+    "RU-C21-pomogite"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch21.txt",
+  "json": "russian/narration/ch21.json",
+  "textHash": "fnv1a64:16d467a27514c680",
+  "jsonHash": "fnv1a64:dfeae191e4368967",
+  "findings": []
+}

@@ -111,3 +111,30 @@ rescues the **д → ж** swap from Chapter 3 alongside *жить*, *читат�
 Measured over the whole track: **3 of 55 atoms are never revisited**, and all
 three belong to the final lesson, which has nothing after it. Before these two
 chapters the count was **21 of 34**.
+
+## Chapters 16-22 — joining, repair, and the question family
+
+Seven chapters of five lessons each. Every lesson's `practises.knowledge` names
+the atoms of the lesson **immediately before it** (distance 1, which is R1), the
+lesson at the **same position two chapters back** (distance 10, which is R2),
+and — from Chapter 20 on — the lesson at the **same position four chapters back**
+(distance 20, which is R3). That third link is why the track's reinforcement
+debt fell while the track grew: within-chapter retrieval alone reaches only
+distances 1-4, so a chapter that only looks at itself lands everything in R1.
+
+Each lesson of Chapters 16-19 additionally retrieves **two words from Chapters
+3-13** chosen so that the retrieval falls inside their R3 window, and each
+lesson of Chapters 18-22 retrieves material from Chapters 1-6 inside its R4
+window. The assignment was computed against the measured defect list rather
+than chosen by feel, which is why all 87 open R3 misses and 9 of the R4 misses
+close on this tranche.
+
+| Chapter | New | Reaches back to | Note |
+|---|---|---|---|
+| **16** | и, и between clauses, или, ни … ни, тоже | знать, говорить, идти, думать, понимать, читать, писать, брать, спрашивать, помогать | the first two-clause sentence in the book |
+| **17** | но, а, один, другой, . ? ! | любить, кофе, чай, хлеб, друг, подруга, брат, сестра, семья, ухо | `другой` pays back `друг`, held since Chapter 7 |
+| **18** | что?, что as a hinge, я думаю что, я не знаю что, — | нос, рот, глаз, сердце, до свидания, пока, до скорого, до завтра, до встречи, спокойной ночи | `думать` and `знать` finally get an object |
+| **19** | почему, потому что, когда?, когда as a hinge, `,` | мама, папа, мать, отец, молоко, сыр, сок, суп, and the Chapter-2 pronoun set | the answer is made out of the question |
+| **20** | хотеть, the bare infinitive, чтобы, мочь, надо | и, ни … ни, тоже, быть, жить, видеть | fourteen infinitives get somewhere to stand |
+| **21** | извините, простите, повторите, медленно, помогите | но, а, один, другой, . ? ! | the kit the track had none of |
+| **22** | кто, какой, сколько, который, ли | что, я думаю что, я не знаю что, —, вода | the family closes at seven |

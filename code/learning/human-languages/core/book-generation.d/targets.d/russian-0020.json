@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 20,
+  "output": "russian/book/chapters/ch20-want-can-must.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}
