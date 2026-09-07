@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-048-DENY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can say that I do not know, that something went badly, and I can set one thing against another or offer a choice between two.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C48-nescio",
+    "LA-C48-male",
+    "LA-C48-malus",
+    "LA-C48-sed",
+    "LA-C48-aut"
+  ]
+}

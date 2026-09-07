@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C45-pron-oblique",
+    "language": "marathi",
+    "chapter": 45,
+    "sequence": 1800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b35140cd91fdc0e0"
+  },
+  "findings": []
+}

@@ -317,7 +317,22 @@ impl VaultToolBridge {
     /// direct-delivery tool over a stub is the configuration this crate argues
     /// against.
     pub fn register_all(&self, runtime: &mut InMemoryToolRuntime) -> Result<(), ToolApiError> {
-        for definition in Self::definitions()? {
+        let definitions = Self::definitions()?;
+
+        // Pre-flight every definition before registering any, exactly as
+        // `register_into_host` does at the host boundary. The argument there
+        // applies unchanged here, and this path had been missing it.
+        //
+        // It became reachable when `InMemoryToolRuntime` gained the S-I7 input
+        // refusal: `request_direct` names a peer through `consumer_agent_id`,
+        // so on an agent surface this loop would register `request_lease`,
+        // refuse `request_direct`, and leave a vault holding exactly the half
+        // that looks healthy. Either both go in or neither does.
+        for definition in &definitions {
+            runtime.check_registration(definition)?;
+        }
+
+        for definition in definitions {
             match definition.tool_id.as_str() {
                 VAULT_REQUEST_LEASE_TOOL_ID => {
                     runtime.register_handler(definition, self.lease_handler())?

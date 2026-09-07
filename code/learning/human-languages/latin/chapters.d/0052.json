@@ -1,0 +1,21 @@
+{
+  "chapter": 52,
+  "title": "Ubi, Cur, Quia, Meus, Tuus",
+  "label": "ch:la-interrogatio",
+  "canDo": "I can ask where and why, answer with a because-clause, and say that a thing is mine or yours.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C52-tuus",
+    "kind": "task",
+    "summary": "The fifth word of the group, taken apart against the four before it.",
+    "assesses": [
+      "LA-LEX-C52-ASK-01",
+      "LA-LEX-C52-ASK-02",
+      "LA-LEX-C52-ASK-03",
+      "LA-LEX-C52-ASK-04",
+      "LA-LEX-C52-ASK-05"
+    ]
+  }
+}

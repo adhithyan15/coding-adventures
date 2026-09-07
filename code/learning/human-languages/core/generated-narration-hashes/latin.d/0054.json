@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:ccc2bb5d70db1566",
+  "lessonIds": [
+    "LA-C54-edo",
+    "LA-C54-bibo",
+    "LA-C54-oculus",
+    "LA-C54-auris",
+    "LA-C54-pes"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch54.txt",
+  "json": "latin/narration/ch54.json",
+  "textHash": "fnv1a64:62df9368f0d86a93",
+  "jsonHash": "fnv1a64:d3dd7a253f92ce12",
+  "findings": []
+}

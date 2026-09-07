@@ -1,0 +1,32 @@
+[package]
+name = "coding_adventures_vault_import_keepass"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM49 Amendment 2 -- KeePassXC KDBX4 adapter. Implements a from-scratch KDBX4 decoder (Argon2d/Argon2id, AES-256-CBC/ChaCha20, HMAC-SHA256 block stream) into vault-import-export's PortableRecord vocabulary for vault-pm's `import kdbx` ceremony."
+license = "MIT"
+
+[features]
+# Exposes `test_support::build_single_login_fixture`, a genuinely valid
+# single-login-entry KDBX4 fixture builder, to dependents' own test suites
+# (currently `vault-pm-cli`) without duplicating this crate's byte-level
+# test-only forward encoder a second time. Always on for this crate's own
+# `cargo test` (see the `any(test, feature = "test-fixtures")` gate in
+# `src/lib.rs`); never enabled for a plain `cargo build`.
+test-fixtures = []
+
+[dependencies]
+coding_adventures_vault_import_export = { path = "../vault-import-export" }
+coding_adventures_zeroize = { path = "../zeroize" }
+coding_adventures_argon2d = { path = "../argon2d" }
+coding_adventures_argon2id = { path = "../argon2id" }
+coding_adventures_aes_modes = { path = "../aes-modes" }
+coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
+coding_adventures_hmac = { path = "../hmac" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_sha512 = { path = "../sha512" }
+deflate = { path = "../deflate" }
+coding-adventures-xml-parser = { path = "../xml-parser" }
+# Constant-time comparison for header-integrity and block-stream HMAC checks
+# (VLT-PM49 §8.3/§8.8) -- already a transitive dependency of this workspace
+# via `hmac`, which depends on it for the same reason.
+subtle = "2"

@@ -964,9 +964,11 @@ enum Command {
     ImportCsv {
         source: PathBuf,
     },
-    /// Parses, but always fails closed with the `unsupported` exit class
-    /// before opening `source` (VLT-PM49 §8): KDBX's own encrypted-container
-    /// format is explicitly deferred, not silently missing from the grammar.
+    /// Decrypt a KDBX4 (KeePass 2.x / KeePassXC) database and create new
+    /// items from it (VLT-PM49 §8, closed by Amendment 2). Unlike every
+    /// other `import FORMAT FILE` command, this one also prompts for the
+    /// database's own master password (§8.7): a KDBX file is itself an
+    /// encrypted container, not a plaintext export.
     ImportKdbx {
         source: PathBuf,
     },
@@ -2115,9 +2117,9 @@ fn dispatch(
             &source,
             &CsvLoginImporter,
         ),
-        // VLT-PM49 §8: always fails closed before opening `source`. KDBX's
-        // own encrypted-container format is explicitly deferred.
-        Command::ImportKdbx { source: _ } => Err(CliFailure::Unsupported),
+        Command::ImportKdbx { source } => {
+            import_kdbx(host, paths, writer, selected_vault, &source)
+        }
         Command::ImportOtpauthUri { source } => import_external(
             host,
             paths,
@@ -3452,6 +3454,57 @@ fn import_external(
         .map_err(|_| CliFailure::InvalidCommand)?;
     drop(bytes);
 
+    create_items_from_portable_records(host, paths, writer, selected_vault, records)
+}
+
+/// Decrypt a KDBX4 database and create new items from it (VLT-PM49 §8.7).
+/// Parallel to, but not reusing, `import_external` end to end: unlike every
+/// plaintext format, this one also needs the database's own master
+/// password, so it reads the source and collects that password itself
+/// before handing both to `vault_import_keepass::decode`. From the
+/// resulting `Vec<PortableRecord>` onward it shares the exact same
+/// "map, authenticate, create, aggregate" tail `import_external` uses,
+/// factored into `create_items_from_portable_records` so that ceremony is
+/// written once, not duplicated for a fourth format.
+fn import_kdbx(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    source: &Path,
+) -> Result<CliOutput, CliFailure> {
+    // Same size ceiling every other `import FORMAT FILE` source already
+    // uses (VLT-PM49 §8.7/§8.8) -- no second ceiling introduced for KDBX.
+    let bytes = host.read_external_import_source(source).map_err(map_host)?;
+    // The KDBX database's own master password, not vault-pm's -- collected
+    // through the same host method `portable_import`/`portable_restore`
+    // already use for an externally-supplied encrypted blob's passphrase
+    // (VLT-PM49 §8.7).
+    let password = host.read_import_passphrase().map_err(map_host)?;
+    let records = coding_adventures_vault_import_keepass::decode(&bytes, &password)
+        // A wrong password and a malformed/corrupt source are
+        // indistinguishable by construction (VLT-PM49 §8.3/§8.8); both
+        // land on the same `invalid` exit class every other adapter's
+        // decode failure already uses.
+        .map_err(|_| CliFailure::InvalidCommand)?;
+    drop(bytes);
+    drop(password);
+
+    create_items_from_portable_records(host, paths, writer, selected_vault, records)
+}
+
+/// Shared tail of every VLT-PM49 import ceremony (§4): map each decoded
+/// `PortableRecord` onto zero-or-more vault-pm records, and -- if that
+/// mapping produced anything at all -- authenticate once per record and
+/// publish it through the exact same audited `item add` path a person
+/// typing at the CLI uses.
+fn create_items_from_portable_records(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    records: Vec<PortableRecord>,
+) -> Result<CliOutput, CliFailure> {
     let mut skipped: u64 = 0;
     let mut failed: u64 = 0;
     let mut to_create: Vec<(&'static str, AnyRecord)> = Vec::new();
@@ -6650,6 +6703,7 @@ fn map_native_local_host(error: LocalHostError) -> HostError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_vault_import_keepass::test_support::build_single_login_fixture;
     use coding_adventures_vault_pm_application::{
         prepare_generation_zero, GenerationZeroRandomness, GENERATION_ZERO_RANDOM_BYTES,
     };
@@ -8981,22 +9035,99 @@ mod tests {
         assert!(!listed.stdout().contains("Skipped Identity"));
     }
 
-    /// KDBX always fails closed with the `unsupported` exit class, before
-    /// `source` is ever opened (VLT-PM49 §8): a nonexistent path must fail
-    /// the *same* way a real one would, proving no filesystem access was
-    /// attempted.
+    /// A well-formed KDBX4 database (built by `vault-import-keepass`'s own
+    /// test-only encoder, VLT-PM49 §8.9/§10 gate 10) decrypts and creates
+    /// the expected login item, and neither the KDBX master password nor
+    /// the entry's own secret ever reaches stdout.
     #[test]
-    fn import_kdbx_always_fails_closed_without_opening_source() {
+    fn import_kdbx_creates_a_login_item_and_leaks_no_secret() {
         let root = TestRoot::new();
         let paths = root.paths();
-        let passphrase = b"kdbx unsupported passphrase".to_vec();
-        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let vault_passphrase = b"kdbx import vault passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [vault_passphrase.clone()]);
         assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
 
-        let absent_source = root.0.join("does-not-exist.kdbx");
-        let host = TestHost::new(paths, []);
-        let result = run(["import", "kdbx", absent_source.to_str().unwrap()], &host);
-        assert_eq!(result.exit_code(), ExitCode::Unsupported, "{result:?}");
+        let kdbx_password = b"correct horse battery staple".to_vec();
+        let fixture = build_single_login_fixture(
+            &kdbx_password,
+            "Imported From KeePass",
+            "keepass-alice",
+            "kdbx-super-secret-pw",
+        );
+        let source = root.0.join("vault.kdbx");
+        fs::write(&source, &fixture).unwrap();
+
+        // First secret answers `read_import_passphrase` (the KDBX
+        // database's own master password); the second answers the target
+        // vault-pm vault's own unlock prompt inside `prepare_item_create`.
+        let import_host = TestHost::new(
+            paths.clone(),
+            [kdbx_password.clone(), vault_passphrase.clone()],
+        );
+        let imported = run(["import", "kdbx", source.to_str().unwrap()], &import_host);
+        assert_eq!(imported.exit_code(), ExitCode::Success, "{imported:?}");
+        assert_eq!(
+            imported.stdout(),
+            "Import complete: created=1 skipped=0 failed=0\n"
+        );
+        assert!(!imported.stdout().contains("kdbx-super-secret-pw"));
+        assert!(!imported.stdout().contains("Imported From KeePass"));
+        assert!(!imported.stdout().contains("correct horse battery staple"));
+
+        let list_host = TestHost::new(paths, [vault_passphrase]);
+        let listed = run(["item", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed.stdout().contains("Imported From KeePass"));
+        assert!(listed.stdout().contains(LOGIN_V1));
+        assert!(!listed.stdout().contains("kdbx-super-secret-pw"));
+    }
+
+    /// A wrong KDBX master password is refused with the invalid exit
+    /// class, before the target vault-pm vault is ever opened (VLT-PM49
+    /// §8.3/§8.8/§10 gate 11): a `TestHost` with only one scripted secret
+    /// (the wrong password) would panic on a second, unexpected
+    /// authentication prompt, so success here proves the target vault was
+    /// never authenticated.
+    #[test]
+    fn import_kdbx_wrong_password_is_rejected_before_any_vault_access() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let vault_passphrase = b"kdbx wrong password vault passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [vault_passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let fixture = build_single_login_fixture(
+            b"correct horse battery staple",
+            "Title",
+            "user",
+            "pw",
+        );
+        let source = root.0.join("vault.kdbx");
+        fs::write(&source, &fixture).unwrap();
+
+        let host = TestHost::new(paths, [b"not the right password".to_vec()]);
+        let result = run(["import", "kdbx", source.to_str().unwrap()], &host);
+        assert_eq!(result.exit_code(), ExitCode::InvalidInput, "{result:?}");
+        assert!(result.stdout().is_empty());
+    }
+
+    /// A structurally malformed (not even a KDBX file) source is refused
+    /// the identical way a wrong password is (VLT-PM49 §8.3: the two are
+    /// indistinguishable by construction), before any vault access.
+    #[test]
+    fn import_kdbx_rejects_a_malformed_source_before_any_vault_access() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let vault_passphrase = b"kdbx malformed source vault passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [vault_passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let source = root.0.join("not-a-kdbx-file.kdbx");
+        fs::write(&source, b"this is not a KDBX container at all").unwrap();
+
+        let host = TestHost::new(paths, [b"any password".to_vec()]);
+        let result = run(["import", "kdbx", source.to_str().unwrap()], &host);
+        assert_eq!(result.exit_code(), ExitCode::InvalidInput, "{result:?}");
         assert!(result.stdout().is_empty());
     }
 

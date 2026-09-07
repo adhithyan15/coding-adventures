@@ -10,6 +10,31 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- `invoke_for_agent` now refuses the fifteen peer-naming smart-home tools
+  before their handlers run, inheriting the input-side S-I7 check added to
+  `InMemoryToolRuntime::register_handler`. It returns
+  `ToolApiError::ToolNamesAnotherAgent` rather than a failed `ToolResult`.
+- This closes a real hole rather than adding depth. `set_desired_state` was
+  reachable through this entry point with a peer `requested_by`: the write
+  landed, attributed to the named peer, and the call returned `ok: true` --
+  the output walk never fired, because the tool declares its output shape and
+  the forged identity sat in a field the schema permits. The regression test
+  reads the record back through the non-agent entry point, so it fails if the
+  write ever lands again.
+- Not reachable from the daemon, to be exact: `D18dSmartHomeModelTools`
+  refuses any tool outside `PRODUCTION_SMART_HOME_MODEL_TOOLS`, which
+  `set_desired_state` is not in. That allowlist was the only thing holding,
+  and it lives in another crate -- so the guarantee now sits on the method
+  whose name promises it, where a second caller inherits it.
+- `register_all` pre-flights the catalog through
+  `InMemoryToolRuntime::check_registration` before registering any of it.
+  It would otherwise return on the first refusal with everything ahead of it
+  already wired, leaving a runtime whose contents depend on catalog order --
+  on an agent surface that is the fifteen peer-naming tools, but a duplicate
+  id or an invalid definition strands it the same way.
+- Correct the `invoke_for_agent` doc, which described the output walk as the
+  whole mechanism and undercounted the peer-naming tools as ten.
+
 - Add `SmartHomeToolBridge::invoke_for_agent`, the model-facing entry point,
   which enables the D18S S-I7 output walk. `invoke` is unchanged and still
   serves non-agent callers, including the audit and access-review readers that

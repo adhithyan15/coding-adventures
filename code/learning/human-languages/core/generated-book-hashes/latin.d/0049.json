@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:05cd652c9e8811ad",
+  "lessonIds": [
+    "LA-C49-possum",
+    "LA-C49-volo",
+    "LA-C49-qui",
+    "LA-C49-et",
+    "LA-C49-quando"
+  ],
+  "tex": "latin/book/chapters/ch49-formae.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "Who You Give It To",
+  "label": "ch:mr-object-marking",
+  "canDo": "I can mark a person I act on with -lā and leave a thing bare, and I can say that I give or bring something to somebody.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R47-give-it-to",
+    "kind": "production",
+    "summary": "Complete MR-R47-give-it-to and say three sentences whose -lā does three different jobs: the experiencer who likes, the person seen, and the person given to.",
+    "assesses": [
+      "MR-GRAMMAR-OBJECT-LAA",
+      "MR-GRAMMAR-INDIRECT-OBJECT"
+    ],
+    "note": "The dative marker has been in the book since chapter 16 and only ever on an experiencer; this chapter names its other two jobs."
+  }
+}

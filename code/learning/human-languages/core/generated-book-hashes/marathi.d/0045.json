@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:1f100d9d6e561849",
+  "lessonIds": [
+    "MR-C45-barobar",
+    "MR-C45-pron-oblique",
+    "MR-C45-shii",
+    "MR-C45-ne",
+    "MR-R45-with"
+  ],
+  "tex": "marathi/book/chapters/ch45-with.tex"
+}

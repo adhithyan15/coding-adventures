@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-050-POINT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can point at something near me, something near you and something over there, refer back to a person already named, and say that a thing is there.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C50-hic",
+    "LA-C50-iste",
+    "LA-C50-ille",
+    "LA-C50-is",
+    "LA-C50-ibi"
+  ]
+}

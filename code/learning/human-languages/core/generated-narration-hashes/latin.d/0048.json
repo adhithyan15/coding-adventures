@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:2e57cd580badc2da",
+  "lessonIds": [
+    "LA-C48-nescio",
+    "LA-C48-male",
+    "LA-C48-malus",
+    "LA-C48-sed",
+    "LA-C48-aut"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "latin/narration/ch48.txt",
+  "json": "latin/narration/ch48.json",
+  "textHash": "fnv1a64:b7e6548dc34e84ec",
+  "jsonHash": "fnv1a64:4a6cb78b9029b50d",
+  "findings": []
+}

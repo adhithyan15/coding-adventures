@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 45,
+  "output": "marathi/book/chapters/ch45-with.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

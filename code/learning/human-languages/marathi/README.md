@@ -304,6 +304,19 @@ first-person can-do sentence and the lesson that pays it off.
   **उजवा** and **डावा**, adjectives that agree the way **माझा** does.
   `SPINE-NAME-EVERYDAY-THINGS` stops being omitted. A1 exam coverage 124/301 →
   **133/301**.
+- **Chapters 45–48 — with, from, to whom, and having**
+  ([`lessons/MR-C45-*`, `MR-C46-*`, `MR-C47-*`, `MR-C48-*`](./lessons/)): the
+  postposition column, closed except for one word. **45** the three endings
+  English calls *with* — **बरोबर** alongside, **-शी** engaged with, **-ने** by
+  means of — sorted by a single question, and the pronoun's own oblique, which
+  is built on the possessive rather than on the subject form; **46** **-हून**
+  and **पासून**, which turn the **शहर** form field of chapter 23 into a spoken
+  answer, and **कुठून**, which lets somebody ask for it; **47** the **-ला** that
+  has been in the book since chapter 16 on an experiencer, given its other two
+  jobs — the **animate** direct object, and the recipient; **48** **-कडे**,
+  which turns chapter 44's two sides into directions and then does the work of
+  a verb Marathi does not have: **माझ्याकडे पाणी आहे**, *at-my-side water is*.
+  A1 exam coverage 133/301 → **142/301**.
 
 Chapters 9–12 **are** in the ledger with scored payoffs, and that is a change
 worth recording rather than quietly editing. This paragraph used to say the

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:371fa39645749c1f",
+  "lessonIds": [
+    "LA-C50-hic",
+    "LA-C50-iste",
+    "LA-C50-ille",
+    "LA-C50-is",
+    "LA-C50-ibi"
+  ],
+  "tex": "latin/book/chapters/ch50-demonstrativa.tex"
+}

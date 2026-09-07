@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:4667bac32c6b3aab",
+  "lessonIds": [
+    "LA-C52-ubi",
+    "LA-C52-cur",
+    "LA-C52-quia",
+    "LA-C52-meus",
+    "LA-C52-tuus"
+  ],
+  "tex": "latin/book/chapters/ch52-interrogatio.tex"
+}

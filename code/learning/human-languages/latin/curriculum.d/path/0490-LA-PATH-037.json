@@ -1,0 +1,16 @@
+{
+  "id": "LA-PATH-037",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "LA-C53-iterum",
+    "LA-C53-magister",
+    "LA-C53-discipulus",
+    "LA-C53-schola",
+    "LA-C53-liber"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "LA-EXT-053-SCHOOL"
+  ]
+}
