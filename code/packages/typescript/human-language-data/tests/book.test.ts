@@ -223,6 +223,38 @@ A [repository note](../data/script.json) and an [external source](https://exampl
     );
     expect(generated).toContain("\\par \\textbf{anchor:} \\textbf{\\dv{दे}}");
     expect(generated).not.toContain("# Test");
+    // Unset overrides keep the shape the first six generated references ship:
+    // the contents line repeats the title, and the running head says
+    // "Pronunciation". Pinned so a default change cannot slip through as a
+    // silent rewrite of files already on disk.
+    expect(generated).toContain(
+      "\\addcontentsline{toc}{chapter}{Pronunciation \\& Script Reference}",
+    );
+    expect(generated).toContain("\\markboth{Pronunciation}{Pronunciation}");
+  });
+
+  it("gives the contents line and the running head their own strings when asked", () => {
+    // Three jobs, three strings. A hand-set reference put a full title over the
+    // page, a shorter one in the contents (a TOC entry has one line to fit in),
+    // and a bare subject in the running head, where "Pronunciation" would
+    // misdescribe a chapter that is mostly a writing system.
+    const generated = renderReferenceAppendix(
+      {
+        language: "test",
+        title: "The Test script --- a reference",
+        shortTitle: "The Test script (reference)",
+        runningHead: "Test script",
+        source: "test/pronunciation-reference.md",
+        output: "test/book/chapters/appendix-pronunciation.tex",
+      },
+      "# Test\n\nBody.\n",
+    );
+
+    expect(generated).toContain("\\chapter*{The Test script --- a reference}");
+    expect(generated).toContain(
+      "\\addcontentsline{toc}{chapter}{The Test script (reference)}",
+    );
+    expect(generated).toContain("\\markboth{Test script}{Test script}");
   });
 
   it("renders a deduplicated, romanization-sorted glossary from content lessons", () => {
