@@ -5123,10 +5123,23 @@ impl InMemoryToolRuntime {
     /// that names a peer in its schema. So "is this an agent surface" is
     /// answerable here and a per-tool list would have to be maintained
     /// forever.
+    /// A CONSTRUCTOR rather than a `self`-consuming modifier, and that is the
+    /// point. While this was `as_agent_surface(mut self) -> Self`, the input
+    /// refusal in `register_handler` held only if the flag was set first:
+    /// `new()`, register a peer-naming tool, *then* mark it, and you had an
+    /// agent surface still holding the tool -- exactly the state the refusal
+    /// exists to prevent. Every call site happened to construct-then-mark, so
+    /// nothing was broken, but the type permitted the wrong order and the
+    /// guarantee was documented as if it did not.
+    ///
+    /// A runtime that begins its life as an agent surface cannot be in that
+    /// state, so the ordering hazard is gone rather than merely unused.
     #[must_use]
-    pub fn as_agent_surface(mut self) -> Self {
-        self.agent_surface = true;
-        self
+    pub fn agent_surface() -> Self {
+        Self {
+            agent_surface: true,
+            ..Self::default()
+        }
     }
 
     pub fn set_policy<P>(&mut self, policy: P)
@@ -5136,7 +5149,46 @@ impl InMemoryToolRuntime {
         self.policy = Box::new(policy);
     }
 
+    /// Whether this runtime is a V1 agent surface.
+    ///
+    /// Exposed so a bulk registrar can pre-flight its catalog against the
+    /// same rule instead of discovering the refusal partway through.
+    #[must_use]
+    pub fn is_agent_surface(&self) -> bool {
+        self.agent_surface
+    }
+
     /// Register one definition and its in-process handler.
+    ///
+    /// On an **agent surface** (see [`InMemoryToolRuntime::agent_surface`])
+    /// a definition that names a peer agent is refused here, before the tool
+    /// can be held at all.
+    ///
+    /// The input side has to carry this, not the output walk. The walk runs
+    /// *after* the handler returns, so for a reader it merely withholds the
+    /// answer -- but for a tool that ACTS it withholds nothing that matters:
+    /// the write has already been committed, attributed to whatever peer the
+    /// caller named. `smart_home.set_desired_state` is exactly that shape; it
+    /// takes a caller-supplied `requested_by` and persists it.
+    ///
+    /// # What this does NOT establish
+    ///
+    /// Only positions the schema DECLARES. [`tools_naming_another_agent`]
+    /// reports the `named` half of the walk; the `holes` half -- `Any` and
+    /// `allow_unknown_fields` positions, see
+    /// [`tools_with_unverifiable_schema`] -- is deliberately not refused here,
+    /// because `smart_home.command`, `pair_bridge` and `complete_pairing` all
+    /// carry an `Any` argument bag and all three are on the shipping model
+    /// surface. Refusing them would trade this hole for an outage.
+    ///
+    /// Those positions are covered only by the value-level check in
+    /// `validate_supplied_value`, which uses the broader
+    /// `value_key_names_a_peer` vocabulary -- and that vocabulary deliberately
+    /// allows `requested_by`, since in an undescribed blob it is usually the
+    /// author's own annotation. So a handler that reaches into an `Any` bag
+    /// for an identity is NOT covered by either half. Nothing in the shipped
+    /// catalog does that today; it is a gap in the control, not in the
+    /// catalog.
     pub fn register_handler<H>(
         &mut self,
         definition: ToolDefinition,
@@ -5145,6 +5197,12 @@ impl InMemoryToolRuntime {
     where
         H: ToolHandler + 'static,
     {
+        if self.agent_surface {
+            let named = tools_naming_another_agent(std::slice::from_ref(&definition));
+            if let Some((tool_id, positions)) = named.into_iter().next() {
+                return Err(ToolApiError::ToolNamesAnotherAgent { tool_id, positions });
+            }
+        }
         let tool_id = definition.tool_id.clone();
         self.registry.register(definition)?;
         self.handlers.insert(tool_id, Box::new(handler));
@@ -5715,6 +5773,16 @@ pub enum ToolApiError {
     /// the catalog entry for that id. See D18D, "Built-in definitions are
     /// canonical".
     BuiltinDefinitionMismatch(String),
+    /// A definition naming a peer agent was offered to an **agent-surface**
+    /// runtime. See D18S S-I7: the agent's view contains no agent identity and
+    /// the agent cannot supply one.
+    ///
+    /// Carries the schema positions that name the peer, so the refusal names
+    /// the field rather than only the tool.
+    ToolNamesAnotherAgent {
+        tool_id: String,
+        positions: Vec<String>,
+    },
 }
 
 impl Display for ToolApiError {
@@ -5730,6 +5798,12 @@ impl Display for ToolApiError {
             Self::InvalidDefinition(issues) => {
                 write!(f, "invalid tool definition with {} issue(s)", issues.len())
             }
+            Self::ToolNamesAnotherAgent { tool_id, positions } => write!(
+                f,
+                "tool '{tool_id}' names another agent at {} and cannot be \
+                 registered on an agent surface",
+                positions.join(", ")
+            ),
         }
     }
 }
@@ -5843,6 +5917,98 @@ fn json_schema_type(type_name: &str) -> JsonValue {
 
 #[cfg(test)]
 mod tests {
+
+    /// A tool that names a peer in its input, and its peerless twin.
+    ///
+    /// `side_effects: Write` is deliberate: the write case is the one the
+    /// output walk cannot protect, because the handler commits before the
+    /// walk ever sees a result.
+    fn peer_naming_definition(tool_id: &str, name_a_peer: bool) -> ToolDefinition {
+        let mut properties = vec![SchemaProperty::new("entity_id", JsonSchema::String)];
+        if name_a_peer {
+            properties.push(SchemaProperty::new("requested_by", JsonSchema::String));
+        }
+        ToolDefinition {
+            tool_id: tool_id.to_string(),
+            display_name: "Set desired state".to_string(),
+            description: "Persist a desired entity state".to_string(),
+            input_schema: JsonSchema::Object {
+                properties,
+                required: vec!["entity_id".to_string()],
+                allow_unknown_fields: false,
+            },
+            output_schema: Some(JsonSchema::Object {
+                properties: vec![SchemaProperty::new("entity_id", JsonSchema::String)],
+                required: vec!["entity_id".to_string()],
+                allow_unknown_fields: false,
+            }),
+            side_effects: ToolSideEffects::Write,
+            idempotency: ToolIdempotency::Conditional,
+            concurrency: ToolConcurrency::Serialized,
+            streaming: ToolStreaming::None,
+            required_tier: PrivilegeTier::Tier1,
+            required_capabilities: vec!["smart_home.write".to_string()],
+            preferred_lock_scope: None,
+            timeout_seconds: Some(30),
+            tags: vec![],
+            stability: ToolStability::Stable,
+        }
+    }
+
+    #[test]
+    fn an_agent_surface_refuses_to_hold_a_tool_that_names_a_peer() {
+        // D18S S-I7, input half. The runtime must not be able to HOLD such a
+        // tool, because holding it is what lets a handler run -- and a handler
+        // that writes has already done the damage by the time the output walk
+        // could object.
+        let mut runtime = InMemoryToolRuntime::agent_surface();
+        let refused = runtime.register_handler(
+            peer_naming_definition("smart_home.set_desired_state", true),
+            |_arguments, _context| Ok(ToolHandlerOutput::new(JsonValue::Null)),
+        );
+        assert!(
+            matches!(
+                refused,
+                Err(ToolApiError::ToolNamesAnotherAgent { ref tool_id, ref positions })
+                    if tool_id == "smart_home.set_desired_state"
+                        && positions == &["requested_by".to_string()]
+            ),
+            "expected a refusal naming requested_by, got {refused:?}"
+        );
+        assert!(
+            runtime.get("smart_home.set_desired_state").is_none(),
+            "a refused tool must not remain in the registry"
+        );
+    }
+
+    #[test]
+    fn a_non_agent_surface_still_holds_the_same_tool() {
+        // The refusal is scoped to the agent surface, not to the tool. Audit
+        // and access-review callers report on principals by design and must
+        // keep working -- scoping this by the tool would break them.
+        let mut runtime = InMemoryToolRuntime::new();
+        runtime
+            .register_handler(
+                peer_naming_definition("smart_home.set_desired_state", true),
+                |_arguments, _context| Ok(ToolHandlerOutput::new(JsonValue::Null)),
+            )
+            .expect("a non-agent surface serves peer-naming tools");
+        assert!(runtime.get("smart_home.set_desired_state").is_some());
+    }
+
+    #[test]
+    fn an_agent_surface_still_holds_a_tool_that_names_no_peer() {
+        // The negative control. Without it, a refusal that rejected
+        // everything would pass the two tests above.
+        let mut runtime = InMemoryToolRuntime::agent_surface();
+        runtime
+            .register_handler(
+                peer_naming_definition("smart_home.set_desired_state", false),
+                |_arguments, _context| Ok(ToolHandlerOutput::new(JsonValue::Null)),
+            )
+            .expect("a peerless tool must still register on an agent surface");
+        assert!(runtime.get("smart_home.set_desired_state").is_some());
+    }
 
     fn obj(fields: Vec<(&str, JsonValue)>) -> JsonValue {
         JsonValue::Object(

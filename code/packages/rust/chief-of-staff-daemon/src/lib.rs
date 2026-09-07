@@ -3358,10 +3358,15 @@ mod tests {
         // list that actually reaches a model on the shipping path, so this is
         // the one place the rule has to hold today.
         //
-        // Ten tools in the wider smart-home catalog DO name a peer via
-        // `principal_id` -- the audit, access-review and capability-grant
-        // readers. None is in this list, and this test is what keeps one from
-        // being added without the S-I7 question being asked.
+        // Sixteen tools in the wider smart-home catalog DO name a peer, via
+        // `principal_id` or `requested_by` -- the audit, access-review and
+        // capability-grant tools. None is in this list, and this test is what
+        // keeps one from being added without the S-I7 question being asked.
+        //
+        // They are also refused by the agent-surface runtime itself now, so
+        // adding one here would fail at registration rather than ship. This
+        // test still earns its place: it fails at review time, naming the
+        // list, instead of at runtime inside a dispatcher.
         let definitions = PRODUCTION_SMART_HOME_MODEL_TOOLS
             .iter()
             .filter_map(|tool_id| {

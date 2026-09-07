@@ -4,6 +4,35 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Refuse a peer-naming tool at REGISTRATION on an agent surface, not only at
+  its output. The output walk is enough for a reader -- the handler runs and
+  the walk withholds the answer -- but withholds nothing that matters for a
+  tool that ACTS. `smart_home.set_desired_state` persists a caller-supplied
+  `requested_by`; a caller of `SmartHomeToolBridge::invoke_for_agent` could
+  commit a desired state attributed to any peer it named and be told `ok:
+  true`. Refusing the definition is the last point at which a forged
+  attribution can be prevented rather than merely unreported.
+- Add `ToolApiError::ToolNamesAnotherAgent { tool_id, positions }`, carrying
+  the schema positions so the refusal names the field and not just the tool.
+- The refusal is scoped to the agent surface, not to the tool. Audit and
+  access-review callers report on principals by design and keep working
+  through a plain `InMemoryToolRuntime`.
+- Replace `as_agent_surface(self) -> Self` with the `agent_surface()`
+  CONSTRUCTOR. The modifier let a caller register peer-naming tools and mark
+  the runtime afterwards, leaving an agent surface holding exactly what the
+  refusal exists to exclude. Every call site already constructed-then-marked,
+  so nothing was broken -- but the type permitted the wrong order while the
+  docs described the guarantee as unconditional.
+- Add `is_agent_surface()`, so a bulk registrar can pre-flight its catalog
+  against the same rule instead of failing partway through.
+- SCOPE, stated because the doc previously implied more: the refusal covers
+  only positions the schema DECLARES. `Any` and `allow_unknown_fields`
+  positions are not refused, because `smart_home.command`, `pair_bridge` and
+  `complete_pairing` all carry an `Any` argument bag and all three ship on the
+  model surface -- refusing them would trade a hole for an outage. A handler
+  that reaches into an `Any` bag for an identity is covered by neither half.
+  Nothing in the shipped catalog does that; the gap is in the control.
+
 - Treat an ABSENT output schema as `Any` on an agent surface. `output_schema:
   None` skipped output validation entirely -- not the shape check, not the
   identity walk -- and `check_registration` pins canonical definitions for
