@@ -101,6 +101,7 @@ import {
   shardDirectoryFor,
 } from "./shard.js";
 import {
+  BOOK_GENERATION_DIRECTORY,
   BOOK_GENERATION_SECTION_DIRECTORIES,
   assertBookGenerationIdentitySets,
   bookGenerationOwnerContents,
@@ -1605,6 +1606,35 @@ function assertBookGenerationCrossLedgerIdentities(
         generatedReferenceAppendices.add(`${language}/appendix-pronunciation`);
       }
     }
+  }
+  // A HAND-WRITTEN appendix is invisible to the comparison below, and that is
+  // how seventeen of them shipped for months while every gate read zero.
+  //
+  // The set above is built from files that begin `% GENERATED FILE.`, and it is
+  // then required to equal the ledger. Those two agree perfectly when a track's
+  // appendix is hand-authored: the file contributes nothing to the set, the
+  // ledger owns nothing for it, and the equality holds over a book chapter no
+  // generator has ever touched. The chapter programme's own measure,
+  // `handwritten_parity.py`, could not see them either — it reads the ledger's
+  // `handwritten` block, and an appendix nobody declared is in no block at all.
+  //
+  // So state the thing an equality between two empties cannot: every registered
+  // track has exactly one pronunciation reference, and it is generated. That is
+  // now true of all 23 — `book-cli.test.ts` already asserts every book inputs
+  // one — so this is a promise rather than a snapshot, and a track arriving with
+  // hand-written LaTeX fails here instead of passing quietly.
+  const handwrittenReferences = [...registered]
+    .filter(
+      (language) => !generatedReferenceAppendices.has(`${language}/appendix-pronunciation`),
+    )
+    .sort();
+  if (handwrittenReferences.length > 0) {
+    throw new Error(
+      `pronunciation reference is hand-written or absent for: ` +
+        `${handwrittenReferences.join(", ")} — declare an owner in ` +
+        `${BOOK_GENERATION_DIRECTORY}/reference-appendices.d and render it from ` +
+        `<track>/pronunciation-reference.md`,
+    );
   }
   assertBookGenerationIdentitySets(document, {
     targets: generatedBook,
