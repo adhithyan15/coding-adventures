@@ -414,6 +414,17 @@ Inline and block data, notes, Given/When/Then annotations, standalone entity
 declarations, configuration, and interactive behavior remain unsupported at
 the partial level.
 
+### Treemap Native Slice
+
+The initial Mermaid 11.16.1 Treemap slice recognizes both `treemap` and
+`treemap-beta` and parses quoted parent and leaf nodes, indentation hierarchy,
+colon or comma numeric values, class selectors, titles, and accessibility
+metadata into dedicated hierarchy IR. Deterministic alternating partitions
+lower through backend-neutral rectangles and glyph runs, with native
+Metal-to-PNG validation. `classDef` declarations are grammar-accepted but their
+style bodies, D3 value formats, configuration overrides, and theme-exact color
+matching remain unsupported at the partial level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

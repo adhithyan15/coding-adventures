@@ -35,6 +35,8 @@ const ARCHITECTURE_TOKEN_GRAMMAR_SOURCE: &str =
 const RADAR_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/radar.tokens");
 const EVENTMODELING_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/eventmodeling.tokens");
+const TREEMAP_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/treemap.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
 const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
@@ -121,6 +123,10 @@ pub fn create_mermaid_eventmodeling_lexer(source: &str) -> GrammarLexer<'_> {
         EVENTMODELING_TOKEN_GRAMMAR_SOURCE,
         "eventmodeling.tokens",
     )
+}
+
+pub fn create_mermaid_treemap_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, TREEMAP_TOKEN_GRAMMAR_SOURCE, "treemap.tokens")
 }
 
 pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
@@ -371,6 +377,11 @@ pub fn try_tokenize_mermaid_radar(source: &str) -> Result<Vec<Token>, String> {
 
 pub fn try_tokenize_mermaid_eventmodeling(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_eventmodeling_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
+pub fn try_tokenize_mermaid_treemap(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_treemap_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
 }
 

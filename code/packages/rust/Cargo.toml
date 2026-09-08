@@ -123,6 +123,7 @@ members = [
     "diagram-layout-temporal",
     "diagram-layout-graph",
     "diagram-layout-grid",
+    "diagram-layout-hierarchy",
     "diagram-layout-packet",
     "diagram-layout-sequence",
     "diagram-to-paint",
