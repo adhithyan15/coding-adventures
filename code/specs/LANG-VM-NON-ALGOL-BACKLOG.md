@@ -8,6 +8,22 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 Oct BEAM probe (selected after #14621 merged)
+
+PR #14621 merged as `df39688c62` after all 46 checks succeeded or skipped.
+VM-060a's token-table bug is fixed. Reprioritization selects the existing Oct
+BEAM gap before VM-060b: Oct already has twelve portable matrix programs,
+whereas simulator host input needs a separate reader/string/ABI design.
+
+Probe observable Oct stdout, u8 wrapping, and control flow on real Erlang using
+the existing matrix runner. Enumerate row-to-source identities on refreshed
+main. Do not promote declarations without successful execution sentinels;
+missing erl alone may skip, lowering/runtime/output failures may not. If the
+probe exposes a lowering defect, log it and define a bounded implementation
+contract before editing the backend. Validate all newly promoted Oct BEAM
+cells and relevant backend regression suites, then update coverage/docs.
+This does not claim the unimplemented Intel-8008 intrinsic semantics (VM-013).
+
 ## VM-060a contract (selected after #14613 merged)
 
 PR #14613 merged as `4462675c52` after 46 completed successful/skipped checks.
