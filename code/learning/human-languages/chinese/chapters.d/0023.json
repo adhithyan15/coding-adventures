@@ -1,0 +1,19 @@
+{
+  "chapter": 23,
+  "title": "De — The Hinge",
+  "label": "ch:zh-de",
+  "canDo": "I can say whose something is, put a whole description in front of the noun it describes, and open a sentence with its topic.",
+  "payoff": {
+    "lesson": "ZH-C23-practice",
+    "kind": "four-skill-function-map",
+    "summary": "One character, eight strokes and no tone, doing three jobs — and the third of them, the topic slot, costs no character at all because it is an order rather than a word.",
+    "assesses": [
+      "ZH-SCRIPT-DE-01",
+      "ZH-LEX-DE-01",
+      "ZH-GRAMMAR-DE-POSSESSION-01",
+      "ZH-GRAMMAR-DE-RELATIVE-01",
+      "ZH-GRAMMAR-TOPIC-COMMENT-01",
+      "ZH-PERFORMANCE-DE-FOUR-SKILL-01"
+    ]
+  }
+}

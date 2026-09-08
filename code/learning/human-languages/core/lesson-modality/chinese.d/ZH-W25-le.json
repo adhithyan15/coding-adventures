@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W25-le",
+    "language": "chinese",
+    "chapter": 25,
+    "sequence": 2310,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ceaa800d8a75f7d6",
+    "detachableSegments": [
+      "Script — a turn, and a hook"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

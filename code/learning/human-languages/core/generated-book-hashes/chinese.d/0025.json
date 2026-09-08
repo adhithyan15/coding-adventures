@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:d7adf4147de05a80",
+  "lessonIds": [
+    "ZH-W25-le",
+    "ZH-C25-le-dongci",
+    "ZH-C25-le-juwei",
+    "ZH-C25-ti",
+    "ZH-C25-practice"
+  ],
+  "tex": "chinese/book/chapters/ch25-le.tex"
+}

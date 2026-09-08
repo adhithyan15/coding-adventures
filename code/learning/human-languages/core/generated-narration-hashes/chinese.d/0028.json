@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:e5ec0b59a26fc448",
+  "lessonIds": [
+    "ZH-W28-xi",
+    "ZH-W28-huan",
+    "ZH-C28-xihuan",
+    "ZH-C28-xihuan-shenme",
+    "ZH-C28-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "chinese/narration/ch28.txt",
+  "json": "chinese/narration/ch28.json",
+  "textHash": "fnv1a64:1b4ca6e5d176602e",
+  "jsonHash": "fnv1a64:7a6c40ec64fabfbf",
+  "findings": []
+}

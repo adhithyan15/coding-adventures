@@ -1,0 +1,1004 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 27,
+  "title": "Age, and And",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:96a1e76effdb0a73",
+  "lessons": [
+    {
+      "id": "ZH-W27-sui",
+      "sequence": 2410,
+      "title": "岁 (suì) — six strokes, and a rule that is not left-to-right",
+      "headword": "岁",
+      "romanization": "suì",
+      "gloss": "岁 — a mountain over an evening, and the one place centre comes before the sides",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:161fca68f2cdaad0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — a mountain, then an evening",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a mountain, then an evening and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and its first character breaks a habit."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nǐ ne — duì bu duì — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nǐ ne — duì bu duì* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ne — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ne* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say de — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *de* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ma — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ma* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kàn — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kàn* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shénme — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shénme* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a mountain, then an evening",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "岁 (suì)."
+            },
+            {
+              "kind": "speech",
+              "text": "Six strokes, three on top and three beneath."
+            },
+            {
+              "kind": "speech",
+              "text": "The top is 山 shān, a mountain — and it is written in an order the rules you have been given do not predict:"
+            },
+            {
+              "kind": "speech",
+              "text": "the shù down the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "the shùzhé — down the left side, then turn and run along the base."
+            },
+            {
+              "kind": "speech",
+              "text": "the shù down the right side."
+            },
+            {
+              "kind": "speech",
+              "text": "Centre before the sides. Every character so far has gone top before bottom and left before right, and those two rules decide almost everything in Chinese writing. 山 is where they run out, and the answer is a third rule: when a shape has a clear middle and two wings, the middle goes first."
+            },
+            {
+              "kind": "speech",
+              "text": "The bottom is 夕 xī, an evening:"
+            },
+            {
+              "kind": "speech",
+              "text": "a short piě falling to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "the héngzhégōu, turning down and falling to the lower left with a hook."
+            },
+            {
+              "kind": "speech",
+              "text": "the diǎn dot laid across it."
+            },
+            {
+              "kind": "speech",
+              "text": "Top before bottom holds between the halves, as always."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "山 — middle first, then left, then right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 山 — middle first, then left, then right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "岁 (suì) — 山 on top, 夕 beneath",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 岁 — 山 on top, 夕 beneath]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write 岁 (suì) from memory",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write 岁 from memory]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes does 岁 (suì) have? (Six.) Which stroke of 山 comes first? (The middle one.) What sits underneath? (夕, an evening.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 岁 (suì), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C27-sui",
+      "sequence": 2420,
+      "title": "岁 (suì) — how old you are",
+      "headword": "岁",
+      "romanization": "suì",
+      "gloss": "suì — years of age, and the sentence that says how old you are without a verb in it",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa96fddb1b78248b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, and the numerals finally do something."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say suì — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *suì* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ne — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ne* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say de — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *de* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ma — R3, durable again, a second word from that distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ma* — **R3**, durable again, a second word from that distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kàn — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kàn* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shénme — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shénme* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "岁 suì is fourth tone — the sharp fall, like 四 and 对."
+            },
+            {
+              "kind": "speech",
+              "text": "It counts years of age, and only that. It is not the word for a year on a calendar."
+            },
+            {
+              "kind": "speech",
+              "text": "十八岁 shíbā suì — eighteen years old 二十岁 — twenty 九十九岁 — ninety-nine."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of those numbers came from the decimal chapter, and until this word there was nothing for them to measure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the sentence with no verb in it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "我十八岁 wǒ shíbā suì — I am eighteen."
+            },
+            {
+              "kind": "speech",
+              "text": "Read that again and look for the verb. There is none. No 是, no anything. Subject, number, 岁 (suì), stop."
+            },
+            {
+              "kind": "speech",
+              "text": "English needs am. Spanish needs tengo. Mandarin puts an age straight after the person and is finished — and putting 是 in is a mistake a beginner makes for months: 我是十八岁 is wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "The question is built the same way, with 吗 doing what it always does:"
+            },
+            {
+              "kind": "speech",
+              "text": "你十八岁吗 — are you eighteen?"
+            },
+            {
+              "kind": "speech",
+              "text": "And now three things this book taught separately can be said in one breath:"
+            },
+            {
+              "kind": "speech",
+              "text": "我是中国人 — 我有一个名字 — 我十八岁."
+            },
+            {
+              "kind": "speech",
+              "text": "Name, nationality, age — the three pieces of personal information any beginner's paper asks for, and the last of them was waiting on this one character."
+            },
+            {
+              "kind": "speech",
+              "text": "One habit worth knowing. Mandarin asks a small child's age with one question and an adult's with another, and both need words this book has not taught yet. What this lesson gives you is the answer, which is the half you are asked for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shíbā suì — 十八岁",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shíbā suì* — 十八岁]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我十八岁 — and hear that there is no verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我十八岁 — and hear that there is no verb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你十八岁吗",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你十八岁吗]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 岁 (suì) count? (Years of age.) What verb does 我十八岁 use? (None — there is no verb in it.) What is the commonest beginner's mistake here? (Putting 是 in.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W27-he",
+      "sequence": 2430,
+      "title": "和 (hé) — eight strokes, and the right half is a mouth",
+      "headword": "和",
+      "romanization": "hé",
+      "gloss": "和 — grain on the left, a mouth on the right, and the grain supplies the sound",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:02d9ae60cf8e956f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — 禾 first, then 口",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — 禾 first, then 口 and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two lessons in, and three of these eight strokes are already yours."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say suì — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *suì* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say duì — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *duì* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kàn shū de rén — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kàn shū de rén* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kàn — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kàn* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say me — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *me* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 禾 first, then 口",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "和 (hé)."
+            },
+            {
+              "kind": "speech",
+              "text": "Eight strokes, five on the left and three on the right — and the three on the right are 口, which you have written since the fourth chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "The left half is 禾 hé, standing grain:"
+            },
+            {
+              "kind": "speech",
+              "text": "a short piě at the very top, falling left."
+            },
+            {
+              "kind": "speech",
+              "text": "the héng beneath it."
+            },
+            {
+              "kind": "speech",
+              "text": "the long shù straight down the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "a piě falling to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "a diǎn closing to the lower right."
+            },
+            {
+              "kind": "speech",
+              "text": "Then 口, in its usual order:"
+            },
+            {
+              "kind": "speech",
+              "text": "the shù down its left side."
+            },
+            {
+              "kind": "speech",
+              "text": "the héngzhé across the top and down the right."
+            },
+            {
+              "kind": "speech",
+              "text": "the héng closing the floor."
+            },
+            {
+              "kind": "speech",
+              "text": "Left half complete before the right one starts, as always."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a phono-semantic compound, the kind the 请 lesson named: one part carries meaning and the other carries sound. Here the sounding half is unusually generous — 禾 is itself said hé, so the character tells you its own pronunciation outright."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "禾 — then 和 (hé), with 口 on the right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 禾 — then 和, with 口 on the right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write 和 (hé) from memory",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write 和 from memory]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes does 和 have? (Eight — five plus 口's three.) Which half supplies the sound? (禾, which is itself hé.) Which earlier character worked the same way? (请.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 和 (hé), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C27-he",
+      "sequence": 2440,
+      "title": "和 (hé) — and, between things only",
+      "headword": "和",
+      "romanization": "hé",
+      "gloss": "hé — 'and' between two nouns, and never between two sentences",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c64e0752683ded58",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One lesson back, and this word opens a column this book has never had."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hé — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hé* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say duì — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *duì* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Hànyǔ, wǒ kàn shū — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Hànyǔ, wǒ kàn shū* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kànjiàn — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kànjiàn* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shén — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shén* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "和 hé is second tone — the rise, the same shape as 十 and 人."
+            },
+            {
+              "kind": "speech",
+              "text": "你和我 nǐ hé wǒ — you and I 书和名字 — books and names 中国人和学生."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands between the two things and joins them. Nothing agrees, nothing changes, and it is the same word however many things there are."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: it joins nouns, and only nouns",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "和 (hé) joins two nouns. It does NOT join two sentences."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the part an English or Spanish speaker gets wrong on the first day, because in their language one word does both:"
+            },
+            {
+              "kind": "speech",
+              "text": "Right: 我和你 — you and I (two nouns) Wrong: 我看书和你看书 — not Mandarin at all."
+            },
+            {
+              "kind": "speech",
+              "text": "English says I read and you read. Spanish says yo leo y tú lees. Mandarin will not use 和 (hé) there at all. To join two statements it simply puts them next to each other, with a comma and no joining word:"
+            },
+            {
+              "kind": "speech",
+              "text": "我看书 — 你看书 — I read, and you read."
+            },
+            {
+              "kind": "speech",
+              "text": "Mandarin writes a comma at that seam; this book prints a dash, because it has taught no punctuation. What matters is that there is no joining word in it at all. That is not a shortcut or a casual register — it is how Mandarin does it, and the words that DO join clauses are different words for different relations, because, but, or, none of which is 和 (hé) and none of which this book has yet taught."
+            },
+            {
+              "kind": "speech",
+              "text": "So 和 (hé) is the first joining word in this track, and the first thing it teaches is where it may not go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ hé wǒ — 你和我",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ hé wǒ* — 你和我]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "书和名字",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 书和名字]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我看书 — 你看书 — two sentences, no 和 (hé)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我看书 — 你看书 — two sentences, no 和]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 和 (hé) join? (Two nouns.) What does it never join? (Two sentences.) How does Mandarin join two statements instead? (It puts them side by side, with a comma.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C27-practice",
+      "sequence": 2450,
+      "title": "我十八岁 — 你和我 (wǒ shíbā suì — nǐ hé wǒ)",
+      "headword": "我十八岁 — 你和我",
+      "romanization": "wǒ shíbā suì — nǐ hé wǒ",
+      "gloss": "an age with no verb in it, and the first joining word this track has ever had",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:552a93fc38e1734c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes on two unrelated characters that each open a column."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hé — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hé* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nǐ ne — duì bu duì — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nǐ ne — duì bu duì* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǒ de shū — kàn shū de rén — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǒ de shū — kàn shū de rén* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kànjiàn — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kànjiàn* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǒ shì — R4, recognition at distance, a second word from that far back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǒ shì* — **R4**, recognition at distance, a second word from that far back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built — an age, and a join",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two characters, fourteen strokes, and each one opens something the track has never had."
+            },
+            {
+              "kind": "speech",
+              "text": "岁 (suì) gives the numerals something to measure. The decimal chapter reached ninety-nine and had nothing to count; 我十八岁 is the first sentence in this book that uses a number to say something true about a person — and it does it with no verb at all."
+            },
+            {
+              "kind": "speech",
+              "text": "和 (hé) is the first joining word in the whole track. It joins two nouns and it refuses two sentences, and knowing the refusal is most of the lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Put them together with what you already have:"
+            },
+            {
+              "kind": "speech",
+              "text": "我是中国人 — 我有一个名字 — 我十八岁 你和我是学生."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Wǒ shíbā suì. Nǐ hé wǒ shì xuésheng."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Give your age with no verb; then join two people with 和 (hé)."
+            },
+            {
+              "kind": "speech",
+              "text": "Read. 我十八岁 — 你和我是学生."
+            },
+            {
+              "kind": "speech",
+              "text": "Write. 岁 (suì) — 山 middle-first, then 夕. 和 (hé) — 禾, then 口."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我十八岁",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我十八岁]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你和我是学生",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你和我是学生]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "岁 (suì) 和 (hé)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 岁 和]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What verb does an age sentence use? (None.) What does 和 (hé) join, and what does it refuse? (Nouns; sentences.) Which stroke of 山 comes first? (The middle one.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

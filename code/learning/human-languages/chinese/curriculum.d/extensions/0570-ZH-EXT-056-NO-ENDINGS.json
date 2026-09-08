@@ -1,0 +1,15 @@
+{
+  "id": "ZH-EXT-056-NO-ENDINGS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that a Mandarin verb has one form, that nothing agrees, that a bare noun needs no article, and that a country plus 人 names its people.",
+  "prerequisites": [],
+  "lessons": [
+    "ZH-C22-bubian",
+    "ZH-C22-buyizhi",
+    "ZH-C22-wuguanci",
+    "ZH-C22-zhongguoren",
+    "ZH-C22-practice"
+  ]
+}

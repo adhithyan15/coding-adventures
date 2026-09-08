@@ -1,0 +1,16 @@
+{
+  "id": "ZH-PATH-023",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "lessons": [
+    "ZH-W24-you",
+    "ZH-C24-you",
+    "ZH-W24-ge",
+    "ZH-C24-ge",
+    "ZH-C24-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "ZH-EXT-058-HAVE-COUNT"
+  ]
+}

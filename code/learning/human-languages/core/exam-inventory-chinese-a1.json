@@ -171,7 +171,7 @@
       "derivedFrom": [
         "A1-N-05"
       ],
-      "note": "Not taught. The Spanish demand restates cleanly - what does the reader do when there is more than one? - and Mandarin's answer has two halves, that a bare noun is number-neutral and that men attaches only to human pronouns and a few human nouns. Neither half is stated, and men does not occur anywhere in the 175 lesson files, so the reader cannot form women ('we')."
+      "note": "Not taught. The Spanish demand restates cleanly - what does the reader do when there is more than one? - and Mandarin's answer has two halves. The FIRST HALF IS NOW TAUGHT: the no-article lesson says in as many words that shu is 'a book', 'the book' and 'books', so a bare noun is number-neutral and the reader has been told so. The second half is men, which attaches only to human pronouns and a few human nouns, and men still returns zero occurrences across the corpus. Half a point is not a point."
     },
     {
       "id": "ZH-A1-N-06",
@@ -195,7 +195,11 @@
       "id": "ZH-A1-LIANG-01",
       "category": "Liangci - measure words, which every counted noun needs",
       "label": "the measure word: a number cannot touch a noun without one",
-      "probe": null,
+      "probe": [
+        "ZH-SCRIPT-GE-01",
+        "ZH-LEX-GE-01",
+        "ZH-GRAMMAR-MEASURE-WORD-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -203,7 +207,7 @@
       ],
       "derivedFrom": [],
       "chineseSpecific": true,
-      "note": "Chinese-specific and ABSENT. Spanish has no classifier column, so the proxy could not have asked for this, and it is one of the two or three things that most obviously mark a beginner's Mandarin as wrong: san ren is not how you say three people, san ge ren is. ge, the general-purpose measure word, occurs zero times in the 175 lesson files."
+      "note": "CLOSED, and it was three strokes. ge is the general-purpose measure word and TWO OF ITS THREE STROKES ARE ren, the first character this book ever taught, so the hand pays almost nothing for it. The lesson gives the rule the old note named - san ren is not how you say three people, san ge ren is - and the yi sandhi that comes with it, yi ge and not yi ge."
     },
     {
       "id": "ZH-A1-LIANG-02",
@@ -242,7 +246,10 @@
       "id": "ZH-A1-ADJ-02",
       "category": "Xingrongci - the adjective",
       "label": "adjectives of nationality and origin",
-      "probe": null,
+      "probe": [
+        "ZH-LEX-ZHONGGUOREN-01",
+        "ZH-GRAMMAR-COUNTRY-PLUS-REN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -251,7 +258,7 @@
       "derivedFrom": [
         "A1-ADJ-02"
       ],
-      "note": "Absent as a form, and closer than it looks: Zhongguo ('China') is taught in chapter 17, and Zhongguo ren ('a Chinese person') is one taught character away, because ren is chapter 12. Two known pieces and no lesson that joins them."
+      "note": "CLOSED WITH NO NEW CHARACTER, exactly as the old note said it could be: Zhongguo was already taught and ren was the first character this book ever wrote, and no lesson had ever put them together. The lesson gives the join AND the rule behind it - country plus ren names its people, with no separate nationality word to learn, which is where English needs Chinese, Spanish, French each with its own shape."
     },
     {
       "id": "ZH-A1-ADJ-03",
@@ -293,7 +300,9 @@
       "id": "ZH-A1-ART-01",
       "category": "Guanci - the article",
       "label": "the article: Mandarin has none, and a bare noun is definite or indefinite by context",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-NO-ARTICLE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -305,7 +314,7 @@
         "A1-ART-03",
         "A1-ART-04"
       ],
-      "note": "All four Spanish article points collapse into one Mandarin fact, and unlike the Russian file this one is NOT counted: no lesson says it. The reader is never told that shu means 'a book', 'the book' or 'books' according to context, which is a thing an English or Spanish speaker will otherwise supply wrongly from their own language."
+      "note": "All four Spanish article points collapse into this one Mandarin fact, and it is now SAID rather than merely true: shu is 'a book', 'the book' and 'books' according to context, and the trap runs both ways - arriving, a reader hunts for the missing article; leaving, they drop the English one. No new character."
     },
     {
       "id": "ZH-A1-DEM-01",
@@ -328,7 +337,11 @@
       "id": "ZH-A1-POSS-01",
       "category": "Lingshu - possession",
       "label": "possession with de: wo de shu",
-      "probe": null,
+      "probe": [
+        "ZH-SCRIPT-DE-01",
+        "ZH-LEX-DE-01",
+        "ZH-GRAMMAR-DE-POSSESSION-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -340,7 +353,7 @@
         "A1-POS-03",
         "A1-SN-01"
       ],
-      "note": "ABSENT. de occurs zero times in the 175 files. Four Spanish points collapse onto this one particle, because Mandarin does not inflect a possessive, does not agree it, and does not distinguish one possessor from several - it puts de between the owner and the owned and stops. The track teaches wo ('I') in chapter 8 and gives it nothing to own."
+      "note": "CLOSED. de now has a character, a sound and a grammar atom. Four Spanish points collapse onto this one particle and the lesson says why: Mandarin does not inflect a possessive, does not agree it, and does not distinguish one possessor from several - it puts de between the owner and the owned and stops. Probed at BOTH doors per this file's LEX/ORTHO habit, because a reader who can say wo de shu and not write it has half of what the point asks."
     },
     {
       "id": "ZH-A1-NUM-01",
@@ -451,7 +464,7 @@
       "derivedFrom": [
         "A1-NG2-04"
       ],
-      "note": "Absent as measurement. da and xiao are taught (ZH-A1-ADJ-03) and there is no unit, no number above five and no measure word to put between them."
+      "note": "Absent as measurement, and the old reason has half expired. It read 'no unit, no number above five and no measure word'. The numerals reach ninety-nine and ge is now taught, so what is left is only the UNIT - no length, no weight, no distance word anywhere in the track. da and xiao are taught (ZH-A1-ADJ-03) and measure nothing."
     },
     {
       "id": "ZH-A1-PRON-01",
@@ -486,13 +499,18 @@
       "derivedFrom": [
         "A1-PRON-01"
       ],
-      "note": "Absent. men occurs zero times in the corpus, so the reader cannot say 'we' - and dajia ('everyone') IS taught in chapter 13, which is the polite substitute and not the pronoun."
+      "note": "Absent, and it is now the cheapest pronoun point left: men is one character, and with it wo men, ni men and ta men all arrive at once - except that ta is a second character the track does not teach either. dajia ('everyone') IS taught and is the polite substitute rather than the pronoun."
     },
     {
       "id": "ZH-A1-PRON-03",
       "category": "Daici - pronouns",
       "label": "the liking frame: xihuan, which takes an ordinary object",
-      "probe": null,
+      "probe": [
+        "ZH-SCRIPT-XI-01",
+        "ZH-SCRIPT-HUAN-01",
+        "ZH-LEX-XIHUAN-01",
+        "ZH-GRAMMAR-XIHUAN-TRANSITIVE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -504,7 +522,7 @@
         "A1-F3-01",
         "A1-NG6-08"
       ],
-      "note": "Absent. Mandarin's answer to gustar is the easiest of any language in this corpus - xihuan is a plain transitive verb with the liker as subject - and the word is not taught. hao as 'to be fond of' IS taught, in chapter 1, as a tone-change curiosity on the same character, which is not the same frame and is not counted here."
+      "note": "CLOSED, and the old note was right that Mandarin's answer to gustar is the easiest in this corpus: xihuan is a plain transitive verb with the liker as subject and nothing to invert. Probed at both doors and on both characters, because a reader who can say xihuan and write neither has half the point. xi is the longest character in this book at twelve strokes; huan shares its left component with dui, one chapter earlier."
     },
     {
       "id": "ZH-A1-PRON-04",
@@ -525,7 +543,10 @@
       "id": "ZH-A1-PRON-05",
       "category": "Daici - pronouns",
       "label": "the relative clause, which in Mandarin is built with de and stands before its noun",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-DE-RELATIVE-01",
+        "ZH-SCRIPT-DE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -536,7 +557,7 @@
         "A1-SUB-04",
         "A1-SUB-05"
       ],
-      "note": "Absent, and blocked on the same missing de as ZH-A1-POSS-01. Worth stating as a shape rather than a gap: Mandarin puts the whole relative clause BEFORE the noun, which is the reverse of Spanish and English, so this is a point the track will have to teach as a reorientation rather than as a word."
+      "note": "The same character, its second job, and the old note was right that this is a reorientation rather than a word: kan shu de ren puts the whole description IN FRONT of the noun, which is the reverse of Spanish and English. The lesson teaches the direction, not a vocabulary item, and says that the de is the same de as the possessive one."
     },
     {
       "id": "ZH-A1-PRON-06",
@@ -674,7 +695,7 @@
       "derivedFrom": [
         "A1-ADV-06"
       ],
-      "note": "Absent, and ye is one of the highest-frequency words in beginner Mandarin because wo ye shi ('me too') is a whole turn."
+      "note": "Absent, and ye is one of the highest-frequency words in beginner Mandarin because wo ye shi ('me too') is a whole turn. Now that dui gives the track its first backchannel, ye is the obvious next one: it is three strokes."
     },
     {
       "id": "ZH-A1-ADV-07",
@@ -719,7 +740,9 @@
       "id": "ZH-A1-V-02",
       "category": "Dongci - the verb, which does not inflect",
       "label": "the invariance stated as a rule, so the reader stops looking for endings",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-VERB-INVARIANT-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -728,7 +751,7 @@
       "derivedFrom": [
         "A1-V-01"
       ],
-      "note": "Not stated. A Spanish or English speaker arrives expecting to conjugate, and nothing in 175 lessons tells them there is nothing to conjugate. It is the cheapest sentence in the whole Mandarin queue and it is not written."
+      "note": "STATED AT LAST, AND IT COST NO CHARACTER. The old note called it the cheapest sentence in the whole Mandarin queue and it is: one lesson works kan through three subjects and says outright that a Mandarin verb has one form, for every person, every number and every time. A reader arriving from Spanish or English otherwise waits for an ending, decides the book has not reached it, and goes on quietly expecting one."
     },
     {
       "id": "ZH-A1-V-03",
@@ -754,7 +777,10 @@
       "id": "ZH-A1-V-04",
       "category": "Dongci - the verb, which does not inflect",
       "label": "you, which is 'to have' and also 'there is'",
-      "probe": null,
+      "probe": [
+        "ZH-SCRIPT-YOU-01",
+        "ZH-LEX-YOU-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -765,7 +791,7 @@
         "A1-NG1-01",
         "A1-NG1-02"
       ],
-      "note": "ABSENT. you occurs zero times in the 175 files. Three Spanish points - existence, presence, and the impersonal haber - all land on this one verb in Mandarin, so a single character closes three points, which makes it the highest-value verb in the queue after xihuan."
+      "note": "CLOSED, and the old note's arithmetic held: one character, six strokes, and three Spanish points land on it. The lesson also states the exception every Mandarin course states early - you is the one verb bu cannot negate."
     },
     {
       "id": "ZH-A1-V-05",
@@ -791,7 +817,11 @@
       "id": "ZH-A1-V-06",
       "category": "Dongci - the verb, which does not inflect",
       "label": "the past: le and guo, which are aspect markers and not tenses",
-      "probe": null,
+      "probe": [
+        "ZH-SCRIPT-LE-01",
+        "ZH-LEX-LE-01",
+        "ZH-GRAMMAR-LE-COMPLETION-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -806,7 +836,7 @@
         "A1-V-09",
         "A1-V-10"
       ],
-      "note": "SEVEN SPANISH POINTS COLLAPSE HERE AND NONE IS ANSWERED. Spanish spends an imperfect, a preterite with two irregular sets, a present perfect and two participles on locating an event in the past. Mandarin does it with le and guo and a time word, and le occurs zero times in the 175 lesson files. Everything in this track happens in an unmarked present."
+      "note": "CLOSED FOR TWO STROKES. The old note said seven Spanish points collapse here and none was answered: an imperfect, a preterite with two irregular sets, a present perfect and two participles, against Mandarin's le plus a time word. le now has a character, a sound and the completion rule, and before it EVERYTHING IN THIS TRACK HAPPENED IN AN ETERNAL PRESENT. The verb still does not change and never will - that is chapter 22's rule arriving where it matters most."
     },
     {
       "id": "ZH-A1-V-07",
@@ -831,7 +861,9 @@
       "id": "ZH-A1-ASP-01",
       "category": "Ti - aspect, which is what Mandarin has instead of tense",
       "label": "aspect: Mandarin marks whether an event is complete, not when it happened",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-ASPECT-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -839,7 +871,7 @@
       ],
       "derivedFrom": [],
       "chineseSpecific": true,
-      "note": "Chinese-specific and absent. The Spanish grammar column has no aspect entry that survives translation - its aspectual work is done inside the tense paradigms - so this had to be added by hand and it comes back empty."
+      "note": "Chinese-specific, added by hand because the Spanish grammar column does its aspectual work inside the tense paradigms and has no entry that survives translation - and now answered. The lesson proves the claim rather than asserting it: wo kan le shu, ni kan ma is not in the past, so le marks whether an event is finished and a time word settles when. This is the largest shape difference between Mandarin and the languages this reader is likeliest to arrive from."
     },
     {
       "id": "ZH-A1-ASP-02",
@@ -882,7 +914,11 @@
       "id": "ZH-A1-PART-02",
       "category": "Zhuci - the particles",
       "label": "the particle ne, for follow-up questions and for 'and you?'",
-      "probe": null,
+      "probe": [
+        "ZH-SCRIPT-NE-01",
+        "ZH-LEX-NE-01",
+        "ZH-GRAMMAR-NE-FOLLOWUP-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -891,13 +927,15 @@
       "derivedFrom": [
         "A1-F2-01"
       ],
-      "note": "Absent."
+      "note": "CLOSED. ni ne is two syllables and a complete conversational turn, and it repeats whatever question was just asked without repeating a word of it. The lesson pins ne against ma by what precedes each - ma after a whole statement, ne after a noun - because they cannot be swapped."
     },
     {
       "id": "ZH-A1-PART-03",
       "category": "Zhuci - the particles",
       "label": "the particle le at the end of a sentence, marking a changed state",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-LE-CHANGED-STATE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -906,7 +944,7 @@
       "derivedFrom": [
         "A1-V-09"
       ],
-      "note": "Absent - see ZH-A1-V-06."
+      "note": "The sentence-final le, taught as its own lesson because it is a different job in a different slot: behind the verb le closes an action, at the end of the sentence it opens a new state. wo shi daxuesheng le is 'I have become one'. That is what a particle language does instead of inflecting - it moves a small word rather than reshaping a big one."
     },
     {
       "id": "ZH-A1-PART-04",
@@ -920,7 +958,7 @@
       ],
       "derivedFrom": [],
       "chineseSpecific": true,
-      "note": "STILL ABSENT AS A CLASS, and the corpus-level finding it records has moved rather than closed. ONE particle of the seven is now taught: ma has a character, a sound and a grammar atom. de, le, ne, ba, guo and zhe remain at zero occurrences across the corpus. A class point is not answered by one member, so this stays open - but the sentence it was written to support, that a Mandarin course with no particles has taught vocabulary and script and not yet grammar, is no longer quite true of this track."
+      "note": "STILL ABSENT AS A CLASS, and the count it records has moved twice. When this file was written NOT ONE of the seven particles was taught. Then ma arrived with the asking chapter. Now de, le and ne arrive together, so FOUR OF SEVEN are taught and the two that carry the most grammar between them - de and le - cost eight strokes and two. What is left is ba, guo and zhe. A class point is not answered by four of seven, so this stays open, and the sentence it was written to support - that a Mandarin course with no particles has taught vocabulary and script and not yet grammar - is no longer true of this track at all."
     },
     {
       "id": "ZH-A1-NP-01",
@@ -962,7 +1000,9 @@
       "id": "ZH-A1-NP-03",
       "category": "Mingci duanyu - the noun phrase",
       "label": "subject-verb agreement: there is none, and that is the point",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-NO-AGREEMENT-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -971,7 +1011,7 @@
       "derivedFrom": [
         "A1-SN-03"
       ],
-      "note": "Not stated - the same omission as ZH-A1-V-02, from the other end."
+      "note": "The same omission from the other end, and now closed with it: nothing about the subject reaches the verb. wo shi, ni shi, ren shi - shi three times. No new character."
     },
     {
       "id": "ZH-A1-VP-01",
@@ -1013,7 +1053,9 @@
       "id": "ZH-A1-VP-03",
       "category": "Dongci duanyu - the verb phrase",
       "label": "the predicate complement and its agreement",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-NO-COMPLEMENT-AGREEMENT-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -1022,7 +1064,7 @@
       "derivedFrom": [
         "A1-SV-03"
       ],
-      "note": "Restated as an absence: Mandarin agrees nothing, so what a Spanish learner must get right here a Mandarin learner must simply not do. Not stated anywhere in the track."
+      "note": "Restated as an absence and now taught as one: daxuesheng has a single shape whether it names one person or a hundred, so what a Spanish learner must get right here a Mandarin learner must simply not attempt. Same lesson as ZH-A1-NP-03 and a separate atom, because they are two different things to stop doing."
     },
     {
       "id": "ZH-A1-S-01",
@@ -1085,7 +1127,9 @@
       "id": "ZH-A1-S-04",
       "category": "Danju - the simple sentence",
       "label": "the topic-comment sentence, which is the shape Mandarin actually prefers",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-TOPIC-COMMENT-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -1093,13 +1137,17 @@
       ],
       "derivedFrom": [],
       "chineseSpecific": true,
-      "note": "Chinese-specific and absent. Spanish is subject-prominent and has no column for this; Mandarin puts the thing being talked about first and comments on it, which is why so much beginner Mandarin sounds odd when built on a Spanish or English template. Nothing in the track names it."
+      "note": "Chinese-specific, and named at last. Mandarin puts the thing being talked about first and comments on it, and the lesson gives the consequence a beginner needs most: once the topic is set the rest of the sentence leaves it out, where English would need 'it'. No new character - it is an order rather than a word, which is why it sits in the de chapter and cost nothing."
     },
     {
       "id": "ZH-A1-J-01",
       "category": "Lianjie - joining two clauses",
       "label": "joining two nouns with he",
-      "probe": null,
+      "probe": [
+        "ZH-SCRIPT-HE-01",
+        "ZH-LEX-HE-01",
+        "ZH-GRAMMAR-HE-NOUNS-ONLY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -1108,7 +1156,7 @@
       "derivedFrom": [
         "A1-CO-01"
       ],
-      "note": "ABSENT. he occurs zero times in the 175 lesson files - checked in characters and in pinyin. Mandarin also does not use he to join two clauses, which is the fact a learner most needs and which cannot be taught before he itself is."
+      "note": "THE JOINING COLUMN COMES OFF ZERO, and he is the word J-08's note named as the cheapest of the nine and the natural next tranche. It is eight strokes, three of which are kou, and it is a phono-semantic compound like qing where the sounding half IS he. The lesson's own point is the restriction: he joins two NOUNS and never two clauses, and Mandarin joins two statements by putting them side by side with no joining word at all."
     },
     {
       "id": "ZH-A1-J-02",
@@ -1172,7 +1220,7 @@
         "A1-SUB-02",
         "A1-SUB-03"
       ],
-      "note": "Absent, and Mandarin makes it cheaper than any language in this corpus: there is no complementiser at all, so the clause is simply placed after the verb. Three Spanish points collapse here, and what blocks them is not a joining word but the missing verbs zhidao and xiang."
+      "note": "Absent, and the blocker is now narrower than it was. Mandarin makes an object clause cheaper than any language in this corpus - there is no complementiser at all, so the clause is simply placed after the verb - and the topic-comment lesson has now taught the reader that Mandarin joins by ORDER rather than by joining words. What is still missing is only the verbs: zhidao and xiang. Three Spanish points wait on two characters."
     },
     {
       "id": "ZH-A1-J-06",
@@ -1216,7 +1264,7 @@
       ],
       "derivedFrom": [],
       "chineseSpecific": true,
-      "note": "STILL ABSENT, and the reason is now MEASURED rather than assumed. Every joining word this column needs - he, gen, huozhe, haishi, keshi, danshi, yinwei, suoyi, suiran - requires at least one character the track does not teach, and in this track a character is not a cheap thing: it costs a five-lesson cycle, a source-verified stroke record in data/scripts/chinese.json, a hand-fitted ductus path checked against the vendored font outline, and a regeneration of the subset font itself. That is the finding this column now carries. The Russian tranche closed thirteen joining devices in thirty-five lessons because every one of them was spelled in letters the track already taught; Chinese cannot borrow that shape, and pretending otherwise would put untaught characters on the page. he is the cheapest of the nine and is the natural next tranche."
+      "note": "OFF ZERO, AND THE BUDGET THIS NOTE NAMED WAS SPENT AS NAMED. It said every joining word needs a character the track does not teach, that a character here costs a writing lesson, a reading lesson, a source-verified stroke record and a regeneration of the subset font, and that he was the cheapest of the nine and the natural next tranche. he is now taught (ZH-A1-J-01). The column point still asks for the whole set and eight remain - gen, huozhe, haishi, keshi, danshi, yinwei, suoyi, suiran - so this stays open. The next cheapest are keshi and danshi, which share ke and shi with characters already in the track's stroke vocabulary."
     },
     {
       "id": "ZH-A1-F1-01",
@@ -1259,7 +1307,11 @@
       "id": "ZH-A1-F1-03",
       "category": "Gei he qiu xinxi - giving and asking for information",
       "label": "give personal information: name, age, nationality",
-      "probe": null,
+      "probe": [
+        "ZH-LEX-MINGZI",
+        "ZH-LEX-ZHONGGUOREN-01",
+        "ZH-GRAMMAR-AGE-NO-VERB-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -1270,7 +1322,7 @@
         "A1-F1-03",
         "A1-NE03-01"
       ],
-      "note": "One of the three at best. Age needs numerals past five and a measure word; nationality needs Zhongguo ren, which is two taught characters that no lesson joins."
+      "note": "All three at last: name, nationality and age. mingzi was already taught; nationality was two taught characters that no lesson joined until the no-endings chapter; and age was one character behind a numeral gate that had already lifted. Probed on all three because the point names all three and this file gives no partial credit."
     },
     {
       "id": "ZH-A1-F1-04",
@@ -1316,7 +1368,10 @@
       "id": "ZH-A1-F2-01",
       "category": "Biaoda yijian - opinions, attitudes and knowledge",
       "label": "ask for an opinion, and hand the turn back",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-NE-FOLLOWUP-01",
+        "ZH-LEX-NE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -1326,7 +1381,7 @@
       "derivedFrom": [
         "A1-F2-01"
       ],
-      "note": "Absent - needs ne."
+      "note": "Handing the turn back, which was blocked on ne and on nothing else."
     },
     {
       "id": "ZH-A1-F2-02",
@@ -1484,7 +1539,10 @@
       "id": "ZH-A1-F3-01",
       "category": "Xihao he yuanwang - likes, wishes and feelings",
       "label": "say what you like",
-      "probe": null,
+      "probe": [
+        "ZH-LEX-XIHUAN-01",
+        "ZH-GRAMMAR-XIHUAN-TRANSITIVE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -1495,7 +1553,7 @@
         "A1-F3-01",
         "A1-F3-03"
       ],
-      "note": "Absent - see ZH-A1-PRON-03."
+      "note": "Saying what you like, which was blocked on xihuan and nothing else. bu negates it normally, unlike you."
     },
     {
       "id": "ZH-A1-F3-02",
@@ -1596,7 +1654,7 @@
       "derivedFrom": [
         "A1-F4-02"
       ],
-      "note": "Not counted, and this is the sharpest near miss in the file: qing is taught as a frame 'waiting to be filled' - the lesson's own words - and there is no verb and no noun to fill it with. A frame with nothing to put in it is not a request."
+      "note": "Not counted, and the near miss is now nearer. qing is still taught as a frame 'waiting to be filled' - the lesson's own words - but the frame is no longer empty: the track has kan, shu, you and xihuan, so qing kan shu is buildable. What no lesson does is BUILD it, and asking for an OBJECT rather than an action needs gei or yao, neither of which is taught. A frame with nothing put in it is still not a request."
     },
     {
       "id": "ZH-A1-F4-03",
@@ -1814,7 +1872,9 @@
       "id": "ZH-A1-F6-02",
       "category": "Huihua guanli - managing the conversation, and repairing it",
       "label": "show that you are following",
-      "probe": null,
+      "probe": [
+        "ZH-PRAGMATIC-DUI-BACKCHANNEL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -1824,7 +1884,7 @@
       "derivedFrom": [
         "A1-F6-04"
       ],
-      "note": "Absent - the Mandarin backchannel is dui, en or hao de, and none is taught as one."
+      "note": "The backchannel, and the old note named dui as one of the three candidates. Until this lesson the track had NO way to make a sound while somebody else was talking, which in Mandarin as in English reads as a listener who has not understood. The lesson also draws the line the point needs: dui agrees with a STATEMENT and is not a general yes, because a question with a verb in it is answered by repeating the verb."
     },
     {
       "id": "ZH-A1-F6-03",
@@ -1913,7 +1973,10 @@
       "id": "ZH-A1-NG1-01",
       "category": "Cunzai - existence",
       "label": "existence and possession, both of which are you",
-      "probe": null,
+      "probe": [
+        "ZH-LEX-YOU-01",
+        "ZH-GRAMMAR-YOU-EXISTENCE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -1923,7 +1986,7 @@
         "A1-NG1-01",
         "A1-NG1-02"
       ],
-      "note": "Absent - see ZH-A1-V-04. Two Spanish points on one missing verb."
+      "note": "Existence and possession, both, on the same verb: wo you shu and you ren. English needs 'have' and 'there is'; Spanish needs tener and hay; Mandarin needs you."
     },
     {
       "id": "ZH-A1-NG1-02",
@@ -1977,7 +2040,11 @@
       "id": "ZH-A1-NG2-01",
       "category": "Shuliang - quantity",
       "label": "counting things, which needs a number, a measure word and a noun",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-MEASURE-WORD-01",
+        "ZH-LEX-NUM-YI",
+        "ZH-LEX-NUM-SAN"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -1986,7 +2053,7 @@
       "derivedFrom": [
         "A1-NG2-01"
       ],
-      "note": "Not counted, although one to five ARE taught. The Spanish point is about counting THINGS and Mandarin cannot count a thing without a measure word (ZH-A1-LIANG-01), so five numerals with nothing to attach them to do not close it. Chapter 3's practice lesson has the reader read a floor number off a wall, which is a number used as a label rather than as a count - a good exercise and a different demand."
+      "note": "Counting THINGS, which is what the point asks and what five numerals with nothing to attach them to could not do. The numerals reached ninety-nine two chapters before this tranche and had nothing to count; ge is what they were waiting for."
     },
     {
       "id": "ZH-A1-NG2-02",
@@ -2017,7 +2084,7 @@
       "derivedFrom": [
         "A1-NG2-04"
       ],
-      "note": "Absent - see ZH-A1-NUM-05."
+      "note": "Absent - see ZH-A1-NUM-05, whose blocker is now the unit alone."
     },
     {
       "id": "ZH-A1-NG3-01",
@@ -2119,7 +2186,7 @@
       "derivedFrom": [
         "A1-NG4-02"
       ],
-      "note": "Absent, and Mandarin makes the calendar unusually cheap - the months are numbered and the weekdays are numbered - so this is one of the highest-return tranches available once the numerals reach ten."
+      "note": "Absent, and the condition its old note set has been met: it said this was one of the highest-return tranches available ONCE THE NUMERALS REACH TEN, and they now reach ninety-nine. Mandarin numbers its months and its weekdays, so the calendar is now a small number of characters - tian, yue, hao, xingqi - away, and it is the largest single return left in this file after the specific-notion vocabulary."
     },
     {
       "id": "ZH-A1-NG4-03",
@@ -2189,7 +2256,11 @@
       "id": "ZH-A1-NG5-04",
       "category": "Xingzhi - quality",
       "label": "age",
-      "probe": null,
+      "probe": [
+        "ZH-SCRIPT-SUI-01",
+        "ZH-LEX-SUI-01",
+        "ZH-GRAMMAR-AGE-NO-VERB-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -2198,7 +2269,7 @@
       "derivedFrom": [
         "A1-NG5-04"
       ],
-      "note": "Absent - blocked on the numerals."
+      "note": "CLOSED, AND THE OLD NOTE'S BLOCKER IS GONE. It read 'blocked on the numerals' and the numerals reached ninety-nine before this tranche began, so the note had decayed: only sui was missing. The lesson also carries the thing a beginner gets wrong for months - wo shiba sui has NO VERB in it, and wo shi shiba sui is wrong."
     },
     {
       "id": "ZH-A1-NG5-05",
@@ -2250,7 +2321,7 @@
         "A1-NE12-03",
         "A1-NE15-01"
       ],
-      "note": "Absent - blocked on the numerals."
+      "note": "Absent, and NO LONGER BLOCKED ON THE NUMERALS - they reached ninety-nine before this tranche and the note had decayed. What it needs now is duoshao ('how much') and a money word, and the digits lesson has already taught the reader that a price tag prints 5 rather than the character."
     },
     {
       "id": "ZH-A1-NG6-03",
@@ -2274,7 +2345,10 @@
       "id": "ZH-A1-NG6-04",
       "category": "Pingjia - evaluation",
       "label": "interest and pleasure",
-      "probe": null,
+      "probe": [
+        "ZH-LEX-XIHUAN-01",
+        "ZH-LEX-XIHUAN-SHENME-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -2283,7 +2357,7 @@
       "derivedFrom": [
         "A1-NG6-08"
       ],
-      "note": "Absent - see ZH-A1-PRON-03."
+      "note": "Interest and pleasure, in both directions: saying what you like and ASKING what somebody else likes. ni xihuan shenme costs no character - shenme was taught in the asking chapter and had almost nothing to ask about - and the lesson's real content is where shenme stands: Mandarin leaves a question word exactly where the answer goes and moves nothing, so question and answer have the same shape word for word."
     },
     {
       "id": "ZH-A1-NG6-05",
@@ -2319,7 +2393,10 @@
       "id": "ZH-A1-NG6-07",
       "category": "Pingjia - evaluation",
       "label": "correctness: right and wrong",
-      "probe": null,
+      "probe": [
+        "ZH-SCRIPT-DUI-01",
+        "ZH-LEX-DUI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -2328,7 +2405,7 @@
       "derivedFrom": [
         "A1-NG6-07"
       ],
-      "note": "Absent, and dui is the missing word - which is also the commonest way to agree, so it would close ZH-A1-F6-02 as well."
+      "note": "CLOSED. dui was the missing word the old note named. It also gives dui bu dui for free, because the verb-not-verb question shape was already taught on hao bu hao - one new syllable and no new grammar - and the bu sandhi from the shi chapter applies unchanged, bu dui rising before a fourth tone."
     },
     {
       "id": "ZH-A1-NG7-01",

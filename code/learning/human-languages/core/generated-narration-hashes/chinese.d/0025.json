@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:2a5be139efa18383",
+  "lessonIds": [
+    "ZH-W25-le",
+    "ZH-C25-le-dongci",
+    "ZH-C25-le-juwei",
+    "ZH-C25-ti",
+    "ZH-C25-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "chinese/narration/ch25.txt",
+  "json": "chinese/narration/ch25.json",
+  "textHash": "fnv1a64:7f390c24ab11d9fe",
+  "jsonHash": "fnv1a64:f4d42d0622e38a07",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C23-de-mingci",
+    "language": "chinese",
+    "chapter": 23,
+    "sequence": 2230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1eb5bded2e0dcf29"
+  },
+  "findings": []
+}

@@ -1,5 +1,7 @@
 {
-  "segments": [],
+  "segments": [
+    "ZH-PATH-021"
+  ],
   "omits": [
     "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",

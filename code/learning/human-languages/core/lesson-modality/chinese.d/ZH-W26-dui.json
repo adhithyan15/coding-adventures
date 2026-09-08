@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W26-dui",
+    "language": "chinese",
+    "chapter": 26,
+    "sequence": 2380,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:957f4d4ce07fabe4",
+    "detachableSegments": [
+      "Script — a hand, and a thumb's width"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

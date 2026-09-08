@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "VERB-LIKE-LOVE"
+  "segments": [
+    "ZH-PATH-027"
   ],
+  "omits": [],
   "relocates": {}
 }

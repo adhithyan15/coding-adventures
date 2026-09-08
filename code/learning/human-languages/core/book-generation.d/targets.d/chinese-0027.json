@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 27,
+  "output": "chinese/book/chapters/ch27-sui-he.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

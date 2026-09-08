@@ -1,0 +1,16 @@
+{
+  "id": "ZH-PATH-025",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "lessons": [
+    "ZH-W26-ne",
+    "ZH-C26-ne",
+    "ZH-W26-dui",
+    "ZH-C26-dui",
+    "ZH-C26-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "ZH-EXT-060-NE-DUI"
+  ]
+}

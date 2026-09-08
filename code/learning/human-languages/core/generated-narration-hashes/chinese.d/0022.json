@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:4867fffdd2a98130",
+  "lessonIds": [
+    "ZH-C22-bubian",
+    "ZH-C22-buyizhi",
+    "ZH-C22-wuguanci",
+    "ZH-C22-zhongguoren",
+    "ZH-C22-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch22.txt",
+  "json": "chinese/narration/ch22.json",
+  "textHash": "fnv1a64:5429cdd19efe11a9",
+  "jsonHash": "fnv1a64:f77a0576e7047c87",
+  "findings": []
+}

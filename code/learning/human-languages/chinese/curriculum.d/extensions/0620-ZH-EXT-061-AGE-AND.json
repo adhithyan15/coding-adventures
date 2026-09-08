@@ -1,0 +1,15 @@
+{
+  "id": "ZH-EXT-061-AGE-AND",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can write 岁 and 和, give an age with no verb, and join two nouns.",
+  "prerequisites": [],
+  "lessons": [
+    "ZH-W27-sui",
+    "ZH-C27-sui",
+    "ZH-W27-he",
+    "ZH-C27-he",
+    "ZH-C27-practice"
+  ]
+}

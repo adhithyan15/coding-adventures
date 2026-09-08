@@ -1,0 +1,15 @@
+{
+  "id": "ZH-EXT-057-DE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can write 的, use it for possession and for a description standing before its noun, and build a topic-comment sentence.",
+  "prerequisites": [],
+  "lessons": [
+    "ZH-W23-de",
+    "ZH-C23-de",
+    "ZH-C23-de-mingci",
+    "ZH-C23-huati",
+    "ZH-C23-practice"
+  ]
+}

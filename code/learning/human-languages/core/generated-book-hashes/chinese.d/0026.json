@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:2c93045a3958074b",
+  "lessonIds": [
+    "ZH-W26-ne",
+    "ZH-C26-ne",
+    "ZH-W26-dui",
+    "ZH-C26-dui",
+    "ZH-C26-practice"
+  ],
+  "tex": "chinese/book/chapters/ch26-ne-dui.tex"
+}

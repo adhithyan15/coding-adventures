@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C27-practice",
+    "language": "chinese",
+    "chapter": 27,
+    "sequence": 2450,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:552a93fc38e1734c"
+  },
+  "findings": []
+}

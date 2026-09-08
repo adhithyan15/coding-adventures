@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "VERB-PAST"
+  "segments": [
+    "ZH-PATH-024"
   ],
+  "omits": [],
   "relocates": {}
 }

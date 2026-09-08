@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:e08f4aadc1ef5ef2",
+  "lessonIds": [
+    "ZH-W24-you",
+    "ZH-C24-you",
+    "ZH-W24-ge",
+    "ZH-C24-ge",
+    "ZH-C24-practice"
+  ],
+  "tex": "chinese/book/chapters/ch24-you-ge.tex"
+}

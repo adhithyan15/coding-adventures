@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:e04af4224f63d8c5",
+  "lessonIds": [
+    "ZH-W28-xi",
+    "ZH-W28-huan",
+    "ZH-C28-xihuan",
+    "ZH-C28-xihuan-shenme",
+    "ZH-C28-practice"
+  ],
+  "tex": "chinese/book/chapters/ch28-xihuan.tex"
+}

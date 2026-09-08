@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:6db38a8d7b2d45b3",
+  "lessonIds": [
+    "ZH-W26-ne",
+    "ZH-C26-ne",
+    "ZH-W26-dui",
+    "ZH-C26-dui",
+    "ZH-C26-practice"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "chinese/narration/ch26.txt",
+  "json": "chinese/narration/ch26.json",
+  "textHash": "fnv1a64:c95e199dfef63a9c",
+  "jsonHash": "fnv1a64:2ade942677b866a5",
+  "findings": []
+}

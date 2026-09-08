@@ -7,7 +7,7 @@
   "signature": "Each character is a dense, evenly-sized square block of strokes — not an alphabet of letters at all.",
   "complete": true,
   "combination": "Not an alphabet: each CHARACTER (hànzì) writes a whole syllable/morpheme, and words are one or more characters (你好 = 'you' + 'good' = hello). Characters are built from recurring COMPONENTS called radicals — often one hinting at meaning and one at sound (a phono-semantic compound: 请 qǐng = 讠 'speech' + 青 qīng 'sound'). Stroke order is a real, taught system (top→bottom, left→right, horizontal before vertical, outside before inside), so — unlike the Indic scripts here — the strokeOrder below is authoritative, not merely conventional.",
-  "notes": "Simplified characters. The inventory closes the current Mandarin lesson corpus with greeting/self-introduction characters, numerals one to five, and the radicals they decompose into; it must grow whenever the track adds vocabulary. `sound` is tone-marked pinyin; `tone` holds the number (1–4 or neutral) and indexes into `tones` below. The font is a fonttools subset of NotoSansSC covering exactly these characters (see _fonts/README.md); re-subset when characters are added.",
+  "notes": "Simplified characters. The inventory closes the current Mandarin lesson corpus with greeting/self-introduction characters, the numerals, the grammatical particles, and the radicals they all decompose into; it must grow whenever the track adds vocabulary. `sound` is tone-marked pinyin; `tone` holds the number (1–4 or neutral) and indexes into `tones` below. The font is a fonttools subset of NotoSansSC covering exactly these characters (see _fonts/README.md); re-subset when characters are added.",
   "tones": [
     {
       "id": "tone-1",
@@ -1344,6 +1344,260 @@
         "variation": "The cited PRC-order dataset supplies two ordered strokes for 十: median 1 crosses from left to right, median 2 descends through its centre. Horizontal before vertical, the same order 三 and 四 already used. The character is the lower component of 早 and appeared in this course as a part of that character for thirteen chapters before it was taught on its own."
       },
       "notes": "Ten. 一 with a vertical post through it, and the lower half of 早."
+    },
+    {
+      "glyph": "的",
+      "sound": "de",
+      "role": "logograph",
+      "tone": "neutral",
+      "components": [
+        "白 (bái, white) on the left",
+        "勺 (sháo, ladle) on the right"
+      ],
+      "strokeOrder": [
+        "draw 白's short piě stroke at the top, falling to the left",
+        "lift, then draw 白's left vertical shù stroke",
+        "lift, then draw 白's héngzhé across the top of the box and down its right side",
+        "lift, then draw 白's inner horizontal héng stroke",
+        "lift, then close 白 with its bottom horizontal héng stroke",
+        "lift, then draw 勺's piě stroke from the top, falling to the left",
+        "lift, then draw 勺's long héngzhégōu down the right side, hooking left at the base",
+        "lift, then place the short diǎn dot inside 勺"
+      ],
+      "penLifts": 7,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 的.json, ordered stroke paths and medians 1–8 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E7%9A%84.json",
+        "variation": "The cited PRC-order dataset supplies eight ordered strokes for 的. Medians 1–5 draw 白: a short left-falling stroke, then the box built as 百's was — left side, joined top and right, inner bar, closing floor. Medians 6–8 draw 勺: a left-falling stroke, a long stroke down the right side that hooks left at the base, and a dot placed last inside the enclosure. Outside before inside, and the dot is the final stroke. Make Me a Hanzi documents proper People's Republic of China stroke order and matching animation medians. This learner path adapts all eight medians to the vendored Noto Sans SC outline while preserving their order, the two joined corners and seven intervening lifts; Noto's 勺 is narrower than the Arphic-derived source graphic."
+      },
+      "notes": "The possessive and modifying particle, and the commonest character in written Mandarin. Carries no tone. 白 supplies only the sound; the meaning is grammatical."
+    },
+    {
+      "glyph": "有",
+      "sound": "yǒu",
+      "role": "logograph",
+      "tone": "3",
+      "components": [
+        "a horizontal and a long left-falling stroke on top, from 又 (a hand)",
+        "月 (moon, and in compounds flesh) beneath"
+      ],
+      "strokeOrder": [
+        "draw the top horizontal héng stroke from left to right",
+        "lift, then draw the long piě stroke from the top centre, falling to the lower left",
+        "lift, then descend 月's left side",
+        "lift, then draw 月's héngzhégōu across the top and down the right side, hooking left at the base",
+        "lift, then draw 月's upper inner horizontal héng stroke",
+        "lift, then draw 月's lower inner horizontal héng stroke"
+      ],
+      "penLifts": 5,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 有.json, ordered stroke paths and medians 1–6 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E6%9C%89.json",
+        "variation": "The cited PRC-order dataset supplies six ordered strokes for 有. Medians 1–2 are the horizontal and the long left-falling stroke that cross at the top, in that order — horizontal before left-falling, the rule 大 and 六 already showed. Medians 3–6 build 月 beneath: left side, then the joined top-and-right that hooks at the base, then the two inner horizontals, so the enclosure is closed before it is filled. Make Me a Hanzi documents proper People's Republic of China stroke order and matching animation medians. This learner path adapts all six medians to Noto Sans SC while preserving their order, the joined corner, the base hook and five intervening lifts; Noto's 月 is slightly narrower than the source graphic."
+      },
+      "notes": "'to have', and also 'there is'. Third tone. Negated with 没 and never with 不 — the one verb in Mandarin that refuses 不."
+    },
+    {
+      "glyph": "个",
+      "sound": "gè",
+      "role": "logograph",
+      "tone": "4",
+      "components": [
+        "人 (person) forming the roof",
+        "a single vertical shù stroke beneath it"
+      ],
+      "strokeOrder": [
+        "draw the piě stroke from the top centre, falling to the lower left",
+        "lift, then draw the nà stroke from the same peak, falling to the lower right",
+        "lift, then draw the vertical shù stroke straight down from under the peak"
+      ],
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 个.json, ordered stroke paths and medians 1–3 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%B8%AA.json",
+        "variation": "The cited PRC-order dataset supplies three ordered strokes for 个. Medians 1–2 are exactly 人 — the same left-falling then right-falling pair, from the same peak, that the first writing lesson in this track taught — and median 3 is a single vertical hung beneath the junction. Make Me a Hanzi documents proper People's Republic of China stroke order and matching animation medians. This learner path adapts all three medians to Noto Sans SC while preserving their order, directions and two intervening lifts; Noto's roof is a little wider than the Arphic-derived source graphic."
+      },
+      "notes": "The general-purpose measure word: 一个人, one person. Three strokes, and two of them are a character the reader already writes."
+    },
+    {
+      "glyph": "了",
+      "sound": "le",
+      "role": "logograph",
+      "tone": "neutral",
+      "components": [
+        "a héngpiě that starts flat and falls away to the right",
+        "a vertical that hooks left at its foot"
+      ],
+      "strokeOrder": [
+        "draw the héngpiě: start with a short flat horizontal at the upper left and let it fall away to the right, without lifting",
+        "lift, then draw the shùgōu: descend from under the turn and flick left at the foot"
+      ],
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 了.json, ordered stroke paths and medians 1–2 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%BA%86.json",
+        "variation": "The cited PRC-order dataset supplies two ordered strokes for 了. Median 1 begins at the upper left, runs right and turns downward within the same stroke; median 2 restarts under that turn, descends most of the height of the square, and finishes with a leftward hook. Make Me a Hanzi documents proper People's Republic of China stroke order and matching animation medians. This learner path adapts both medians to Noto Sans SC while preserving their order, the single internal turn, the terminal hook and one intervening lift; Noto's hook is shorter than the Arphic-derived source graphic's."
+      },
+      "notes": "The aspect particle. Two strokes — the fewest of any character in this book after 一 and 二 — and it carries more grammar than any of them. Neutral tone."
+    },
+    {
+      "glyph": "呢",
+      "sound": "ne",
+      "role": "logograph",
+      "tone": "neutral",
+      "components": [
+        "口 (mouth) on the left, small and set high",
+        "尼 (ní) on the right, supplying only the sound"
+      ],
+      "strokeOrder": [
+        "draw 口's left vertical shù stroke from top to bottom",
+        "lift, then draw 口's horizontal-turning héngzhé across the top and down the right side",
+        "lift, then close 口 with a horizontal héng from left to right",
+        "lift, then draw 尸's héngzhé across the top of the right half and down at its right",
+        "lift, then draw 尸's horizontal héng beneath it",
+        "lift, then draw 尸's long piě, falling from the top all the way to the lower left",
+        "lift, then draw 匕's short piě, falling to the left",
+        "lift, then draw 匕's shùwāngōu, turning along the base and finishing to the right"
+      ],
+      "penLifts": 7,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 呢.json, ordered stroke paths and medians 1–8 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%91%A2.json",
+        "variation": "The cited PRC-order dataset supplies eight ordered strokes for 呢. Medians 1–3 draw the left 口 in the same order the standalone character uses and in the same upper-left third of the square that 吗 puts it in. Medians 4–6 draw 尸 — a turning top stroke, a horizontal, and a long left-falling stroke that runs past the bottom of 口 — and medians 7–8 draw 匕 tucked inside it. Make Me a Hanzi documents proper People's Republic of China stroke order and matching animation medians. This learner path adapts all eight medians to Noto Sans SC while preserving their order, the three internal turns and seven intervening lifts; Noto sets 尸's long falling stroke slightly steeper than the Arphic-derived source graphic."
+      },
+      "notes": "The follow-up question particle. Built exactly as 吗 is — 口 for something spoken, plus a right half that supplies only the sound — so a reader who can write 吗 already knows half of it."
+    },
+    {
+      "glyph": "对",
+      "sound": "duì",
+      "role": "logograph",
+      "tone": "4",
+      "components": [
+        "又 (a hand) on the left",
+        "寸 (cùn, a thumb's width) on the right"
+      ],
+      "strokeOrder": [
+        "draw 又's héngpiě: a short flat start that turns and falls to the lower left, without lifting",
+        "lift, then draw 又's nà stroke, crossing it and falling to the lower right",
+        "lift, then draw 寸's horizontal héng stroke across the right half",
+        "lift, then draw 寸's long shùgōu down through it, hooking left at the foot",
+        "lift, then place 寸's short diǎn dot to the left of the hook"
+      ],
+      "penLifts": 4,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 对.json, ordered stroke paths and medians 1–5 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%AF%B9.json",
+        "variation": "The cited PRC-order dataset supplies five ordered strokes for 对. Medians 1–2 draw 又 as a turning left-falling stroke crossed by a right-falling one; medians 3–5 draw 寸 as a horizontal, a long hooked vertical through it, and a dot placed last. Left component complete before the right one begins, and the dot is the final stroke. Make Me a Hanzi documents proper People's Republic of China stroke order and matching animation medians. This learner path adapts all five medians to Noto Sans SC while preserving their order, the internal turn in 又, the terminal hook and four intervening lifts; Noto's 寸 sits slightly higher than the Arphic-derived source graphic's."
+      },
+      "notes": "'right, correct' — and on its own, the commonest way to agree in spoken Mandarin. Fourth tone. Its left half 又 is the same component that opens 欢."
+    },
+    {
+      "glyph": "岁",
+      "sound": "suì",
+      "role": "logograph",
+      "tone": "4",
+      "components": [
+        "山 (mountain) on top",
+        "夕 (evening) beneath"
+      ],
+      "strokeOrder": [
+        "draw 山's central vertical shù stroke",
+        "lift, then draw 山's shùzhé: down the left side, then turn and run along the base to the right",
+        "lift, then draw 山's right vertical shù stroke",
+        "lift, then draw 夕's short piě, falling to the lower left",
+        "lift, then draw 夕's héngzhégōu, turning down and falling to the lower left with a hook",
+        "lift, then place 夕's diǎn dot across it"
+      ],
+      "penLifts": 5,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 岁.json, ordered stroke paths and medians 1–6 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%B2%81.json",
+        "variation": "The cited PRC-order dataset supplies six ordered strokes for 岁. Medians 1–3 draw 山 with its centre vertical first, then the joined left-and-base stroke, then the right vertical — centre before the sides, which is the one place this book's top-to-bottom and left-to-right rules do not decide the order by themselves. Medians 4–6 draw 夕 beneath. Make Me a Hanzi documents proper People's Republic of China stroke order and matching animation medians. This learner path adapts all six medians to Noto Sans SC while preserving their order, the two internal turns and five intervening lifts; Noto's 山 is wider and flatter than the Arphic-derived source graphic's."
+      },
+      "notes": "The measure word for years of age: 我十八岁, I am eighteen. Fourth tone. A mountain over an evening — the character for a year that has gone by."
+    },
+    {
+      "glyph": "和",
+      "sound": "hé",
+      "role": "logograph",
+      "tone": "2",
+      "components": [
+        "禾 (hé, standing grain) on the left, supplying the sound",
+        "口 (mouth) on the right"
+      ],
+      "strokeOrder": [
+        "draw 禾's short piě at the very top, falling to the left",
+        "lift, then draw 禾's horizontal héng stroke",
+        "lift, then draw 禾's long central vertical shù stroke",
+        "lift, then draw 禾's piě, falling to the lower left",
+        "lift, then draw 禾's closing diǎn to the lower right",
+        "lift, then draw 口's left vertical shù stroke",
+        "lift, then draw 口's héngzhé across the top and down the right side",
+        "lift, then close 口 with a horizontal héng from left to right"
+      ],
+      "penLifts": 7,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 和.json, ordered stroke paths and medians 1–8 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%92%8C.json",
+        "variation": "The cited PRC-order dataset supplies eight ordered strokes for 和. Medians 1–5 draw 禾: the short top left-falling stroke, the horizontal, the long central vertical, then the left-falling and right-falling pair that finish it. Medians 6–8 draw 口 on the right in the same order the standalone character uses. Left component complete before the right one begins. Make Me a Hanzi documents proper People's Republic of China stroke order and matching animation medians. This learner path adapts all eight medians to Noto Sans SC while preserving their order, the joined corner in 口 and seven intervening lifts; Noto compresses 禾's final right-falling stroke into a dot, as the source graphic does, because 口 stands beside it."
+      },
+      "notes": "'and', joining two nouns — never two clauses. A phono-semantic compound like 请: 禾 hé supplies the sound and 口 the mouth. Second tone."
+    },
+    {
+      "glyph": "喜",
+      "sound": "xǐ",
+      "role": "logograph",
+      "tone": "3",
+      "components": [
+        "壴 (a drum on its stand) filling the top",
+        "口 (mouth) at the foot"
+      ],
+      "strokeOrder": [
+        "draw the long top horizontal héng stroke",
+        "lift, then draw the vertical shù stroke down through it",
+        "lift, then draw the second horizontal héng beneath",
+        "lift, then draw the upper 口's left vertical shù stroke",
+        "lift, then draw the upper 口's héngzhé across the top and down the right side",
+        "lift, then close the upper 口 with a horizontal héng",
+        "lift, then draw the left short stroke of the pair beneath it",
+        "lift, then draw the right short stroke of that pair",
+        "lift, then draw the widest horizontal héng in the character, edge to edge",
+        "lift, then draw the lower 口's left vertical shù stroke",
+        "lift, then draw the lower 口's héngzhé across the top and down the right side",
+        "lift, then close the lower 口 with a horizontal héng"
+      ],
+      "penLifts": 11,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 喜.json, ordered stroke paths and medians 1–12 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%96%9C.json",
+        "variation": "The cited PRC-order dataset supplies twelve ordered strokes for 喜, and they descend the character in four bands: medians 1–3 the 士 at the top, medians 4–6 a 口, medians 7–8 the short pair beneath it, median 9 the single widest horizontal in the character, and medians 10–12 the closing 口. Top before bottom throughout, and each 口 is built left side, joined top-and-right, closing floor — the order the reader already writes. Make Me a Hanzi documents proper People's Republic of China stroke order and matching animation medians. This learner path adapts all twelve medians to Noto Sans SC while preserving their order, the two joined corners and eleven intervening lifts; Noto's ninth stroke runs slightly wider than the Arphic-derived source graphic's."
+      },
+      "notes": "'to be pleased'. Twelve strokes, the most of any character in this book so far. Its two 口 are the same mouth the reader has written since 吗."
+    },
+    {
+      "glyph": "欢",
+      "sound": "huān",
+      "role": "logograph",
+      "tone": "1",
+      "components": [
+        "又 (a hand) on the left",
+        "欠 (qiàn, a person with an open mouth) on the right"
+      ],
+      "strokeOrder": [
+        "draw 又's héngpiě: a short flat start that turns and falls to the lower left, without lifting",
+        "lift, then draw 又's nà stroke, crossing it and falling to the lower right",
+        "lift, then draw 欠's piě at the top, falling to the left",
+        "lift, then draw 欠's hénggōu, running right and hooking down at its end",
+        "lift, then draw 欠's long piě, falling from under the hook to the lower left",
+        "lift, then draw 欠's nà, falling to the lower right"
+      ],
+      "penLifts": 5,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 欢.json, ordered stroke paths and medians 1–6 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E6%AC%A2.json",
+        "variation": "The cited PRC-order dataset supplies six ordered strokes for 欢. Medians 1–2 draw 又 exactly as 对 draws it, which is why the two characters are taught near each other; medians 3–6 draw 欠 as a short left-falling stroke, a hooked horizontal, then the long left-falling and right-falling pair that carry the whole right half. Make Me a Hanzi documents proper People's Republic of China stroke order and matching animation medians. This learner path adapts all six medians to Noto Sans SC while preserving their order, the internal turn in 又, the hook in 欠 and five intervening lifts; Noto's final right-falling stroke reaches further right than the Arphic-derived source graphic's."
+      },
+      "notes": "'joyful'. First tone, and in 喜欢 it loses its tone altogether: xǐhuan. Its left half 又 is the same component that opens 对."
     }
   ]
 }

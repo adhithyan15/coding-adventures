@@ -1,0 +1,19 @@
+{
+  "chapter": 28,
+  "title": "Xihuan — What You Like",
+  "label": "ch:zh-xihuan",
+  "canDo": "I can say what I like and do not like, and ask somebody else what they like.",
+  "payoff": {
+    "lesson": "ZH-C28-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Eighteen strokes and one verb, and the liking frame every other language in this series makes a beginner turn round: in Mandarin the liker is simply the subject.",
+    "assesses": [
+      "ZH-SCRIPT-XI-01",
+      "ZH-SCRIPT-HUAN-01",
+      "ZH-LEX-XIHUAN-01",
+      "ZH-GRAMMAR-XIHUAN-TRANSITIVE-01",
+      "ZH-LEX-XIHUAN-SHENME-01",
+      "ZH-PERFORMANCE-XIHUAN-FOUR-SKILL-01"
+    ]
+  }
+}

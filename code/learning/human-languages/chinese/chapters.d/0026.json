@@ -1,0 +1,20 @@
+{
+  "chapter": 26,
+  "title": "Ne and Dui",
+  "label": "ch:zh-ne-dui",
+  "canDo": "I can hand a question back with 呢, agree with what somebody has said, and ask whether something is right.",
+  "payoff": {
+    "lesson": "ZH-C26-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Thirteen strokes make the first two-sided exchange in this book: 吗 could ask, and until now nothing could hand the question back or agree with the answer.",
+    "assesses": [
+      "ZH-SCRIPT-NE-01",
+      "ZH-LEX-NE-01",
+      "ZH-GRAMMAR-NE-FOLLOWUP-01",
+      "ZH-SCRIPT-DUI-01",
+      "ZH-LEX-DUI-01",
+      "ZH-PRAGMATIC-DUI-BACKCHANNEL-01",
+      "ZH-PERFORMANCE-NE-DUI-01"
+    ]
+  }
+}

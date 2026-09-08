@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C26-dui",
+    "language": "chinese",
+    "chapter": 26,
+    "sequence": 2390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52cec006b6e40ec7"
+  },
+  "findings": []
+}

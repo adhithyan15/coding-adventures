@@ -1,0 +1,16 @@
+{
+  "id": "ZH-PATH-021",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ZH-C22-bubian",
+    "ZH-C22-buyizhi",
+    "ZH-C22-wuguanci",
+    "ZH-C22-zhongguoren",
+    "ZH-C22-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "ZH-EXT-056-NO-ENDINGS"
+  ]
+}

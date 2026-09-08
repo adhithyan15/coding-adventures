@@ -1,0 +1,16 @@
+{
+  "id": "ZH-PATH-024",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ZH-W25-le",
+    "ZH-C25-le-dongci",
+    "ZH-C25-le-juwei",
+    "ZH-C25-ti",
+    "ZH-C25-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "ZH-EXT-059-LE"
+  ]
+}
