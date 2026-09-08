@@ -38,6 +38,12 @@ defaults to `.`. It recursively analyzes regular `.ml` and `.mli` files in
 deterministic relative-path order, while rejecting symlinked source inputs and
 skipping `_build`, `.git`, `_opam`, and `node_modules` directories.
 
+The scanner applies fixed resource ceilings before parsing: at most 10,000
+source files, at most 4 MiB per source file, at most 64 MiB across all source
+files, and at most 1 MiB for `required_capabilities.json`. Crossing any ceiling
+is an exit-2 input error. Reads are bounded to the size checked on the opened
+channel so a growing file cannot force an unbounded allocation.
+
 `required_capabilities.json` is loaded only from the package root. An absent
 manifest is the Spec 13 zero-capability profile. A present manifest must be a
 schema-v1 object with the closed 19 category/action pairs. Unknown fields,
