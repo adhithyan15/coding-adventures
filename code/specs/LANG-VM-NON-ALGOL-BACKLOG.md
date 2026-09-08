@@ -1524,3 +1524,11 @@ arithmetic operand conversion to the six comparison operations. Keep all
 operand ordering, 0/1 result conventions and unsupported-kind errors. Verify
 literal/literal and both mixed forms for less, equal and greater inputs across
 all six comparisons, then rerun the four COBOL cases before promotion.
+
+### VM-040 COBOL counted-loop literal move contract
+
+IF and rounded division pass after comparison support. PERFORM TIMES then
+rejects mov Int(3), used to initialize its counter. Permit checked Var/Int
+operands in mov through the same conversion helper; retain missing-source and
+unsupported-kind errors. The executed counted loop must print 1, 2, 3 and stop.
+Include positive and negative immediate moves in direct runtime coverage.
