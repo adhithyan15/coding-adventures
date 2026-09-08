@@ -137,12 +137,12 @@ describe("the committed Marwadi A1 inventory", () => {
     }
   });
 
-  it("reports an EMPTY joining column, an empty adverb column, and a closed transaction column", () => {
+  it("reports an EMPTY joining column, an adverb column of one, and a closed transaction column", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(197);
-    expect(coverage.covered).toBe(76);
-    expect(coverage.unmapped).toBe(121);
+    expect(coverage.covered).toBe(79);
+    expect(coverage.unmapped).toBe(118);
     expect(coverage.partial).toBe(0);
     // FLAT ZERO. `ar`, `ane`, `aur` (and), `pan`, `par` (but), `ke` (that),
     // `jad` (when) all return ZERO occurrences in 312 files. A learner with
@@ -151,15 +151,18 @@ describe("the committed Marwadi A1 inventory", () => {
       enumerated: 11,
       covered: 0,
     });
-    // Also flat: nothing is here, there, today, yesterday, badly, or not.
-    expect(coverage.byCategory["Kriya-visheshan (adverbs)"]!).toEqual({ enumerated: 8, covered: 0 });
+    // NO LONGER FLAT, and by exactly one: `koni` closed MW-A1-ADV-05, the
+    // polarity point. Nothing is still here, there, today, yesterday or badly —
+    // the column moved from 0 to 1 because the track finally has a word for
+    // NOT, and for no other reason.
+    expect(coverage.byCategory["Kriya-visheshan (adverbs)"]!).toEqual({ enumerated: 8, covered: 1 });
     // And the column this track is actually built around is closed outright.
     expect(coverage.byCategory["Saudo (the counter transaction this track is built around)"]!).toEqual({
       enumerated: 4,
       covered: 4,
     });
     expect(formatExamCoverage(coverage)).toContain(
-      "marwadi A1 (partial inventory): 76/197 points covered (39%)",
+      "marwadi A1 (partial inventory): 79/197 points covered (40%)",
     );
   }, 60_000);
 
@@ -186,11 +189,27 @@ describe("the committed Marwadi A1 inventory", () => {
       expect(taught.has(`MW-LEX-${numeral}-01`), numeral).toBe(true);
       expect(taught.has(`MW-SCRIPT-${numeral}-01`), numeral).toBe(true);
     }
-    // The note must keep BOTH halves: what was missing, and what is still
-    // missing. Eleven to nineteen wait on four independent vowels and one
-    // consonant, which is a script debt and not a numeral one.
+    // THE TEENS HAVE NOW LANDED, and the probe has to name them or the file
+    // keeps reporting a count that stops at ten while the corpus reaches
+    // twenty. Eleven to nineteen were a SCRIPT gap, priced at four signs, and
+    // the four were taught: the standing vowels i, a and u and the retroflex
+    // consonant lla. This point was already covered before they landed, so the
+    // teens move no coverage number at all -- which is exactly why the probe,
+    // and not the percentage, is where they have to be recorded.
+    for (const teen of ["IGYAARA", "BAARA", "TERA", "CHAUDA", "PANDARA",
+      "SOLA", "SATARA", "ATHARA", "UGHANIS"]) {
+      expect(numerals.probe, teen).toContain(`MW-LEX-${teen}-01`);
+      expect(numerals.probe, teen).toContain(`MW-SCRIPT-${teen}-01`);
+      expect(taught.has(`MW-LEX-${teen}-01`), teen).toBe(true);
+      expect(taught.has(`MW-SCRIPT-${teen}-01`), teen).toBe(true);
+    }
+    for (const sign of ["I-INDEPENDENT", "A-INDEPENDENT", "U-INDEPENDENT", "LLA"]) {
+      expect(taught.has(`MW-SCRIPT-${sign}-01`), sign).toBe(true);
+    }
     expect(numerals.note).toMatch(/CLOSED BY HL-C350/);
-    expect(numerals.note).toMatch(/NOT CLOSED, DELIBERATELY: the numbers between ten and twenty/);
+    // The ORDER is the finding, and the note has to carry it: nineteen is
+    // ughanis, one short of twenty, so twenty had to be taught first.
+    expect(numerals.note).toMatch(/TWENTY WAS TAUGHT BEFORE THE TEENS/);
     // …and the digits, the same hole seen from the script side, closed with it.
     const digits = inventory.points.find((point) => point.id === "MW-A1-LIP-13")!;
     expect(digits.probe).not.toBeNull();
@@ -207,13 +226,35 @@ describe("the committed Marwadi A1 inventory", () => {
     expect(ordinals.probe).toBeNull();
     expect(ordinals.note).toMatch(/no citable Marwari-specific source/);
     expect(ordinals.note).toMatch(/not a script debt/);
-    // (2) POLARITY, untouched by HL-C350 and still red. `haan saa` gets a
-    //     four-skill performance lesson in chapter 3 and there is NO negator at
-    //     all, so a bargaining course still cannot decline, refuse or disagree —
-    //     which now matters more, not less, since it can name a price.
+    // RE-CHECKED by the HL-C354 ordinal sweep, which searched again and found
+    // nothing citable, so no series was invented. The note records the
+    // re-check, because a reader who saw the teens land in the same tranche
+    // would otherwise assume the ordinals were simply forgotten.
+    expect(ordinals.note).toMatch(/RE-CHECKED by HL-C354's ordinal sweep and STILL UNSOURCED/);
+    // (2) POLARITY, RED SINCE CHAPTER 3 AND NOW CLOSED. `haan saa` had a
+    //     four-skill performance lesson and no opposite anywhere in 312 files,
+    //     so a bargaining course could name a price and not decline one.
+    //     Chapter 39 teaches `koni`, sourced to a Swadesh word list collected
+    //     for Marwari, and it cost the hand NOTHING: ko + ni is four signs the
+    //     track has had since chapter 5. The gap was never a writing problem,
+    //     which is why it is asserted here atom by atom rather than as a
+    //     boolean.
     const polarity = inventory.points.find((point) => point.id === "MW-A1-ADV-05")!;
-    expect(polarity.probe).toBeNull();
-    expect(inventory.points.find((point) => point.id === "MW-A1-F4-09")!.probe).toBeNull();
+    expect(polarity.probe).toContain("MW-LEX-KONI-01");
+    expect(polarity.probe).toContain("MW-SCRIPT-KONI-01");
+    expect(taught.has("MW-LEX-KONI-01")).toBe(true);
+    expect(taught.has("MW-SCRIPT-KONI-01")).toBe(true);
+    // …and the move this file called the single most consequential missing one.
+    // The walk-away reuses `paachhe milsoo`, taught in chapter 7 as a farewell.
+    const decline = inventory.points.find((point) => point.id === "MW-A1-F4-09")!;
+    expect(decline.probe).toContain("MW-PERFORMANCE-REFUSAL-FOUR-SKILL-01");
+    expect(decline.probe).toContain("MW-SCRIPT-PACHHE-MILSOO-01");
+    // WHAT IS STILL NOT CLAIMED, and the note must say so: `koni` is taught as
+    // a one-word answer, not inside a sentence, so the negative DECLARATIVE is
+    // still open and is now blocked on a frame rather than on a word.
+    const negativeDeclarative = inventory.points.find((point) => point.id === "MW-A1-OS-02")!;
+    expect(negativeDeclarative.probe).toBeNull();
+    expect(negativeDeclarative.note).toMatch(/negative DECLARATIVE/);
     // (3) REPAIR, checked separately: nothing at all, at the one counter where
     //     mishearing the price is the whole risk.
     const repair = inventory.points.find((point) => point.id === "MW-A1-F2-15")!;

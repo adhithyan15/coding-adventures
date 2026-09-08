@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C38-hear-athara",
+    "language": "marwadi",
+    "chapter": 38,
+    "sequence": 3310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27388fce930e6016"
+  },
+  "findings": []
+}

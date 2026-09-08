@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W38-lla",
+    "language": "marwadi",
+    "chapter": 38,
+    "sequence": 3250,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a3f57a8ad31417f0",
+    "detachableSegments": [
+      "Script — a second l"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

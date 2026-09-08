@@ -1,0 +1,36 @@
+{
+  "id": "MW-EXT-045-TEENS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say and write eleven to nineteen in Marwadi, count one to twenty straight through, and say why nineteen is built on twenty.",
+  "prerequisites": [
+    "MW-EXT-044-NUMBERED-EXCHANGE"
+  ],
+  "lessons": [
+    "MW-W37-i",
+    "MW-C37-hear-igyaara",
+    "MW-C37-igyaara",
+    "MW-C37-hear-baara",
+    "MW-C37-baara",
+    "MW-C37-hear-tera",
+    "MW-C37-tera",
+    "MW-C37-hear-chauda",
+    "MW-C37-chauda",
+    "MW-C37-hear-pandara",
+    "MW-C37-pandara",
+    "MW-R37-count-fifteen",
+    "MW-W38-lla",
+    "MW-C38-hear-sola",
+    "MW-C38-sola",
+    "MW-W38-a",
+    "MW-C38-hear-satara",
+    "MW-C38-satara",
+    "MW-C38-hear-athara",
+    "MW-C38-athara",
+    "MW-W38-u",
+    "MW-C38-hear-ughanis",
+    "MW-C38-ughanis",
+    "MW-R38-count-twenty"
+  ]
+}

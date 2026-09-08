@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C37-baara",
+    "language": "marwadi",
+    "chapter": 37,
+    "sequence": 3170,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:791ab6c7333eec49"
+  },
+  "findings": []
+}

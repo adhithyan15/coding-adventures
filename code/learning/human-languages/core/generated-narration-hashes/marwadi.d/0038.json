@@ -1,0 +1,26 @@
+{
+  "language": "marwadi",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:3c5d1124612d3aa9",
+  "lessonIds": [
+    "MW-W38-lla",
+    "MW-C38-hear-sola",
+    "MW-C38-sola",
+    "MW-W38-a",
+    "MW-C38-hear-satara",
+    "MW-C38-satara",
+    "MW-C38-hear-athara",
+    "MW-C38-athara",
+    "MW-W38-u",
+    "MW-C38-hear-ughanis",
+    "MW-C38-ughanis",
+    "MW-R38-count-twenty"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 0,
+  "text": "marwadi/narration/ch38.txt",
+  "json": "marwadi/narration/ch38.json",
+  "textHash": "fnv1a64:61efc06f323720e4",
+  "jsonHash": "fnv1a64:55e4d42721d93ca1",
+  "findings": []
+}

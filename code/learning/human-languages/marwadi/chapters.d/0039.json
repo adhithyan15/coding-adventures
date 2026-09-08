@@ -1,0 +1,16 @@
+{
+  "chapter": 39,
+  "title": "Saying No",
+  "label": "ch:mw-saying-no",
+  "canDo": "I can refuse an offer in Marwadi and leave a bargain open, which the market chapters could not do.",
+  "payoff": {
+    "lesson": "MW-C39-refusal-four",
+    "kind": "four-skill-function-map",
+    "summary": "The refusal and the walk-away run in all four skills, against the counter-offer the market chapters had no answer to.",
+    "assesses": [
+      "MW-LEX-KONI-01",
+      "MW-SCRIPT-KONI-01",
+      "MW-PERFORMANCE-REFUSAL-FOUR-SKILL-01"
+    ]
+  }
+}

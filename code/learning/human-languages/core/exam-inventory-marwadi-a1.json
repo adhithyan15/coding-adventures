@@ -423,7 +423,25 @@
         "MW-SCRIPT-BEES-01",
         "MW-SCRIPT-SO-01",
         "MW-PERFORMANCE-COUNT-FIVE-FOUR-SKILL-01",
-        "MW-PERFORMANCE-COUNT-TEN-FOUR-SKILL-01"
+        "MW-PERFORMANCE-COUNT-TEN-FOUR-SKILL-01",
+        "MW-LEX-IGYAARA-01",
+        "MW-LEX-BAARA-01",
+        "MW-LEX-TERA-01",
+        "MW-LEX-CHAUDA-01",
+        "MW-LEX-PANDARA-01",
+        "MW-LEX-SOLA-01",
+        "MW-LEX-SATARA-01",
+        "MW-LEX-ATHARA-01",
+        "MW-LEX-UGHANIS-01",
+        "MW-SCRIPT-IGYAARA-01",
+        "MW-SCRIPT-BAARA-01",
+        "MW-SCRIPT-TERA-01",
+        "MW-SCRIPT-CHAUDA-01",
+        "MW-SCRIPT-PANDARA-01",
+        "MW-SCRIPT-SOLA-01",
+        "MW-SCRIPT-SATARA-01",
+        "MW-SCRIPT-ATHARA-01",
+        "MW-SCRIPT-UGHANIS-01"
       ],
       "anchorIds": [
         "ES-A1-PROXY",
@@ -435,7 +453,7 @@
         "A1-NG2-01",
         "A1-NE16-01"
       ],
-      "note": "CLOSED BY HL-C350, AND THE NOTE IT REPLACED IS WORTH KEEPING IN VIEW: this file's headline used to be that a curriculum whose chapters 26-31 are a market -- how much is this?, how much altogether?, this is very expensive, make it a little cheaper, what final price will you give?, take the money -- taught NO NUMBER AT ALL, and that ek, do, teen, chaar and paanch returned zero across 257 files. Chapters 32-36 teach twelve cardinals: ek, do, teen, chaar, paanch, chha, saat, aath, no, das, bees, so. Each is heard, then written, then scored in four skills, and each has both a LEX and a SCRIPT atom, so the probe names twenty-four word atoms and the two counting payoffs. WHAT IT COST THE HAND: one letter. Every sign in all twelve words was already in the track except independent ए, isolated in MW-W32-e against the े matra it had been writing since chapter 9. That is why this point was affordable and why no per-track reading found it -- the block was never the script. NOT CLOSED, DELIBERATELY: the numbers between ten and twenty. Marwari builds nineteen as ughanis, one short of twenty (the comparative dictionary records ekuncalis, one short of forty, for thirty-nine), so twenty is taught FIRST and the teens wait on four independent vowels and one consonant the track has never taught -- इ for igyaara, अ for atharaa, उ for ughanis, and ळ for solaa. Those are five script lessons, not a numeral gap, and MW-A1-LIP-13 is where they belong."
+      "note": "CLOSED BY HL-C350 and COMPLETED to twenty by HL-C353's follow-up. The count now runs one to twenty with no hole in it: chapters 32-36 taught twelve cardinals and the ten digits, and chapters 37-38 fill in eleven to nineteen. It cost FOUR signs -- the standing vowels i, a and u and the retroflex consonant lla -- and no other. This point was already covered before the teens landed, so THE TEENS MOVE NO NUMBER IN THIS FILE; they are recorded here because the probe should name what is taught rather than the smallest set that scored the point. TWENTY WAS TAUGHT BEFORE THE TEENS AND THAT ORDER IS NOT ARBITRARY: Marwari's nineteen is ughanis, one short of twenty, built on the number ABOVE it, so a course that counted straight up would have printed bees inside nineteen before it had taught bees."
     },
     {
       "id": "MW-A1-Q-02",
@@ -450,7 +468,7 @@
       "derivedFrom": [
         "A1-Q-02"
       ],
-      "note": "STILL ABSENT, and the reason is worth recording because it is NOT the reason it looks like. Marwari's first four ordinals -- pahlo, dujo, tijo, chautho -- need no sign this track has not taught: प ह ल ो, द ू ज ो, त ी ज ो and च ौ थ ो are all in the corpus already, so this is not a script debt and would cost the hand nothing. It was left uncovered by HL-C350 because no citable Marwari-specific source for the ordinal series was found: the Rajasthani numeral list this track cites for the cardinals prints no ordinals, and the comparative dictionary is a cognate list rather than a paradigm. Ordinals are the weakest column in the whole corpus -- twenty tracks enumerate one and eighteen leave it uncovered -- so this is a shared gap, and here it is a SOURCING gap rather than a teaching one. aakhri (final, last) is taught in chapter 29 and remains the only ordering word in the corpus."
+      "note": "STILL ABSENT, and the reason is worth recording because it is NOT the reason it looks like. Marwari's first four ordinals -- pahlo, dujo, tijo, chautho -- need no sign this track has not taught: प ह ल ो, द ू ज ो, त ी ज ो and च ौ थ ो are all in the corpus already, so this is not a script debt and would cost the hand nothing. It was left uncovered by HL-C350 because no citable Marwari-specific source for the ordinal series was found: the Rajasthani numeral list this track cites for the cardinals prints no ordinals, and the comparative dictionary is a cognate list rather than a paradigm. Ordinals are the weakest column in the whole corpus -- twenty tracks enumerate one and eighteen leave it uncovered -- so this is a shared gap, and here it is a SOURCING gap rather than a teaching one. aakhri (final, last) is taught in chapter 29 and remains the only ordering word in the corpus. RE-CHECKED by HL-C354's ordinal sweep and STILL UNSOURCED: the sweep searched again for a citable Marwari-specific ordinal series and found none, so no series was invented and this point stays open. What changed around it is that the block is now the ONLY reason: the teens tranche taught the four signs the numbers needed and the ordinals needed none of them, so the sourcing gap is not merely the main reason, it is the sole one."
     },
     {
       "id": "MW-A1-Q-03",
@@ -693,7 +711,11 @@
       "id": "MW-A1-ADV-05",
       "category": "Kriya-visheshan (adverbs)",
       "label": "polarity: haan and its opposite",
-      "probe": null,
+      "probe": [
+        "MW-LEX-KONI-01",
+        "MW-SCRIPT-KONI-01",
+        "MW-PERFORMANCE-REFUSAL-FOUR-SKILL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -702,7 +724,7 @@
       "derivedFrom": [
         "A1-ADV-05"
       ],
-      "note": "haan saa is taught in chapter 3 and given a four-skill performance lesson of its own -- and NO WORD FOR NO EXISTS IN THIS TRACK. koni, nain and naa all return zero occurrences in 257 files (the eight raw matches for naa are inside naana and naani). A learner who is shown the wrong cloth, offered the wrong price or asked a question they must decline has been given the affirmative answer and nothing else. Checked separately from coverage, as this series requires."
+      "note": "CLOSED. koni is taught in chapter 39, heard first and then written, and given a four-skill lesson that pairs it with the paachhe milsoo of chapter 7 -- the goodbye that in a market is a walk-away rather than a farewell. The word is sourced to a Swadesh word list collected for Marwari, which gives koni for 'not' where Hindi has nahin, and it is one of the words a Rajasthani ear listens for. It cost the hand NOTHING: ko + ni is four signs the track has had since chapter 5. The gap was never a writing problem."
     },
     {
       "id": "MW-A1-ADV-06",
@@ -923,7 +945,7 @@
       "derivedFrom": [
         "A1-OS-01"
       ],
-      "note": "There is no negator in this track at all (MW-A1-ADV-05), so nothing can be denied, refused or corrected. This and MW-A1-Q-01 are the two gaps that most limit what the market scenario can actually do."
+      "note": "STILL UNCOVERED, and now for a NARROWER reason than before. The negator exists as of chapter 39 (MW-A1-ADV-05), so this point is no longer blocked on vocabulary. What is still missing is the negative DECLARATIVE: koni is taught as a one-word answer to an offer, not inside a sentence, and 'ye sasto koni hai' is modelled nowhere. Closing it needs a sentence frame rather than a word, and it is deliberately not claimed here."
     },
     {
       "id": "MW-A1-OS-03",
@@ -1092,7 +1114,7 @@
       "derivedFrom": [
         "A1-CO-02"
       ],
-      "note": "Unreachable: there is no negator (MW-A1-ADV-05)."
+      "note": "Still uncovered. The negator now exists (MW-A1-ADV-05) so the old note's reason no longer holds, but neither coordinator does: there is no ar and no ya either (MW-A1-CJ-01, MW-A1-CJ-03), so negative coordination is blocked on the joining column rather than on the negator."
     },
     {
       "id": "MW-A1-CJ-03",
@@ -1303,7 +1325,11 @@
       "id": "MW-A1-F1-05",
       "category": "Kaam: soochna dena ar poochhna",
       "label": "confirm or deny the previous statement",
-      "probe": null,
+      "probe": [
+        "MW-LEX-HAAN-01",
+        "MW-LEX-KONI-01",
+        "MW-SCRIPT-KONI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1312,7 +1338,7 @@
       "derivedFrom": [
         "A1-F1-05"
       ],
-      "note": "haan saa confirms, and there is nothing to deny with (MW-A1-ADV-05). Half a point, and the missing half is the half a bargain needs."
+      "note": "CLOSED, and it was exactly half a point before. haan saa has confirmed since chapter 3 and nothing could deny; koni now denies. Chapter 39 puts the two on the page one above the other for the first time in the book, and runs the counter-offer with both branches -- agree, or refuse and leave."
     },
     {
       "id": "MW-A1-F2-01",
@@ -1745,7 +1771,7 @@
       "derivedFrom": [
         "A1-F4-06"
       ],
-      "note": "Unreachable without a negator."
+      "note": "Still uncovered, and no longer for want of a negator: koni is taught in chapter 39. Permission is not asked for anywhere in the track, so there is nothing to refuse."
     },
     {
       "id": "MW-A1-F4-07",
@@ -1785,7 +1811,12 @@
       "id": "MW-A1-F4-09",
       "category": "Kaam: saamne waale ne kehno",
       "label": "decline an offer",
-      "probe": null,
+      "probe": [
+        "MW-LEX-KONI-01",
+        "MW-SCRIPT-KONI-01",
+        "MW-PERFORMANCE-REFUSAL-FOUR-SKILL-01",
+        "MW-SCRIPT-PACHHE-MILSOO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1794,7 +1825,7 @@
       "derivedFrom": [
         "A1-F4-09"
       ],
-      "note": "Unreachable without a negator. In a bargaining curriculum this is the single most consequential missing move: the learner can open a negotiation and cannot walk away from one."
+      "note": "CLOSED, and it was called the single most consequential missing move in this file. Chapter 39 teaches koni and then runs the decline as a two-line move: koni, then paachhe milsoo -- the goodbye chapter 7 taught as a farewell, which in a bazaar is a walk-away that leaves the bargain open rather than ending it. The learner can now open a negotiation AND leave one."
     },
     {
       "id": "MW-A1-F5-01",

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C38-hear-sola",
+    "language": "marwadi",
+    "chapter": 38,
+    "sequence": 3260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cd401f868ffe12d"
+  },
+  "findings": []
+}

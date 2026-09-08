@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C38-satara",
+    "language": "marwadi",
+    "chapter": 38,
+    "sequence": 3300,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d46c57a53f7417a7"
+  },
+  "findings": []
+}
