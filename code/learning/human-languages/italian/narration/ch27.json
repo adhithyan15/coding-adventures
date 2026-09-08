@@ -1,0 +1,955 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 27,
+  "title": "Sesto al Decimo",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:41251cd629daaf58",
+  "lessons": [
+    {
+      "id": "IT-C27-sesto",
+      "sequence": 940,
+      "title": "sesto — the sixth, and a letter that disappeared",
+      "headword": "sesto / sesta",
+      "romanization": "sesto / sesta",
+      "gloss": "sixth — the shortest step in the series",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:ba1055d080d50eed",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls open the chapter, at the four measured distances."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quinto — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quinto* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say primo — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *primo* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say la famiglia — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *la famiglia* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il padre e la madre — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il padre e la madre* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il pane — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il pane* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say prego, here you are — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *prego, here you are* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Prego? — come again — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Prego? — come again* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sesto (masculine), sesta (feminine) — sixth. il sesto piano — the sixth floor. la sesta volta — the sixth time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: the letter that went",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin had sex and sextus, both with an x — which is a ks sound written with one letter. Italian does not keep x in inherited words. The cluster came apart and simplified, and both words lost it: sex became sei, and sextus became sesto."
+            },
+            {
+              "kind": "speech",
+              "text": "You can see the same disappearance in every Italian word that had one. It is why Italian spelling looks so much plainer than Latin's, and why a Latin word with an x is usually recognisable in Italian with an s or a doubled consonant in its place."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the x because it borrowed from books rather than inheriting from speech: sextet, sextant."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sesto, sesta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sesto, sesta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the join — sei becomes sesto, both from an x that went",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the join — *sei → sesto*, both from an *x* that went]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sesta volta — the sixth time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sesta volta* — the sixth time]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What letter did Latin sextus have that sesto has not? (X — a ks sound.) What happened to the same letter in sex? (It went too — sei.) And say \"the sixth floor.\" (Il sesto piano.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C27-settimo",
+      "sequence": 950,
+      "title": "settimo — the seventh, and the seventh heaven",
+      "headword": "settimo / settima",
+      "romanization": "settimo / settima",
+      "gloss": "seventh — and the heaven that is a number",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:412555c9594b676d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the seventh."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sesto — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sesto* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say secondo — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *secondo* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il nome — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il nome* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say undici a sedici — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *undici a sedici* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say diciassette a venti — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *diciassette a venti* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say come — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *come* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say stare — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *stare* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "settimo (masculine), settima (feminine) — seventh. il settimo piano — the seventh floor. la settima volta — the seventh time."
+            },
+            {
+              "kind": "speech",
+              "text": "The double tt stays and you must hold it — SET-ti-mo, with the stress right at the front. A single t would make a different word's shape."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: al settimo cielo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "essere al settimo cielo — to be in seventh heaven, delighted."
+            },
+            {
+              "kind": "speech",
+              "text": "The phrase is old and it is astronomy. Mediaeval writers counted the heavens outward from the earth — Moon, Mercury, Venus, Sun, Mars, Jupiter, and then Saturn, the seventh — and above them the fixed stars. The seventh was the highest a planet reached, so being at it meant being as high as you could get."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the same idiom and the same count. Italian says it with the ordinal you have this minute learned, which is a reasonable place to notice that these words are not only for floors."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "settimo, settima — SET-ti-mo, hold the tt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *settimo, settima* — *SET-ti-mo*, hold the *tt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the join — sette becomes settimo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the join — *sette → settimo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "essere al settimo cielo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *essere al settimo cielo*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where is the stress in settimo? (On the first syllable.) What is the seventh heaven, counted out? (Saturn — the outermost planet in the mediaeval count.) And say \"the seventh time.\" (La settima volta.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C27-ottavo",
+      "sequence": 960,
+      "title": "ottavo — the ending that breaks step",
+      "headword": "ottavo / ottava",
+      "romanization": "ottavo / ottava",
+      "gloss": "eighth — the one that takes a different ending, and the eight notes named after it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5613dfb67fa783f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the eighth — the one that does not do what the last four did."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say settimo — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *settimo* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say terzo — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *terzo* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say la persona — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *la persona* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nero e bianco — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nero e bianco* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rosso e blu — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rosso e blu* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Come stai? — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Come stai?* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Come sta? — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Come sta?* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ottavo (masculine), ottava (feminine) — eighth. l'ottavo piano — the eighth floor. l'ottava volta — the eighth time."
+            },
+            {
+              "kind": "speech",
+              "text": "Otto is eight. By now you would expect otto with the ending the last four took, and it is not that: this one ends in -avo, and it is the only one of the ten that does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: an octave is a count",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin octāvus already had the odd -āvus, and Italian inherited the oddity rather than tidying it away — which is what usually happens to a word that is used too often to be regularised."
+            },
+            {
+              "kind": "speech",
+              "text": "L'ottava in music is the eighth note: do re mi fa sol la si and then do again, where the names come round. The interval is named for the count that closes it, and Italian named the notes too — do, re, mi are the opening syllables of a mediaeval hymn, set down by an Italian monk."
+            },
+            {
+              "kind": "speech",
+              "text": "So the word for a musical octave and the word for the eighth floor are the same word, and the music is the one that explains the name."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ottavo, ottava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ottavo, ottava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the odd ending — -avo, not the ending the last four took",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the odd ending — **-avo**, not the ending the last four took]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'ottava — the eighth note, where the names begin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'ottava* — the eighth note, where the names begin again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What ending does ottavo take, and how many of the ten take it? (-avo, and only this one.) What is an octave, counted out? (The eighth note, where the names start again.) And say \"the eighth floor.\" (L'ottavo piano.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C27-nono",
+      "sequence": 970,
+      "title": "nono — the ninth, squeezed shut",
+      "headword": "nono / nona",
+      "romanization": "nono / nona",
+      "gloss": "ninth — shorter than its own number",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1f2791a3f87bc59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the ninth — the one that gets shorter."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ottavo — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ottavo* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quarto — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quarto* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il cuore — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il cuore* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say avere — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *avere* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ho parlato — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ho parlato* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say Come va? — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *Come va?* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say così così — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *così così* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nono (masculine), nona (feminine) — ninth. il nono piano — the ninth floor. la nona volta — the ninth time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: shorter, not longer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nove is nine. Every ordinal so far has been at least as long as its cardinal; this one is shorter. Latin had novēnus and squeezed it shut into nōnus, and Italian inherited the squeezed form."
+            },
+            {
+              "kind": "speech",
+              "text": "Two ordinals running have now bent the shape in two different directions — ottavo by taking an odd ending, nono by losing sound. That is what a series of inherited words looks like from inside: not a rule with exceptions, but ten words that each survived a slightly different accident."
+            },
+            {
+              "kind": "speech",
+              "text": "And the feminine stands on its own in Italian. La Nona — no noun after it — means Beethoven's ninth symphony, the way English says the Ninth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nono, nona",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nono, nona*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the squeeze — nove becomes nono, shorter than its number",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the squeeze — *nove → nono*, shorter than its number]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la Nona — the Ninth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la Nona* — the Ninth]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is nono longer or shorter than nove? (Shorter — it was squeezed shut.) Which two ordinals bend the shape, and how differently? (Ottavo takes an odd ending; nono loses sound.) And what is la Nona? (The Ninth — the symphony.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C27-decimo",
+      "sequence": 980,
+      "title": "decimo — the tenth, and the split heard again",
+      "headword": "decimo / decima",
+      "romanization": "decimo / decima",
+      "gloss": "tenth — the last of the ten memorized words, and the pair that repeats the fifth's split",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14af28d86d917ce6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the tenth, which closes the memorized ten."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nono — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nono* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quinto — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quinto* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say l'occhio — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *l'occhio* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say parlò — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *parlò* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say essere — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *essere* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say non c'è male — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *non c'è male* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the second chapter's own recombining — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *the second chapter's own recombining* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "decimo (masculine), decima (feminine) — tenth. il decimo piano — the tenth floor. la decima volta — the tenth time."
+            },
+            {
+              "kind": "speech",
+              "text": "Stress at the front: DE-chi-mo, three syllables."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built: the split, and the end of the list",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The quinto lesson promised this pair, and here it is. Dieci has a soft ch-sound in the middle; decimo has the same letter and it is soft too — DE-chi-mo — but the vowel went the other way: the cardinal broke its e into ie and the ordinal did not. One more word that moved while its twin stood still."
+            },
+            {
+              "kind": "speech",
+              "text": "La decima was the tithe, the tenth of a harvest owed to the church, and Italian still uses the feminine that way."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the ten. Primo to decimo — ten separate words, each inherited whole from Latin, each with its own small accident. There is no rule that generates them, and you have now met all of them. The next lesson is the good news: from eleven upward Italian stopped inheriting and started building, and one ending does the rest of the number line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "decimo, decima — DE-chi-mo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *decimo, decima* — *DE-chi-mo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — dieci broke its vowel, decimo did not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *dieci* broke its vowel, *decimo* did not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all ten in order, primo to decimo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all ten in order, *primo* to *decimo*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How is decimo said? (DE-chi-mo, stress at the front.) What did dieci do to its vowel that decimo did not? (Broke it into ie.) And how many separate inherited words are there from first to tenth? (Ten — no rule generates them.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

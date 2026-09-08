@@ -1,0 +1,26 @@
+{
+  "chapter": 26,
+  "title": "Primo, Secondo, Terzo",
+  "label": "ch:it-ordinali",
+  "canDo": "I can say first to fifth in Italian with the right ending, read the two courses on an Italian menu, and ask for a quarter of an hour.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "IT-C26-quinto",
+    "kind": "production",
+    "summary": "The fifth ordinal said against the four before it, and the sound split that makes cinque and quinto refuse to rhyme.",
+    "assesses": [
+      "IT-LEX-PRIMO-02",
+      "IT-ETYMON-PRIMO-03",
+      "IT-LEX-SECONDO-02",
+      "IT-NOTICE-SECONDO-03",
+      "IT-LEX-TERZO-02",
+      "IT-ETYMON-TERZO-03",
+      "IT-LEX-QUARTO-02",
+      "IT-LEX-QUARTO-03",
+      "IT-LEX-QUINTO-02",
+      "IT-SOUND-QUINTO-03"
+    ]
+  }
+}

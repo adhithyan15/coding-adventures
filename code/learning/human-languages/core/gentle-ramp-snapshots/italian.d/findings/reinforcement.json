@@ -4,7 +4,7 @@
   "finding": {
     "language": "italian",
     "kind": "reinforcement",
-    "count": 342,
+    "count": 279,
     "unit": "missed window(s)",
     "detail": "add retrieval at the expanding R1-R4 intervals"
   }

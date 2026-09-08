@@ -1,0 +1,13 @@
+{
+  "id": "IT-EXT-032-ORDINE",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can build any ordinal above ten with -esimo, put two things in order with prima and dopo, and lay out the courses of a meal in sequence.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C28-undicesimo",
+    "IT-C28-prima",
+    "IT-C28-dopo",
+    "IT-C28-practice"
+  ]
+}

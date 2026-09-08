@@ -144,8 +144,24 @@ describe("the committed Italian A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(292);
-    expect(coverage.covered).toBe(111);
-    expect(coverage.unmapped).toBe(181);
+    expect(coverage.covered).toBe(114);
+    expect(coverage.unmapped).toBe(178);
+    // THE ORDINAL COLUMN, which HL-C350 measured as the weakest in the whole
+    // corpus: twenty tracks enumerate an ordinal point and eighteen left it
+    // uncovered. Italian held THREE of those points, more than any other track,
+    // and the ordinal tranche closed all three -- IT-A1-Q-04, IT-A1-NG-15 and
+    // IT-A1-NG-19. Before it, the entire corpus of 93 Italian lessons contained
+    // one ordinal, `primo`, and it was inside the GLOSS of primavera rather than
+    // taught. IT-A1-Q-03 (cardinals above twenty) is untouched and stays named:
+    // venti is still the ceiling.
+    expect(coverage.byCategory["I quantificatori (quantity and number)"]!).toEqual({
+      enumerated: 6,
+      covered: 3,
+    });
+    expect(coverage.byCategory["Nozioni generali (general notions)"]!).toEqual({
+      enumerated: 36,
+      covered: 14,
+    });
     expect(coverage.partial).toBe(0);
     // The joining column, which has been near-empty in every track measured.
     // Italian's ONE covered point is covered sideways: chapter 16's lesson on
@@ -166,7 +182,7 @@ describe("the committed Italian A1 inventory", () => {
     expect(coverage.byCategory["Il verbo (the verb)"]!).toEqual({ enumerated: 19, covered: 15 });
     expect(coverage.byCategory["Il sostantivo (the noun)"]!).toEqual({ enumerated: 8, covered: 8 });
     expect(formatExamCoverage(coverage)).toContain(
-      "italian A1 (partial inventory): 111/292 points covered (38%)",
+      "italian A1 (partial inventory): 114/292 points covered (39%)",
     );
   }, 60_000);
 
