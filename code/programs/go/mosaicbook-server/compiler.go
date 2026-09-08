@@ -23,6 +23,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -85,6 +86,13 @@ func (c *cappedWriter) String() string {
 // Compiler output captured for error messages is capped at maxCompilerOutputBytes
 // (via cappedWriter) to avoid holding unbounded buffers in memory.
 func (s *Server) compile(c Component, backend string, outputPath string, story *Story) error {
+	return s.compileContext(context.Background(), c, backend, outputPath, story)
+}
+
+// compileContext is compile with cancellation. The interactive server uses a
+// background context, while the CI catalogue checker supplies a hard overall
+// deadline so a hung compiler cannot consume a runner indefinitely.
+func (s *Server) compileContext(ctx context.Context, c Component, backend string, outputPath string, story *Story) error {
 	// A story's fixtures reach the compiler as a JSON file, the shape
 	// mosaic-compile's --fixtures expects: a flat object of slot name to
 	// value. Written per compile and removed after, so concurrent previews of
@@ -107,7 +115,7 @@ func (s *Server) compile(c Component, backend string, outputPath string, story *
 		}
 	}
 
-	cmd := exec.Command(s.compilerPath, compilerArgs(c, backend, outputPath, fixturesPath)...)
+	cmd := exec.CommandContext(ctx, s.compilerPath, compilerArgs(c, backend, outputPath, fixturesPath)...)
 
 	// Capture combined stdout+stderr so we can surface compiler errors in the
 	// preview HTML page rather than just logging them server-side.
@@ -117,6 +125,9 @@ func (s *Server) compile(c Component, backend string, outputPath string, story *
 	err := cmd.Run()
 
 	if err != nil {
+		if ctxErr := ctx.Err(); ctxErr != nil {
+			return fmt.Errorf("mosaic-compile %s: %w", backend, ctxErr)
+		}
 		// Distinguish "binary not found" from "compilation failed" — the former
 		// needs a setup hint, the latter needs the compiler error text.
 		if isNotFound(err) {
