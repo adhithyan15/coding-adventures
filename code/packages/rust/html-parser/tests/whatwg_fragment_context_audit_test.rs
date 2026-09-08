@@ -43,7 +43,7 @@ const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str, &str)] = &[
         "svg path",
         "fragment-foreign-context",
     ),
-    ("template-dat-109", "template", "fragment-template-context"),
+    ("template-dat-116", "template", "fragment-template-context"),
 ];
 const TEMPLATE_FRAGMENT_CROSS_AXIS_SUITES: &[(&str, &str, &str)] = &[
     (
@@ -127,7 +127,7 @@ const FRAMESET_FRAGMENT_CROSS_AXIS_SUITES: &[(&str, &str, &str)] = &[
 ];
 const FRAGMENT_CROSS_AXIS_CASES: &[FragmentCrossAxisCase] = &[
     FragmentCrossAxisCase {
-        id: "template-dat-109",
+        id: "template-dat-116",
         context: "template",
         fragment_axis: "fragment-template-context",
         data_snippet: "<template><form><input name=\"q\"></form><div>second</div></template>",

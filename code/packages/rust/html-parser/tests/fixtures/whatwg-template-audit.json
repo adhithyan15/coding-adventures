@@ -1,5 +1,5 @@
 {
-  "case_count": 118,
+  "case_count": 131,
   "cases": [
     {
       "axis": "head-body-template",
@@ -681,15 +681,15 @@
     },
     {
       "axis": "table-template",
-      "id": "template-dat-112",
+      "id": "template-dat-127",
       "reason": "template insertion while table insertion modes are active",
-      "source": "template.dat:112"
+      "source": "template.dat:127"
     },
     {
       "axis": "template-fragment-context",
-      "id": "template-dat-109",
+      "id": "template-dat-116",
       "reason": "fragment parsing with template as the context element",
-      "source": "template.dat:109"
+      "source": "template.dat:116"
     },
     {
       "axis": "head-body-template",
@@ -705,22 +705,100 @@
     },
     {
       "axis": "table-template",
-      "id": "template-dat-46",
+      "id": "template-dat-52",
       "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:52"
+    },
+    {
+      "axis": "frameset-template",
+      "id": "template-dat-44",
+      "reason": "template insertion around frameset and frame recovery",
+      "source": "template.dat:44"
+    },
+    {
+      "axis": "frameset-template",
+      "id": "template-dat-45",
+      "reason": "template insertion around frameset and frame recovery",
+      "source": "template.dat:45"
+    },
+    {
+      "axis": "frameset-template",
+      "id": "template-dat-46",
+      "reason": "template insertion around frameset and frame recovery",
       "source": "template.dat:46"
+    },
+    {
+      "axis": "frameset-template",
+      "id": "template-dat-47",
+      "reason": "template insertion around frameset and frame recovery",
+      "source": "template.dat:47"
+    },
+    {
+      "axis": "frameset-template",
+      "id": "template-dat-48",
+      "reason": "template insertion around frameset and frame recovery",
+      "source": "template.dat:48"
+    },
+    {
+      "axis": "frameset-template",
+      "id": "template-dat-49",
+      "reason": "template insertion around frameset and frame recovery",
+      "source": "template.dat:49"
+    },
+    {
+      "axis": "table-template",
+      "id": "template-dat-117",
+      "reason": "template insertion while table insertion modes are active",
+      "source": "template.dat:117"
+    },
+    {
+      "axis": "template-fragment-context",
+      "id": "template-dat-118",
+      "reason": "fragment parsing with template as the context element",
+      "source": "template.dat:118"
+    },
+    {
+      "axis": "template-shell",
+      "id": "template-dat-119",
+      "reason": "ordinary template start/end tags and content model boundaries",
+      "source": "template.dat:119"
+    },
+    {
+      "axis": "template-fragment-context",
+      "id": "template-dat-120",
+      "reason": "fragment parsing with template as the context element",
+      "source": "template.dat:120"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-121",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:121"
+    },
+    {
+      "axis": "nested-template",
+      "id": "template-dat-122",
+      "reason": "nested template stacks and template-stack unwinding",
+      "source": "template.dat:122"
+    },
+    {
+      "axis": "template-shell",
+      "id": "template-dat-123",
+      "reason": "ordinary template start/end tags and content model boundaries",
+      "source": "template.dat:123"
     }
   ],
   "counts_by_axis": {
     "eof-template": 19,
     "foreign-content-template": 2,
-    "frameset-template": 5,
+    "frameset-template": 11,
     "head-body-template": 11,
-    "nested-template": 22,
+    "nested-template": 24,
     "rawtext-template": 4,
     "select-template": 6,
-    "table-template": 44,
-    "template-fragment-context": 1,
-    "template-shell": 4
+    "table-template": 45,
+    "template-fragment-context": 3,
+    "template-shell": 6
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress template insertion modes, nested template stacks, EOF recovery, and template interactions with tables, selects, framesets, document shells, text modes, foreign content, and fragment contexts.",
   "format": "whatwg-html-template-audit/v1",

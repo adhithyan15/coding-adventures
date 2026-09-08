@@ -82,13 +82,17 @@ fn html5lib_coverage_audit_fixture_matches_checked_local_corpora() {
             .chars()
             .all(|character| character.is_ascii_hexdigit())
     );
-    assert_eq!(audit.tree_construction.upstream_cases, 1938);
+    assert_eq!(audit.tree_construction.upstream_cases, 1952);
     assert_eq!(audit.tree_construction.local_cases, tree_cases.len());
-    assert_eq!(audit.tree_construction.local_cases, 2641);
-    assert_eq!(audit.tree_construction.missing, 0);
+    assert_eq!(audit.tree_construction.local_cases, 2654);
+    assert_eq!(audit.tree_construction.missing, 1);
     assert_eq!(
         audit.tree_construction.missing_sources.len(),
         audit.tree_construction.missing
+    );
+    assert_eq!(
+        audit.tree_construction.missing_sources,
+        ["template.dat:124"]
     );
     assert_eq!(
         missing_source_count(&audit.tree_construction, "processing-instructions.dat:"),
