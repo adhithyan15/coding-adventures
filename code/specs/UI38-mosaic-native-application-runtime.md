@@ -207,8 +207,13 @@ engine. The v1 standard effect set is:
 | preferences | locale, color scheme, text scale, reduced motion |
 | accessibility | polite and assertive announcement |
 
-Every request carries an effect id. Completion, cancellation, denial, and failure
-return as normal events carrying that id. Permission denial is a first-class result.
+Every request carries an effect id. UI47 refines the completion protocol: awaited
+success, cancellation and failure return through the dedicated effect-completion
+channel, not app-private UI events. Permission denial is an explicit failure.
+Protocol v1 currently serializes requests but does not implement that channel;
+UI47 implementation is required before hosts can claim awaited capability support.
+While an Await request is pending, UI47 section 8 requires typed refusal of
+standalone snapshot/restore without changing app state or replaying I/O.
 Backends must report unsupported effects during packaging under the strict profile;
 runtime `unimplemented` placeholders are forbidden.
 

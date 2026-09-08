@@ -244,9 +244,9 @@ completion has a suspended flow, which interacts with `snapshot` and `restore`
 in ways v1 never had to consider. **What happens to an in-flight effect when
 the app is snapshotted?** The honest answer is that a snapshot taken mid-effect
 must either refuse, or record the pending effect and re-emit it on restore.
-This spec does not settle that, and it should be settled before step 1 — it is
-the most likely source of a subtle bug in the whole design, and it deserves its
-own issue rather than a paragraph here.
+Section 8 now settles that question (#13932): refuse standalone snapshot and
+restore while any Await effect remains outstanding. This unblocks the protocol
+implementation tracked in #14547; it does not mean the channel exists yet.
 
 **The deciding argument** is that (B) is not actually a resting place. It is
 today's situation with a name, and today's situation already silently swallows
@@ -256,11 +256,98 @@ a delete.
 
 ## 7. What this does not decide
 
-- The snapshot/restore interaction for in-flight effects (§6). **Blocking for
-  step 1.**
+- The platform-specific mechanics of cancelling an open dialog or interrupted
+  file write. The runtime outcome must still be explicit; section 8 defines the
+  snapshot and identity rules regardless of platform.
 - Whether `openCard` should exist at all. It is a `Notify` under this design,
   but a notification no host consumes may simply be surface to delete. That is
   an Engram question, not a protocol one.
 - Whether `hostIntent` is removed once effects land, or kept as a compatibility
   shim for the web host, where there is no C ABI and the JS bridge could keep
   its current shape.
+
+
+## 8. Snapshot boundary for awaited effects (decision: #13932)
+
+### 8.1 Refuse, without changing state
+
+A running instance with one or more outstanding `Await` effects MUST refuse
+standalone `snapshot` and `restore` with a typed `PendingEffects` result. Check
+this before calling the application's snapshot/restore methods. The result
+includes the outstanding effect identities so the host can explain why a save
+or checkpoint is deferred. It is not an empty snapshot or a successful no-op.
+
+Refusal MUST leave application state, pending effects, event sequence and update
+revision unchanged. It MUST NOT cancel a dialog, roll back a user action, emit a
+replacement request, or repeat a file operation. `Notify` effects do not block
+snapshotting because no completion is owed for them.
+
+Snapshots contain settled application state. Pending requests, file handles and
+host callbacks are not added to the opaque snapshot format. A successful restore
+therefore never reopens a dialog or repeats an external operation merely because
+it occurred before the snapshot. This decision adds no field to `Snapshot`.
+
+### 8.2 Retirement and identity
+
+An awaited effect remains pending until its completion is accepted. Success,
+explicit cancellation and failure are all terminal outcomes when accepted by the
+application. If validation or the application rejects a completion, its identity
+remains pending and sequence/revision are not consumed; the host may correct the
+completion without repeating the external operation. Applications must validate
+before mutation, as with ordinary rejected dispatches.
+
+The runtime rejects duplicate, unknown and stale completion identities before
+calling application code. Effect identities belong to an app instance's lifetime,
+not to snapshot contents: a same-instance restore MUST NOT reset the identity
+allocator or make a retired id valid again. A fresh instance has a separate
+namespace. Host callbacks retain their originating instance identity and MUST NOT
+be delivered to a replacement instance. Destroying an instance invalidates its
+pending completions; it does not authorize the host to replay their side effects.
+
+A completion may itself emit another `Await` request. Snapshot/restore remains
+blocked until the whole pending set is empty, including that new request. The
+runtime checks and retires identities as part of accepting the update, not when
+a host merely begins handling the request.
+
+### 8.3 Save and open flows
+
+For Save, capture the versioned workbook snapshot before emitting the awaited
+file-save request. The payload represents that consistent point in time even if
+the application later permits more editing. A completed write acknowledges those
+bytes; it does not imply that later edits have also been saved.
+
+For Open, keep the current workbook until the awaited result is accepted. The
+application validates and applies the returned snapshot as part of completion.
+This is not a separate host `restore` call while the dialog effect is pending.
+Malformed data, cancellation and read failure must leave the existing workbook
+intact. A failed completion handler must not partially replace its state.
+
+Autosave/checkpoint hosts retain the last successful checkpoint and defer a new
+one while `PendingEffects` is reported. Retry after a terminal completion, rather
+than spinning or silently discarding the requested checkpoint. Hosts that require
+an immediate checkpoint may ask to cancel a capability, then wait for explicit
+accepted cancellation before retrying. Timeout or closing a dialog does not by
+itself retire an effect in the runtime.
+
+This policy does not make external writes transactional across a process crash.
+A host must not infer from the absence of a new checkpoint that a previous file
+write did not occur. Resuming an interrupted operation requires a separate,
+explicit recovery design; automatic replay is not part of this contract.
+
+### 8.4 Required conformance before file controls ship
+
+- A pending Await request causes typed snapshot and standalone restore refusal;
+  neither application method runs, and state/sequence/revision remain unchanged.
+- Notify-only updates remain snapshot-compatible.
+- Accepted success, cancellation and failure retire the request exactly once;
+  duplicate, unknown and old-instance completions never reach application code.
+- Rejected completion leaves the original request pending without new I/O.
+- A completion that emits another Await request still blocks a checkpoint.
+- After the pending set empties, snapshots restore into a fresh instance without
+  re-emitting the completed request. Same-instance restore cannot reuse its id.
+- Save uses the bytes captured before Await. Invalid/cancelled Open preserves
+  current workbook data and pending cell edits; valid Open applies atomically.
+
+These are implementation acceptance requirements, not claims about protocol v1.
+The existing runtime still has no completion channel. Implement #14547 before
+adding browser file-effect handling or VisiCalc saved-workbook controls.
