@@ -72,7 +72,7 @@ other:
 
 **-મું** is not a one-off. Wiktionary's entry for the suffix builds the ordinal
 of every Gujarati number with it except five: **એક**, **બે**, **ત્રણ**, **ચાર**,
-and the word for six, which this book has not reached.
+and the word for six, which the next chapter reaches.
 
 That list lands well for you. Your count stops at **પાંચ**, so of the five
 ordinals you can reach at all, **four stand on the exception list and one does

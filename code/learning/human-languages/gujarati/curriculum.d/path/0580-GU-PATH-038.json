@@ -1,0 +1,19 @@
+{
+  "id": "GU-PATH-038",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "GU-C39-chha",
+    "GU-C39-saat",
+    "GU-W22-ttha",
+    "GU-C39-aath",
+    "GU-C39-nav",
+    "GU-C39-das",
+    "GU-C39-ordinal-reach",
+    "GU-R39-one-to-ten"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-050-CARDINALS-SIX-TO-TEN"
+  ],
+  "after": []
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 43,
+  "title": "Past Five, and the Balance Turns Over",
+  "label": "ch:gu-six-to-ten",
+  "canDo": "I can count from one to ten in Gujarati, write the one new letter that eight needs, and build the ordinal of any number from seven upward without ever being taught the word.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "GU-R39-one-to-ten",
+    "kind": "production",
+    "summary": "Complete GU-R39-one-to-ten: run ek to das without stopping, then run the ordinals and say which five of the ten you built rather than learned.",
+    "assesses": [
+      "GU-LEX-CHHA-SIX",
+      "GU-LEX-SAAT",
+      "GU-SCRIPT-TTHA-01",
+      "GU-LEX-AATH",
+      "GU-LEX-NAV",
+      "GU-LEX-DAS",
+      "GU-GRAMMAR-ORDINAL-MU-REACH"
+    ],
+    "note": "The chapter runs in counting order, six to ten, because for these five numbers counting order IS the construction order: Wiktionary's -mun entry ends its exception list at chha, so the reader crosses the boundary between exception and rule exactly once, between the first lesson and the second. Ordering by cost was the alternative -- four of the five numbers need no new sign and only aath needs one -- and it was rejected because it would have left the reader counting round a hole at eight for two lessons to save nothing. The one sign, ttha, is bought in the third lesson, which is where chapters 35-41 already put their writing lesson."
+  }
+}

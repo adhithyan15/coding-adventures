@@ -1943,8 +1943,15 @@ describe("the committed Gujarati A1 inventory", () => {
     // 120 -> 121. HL-C359 closes GU-A1-NUM-05, the ordinal point, with chapter
     // 42. Sankhya goes 1/5 to 2/5; the three still open are all the count
     // stopping at five, not the ordinal.
-    expect(coverage.covered).toBe(121);
-    expect(coverage.unmapped).toBe(89);
+    // 121 -> 122. HL-C361 closes GU-A1-NUM-03, the cardinals six to ten, with
+    // chapter 43. ONE point, and the total is the least of what moved: the
+    // reachable count doubles (highest numeral 5 -> 10), the track's numeral
+    // LESSONS go 1 -> 6, and the ordinal rule stops being a single worked
+    // example and becomes productive above the exception list -- none of which
+    // a coverage total can see, because every one of them deepens a tick that
+    // was already there.
+    expect(coverage.covered).toBe(122);
+    expect(coverage.unmapped).toBe(88);
     expect(coverage.partial).toBe(0);
     // THE HEADLINE HAS CHANGED, and this assertion is the record of it. It read
     // `covered: 0` and was the starkest finding in the file: `ane` returned ZERO
@@ -1974,13 +1981,20 @@ describe("the committed Gujarati A1 inventory", () => {
     // the script is finished; the uncovered points in this column are that
     // distinction, and seven chapters of joining did not touch it.
     expect(coverage.byCategory["Lipi (script and orthography)"]!.covered).toBe(9);
+    // Unchanged again after chapter 43, and that is the point worth keeping: the
+    // cardinal tranche spent exactly one new letter (44 of 44 glyphs taught
+    // becomes 45 of 45) and did not touch a single DIGIT. GU-A1-NUM-08 is still
+    // zero of ten, and is now the only reading gap left below ten.
+    expect(
+      inventory.points.find((point) => point.id === "GU-A1-NUM-08")?.probe,
+    ).toBeNull();
     // The columns the tranche moved that it was not aiming at: the negator alone
     // closed the can't-say-I-don't-understand function, and the question family
     // closed four at once.
     expect(coverage.byCategory["Nakaar (negation)"]!).toEqual({ enumerated: 4, covered: 3 });
     expect(coverage.byCategory["Prashna (asking questions)"]!).toEqual({ enumerated: 10, covered: 8 });
     expect(formatExamCoverage(coverage)).toContain(
-      "gujarati A1 (partial inventory): 121/210 points covered (58%)",
+      "gujarati A1 (partial inventory): 122/210 points covered (58%)",
     );
   }, 60_000);
 
@@ -2008,10 +2022,46 @@ describe("the committed Gujarati A1 inventory", () => {
       "GU-GRAMMAR-ORDINAL-IJU",
     ]);
     for (const atom of ordinals?.probe ?? []) expect(taught.has(atom), atom).toBe(true);
-    // The cardinal the rule stands on is taught, and is the reason the count
-    // stops where it does. GU-A1-NUM-03 (six to ten) is still open.
+    // The cardinal the rule stands on is taught, and is the reason the chapter
+    // opens where it does.
     expect(taught.has("GU-LEX-NUMBERS-ONE-TO-FIVE")).toBe(true);
-    expect(inventory.points.find((point) => point.id === "GU-A1-NUM-03")?.probe).toBeNull();
+  }, 60_000);
+
+  // The cardinal point, named rather than left to the aggregate. Both halves
+  // were falsified before this was kept: a fabricated id fails the "probes only
+  // atoms that EXIST" test above AND the per-atom loop below, and nulling the
+  // probe fails the coverage total two tests up as well as this file's own
+  // `toEqual` on the probe list.
+  it("closes GU-A1-NUM-03 on five cardinals, one letter and a rule with both edges", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "gujarati");
+    const cardinals = inventory.points.find((point) => point.id === "GU-A1-NUM-03");
+    // In COUNTING order, because for six to ten that IS the construction order:
+    // Wiktionary's -mun entry ends its exception list at chha, so the reader
+    // crosses the boundary between exception and rule exactly once, between the
+    // first lesson and the second. Ordering by cost was available -- four of the
+    // five need no new sign -- and was rejected, because it buys nothing and
+    // leaves the reader counting round a hole at eight.
+    expect(cardinals?.probe).toEqual([
+      "GU-LEX-CHHA-SIX",
+      "GU-LEX-SAAT",
+      "GU-LEX-AATH",
+      "GU-LEX-NAV",
+      "GU-LEX-DAS",
+    ]);
+    for (const atom of cardinals?.probe ?? []) expect(taught.has(atom), atom).toBe(true);
+    // The chapter's other two atoms are NOT in the probe, because neither is a
+    // cardinal: the one new letter, and the rule that names both edges of the
+    // -mun exception list. Both are taught, and the rule atom is the reason the
+    // ordinals above sixth need no lesson of their own.
+    expect(taught.has("GU-SCRIPT-TTHA-01")).toBe(true);
+    expect(taught.has("GU-GRAMMAR-ORDINAL-MU-REACH")).toBe(true);
+    // What is NOT claimed, asserted rather than left to be inferred: the
+    // irregular sixth ordinal is printed once with its source and taught as no
+    // atom at all, so no GU-LEX-* id for it exists anywhere in the corpus.
+    expect(taught.has("GU-LEX-CHHATHTHU")).toBe(false);
+    // And the count still stops at ten. GU-A1-NUM-04 wants agiyaar upward.
+    expect(inventory.points.find((point) => point.id === "GU-A1-NUM-04")?.probe).toBeNull();
   }, 60_000);
 });
 
