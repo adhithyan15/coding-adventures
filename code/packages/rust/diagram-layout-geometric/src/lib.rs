@@ -6,11 +6,67 @@
 //! resolves the canvas size (from an explicit `width`/`height` or from the
 //! bounding box of all elements) and passes elements through unchanged.
 
-use diagram_ir::{GeoElement, GeometricDiagram, LayoutedGeometricDiagram};
+use std::collections::HashMap;
+use diagram_ir::{GeoElement, GeometricDiagram, LayoutedGeometricDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, VennDiagram};
 
 pub const VERSION: &str = "0.1.0";
 
 const MARGIN: f64 = 20.0;
+
+/// Produce stable Venn geometry. Sizes affect radii; exact area-proportional
+/// overlap optimization is deliberately outside this partial slice.
+pub fn layout_venn(diagram: &VennDiagram, canvas_width: f64) -> LayoutedVennDiagram {
+    let width = canvas_width.max(360.0);
+    let height = (width * 0.68).max(300.0);
+    let title_offset = if diagram.title.is_some() { 34.0 } else { 0.0 };
+    let sets: Vec<_> = diagram.regions.iter().filter(|region| region.sets.len() == 1).collect();
+    let max_size = sets.iter().map(|set| set.size).fold(1.0_f64, f64::max);
+    let orbit = (width.min(height - title_offset) * 0.16).max(36.0);
+    let base_radius = (width.min(height - title_offset) * 0.25).max(64.0);
+    let center_x = width / 2.0;
+    let center_y = title_offset + (height - title_offset) / 2.0;
+    let count = sets.len().max(1) as f64;
+    let circles: Vec<_> = sets.iter().enumerate().map(|(index, region)| {
+        let angle = if sets.len() == 2 { std::f64::consts::PI * index as f64 } else {
+            -std::f64::consts::FRAC_PI_2 + std::f64::consts::TAU * index as f64 / count
+        };
+        LayoutedVennCircle {
+            id: region.sets[0].clone(),
+            label: region.label.clone().unwrap_or_else(|| region.sets[0].clone()),
+            cx: center_x + angle.cos() * orbit, cy: center_y + angle.sin() * orbit,
+            radius: base_radius * (0.72 + 0.28 * (region.size / max_size).sqrt()),
+            style: region.style.clone(),
+        }
+    }).collect();
+    let centers: HashMap<_, _> = circles.iter().map(|circle| (circle.id.as_str(), (circle.cx, circle.cy))).collect();
+    let mut labels = Vec::new();
+    for (index, circle) in circles.iter().enumerate() {
+        let angle = if circles.len() == 2 { std::f64::consts::PI * index as f64 } else {
+            -std::f64::consts::FRAC_PI_2 + std::f64::consts::TAU * index as f64 / count
+        };
+        labels.push(LayoutedVennLabel { text: circle.label.clone(),
+            x: circle.cx + angle.cos() * circle.radius * 0.58,
+            y: circle.cy + angle.sin() * circle.radius * 0.58, style: circle.style.clone() });
+    }
+    for region in diagram.regions.iter().filter(|region| region.sets.len() > 1) {
+        if let (Some(label), Some((x, y))) = (&region.label, centroid(&region.sets, &centers)) {
+            labels.push(LayoutedVennLabel { text: label.clone(), x, y, style: region.style.clone() });
+        }
+    }
+    for text in &diagram.texts {
+        if let Some((x, y)) = centroid(&text.sets, &centers) {
+            labels.push(LayoutedVennLabel { text: text.label.clone().unwrap_or_else(|| text.id.clone()), x, y: y + 20.0, style: text.style.clone() });
+        }
+    }
+    LayoutedVennDiagram { width, height, title: diagram.title.clone(), circles, labels }
+}
+
+fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64, f64)> {
+    let points: Vec<_> = sets.iter().filter_map(|set| centers.get(set.as_str())).collect();
+    (!points.is_empty()).then(|| { let count = points.len() as f64;
+        (points.iter().map(|point| point.0).sum::<f64>() / count,
+         points.iter().map(|point| point.1).sum::<f64>() / count) })
+}
 
 /// Resolve canvas size and produce a `LayoutedGeometricDiagram`.
 pub fn layout_geometric_diagram(d: &GeometricDiagram) -> LayoutedGeometricDiagram {
@@ -143,5 +199,18 @@ mod tests {
         let d = layout_geometric_diagram(&dg);
         assert_eq!(d.width, 900.0);
         assert!(d.height > 0.0);
+    }
+
+    #[test]
+    fn venn_layout_is_deterministic_and_size_aware() {
+        let diagram = VennDiagram { title: None, regions: vec![
+            VennRegion { sets: vec!["A".into()], size: 20.0, label: None, style: VennStyle::default() },
+            VennRegion { sets: vec!["B".into()], size: 10.0, label: None, style: VennStyle::default() },
+            VennRegion { sets: vec!["A".into(), "B".into()], size: 3.0, label: Some("AB".into()), style: VennStyle::default() },
+        ], texts: vec![] };
+        let first = layout_venn(&diagram, 600.0);
+        assert_eq!(first, layout_venn(&diagram, 600.0));
+        assert!(first.circles[0].radius > first.circles[1].radius);
+        assert!(first.labels.iter().any(|label| label.text == "AB"));
     }
 }

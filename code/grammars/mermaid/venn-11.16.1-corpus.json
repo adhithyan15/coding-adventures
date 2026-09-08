@@ -1,0 +1,18 @@
+{
+  "upstream": "mermaid@11.16.1",
+  "scope": "native set subset",
+  "fixtures": [
+    {
+      "name": "basic-labelled-overlap",
+      "source": "venn-beta\ntitle Team overlap\nset Frontend[\"Frontend\"]:20\nset Backend[\"Backend\"]:12\nunion Frontend,Backend[\"APIs\"]:3"
+    },
+    {
+      "name": "quoted-identifiers-and-text",
+      "source": "venn-beta\nset \"Foo Bar\"\n  text item[\"Inside Foo\"]\nset Buz\nunion \"Foo Bar\",Buz\n  text shared[\"Shared note\"]"
+    },
+    {
+      "name": "three-sets-and-styles",
+      "source": "venn-beta\nset A:20\nset B:18\nset C:16\nunion A,B,C[\"All\"]:2\nstyle A fill:#ff6b6b, stroke:#991b1b\nstyle A,B color:#333"
+    }
+  ]
+}
