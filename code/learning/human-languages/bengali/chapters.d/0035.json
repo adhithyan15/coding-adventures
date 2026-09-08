@@ -1,0 +1,21 @@
+{
+  "chapter": 35,
+  "title": "All of Us",
+  "label": "ch:bn-all-of-us",
+  "canDo": "I can talk about more than one of us, more than one of you and more than one of them, and say what belongs to any of those groups.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-R24-all-of-us",
+    "kind": "production",
+    "summary": "The plural ending taught two chapters earlier on nouns turns out to build every plural pronoun in the language without one exception, and a different ending replaces it when the pronoun has to own something — the first sight of the rule that the back slot holds one suffix at a time.",
+    "assesses": [
+      "BN-LEX-C24-AMRA-01",
+      "BN-LEX-C24-TOMRA-01",
+      "BN-LEX-C24-TARA-01",
+      "BN-GRAMMAR-C24-AMADER-01"
+    ],
+    "note": "No plural pronoun of any person existed in the corpus, so possession was available for exactly two of the six persons the proxy enumerates."
+  }
+}

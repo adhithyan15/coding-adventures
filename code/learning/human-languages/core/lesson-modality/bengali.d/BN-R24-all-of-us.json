@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R24-all-of-us",
+    "language": "bengali",
+    "chapter": 35,
+    "sequence": 1830,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cc5931bb55461269"
+  },
+  "findings": []
+}

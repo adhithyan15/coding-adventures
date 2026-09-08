@@ -1,0 +1,17 @@
+{
+  "id": "BN-EXT-029-CLASSIFIER",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say the shirt, a shirt and another shirt, using the ending Bengali has instead of an article.",
+  "prerequisites": [
+    "BN-EXT-028-REPAIR-KIT"
+  ],
+  "lessons": [
+    "BN-W05-tta",
+    "BN-C20-tta-classifier",
+    "BN-C20-ekta",
+    "BN-C20-arekta",
+    "BN-R20-one-and-another"
+  ]
+}

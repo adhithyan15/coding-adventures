@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C21-eta",
+    "language": "bengali",
+    "chapter": 32,
+    "sequence": 1670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa4b0bdd71e072a9"
+  },
+  "findings": []
+}

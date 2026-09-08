@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C25-ke-who",
+    "language": "bengali",
+    "chapter": 36,
+    "sequence": 1870,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:752cb59b449e6e73"
+  },
+  "findings": []
+}

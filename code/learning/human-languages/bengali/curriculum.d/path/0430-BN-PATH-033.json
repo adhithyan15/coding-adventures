@@ -1,0 +1,16 @@
+{
+  "id": "BN-PATH-033",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "BN-C25-ke-suffix",
+    "BN-C25-amake",
+    "BN-C25-tomake",
+    "BN-C25-ke-who",
+    "BN-R25-the-one-it-happens-to"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-034-OBJECT-CASE"
+  ],
+  "after": []
+}

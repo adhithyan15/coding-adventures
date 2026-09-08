@@ -1,0 +1,16 @@
+{
+  "id": "BN-PATH-032",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "BN-C24-amra",
+    "BN-C24-tomra",
+    "BN-C24-tara",
+    "BN-C24-amader",
+    "BN-R24-all-of-us"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-033-PLURAL-PRONOUNS"
+  ],
+  "after": []
+}

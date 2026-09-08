@@ -1,0 +1,17 @@
+{
+  "id": "BN-EXT-032-THIRD-PERSON",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can talk about somebody who is neither speaking nor being spoken to, at the right level of respect, and say what is theirs.",
+  "prerequisites": [
+    "BN-EXT-031-PLURAL"
+  ],
+  "lessons": [
+    "BN-C23-she",
+    "BN-C23-tini",
+    "BN-C23-o-pron",
+    "BN-C23-tar",
+    "BN-R23-somebody-else"
+  ]
+}

@@ -1,0 +1,218 @@
+Bengali, chapter 36: The One It Happens To.
+5 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 5.
+কে (-ke) — the one it happens to.
+
+Warm-up.
+[pause 2 seconds]
+Which group is ভাই in and which is জামা in? Then say our family.
+[your turn — recall: two chapters back, the word for he on the careful rung — tini]
+[pause 8 seconds for the answer]
+
+You'll want to know: কে.
+ভাইকে — bhāike — to the brother, or the brother, as the one it is done to.
+বন্ধুকে — bôndhuke — the friend, as the one it is done to.
+Another ending on the back of the noun, and it marks something new: that this person is not doing the action but receiving it. English marks that with word order alone; Bengali marks it on the word.
+And it is choosy in a way you can now predict. কে (-ke) goes on জীব nouns — people — and not on things:
+ভাইকে — yes.
+জামাকে — no; a shirt stays জামা.
+The animacy split you learned three chapters ago is doing this too. That one question keeps paying.
+
+Grammar Lens: the same slot, still one at a time.
+Line the endings up and the system is visible:
+[a table of 4 rows, read aloud]
+ending: -র. what it says: whose. goes on: anything.
+ending: -কে (-ke). what it says: the one it happens to. goes on: living nouns.
+ending: -দের. what it says: whose, plural. goes on: living nouns.
+ending: -টা. what it says: the one we mean. goes on: things, mostly.
+All four sit in the same slot at the back of the noun, and the rule from the last chapter still holds: one at a time. That is why -দের exists at all, and why you will never see two of these stacked.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: bhāike, bônke, bôndhuke]
+[pause 8 seconds for the answer]
+[your turn — say: the one that takes no ending, and why — jāmā, because it is জিনিস]
+[pause 8 seconds for the answer]
+[your turn — say: whose, then to whom — tār bhāi, then tār bhāike]
+[pause 8 seconds for the answer]
+[your turn — say: the four endings in the slot — -r, -ke, -der, -ṭā]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -কে (-ke) say about a noun? (That it is the one the action happens to.) Which nouns take it? (Living ones.) And how many of these endings can sit on one noun at once? (One.)
+Source: Unicode Bengali chart.
+
+
+Lesson 2 of 5.
+আমাকে (āmāke) — me.
+
+Warm-up.
+[pause 2 seconds]
+Put the object ending on ভাই. Then say I and my.
+
+You'll want to know: আমাকে.
+আমাকে — āmāke — me, to me.
+A pronoun is a living noun, so it takes the living noun's ending — the third time this book has said that and the third time it has been true without an exception:
+[a table of 3 rows, read aloud]
+job: I. the word: আমি. ending: —.
+job: my. the word: আমার. ending: -র.
+job: me. the word: আমাকে (āmāke). ending: -কে (-ke).
+Same stem আমা-, three endings, no memorisation.
+
+Grammar Lens: the frame that had no filler.
+Chapter nine taught something odd and important: Bengali does not say I like tea. It says, near enough, tea is good to me — the liking is not something you do, it is something that happens to you.
+That frame needs a to me, and the book had none. It has one now:
+আমাকে চা ভালো লাগে — āmāke chā bhālo lāge — I like tea (literally, tea feels good to me).
+A whole family of Bengali sentences works this way — liking, needing, feeling cold, being hungry — and every one of them was out of reach for want of this word.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the three forms — āmi, āmār, āmāke]
+[pause 8 seconds for the answer]
+[your turn — say: āmāke chā bhālo lāge]
+[pause 8 seconds for the answer]
+[your turn — say: the plural of the same — āmāder]
+[pause 8 seconds for the answer]
+[your turn — say: on a noun, for comparison — bhāike]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What stem do আমি, আমার and আমাকে (āmāke) share? (আমা-.) What does Bengali say instead of I like tea? (Tea feels good to me.) And which ending makes the to me? (-কে (-ke).)
+Source: Unicode Bengali chart.
+
+
+Lesson 3 of 5.
+তোমাকে (tomāke) — you, as the one it happens to.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Say me. Then say the plain and the careful words for you.
+
+You'll want to know: তোমাকে.
+তোমাকে — tomāke — you, as the one it is done to.
+And with the third person, built from the stem you already met in তার:
+তাকে — tāke — him, her.
+Now the whole table, and it is worth looking at as a table rather than as a list:
+[a table of 3 rows, read aloud]
+person: আমি. possessive: আমার. object: আমাকে (āmāke).
+person: তুমি. possessive: তোমার. object: তোমাকে (tomāke).
+person: সে. possessive: তার. object: তাকে.
+Three stems, three endings, nine words, nothing irregular.
+
+Grammar Lens: what English makes you memorise and Bengali does not.
+The English column is I, my, me — he, his, him, and there is no rule in it: a learner memorises each cell. The Bengali column is one stem with -র or -কে (-ke) stuck on. Nothing about তাকে has to be learned once তার is known.
+The careful rungs behave, too: আপনাকে and তাঁকে.
+And you can now be polite to a specific person, which chapter twenty-two could not do — it taught দয়া করে with nobody to address it to.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the object row — āmāke, tomāke, tāke]
+[pause 8 seconds for the answer]
+[your turn — say: one stem, two endings — tār, then tāke]
+[pause 8 seconds for the answer]
+[your turn — say: the careful ones — āpnāke, tā̃ke]
+[pause 8 seconds for the answer]
+[your turn — say: politely, to you — doyā kore … tomāke]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the object form of সে? (তাকে.) What do তার and তাকে share? (The stem তা-.) And how many of these nine forms are irregular? (None.)
+Source: Unicode Bengali chart.
+
+
+Lesson 4 of 5.
+কে (-ke) (ke) — who?
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Put the object ending on ভাই. Then say you, as the one it is done to.
+
+You'll want to know: কে standing alone.
+কে (-ke)? — ke? — who?
+সে কে (-ke)? — she ke? — who is he?
+This is a different word from the ending you learned two lessons ago. They are spelled identically and they are not related, and Bengali tells them apart the way it tells ও apart from ও: by where they sit.
+[a table of 2 rows, read aloud]
+where: stuck to the back of a noun. what it is: -কে (-ke), the object ending.
+where: standing on its own. what it is: কে (-ke), who?
+You now have both of the questions a stranger opens with. এটা কী? asks about a thing; কে (-ke)? asks about a person — and the two are told apart only by their vowel, so say them carefully.
+
+Grammar Lens: the asking head, for the third time.
+Chapter thirty laid out three heads on one frame — the relative য-, the demonstrative ত-, and the asking ক-. Every question word in this book starts with the last of them:
+কী — what.
+কেমন — how.
+কখন — when.
+কে (-ke) — who.
+Four words, one letter at the front of each. And the answers come from the ত- column: তিনি, তার, তখন. Ask with ক-, answer with ত-.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ke?]
+[pause 8 seconds for the answer]
+[your turn — say: she ke? — and answer it — she āmār bhāi]
+[pause 8 seconds for the answer]
+[your turn — say: the two that sound alike — bhāike (the ending), then ke? (the question)]
+[pause 8 seconds for the answer]
+[your turn — say: the thing and the person — eṭā ki?, then ke?]
+[pause 8 seconds for the answer]
+[your turn — say: the four asking words — ki, kemon, kôkhon, ke]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you tell the question কে (-ke) from the ending -কে (-ke)? (By where it sits — alone, or stuck to a noun.) Which letter opens every question word in this book? (ক-.) And which column do the answers come from? (ত-.)
+Source: Unicode Bengali chart.
+
+
+Lesson 5 of 5.
+The one it happens to — one ending, one question word written identically, and a dative frame that finally has somebody to point at.
+
+Warm-up.
+[pause 4 seconds]
+Two things in this chapter are written the same and are not the same word. Name both, and say what tells them apart.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the object row — āmāke, tomāke, tāke]
+[pause 8 seconds for the answer]
+[your turn — say: on nouns — bhāike, bônke, bôndhuke]
+[pause 8 seconds for the answer]
+[your turn — say: the frame that waited twenty-seven chapters — āmāke chā bhālo lāge]
+[pause 8 seconds for the answer]
+[your turn — recall: two chapters back, the ending that pluralises a living noun — -rā]
+[pause 8 seconds for the answer]
+
+Guided Practice: the distant band — five chapters of grammar, run cold.
+[pause 4 seconds]
+Four endings now compete for one slot on the back of a Bengali noun, and one question decides which of them a noun may take. Run all of it.
+[your turn — say: the four endings, and what each says — -ṭā, -r, -ke, -der]
+[pause 8 seconds for the answer]
+[your turn — say: the question that chooses between them — is it জীব or জিনিস?]
+[pause 8 seconds for the answer]
+[your turn — say: a living noun through all of them — bhāiṭi, bhāir, bhāike, bhāirā]
+[pause 8 seconds for the answer]
+[your turn — say: a thing, which takes fewer — jāmāṭā, jāmāgulo]
+[pause 8 seconds for the answer]
+[your turn — say: pointing, counting, colouring — ei ekṭā lāl jāmā]
+[pause 8 seconds for the answer]
+[your turn — say: the six persons and their objects — āmi/āmāke, tumi/tomāke, she/tāke]
+[pause 8 seconds for the answer]
+[your turn — say: whose, plural — āmāder, tāder]
+[pause 8 seconds for the answer]
+[your turn — say: the two questions a stranger opens with — eṭā ki? and ke?]
+[pause 8 seconds for the answer]
+[your turn — say: liking, for two people — āmāke chā bhālo lāge, tomāke jôl bhālo lāge]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 4 seconds]
+Which nouns take -কে (-ke)? (Living ones.) How many endings may share the slot at once? (One.) What does Bengali say instead of I like tea? (Tea feels good to me.) And what is the difference between the two words spelled কে (-ke)? (Where they sit — one is stuck on, one stands alone.)
+Source: Unicode Bengali chart.

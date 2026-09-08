@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 35,
+  "output": "bengali/book/chapters/ch35-all-of-us.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

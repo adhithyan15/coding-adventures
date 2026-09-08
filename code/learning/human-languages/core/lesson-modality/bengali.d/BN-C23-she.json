@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C23-she",
+    "language": "bengali",
+    "chapter": 34,
+    "sequence": 1740,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:50e994eaedfb3372"
+  },
+  "findings": []
+}

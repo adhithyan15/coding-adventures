@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C24-tomra",
+    "language": "bengali",
+    "chapter": 35,
+    "sequence": 1800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f31f3082dc23822"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:130a90e96ceb4ba2",
+  "lessonIds": [
+    "BN-C25-ke-suffix",
+    "BN-C25-amake",
+    "BN-C25-tomake",
+    "BN-C25-ke-who",
+    "BN-R25-the-one-it-happens-to"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "bengali/narration/ch36.txt",
+  "json": "bengali/narration/ch36.json",
+  "textHash": "fnv1a64:dbfe272b642d185e",
+  "jsonHash": "fnv1a64:be8043316839a996",
+  "findings": []
+}

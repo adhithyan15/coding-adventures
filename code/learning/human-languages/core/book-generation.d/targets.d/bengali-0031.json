@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 31,
+  "output": "bengali/book/chapters/ch31-the-letter-in-the-way.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

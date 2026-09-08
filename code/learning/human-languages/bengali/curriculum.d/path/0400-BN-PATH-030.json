@@ -1,0 +1,16 @@
+{
+  "id": "BN-PATH-030",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "BN-C22-animacy",
+    "BN-C22-ra",
+    "BN-C22-gulo",
+    "BN-C22-adj-order",
+    "BN-R22-more-than-one"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-031-PLURAL"
+  ],
+  "after": []
+}

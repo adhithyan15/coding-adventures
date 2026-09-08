@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C20-tta-classifier",
+    "language": "bengali",
+    "chapter": 31,
+    "sequence": 1600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3a03e1cb826c0cb"
+  },
+  "findings": []
+}
