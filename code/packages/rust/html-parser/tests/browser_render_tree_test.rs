@@ -264,6 +264,12 @@ struct ExpectedRenderNode {
     #[serde(default)]
     size: Option<String>,
     #[serde(default)]
+    rows: Option<String>,
+    #[serde(default)]
+    cols: Option<String>,
+    #[serde(default)]
+    control_name: Option<String>,
+    #[serde(default)]
     list: Option<String>,
     #[serde(default)]
     form_action: Option<String>,
@@ -584,9 +590,9 @@ impl ExpectedRenderNode {
             minlength: self.minlength,
             maxlength: self.maxlength,
             size: self.size,
-            rows: None,
-            cols: None,
-            control_name: None,
+            rows: self.rows,
+            cols: self.cols,
+            control_name: self.control_name,
             list: self.list,
             form_action: self.form_action,
             resolved_form_action: self.resolved_form_action,

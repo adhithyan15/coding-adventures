@@ -17117,7 +17117,11 @@ fn browser_content_node_for_element(
         size: browser_control_size(element),
         rows: browser_control_rows(element),
         cols: browser_control_cols(element),
-        control_name: element.attribute("name").map(ToOwned::to_owned),
+        control_name: if role == "control" {
+            element.attribute("name").map(ToOwned::to_owned)
+        } else {
+            None
+        },
         list: browser_control_list(element),
         resolved_form_action: browser_control_form_action(element)
             .as_deref()
