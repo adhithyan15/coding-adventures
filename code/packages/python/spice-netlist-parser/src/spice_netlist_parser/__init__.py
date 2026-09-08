@@ -1,6 +1,7 @@
 """SPICE3 netlist parser for the coding-adventures SPICE engine."""
 
 from spice_netlist_parser.parser import (
+    CLI_ERROR_CODE,
     CLI_RESULT_SCHEMA_VERSION,
     AcAnalysis,
     AnalysisExecutionResult,
@@ -53,6 +54,7 @@ __all__ = [
     "AnalysisKind",
     "AnalysisPlanStep",
     "AnalysisResult",
+    "CLI_ERROR_CODE",
     "CLI_RESULT_SCHEMA_VERSION",
     "DcAnalysis",
     "DistortionAnalysis",

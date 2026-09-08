@@ -3,7 +3,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from spice_netlist_parser import CLI_RESULT_SCHEMA_VERSION, run_netlist_json
+from spice_netlist_parser import CLI_ERROR_CODE, CLI_RESULT_SCHEMA_VERSION, run_netlist_json
 
 
 def _cli_case() -> dict[str, object]:
@@ -12,6 +12,10 @@ def _cli_case() -> dict[str, object]:
     assert corpus["schemaVersion"] == 1
     assert corpus["suite"] == "berkeley-v1-cli"
     return corpus["cases"][0]
+
+
+def _grammar_path(name: str) -> Path:
+    return Path(__file__).resolve().parents[4] / "grammars/spice" / name
 
 
 def test_run_netlist_json_uses_the_shared_berkeley_cli_contract() -> None:
@@ -40,3 +44,42 @@ def test_module_cli_runs_a_deck_file_as_json(tmp_path: Path) -> None:
 
     assert completed.returncode == 0, completed.stderr
     assert json.loads(completed.stdout)["title"] == case["expected"]["title"]
+
+
+def test_module_cli_reports_a_stable_failure_code() -> None:
+    corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
+    case = corpus["failureCases"][0]
+
+    completed = subprocess.run(
+        [sys.executable, "-m", "spice_netlist_parser.cli", "run", "--json", "-"],
+        check=False,
+        capture_output=True,
+        input=case["deck"],
+        text=True,
+    )
+
+    assert completed.returncode == case["expected"]["exitStatus"]
+    assert completed.stderr.startswith(f"{case['expected']['diagnosticCode']}: ")
+    assert completed.stderr.startswith(f"{CLI_ERROR_CODE}: ")
+
+
+def test_shared_release_manifest_freezes_the_berkeley_v1_gate() -> None:
+    release = json.loads(_grammar_path("berkeley-v1-release-manifest.json").read_text(encoding="utf-8"))
+    core = json.loads(_grammar_path("berkeley-v1-op-corpus.json").read_text(encoding="utf-8"))
+    syntax = json.loads(_grammar_path("berkeley-v1-syntax-corpus.json").read_text(encoding="utf-8"))
+    cli = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
+
+    gate = release["corpusGate"]
+    assert release["schemaVersion"] == 1
+    assert release["suite"] == "berkeley-v1-release"
+    assert len(core["cases"]) >= gate["minimumCoreCaseCount"]
+    assert set(gate["requiredAnalysisKinds"]) <= {case["analysis"] for case in core["cases"]}
+    assert set(gate["requiredDeviceKinds"]) <= {case["kind"] for case in core["cases"]}
+    assert len(syntax["cases"]) >= gate["minimumSyntaxCaseCount"]
+    assert set(gate["requiredSyntaxClassifications"]) <= {
+        case["classification"] for case in syntax["cases"]
+    }
+    assert len(cli["cases"]) >= gate["minimumCliSuccessCaseCount"]
+    assert len(cli["failureCases"]) >= gate["minimumCliFailureCaseCount"]
+    assert release["cli"]["result"]["schemaVersion"] == CLI_RESULT_SCHEMA_VERSION
+    assert release["cli"]["failureDiagnostic"]["code"] == CLI_ERROR_CODE

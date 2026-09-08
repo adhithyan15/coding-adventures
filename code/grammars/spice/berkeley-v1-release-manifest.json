@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "suite": "berkeley-v1-release",
+  "corpusGate": {
+    "minimumCoreCaseCount": 14,
+    "requiredAnalysisKinds": ["op", "dc", "ac", "tran", "tf"],
+    "requiredDeviceKinds": ["D", "NPN", "NJF", "NMOS"],
+    "minimumSyntaxCaseCount": 9,
+    "requiredSyntaxClassifications": ["supported", "supported-diagnostic", "deliberate-exclusion"],
+    "minimumCliSuccessCaseCount": 1,
+    "minimumCliFailureCaseCount": 1
+  },
+  "cli": {
+    "command": "spice-netlist-parser run --json <deck|->",
+    "successExitStatus": 0,
+    "failureExitStatus": 1,
+    "usageExitStatus": 2,
+    "result": {
+      "schemaVersion": 1,
+      "topLevelFields": ["analyses", "schemaVersion", "title"],
+      "analysisFields": ["index", "kind", "records"]
+    },
+    "failureDiagnostic": {
+      "code": "SPICE_CLI_ERROR",
+      "stderrPrefix": "SPICE_CLI_ERROR:",
+      "detail": "Human-readable detail is informative and is not cross-language canonical."
+    }
+  },
+  "supportedCards": [
+    {"kind": "source", "cards": ["V", "I"]},
+    {"kind": "passive", "cards": ["R", "C", "L"]},
+    {"kind": "nonlinear", "cards": ["D", "Q", "J", "M"]},
+    {"kind": "model", "cards": ["D", "NPN", "PNP", "NJF", "PJF", "NMOS LEVEL=1", "PMOS LEVEL=1"]},
+    {"kind": "analysis", "cards": [".op", ".dc", ".ac", ".tran", ".tf"]},
+    {"kind": "deck", "cards": ["title", "* comment", "; inline comment", "+ continuation", ".subckt/.ends (non-nested)", ".save", ".end"]}
+  ],
+  "deliberateExclusions": [
+    "Nested .subckt definitions",
+    "MOS model LEVEL values other than 1",
+    "Vendor-dialect and ngspice compatibility extensions",
+    ".control command execution"
+  ],
+  "scopeRule": "Cards and parameters outside this manifest are not Berkeley SPICE v1 compatibility promises."
+}

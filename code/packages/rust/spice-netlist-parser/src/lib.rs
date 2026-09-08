@@ -1018,6 +1018,7 @@ pub fn run_netlist(text: &str) -> Result<Vec<AnalysisExecutionResult>, AnalysisE
 }
 
 pub const CLI_RESULT_SCHEMA_VERSION: u32 = 1;
+pub const CLI_ERROR_CODE: &str = "SPICE_CLI_ERROR";
 
 pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
     let parsed = parse_netlist(text)?;

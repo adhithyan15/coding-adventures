@@ -7,7 +7,7 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from spice_netlist_parser.parser import run_netlist_json
+from spice_netlist_parser.parser import CLI_ERROR_CODE, run_netlist_json
 
 
 def _arguments(argv: Sequence[str] | None) -> argparse.Namespace:
@@ -30,7 +30,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         sys.stdout.write(run_netlist_json(text))
         return 0
     except (OSError, ValueError) as error:
-        sys.stderr.write(f"SPICE_CLI_ERROR: {error}\n")
+        sys.stderr.write(f"{CLI_ERROR_CODE}: {error}\n")
         return 1
 
 

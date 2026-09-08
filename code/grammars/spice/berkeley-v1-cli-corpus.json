@@ -11,5 +11,15 @@
         "recordCounts": [1, 2, 1, 1, 1]
       }
     }
+  ],
+  "failureCases": [
+    {
+      "id": "orphan-continuation",
+      "deck": "+ 1k\nR1 in 0 1k\n.end\n",
+      "expected": {
+        "exitStatus": 1,
+        "diagnosticCode": "SPICE_CLI_ERROR"
+      }
+    }
   ]
 }
