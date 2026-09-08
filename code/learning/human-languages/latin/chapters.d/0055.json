@@ -1,0 +1,23 @@
+{
+  "chapter": 55,
+  "title": "Numerī Ōrdinis",
+  "label": "ch:la-ordinals",
+  "canDo": "I can say first, second, third, fourth and fifth in Latin, and use them to say which hour or which day I mean.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "LA-C55-quintus",
+    "kind": "task",
+    "summary": "The fifth ordinal, said against the four before it, and the month whose name it is.",
+    "assesses": [
+      "LA-LEX-C55-ORDINAL-01",
+      "LA-LEX-C55-ORDINAL-02",
+      "LA-ETYMON-C55-SECUNDUS-SEQUI-01",
+      "LA-LEX-C55-ORDINAL-03",
+      "LA-LEX-C55-ORDINAL-04",
+      "LA-GRAMMAR-C55-ORDINAL-ADJECTIVE-01",
+      "LA-LEX-C55-ORDINAL-05"
+    ]
+  }
+}

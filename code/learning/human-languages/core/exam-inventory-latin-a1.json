@@ -531,7 +531,19 @@
       "id": "LA-A1-Q-05",
       "category": "Numeri (quantity and number)",
       "label": "ordinal numerals to tenth",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C55-ORDINAL-01",
+        "LA-LEX-C55-ORDINAL-02",
+        "LA-LEX-C55-ORDINAL-03",
+        "LA-LEX-C55-ORDINAL-04",
+        "LA-LEX-C55-ORDINAL-05",
+        "LA-LEX-C56-ORDINAL-06",
+        "LA-LEX-C56-ORDINAL-07",
+        "LA-LEX-C56-ORDINAL-08",
+        "LA-LEX-C56-ORDINAL-09",
+        "LA-LEX-C56-ORDINAL-10",
+        "LA-GRAMMAR-C55-ORDINAL-ADJECTIVE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -540,7 +552,7 @@
       "derivedFrom": [
         "A1-Q-02"
       ],
-      "note": "primus, secundus, tertius: absent. Quintilis and Sextilis are taught as month names in chapter 11 with their ordinal sense explained, which is the nearest the corpus comes."
+      "note": "CLOSED by the ordinal tranche: primus to decimus, one word a lesson, in the order the language's own construction dictates rather than in numerical order. The first two carry no cardinal at all -- primus is a superlative of pri- 'in front', secundus is built on sequi 'to follow' -- tertius is the first in which the cardinal shows through, and quartus states the shape the rest keep. Octavus takes -avus and nonus is a contraction of noven-, so each exception has a lesson of its own. NOT taught: the ordinals above tenth, the distributives singuli and bini, and the ordinal used as a fraction."
     },
     {
       "id": "LA-A1-Q-06",
@@ -2582,7 +2594,7 @@
       "derivedFrom": [
         "A1-NG1-04"
       ],
-      "note": "Six time nouns are taught (LA-A1-N-03) and nothing is ever placed in one. The ablative of time when, which is the construction, is at LA-A1-CAS-05 and absent."
+      "note": "Six time nouns are taught (LA-A1-N-03) and the ordinal chapters now name three hours of a Roman day -- prima, sexta and nona hora -- and divide the day at midday. That places an event by NAMING an hour, not by inflecting one: the ablative of time when, which is the construction this point asks for, is at LA-A1-CAS-05 and absent."
     },
     {
       "id": "LA-A1-NG-05",
@@ -2752,7 +2764,12 @@
       "id": "LA-A1-NG-15",
       "category": "Notiones generales (general notions)",
       "label": "order: ordinals, ante and post",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C57-ORDER-01",
+        "LA-LEX-C57-ORDER-02",
+        "LA-TASK-C57-ORDER-03",
+        "LA-LEX-C55-ORDINAL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -2761,7 +2778,7 @@
       "derivedFrom": [
         "A1-NG3-06"
       ],
-      "note": "post is quoted inside post meridiem in chapter 35 and never taught; ante is absent; the ordinals are at LA-A1-Q-05."
+      "note": "CLOSED. ante and post each get a lesson, and the post meridiem that chapter 35 quoted without teaching is now taken apart against the ante meridiem beside it; the recombining lesson places three named hours of a Roman day between them. The ordinals it also names are at LA-A1-Q-05. NOT taught: the accusative that ante and post actually govern, which is at LA-A1-CAS-02."
     },
     {
       "id": "LA-A1-NG-16",
@@ -2824,7 +2841,11 @@
       "id": "LA-A1-NG-19",
       "category": "Notiones generales (general notions)",
       "label": "anteriority and posteriority",
-      "probe": null,
+      "probe": [
+        "LA-LEX-C57-ORDER-01",
+        "LA-LEX-C57-ORDER-02",
+        "LA-TASK-C57-ORDER-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "LA-CORPUS",
@@ -2833,7 +2854,7 @@
       "derivedFrom": [
         "A1-NG4-03"
       ],
-      "note": "Absent; see LA-A1-NG-15."
+      "note": "CLOSED with LA-A1-NG-15 and by the same two words: ante for anteriority, post for posteriority, both taught in the temporal sense as well as the spatial one. NOT taught: antequam and postquam, which need a subordinate clause."
     },
     {
       "id": "LA-A1-NG-20",

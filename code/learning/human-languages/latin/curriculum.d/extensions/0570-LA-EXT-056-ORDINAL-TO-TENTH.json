@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-056-ORDINAL-TO-TENTH",
+  "stage": "A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can count in order all the way to tenth, and say why noon and siesta are ordinal numbers wearing a disguise.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C56-sextus",
+    "LA-C56-septimus",
+    "LA-C56-octavus",
+    "LA-C56-nonus",
+    "LA-C56-decimus"
+  ]
+}

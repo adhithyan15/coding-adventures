@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C55-quartus",
+    "language": "latin",
+    "chapter": 55,
+    "sequence": 1530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cfa73ac6992adb5"
+  },
+  "findings": []
+}

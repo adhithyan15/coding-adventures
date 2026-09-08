@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-055-ORDINAL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can say first, second, third, fourth and fifth in Latin, and use them to say which hour or which day I mean.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C55-primus",
+    "LA-C55-secundus",
+    "LA-C55-tertius",
+    "LA-C55-quartus",
+    "LA-C55-quintus"
+  ]
+}

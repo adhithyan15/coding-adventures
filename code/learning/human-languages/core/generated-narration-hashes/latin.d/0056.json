@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:8e2489c83c33830e",
+  "lessonIds": [
+    "LA-C56-sextus",
+    "LA-C56-septimus",
+    "LA-C56-octavus",
+    "LA-C56-nonus",
+    "LA-C56-decimus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch56.txt",
+  "json": "latin/narration/ch56.json",
+  "textHash": "fnv1a64:64d61059ab87486b",
+  "jsonHash": "fnv1a64:c27629d4026c2cd6",
+  "findings": []
+}

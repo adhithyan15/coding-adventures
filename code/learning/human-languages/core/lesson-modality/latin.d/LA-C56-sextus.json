@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C56-sextus",
+    "language": "latin",
+    "chapter": 56,
+    "sequence": 1550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ac4d12c1709e237"
+  },
+  "findings": []
+}

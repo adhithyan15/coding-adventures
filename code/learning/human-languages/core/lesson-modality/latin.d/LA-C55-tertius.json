@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C55-tertius",
+    "language": "latin",
+    "chapter": 55,
+    "sequence": 1520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d11aabe0f4c28b4"
+  },
+  "findings": []
+}

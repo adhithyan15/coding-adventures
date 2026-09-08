@@ -1,0 +1,11 @@
+{
+  "language": "latin",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:d41f7d826cda0364",
+  "lessonIds": [
+    "LA-C57-ante",
+    "LA-C57-post",
+    "LA-C57-practice"
+  ],
+  "tex": "latin/book/chapters/ch57-ante-post.tex"
+}

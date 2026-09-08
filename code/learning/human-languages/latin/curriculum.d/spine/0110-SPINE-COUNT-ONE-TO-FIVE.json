@@ -1,7 +1,10 @@
 {
   "segments": [
     "LA-PATH-006",
-    "LA-PATH-017"
+    "LA-PATH-017",
+    "LA-PATH-039",
+    "LA-PATH-040",
+    "LA-PATH-041"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"
