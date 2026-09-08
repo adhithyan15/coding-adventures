@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed - compose same-package references for browser backends
+
+Standalone pipeline builds with `--package-manifest` now qualify and inline
+bare sibling component references before HTML, Web Component, and React
+emission. The browser emitters also consistently accept the compatibility
+`Input` primitive used for multiline notes.
+
 ### Fixed - styles are optional in standalone pipeline mode
 
 Standalone pipeline compilation now accepts `--interface` and `--layout`

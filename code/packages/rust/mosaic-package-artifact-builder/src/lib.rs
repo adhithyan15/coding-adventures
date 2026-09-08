@@ -598,6 +598,7 @@ fn compose_component_with_backend_tokens(
         msl_src,
         package_search_paths,
         style_options,
+        None,
     )
 }
 
@@ -645,6 +646,40 @@ pub fn compose_component_with_model_and_tokens(
             tokens,
             backend: None,
         },
+        None,
+    )
+}
+
+/// Complete package composition for one component compiled with its owning
+/// package manifest.
+///
+/// Bare PascalCase nodes that name a sibling export are package component
+/// references, not kernel primitives. Qualifying them before dependency-style
+/// collection and layout resolution lets every backend consume the same fully
+/// inlined layout rather than requiring backend-specific component registries.
+#[allow(clippy::too_many_arguments)]
+pub fn compose_component_with_model_in_package(
+    component: &str,
+    model: mosmodel_compiler::CompileOutput,
+    mll_src: &str,
+    msl_src: &str,
+    package_search_paths: &[PathBuf],
+    theme: Option<&str>,
+    package_name: &str,
+    package_exports: &[String],
+) -> Result<ComposedComponent, BuildError> {
+    compose_component_with_model_and_style_options(
+        component,
+        model,
+        mll_src,
+        msl_src,
+        package_search_paths,
+        &StyleCompositionOptions {
+            theme,
+            tokens: &mosstyle_compiler::TokenOverrides::default(),
+            backend: None,
+        },
+        Some((package_name, package_exports)),
     )
 }
 
@@ -655,9 +690,18 @@ fn compose_component_with_model_and_style_options(
     msl_src: &str,
     package_search_paths: &[PathBuf],
     style_options: &StyleCompositionOptions<'_>,
+    local_package: Option<(&str, &[String])>,
 ) -> Result<ComposedComponent, BuildError> {
     let mut layout = moslayout_compiler::compile(mll_src, Some(&model.descriptor_json))
         .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    if let Some((package_name, package_exports)) = local_package {
+        qualify_local_component_references(
+            &mut layout.def.root,
+            component,
+            package_name,
+            package_exports,
+        );
+    }
     let dependency_style_parts = collect_dependency_style_parts(
         component,
         &layout.def,
@@ -687,6 +731,23 @@ fn compose_component_with_model_and_style_options(
         layout,
         style,
     })
+}
+
+fn qualify_local_component_references(
+    node: &mut LayoutNode,
+    current_component: &str,
+    package_name: &str,
+    package_exports: &[String],
+) {
+    if node.package_ref().is_none()
+        && node.tag != current_component
+        && package_exports.iter().any(|export| export == &node.tag)
+    {
+        node.tag = format!("pkg::{package_name}::{}", node.tag);
+    }
+    for child in &mut node.children {
+        qualify_local_component_references(child, current_component, package_name, package_exports);
+    }
 }
 
 // ===========================================================================

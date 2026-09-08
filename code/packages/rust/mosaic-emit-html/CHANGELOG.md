@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed - lower compatibility Input nodes
+
+The pipeline HTML emitter now lowers the legacy `Input` surface, including its
+multiline textarea shape, value and placeholder bindings, length/read-only
+attributes, and event hydration markers.
+
 ### Added - static UI49 one-of slot-state snapshots (#14368)
 
 The three-file HTML pipeline can now bake explicitly supplied `one-of` slot

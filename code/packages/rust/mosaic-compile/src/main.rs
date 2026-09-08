@@ -37,8 +37,8 @@ use mosaic_emit_html::HtmlRenderer;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_package_artifact_builder::{
-    build_package_with_profile_runtime_and_tokens, compose_component_with_model, Backend,
-    BuildOptions, BuildProfile,
+    build_package_with_profile_runtime_and_tokens, compose_component_with_model,
+    compose_component_with_model_in_package, Backend, BuildOptions, BuildProfile,
 };
 use mosaic_vm::MosaicVM;
 
@@ -816,14 +816,30 @@ fn run_pipeline(
             }
         }
     }
-    let composed = compose_component_with_model(
-        &component_name,
-        mosmodel_out,
-        &layout_src,
-        &style_src,
-        &search_paths,
-        None,
-    )
+    let local_package = matches!(backend, "html" | "webcomponent" | "react")
+        .then(|| package_manifest_path)
+        .flatten()
+        .and_then(|path| mosaic_package_manifest::parse_path(Path::new(path)).ok());
+    let composed = match &local_package {
+        Some(manifest) => compose_component_with_model_in_package(
+            &component_name,
+            mosmodel_out,
+            &layout_src,
+            &style_src,
+            &search_paths,
+            None,
+            &manifest.package.name,
+            &manifest.components.exports,
+        ),
+        None => compose_component_with_model(
+            &component_name,
+            mosmodel_out,
+            &layout_src,
+            &style_src,
+            &search_paths,
+            None,
+        ),
+    }
     .unwrap_or_else(|error| {
         eprintln!("mosaic-compile: package composition failed for {component_name}: {error}");
         process::exit(1);

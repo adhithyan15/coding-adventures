@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - lower compatibility Input nodes
+
+Web Component templates now lower the legacy `Input` surface, including its
+multiline textarea shape and existing value, placeholder, length, read-only,
+and event bindings.
+
 ### Added - activate UI49 slot-owned style states (#14312)
 
 Generated Custom Elements now apply mosstyle states owned by `one-of` slots

@@ -1600,7 +1600,7 @@ fn emit_html_tree(
     // UI29 §2.1 — `HostInput` and `HostButton`. Both have custom prop
     // shapes (value/placeholder/read-only for input, label/disabled for
     // button) that the simple HtmlTag table cannot express.
-    if node.tag == "HostInput" {
+    if node.tag == "HostInput" || node.tag == "Input" {
         out.push_str(&emit_host_input(node, indent, part_styles));
         return Ok(out);
     }
@@ -1888,7 +1888,7 @@ fn append_emit_marker(attrs: &mut String, node: &LayoutNode, prop_name: &str, at
     }
 }
 
-/// Lower a UI29 `HostInput` node to an `<input type="text" ...>` line.
+/// Lower a UI29 `HostInput` or compatibility `Input` node to HTML.
 ///
 /// Static-HTML constraints shape the prop handling:
 ///
@@ -1915,6 +1915,9 @@ fn emit_host_input(
 ) -> String {
     let pad = " ".repeat(indent);
     let mut attrs = String::new();
+    let multiline = node.tag == "Input"
+        && matches!(find_prop(node, "multiline"), Some(LayoutPropValue::Keyword(k)) if k == "true");
+    let mut textarea_value = String::new();
 
     // Portable input name -> native HTML accessible-name attribute.
     match find_prop(node, "a11y-label") {
@@ -1930,10 +1933,18 @@ fn emit_host_input(
     // value: slot ref or string literal
     match find_prop(node, "value") {
         Some(LayoutPropValue::SlotRef(s)) => {
-            write!(attrs, " value=\"{{{{{}}}}}\"", camel(s)).unwrap();
+            if multiline {
+                write!(textarea_value, "{{{{{}}}}}", camel(s)).unwrap();
+            } else {
+                write!(attrs, " value=\"{{{{{}}}}}\"", camel(s)).unwrap();
+            }
         }
         Some(LayoutPropValue::String(lit)) => {
-            write!(attrs, " value=\"{}\"", escape_html_attr(lit)).unwrap();
+            if multiline {
+                textarea_value.push_str(&escape_html_text(lit));
+            } else {
+                write!(attrs, " value=\"{}\"", escape_html_attr(lit)).unwrap();
+            }
         }
         _ => {}
     }
@@ -1965,9 +1976,18 @@ fn emit_host_input(
     append_emit_marker(&mut attrs, node, "onChange", "data-on-change");
     append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
     append_emit_marker(&mut attrs, node, "onCancel", "data-on-cancel");
+    if node.tag == "Input" {
+        if let Some(LayoutPropValue::Number(value)) = find_prop(node, "max-length") {
+            write!(attrs, " maxlength=\"{value}\"").unwrap();
+        }
+    }
 
     let style_attr = build_style_attr(node, "", part_styles);
-    format!("{pad}<input type=\"text\"{attrs}{style_attr}>\n")
+    if multiline {
+        format!("{pad}<textarea{attrs}{style_attr}>{textarea_value}</textarea>\n")
+    } else {
+        format!("{pad}<input type=\"text\"{attrs}{style_attr}>\n")
+    }
 }
 
 /// Lower a UI29 `HostButton` node to a `<button>...</button>` block.
