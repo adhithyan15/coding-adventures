@@ -4,6 +4,7 @@ const componentName = "SpiceWorkbench";
 const fallbackProps = {
   "analysisLabel": "analysis-label",
   "analysisRows": [],
+  "diagnosticRows": [],
   "diagnostics": "diagnostics",
   "diagnosticsLabel": "diagnostics-label",
   "inspectLabel": "inspect-label",
@@ -11,7 +12,10 @@ const fallbackProps = {
   "netlistLabel": "netlist-label",
   "netlistPlaceholder": "netlist-placeholder",
   "netlistText": "netlist-text",
+  "rawResultLabel": "raw-result-label",
+  "resultColumns": [],
   "resultLabel": "result-label",
+  "resultRows": [],
   "resultText": "result-text",
   "runLabel": "run-label",
   "selectedAnalysisLabel": "selected-analysis-label",

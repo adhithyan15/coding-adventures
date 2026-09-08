@@ -17,6 +17,9 @@
       </div>
       <span style="font-size: 12px; font-weight: bold; color: #475569">{{diagnosticsLabel}}</span>
       <span style="color: #334155">{{diagnostics}}</span>
+      <!-- mosaic-for each="diagnosticRows" as="diagnostic" index="diagnostic-index" -->
+        <span style="color: #b91c1c; font-family: monospace">{{diagnostic}}</span>
+      <!-- /mosaic-for -->
     </div>
     <div style="display: flex; flex-direction: row; gap: 14px">
       <div style="display: flex; flex-direction: column; width: 30%; gap: 6px">
@@ -29,6 +32,25 @@
       </div>
       <div style="display: flex; flex-direction: column; width: 70%; gap: 6px">
         <span style="font-size: 12px; font-weight: bold; color: #475569">{{resultLabel}}</span>
+        <table style="background: #ffffff; border-width: 1px; border-color: #cbd5e1">
+          <thead>
+            <tr>
+              <!-- mosaic-for each="resultColumns" as="column" index="column-index" -->
+                <th></th>
+              <!-- /mosaic-for -->
+            </tr>
+          </thead>
+          <tbody>
+            <!-- mosaic-for each="resultRows" as="row" index="row-index" -->
+              <tr>
+                <!-- mosaic-for each="row" as="value" index="value-index" -->
+                  <td></td>
+                <!-- /mosaic-for -->
+              </tr>
+            <!-- /mosaic-for -->
+          </tbody>
+        </table>
+        <span style="font-size: 12px; font-weight: bold; color: #475569">{{rawResultLabel}}</span>
         <span style="min-height: 160px; background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 4px; padding: 10px; font-family: monospace; white-space: pre-wrap">{{resultText}}</span>
       </div>
     </div>
