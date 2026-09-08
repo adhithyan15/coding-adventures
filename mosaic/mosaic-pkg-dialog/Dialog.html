@@ -1,0 +1,66 @@
+<!doctype html>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dialog — Mosaic</title><style>
+:root { --bg:#faf8f5; --fg:#1f1d1b; --muted:#6b645c; --line:#e6ded3;
+        --card:#ffffff; --accent:#b4601a; --code:#f3efe9; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#17150f; --fg:#f1ece3; --muted:#a49b8e; --line:#332e26;
+          --card:#201d17; --accent:#e0942a; --code:#262119; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--fg); font-size:15px; line-height:1.55;
+       font-family:-apple-system,Segoe UI,system-ui,Helvetica Neue,Arial,sans-serif; }
+.wrap { max-width:1040px; margin:0 auto; padding:32px 24px 72px; }
+a { color:var(--accent); }
+h1 { font-size:28px; margin:0 0 6px; letter-spacing:-.01em; }
+h2 { font-size:15px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
+     margin:34px 0 10px; font-weight:600; }
+.sub { color:var(--muted); margin:0 0 26px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; }
+.card { display:block; padding:12px 14px; background:var(--card); border:1px solid var(--line);
+        border-radius:10px; text-decoration:none; color:var(--fg); }
+.card:hover { border-color:var(--accent); }
+.card .n { font-weight:600; }
+.card .m { color:var(--muted); font-size:13px; }
+table { border-collapse:collapse; width:100%; margin:6px 0 18px; }
+th,td { text-align:left; padding:7px 10px; border-bottom:1px solid var(--line); font-size:14px; }
+th { color:var(--muted); font-weight:600; font-size:12px; text-transform:uppercase;
+     letter-spacing:.06em; }
+code,.pill { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; }
+.pill { background:var(--code); border:1px solid var(--line); border-radius:5px;
+        padding:1px 6px; margin-right:4px; display:inline-block; }
+iframe.preview { background:var(--card); border:1px solid var(--line); border-radius:10px;
+           width:100%; height:190px; display:block; }
+.preview > * { max-width:100%; }
+.note { color:var(--muted); font-size:13px; margin:8px 0 0; }
+.err { background:var(--code); border:1px solid var(--line); border-radius:8px;
+       padding:12px; white-space:pre-wrap; font-size:12.5px; }
+</style>
+<div class="wrap">
+<p class="sub"><a href="../index.html">← All components</a></p>
+<h1>Dialog</h1>
+<p class="sub"><code>mosaic-pkg-dialog</code> · light and dark themes</p>
+
+<h2>Preview</h2>
+
+<iframe class="preview" src="Dialog/index.html" title="Dialog preview"
+ loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
+<p class="note">The real emitted html project, running its own runtime — not a screenshot and not a
+re-render. Slot values are samples: the first legal member of each <code>one-of</code> axis, and the
+slot's own name for text, because this component has no stories yet.
+<a href="Dialog/index.html" target="_blank" rel="noopener">Open it on its own</a>.</p>
+
+
+<h2>Slots</h2>
+<table><tr><th>Name</th><th>Type</th><th>Values</th></tr>
+<tr><td><code>open</code></td><td><code>bool</code></td>
+<td></td></tr><tr><td><code>title</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>message</code></td><td><code>text</code></td>
+<td></td></tr><tr><td><code>close-label</code></td><td><code>text</code></td>
+<td></td></tr>
+</table>
+
+<h2>Events</h2>
+<p><span class="pill">onClose</span></p>
+
+</div>

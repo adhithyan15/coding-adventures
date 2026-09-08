@@ -1,0 +1,314 @@
+<!doctype html>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mosaic components</title><style>
+:root { --bg:#faf8f5; --fg:#1f1d1b; --muted:#6b645c; --line:#e6ded3;
+        --card:#ffffff; --accent:#b4601a; --code:#f3efe9; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#17150f; --fg:#f1ece3; --muted:#a49b8e; --line:#332e26;
+          --card:#201d17; --accent:#e0942a; --code:#262119; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--fg); font-size:15px; line-height:1.55;
+       font-family:-apple-system,Segoe UI,system-ui,Helvetica Neue,Arial,sans-serif; }
+.wrap { max-width:1040px; margin:0 auto; padding:32px 24px 72px; }
+a { color:var(--accent); }
+h1 { font-size:28px; margin:0 0 6px; letter-spacing:-.01em; }
+h2 { font-size:15px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
+     margin:34px 0 10px; font-weight:600; }
+.sub { color:var(--muted); margin:0 0 26px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; }
+.card { display:block; padding:12px 14px; background:var(--card); border:1px solid var(--line);
+        border-radius:10px; text-decoration:none; color:var(--fg); }
+.card:hover { border-color:var(--accent); }
+.card .n { font-weight:600; }
+.card .m { color:var(--muted); font-size:13px; }
+table { border-collapse:collapse; width:100%; margin:6px 0 18px; }
+th,td { text-align:left; padding:7px 10px; border-bottom:1px solid var(--line); font-size:14px; }
+th { color:var(--muted); font-weight:600; font-size:12px; text-transform:uppercase;
+     letter-spacing:.06em; }
+code,.pill { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; }
+.pill { background:var(--code); border:1px solid var(--line); border-radius:5px;
+        padding:1px 6px; margin-right:4px; display:inline-block; }
+iframe.preview { background:var(--card); border:1px solid var(--line); border-radius:10px;
+           width:100%; height:190px; display:block; }
+.preview > * { max-width:100%; }
+.note { color:var(--muted); font-size:13px; margin:8px 0 0; }
+.err { background:var(--code); border:1px solid var(--line); border-radius:8px;
+       padding:12px; white-space:pre-wrap; font-size:12.5px; }
+</style>
+<div class="wrap">
+<h1>Mosaic components</h1>
+<p class="sub">55 components across 21 packages. Every page on this site is
+generated from the packages themselves, so it republishes whenever a component ships.</p>
+
+<h2>mosaic-pkg-calendar</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-calendar/Calendar.html">
+<div class="n">Calendar</div>
+<div class="m">3 slots · 3 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-card</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-card/Card.html">
+<div class="n">Card</div>
+<div class="m">3 slots</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-card-browser</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-card-browser/CardBrowser.html">
+<div class="n">CardBrowser</div>
+<div class="m">45 slots · 18 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-collection-actions</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-collection-actions/CollectionActions.html">
+<div class="n">CollectionActions</div>
+<div class="m">24 slots · 7 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-deck-options</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-deck-options/DeckOptionsPanel.html">
+<div class="n">DeckOptionsPanel</div>
+<div class="m">50 slots · 23 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-deck-stats</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-deck-stats/DeckStatsPanel.html">
+<div class="n">DeckStatsPanel</div>
+<div class="m">14 slots · 1 event</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-dialog</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-dialog/Dialog.html">
+<div class="n">Dialog</div>
+<div class="m">4 slots · 1 event</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-grid</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-grid/Cell.html">
+<div class="n">Cell</div>
+<div class="m">9 slots · 4 events</div>
+</a><a class="card" href="mosaic-pkg-grid/Column.html">
+<div class="n">Column</div>
+<div class="m">6 slots</div>
+</a><a class="card" href="mosaic-pkg-grid/Grid.html">
+<div class="n">Grid</div>
+<div class="m">8 slots · 5 events</div>
+</a><a class="card" href="mosaic-pkg-grid/RowHeaderGrid.html">
+<div class="n">RowHeaderGrid</div>
+<div class="m">11 slots · 6 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-note-editor</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-note-editor/NoteEditor.html">
+<div class="n">NoteEditor</div>
+<div class="m">25 slots · 8 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-note-type-editor</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-note-type-editor/NoteTypeEditor.html">
+<div class="n">NoteTypeEditor</div>
+<div class="m">36 slots · 14 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-notes</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-notes/Notes.html">
+<div class="n">Notes</div>
+<div class="m">6 slots · 8 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-project-nav</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-project-nav/ProjectNav.html">
+<div class="n">ProjectNav</div>
+<div class="m">3 slots · 4 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-rating-controls</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-rating-controls/RatingControls.html">
+<div class="n">RatingControls</div>
+<div class="m">4 slots · 4 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-review-actions</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-review-actions/ReviewActions.html">
+<div class="n">ReviewActions</div>
+<div class="m">5 slots · 5 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-review-card</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-review-card/ReviewCard.html">
+<div class="n">ReviewCard</div>
+<div class="m">14 slots · 6 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-review-history</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-review-history/ReviewHistoryPanel.html">
+<div class="n">ReviewHistoryPanel</div>
+<div class="m">22 slots</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-session-progress</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-session-progress/SessionProgress.html">
+<div class="n">SessionProgress</div>
+<div class="m">8 slots</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-sheet</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-sheet/Sheet.html">
+<div class="n">Sheet</div>
+<div class="m">13 slots · 8 events</div>
+</a>
+</div>
+
+<h2>mosaic-pkg-toolkit</h2>
+<div class="grid">
+<a class="card" href="mosaic-pkg-toolkit/Accordion.html">
+<div class="n">Accordion</div>
+<div class="m">3 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Alert.html">
+<div class="n">Alert</div>
+<div class="m">3 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Badge.html">
+<div class="n">Badge</div>
+<div class="m">2 slots</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Breadcrumb.html">
+<div class="n">Breadcrumb</div>
+<div class="m">1 slot · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Button.html">
+<div class="n">Button</div>
+<div class="m">4 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/ButtonGroup.html">
+<div class="n">ButtonGroup</div>
+<div class="m">1 slot · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Checkbox.html">
+<div class="n">Checkbox</div>
+<div class="m">4 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/DropdownMenu.html">
+<div class="n">DropdownMenu</div>
+<div class="m">3 slots · 2 events</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Field.html">
+<div class="n">Field</div>
+<div class="m">6 slots · 2 events</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Input.html">
+<div class="n">Input</div>
+<div class="m">4 slots · 2 events</div>
+</a><a class="card" href="mosaic-pkg-toolkit/InputGroup.html">
+<div class="n">InputGroup</div>
+<div class="m">5 slots · 2 events</div>
+</a><a class="card" href="mosaic-pkg-toolkit/ListGroup.html">
+<div class="n">ListGroup</div>
+<div class="m">2 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Modal.html">
+<div class="n">Modal</div>
+<div class="m">4 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Nav.html">
+<div class="n">Nav</div>
+<div class="m">2 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Navbar.html">
+<div class="n">Navbar</div>
+<div class="m">3 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/NumberInput.html">
+<div class="n">NumberInput</div>
+<div class="m">3 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Pagination.html">
+<div class="n">Pagination</div>
+<div class="m">4 slots · 3 events</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Radio.html">
+<div class="n">Radio</div>
+<div class="m">5 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Select.html">
+<div class="n">Select</div>
+<div class="m">5 slots · 2 events</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Spinner.html">
+<div class="n">Spinner</div>
+<div class="m">3 slots</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Tabs.html">
+<div class="n">Tabs</div>
+<div class="m">3 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Toast.html">
+<div class="n">Toast</div>
+<div class="m">4 slots · 1 event</div>
+</a><a class="card" href="mosaic-pkg-toolkit/Tooltip.html">
+<div class="n">Tooltip</div>
+<div class="m">2 slots</div>
+</a>
+</div>
+
+<h2>mosaic-std-controls</h2>
+<div class="grid">
+<a class="card" href="mosaic-std-controls/Button.html">
+<div class="n">Button</div>
+<div class="m">2 slots · 1 event</div>
+</a><a class="card" href="mosaic-std-controls/Checkbox.html">
+<div class="n">Checkbox</div>
+<div class="m">3 slots · 1 event</div>
+</a><a class="card" href="mosaic-std-controls/Input.html">
+<div class="n">Input</div>
+<div class="m">3 slots · 2 events</div>
+</a><a class="card" href="mosaic-std-controls/NumberInput.html">
+<div class="n">NumberInput</div>
+<div class="m">3 slots · 1 event</div>
+</a><a class="card" href="mosaic-std-controls/Slider.html">
+<div class="n">Slider</div>
+<div class="m">7 slots · 2 events</div>
+</a>
+</div>
+
+<h2>mosaic-std-foundation</h2>
+<div class="grid">
+<a class="card" href="mosaic-std-foundation/BodyText.html">
+<div class="n">BodyText</div>
+<div class="m">1 slot</div>
+</a><a class="card" href="mosaic-std-foundation/CaptionText.html">
+<div class="n">CaptionText</div>
+<div class="m">1 slot</div>
+</a><a class="card" href="mosaic-std-foundation/DisplayText.html">
+<div class="n">DisplayText</div>
+<div class="m">1 slot</div>
+</a><a class="card" href="mosaic-std-foundation/FoundationIcon.html">
+<div class="n">FoundationIcon</div>
+<div class="m">2 slots</div>
+</a><a class="card" href="mosaic-std-foundation/HeadingText.html">
+<div class="n">HeadingText</div>
+<div class="m">1 slot</div>
+</a><a class="card" href="mosaic-std-foundation/Surface.html">
+<div class="n">Surface</div>
+<div class="m">1 slot</div>
+</a>
+</div>
+
+</div>
