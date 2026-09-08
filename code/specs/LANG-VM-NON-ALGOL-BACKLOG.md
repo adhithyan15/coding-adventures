@@ -1475,3 +1475,14 @@ rerun of the seven existing columns is claimed. This proves ASCII integer
 printing only; byte truncation/encoding, BEAM input/EOF, and Brainfuck tape
 semantics still need separate probes before promotion. Reprioritize the remaining
 VM-040 families against VM-060b host input and VM-013 Intel 8008 after merge.
+
+## VM-040 COBOL BEAM output probe (selected after #14665 merged)
+
+PR #14665 merged as 9af6235015 after all 46 checks succeeded or skipped.
+Prioritize COBOL's first four output cases because they exercise the newly
+available character writer together with existing string and integer lowering.
+Probe literal DISPLAY, numeric MOVE, integer arithmetic and scaled-decimal ADD
+on real Erlang. Preserve exact stdout and hard failures after runtime detection.
+Only promote executed cells. If a defect appears, commit its bounded contract
+before production edits. Larger COBOL string operations, BEAM input/EOF,
+VM-060b host-reader ABI, and VM-013 machine semantics remain separate items.
