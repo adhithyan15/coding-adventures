@@ -8,6 +8,20 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 FLOW-MATIC BEAM output probe (selected after #14646 merged)
+
+PR #14646 merged as `622208db64` after all46checks succeeded or skipped.
+Nib's26portable BEAM programs are complete. Select the four FLOW-MATIC
+output/control-flow rows next: they can reuse the proven integer-output path
+without conflating output with BEAM input/EOF, which remains a separate slice.
+
+Run the existing scalar output, taken EQUAL, false LESS/GREATER/OTHERWISE,
+and jump-chain sources on real Erlang. Current rows386-389 must be rechecked
+against source after refresh. Missing erl alone may skip; compile/runtime/output
+failures must remain hard. Commit a bounded contract for any newly exposed
+backend defect before changing it. Promote only executed cells; keep the four
+input/EOF rows explicitly undeclared on BEAM until a host-reader proof exists.
+
 ## VM-040 Nib BEAM probe (selected after #14632 merged)
 
 PR #14632 merged as `9b04b74cb8` after all 46 checks succeeded or skipped.
