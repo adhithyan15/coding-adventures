@@ -1,0 +1,2 @@
+# @version 1
+document = { NEWLINE } HEADER { NEWLINE | NODE_LINE } EOF ;

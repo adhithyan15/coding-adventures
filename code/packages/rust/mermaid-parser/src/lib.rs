@@ -26,7 +26,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_architecture, try_tokenize_mermaid_block, try_tokenize_mermaid_kanban,
     try_tokenize_mermaid_mindmap, try_tokenize_mermaid_packet, try_tokenize_mermaid_timeline,
     try_tokenize_mermaid_eventmodeling, try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
-    try_tokenize_mermaid_treemap, try_tokenize_mermaid_venn,
+    try_tokenize_mermaid_treemap, try_tokenize_mermaid_venn, try_tokenize_mermaid_ishikawa,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -65,6 +65,7 @@ const EVENTMODELING_PARSER_GRAMMAR_SOURCE: &str =
 const TREEMAP_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/treemap.grammar");
 const VENN_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/venn.grammar");
+const ISHIKAWA_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/ishikawa.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -566,6 +567,7 @@ use diagram_ir::{
     TaskStart, TemporalBody, TemporalDiagram, TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
+    IshikawaCause, IshikawaDiagram,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -661,6 +663,7 @@ impl MermaidDiagramType {
                 | Self::EventModeling
                 | Self::Treemap
                 | Self::Venn
+                | Self::Ishikawa
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -687,6 +690,7 @@ pub enum MermaidDiagram {
     EventModel(EventModelDiagram),
     Treemap(TreemapDiagram),
     Venn(VennDiagram),
+    Ishikawa(IshikawaDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -819,6 +823,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         }
         MermaidDiagramType::Treemap => parse_treemap(source).map(MermaidDiagram::Treemap),
         MermaidDiagramType::Venn => parse_venn(source).map(MermaidDiagram::Venn),
+        MermaidDiagramType::Ishikawa => parse_ishikawa(source).map(MermaidDiagram::Ishikawa),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -2962,6 +2967,42 @@ fn split_venn_style_properties(raw: &str) -> Vec<&str> {
 }
 
 fn venn_error(line: usize, message: impl Into<String>) -> ParseError { ParseError { message: message.into(), line, col: 1 } }
+
+// ── ishikawa parser ───────────────────────────────────────────────────────
+
+/// Parse Mermaid 11.16.1 indentation-based Ishikawa diagrams into causal IR.
+pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_ishikawa(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(ISHIKAWA_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse ishikawa.grammar: {error}"));
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
+        .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
+
+    let lines: Vec<_> = prepared.lines().enumerate().filter_map(|(index, line)| {
+        let text = line.trim();
+        if text.is_empty() || matches!(text.to_ascii_lowercase().as_str(), "ishikawa" | "ishikawa-beta") { None }
+        else { Some((index + 1, indentation_width(line), text.to_string())) }
+    }).collect();
+    let Some((_, _, effect)) = lines.first() else { return Err(ParseError { message: "ishikawa requires an effect".into(), line: 1, col: 1 }); };
+    let mut causes = Vec::new();
+    let mut stack = Vec::<(usize, String)>::new();
+    for (line, indentation, label) in lines.iter().skip(1) {
+        let effective_indent = *indentation;
+        while stack.last().is_some_and(|(level, _)| *level >= effective_indent) { stack.pop(); }
+        let parent_id = stack.last().map(|(_, id)| id.clone());
+        let id = format!("cause-{}", causes.len() + 1);
+        let depth = parent_id.as_ref().and_then(|parent| causes.iter().find(|cause: &&IshikawaCause| &cause.id == parent)).map_or(1, |cause| cause.depth + 1);
+        if label.is_empty() { return Err(ParseError { message: "empty Ishikawa cause".into(), line: *line, col: 1 }); }
+        causes.push(IshikawaCause { id: id.clone(), label: label.clone(), parent_id, depth });
+        stack.push((effective_indent, id));
+    }
+    Ok(IshikawaDiagram { effect: effect.clone(), causes })
+}
+
+fn indentation_width(line: &str) -> usize {
+    line.chars().take_while(|character| character.is_whitespace()).map(|character| if character == '\t' { 4 } else { 1 }).sum()
+}
 
 // ── radar-beta parser ─────────────────────────────────────────────────────
 

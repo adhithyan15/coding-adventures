@@ -7,7 +7,7 @@
 //! bounding box of all elements) and passes elements through unchanged.
 
 use std::collections::HashMap;
-use diagram_ir::{GeoElement, GeometricDiagram, LayoutedGeometricDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, VennDiagram};
+use diagram_ir::{GeoElement, GeometricDiagram, IshikawaDiagram, LayoutedGeometricDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, Point, VennDiagram};
 
 pub const VERSION: &str = "0.1.0";
 
@@ -66,6 +66,36 @@ fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64
     (!points.is_empty()).then(|| { let count = points.len() as f64;
         (points.iter().map(|point| point.0).sum::<f64>() / count,
          points.iter().map(|point| point.1).sum::<f64>() / count) })
+}
+
+/// Lay out an Ishikawa causal tree as an alternating fishbone.
+pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> LayoutedIshikawaDiagram {
+    let width = canvas_width.max(560.0); let height = (width * 0.58).max(360.0);
+    let spine_y = height / 2.0; let spine_from = Point { x: 36.0, y: spine_y };
+    let effect_width = 150.0; let effect_height = 58.0; let effect_x = width - effect_width - 20.0;
+    let spine_to = Point { x: effect_x, y: spine_y };
+    let roots: Vec<_> = diagram.causes.iter().filter(|cause| cause.parent_id.is_none()).collect();
+    let spacing = (spine_to.x - spine_from.x) / (roots.len() + 1).max(2) as f64;
+    let mut bones = Vec::new(); let mut anchors = HashMap::<&str, Point>::new();
+    for (index, cause) in roots.iter().enumerate() {
+        let attach = Point { x: spine_from.x + spacing * (index + 1) as f64, y: spine_y };
+        let sign = if index.is_multiple_of(2) { -1.0 } else { 1.0 };
+        let tip = Point { x: attach.x - spacing * 0.48, y: spine_y + sign * height * 0.32 };
+        bones.push(LayoutedIshikawaBone { from: tip.clone(), to: attach, label: cause.label.clone(),
+            label_position: Point { x: tip.x + spacing * 0.24, y: (tip.y + spine_y) / 2.0 + sign * 42.0 }, depth: 1 });
+        anchors.insert(&cause.id, tip);
+    }
+    for cause in diagram.causes.iter().filter(|cause| cause.parent_id.is_some()) {
+        let parent = cause.parent_id.as_deref().and_then(|id| anchors.get(id)).cloned().unwrap_or(spine_from.clone());
+        let sign = if parent.y < spine_y { -1.0 } else { 1.0 };
+        let length = (90.0 / cause.depth as f64).max(38.0);
+        let tip = Point { x: parent.x - length, y: parent.y + sign * length * 0.55 };
+        bones.push(LayoutedIshikawaBone { from: tip.clone(), to: parent,
+            label: cause.label.clone(), label_position: Point { x: tip.x, y: tip.y - sign * 12.0 }, depth: cause.depth });
+        anchors.insert(&cause.id, tip);
+    }
+    LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), effect_x, effect_y: spine_y - effect_height / 2.0,
+        effect_width, effect_height, spine_from, spine_to, bones }
 }
 
 /// Resolve canvas size and produce a `LayoutedGeometricDiagram`.
@@ -212,5 +242,16 @@ mod tests {
         assert_eq!(first, layout_venn(&diagram, 600.0));
         assert!(first.circles[0].radius > first.circles[1].radius);
         assert!(first.labels.iter().any(|label| label.text == "AB"));
+    }
+
+    #[test]
+    fn ishikawa_layout_alternates_major_causes() {
+        let diagram = IshikawaDiagram { effect: "Problem".into(), causes: vec![
+            IshikawaCause { id: "a".into(), label: "A".into(), parent_id: None, depth: 1 },
+            IshikawaCause { id: "b".into(), label: "B".into(), parent_id: None, depth: 1 },
+        ] };
+        let layout = layout_ishikawa(&diagram, 640.0);
+        assert!(layout.bones[0].from.y < layout.spine_from.y);
+        assert!(layout.bones[1].from.y > layout.spine_from.y);
     }
 }

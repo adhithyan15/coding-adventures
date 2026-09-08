@@ -184,7 +184,7 @@
     {
       "id": "ishikawa",
       "headers": ["ishikawa", "ishikawa-beta"],
-      "status": "detected",
+      "status": "partial",
       "ir": "causal",
       "smoke_source": "ishikawa-beta\nProblem\n  Cause"
     },
