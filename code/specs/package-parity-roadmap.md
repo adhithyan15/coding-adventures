@@ -13124,6 +13124,117 @@ remaining-engine aggregate until POSIX and Windows native identity, link,
 reparse, and replacement-race behavior is proven. The updated state contains
 716 owners and 1,180 edges: 208 merged, 507 pending, and one in progress.
 
+### Post-PR #14366 reconciliation and parallel backlog findings
+
+PR #14366 completed all 42 final-head checks acceptably. GitHub reported the
+reviewed head `8ebd6658a4cfed6f7d801b904799f171b1a737e7` clean and mergeable before
+guarded squash auto-merge was enabled, and merged it at
+`2026-09-05T19:53:45Z` as
+`8b8ce4b3c8edd10923cfeb0f693717741fe665df` without a plain manual merge
+command.
+
+The collision-checked schema-3 inventory at exact refreshed `origin/main`
+remains identity-neutral: 15 established lanes, 1,413 implementation
+identities, 4,629 implementation slots, and 1,452 all-reported identities. The
+four bands remain 175/265, 123/934, 172/2,165, and 943/13,202; Rust has 754
+singletons, OCaml remains emerging at zero packages, and canonical collisions
+and unknown language buckets remain zero.
+
+Parallel read-only audits found three dependency-shaped build-tool boundaries,
+including two previously missing owners.
+Elixir registry and hashing work cannot prove atomic host-file
+identity with pure OTP file APIs, so the new selection-blocked
+`build-tool-elixir-native-source-snapshot-stability-hardening` owner gates its
+dependency hashing, repository-boundary adoption, and aggregate closure. Go's
+current registry is incomplete and its native collector likewise lacks a
+reviewed no-follow, reparse, hardlink, and replacement-race contract; the new
+selection-blocked `build-tool-go-native-source-snapshot-stability-hardening`
+owner therefore sits between exact Go registry adoption and dependency
+hashing, repository-boundary adoption, the remaining-engine aggregate, and the
+canonical Go oracle. Swift already has complete portable hashing, registry,
+and repository-boundary owners merged; its existing
+`build-tool-swift-git-index-snapshot-stability-repair` remains the correct
+owner for comparing complete mode/OID/stage/path records rather than path sets.
+
+The `ct-compare` audit found no language-neutral conformance contract and five
+missing established-lane implementations. The new
+`ct-compare-language-neutral-conformance` owner freezes data-independent
+control flow and exact equal-length work without wall-clock assertions. Dart,
+Haskell, Lua, Perl, and Swift each have a separate dependent implementation
+owner, and the prior remaining-lane umbrella is now selection-blocked behind
+all five leaves. No reviewed lane exception is currently justified.
+
+The reconciled graph contains 724 owners and 1,196 edges: 209 merged and 515
+pending, with no active parity PR. It is unique, dependency-complete, acyclic,
+and free of merged-to-unmerged edges. The highest strategic ready owner in the
+durable language/build-tool scope is `ocaml-representative-core`, with three
+direct and eighteen total unfinished descendants. Its bounded first tranche is
+exactly `logic-gates`, `graph`, `directed-graph`, and `state-machine`, with
+OCAML05 fixing the portable API decisions, package-local Alcotest vectors,
+95%+ line-coverage targets, capability manifests, Dune/opam metadata, and the
+local graph then directed-graph dependency chain. The already merged OCaml
+process-free substrate and three-platform toolchain satisfy its prerequisites;
+the later native build-tool and all-language denominator gates remain separate.
+
+`ocaml-representative-core` is therefore selected as the sole in-progress item
+on fresh branch `codex/ocaml-representative-core`, created from exact merged
+main `8b8ce4b3c8edd10923cfeb0f693717741fe665df`. Selection leaves 209 merged,
+514 pending, and exactly one in-progress owner. Implementation remains serial;
+parallel work continues only for bounded read-only reference, fixture,
+validation, and backlog audits while this tranche advances toward one
+ready-for-review PR.
+
+Before specification implementation, the branch rebased cleanly onto exact
+`origin/main` `06e95a156bd9d4f90654d7ef0facc8b419a22e39`. The intervening #14364
+Mosaic style-default merge changes only existing Mosaic packages and shared
+history. A fresh collision report reproduces every inventory count above with
+zero collisions and zero unknown buckets; the selected ownership graph remains
+724 owners and 1,196 edges at 209 merged, 514 pending, and one in progress.
+
+The representative-core parallel validation audit found one additional
+dependency-shaped integration gap. The pinned three-platform OCaml workflow
+executes the library and program scaffold fixtures but not the real package
+chain. Generic canonical CI can discover OCaml package BUILD files, and this
+core tranche now supplies only its minimum guarded, checksum-enforcing opam
+bootstrap plus serialized OCaml build-tool invocation; package-specific hosted
+execution remains outside this process-free package owner. The new pending
+`ocaml-representative-package-ci-execution` owner depends on the representative
+core and the already merged CI toolchain, owns real Ubuntu, macOS, and Windows
+format/test/numeric-coverage/install/source-archive/installed-downstream
+execution without skips, stale coverage isolation, direct-BUILD fail-fast
+semantics, pinned odoc, warning-clean documentation, and retained evidence. It
+now gates final lane promotion and remains separate from this process-free
+package tranche.
+
+Parallel release and dependency audits found no additional eligible unowned
+OCaml gap: the execution owner above already owns the shared release-hardening
+surface, while capability analysis and process substrate remain independent
+siblings joined only by promotion. The native OCaml build tool now also waits
+for `build-tool-neutral-graph-diff-corpus-completion`, preventing its graph and
+diff behavior from targeting an incomplete neutral corpus. The reconciled state
+therefore contains 725 owners and 1,200 edges: 209 merged, 515 pending, and one
+in progress; graph uniqueness, dependency completeness, acyclicity, and the no
+merged-to-unmerged invariant remain intact. After this core lands, capability
+analysis has the highest OCaml dependency leverage at seventeen unfinished
+descendants; package execution remains the separate cross-platform evidence
+frontier.
+
+Before publication, the completed tranche rebased without conflict onto exact
+`origin/main` `8e52198a5ba63fab43f62037d2367e1bd8fab759`. Six intervening SPICE,
+Mosaic, generic-CI, Hindi, and UI documentation commits plus the later Rust
+language-VM delimiter-indexing repair add no package identity or state owner.
+Their only exact overlap is generic `ci.yml`; the
+automatic merge preserves main's 15-shard rebalance and five pinned npm repair
+installs together with the guarded OCaml matrix, checksum bootstrap, Windows
+retention, and conditional serialized execution. The collision-checked report
+remains 15 established lanes, 1,413 implementation identities, 4,629 slots,
+1,452 all-reported identities, the unchanged four completion bands, 754 Rust
+singletons, four emerging OCaml packages, zero collisions, and zero unknown
+buckets. All 39 package tests, strict opam lint, formatting, release installs,
+four above-95% coverage runs, installed consumer examples, the 50-test lock
+suite with two expected Windows symlink skips, repository lock validation, Go
+build-tool test/vet/build, state-DAG, and diff hygiene checks are acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

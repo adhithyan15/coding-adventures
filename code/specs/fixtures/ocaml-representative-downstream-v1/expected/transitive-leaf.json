@@ -1,0 +1,1 @@
+{"schema_version":1,"fixture":"ocaml-state-machine-transitive-link-v1","reachable":["cold","warm"],"dfa_state":"warm","passes":true}

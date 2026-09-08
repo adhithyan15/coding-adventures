@@ -1025,14 +1025,26 @@ func TestGenerateOcamlEncodesDependenciesAndDescriptions(t *testing.T) {
 	}
 	buildText := string(build)
 	for _, want := range []string{
-		"opam pin add --no-action -y coding-adventures-bitset ../bitset",
-		"opam pin add --no-action -y coding-adventures-graph ../graph",
+		"opam pin add --no-action --working-dir --no-checksums -y coding-adventures-bitset ../bitset",
+		"opam pin add --no-action --working-dir --no-checksums -y coding-adventures-graph ../graph",
 		"opam exec -- dune build @fmt",
 		"opam exec -- dune runtest --force",
 		"opam exec -- bisect-ppx-report summary --per-file --expect src/coding_adventures_my_pkg.ml bisect*.coverage",
 	} {
 		if !strings.Contains(buildText, want) {
 			t.Errorf("BUILD missing %q", want)
+		}
+	}
+	buildWindows, err := os.ReadFile(filepath.Join(target, "BUILD_windows"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{
+		"opam pin add --no-action --working-dir --no-checksums -y coding-adventures-bitset ../bitset",
+		"opam pin add --no-action --working-dir --no-checksums -y coding-adventures-graph ../graph",
+	} {
+		if !strings.Contains(string(buildWindows), want) {
+			t.Errorf("BUILD_windows missing %q", want)
 		}
 	}
 	if strings.Contains(buildText, description) {

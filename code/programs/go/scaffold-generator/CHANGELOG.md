@@ -23,6 +23,8 @@ All notable changes to this program will be documented in this file.
 
 ### Fixed
 
+- OCaml dependency pins now scope checksum bypass to local worktree ingestion
+  while subsequent registry dependency installs retain strict checksums.
 - Lua dependency discovery is now restricted to the rockspec `dependencies`
   table, accepts versioned and unversioned local rocks, and emits standalone
   Unix and Windows recipes with the full ordered local closure plus hardened

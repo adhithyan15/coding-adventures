@@ -7,7 +7,7 @@
     "otp_version": "27.3.4.11",
     "version_type": "strict",
     "setup_condition": "needs.detect.outputs.needs_elixir == 'true'",
-    "affected_build_condition": "needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true')"
+    "affected_build_condition": "needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true')"
   },
   "unsupported_protocol": {
     "directive_prefix": "# build-tool: unsupported=",

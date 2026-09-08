@@ -2017,8 +2017,8 @@ val layer : string option
     const pinPath = depDir
       ? path.relative(targetDir, depDir).split(path.sep).join("/")
       : `../${dep}`;
-    build += `opam pin add --no-action -y coding-adventures-${dep} ${pinPath}\n`;
-    buildWindows += `opam pin add --no-action -y coding-adventures-${dep} ${pinPath}\n`;
+    build += `opam pin add --no-action --working-dir --no-checksums -y coding-adventures-${dep} ${pinPath}\n`;
+    buildWindows += `opam pin add --no-action --working-dir --no-checksums -y coding-adventures-${dep} ${pinPath}\n`;
   }
   build += `opam install . --deps-only --with-test --with-dev-setup -y
 opam exec -- dune build @fmt

@@ -51,6 +51,26 @@ class RequiredCapabilitiesTest(unittest.TestCase):
                 document = json.loads(path.read_text(encoding="utf-8"))
                 self.assert_schema_valid(document)
 
+    def test_all_explicit_ocaml_package_manifests_are_schema_valid(self) -> None:
+        package_root = REPO_ROOT / "code/packages/ocaml"
+        roots = sorted(path.parent for path in package_root.glob("*/BUILD"))
+        self.assertTrue(roots, "expected at least one explicit OCaml package")
+
+        for root in roots:
+            path = root / "required_capabilities.json"
+            with self.subTest(package=root.relative_to(REPO_ROOT)):
+                self.assertTrue(
+                    path.is_file(),
+                    "every buildable OCaml package needs a capability manifest",
+                )
+                document = json.loads(path.read_text(encoding="utf-8"))
+                self.assert_schema_valid(document)
+                self.assertEqual(
+                    f"ocaml/{root.name}",
+                    document["package"],
+                    "manifest package identity must match its on-disk directory",
+                )
+
     def test_ocaml_scaffold_fixtures_are_schema_valid(self) -> None:
         paths = sorted(FIXTURE_ROOT.glob("ocaml-*/required_capabilities.json"))
         self.assertEqual(2, len(paths), "expected OCaml library and program fixtures")

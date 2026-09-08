@@ -398,7 +398,8 @@ pays off — without it, finding predecessors would require scanning all edges.
 
 ### LabeledDirectedGraph
 
-A `LabeledDirectedGraph` wraps `DirectedGraph` and adds a string label to each edge.
+A `LabeledDirectedGraph` wraps `DirectedGraph` and adds one or more distinct
+string labels to each ordered endpoint pair.
 Used by state machines: nodes are states, edges are transitions, labels are the events
 that trigger each transition.
 
@@ -411,7 +412,7 @@ Edges:  RED ──"timer"──→ GREEN
         YELLOW ──"timer"──→ RED
 
 LabeledDirectedGraph stores:
-  labels: Map<(u, v), str>
+  labels: Map<(u, v), Set[str]>
 ```
 
 ## Representation
@@ -431,7 +432,7 @@ and kept in sync on every add/remove operation.
 For `LabeledDirectedGraph`:
 ```
 inner:  DirectedGraph[T]
-labels: Map[Tuple[T, T], str]     # (u, v) → label string
+  labels: Map[Tuple[T, T], Set[str]] # (u, v) → distinct labels
 ```
 
 ## Algorithms (Pure Functions)
@@ -499,7 +500,7 @@ class LabeledDirectedGraph(Generic[T]):
     def add_edge(self, u: T, v: T, label: str, weight: float = 1.0) -> None: ...
     def remove_edge(self, u: T, v: T) -> None: ...
     def has_edge(self, u: T, v: T) -> bool: ...
-    def edge_label(self, u: T, v: T) -> str: ...       # raises KeyError if missing
+    def edge_labels(self, u: T, v: T) -> frozenset[str]: ...
     def edges_labeled(self) -> frozenset[tuple[T, T, str, float]]: ...
     def successors(self, node: T) -> frozenset[T]: ...
     def predecessors(self, node: T) -> frozenset[T]: ...
@@ -560,6 +561,9 @@ model per language:
   `var reverse: [T: [T: Double]]`.
 
 `LabeledDirectedGraph` always uses composition in all languages, wrapping `DirectedGraph`.
+Adding the same label twice is idempotent. Removing one label preserves the
+structural edge and its other labels; removing the final label removes the
+edge. Removing a structural edge or endpoint removes every attached label.
 
 ## Test Strategy
 

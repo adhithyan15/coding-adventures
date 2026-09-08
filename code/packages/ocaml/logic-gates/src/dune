@@ -1,0 +1,6 @@
+(library
+ (name coding_adventures_logic_gates)
+ (public_name coding-adventures-logic-gates)
+ (wrapped false)
+ (instrumentation
+  (backend bisect_ppx)))

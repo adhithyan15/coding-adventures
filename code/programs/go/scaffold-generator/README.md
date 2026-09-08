@@ -10,7 +10,8 @@ empty capability profile for the pure library template.
 
 OCaml library and program scaffolds match the shared OCAML02 golden trees.
 They include exact direct opam/Dune tool constraints, Alcotest, formatting and
-coverage commands, local dependency pins, and schema-v1 capability profiles.
+coverage commands, local dependency pins whose checksum exception is scoped to
+worktree ingestion, and schema-v1 capability profiles.
 Transitive opam-repository/switch locking remains a separate CI-toolchain gate.
 
 Lua scaffolds read both versioned and unversioned repository-local rockspec

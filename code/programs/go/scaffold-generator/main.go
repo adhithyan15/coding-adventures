@@ -2213,8 +2213,8 @@ val layer : string option
 			}
 			pinPath = filepath.ToSlash(relative)
 		}
-		build += fmt.Sprintf("opam pin add --no-action -y coding-adventures-%s %s\n", dep, pinPath)
-		buildWindows += fmt.Sprintf("opam pin add --no-action -y coding-adventures-%s %s\n", dep, pinPath)
+		build += fmt.Sprintf("opam pin add --no-action --working-dir --no-checksums -y coding-adventures-%s %s\n", dep, pinPath)
+		buildWindows += fmt.Sprintf("opam pin add --no-action --working-dir --no-checksums -y coding-adventures-%s %s\n", dep, pinPath)
 	}
 	build += fmt.Sprintf(`opam install . --deps-only --with-test --with-dev-setup -y
 opam exec -- dune build @fmt
