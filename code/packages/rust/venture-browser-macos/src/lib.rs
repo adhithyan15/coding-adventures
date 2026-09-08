@@ -24,8 +24,8 @@ use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, Windo
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::{
     BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
-    BrowserHostController, BrowserHostEffect, BrowserHostEventOutcome, BrowserScrollMetrics,
-    HttpBrowserFetcher, MemoryBookmarkRepository,
+    BrowserFetchRequest, BrowserHostController, BrowserHostEffect, BrowserHostEventOutcome,
+    BrowserScrollMetrics, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -123,13 +123,17 @@ where
 }
 
 #[cfg(target_vendor = "apple")]
-fn activate_control_at(
+fn activate_control_at<F>(
     session: &mut BrowserSession,
     viewport_x: f64,
     viewport_y: f64,
     width: f64,
     height: f64,
-) -> bool {
+    fetcher: &F,
+) -> Result<bool, BrowserLoadError>
+where
+    F: BrowserResourceFetcher,
+{
     let theme = mosaic_html_theme();
     let measurer = NativeMeasurer::new();
     let shaper = NativeShaper::new();
@@ -143,9 +147,9 @@ fn activate_control_at(
         &metrics,
         &resolver,
     );
-    session
-        .activate_control(viewport_x, viewport_y, &pipeline)
-        .is_some()
+    Ok(session
+        .activate_control_and_submit(viewport_x, viewport_y, &pipeline, fetcher)?
+        .is_some())
 }
 
 /// Activate the link at a viewport coordinate through the native page
@@ -177,7 +181,7 @@ where
         &resolver,
     );
     if session
-        .activate_control(viewport_x, viewport_y, &pipeline)
+        .activate_control_and_submit(viewport_x, viewport_y, &pipeline, fetcher)?
         .is_some()
     {
         return Ok(true);
@@ -481,6 +485,13 @@ impl BrowserResourceFetcher for OwnedFetcher {
     fn fetch(&self, url: &str) -> Result<venture_browser_core::BrowserFetchResponse, String> {
         self.0.fetch(url)
     }
+
+    fn fetch_request(
+        &self,
+        request: &BrowserFetchRequest,
+    ) -> Result<venture_browser_core::BrowserFetchResponse, String> {
+        self.0.fetch_request(request)
+    }
 }
 
 #[cfg(target_vendor = "apple")]
@@ -583,10 +594,11 @@ impl MacBrowserHost {
     pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
         let width = self.width;
         let height = self.height;
-        if activate_control_at(self.controller.session_mut(), x, y, width, height) {
+        let fetcher = &self.fetcher;
+        if activate_control_at(self.controller.session_mut(), x, y, width, height, fetcher)? {
+            self.controller.synchronize_session_state();
             return Ok(true);
         }
-        let fetcher = &self.fetcher;
         self.controller.activate_link(x, y, |session, navigation| {
             navigate_session(session, navigation, width, height, fetcher)
         })

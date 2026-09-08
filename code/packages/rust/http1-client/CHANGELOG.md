@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added bounded URL-encoded POST requests with explicit content type and byte
+  length, including POST-to-GET handling for 301/302 redirects.
+
 ## [0.1.0] - 2026-07-29
 
 ### Added
