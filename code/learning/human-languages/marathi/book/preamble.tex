@@ -29,6 +29,12 @@
 \usepackage[raggedright]{titlesec}
 \input{../../_shared/visual.tex}
 
+% A macron vowel followed by U+0303 is a LONG nasal vowel, and Latin Modern sets
+% it as the short one -- the macron is dropped. Must come after visual.tex
+% (graphicx) and after hyperref, both of which it uses. See the file itself for
+% the diagnosis and for why this is not a lesson edit.
+\input{../../_shared/nasal-macron.tex}
+
 \usepackage{polyglossia}
 \setmainlanguage{english}
 
