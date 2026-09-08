@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W20-shi",
+    "language": "chinese",
+    "chapter": 20,
+    "sequence": 2060,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fe8723084ffb2fbf",
+    "detachableSegments": [
+      "Script — a bar and a post"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

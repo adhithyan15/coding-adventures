@@ -1,0 +1,21 @@
+{
+  "id": "ZH-EXT-054-COUNT-TEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say, read and write the Mandarin numbers one to ten with their tones.",
+  "prerequisites": [],
+  "lessons": [
+    "ZH-W20-liu",
+    "ZH-C20-liu",
+    "ZH-W20-qi",
+    "ZH-C20-qi",
+    "ZH-W20-ba",
+    "ZH-C20-ba",
+    "ZH-W20-jiu",
+    "ZH-C20-jiu",
+    "ZH-W20-shi",
+    "ZH-C20-shi",
+    "ZH-C20-practice"
+  ]
+}

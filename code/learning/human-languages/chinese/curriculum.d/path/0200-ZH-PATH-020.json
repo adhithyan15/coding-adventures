@@ -1,0 +1,18 @@
+{
+  "id": "ZH-PATH-020",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "ZH-C21-shiyi",
+    "ZH-C21-ershi",
+    "ZH-W21-bai",
+    "ZH-C21-bai",
+    "ZH-C21-digits",
+    "ZH-C21-practice",
+    "ZH-R21-close"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "ZH-EXT-055-DECIMAL"
+  ]
+}

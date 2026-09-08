@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:a770a5301c462609",
+  "lessonIds": [
+    "ZH-C21-shiyi",
+    "ZH-C21-ershi",
+    "ZH-W21-bai",
+    "ZH-C21-bai",
+    "ZH-C21-digits",
+    "ZH-C21-practice",
+    "ZH-R21-close"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch21.txt",
+  "json": "chinese/narration/ch21.json",
+  "textHash": "fnv1a64:18b55512d0bacb98",
+  "jsonHash": "fnv1a64:2f196b49e51af289",
+  "findings": []
+}

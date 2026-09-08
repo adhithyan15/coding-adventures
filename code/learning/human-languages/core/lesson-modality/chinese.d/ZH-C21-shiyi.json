@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C21-shiyi",
+    "language": "chinese",
+    "chapter": 21,
+    "sequence": 2090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ef82cfc5e8e9fe1"
+  },
+  "findings": []
+}

@@ -1,0 +1,1387 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 20,
+  "title": "Six to Ten, and the Character That Was Already Here",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:f854cccc8a60bfad",
+  "lessons": [
+    {
+      "id": "ZH-W20-liu",
+      "sequence": 1980,
+      "title": "六 (liù) — four strokes again, for six this time",
+      "headword": "六",
+      "romanization": "liù",
+      "gloss": "six — a dot, a bar, and the two legs of 八 underneath",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4830b0eafa75b822",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — a dot, a bar, two legs",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a dot, a bar, two legs and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 五. How many strokes, and how many does it mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a dot, a bar, two legs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "六 (liù)."
+            },
+            {
+              "kind": "speech",
+              "text": "Four strokes. For six. 五 had four for five; 六 (liù) has four for six. Whatever was left of the counting trick after chapter 3 is now gone for good."
+            },
+            {
+              "kind": "speech",
+              "text": "The four strokes, in order:"
+            },
+            {
+              "kind": "speech",
+              "text": "the short diǎn dot at the top centre, down and to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "the long héng horizontal beneath it, left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "the left leg, a piě falling to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "the right leg, a nà falling to the lower right."
+            },
+            {
+              "kind": "speech",
+              "text": "Top before bottom, then left before right — the two rules that have ordered every character in this book."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold on to strokes 3 and 4. On their own, without the dot and the bar, they are the character for eight, and you will write them again in two lessons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "六 (liù) — dot, bar, left leg, right leg",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 六 — dot, bar, left leg, right leg]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Hanzi Writer Data 六 (liù); Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W20-liu-strokes",
+              "prompt": "How many strokes does 六 (liù) have?",
+              "assesses": [
+                "ZH-SCRIPT-NUM-LIU"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "four",
+                "4",
+                "four strokes"
+              ],
+              "feedback": {
+                "correct": "Four, for six — as 五 was four for five.",
+                "incorrect": "Four: dot, bar, left leg, right leg."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C20-liu",
+      "sequence": 1990,
+      "title": "六 (liù) — six, and the run starts again",
+      "headword": "六",
+      "romanization": "liù",
+      "gloss": "six — the sixth number, and the first one past where this book stopped",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54b2438c5bc54b02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 六 (liù), then count aloud to five."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "六 liù means six."
+            },
+            {
+              "kind": "speech",
+              "text": "liù is fourth tone — the sharp fall, the same shape as sì, four. Say them together and only the mouth changes: sì, liù."
+            },
+            {
+              "kind": "speech",
+              "text": "The vowel is worth a moment. Pinyin writes iu, and what you say is closer to ioū: there is a faint o in the middle that the spelling does not print."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — the run starts again",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This book taught 一 二 三 四 五 in chapter 3 and then stopped. For seventeen chapters it could name a family, a school and a greeting and could not count to six — could not give an age, a price, a floor or a date. 六 (liù) is where that starts being paid back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sì, liù — one fall, twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **sì**, **liù** — one fall, twice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yī èr sān sì wǔ liù — the run, at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **yī èr sān sì wǔ liù** — the run, at speed]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C20-liu-tone",
+              "prompt": "Which earlier number shares liu's tone?",
+              "assesses": [
+                "ZH-LEX-NUM-LIU"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "si",
+                "四",
+                "sì, four",
+                "four"
+              ],
+              "feedback": {
+                "correct": "Both are fourth tone, the sharp fall.",
+                "incorrect": "四 sì — both fall."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W20-qi",
+      "sequence": 2000,
+      "title": "七 (qī) — two strokes, for seven",
+      "headword": "七",
+      "romanization": "qī",
+      "gloss": "seven — two strokes, and one of them turns twice",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1646ec9cfd8fc265",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the second stroke does the work",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the second stroke does the work and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 六 (liù) and say how many strokes it has."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the second stroke does the work",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "七 (qī)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two strokes. For seven. Six had four, seven has two — the stroke count is not merely useless now, it is running backwards."
+            },
+            {
+              "kind": "speech",
+              "text": "The two strokes:"
+            },
+            {
+              "kind": "speech",
+              "text": "the héng horizontal, left to right, rising a little as it goes."
+            },
+            {
+              "kind": "speech",
+              "text": "the shùwāngōu: start high on the right, descend, bend along the foot to the right, and hook upward at the end."
+            },
+            {
+              "kind": "speech",
+              "text": "That second stroke is one continuous movement with two turns in it. Do not lift in the middle of it — a lift is what makes it two strokes instead of one, and seven would then be three."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "七 (qī) — the bar, then the turning stroke, unbroken",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 七 — the bar, then the turning stroke, unbroken]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COUNT",
+              "instruction": "two strokes, not three",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COUNT: two strokes, not three]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Hanzi Writer Data 七 (qī); Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W20-qi-lift",
+              "prompt": "How many times do you lift the pen writing 七 (qī)?",
+              "assesses": [
+                "ZH-SCRIPT-NUM-QI"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "once",
+                "1",
+                "one",
+                "once, after the horizontal"
+              ],
+              "feedback": {
+                "correct": "Once. The turning stroke is unbroken.",
+                "incorrect": "Once — the second stroke turns twice without lifting."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C20-qi",
+      "sequence": 2010,
+      "title": "七 (qī) — seven",
+      "headword": "七",
+      "romanization": "qī",
+      "gloss": "seven — first tone, and a consonant English does not have",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a60c1c4a3d58ae6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 七 (qī), then say six."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "七 qī means seven."
+            },
+            {
+              "kind": "speech",
+              "text": "qī is first tone, the high level one — the same shape as yī, one. Say them in a row and hold the pitch flat across both: yī, qī."
+            },
+            {
+              "kind": "speech",
+              "text": "The q is the piece to work on, because English has no letter for it. Put the tongue where it goes for y in yes, then release the air the way you do for ch. It is not the k of queen and it is not an English ch; it is the tongue of one and the release of the other."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yī, qī — two high level tones",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **yī**, **qī** — two high level tones]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǔ liù qī — dip, fall, level",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **wǔ liù qī** — dip, fall, level]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C20-qi-sound",
+              "prompt": "Where is the tongue for the q of qi?",
+              "assesses": [
+                "ZH-LEX-NUM-QI"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "where it is for y in yes",
+                "like y",
+                "the y position",
+                "front, as for y"
+              ],
+              "feedback": {
+                "correct": "Tongue of y, release of ch.",
+                "incorrect": "Where it goes for the y of yes — then release as for ch."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W20-ba",
+      "sequence": 2020,
+      "title": "八 (bā) — a character you have already written twice",
+      "headword": "八",
+      "romanization": "bā",
+      "gloss": "eight — the two strokes of 人, parted at the top",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4e2d15e781044da9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the gap is the character",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the gap is the character and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 七 (qī), then write 六 (liù) and put a finger on its two legs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the gap is the character",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "八 (bā)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two strokes. For eight."
+            },
+            {
+              "kind": "speech",
+              "text": "the left leg, a piě falling to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, then the right leg, a nà falling to the lower right."
+            },
+            {
+              "kind": "speech",
+              "text": "You wrote both of them in 六 (liù) two lessons ago, under the dot and the bar. Take the dot and the bar away and what is left is eight."
+            },
+            {
+              "kind": "speech",
+              "text": "And one more comparison, because it is the sharpest in the whole book: 人, rén, \"person\", is these same two strokes joined at the top. 八 (bā) is the same two strokes parted. The gap is the entire difference between a person and the number eight — which is why the first stroke of 八 (bā) begins below where 人's does, and why the two must never be allowed to touch."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "八 (bā) — left leg, lift, right leg, apart at the top",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 八 — left leg, lift, right leg, apart at the top]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "write 人 beside it and mark where they meet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: write 人 beside it and mark where they meet]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Hanzi Writer Data 八 (bā); Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W20-ba-gap",
+              "prompt": "What is the only difference between 八 (bā) and 人?",
+              "assesses": [
+                "ZH-SCRIPT-NUM-BA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the strokes are parted at the top",
+                "they do not touch",
+                "the gap at the top",
+                "人 joins, 八 does not"
+              ],
+              "feedback": {
+                "correct": "The gap is the character.",
+                "incorrect": "人 joins its two strokes at the top; 八 leaves them apart."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C20-ba",
+      "sequence": 2030,
+      "title": "八 (bā) — eight, and why it costs more",
+      "headword": "八",
+      "romanization": "bā",
+      "gloss": "eight — first tone, and the luckiest number in the language",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88c1fca8c62ffd58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 八 (bā), then say seven."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "八 bā means eight."
+            },
+            {
+              "kind": "speech",
+              "text": "bā is first tone, high and level, like qī. The b is unaspirated: no puff of air, closer to an English p in spin than the b of bin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — why eight costs more",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bā sounds close to fā, the first syllable of a word meaning to prosper or come into wealth. That resemblance is why eight is the number people pay extra for: on a car number plate, in a phone number, in the price of a flat on the eighth floor. The Beijing Olympics opened at eight seconds past eight on the eighth day of the eighth month."
+            },
+            {
+              "kind": "speech",
+              "text": "A number can carry that much only in a language where numbers sound like other words, and this is the clearest case of it a beginner will meet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qī, bā — two level tones",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **qī**, **bā** — two level tones]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liù qī bā — fall, level, level",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **liù qī bā** — fall, level, level]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C20-ba-lucky",
+              "prompt": "Why is eight a lucky number in Chinese?",
+              "assesses": [
+                "ZH-CULTURE-BA-LUCKY"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "it sounds like fa, to prosper",
+                "it sounds like the word for prosper",
+                "fa",
+                "sounds like getting rich"
+              ],
+              "feedback": {
+                "correct": "Sound, not symbol.",
+                "incorrect": "bā sounds close to fā, to prosper."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W20-jiu",
+      "sequence": 2040,
+      "title": "九 (jiǔ) — two strokes again",
+      "headword": "九",
+      "romanization": "jiǔ",
+      "gloss": "nine — two strokes, one of them crossing the whole square",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2b4641ba3449f42a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — a fall and a turn",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a fall and a turn and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 八 (bā) and 七 (qī). How many strokes between them? Say why eight is the number people pay extra for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a fall and a turn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "九 (jiǔ)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two strokes. For nine."
+            },
+            {
+              "kind": "speech",
+              "text": "a long piě, falling from the upper right all the way to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, then the héngzhéwāngōu: cross the first stroke to the right, turn downward, and hook back to the left at the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "Seven, eight and nine are two strokes each. The last three single digits are the three quickest characters in this book to write, and the three largest numbers you have. Whatever intuition said that bigger numbers need more ink is finished."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "九 (jiǔ) — the long fall, then the crossing turn with its hook",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 九 — the long fall, then the crossing turn with its hook]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "七 (qī) 八 (bā) 九 (jiǔ) in a row — six strokes for three numbers",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 七 八 九 in a row — six strokes for three numbers]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Hanzi Writer Data 九 (jiǔ); Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W20-jiu-count",
+              "prompt": "How many strokes do 七 (qī), 八 (bā) and 九 (jiǔ) have between them?",
+              "assesses": [
+                "ZH-SCRIPT-NUM-JIU"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "six",
+                "6",
+                "six, two each"
+              ],
+              "feedback": {
+                "correct": "Two each — the three largest single digits are the cheapest to write.",
+                "incorrect": "Six: two each."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C20-jiu",
+      "sequence": 2050,
+      "title": "九 (jiǔ) — nine",
+      "headword": "九",
+      "romanization": "jiǔ",
+      "gloss": "nine — third tone, and a dip you have had since ni",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a61c6d8f811536d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 九 (jiǔ), then say eight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "九 jiǔ means nine."
+            },
+            {
+              "kind": "speech",
+              "text": "jiǔ is third tone, the low dip — so it joins nǐ, hǎo and wǔ. Say all four in a row and let the pitch stay low and creaky across every one."
+            },
+            {
+              "kind": "speech",
+              "text": "The j is the unaspirated partner of the q in qī: same tongue position, no puff of air. Say qī jiǔ and the only difference is the breath."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the dip in mind. Two third tones in a row do not both dip — the first one lifts — and nine is about to give this book its first pair of them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ hǎo wǔ jiǔ — four dips",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **nǐ hǎo wǔ jiǔ** — four dips]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qī jiǔ — the same tongue, one with breath and one without",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **qī jiǔ** — the same tongue, one with breath and one without]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qī bā jiǔ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **qī bā jiǔ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C20-jiu-tone",
+              "prompt": "Which tone does jiu share with ni, hao and wu?",
+              "assesses": [
+                "ZH-LEX-NUM-JIU"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "third",
+                "3",
+                "tone 3",
+                "the third, the dip"
+              ],
+              "feedback": {
+                "correct": "The low dip.",
+                "incorrect": "Third tone — the low dipping one."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W20-shi",
+      "sequence": 2060,
+      "title": "十 (shí) — the character that was already here",
+      "headword": "十",
+      "romanization": "shí",
+      "gloss": "ten — a character this book has been printing inside another one for chapters",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fe8723084ffb2fbf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — a bar and a post",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a bar and a post and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 早, zǎo, morning. Say what sits under the sun in it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a bar and a post",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "十 (shí)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two strokes. For ten."
+            },
+            {
+              "kind": "speech",
+              "text": "the héng horizontal, left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, then the shù vertical, top to bottom, crossing it at the centre."
+            },
+            {
+              "kind": "speech",
+              "text": "You have written this before. It is the lower half of 早 — and the morning lesson said, in as many words, that on its own this piece is the character for ten, and then went on to something else. It has been sitting on the page for thirteen chapters waiting for a number to hang on."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it against 一, one: the same horizontal, with a post through it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "十 (shí) — bar first, then post",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 十 — bar first, then post]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "早 and point at the 十 (shí) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 早 and point at the 十 inside it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Hanzi Writer Data 十 (shí); Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W20-shi-inside",
+              "prompt": "Which character you already write has 十 (shí) inside it?",
+              "assesses": [
+                "ZH-SCRIPT-NUM-SHI"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "早",
+                "zao",
+                "早, morning",
+                "morning"
+              ],
+              "feedback": {
+                "correct": "早 — sun over ten.",
+                "incorrect": "早, zǎo, morning: 日 over 十."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C20-shi",
+      "sequence": 2070,
+      "title": "十 (shí) — ten",
+      "headword": "十",
+      "romanization": "shí",
+      "gloss": "ten — and the last of the ten words that build every number to ninety-nine",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39614b1609833452",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 十 (shí), then say nine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "十 shí means ten."
+            },
+            {
+              "kind": "speech",
+              "text": "shí is second tone, the rise — the pitch starts in the middle and goes up, as if asking. It is the first number in the whole run of ten to use it."
+            },
+            {
+              "kind": "speech",
+              "text": "The sh curls the tongue back, further than an English sh. Keep the tip high and behind the ridge."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the whole run once: yī èr sān sì wǔ liù qī bā jiǔ shí. Level, fall, level, fall, dip, fall, level, level, dip, rise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — the last of the ten",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ten is not simply the tenth word. It is the last one this book needs before every number up to ninety-nine falls out of the ten it already has — and the next chapter spends it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā jiǔ shí — level, dip, rise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **bā jiǔ shí** — level, dip, rise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole run, one to ten, at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole run, one to ten, at speed]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C20-shi-tone",
+              "prompt": "Which tone is shi, and is any other number on it?",
+              "assesses": [
+                "ZH-LEX-NUM-SHI"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "second, and no",
+                "second tone, no others",
+                "2, none",
+                "the rise, and it is the only one"
+              ],
+              "feedback": {
+                "correct": "The only rising tone in the run of ten.",
+                "incorrect": "Second tone, the rise — and it is the only one of the ten."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C20-practice",
+      "sequence": 2080,
+      "title": "Payoff — one to ten",
+      "headword": "一二三四五六七八九十",
+      "romanization": "yī èr sān sì wǔ liù qī bā jiǔ shí",
+      "gloss": "payoff — one to ten, seventeen chapters after one to five",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c934e2f4d0c32a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ten, then say why eight costs more."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Count aloud one to ten, then ten to one."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear all ten named singly and out of order, and say each."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the ten characters printed shuffled — 九 (jiǔ) 三 十 (shí) 六 (liù) 一 八 (bā) 四 七 (qī) 二 五 — and say each with its tone."
+            },
+            {
+              "kind": "speech",
+              "text": "Write the five new ones from dictation: 六 (liù) 七 (qī) 八 (bā) 九 (jiǔ) 十 (shí)."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the tone of each of the ten in order. Only one of them rises."
+            },
+            {
+              "kind": "speech",
+              "text": "Say what 八 (bā) and 人 differ by, and what sits inside 早."
+            },
+            {
+              "kind": "speech",
+              "text": "Five new characters cost twelve strokes between them — four, two, two, two and two. The single hardest thing in this chapter was not the writing; it was that the numbers had been left at five for seventeen chapters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C20-practice-ten",
+              "prompt": "Count aloud from one to ten in Mandarin.",
+              "assesses": [
+                "ZH-PERFORMANCE-COUNT-TEN"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "yī èr sān sì wǔ liù qī bā jiǔ shí",
+                "yi er san si wu liu qi ba jiu shi",
+                "yī, èr, sān, sì, wǔ, liù, qī, bā, jiǔ, shí"
+              ],
+              "feedback": {
+                "correct": "Ten words — and the next chapter turns them into ninety-nine numbers.",
+                "incorrect": "Run it slowly, one tone at a time."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

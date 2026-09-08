@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W20-ba",
+    "language": "chinese",
+    "chapter": 20,
+    "sequence": 2020,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4e2d15e781044da9",
+    "detachableSegments": [
+      "Script — the gap is the character"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

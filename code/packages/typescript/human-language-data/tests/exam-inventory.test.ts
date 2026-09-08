@@ -2490,8 +2490,10 @@ describe("the committed Chinese A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(191);
-    expect(coverage.covered).toBe(70);
-    expect(coverage.unmapped).toBe(121);
+    // 70 -> 73: HL-C350's numeral tranche (chapters 20-21) closes ZH-A1-NUM-01,
+    // ZH-A1-NUM-02 and ZH-A1-AB-02.
+    expect(coverage.covered).toBe(73);
+    expect(coverage.unmapped).toBe(118);
     expect(coverage.partial).toBe(0);
     // THE HEADLINE WHEN THIS FILE WAS WRITTEN, and it was not a vocabulary gap.
     // Mandarin carries almost all of its grammar in a handful of toneless
@@ -2540,8 +2542,35 @@ describe("the committed Chinese A1 inventory", () => {
     // learners eat on day one.
     expect(coverage.byCategory["Jiaoyu - education"]!.covered).toBe(3);
     expect(coverage.byCategory["Yinshi - food and drink"]!).toEqual({ enumerated: 1, covered: 0 });
+    // THE COLUMN THAT WAS HALF DONE. yi, er, san, si and wu were taught in
+    // chapter 3, each with its own character and its own writing lesson, and
+    // liu, qi, ba, jiu and shi were absent for seventeen chapters -- a track
+    // that could name a family and a school and could not give an age. The
+    // tranche costs five characters and TWELVE strokes between them.
+    expect(coverage.byCategory["Shuci - numerals and quantity"]!)
+      .toEqual({ enumerated: 5, covered: 2 });
+    // The decimal structure is probed as a RULE and two worked examples, not as
+    // eighty-nine lexical atoms, because that is what Mandarin actually asks of
+    // a learner: shi yi is ten-one and er shi is two-ten, and the order is the
+    // whole grammar. Ten words reach ninety-nine.
+    const zhDecimal = inventory.points.find((point) => point.id === "ZH-A1-NUM-02")!;
+    expect(zhDecimal.probe).toContain("ZH-GRAMMAR-DECIMAL-TEENS");
+    expect(zhDecimal.probe).toContain("ZH-GRAMMAR-DECIMAL-TENS");
+    expect(zhDecimal.probe).not.toContain("ZH-LEX-SHISAN");
+    // The cardinals are probed at BOTH doors, because this track splits a
+    // character's sound from its hand and a probe naming only the LEX atom
+    // would report a number the reader cannot write.
+    const zhCardinals = inventory.points.find((point) => point.id === "ZH-A1-NUM-01")!;
+    for (const digit of ["LIU", "QI", "BA", "JIU", "SHI"]) {
+      expect(zhCardinals.probe, digit).toContain(`ZH-LEX-NUM-${digit}`);
+      expect(zhCardinals.probe, digit).toContain(`ZH-SCRIPT-NUM-${digit}`);
+    }
+    // And the digits: a price tag prints 5, not the character, so a reader with
+    // the character and not the digit still cannot read a price.
+    expect(coverage.byCategory["Suoxie - abbreviations and symbols"]!)
+      .toEqual({ enumerated: 2, covered: 1 });
     expect(formatExamCoverage(coverage)).toContain(
-      "chinese A1 (partial inventory): 70/191 points covered (37%)",
+      "chinese A1 (partial inventory): 73/191 points covered (38%)",
     );
   }, 60_000);
 });

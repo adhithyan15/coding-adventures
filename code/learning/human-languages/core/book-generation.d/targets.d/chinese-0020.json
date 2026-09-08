@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 20,
+  "output": "chinese/book/chapters/ch20-count-ten.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

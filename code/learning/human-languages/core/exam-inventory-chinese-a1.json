@@ -346,7 +346,29 @@
       "id": "ZH-A1-NUM-01",
       "category": "Shuci - numerals and quantity",
       "label": "the cardinal numerals: at least one to ten",
-      "probe": null,
+      "probe": [
+        "ZH-LEX-NUM-YI",
+        "ZH-LEX-NUM-ER",
+        "ZH-LEX-NUM-SAN",
+        "ZH-LEX-NUM-SI",
+        "ZH-LEX-NUM-WU",
+        "ZH-LEX-NUM-LIU",
+        "ZH-LEX-NUM-QI",
+        "ZH-LEX-NUM-BA",
+        "ZH-LEX-NUM-JIU",
+        "ZH-LEX-NUM-SHI",
+        "ZH-SCRIPT-NUM-YI",
+        "ZH-SCRIPT-NUM-ER",
+        "ZH-SCRIPT-NUM-SAN",
+        "ZH-SCRIPT-NUM-SI",
+        "ZH-SCRIPT-NUM-WU",
+        "ZH-SCRIPT-NUM-LIU",
+        "ZH-SCRIPT-NUM-QI",
+        "ZH-SCRIPT-NUM-BA",
+        "ZH-SCRIPT-NUM-JIU",
+        "ZH-SCRIPT-NUM-SHI",
+        "ZH-PERFORMANCE-COUNT-TEN"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -357,13 +379,21 @@
         "A1-NG2-01",
         "A1-NE16-01"
       ],
-      "note": "HALF, AND NOT COUNTED. yi, er, san, si and wu are taught in chapter 3, each with its own character and its own writing lesson - and liu, qi, ba, jiu and shi are absent. shi ('ten') appears in four lesson bodies, as the lower component of zao, where the text says in as many words that on its own it is the character for ten and then does not teach it. A candidate cannot count past five, cannot give a telephone number, an age or a price. This is a partial paradigm, and a partial paradigm scores nothing."
+      "note": "CLOSED BY HL-C350, and the note it replaces named the exact shape of the gap: HALF, AND NOT COUNTED. yi, er, san, si and wu were taught in chapter 3, each with its own character and its own writing lesson, and liu, qi, ba, jiu and shi were absent -- for seventeen chapters. The note also found shi hiding in four lesson bodies as the lower component of zao, where the text says in as many words that on its own it is the character for ten and then does not teach it; ZH-W20-shi is that sentence finally cashed. WHAT IT COST: five characters and TWELVE STROKES between them -- four, two, two, two, two. The three largest single digits are the three quickest characters in the book to write, which is the opposite of the intuition a learner arrives with. Both doors are probed, LEX and SCRIPT, because this track splits a character's sound from its hand and a probe naming only one would report a number the reader cannot write."
     },
     {
       "id": "ZH-A1-NUM-02",
       "category": "Shuci - numerals and quantity",
       "label": "the decimal structure: how Mandarin builds eleven, twenty and ninety-nine out of ten",
-      "probe": null,
+      "probe": [
+        "ZH-GRAMMAR-DECIMAL-TEENS",
+        "ZH-GRAMMAR-DECIMAL-TENS",
+        "ZH-LEX-SHIYI",
+        "ZH-LEX-ERSHI",
+        "ZH-LEX-NUM-BAI",
+        "ZH-SCRIPT-NUM-BAI",
+        "ZH-PERFORMANCE-DECIMAL-HUNDRED"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -373,7 +403,7 @@
         "A1-Q-02",
         "A1-NG3-06"
       ],
-      "note": "Absent, and it is Mandarin's best gift to a beginner - shi yi is 'ten one', er shi is 'two ten', and the whole of 11 to 99 falls out of ten words. Restated from Spanish's ordinals because the ordinal in Mandarin is di plus the same numeral, so both demands stand on the same missing decade."
+      "note": "CLOSED BY HL-C350, and the note it replaces was right that this is Mandarin's best gift to a beginner. shi yi is ten-one, eleven; er shi is two-ten, twenty; the same two words in the other order, and the order is the entire grammar. TEN WORDS REACH NINETY-NINE. The probe names the two rule atoms and two worked examples rather than eighty-nine lexical atoms, because the track teaches a rule and not a word list -- and the difference is visible in this campaign's own sibling tranches, where Urdu's eleven to nineteen are nine irregular words that had to be left out and Persian's are a unit in front of dah. ALSO CLOSED HERE: the third-tone sandhi drill the track had no material for. jiu shi jiu, ninety-nine, is two third tones around a rise, and it is the first pair of them the course could build."
     },
     {
       "id": "ZH-A1-NUM-03",
@@ -3330,7 +3360,10 @@
       "id": "ZH-A1-AB-02",
       "category": "Suoxie - abbreviations and symbols",
       "label": "symbols and the digits",
-      "probe": null,
+      "probe": [
+        "ZH-SCRIPT-ARABIC-DIGITS",
+        "ZH-CULTURE-DIGIT-REGISTER"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ZH-CORPUS",
@@ -3339,7 +3372,7 @@
       "derivedFrom": [
         "A1-O4-03"
       ],
-      "note": "Absent, and the digits are the notable half: Chinese writes prices, dates and telephone numbers in Arabic numerals, so a reader who has the character wu and not the digit 5 cannot read a price tag. The chapter-3 practice lesson has the reader read a floor number, which is the closest the track comes."
+      "note": "CLOSED BY HL-C350, and the note it replaces stated the case exactly: Chinese writes prices, dates and telephone numbers in Arabic numerals, so a reader who has the character wu and not the digit 5 cannot read a price tag. ZH-C21-digits teaches the two side by side and, more usefully, teaches WHICH register each belongs to -- digits for prices, dates, phone numbers, addresses and anything counted; characters for formal and legal text, cheque amounts, shop signs and running prose -- and that both are read aloud as the same words. It costs no new character: the digits are the one part of the Chinese writing system an English-reading beginner already owns, and the lesson exists to stop them being ignored."
     },
     {
       "id": "ZH-A1-MED-01",

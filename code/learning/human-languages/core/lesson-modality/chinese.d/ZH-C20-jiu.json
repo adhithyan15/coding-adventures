@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C20-jiu",
+    "language": "chinese",
+    "chapter": 20,
+    "sequence": 2050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a61c6d8f811536d4"
+  },
+  "findings": []
+}

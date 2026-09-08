@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R21-close",
+    "language": "chinese",
+    "chapter": 21,
+    "sequence": 2150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25ff4b93157e9e26"
+  },
+  "findings": []
+}
