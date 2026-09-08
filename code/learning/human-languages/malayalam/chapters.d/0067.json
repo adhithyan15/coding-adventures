@@ -1,0 +1,23 @@
+{
+  "chapter": 67,
+  "title": "Which One in the Line",
+  "label": "ch:ml-ordinals",
+  "canDo": "I can say first to fifth in Malayalam, and make an ordinal from any number by taking off its final u and adding -aam.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ML-C67-fifth",
+    "kind": "production",
+    "summary": "The five said in order, every one of them built by the ending and not one of them memorized.",
+    "assesses": [
+      "ML-LEX-C67-ORDINAL-01",
+      "ML-GRAMMAR-C67-ORDINAL-02",
+      "ML-LEX-C67-ORDINAL-03",
+      "ML-ETYMON-C67-ORDINAL-04",
+      "ML-LEX-C67-ORDINAL-05",
+      "ML-LEX-C67-ORDINAL-06",
+      "ML-LEX-C67-ORDINAL-07"
+    ]
+  }
+}

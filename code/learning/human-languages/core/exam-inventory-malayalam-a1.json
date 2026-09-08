@@ -705,7 +705,23 @@
       "id": "ML-A1-NUM-05",
       "category": "Sankhya (numerals and quantity)",
       "label": "ordinals: first, second, third",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C67-ORDINAL-01",
+        "ML-GRAMMAR-C67-ORDINAL-02",
+        "ML-LEX-C67-ORDINAL-03",
+        "ML-ETYMON-C67-ORDINAL-04",
+        "ML-LEX-C67-ORDINAL-05",
+        "ML-LEX-C67-ORDINAL-06",
+        "ML-LEX-C67-ORDINAL-07",
+        "ML-LEX-C68-ORDINAL-01",
+        "ML-LEX-C68-ORDINAL-02",
+        "ML-LEX-C68-ORDINAL-03",
+        "ML-LEX-C68-ORDINAL-04",
+        "ML-LEX-C68-ORDINAL-05",
+        "ML-LEX-C68-ORDINAL-06",
+        "ML-GRAMMAR-C68-ORDINAL-07",
+        "ML-LEX-C68-ORDINAL-08"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -716,7 +732,7 @@
         "A1-NG3-06"
       ],
       "malayalamSpecific": false,
-      "note": "No ordinal is taught, so neither the ordering notion nor 'the first street on the left' is available."
+      "note": "CLOSED by the ordinal tranche, chapters 67-68, one word a lesson, and the ordering notion this note used to say was missing is closed with it: aadyam ('at first') pairs with the pinne the track already had. Malayalam's -aam has NO exceptions -- not even at one -- which makes it the only track in this column whose ordinals can honestly be taught in numerical order, and the first lesson says so. It is also the one Dravidian sister that does not build 'first' on *mutal: Tamil mudal, Kannada modalu and Telugu modalu all do, while Malayalam kept the cognate mutal for 'from' and let the ordinary ending fill the slot. NOT TAUGHT, deliberately, and each for a stated reason: (1) the longer attributive -aamathe (raNTaamathe veeTu) exists in the dictionaries but no source was found that states when it is required over bare -aam, so no usage rule is claimed; (2) 'the first street on the LEFT' is still out of reach because no word for left or right is taught anywhere in the track -- the ordinal half of that phrase is now available and the direction half is not; (3) the seventh lesson is headed by its romanization rather than by ezhaam, because the independent long e has NO sourced stroke order in data/scripts/malayalam.json and one was not invented -- a Davis handwriting clip for it exists but could not be observed here, so the letter stays recognition-only and the lesson says so on the page. A body-text character census would have called that letter 'taught' 20 times over; the writing-closure gate is what caught it."
     },
     {
       "id": "ML-A1-NUM-06",

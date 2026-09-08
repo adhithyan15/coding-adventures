@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-67-ORDINAL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say first to fifth in Malayalam, and make an ordinal from any number by taking off its final u and adding -aam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C67-first",
+    "ML-C67-second",
+    "ML-C67-third",
+    "ML-C67-fourth",
+    "ML-C67-fifth"
+  ]
+}

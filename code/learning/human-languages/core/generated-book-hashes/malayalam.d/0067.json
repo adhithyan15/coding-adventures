@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:d099b8cfd315c4d1",
+  "lessonIds": [
+    "ML-C67-first",
+    "ML-C67-second",
+    "ML-C67-third",
+    "ML-C67-fourth",
+    "ML-C67-fifth"
+  ],
+  "tex": "malayalam/book/chapters/ch67-ordinals.tex"
+}

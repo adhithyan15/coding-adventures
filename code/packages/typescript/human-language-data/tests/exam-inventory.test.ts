@@ -1549,9 +1549,18 @@ describe("the committed Malayalam A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(243);
-    expect(coverage.covered).toBe(162);
-    expect(coverage.unmapped).toBe(81);
+    expect(coverage.covered).toBe(163);
+    expect(coverage.unmapped).toBe(80);
     expect(coverage.partial).toBe(0);
+    // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
+    // 67-68). It is the ONLY point that moved, and the numeral column below
+    // says so on its own line rather than leaving the total to speak for it.
+    // The two still open in that column are ML-A1-NUM-04 (counting past
+    // twenty) and ML-A1-NUM-08 (measures); neither is ordinal work.
+    expect(coverage.byCategory["Sankhya (numerals and quantity)"]!).toEqual({
+      enumerated: 9,
+      covered: 7,
+    });
     // THE HEADLINE. Malayalam joins clauses with a clitic -um for "and", a
     // quotative ennu for "that", and participles for everything else, and the
     // corpus teaches none of them. Chapter 64 is called "Five Words That Join"
@@ -1575,7 +1584,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 162/243 points covered (67%)",
+      "malayalam A1 (partial inventory): 163/243 points covered (67%)",
     );
   }, 60_000);
 });

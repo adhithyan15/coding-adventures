@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:e1244a14e1adf53a",
+  "lessonIds": [
+    "ML-C68-sixth",
+    "ML-C68-seventh",
+    "ML-C68-eighth",
+    "ML-C68-ninth",
+    "ML-C68-tenth",
+    "ML-C68-eleventh",
+    "ML-C68-at-first"
+  ],
+  "tex": "malayalam/book/chapters/ch68-ordinals-to-eleventh.tex"
+}

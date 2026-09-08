@@ -106,6 +106,27 @@ pieces taught before the whole; and a book you can read straight through.
   ഗ**, after which the track teaches every one of the sixty-seven characters it
   puts on the page.
 
+- **Chapters 67-68 — the ordinal column** ([`lessons/ML-C6{7,8}-*`](./lessons/)):
+  twelve lessons, one word each, closing `ML-A1-NUM-05` and taking A1 coverage to
+  **163/243 (67%)** with the numeral column at **7 of 9**. Malayalam's **ആം** has
+  no exception anywhere in the set — not even at one — which makes this the one
+  track in the corpus's ordinal column whose set can honestly be taught in
+  numerical order, and chapter 67 opens on *first* in order to say so. Chapter 68
+  runs to eleventh, then teaches **ആദ്യം** ("at first") against the **പിന്നെ**
+  the track already had, closing the ordering notion as well as the ordinals.
+  The cross-family box is the one this track's Tamil thread was built for: Tamil
+  *mudal*, Kannada *modalu* and Telugu *modalu* all build "first" on one
+  Dravidian word for "a beginning"; Malayalam kept the cognate **മുതൽ** for
+  "from" and let its ordinary ending fill the slot instead. In the book.
+
+  One honest gap inside it. **ഏ**, the independent long *ē*, is a
+  **recognition-only** row in [`data/scripts/malayalam.json`](../data/scripts/malayalam.json):
+  it has no sourced stroke order, so a headword containing it cannot enter glyph
+  closure. Rather than invent an order, the seventh lesson is headed by its
+  romanization — the same choice chapter 7's counting lessons already make — and
+  the lesson tells the reader on the page that this letter is to be read and not
+  yet copied.
+
 All forty-seven later lessons remain below five effective minutes.
 
 ## Book / fonts

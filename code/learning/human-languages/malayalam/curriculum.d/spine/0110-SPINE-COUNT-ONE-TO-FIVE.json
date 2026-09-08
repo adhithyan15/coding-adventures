@@ -1,7 +1,9 @@
 {
   "segments": [
     "ML-PATH-012",
-    "ML-PATH-022"
+    "ML-PATH-022",
+    "ML-PATH-67-ORDINAL",
+    "ML-PATH-68-ORDINAL"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"
