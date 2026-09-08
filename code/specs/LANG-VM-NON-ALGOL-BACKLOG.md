@@ -8,6 +8,20 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 FLOW-MATIC BEAM output probe (selected after #14646 merged)
+
+PR #14646 merged as `622208db64` after all46checks succeeded or skipped.
+Nib's26portable BEAM programs are complete. Select the four FLOW-MATIC
+output/control-flow rows next: they can reuse the proven integer-output path
+without conflating output with BEAM input/EOF, which remains a separate slice.
+
+Run the existing scalar output, taken EQUAL, false LESS/GREATER/OTHERWISE,
+and jump-chain sources on real Erlang. Current rows386-389 must be rechecked
+against source after refresh. Missing erl alone may skip; compile/runtime/output
+failures must remain hard. Commit a bounded contract for any newly exposed
+backend defect before changing it. Promote only executed cells; keep the four
+input/EOF rows explicitly undeclared on BEAM until a host-reader proof exists.
+
 ## VM-040 Nib BEAM probe (selected after #14632 merged)
 
 PR #14632 merged as `9b04b74cb8` after all 46 checks succeeded or skipped.
@@ -1439,3 +1453,25 @@ and all12OctBEAM programs passed again after widening the mask selection.
 The backend suite passed93tests (18unit70integration5doc), including30op/type
 width cases. No full seven-standard-column rerun is claimed. Broader4004
 fidelity remains VM028; remaining BEAM families are reprioritized after merge.
+
+### VM-040 FLOW-MATIC output implementation contract
+
+The first real probe refuses putchar in main and the generated integer-printer
+helpers. Add putchar by building one character list and calling io:put_chars/1,
+reserving two heap words and treating this builtin as an imported-call site
+for existing live-register spill/restore analysis. It has one value operand
+and no result. Validate actual recursive integer printing/control flow; input
+and Brainfuck tape parity remain outside this change.
+
+### VM-040 FLOW-MATIC output validation
+
+The four output/control-flow programs passed on real Erlang and in four fresh
+single-cell processes (rows 386-389), each with its positive execution sentinel.
+A separate 200-character loop preserved live state and returned 42. All 93
+backend tests (18 unit, 70 integration, 5 doc) and Clippy for both affected
+packages with all targets passed. FLOW-MATIC now declares 60 cells: four output
+programs across eight backends and four input programs across seven. No full
+rerun of the seven existing columns is claimed. This proves ASCII integer
+printing only; byte truncation/encoding, BEAM input/EOF, and Brainfuck tape
+semantics still need separate probes before promotion. Reprioritize the remaining
+VM-040 families against VM-060b host input and VM-013 Intel 8008 after merge.
