@@ -1,0 +1,16 @@
+{
+  "id": "UR-PATH-026",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "UR-C25-plural",
+    "UR-C25-oblique-plural",
+    "UR-C25-hum",
+    "UR-C25-hamara",
+    "UR-R25-more-than-one"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-036-PLURAL"
+  ],
+  "after": []
+}

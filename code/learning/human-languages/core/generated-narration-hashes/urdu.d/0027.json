@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:59aafe8605295dd1",
+  "lessonIds": [
+    "UR-C27-shahr",
+    "UR-C27-mulk",
+    "UR-C27-lahore",
+    "UR-C27-lahori",
+    "UR-R27-where-you-are-from"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch27.txt",
+  "json": "urdu/narration/ch27.json",
+  "textHash": "fnv1a64:8f4dd5a44e818116",
+  "jsonHash": "fnv1a64:d8ea1d6b3214f894",
+  "findings": []
+}

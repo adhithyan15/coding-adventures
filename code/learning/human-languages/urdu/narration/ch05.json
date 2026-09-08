@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0f9671c8dda6c6aa",
+  "sourceHash": "fnv1a64:a8b3f30d7d94263b",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -574,7 +574,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:adbf840b397c05da",
+      "sourceHash": "fnv1a64:4ee8f9e0aeaed822",
       "notice": {
         "modality": "pen",
         "needs": [

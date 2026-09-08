@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C26-apna",
+    "language": "urdu",
+    "chapter": 26,
+    "sequence": 1380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cb08931763a53d9"
+  },
+  "findings": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "UR-PATH-025",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "UR-C24-is",
+    "UR-C24-un",
+    "UR-C24-yahan",
+    "UR-C24-vahan",
+    "UR-R24-here-there-where"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-035-OBLIQUE-DEIXIS"
+  ],
+  "after": []
+}

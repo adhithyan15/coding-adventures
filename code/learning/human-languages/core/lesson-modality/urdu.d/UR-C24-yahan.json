@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C24-yahan",
+    "language": "urdu",
+    "chapter": 24,
+    "sequence": 1290,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0599d9a88832854c"
+  },
+  "findings": []
+}

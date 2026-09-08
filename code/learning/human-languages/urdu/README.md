@@ -104,6 +104,27 @@ Urdu and Hindi share a large grammatical core, while the formal lexicon and
 writing systems make their histories visible. Both the shared structure and the
 Persian-Arabic vocabulary bridges are drawn out as you go. Script conventions are grounded in Northwestern University's *Zero Zabar*.
 
+## What the track can do, as of chapters 23–27
+
+A learner can now **change a noun into the shape a postposition demands** — the
+rule that has been running silently under **کا** since chapter three — and then
+put something **in** a room (**میں**), **on** or **at** a thing (**پر**), or
+**to** a person (**کو**). They can **point into a frame** with the oblique
+demonstratives **اس** and **ان**, say **where** something is (**یہاں**,
+**وہاں**) and finally answer the **کہاں** the book has been able to ask since
+chapter seventeen. They can make a noun **plural** and plural-before-a-
+postposition; say **we** and **our**; say **whose** for five of six persons;
+mark with **اپنا** that the owner is the subject — a distinction English does not
+draw at all; **invite agreement** with **ہے نا؟**; **call** somebody by a kin
+term; and name a **city**, a **country** and, for the first time in 108 lessons,
+an actual **place**.
+
+All twenty-one new headwords are spellable with the fifteen letters the script
+ladder has taught. The whole time column — **آج**, **دن**, **رات**, **وقت**,
+**کب** — was rejected on that test and is recorded in
+`core/exam-inventory-urdu-a1.json` beside the five letters that block it: it is a
+script tranche before it is a vocabulary one.
+
 ## What the track can do, as of chapters 19–22
 
 A learner who reaches the end can now **deny** any verb the book taught (نہیں in

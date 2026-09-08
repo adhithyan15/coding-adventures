@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C26-vocative",
+    "language": "urdu",
+    "chapter": 26,
+    "sequence": 1400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6193e75ff984f069"
+  },
+  "findings": []
+}

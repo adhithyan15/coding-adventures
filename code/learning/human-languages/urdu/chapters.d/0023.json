@@ -1,0 +1,22 @@
+{
+  "chapter": 23,
+  "title": "Before a Postposition, Everything Changes",
+  "label": "ch:ur-before-a-postposition",
+  "canDo": "I can put something in a room, on a thing, or to a person -- and I know why the noun changes shape before I do it.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R23-into-and-onto",
+    "kind": "production",
+    "summary": "The book's whole vocabulary becomes placeable for the first time: a pantry, a wardrobe and five kinds of weather that could only ever be named can now be put somewhere, and the postpositions the reader has been reading since chapter three finally have their rule stated.",
+    "assesses": [
+      "UR-GRAMMAR-OBLIQUE",
+      "UR-GRAMMAR-KO",
+      "UR-GRAMMAR-MEIN-POST",
+      "UR-GRAMMAR-PAR",
+      "UR-LEX-KAMRA"
+    ],
+    "note": "The oblique is the invisible prerequisite under four other exam points. It is taught as a rule before any postposition is taught, because a learner who does not know it cannot use کا, کو or میں even after learning them."
+  }
+}

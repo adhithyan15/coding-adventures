@@ -1,0 +1,17 @@
+{
+  "id": "UR-PATH-024",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "UR-C23-kamra",
+    "UR-C23-oblique",
+    "UR-C23-ko",
+    "UR-C23-mein",
+    "UR-C23-par",
+    "UR-R23-into-and-onto"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-034-OBLIQUE-AND-POSTPOSITIONS"
+  ],
+  "after": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 25,
+  "output": "urdu/book/chapters/ch25-more-than-one.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

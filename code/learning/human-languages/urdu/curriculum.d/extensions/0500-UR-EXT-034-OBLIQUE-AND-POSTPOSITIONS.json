@@ -1,0 +1,18 @@
+{
+  "id": "UR-EXT-034-OBLIQUE-AND-POSTPOSITIONS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name a room, change a noun into the shape a postposition demands, and put something in it, on it, or to somebody.",
+  "prerequisites": [
+    "UR-EXT-033-REPAIR-KIT"
+  ],
+  "lessons": [
+    "UR-C23-kamra",
+    "UR-C23-oblique",
+    "UR-C23-ko",
+    "UR-C23-mein",
+    "UR-C23-par",
+    "UR-R23-into-and-onto"
+  ]
+}

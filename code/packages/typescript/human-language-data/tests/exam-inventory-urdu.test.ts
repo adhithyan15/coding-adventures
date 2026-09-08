@@ -138,7 +138,7 @@ describe("the committed Urdu A1 inventory", () => {
     }
   });
 
-  it("reports a numeral column of ZERO and a flattering script closure that is not one", () => {
+  it("reports FOUR full columns, a numeral column still at ZERO, and a flattering script closure that is not one", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(234);
@@ -149,9 +149,46 @@ describe("the committed Urdu A1 inventory", () => {
     // اور, یا, لیکن, کیوں, کون, کیونکہ, کہ, کے لیے, کہنا and آرام سے all landed
     // inside the taught set, while معاف, مہربانی, مگر, جب and بھی did not and
     // are named in romanization beside the letters that block them.
-    expect(coverage.covered).toBe(116);
-    expect(coverage.unmapped).toBe(118);
+    //
+    // 116 -> 130: the oblique tranche (chapters 23-27). Twenty-one items closed
+    // fourteen points, and the ratio comes from ONE RULE. UR-A1-PST-05 -- the
+    // shape every Urdu noun takes before a postposition -- is described in its
+    // own note as "the invisible prerequisite under four of the five points
+    // above", and it is taught first, as a rule, before any postposition that
+    // needs it. Four postposition points, both demonstrative points and the
+    // third-person possessive all stand on it.
+    expect(coverage.covered).toBe(130);
+    expect(coverage.unmapped).toBe(104);
     expect(coverage.partial).toBe(0);
+    // THE PAYOFF, and the column the oblique was worth. Every postposition point
+    // in the file now stands on a lesson, including UR-A1-PST-05 itself.
+    expect(coverage.byCategory["Huruf-e-jar (postpositions and case)"]!).toEqual({
+      enumerated: 6,
+      covered: 6,
+    });
+    // Three more columns close outright, and two of the three were not aimed at:
+    // deixis closes because یہ and وہ needed an oblique before they could stand
+    // in front of anything, and possession closes because the third person is
+    // built out of that same oblique plus the کا the book has had since chapter
+    // three.
+    expect(coverage.byCategory["Isharat (demonstratives and deixis)"]!).toEqual({
+      enumerated: 4,
+      covered: 4,
+    });
+    expect(coverage.byCategory["Milkiyat (possession)"]!).toEqual({
+      enumerated: 3,
+      covered: 3,
+    });
+    expect(coverage.byCategory["Jumla (the sentence)"]!).toEqual({
+      enumerated: 7,
+      covered: 7,
+    });
+    // The pronoun column, one point off full: only the relative جو is left, and
+    // it needs جیم, which the script ladder has not reached.
+    expect(coverage.byCategory["Zameer (pronouns)"]!).toEqual({
+      enumerated: 9,
+      covered: 8,
+    });
     // THE HEADLINE. Not one numeral is taught: ایک and دو both return zero
     // occurrences as words (the two raw matches for دو are inside دوست), and
     // there is no digit, no ordinal and no quantifier. Bengali reaches five and
@@ -180,9 +217,17 @@ describe("the committed Urdu A1 inventory", () => {
     // The script column is where this track looks best and measures worst.
     // measureScriptClosure reports only 4 violations — the best of the three —
     // while teaching 15 glyphs of 35 shown, 20 never taught, which is the WORST
-    // proportion of the three. The gap is the exposure rule: 49 exposure-only
-    // lessons and 142 exempted glyph-instances, bought by
+    // proportion of the three. The gap is the exposure rule: exposure-only
+    // lessons and exempted glyph-instances, bought by
     // headwordsWithoutRomanization being 0.
+    //
+    // UNCHANGED by the twenty-six lessons of chapters 23-27: violations stay at
+    // 4, glyphs taught stay at 15, never-taught stays at 20 and
+    // headwordsWithoutRomanization stays at 0. Every one of the twenty-one new
+    // headwords is spellable with the fifteen taught letters, which is why this
+    // tranche took the oblique and the postpositions rather than the time column
+    // — آج, دن, رات, وقت and کب need five letters the ladder has not reached, and
+    // a vocabulary tranche cannot buy them.
     expect(coverage.byCategory["Rasm-ul-khat (script and orthography)"]!).toEqual({
       enumerated: 15,
       covered: 9,
@@ -191,7 +236,7 @@ describe("the committed Urdu A1 inventory", () => {
     expect(coverage.byCategory["Tarz-e-kalam (register, and the Perso-Arabic layer the caveat names)"]!)
       .toEqual({ enumerated: 6, covered: 4 });
     expect(formatExamCoverage(coverage)).toContain(
-      "urdu A1 (partial inventory): 116/234 points covered (50%)",
+      "urdu A1 (partial inventory): 130/234 points covered (56%)",
     );
   }, 60_000);
 });
