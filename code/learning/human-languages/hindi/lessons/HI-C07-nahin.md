@@ -8,9 +8,9 @@ spine_node: SPINE-RESPOND-BASIC
 sequence: 500
 chapter: 7
 type: word
-headword: नहीं
-gloss: no / not (nahīṃ)
-romanization: "nahīṃ"
+headword: "नहीं / जानता"
+gloss: "no / not / masculine present form of to know"
+romanization: "nahīṃ / jāntā"
 concept_tag: RESPONSE-NO
 prerequisites: [HI-C07-haan]
 sounds: [anusvara-nasal, vowel-ii]
@@ -70,8 +70,8 @@ stubbornly unchanged things human languages have.
 
 Like Spanish *no*, **nahīṃ** is both the **answer** and the **sentence-negator**:
 
-- **answer**: *क्या आप ठीक हैं?* — **नहीं.** ("Are you well?" — "No.")
-- **negator**: *मैं **नहीं** जानता* — "I do **not** know."
+- **answer**: *क्या आप ठीक हैं?* — **नहीं** (*nahīṃ*). ("Are you well?" — "No.")
+- **negator**: मैं **नहीं** (*nahīṃ*) जानता — "I do **not** know."
 
 So this single word gives you both "no" and how to make a sentence negative.
 

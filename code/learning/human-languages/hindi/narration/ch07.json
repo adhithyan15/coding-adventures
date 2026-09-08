@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:794ad2fffafb3b62",
+  "sourceHash": "fnv1a64:1388aa8ca5befd8b",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93ee7a8380b3a04c",
+      "sourceHash": "fnv1a64:cbf6a0d868425c6c",
       "notice": null,
       "blocks": [
         {
@@ -136,16 +136,16 @@
       "id": "HI-C07-nahin",
       "sequence": 500,
       "title": "नहीं (nahīṃ) — no / not",
-      "headword": "नहीं",
-      "romanization": "nahīṃ",
-      "gloss": "no / not (nahīṃ)",
+      "headword": "नहीं / जानता",
+      "romanization": "nahīṃ / jāntā",
+      "gloss": "no / not / masculine present form of to know",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b93ae4839c8371ab",
+      "sourceHash": "fnv1a64:23117f1728ad244f",
       "notice": null,
       "blocks": [
         {
