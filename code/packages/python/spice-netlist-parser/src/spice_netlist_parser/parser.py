@@ -589,18 +589,9 @@ def parse_netlist(text: str) -> ParsedNetlist:
     statements: list[_Statement] = []
     subckts: dict[str, _SubcktDefinition] = {}
     current_subckt: _SubcktDefinition | None = None
-    saw_content = False
-    for line_number, raw_line in enumerate(text.splitlines(), start=1):
-        stripped = raw_line.strip()
-        if not stripped:
-            continue
-        if stripped.startswith("*"):
-            if not saw_content and parsed.title is None:
-                parsed.title = stripped[1:].strip() or None
-            continue
-        saw_content = True
-
-        fields = _split_fields(_strip_inline_comment(raw_line))
+    parsed.title, logical_cards = _berkeley_logical_cards(text)
+    for line_number, logical_card in logical_cards:
+        fields = _split_fields(logical_card)
         if not fields:
             continue
         head = fields[0]
@@ -2742,6 +2733,46 @@ def _split_fields(line: str) -> list[str]:
 
 def _strip_inline_comment(line: str) -> str:
     return line.split(";", 1)[0]
+
+
+def _berkeley_logical_cards(text: str) -> tuple[str | None, list[tuple[int, str]]]:
+    """Collapse Berkeley ``+`` continuation lines into logical parser cards."""
+
+    cards: list[tuple[int, str]] = []
+    pending_line: int | None = None
+    pending_text: str | None = None
+    title: str | None = None
+    saw_content = False
+
+    for line_number, raw_line in enumerate(text.splitlines(), start=1):
+        stripped = _strip_inline_comment(raw_line).strip()
+        if not stripped:
+            continue
+        if stripped.startswith("*"):
+            if not saw_content and title is None:
+                title = stripped[1:].strip() or None
+            continue
+        if stripped.startswith("+"):
+            if pending_text is None:
+                raise NetlistParseError(
+                    "line "
+                    f"{line_number}: SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD: "
+                    "continuation line appears before any logical SPICE card"
+                )
+            continuation = stripped[1:].strip()
+            if continuation:
+                pending_text = f"{pending_text} {continuation}"
+            continue
+
+        saw_content = True
+        if pending_text is not None:
+            cards.append((pending_line or line_number, pending_text))
+        pending_line = line_number
+        pending_text = stripped
+
+    if pending_text is not None:
+        cards.append((pending_line or 1, pending_text))
+    return title, cards
 
 
 def _require_fields(fields: list[str], count: int, label: str) -> None:

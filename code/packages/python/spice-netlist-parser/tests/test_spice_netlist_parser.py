@@ -175,6 +175,35 @@ def test_runs_shared_berkeley_v1_core_corpus() -> None:
         assert expected["min"] <= value <= expected["max"], case["id"]
 
 
+def test_runs_shared_berkeley_v1_syntax_corpus() -> None:
+    corpus_path = (
+        Path(__file__).resolve().parents[4]
+        / "grammars/spice/berkeley-v1-syntax-corpus.json"
+    )
+    corpus = json.loads(corpus_path.read_text(encoding="utf-8"))
+
+    assert corpus["schemaVersion"] == 1
+    assert corpus["suite"] == "berkeley-v1-syntax"
+    for case in corpus["cases"]:
+        assert case["classification"] in {
+            "supported",
+            "supported-diagnostic",
+            "deliberate-exclusion",
+        }
+        if case["outcome"] == "rejected":
+            with pytest.raises(NetlistParseError):
+                parse_netlist(case["deck"])
+            continue
+
+        assert case["outcome"] == "accepted"
+        parsed = parse_netlist(case["deck"])
+        expected = case["expected"]
+        if "title" in expected:
+            assert parsed.title == expected["title"], case["id"]
+        assert len(parsed.circuit.elements) == expected["elementCount"], case["id"]
+        assert [step.kind for step in parsed.analysis_plan()] == expected["analysisKinds"], case["id"]
+
+
 def test_parse_reactive_elements_and_analysis_cards() -> None:
     parsed = parse_netlist(
         """

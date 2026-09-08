@@ -50,12 +50,17 @@ model-card parameter, or a UI artifact is not a completion signal.
      parser-executed gate. Its numerical windows are intentionally broad enough
      to preserve cross-language solver parity while catching model or lowering
      regressions.
-   - The active PR batches `.dc`, `.ac`, `.tran`, and `.tf` into that same
-     corpus rather than paying CI separately for each analysis. It also makes
-     parsed `.tf` cards executable across the three ports.
-   - Next: add accepted and deliberately rejected Berkeley syntax cases.
+   - The numerical phase batches `.dc`, `.ac`, `.tran`, and `.tf` into that
+     same corpus rather than paying CI separately for each analysis. It also
+     makes parsed `.tf` cards executable across the three ports.
+   - Current phase: add a shared accepted/rejected Berkeley syntax corpus.
+     The corpus includes logical `+` continuation cards, comments, `.end`
+     boundaries, case-insensitive subcircuit use, and explicit exclusions.
      Classify every case as passing, a proven implementation gap, or deliberate
      exclusion; no silent skips.
+   - Next: use the combined numerical and syntax corpus evidence to identify a
+     genuinely blocking device or analysis contract. If none is found, advance
+     directly to the release gate rather than inventing parameter-sized work.
 
 2. **Corpus-blocking Berkeley core closure**.
    - Fix the grouped failures found by the executable gate, batched by a
@@ -73,6 +78,10 @@ model-card parameter, or a UI artifact is not a completion signal.
    - ngspice and vendor-dialect compatibility, nested sweeps and raw-format
      interchange, advanced nonlinear convergence work, mixed-signal coupling,
      and the Mosaic/LTspice-style UI move only after item 3 is green.
+   - Discovery: align the Rust Mosaic app facade's runnable-analysis inventory
+     with parser-plan `.tf` execution during the UI/API phase. This is not a
+     Berkeley corpus blocker because the cross-language parser plans already
+     execute `.tf`.
 
 ### Operating rules
 

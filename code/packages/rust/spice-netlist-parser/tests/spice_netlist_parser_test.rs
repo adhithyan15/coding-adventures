@@ -258,6 +258,58 @@ fn runs_shared_berkeley_v1_core_corpus() {
 }
 
 #[test]
+fn runs_shared_berkeley_v1_syntax_corpus() {
+    let corpus: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../grammars/spice/berkeley-v1-syntax-corpus.json"
+    ))
+    .expect("shared Berkeley v1 syntax corpus should be valid JSON");
+
+    assert_eq!(corpus["schemaVersion"], 1);
+    assert_eq!(corpus["suite"], "berkeley-v1-syntax");
+    let cases = corpus["cases"]
+        .as_array()
+        .expect("shared Berkeley v1 syntax corpus should contain cases");
+    for case in cases {
+        let case_id = case["id"].as_str().unwrap();
+        assert!(matches!(
+            case["classification"].as_str(),
+            Some("supported" | "supported-diagnostic" | "deliberate-exclusion")
+        ));
+        let deck = case["deck"].as_str().unwrap();
+        if case["outcome"] == "rejected" {
+            assert!(parse_netlist(deck).is_err(), "{case_id}");
+            continue;
+        }
+
+        assert_eq!(case["outcome"], "accepted", "{case_id}");
+        let parsed = parse_netlist(deck).unwrap_or_else(|error| panic!("{case_id}: {error}"));
+        let expected = &case["expected"];
+        if let Some(title) = expected.get("title").and_then(serde_json::Value::as_str) {
+            assert_eq!(parsed.title.as_deref(), Some(title), "{case_id}");
+        }
+        assert_eq!(
+            parsed.circuit.elements().len(),
+            expected["elementCount"].as_u64().unwrap() as usize,
+            "{case_id}"
+        );
+        assert_eq!(
+            parsed
+                .analysis_plan()
+                .iter()
+                .map(|step| format!("{:?}", step.kind).to_ascii_lowercase())
+                .collect::<Vec<_>>(),
+            expected["analysisKinds"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|kind| kind.as_str().unwrap().to_string())
+                .collect::<Vec<_>>(),
+            "{case_id}"
+        );
+    }
+}
+
+#[test]
 fn parses_reactive_elements_vccs_source_waveforms_and_analysis_cards() {
     let parsed = parse_netlist(
         r#"

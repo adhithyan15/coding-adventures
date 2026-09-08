@@ -139,6 +139,47 @@ C1 out 0 1u IC=0
     }
   });
 
+  it("runs the shared Berkeley v1 syntax corpus", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/berkeley-v1-syntax-corpus.json", import.meta.url),
+      "utf8",
+    )) as {
+      schemaVersion: number;
+      suite: string;
+      cases: readonly {
+        id: string;
+        outcome: "accepted" | "rejected";
+        classification: "supported" | "supported-diagnostic" | "deliberate-exclusion";
+        deck: string;
+        expected?: {
+          title?: string;
+          elementCount: number;
+          analysisKinds: readonly string[];
+        };
+      }[];
+    };
+
+    expect(corpus.schemaVersion).toBe(1);
+    expect(corpus.suite).toBe("berkeley-v1-syntax");
+    for (const testCase of corpus.cases) {
+      expect(["supported", "supported-diagnostic", "deliberate-exclusion"])
+        .toContain(testCase.classification);
+      if (testCase.outcome === "rejected") {
+        expect(() => parseNetlist(testCase.deck), testCase.id).toThrow(NetlistParseError);
+        continue;
+      }
+
+      const parsed = parseNetlist(testCase.deck);
+      const expected = testCase.expected!;
+      if (expected.title !== undefined) {
+        expect(parsed.title, testCase.id).toBe(expected.title);
+      }
+      expect(parsed.circuit.elements(), testCase.id).toHaveLength(expected.elementCount);
+      expect(parsed.analysisPlan().map((step) => step.kind), testCase.id)
+        .toEqual(expected.analysisKinds);
+    }
+  });
+
   it("parses reactive elements, VCCS, source waveforms, and analysis cards", () => {
     const parsed = parseNetlist(`
 Vstep in 0 PULSE(0 1 0 1n 1n 10n 20n)
