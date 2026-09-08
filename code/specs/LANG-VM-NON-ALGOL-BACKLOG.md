@@ -1380,3 +1380,11 @@ future frontend design scope, not missing proofs for already-implemented code.
 Do not select ALGOL items from this backlog while the separate ALGOL agent is
 active. Cross-cutting fixes may touch shared infrastructure used by ALGOL, but
 must preserve its tests and avoid changing ALGOL semantics or roadmap ownership.
+
+### VM-040 probe discovery: BEAM runner discarded program stdout
+
+After print_i64 lowered, the output assertion saw an empty string. Inspection
+found run_beam always returned an empty stdout after parsing its result marker.
+Preserve the actual bytes before the result marker as program stdout, with a
+parser regression covering output plus return value. Keep result-range and
+process failure checks. This harness fix is required for observable BEAM cells.
