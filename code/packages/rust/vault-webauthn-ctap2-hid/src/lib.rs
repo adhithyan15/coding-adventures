@@ -264,7 +264,7 @@ fn run_get_assertion(
     let device = FidoKeyHidFactory::create(&cfg).map_err(|err| classify_ctap_error(&err))?;
     let extensions = build_hmac_secret_extension(*hmac_secret_salt);
     let assertion = device
-        .get_assertion_with_extensios(
+        .get_assertion_with_extensions(
             relying_party_id,
             challenge,
             &[credential_id.to_vec()],
