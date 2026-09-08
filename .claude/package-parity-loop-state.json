@@ -19,10 +19,10 @@
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-08T18:43:00Z",
+    "observed_at": "2026-09-08T18:45:31Z",
     "pr_number": 14659,
     "status": "checks-pending",
-    "notes": "Both CI builds failed at HASH_PACKAGE_FAILED for unknown/blog. Actual logs showed the strict registry adopter could not hash the repository-owned code/sites packages. The focused repair maps only canonical code/sites/<name> roots to the existing TypeScript source-input profile while retaining their unknown/* graph identities, adds exact path/input regressions, and classifies the separate authored Markdown/SVG registry gap. After a conflict-free rebase across 21 new main commits, the full Go suite, race, vet, module verification, tidy-diff, trimpath build, 24 schema tests, 80 neutral runner tests, state DAG, diff hygiene, and a real 5,172-package all-language dry plan pass. The repaired head is ready for an exact-lease force-push; auto-merge remains disabled until replacement checks are terminal and acceptable and mergeability is clean."
+    "notes": "Both CI builds failed at HASH_PACKAGE_FAILED for unknown/blog. Actual logs showed the strict registry adopter could not hash the repository-owned code/sites packages. The focused repair maps only canonical code/sites/<name> roots to the existing TypeScript source-input profile while retaining their unknown/* graph identities, adds exact path/input regressions, and classifies the separate authored Markdown/SVG registry gap. After a conflict-free rebase across 21 new main commits, the full Go suite, race, vet, module verification, tidy-diff, trimpath build, 24 schema tests, 80 neutral runner tests, state DAG, diff hygiene, and a real 5,172-package all-language dry plan pass. The rebased repair was force-pushed with the exact captured lease for prior remote head 1d9778d0d70a9fc6cc7ce52f2ed08ab35b391ec3; replacement checks are pending and auto-merge remains disabled until they are terminal and acceptable and mergeability is clean."
   },
   "last_inventory": {
     "revision": "668e551588ebf183e4f7c2835e47ebeed9d37230",
