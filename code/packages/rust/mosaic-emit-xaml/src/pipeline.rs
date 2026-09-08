@@ -1376,10 +1376,18 @@ fn register_host_visual_states(
         .states
         .iter()
         .filter_map(|(state_name, state_style)| {
-            state_style
-                .slot
-                .as_deref()
-                .map(|slot_name| (state_name.as_str(), slot_name, state_style))
+            let slot_name = state_style.slot.as_deref()?;
+            // Package composition flattens dependency layouts and styles into
+            // the consuming component. A dependency-owned style axis is not
+            // necessarily part of the consumer's generated code-behind (for
+            // example toolkit Input.size inside EngramApp). Emitting x:Bind
+            // for such an absent property makes XamlCompiler reject the whole
+            // application. Only generate a runtime trigger when the owning
+            // slot actually exists on this component; the dependency's base
+            // style remains the safe native fallback.
+            ctx.slot_types
+                .contains_key(slot_name)
+                .then_some((state_name.as_str(), slot_name, state_style))
         })
         .collect::<Vec<_>>();
     slot_states.sort_by_key(|(state_name, slot_name, _)| {
@@ -19550,6 +19558,43 @@ mod tests {
         assert!(background.states[2]
             .trigger_value
             .contains("ConverterParameter=danger"));
+    }
+
+    #[test]
+    fn dependency_slot_state_without_consumer_property_is_not_bound() {
+        let c = component("Consumer", vec![], vec![]);
+        let l = layout_with_root("Consumer", styled_host_button(vec![]));
+        let s = StyleDef {
+            component_name: "Consumer".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "padding".to_string(),
+                    value: "8".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    // This owner came from a flattened dependency component;
+                    // Consumer itself does not declare a `size` slot.
+                    slot: Some("size".to_string()),
+                    state: "lg".to_string(),
+                    props: vec![StyleProp {
+                        name: "padding".to_string(),
+                        value: "12".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(r.xaml.contains("Padding=\"8\""), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("x:Bind Size"), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("ConverterParameter=lg"), "got:\n{}", r.xaml);
+        assert!(!r
+            .if_helpers
+            .iter()
+            .any(|file| file.filename == "StringEqualsConverter.cs"));
     }
 
     #[test]
