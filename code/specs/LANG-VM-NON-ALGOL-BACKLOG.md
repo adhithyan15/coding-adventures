@@ -27,6 +27,13 @@ Acceptance: named input refusal tests through both public APIs, a textual
 emission control for each builtin, the package test suite and all-target Clippy.
 Document the distinction in README and changelog. No simulator runtime change.
 
+Validation: the new public-API regression first failed on the generic whitelist
+message, then passed for all three builtins with textual emission controls.
+The package suite passed 202 tests (103 unit, 95 integration, four doc tests);
+all-target Clippy with warnings denied passed. These are refusal/emission
+proofs, not an encoded input execution claim.
+
+
 Discovered **VM-060**, queued next: design table-aware simulator host-call
 resolution before adding input. Pin rejection of unbound MemberRef tokens
 rather than aliasing MethodDef ordinals; define explicit per-run shared reader,

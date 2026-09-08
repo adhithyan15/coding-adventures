@@ -1993,3 +1993,33 @@ fn e8_conversions_round_trip_runs_on_real_clr() {
     let _ = std::fs::remove_dir_all(&dir);
     assert_eq!(stdout, "42", "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
 }
+
+/// Encoded CIL has no simulator host reader. Refuse before returning bytes,
+/// while preserving the separate real-CoreCLR text emitter's input surface.
+#[test]
+fn encoded_input_refusal_preserves_textual_input() {
+    let generator = IIRClrCodeGenerator::default_name();
+    for (builtin, ty, text_call) in [
+        ("input_i64", "i64", "TryParse"),
+        ("input_str", "str", "Console::ReadLine"),
+        ("input_more", "i64", "TextReader::Peek"),
+    ] {
+        let module = single_fn(vec![
+            IIRInstr::new("call_builtin", Some("value".into()),
+                vec![Operand::Var(builtin.into())], ty),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+        let errors = generator.validate(&module);
+        assert!(errors.iter().any(|error|
+            error.contains(builtin) && error.contains("encoded CIL")
+                && error.contains("host reader") && error.contains("emit_il")),
+            "{builtin}: expected actionable encoded input refusal, got {errors:?}");
+        match lower_iir_to_cil(&module, &default_cfg()) {
+            Err(IIRClrError::ValidationFailed(actual)) => assert_eq!(actual, errors),
+            Err(error) => panic!("{builtin}: wrong error: {error}"),
+            Ok(_) => panic!("{builtin}: unexpectedly produced an encoded artifact"),
+        }
+        let il = emit_il(&module, &default_cfg()).expect("textual input remains supported");
+        assert!(il.contains(text_call), "{builtin}: missing {text_call} in {il}");
+    }
+}
