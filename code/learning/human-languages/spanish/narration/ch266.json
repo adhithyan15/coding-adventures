@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 266,
   "title": "Review --- Four Last Pieces, and the Thread",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d040afcbd14d9d9e",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3d43d903fdc6b620",
   "lessons": [
     {
       "id": "ES-C67-repaso-a1",
@@ -462,6 +462,642 @@
             {
               "kind": "speech",
               "text": "What replaced Latin's ending for the person on the receiving end? (A little a.) Which slot carries emphasis? (The front one.) And why does mucho refuse to agree in come mucho? (It leans on a verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C67-primera-lectura",
+      "sequence": 2567,
+      "title": "(reading) — the first paragraph",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "the first paragraph — forty-seven words of Spanish in a row, and not one of them new",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b499629ab3bfd79b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything you are about to read, you already know. Not one word in it is new."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is that there are forty-seven of them in a row."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "María vive en una casa grande con su hermano. Hoy no trabaja, porque es domingo. Por la mañana come pan. Luego va a leer un libro. El libro es muy bueno, pero es bastante grande. Ahora está cansada. Va a dormir. Mañana habla español con su estudiante."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read it again, and notice how little work it took."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what is holding it together, because it is not vocabulary."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Porque joins a fact to its reason. Pero holds two true things apart. Luego puts one thing after another. Va a reaches forward into tomorrow. Each of those was a chapter, and each was small."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Eight sentences across six lines is not much. But the longest run of Spanish anywhere in this book so far was a single line of about fifteen words, and nearly every one of those was a drill — a list of verb forms, or one phrase set against another — rather than something a person would actually say."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first time the book has asked you to hold a whole paragraph in your head at once — and the reason it can is that everything in it was paid for, one chapter at a time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the paragraph aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the paragraph aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-primera-lectura-who",
+              "prompt": "Who does Maria live with?",
+              "assesses": [
+                "ES-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "her brother",
+                "su hermano",
+                "with her brother"
+              ],
+              "feedback": {
+                "correct": "Con su hermano.",
+                "incorrect": "Her brother -- con su hermano."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-primera-lectura-why",
+              "prompt": "Why is she not working today?",
+              "assesses": [
+                "ES-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "because it is sunday",
+                "porque es domingo",
+                "it is sunday"
+              ],
+              "feedback": {
+                "correct": "Porque es domingo.",
+                "incorrect": "Because it is Sunday."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-primera-lectura-book",
+              "prompt": "Two things are said about the book. What are they?",
+              "assesses": [
+                "ES-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "it is good but big",
+                "muy bueno pero bastante grande",
+                "good and quite large"
+              ],
+              "feedback": {
+                "correct": "Muy bueno, pero bastante grande.",
+                "incorrect": "It is very good, but quite big."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words in that paragraph were new to you? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what made it readable? (Everything in it had already been paid for, one chapter at a time.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C67-segunda-lectura",
+      "sequence": 2568,
+      "title": "(reading) — the second paragraph",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "the second paragraph — a different person, a different day, and still nothing new",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:217d918dc1d41230",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last paragraph was about María. This one is about her brother, on a different day."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Same rule as before: not one word in it is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "El lunes María trabaja. Su hermano no. Está en casa con el perro. Por la tarde bebe café y escribe a su madre. No hay pan, pero hay agua. Luego va a salir, porque quiere ver a su padre. Por la noche los dos comen en casa."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Once through, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again — and this time notice that you did not have to work out who Está refers to. Spanish left the name out and you kept it anyway."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Su hermano no. Two words, and the verb is gone. Spanish drops what the sentence before it already said, and the reader carries it forward."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the thing a paragraph can do that a sentence cannot. A sentence has to say everything. A paragraph gets to lean on the one before it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "It is also why reading gets easier as it gets longer, which is the opposite of what most people expect."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the paragraph aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the paragraph aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-segunda-lectura-who",
+              "prompt": "Who is at home with the dog?",
+              "assesses": [
+                "ES-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "her brother",
+                "su hermano",
+                "the brother"
+              ],
+              "feedback": {
+                "correct": "Su hermano.",
+                "incorrect": "Her brother -- su hermano."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-segunda-lectura-why",
+              "prompt": "Why does he go out?",
+              "assesses": [
+                "ES-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "because he wants to see his father",
+                "porque quiere ver a su padre",
+                "to see his father"
+              ],
+              "feedback": {
+                "correct": "Porque quiere ver a su padre.",
+                "incorrect": "Because he wants to see his father."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In Su hermano no, what word is missing? (Trabaja — and you supplied it without being asked.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many new words were in the paragraph? (None, again.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C67-tercera-lectura",
+      "sequence": 2569,
+      "title": "(reading) — the third paragraph",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "the third paragraph — sixty-one words, two people, and the first time length stops being the point",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d78c69c88c5409c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This one is longer than both of the others. You are not going to notice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "El sábado María y su hermana van a casa de su madre. Su madre es profesora y habla español muy bien. Por la mañana comen pan y beben café. Luego María lee un libro y su hermana escribe. Por la tarde caminan hasta la casa de su hermano. Ahora es tarde, pero están bien. Mañana es domingo, y María no trabaja."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Once through, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now answer this before you read it again: how many people are in it?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four people, and Spanish named each one once. After that they are su madre, su hermana, su hermano — held in place by a single small word you learned a long time ago."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count what you actually did here. Sixty-one words. Four people. Two days. One page of grammar you already had."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first paragraph in this chapter was forty-seven words and felt like a wall. This one is longer and did not. Nothing was added in between except two more paragraphs — which is the only thing that ever fixes this."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the paragraph aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the paragraph aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-tercera-lectura-who",
+              "prompt": "Whose house do they go to on Saturday?",
+              "assesses": [
+                "ES-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "their mother's",
+                "su madre",
+                "the mother",
+                "casa de su madre"
+              ],
+              "feedback": {
+                "correct": "A casa de su madre.",
+                "incorrect": "Their mother's -- casa de su madre."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-tercera-lectura-what",
+              "prompt": "What does the mother do?",
+              "assesses": [
+                "ES-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "she is a teacher",
+                "es profesora",
+                "teacher",
+                "she teaches"
+              ],
+              "feedback": {
+                "correct": "Es profesora.",
+                "incorrect": "She is a teacher -- es profesora."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three paragraphs was hardest? (The first — and it was the shortest.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What changed? (Nothing was added. You simply read three of them.)"
             }
           ]
         }

@@ -491,6 +491,12 @@ const BOOK_BLOCK_TITLES = {
   recall: "Before you move on",
   /** Was "You'll want to know first" --- shorter, and reads as a heading. */
   input: "What to know first",
+  /**
+   * A connected passage. Titled rather than bare because it is the one block a
+   * reader is meant to stop at and re-read, and an untitled box on the page
+   * looks like an aside to be skimmed.
+   */
+  comprehension: "Read this",
 } as const;
 
 /**
@@ -1233,6 +1239,21 @@ function renderBlock(block: LessonBodyBlock, options?: InlineRenderOptionsInput)
   if (block.type === "grammar" || block.type === "notice") {
     return `\\begin{grammarlens}[title={${title}}]\n${content}\n\\end{grammarlens}`;
   }
+  if (block.type === "comprehension") {
+    // Rendered as an inline tcolorbox rather than a named environment on
+    // purpose: every named environment (culture, grammarlens) is defined in a
+    // per-track preamble.tex, and there are 23 of those, all hand-written --
+    // exactly the files this programme is retiring. An inline box needs no
+    // preamble edit, so a reading passage can appear in any track's book the
+    // day that track authors one.
+    const readingTitle = BOOK_BLOCK_TITLES.comprehension;
+    return [
+      "\\begin{tcolorbox}[breakable,skin=enhanced,colback=orange!6,colframe=orange!45!black," +
+        `boxrule=0.5pt,arc=1mm,left=6pt,right=6pt,top=4pt,bottom=4pt,fonttitle=\\bfseries,title={${readingTitle}}]`,
+      content,
+      "\\end{tcolorbox}",
+    ].join("\n");
+  }
   if (block.type === "culture-pragmatics") return `\\begin{culture}\n${content}\n\\end{culture}`;
   if (block.type === "warmup") {
     // BOOK_BLOCK_TITLES.warmup is deliberately empty: the indented lead-in is
@@ -1726,6 +1747,7 @@ const INDEX_BLOCK_FACETS = new Map<LessonBodyBlock["type"], string>([
   ["etymology", "etymology"],
   ["cognates", "family and cognates"],
   ["culture-pragmatics", "usage and culture"],
+  ["comprehension", "reading"],
 ]);
 
 const INDEX_FACET_ORDER = [
@@ -1736,6 +1758,7 @@ const INDEX_FACET_ORDER = [
   "etymology",
   "family and cognates",
   "usage and culture",
+  "reading",
 ];
 
 function indexSortKey(value: string): string {
