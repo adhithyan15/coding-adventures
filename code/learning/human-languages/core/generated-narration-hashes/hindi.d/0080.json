@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 80,
-  "sourceHash": "fnv1a64:c1dbffce78546757",
+  "sourceHash": "fnv1a64:55798bd2b76cd145",
   "lessonIds": [
     "HI-C73-eating-house",
     "HI-C73-breakfast",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch80.txt",
   "json": "hindi/narration/ch80.json",
-  "textHash": "fnv1a64:5e64329ab5bd8cb7",
-  "jsonHash": "fnv1a64:ce4e3e4780f85dc0",
+  "textHash": "fnv1a64:b8f286f46a45340a",
+  "jsonHash": "fnv1a64:4debfeb71bf61b7e",
   "findings": []
 }
