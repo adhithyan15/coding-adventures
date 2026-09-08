@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:d62a10596021459a",
+  "lessonIds": [
+    "PT-C27-primeiro",
+    "PT-C27-segundo",
+    "PT-C27-terceiro",
+    "PT-C27-quarto",
+    "PT-C27-quinto"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "portuguese/narration/ch27.txt",
+  "json": "portuguese/narration/ch27.json",
+  "textHash": "fnv1a64:df257241fc5e656b",
+  "jsonHash": "fnv1a64:41002016e756558f",
+  "findings": []
+}

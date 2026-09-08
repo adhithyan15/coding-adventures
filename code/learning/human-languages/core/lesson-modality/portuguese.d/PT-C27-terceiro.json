@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C27-terceiro",
+    "language": "portuguese",
+    "chapter": 27,
+    "sequence": 990,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3e5a86531a48dbf4"
+  },
+  "findings": []
+}

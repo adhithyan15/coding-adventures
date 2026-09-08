@@ -1,0 +1,14 @@
+{
+  "id": "PT-EXT-031-ORDINAIS",
+  "stage": "A1",
+  "kind": "required",
+  "canDo": "I can say first to fifth in Portuguese with the right gender, and say why the week starts at the second day and why Tuesday is terca and not terceira.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C27-primeiro",
+    "PT-C27-segundo",
+    "PT-C27-terceiro",
+    "PT-C27-quarto",
+    "PT-C27-quinto"
+  ]
+}

@@ -140,8 +140,8 @@ describe("the committed Portuguese A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(208);
-    expect(coverage.covered).toBe(120);
-    expect(coverage.unmapped).toBe(88);
+    expect(coverage.covered).toBe(121);
+    expect(coverage.unmapped).toBe(87);
     expect(coverage.partial).toBe(0);
     // 4 of 12, where eleven tracks before this one reported 0 or 1. `e` is
     // GLOSSED in chapter 2 — "the glue is e você?, and e continues Latin et" —
@@ -160,9 +160,22 @@ describe("the committed Portuguese A1 inventory", () => {
     expect(coverage.byCategory["Os possessivos (possession)"]!).toEqual({ enumerated: 3, covered: 0 });
     // And the columns this track closes outright.
     expect(coverage.byCategory["A frase simples (the simple sentence)"]!).toEqual({ enumerated: 7, covered: 7 });
+    // THE ORDINAL COLUMN, which HL-C350 measured as the weakest in the whole
+    // corpus: twenty tracks enumerate an ordinal point and eighteen left it
+    // uncovered. Portuguese was among the cheapest to close and the reason is
+    // in the track itself — FIVE of the ten ordinals were already in the
+    // learner's mouth as weekdays (segunda, terca, quarta, quinta, sexta),
+    // glossed in chapter 7 as ordinals of numbers the learner had, with the
+    // ordinal series itself never taught. PT-A1-Q-04 is what moved here.
+    // PT-A1-Q-05 (pouco/muito) and PT-A1-Q-06 (bastante) are still open and are
+    // quantity, not counting.
+    expect(coverage.byCategory["Os quantificadores (quantity and number)"]!).toEqual({
+      enumerated: 6,
+      covered: 4,
+    });
     expect(coverage.byCategory["O substantivo (the noun)"]!).toEqual({ enumerated: 7, covered: 7 });
     expect(formatExamCoverage(coverage)).toContain(
-      "portuguese A1 (partial inventory): 120/208 points covered (58%)",
+      "portuguese A1 (partial inventory): 121/208 points covered (58%)",
     );
   }, 60_000);
 

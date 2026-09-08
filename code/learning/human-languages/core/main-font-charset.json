@@ -15,6 +15,11 @@
       "name": "SECTION SIGN"
     },
     {
+      "cp": "U+00AA",
+      "char": "ª",
+      "name": "FEMININE ORDINAL INDICATOR"
+    },
+    {
       "cp": "U+00AB",
       "char": "«",
       "name": "LEFT-POINTING DOUBLE ANGLE QUOTATION MARK"
@@ -33,6 +38,11 @@
       "cp": "U+00B7",
       "char": "·",
       "name": "MIDDLE DOT"
+    },
+    {
+      "cp": "U+00BA",
+      "char": "º",
+      "name": "MASCULINE ORDINAL INDICATOR"
     },
     {
       "cp": "U+00BB",

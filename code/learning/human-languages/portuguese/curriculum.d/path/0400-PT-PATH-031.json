@@ -1,0 +1,16 @@
+{
+  "id": "PT-PATH-031",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "PT-C27-primeiro",
+    "PT-C27-segundo",
+    "PT-C27-terceiro",
+    "PT-C27-quarto",
+    "PT-C27-quinto"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "PT-EXT-031-ORDINAIS"
+  ]
+}
