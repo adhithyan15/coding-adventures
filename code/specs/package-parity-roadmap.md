@@ -1765,7 +1765,7 @@ implementation languages and 267 missing slots to reach all 15. After Priority
 | Language lane | Current high-consensus gaps | Pairing rule |
 |---|---:|---|
 | C# | 0 | Complete; paired native package wave |
-| Dart | 98 | Close the reopened 14-of-15 set, then dependencies before consumers |
+| Dart | 97 | Close the reopened 14-of-15 set, then dependencies before consumers |
 | Elixir | 1 | Close `image-codec-png`, then retain as a reference lane |
 | F# | 0 | Complete; paired native package wave |
 | Go | 0 | Complete; primary build-tool and portable-core reference lane |
@@ -1777,7 +1777,7 @@ implementation languages and 267 missing slots to reach all 15. After Priority
 | Python | 1 | Classify the remaining self-hosted `python-parser` carefully |
 | Ruby | 1 | Close `image-codec-png`, then retain as a reference lane |
 | Rust | 1 | Close `image-codec-png`; reference broad and singleton families |
-| Swift | 52 | Data structures and generated frontends before native app surfaces |
+| Swift | 51 | Data structures and generated frontends before native app surfaces |
 | TypeScript | 0 | Complete; reference lane for web-capable portable contracts |
 
 Zero-gap lanes remain active reference and conformance lanes; they are not
@@ -13384,6 +13384,75 @@ merged PR #14604. These additions bring the state to 753 unique owners: 211 merg
 541 pending, and exactly this graph/diff owner PR-open as #14615, with complete
 dependencies, no cycle, and no merged-to-unfinished
 edge.
+
+### Post-PR #14615 reconciliation and Go source-registry selection
+
+PR #14615 completed every reported check acceptably at exact head
+`26436208e66cebe63baaf6fba9232b145bcc55d3`. Both duplicate Ubuntu builds and
+repository-metadata contracts passed, both final CI gates passed, and GitHub
+reported the branch clean and mergeable. Guarded squash auto-merge was enabled
+and GitHub merged the reviewed head at `2026-09-08T13:27:07Z` as
+`3afe6de3678f56b3a39c10b040aff9d7fa74a13a`, without a plain manual merge
+command.
+
+Before implementation, seven non-overlapping ARMv7-A, bounded-JSON storage,
+VisiCalc, HTML parser, Mermaid Wardley, browser form-control, and ALGOL result-
+composition merges advanced exact `origin/main` to
+`a94930658181ef406fac9b49c72356d692b7e09d`. The
+collision-checked schema-3 inventory there has 15 established lanes, 1,424
+implementation identities, 4,645 implementation slots, and 1,463 all-reported
+identities. The breadth bands are 175/265, 123/934, 177/2,230, and 949/13,286.
+Rust has 765 singletons;
+OCaml remains emerging with five packages; canonical collisions and unknown
+language buckets remain zero. PR #14614 adds Rust beside Python for the
+`armv7a-simulator` identity, so a new exact two-lane classification owner now
+owns Spec 07x reconciliation, applicable-lane review, bounded traces, and the
+Rust package's missing explicit empty capability profile. The current high-
+consensus table is corrected to 97 Dart and 51 Swift gaps. Haskell has four
+structural gaps, but its counted generic `font-parser` wrapper remains
+separately owned FNT00 semantic debt.
+
+The two new identities are the deterministic Rust-only `layout-controls` and
+`browser-form-controls` UI53 cores. Exact dependency-shaped owners now require
+a bounded neutral metadata and intrinsic-sizing contract first, followed by
+browser retained-tree state transitions dependent on both that contract and the
+existing portable HTML frontend. The Wardley merge adds no identity or slot,
+but it extends existing Mermaid lexer, parser, IR, geometry, and paint packages
+with a distinct semantic family. A neutral Wardley pipeline owner and a
+selection-blocked established-lane rollout umbrella now prevent that semantic
+gap from being hidden by stable package counts.
+
+Parallel read-only audits decomposed work while CI ran. They add an independent
+Java/Kotlin process-free graph/diff owner and give it, plus the existing Dart
+core, both merged neutral graph/diff and repository-boundary prerequisites.
+Java and Kotlin must remain separate idiomatic engines sharing only fixtures;
+neither is a reviewed shared-engine exception. The audits also split the stale
+Haskell tail into event-loop, neutral Brotli repair, Haskell Brotli, ct-compare,
+and PNG children; add exact Haskell/Swift CLI-parser, Starlark-metering, and
+validation-oracle leaves; and add selection-blocked native-adapter closure
+gates for both lanes.
+
+The same refresh corrects the Haskell capability audit to 204 packages and four
+programs and registers a Swift capability audit for 162 packages and 12
+programs. It classifies the previously unowned `mosaic-flux-swiftui` and
+`PaintVmDirect2DNative` Swift singletons as platform/runtime boundaries that
+need truthful capability and applicability decisions, not automatic portable
+rollout. `swift-hash-functions-lane-parity` is the first exact child split from
+Swift's remaining high-consensus classifier because it unlocks bloom-filter,
+hash-map, hyperloglog, and the in-memory-store chain. The stale Chief channel
+crypto owner is now selection-blocked pending reconciliation with already
+merged D18F/D18P fixture work.
+
+After these additions the state has 774 unique owners: 212 merged, 561 pending,
+and exactly one in progress. All IDs are unique, every dependency resolves, the
+graph is acyclic, and no merged owner depends on unfinished work. The selected
+`build-tool-go-language-source-input-registry-adoption` owner begins on fresh
+branch `codex/build-tool-go-language-source-registry-20260908` from exact merged
+main `a94930658181ef406fac9b49c72356d692b7e09d`. Its four formal prerequisites are merged, it has no live implementation-
+path overlap, and it reaches 24 unfinished descendants through native snapshot
+stability, dependency hashing, repository-boundary diff/digest, the Go oracle,
+all-language build tools, and OCaml promotion. Dart and JVM graph/diff cores are
+the next ready audited alternatives after this serial PR.
 
 ## Autonomous Loop Protocol
 
