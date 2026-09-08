@@ -93,8 +93,27 @@ func (s *Server) handlePreview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Resolve the requested story so its fixtures reach the compiler.
+	//
+	// The story name was parsed out of the URL and then discarded, so every
+	// story of a component rendered identically -- a variant gallery of eight
+	// identical buttons (#14459). An unknown name is not an error: falling
+	// back to the first story keeps a stale bookmark or a renamed story
+	// previewing rather than 404ing, and the story list in the UI is the
+	// source of truth for what exists.
+	var story *Story
+	for i := range found.Stories {
+		if found.Stories[i].Name == storyName {
+			story = &found.Stories[i]
+			break
+		}
+	}
+	if story == nil && len(found.Stories) > 0 {
+		story = &found.Stories[0]
+	}
+
 	// Compile the source file to the requested backend.
-	compiled, compileErr := s.compileToString(*found, backend)
+	compiled, compileErr := s.compileToString(*found, backend, story)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	// For the html backend the compiled output is a static HTML fragment with no
