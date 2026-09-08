@@ -97,15 +97,23 @@
       "id": "A1-ART-03",
       "category": "Der Artikel",
       "label": "negative kein / keine",
-      "probe": null,
-      "note": "Untaught. kein has no atom, which also blocks A1-NEG-02 -- the same two words close both points."
+      "probe": [
+        "GE-LEX-KEIN-01",
+        "GE-LEX-KEINE-01",
+        "GE-LEX-KEINEN-01"
+      ]
     },
     {
       "id": "A1-ART-04",
       "category": "Der Artikel",
       "label": "nominative and accusative forms",
-      "probe": null,
-      "note": "Explicitly deferred by the corpus. GE-C14-einen teaches einen and says on the page: 'Take this one as a word for now, not as a system. The system behind it -- German's cases -- gets a chapter of its own later.' That chapter has not been written; den has no atom."
+      "probe": [
+        "GE-LEX-DEN-01",
+        "GE-GRAMMAR-AKKUSATIV-NUR-MASKULIN-01",
+        "GE-LEX-EINEN-01",
+        "GE-LEX-KEINEN-01"
+      ],
+      "note": "The chapter GE-C14-einen promised. All four atoms, because the point is the CONTRAST: den is the new article, the rule says only the der row moves, and einen and keinen are the two words the reader was already saying that move with it."
     },
     {
       "id": "A1-ART-05",
@@ -132,8 +140,14 @@
       "id": "A1-PRO-02",
       "category": "Das Pronomen",
       "label": "personal pronouns in the accusative",
-      "probe": null,
-      "note": "One seventh owned: mich, from chapter 3. dich, ihn, uns and euch have no atoms."
+      "probe": [
+        "GE-LEX-MICH-01",
+        "GE-LEX-DICH-01",
+        "GE-LEX-IHN-01",
+        "GE-LEX-UNS-01",
+        "GE-LEX-EUCH-01"
+      ],
+      "note": "sie and es are not listed because they are identical to their nominative forms -- probing them would resolve against the nominative atoms and claim a distinction the language does not make."
     },
     {
       "id": "A1-PRO-03",
@@ -148,8 +162,13 @@
       "id": "A1-PRO-04",
       "category": "Das Pronomen",
       "label": "possessives mein, dein, sein, ihr",
-      "probe": null,
-      "note": "mein is owned inside the phrase mein Name ist. dein, sein and ihr have no atoms, and the ending family they share with ein and kein is unstated."
+      "probe": [
+        "GE-LEX-MEIN-01",
+        "GE-LEX-DEIN-01",
+        "GE-LEX-SEIN-HIS-01",
+        "GE-LEX-IHR-HER-01"
+      ],
+      "note": "GE-LEX-MEIN-01 is a NEW atom, not GE-LEX-MEIN-NAME-IST-02: mein was inside a fixed phrase and the phrase atom cannot demonstrate the word."
     },
     {
       "id": "A1-PRO-05",
@@ -163,8 +182,9 @@
       "id": "A1-ADJ-01",
       "category": "Das Adjektiv",
       "label": "predicative adjectives do not inflect",
-      "probe": null,
-      "note": "Shown and never named. gut stands uninflected after ist throughout the track and guten Tag inflects in front of a noun, so both halves of the contrast are on the page; no lesson states that the predicative form does not move."
+      "probe": [
+        "GE-GRAMMAR-ADJ-PRAEDIKATIV-01"
+      ]
     },
     {
       "id": "A1-ADJ-02",
@@ -246,15 +266,21 @@
       "id": "A1-V-06",
       "category": "Das Verb",
       "label": "modal verbs koennen, muessen, moechten",
-      "probe": null,
-      "note": "Untaught in the present. konnte, the preterite of koennen, is owned from the simple-past chapter, so the track can say what it could do and not what it can do."
+      "probe": [
+        "GE-LEX-KOENNEN-01",
+        "GE-LEX-MUESSEN-01",
+        "GE-LEX-MOECHTEN-01",
+        "GE-GRAMMAR-VERBKLAMMER-01"
+      ],
+      "note": "The bracket atom is listed with the three verbs because a modal without an infinitive at the end of the sentence is half the point."
     },
     {
       "id": "A1-V-07",
       "category": "Das Verb",
       "label": "the imperative for instructions",
-      "probe": null,
-      "note": "Untaught. Every verb in the track appears with a subject in front of it."
+      "probe": [
+        "GE-GRAMMAR-IMPERATIV-DU-01"
+      ]
     },
     {
       "id": "A1-V-08",
@@ -281,36 +307,49 @@
       "id": "A1-V-10",
       "category": "Das Verb",
       "label": "the past participle in ge- ... -t / -en",
-      "probe": null,
-      "note": "Half owned. The weak participle ge- ... -t has an atom and four instances; the strong -en participle is USED (gegangen, in the sein-perfect chapter) and never named, so a probe naming it would resolve against nothing."
+      "probe": [
+        "GE-GRAMMAR-PARTIZIP-GE-T-01",
+        "GE-GRAMMAR-PARTIZIP-GE-EN-01",
+        "GE-ETYMON-GE-PRAEFIX-01"
+      ],
+      "note": "Both families and the wrapper. The -t half was owned; the -en half was USED in gegangen and never named, which is why this point read as absent while the corpus was already saying it."
     },
     {
       "id": "A1-V-11",
       "category": "Das Verb",
       "label": "es gibt for existence",
-      "probe": null,
-      "note": "Untaught. es is owned as a pronoun and as the weather subject; the existential es gibt is not."
+      "probe": [
+        "GE-LEX-ES-GIBT-01"
+      ]
     },
     {
       "id": "A1-V-12",
       "category": "Das Verb",
       "label": "reflexive verbs with sich",
-      "probe": null,
-      "note": "mich appears reflexively inside freut mich, a frozen phrase, and sich has no atom."
+      "probe": [
+        "GE-LEX-SICH-01",
+        "GE-GRAMMAR-REFLEXIV-01"
+      ],
+      "note": "The rule as well as the word: mich, dich, uns and euch already did this job and no lesson said so, so the construction was demonstrated in freut mich for forty-seven chapters and owned by nobody."
     },
     {
       "id": "A1-NEG-01",
       "category": "Die Negation",
       "label": "nicht and where it stands",
-      "probe": null,
-      "note": "Half owned. nicht has a word atom and an etymology atom since chapter 3; where it stands in the sentence is nowhere stated."
+      "probe": [
+        "GE-LEX-NICHT-01",
+        "GE-GRAMMAR-NICHT-STELLUNG-01"
+      ]
     },
     {
       "id": "A1-NEG-02",
       "category": "Die Negation",
       "label": "kein for negating a noun",
-      "probe": null,
-      "note": "Untaught -- the same kein gap as A1-ART-03."
+      "probe": [
+        "GE-LEX-KEIN-01",
+        "GE-LEX-KEINE-01",
+        "GE-GRAMMAR-KEIN-VS-NICHT-01"
+      ]
     },
     {
       "id": "A1-NEG-03",
@@ -324,29 +363,40 @@
       "id": "A1-FR-01",
       "category": "Die Frage",
       "label": "yes/no questions by inversion",
-      "probe": null,
-      "note": "Untaught. Verb-second is owned, and every question the track shows is a W-question, where verb-second and inversion look identical. The polar question, where the verb moves to first place, is never shown."
+      "probe": [
+        "GE-GRAMMAR-JA-NEIN-FRAGE-01"
+      ]
     },
     {
       "id": "A1-FR-02",
       "category": "Die Frage",
       "label": "W-questions: wer, was, wo, wann, wie, warum",
-      "probe": null,
-      "note": "Three of six owned: was, wo, wie, each with its own lesson. wer, wann and warum have no atoms."
+      "probe": [
+        "GE-LEX-WER-01",
+        "GE-LEX-WAS-01",
+        "GE-LEX-WO-01",
+        "GE-LEX-WANN-01",
+        "GE-LEX-WIE-02",
+        "GE-LEX-WARUM-01"
+      ],
+      "note": "All six, because the point names all six. Three were already taught and three are new; listing only the new ones would let the point read as closed if one of the old lessons were retired."
     },
     {
       "id": "A1-FR-03",
       "category": "Die Frage",
       "label": "wie viel / wie viele",
-      "probe": null,
-      "note": "Untaught."
+      "probe": [
+        "GE-LEX-WIE-VIEL-01",
+        "GE-LEX-WIE-VIELE-01"
+      ]
     },
     {
       "id": "A1-FR-04",
       "category": "Die Frage",
       "label": "welcher as an interrogative determiner",
-      "probe": null,
-      "note": "Untaught."
+      "probe": [
+        "GE-LEX-WELCHER-01"
+      ]
     },
     {
       "id": "A1-PRAEP-01",
@@ -418,29 +468,42 @@
       "category": "Der Satz",
       "label": "the verb bracket, with the second part at the end",
       "probe": [
-        "GE-GRAMMAR-SEPARABLE-09"
-      ]
+        "GE-GRAMMAR-SEPARABLE-09",
+        "GE-GRAMMAR-VERBKLAMMER-01"
+      ],
+      "note": "The separable prefix demonstrated the bracket and never named it; GE-GRAMMAR-VERBKLAMMER-01 names it, and names the prefix, the participle and the cancelling nicht as three earlier instances of one habit."
     },
     {
       "id": "A1-SATZ-03",
       "category": "Der Satz",
       "label": "coordination with und, oder, aber, denn",
-      "probe": null,
-      "note": "One of four owned: und, from chapter 3. oder, aber and denn have no atoms."
+      "probe": [
+        "GE-LEX-UND-01",
+        "GE-LEX-ODER-01",
+        "GE-LEX-ABER-01",
+        "GE-LEX-DENN-01"
+      ]
     },
     {
       "id": "A1-SATZ-04",
       "category": "Der Satz",
       "label": "weil and the verb-final clause",
-      "probe": null,
-      "note": "Untaught, and it is the track's only verb-final construction -- SPINE-SAY-WHY records CONNECTIVE-BECAUSE as an omission for the same reason."
+      "probe": [
+        "GE-LEX-WEIL-01",
+        "GE-GRAMMAR-VERB-LETZT-01"
+      ],
+      "note": "The word and the movement, because weil without verb-final order is not weil."
     },
     {
       "id": "A1-SATZ-05",
       "category": "Der Satz",
       "label": "introducing oneself and others",
-      "probe": null,
-      "note": "Introducing ONESELF is fully owned: ich heisse, mein Name ist, freut mich, wie heissen Sie. Introducing somebody else is not -- das ist has no atom."
+      "probe": [
+        "GE-LEX-ICH-HEISSE-01",
+        "GE-LEX-MEIN-NAME-IST-02",
+        "GE-LEX-FREUT-MICH-02",
+        "GE-LEX-DAS-IST-01"
+      ]
     },
     {
       "id": "A1-AUS-01",

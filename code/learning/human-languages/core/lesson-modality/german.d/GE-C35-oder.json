@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C35-oder",
+    "language": "german",
+    "chapter": 48,
+    "sequence": 1240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3b1b4606ec828d3"
+  },
+  "findings": []
+}

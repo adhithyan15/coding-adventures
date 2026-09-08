@@ -1,0 +1,24 @@
+{
+  "chapter": 47,
+  "title": "Which One, and the Form the Book Owed You",
+  "label": "ch:ge-akkusativ",
+  "canDo": "I can ask which one and how many, put a der-word into the shape it takes when something is done to it, say that a thing exists, and leave an adjective alone when it follows the verb.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-R34-welchen",
+    "kind": "production",
+    "summary": "Every der-word in the book is run through the shape it takes when something happens to it, and every adjective is run through the shape it takes when nothing does. The chapter costs five items and pays a debt the einen lesson wrote down in plain sight: GE-C14-einen told the reader to take einen 'as a word for now, not as a system', and named the chapter that would explain it. This is that chapter.",
+    "assesses": [
+      "GE-LEX-WELCHER-01",
+      "GE-LEX-WIE-VIEL-01",
+      "GE-LEX-WIE-VIELE-01",
+      "GE-LEX-DEN-01",
+      "GE-GRAMMAR-AKKUSATIV-NUR-MASKULIN-01",
+      "GE-GRAMMAR-ADJ-PRAEDIKATIV-01",
+      "GE-LEX-ES-GIBT-01"
+    ],
+    "note": "einen and keinen were both taught as bare words before the system behind them existed, so the case chapter costs one new article and one rule rather than a paradigm: three words the reader already says turn out to move together on one row."
+  }
+}

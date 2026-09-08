@@ -2,12 +2,12 @@
   "segments": [
     "GE-PATH-007",
     "GE-PATH-009",
-    "GE-PATH-032"
+    "GE-PATH-032",
+    "GE-PATH-A1-POSSESSIV"
   ],
   "omits": [
     "QUESTION-WHAT",
     "PRONOUN-ME",
-    "PRONOUN-MY",
     "WORD-NAME",
     "WORD-IS"
   ],

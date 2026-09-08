@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:553c49d406b28943",
+  "lessonIds": [
+    "GE-C33-ja-nein-frage",
+    "GE-C33-imperativ",
+    "GE-C33-wer",
+    "GE-C33-wann",
+    "GE-C33-warum",
+    "GE-R33-frag-mich"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch46.txt",
+  "json": "german/narration/ch46.json",
+  "textHash": "fnv1a64:d9ed39f083d30612",
+  "jsonHash": "fnv1a64:43b39d9cea129c01",
+  "findings": []
+}

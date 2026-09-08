@@ -1,0 +1,17 @@
+{
+  "id": "GE-PATH-A1-KLAMMER",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "lessons": [
+    "GE-C38-koennen",
+    "GE-C38-moechten",
+    "GE-C38-muessen",
+    "GE-C38-klammer",
+    "GE-C38-partizip-en",
+    "GE-R38-was-kann-ich"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-A1-KLAMMER"
+  ],
+  "after": []
+}

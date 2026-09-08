@@ -1,0 +1,1083 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 49,
+  "title": "Mine, Yours, His, Hers",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:ebdeff3c626b6fc6",
+  "lessons": [
+    {
+      "id": "GE-C36-mein",
+      "sequence": 1300,
+      "title": "mein — the word you have been saying since you first gave your name",
+      "headword": "mein",
+      "romanization": "mein",
+      "gloss": "my — pulled out of the phrase it has been hiding in since you first gave your name, and the head of a family of six words that share one set of endings",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:270375866ab4632f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say mein Name ist …. You have said it since the second chapter as a single block. The first word of it is about to become a word of its own."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the phrase that says a thing exists — es gibt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the phrase that says a thing exists — *es gibt*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mein",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mein — \"my\"."
+            },
+            {
+              "kind": "speech",
+              "text": "mein Bruder, meine Schwester, mein Brot."
+            },
+            {
+              "kind": "speech",
+              "text": "English splits this word in two — my in front of a noun, mine standing alone — and the split is late and unnecessary. mein and mine are one word, Proto-Germanic mīnaz, and German never divided it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the family of six",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mein takes the endings ein takes. So does kein, and so will the three words in the next three lessons."
+            },
+            {
+              "kind": "speech",
+              "text": "You paid for this two chapters ago without being told. Ein becomes eine before a die-word and einen when a der-word is done to. Kein does the same. Mein does the same:"
+            },
+            {
+              "kind": "speech",
+              "text": "mein Bruder becomes Ich habe meinen Bruder. meine Schwester becomes Ich habe meine Schwester."
+            },
+            {
+              "kind": "speech",
+              "text": "One ending set, six words wearing it. Learning the fourth, fifth and sixth costs nothing at all, because the endings were bought with ein, banked again with kein, and confirmed a third time with den."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the article first, so the ending falls out of it."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Bruder becomes \"mein Bruder\", then done-to, \"meinen Bruder\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der* Bruder → \"mein Bruder\", then done-to, \"meinen Bruder\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Schwester becomes \"meine Schwester\", which does not move",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die* Schwester → \"meine Schwester\", which does not move]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"meine Mutter, mein Vater\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"meine Mutter, mein Vater\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mein Freund, meine Freundin\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mein Freund, meine Freundin\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three that move on the same row — \"einen, keinen, meinen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three that move on the same row — \"einen, keinen, meinen\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"mein Bruder — meinen Bruder.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which endings does mein take? (The ones ein takes — and kein.) Say \"my brother\" as the thing you have. (Meinen Bruder.) Which two English words are mein? (My and mine, split late and needlessly.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C36-dein",
+      "sequence": 1310,
+      "title": "dein — \"your,\" and the third th that became a d",
+      "headword": "dein",
+      "romanization": "dein",
+      "gloss": "your — the second of the six, and the same consonant shift that turned thou into du",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61cf3a58d76e8f55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say du and dir. Both were once English thou and thee. Predict the German for thine before you read on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dein",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dein — \"your\", to somebody you call du."
+            },
+            {
+              "kind": "speech",
+              "text": "dein Bruder, deine Schwester, deinen Bruder."
+            },
+            {
+              "kind": "speech",
+              "text": "The endings are mein's endings, which were ein's endings. Nothing new is being learned here except the first two letters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three words, one shift, and you have now seen all three:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "German"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "English: thou. German: du.",
+                "English: thee. German: dir.",
+                "English: thine. German: dein."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Germanic þ hardened into German d across the board, so any English word beginning th- is worth testing against a German d-. That is das. Three is drei. Thank is danken. The rule has been paying out since your first article and it will keep paying."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dein Bruder, deine Schwester\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dein Bruder, deine Schwester\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"mein Freund, dein Freund\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"mein Freund, dein Freund\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a question with it — \"Wer ist deine Freundin?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a question with it — \"Wer ist deine Freundin?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the th to d rule, four times — \"that/das, three/drei, thank/danke, thine/dein\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *th* to *d* rule, four times — \"that/das, three/drei, thank/danke, thine/dein\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Wer ist dein Bruder?\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"your sister\" and \"your brother\". Which English word is dein? (Thine.) Which sound law lines the two up? (Germanic þ becoming German d.) Whose endings does dein wear? (Ein's — like kein and mein.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C36-sein-his",
+      "sequence": 1320,
+      "title": "sein — \"his,\" and a collision worth meeting head-on",
+      "headword": "sein",
+      "romanization": "sein",
+      "gloss": "his — spelled exactly like the verb to be, and the collision is worth meeting head-on",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0dcf81d73fa71737",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sein is the verb to be, the one with three roots braided into it. Say er ist. Now meet a second, unrelated word spelled the same way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sein",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sein — \"his\"."
+            },
+            {
+              "kind": "speech",
+              "text": "sein Bruder, seine Schwester, seinen Bruder."
+            },
+            {
+              "kind": "speech",
+              "text": "Same endings again — ein's. Third word in a row that costs nothing but its first letters."
+            },
+            {
+              "kind": "speech",
+              "text": "The two seins are genuinely two words. The possessive is Proto-Germanic sīnaz, a cousin of Latin suus. The verb is the braided one. They arrived at the same spelling from opposite directions and German never separated them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: how a reader tells them apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The position settles it, every time, without exception:"
+            },
+            {
+              "kind": "speech",
+              "text": "sein Bruder — a noun follows, so this is his. Ich will sein — no noun follows, so this is to be."
+            },
+            {
+              "kind": "speech",
+              "text": "A possessive is always leaning on a noun. An infinitive is not. German has more of these collisions than English does — sie alone runs three jobs — and each time, what resolves it is the shape of the sentence around the word rather than the word itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sein Bruder, seine Schwester\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sein Bruder, seine Schwester\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three so far — \"mein Vater, dein Vater, sein Vater\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three so far — \"mein Vater, dein Vater, sein Vater\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Das ist sein Hund.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Das ist sein Hund.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the collision, both ways — \"sein Bruder\" and the bare verb, \"sein\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the collision, both ways — \"sein Bruder\" and the bare verb, \"sein\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"mein Vater, dein Vater, sein Vater.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"his mother\" and \"his brother\". What else is the word sein? (The verb to be.) What tells them apart? (Whether a noun follows.) Say the three possessives you now own. (Mein, dein, sein.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C36-ihr-her",
+      "sequence": 1330,
+      "title": "ihr — \"her,\" and a word with three jobs",
+      "headword": "ihr",
+      "romanization": "ihr",
+      "gloss": "her — the fourth of the six, and a word that now does three separate jobs in this book",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a32ddea8e129262e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ihr already means you all. Sie already means she, they and formal you. German is comfortable with a word doing several jobs, and this lesson adds one more."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ihr",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ihr — \"her\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ihr Bruder, ihre Schwester, ihren Bruder."
+            },
+            {
+              "kind": "speech",
+              "text": "Said eer: the h is silent and stretches the i, exactly as it does in Ihnen. The endings are ein's, for the fourth time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: three jobs, all settled by position",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where the word stands says which job it is doing:"
+            },
+            {
+              "kind": "speech",
+              "text": "ihr wohnt — a verb with -t follows, so this is you all."
+            },
+            {
+              "kind": "speech",
+              "text": "ihr Bruder — a noun follows, so this is her."
+            },
+            {
+              "kind": "speech",
+              "text": "Ihr Bruder, capitalised — the formal your, which the capital marks the same way it marks formal Sie."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing here is ambiguous in a real sentence, and the capital does real work — a third reason for the capitalisation rule the writing chapter taught."
+            },
+            {
+              "kind": "speech",
+              "text": "The same ihr also means their, which is one job too many to add today; the book will come back to it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ihr Bruder, ihre Schwester\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ihr Bruder, ihre Schwester\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — \"mein, dein, sein, ihr\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — \"mein, dein, sein, ihr\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two jobs side by side — \"ihr wohnt\" and \"ihr Hund\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two jobs side by side — \"ihr wohnt\" and \"ihr Hund\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Das ist ihre Mutter.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Das ist ihre Mutter.\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"mein, dein, sein, ihr.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four possessives. (Mein, dein, sein, ihr.) What tells you which job ihr is doing? (What follows it — a verb or a noun.) What does the capital on Ihr mean? (The formal your.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C36-das-ist",
+      "sequence": 1340,
+      "title": "das ist — introducing somebody who is not you",
+      "headword": "Das ist mein Bruder",
+      "romanization": "Das ist mein Bruder",
+      "gloss": "this is — the phrase that introduces somebody else, using a das that stands for no gender at all",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9e2be09b2d34a255",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can give your own name three ways and shake hands afterwards. You cannot yet introduce anybody else, and the phrase that does it is two words you already have."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das ist",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das ist — \"this is\", \"that is\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Das ist mein Bruder. — \"This is my brother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Das ist meine Schwester. — \"This is my sister.\""
+            },
+            {
+              "kind": "speech",
+              "text": "And the reply is one you have owned since your first introduction: Freut mich."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the das that ignores gender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at the second sentence again. Schwester is a die-word, and the phrase still opens with das. That is not a mistake, and it is not the article."
+            },
+            {
+              "kind": "speech",
+              "text": "The das at the front of the sentence is the older, pointing word the article descends from — the demonstrative behind English that. It points at a person without committing to a gender, so it stays das in front of everybody:"
+            },
+            {
+              "kind": "speech",
+              "text": "Das ist mein Vater., Das ist meine Mutter., Das ist mein Hund."
+            },
+            {
+              "kind": "speech",
+              "text": "English does the same thing and hides it as well: that is my sister uses a word that started life as the neuter þæt and long ago stopped caring."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Das ist mein Bruder.\" — then answer, \"Freut mich.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Das ist mein Bruder.\" — then answer, \"Freut mich.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Das ist meine Schwester.\" — the das does not become die",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Das ist meine Schwester.\" — the *das* does not become *die*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the household — \"Das ist meine Mutter. Das ist mein Vater.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the household — \"Das ist meine Mutter. Das ist mein Vater.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with the other three possessives — \"Das ist dein Freund. Das ist seine Freundin. Das ist ihr Hund.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with the other three possessives — \"Das ist dein Freund. Das ist seine Freundin. Das ist ihr Hund.\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Das ist meine Schwester. — Freut mich.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Introduce your sister. (Das ist meine Schwester.) Why is it not die ist? (That das is the old pointing word, not the article, and it ignores gender.) What do you say back? (Freut mich.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R36-wer-ist-das",
+      "sequence": 1350,
+      "title": "Wer ist das? — the chapter, run cold",
+      "headword": "Wer ist das?",
+      "romanization": "Wer ist das?",
+      "gloss": "four possessives, one introduction, and the ending set that six words share",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b28218844492d265",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four possessives. Then name the two older words whose endings all four borrow, and say why that means the four cost almost nothing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: introduce everybody",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every person this book has named, introduced and claimed."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Das ist mein Bruder. Das ist meine Schwester.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Das ist mein Bruder. Das ist meine Schwester.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Das ist meine Mutter. Das ist mein Vater.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Das ist meine Mutter. Das ist mein Vater.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two collective words — \"meine Eltern, meine Geschwister\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two collective words — \"meine Eltern, meine Geschwister\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair the -in suffix built — \"mein Freund, meine Freundin\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair the *-in* suffix built — \"mein Freund, meine Freundin\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Das ist meine Familie.\" then answer, \"Freut mich.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Das ist meine Familie.\" then answer, \"Freut mich.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four Latin cousins those words keep — frater, soror, mater, pater",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four Latin cousins those words keep — *frater, soror, mater, pater*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — everything, claimed",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Put mein in front of everything, and then do something to it."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the animals — \"mein Hund, meinen Hund; meine Katze\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the animals — \"mein Hund, meinen Hund; meine Katze\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the table — \"mein Kaffee, meinen Kaffee; mein Brot; meine Milch\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the table — \"mein Kaffee, meinen Kaffee; mein Brot; meine Milch\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the body, all of it — \"mein Kopf, meine Hand, mein Arm, mein Fuß, mein Herz, mein Auge, mein Ohr, mein Mund, meine Nase\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the body, all of it — \"mein Kopf, meine Hand, mein Arm, mein Fuß, mein Herz, mein Auge, mein Ohr, mein Mund, meine Nase\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two abstractions — \"mein Name\", \"meine Zeit\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two abstractions — \"mein Name\", \"meine Zeit\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six words on one ending set — \"ein, kein, mein, dein, sein, ihr\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six words on one ending set — \"ein, kein, mein, dein, sein, ihr\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the der-row, five words deep — \"den, einen, keinen, meinen, deinen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *der*-row, five words deep — \"den, einen, keinen, meinen, deinen\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: the far band — the last three chapters, over one family",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything since the negation chapter, said about one family."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joined and corrected — \"Das ist nicht mein Bruder, sondern mein Vater.\" \"Das ist meine Schwester, aber sie ist müde.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: joined and corrected — \"Das ist nicht mein Bruder, sondern mein Vater.\" \"Das ist meine Schwester, aber sie ist müde.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with a reason both ways — \"Das ist mein Bruder, denn er hat meinen Namen.\" \"Ich frage meine Mutter, weil ich keine Zeit habe.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with a reason both ways — \"Das ist mein Bruder, denn er hat meinen Namen.\" \"Ich frage meine Mutter, weil ich keine Zeit habe.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "existence and its marked form — \"Es gibt keinen Kaffee.\" \"Es gibt einen Bruder oder eine Schwester.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: existence and its marked form — \"Es gibt keinen Kaffee.\" \"Es gibt einen Bruder oder eine Schwester.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three W-words, aimed at people — \"Wer ist das? Wann? Warum?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three W-words, aimed at people — \"Wer ist das? Wann? Warum?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words built out of not and one — German's kein and English's none",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words built out of *not* and *one* — German's **kein** and English's **none**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two W-words whose English twins begin wh- — \"wer/who, wann/when\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two W-words whose English twins begin *wh-* — \"wer/who, wann/when\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say all six words that share one ending set. (Ein, kein, mein, dein, sein, ihr.) Which row of endings moves? (The der row.) Introduce your sister and answer yourself. (Das ist meine Schwester. — Freut mich.) Which other job does sein do, and which other two does ihr do?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

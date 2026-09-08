@@ -894,16 +894,59 @@ describe("the committed German A1 inventory", () => {
     // A tranche aimed at any of those sixteen would have written a second lesson
     // for material already in the book. That is the failure an inventory exists to
     // prevent, and it had been running in the flattering direction for months.
-    expect(coverage.covered).toBe(37);
-    // Der Artikel leaves this list at 2/5 — der/die/das and ein/eine were always
-    // taught. Questions and prepositions are genuinely empty: no lesson in the
-    // track owns wer, wann, warum, welcher, or any preposition as a preposition.
-    for (const empty of ["Die Frage", "Die Praeposition"]) {
-      expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
+    //
+    // 37 -> 56. Seven chapters, thirty-five items, forty-four atoms, forty-two
+    // lessons. Nineteen points close, and FIVE COLUMNS go to full:
+    //
+    //   Das Verb        7/12 -> 12/12
+    //   Das Pronomen     3/5  ->  5/5
+    //   Der Satz         2/5  ->  5/5
+    //   Die Frage        0/4  ->  4/4
+    //   Die Negation     1/3  ->  3/3
+    //
+    // The ratio comes from spending rather than minting. kein is `ein` with two
+    // letters on the front, so it inherits an ending set the reader bought in the
+    // ein/eine lesson; `den` then names the row those endings move on, which is
+    // the chapter GE-C14-einen promised in plain text and never delivered; and
+    // the four possessives inherit the same set a third time. Six words end up
+    // sharing one paradigm and only two of the six are new.
+    expect(coverage.covered).toBe(56);
+    for (const full of ["Das Verb", "Das Pronomen", "Der Satz", "Die Frage", "Die Negation"]) {
+      const column = coverage.byCategory[full];
+      expect(column?.covered, full).toBe(column?.enumerated);
     }
-    expect(coverage.byCategory["Der Artikel"]).toEqual({ enumerated: 5, covered: 2 });
+    // Die Praeposition is the one column the tranche did not touch, and it is
+    // the next one: A1-ART-05 (dative article forms) sits under A1-PRAEP-02, so
+    // one lesson set unblocks two points at once.
+    expect(coverage.byCategory["Die Praeposition"]).toEqual({ enumerated: 4, covered: 0 });
+    expect(coverage.byCategory["Der Artikel"]).toEqual({ enumerated: 5, covered: 4 });
     expect(coverage.byCategory["Grundwortschatz"]!.covered).toBeGreaterThan(0);
   }, 60_000);
+
+  it("closes A1-ART-04 on the atom the corpus DEFERRED, not on a new paradigm", () => {
+    // Named rather than left to the aggregate. The 56/70 above would move if this
+    // probe were nulled, but it would move for eighteen other reasons too; this
+    // pins WHICH four atoms close the point, and that two of the four are words
+    // the reader has been saying since the haben and negation chapters.
+    //
+    // Both halves were falsified before this was kept: adding a fabricated id
+    // fails the "probes only atoms that exist" test above, and nulling the probe
+    // drops the total to 55.
+    const point = inventory.points.find((p) => p.id === "A1-ART-04");
+    expect(point?.probe).toEqual([
+      // The one new article.
+      "GE-LEX-DEN-01",
+      // The rule that says only the der row moves — which is why the German case
+      // system costs one row and not a nine-cell grid at this level.
+      "GE-GRAMMAR-AKKUSATIV-NUR-MASKULIN-01",
+      // SPENT, not minted. GE-C14-einen taught `einen` as a bare word and said on
+      // the page: "the system behind it ... gets a chapter of its own later".
+      "GE-LEX-EINEN-01",
+      // Minted by this tranche's own first chapter, three chapters earlier, and
+      // spent here.
+      "GE-LEX-KEINEN-01",
+    ]);
+  });
 });
 
 // ---------------------------------------------------------------------------

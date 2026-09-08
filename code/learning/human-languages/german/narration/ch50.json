@@ -1,0 +1,1020 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 50,
+  "title": "The One It Happens To",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:cac8e3ae08de0c1d",
+  "lessons": [
+    {
+      "id": "GE-C37-dich",
+      "sequence": 1360,
+      "title": "dich — \"you,\" as the one it happens to",
+      "headword": "dich",
+      "romanization": "dich",
+      "gloss": "you, as the one it happens to — the partner of mich, and English thee one more time",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e77efeeb0551a6f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You own mich (\"me\") and mir (\"to me\"), and on the du side you own du, dir and now dein. One shape is missing from that row."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the joiner that sends the verb to the end — weil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the joiner that sends the verb to the end — *weil*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dich",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dich — \"you\", when you are the one being done to."
+            },
+            {
+              "kind": "speech",
+              "text": "Said dikh, with the soft ich-sound of ich, mich and nicht."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich sehe dich. — \"I see you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Ich höre dich. — \"I hear you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is mich's partner exactly: ich becomes mich, du becomes dich. One vowel apart, one job apart, and the pattern is visible without being taught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English once had this whole row and let it collapse. Thou was the doer, thee was both the done-to and the to-whom, thine the possessive. German kept four distinct shapes where English kept three and then lost all of them:"
+            },
+            {
+              "kind": "speech",
+              "text": "du, dich, dir, dein."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one begins with the d that was English th, so the row is predictable from a rule you have had since the second chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich sehe dich.\" and \"Ich höre dich.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich sehe dich.\" and \"Ich höre dich.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich verstehe dich.\" and \"Ich frage dich.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich verstehe dich.\" and \"Ich frage dich.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"Ich sehe dich\", \"Du siehst mich\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"Ich sehe dich\", \"Du siehst mich\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole du row — \"du, dich, dir, dein\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole *du* row — \"du, dich, dir, dein\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Ich sehe dich. Du siehst mich.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the four shapes of du. (Du, dich, dir, dein.) Which one is the done-to? (Dich.) Say \"I hear you.\" (Ich höre dich.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C37-ihn",
+      "sequence": 1370,
+      "title": "ihn — \"him,\" on the row that always moves",
+      "headword": "ihn",
+      "romanization": "ihn",
+      "gloss": "him — the pronoun that moves on the same row as den, einen, keinen and meinen",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5bcdb3fe991af65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One row of German keeps changing shape and the other two do not. Say der becomes den, ein becomes einen, kein becomes keinen, mein becomes meinen. The pronoun does it too."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ihn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ihn — \"him\", and also \"it\" when the it is a der-word."
+            },
+            {
+              "kind": "speech",
+              "text": "Said een: the h is silent and stretches the vowel, as in ihr and Ihnen."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich sehe ihn. — \"I see him.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Der Hund? Ich sehe ihn. — \"The dog? I see it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That second sentence is the one an English speaker forgets. A German der-word is ihn, whatever it is made of, because German picks the pronoun by the article and not by whether the thing is alive."
+            },
+            {
+              "kind": "speech",
+              "text": "Sie and es do not move at all — the die row and the das row stand still here exactly as their articles do."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English him looks like a translation of ihn and is not the same form. Him was originally the to-whom shape, and it swallowed the done-to shape hine somewhere in the Middle Ages. German never let that merger happen, which is why it still has ihn for the done-to and ihm for the to-whom."
+            },
+            {
+              "kind": "speech",
+              "text": "So the two languages did not lose the same thing. English lost the distinction; German lost nothing and merely stopped being able to explain it briefly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich sehe ihn.\" and \"Ich höre ihn.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich sehe ihn.\" and \"Ich höre ihn.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the thing, not the person — \"Der Hund? Ich sehe ihn.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the thing, not the person — \"Der Hund? Ich sehe ihn.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Der Kaffee? Ich trinke ihn.\" and \"Der Wein? Ich sehe ihn.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Der Kaffee? Ich trinke ihn.\" and \"Der Wein? Ich sehe ihn.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the row that does not move — \"Die Katze? Ich sehe sie.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the row that does not move — \"Die Katze? Ich sehe sie.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three done-to pronouns so far — \"mich, dich, ihn\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three done-to pronouns so far — \"mich, dich, ihn\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Ich sehe ihn. Ich sehe sie.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which pronoun replaces a der-word being done to? (Ihn — alive or not.) Which two do not change at all? (Sie and es.) What was English him originally? (The to-whom form, which swallowed the done-to one.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C37-uns",
+      "sequence": 1380,
+      "title": "uns — \"us,\" and the one place German is simpler",
+      "headword": "uns",
+      "romanization": "uns",
+      "gloss": "us — the same word as English us, doing both German jobs at once, which is the one place German is simpler",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffc2f068635b97c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich has three shapes — ich, mich, mir. Say them, then take the plural, which has two."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: uns",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "uns — \"us\", and also \"to us\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Er sieht uns. — \"He sees us.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Er gibt uns Kaffee. — \"He gives us coffee.\""
+            },
+            {
+              "kind": "speech",
+              "text": "One word, both jobs. Where ich needed mich and mir, wir needs only uns, and the language stops distinguishing exactly where it had been insisting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "uns and English us are the same word, worn to the same length in both languages. English us also does both jobs — he sees us, he gives us coffee — so this is one row where the two languages agree completely and nothing has to be learned twice."
+            },
+            {
+              "kind": "speech",
+              "text": "It is worth noticing why the agreement happened. German kept its distinctions in the singular, where the words are short and said constantly; it let them go in the plural, where they are longer and rarer. English did the same thing to thou and thee four centuries later, only more thoroughly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Er sieht uns.\" and \"Er hört uns.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Er sieht uns.\" and \"Er hört uns.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both jobs at once — \"Er sieht uns\" and \"Er gibt uns Kaffee\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both jobs at once — \"Er sieht uns\" and \"Er gibt uns Kaffee\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four done-to pronouns — \"mich, dich, ihn, uns\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four done-to pronouns — \"mich, dich, ihn, uns\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Verstehst du uns?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Verstehst du uns?\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Er sieht uns. Er gibt uns Kaffee.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many shapes does wir have? (One — uns, for both jobs.) How many does ich have? (Three — ich, mich, mir.) Say \"he sees us.\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C37-euch",
+      "sequence": 1390,
+      "title": "euch — \"you all,\" and the word English promoted",
+      "headword": "euch",
+      "romanization": "euch",
+      "gloss": "you all, as the ones it happens to — and the word English quietly promoted to be its only \"you\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f2bbb0d67ce920d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ihr is you all. It needs a done-to shape, and the shape it has is the most quietly famous word in this chapter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: euch",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "euch — \"you all\", when you are the ones being done to. It also covers to you all, exactly as uns covers both jobs."
+            },
+            {
+              "kind": "speech",
+              "text": "Said oykh: the eu is the oy of English boy, and the ch is the soft one."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich sehe euch. — \"I see you all.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English had this word. Old English ēow was the done-to shape of ġē (\"ye\"), and ēow is exactly what German's euch is."
+            },
+            {
+              "kind": "speech",
+              "text": "Then English did something strange. It let ēow — the object form — take over the subject job as well, so ye died out and you became the only word left for the second person, singular or plural, doer or done-to. Modern English addresses everybody with what was once a plural object pronoun."
+            },
+            {
+              "kind": "speech",
+              "text": "German still has the whole set standing: du, dich, dir for one person, ihr, euch for several, Sie, Ihnen for a stranger. English boiled all of that down to you, and y'all is the attempt to build the plural back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich sehe euch.\" and \"Ich höre euch.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich sehe euch.\" and \"Ich höre euch.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the five done-to pronouns — \"mich, dich, ihn, uns, euch\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the five done-to pronouns — \"mich, dich, ihn, uns, euch\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three ways to address people — \"dich, euch, Ihnen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three ways to address people — \"dich, euch, Ihnen\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English word all of them collapsed into — you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English word all of them collapsed into — *you*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"mich, dich, ihn, uns, euch.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the done-to shape of ihr? (Euch.) Which English word is it? (You — by way of Old English ēow.) Which English word did ēow push out? (Ye.) Say all five done-to pronouns you now own."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C37-sich",
+      "sequence": 1400,
+      "title": "sich — the verb bent back on itself",
+      "headword": "sich",
+      "romanization": "sich",
+      "gloss": "himself, herself, itself, themselves — one German word where English needs four, and the pronoun that bends a verb back onto its own subject",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5cbbd944702d0be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have said freut mich since the second chapter without asking what the mich is doing there. This lesson answers it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: when the doer and the done-to are the same",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "When the person doing something is also the person it happens to, German puts the done-to pronoun in anyway."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich wasche mich. — \"I wash.\" Literally I wash me."
+            },
+            {
+              "kind": "speech",
+              "text": "English drops the pronoun in most of these — I wash, I shave, I dress — and German never does. Every done-to pronoun you own is already the right one: mich, dich, uns, euch. Nothing new is needed for four of the six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: sich",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sich — the one shape German uses for himself, herself, itself, themselves and formal yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "Said zikh, with a z at the front and the soft ich-sound at the back."
+            },
+            {
+              "kind": "speech",
+              "text": "Er wäscht sich., Sie wäscht sich., Sie waschen sich."
+            },
+            {
+              "kind": "speech",
+              "text": "Where English needs four different words with -self welded on, German needs one, and it never changes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sich is Latin sē and French se, all descended from Proto-Indo-European swe-, \"one's own\". English lost the pronoun and kept the root inside words built on it: self, suicide, and — by a long road — sibling, a person of one's own kin."
+            },
+            {
+              "kind": "speech",
+              "text": "Which finally explains freut mich: freuen is one of these verbs, so es freut mich is \"it gladdens me\", and the greeting you have said a hundred times was a reflexive construction all along."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich wasche mich.\" and \"Er wäscht sich.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich wasche mich.\" and \"Er wäscht sich.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole set, four owned and one new — \"mich, dich, sich, uns, euch\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole set, four owned and one new — \"mich, dich, sich, uns, euch\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the greeting, taken apart — \"freut mich\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the greeting, taken apart — \"freut mich\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Sie freut sich.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Sie freut sich.\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Ich wasche mich. Er wäscht sich.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many English words does sich cover? (Four or more — himself, herself, itself, themselves.) Which four done-to pronouns did you already own for this job? (Mich, dich, uns, euch.) And what has freut mich been all along? (A reflexive — \"it gladdens me\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R37-mich-dich-sich",
+      "sequence": 1410,
+      "title": "mich, dich, sich — the chapter, run cold",
+      "headword": "mich · dich · ihn · uns · euch · sich",
+      "romanization": "mich · dich · ihn · uns · euch · sich",
+      "gloss": "the whole done-to row, and every verb in the book pointed at somebody",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7114a49e1ab4365",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the six done-to pronouns. Then name the two that did not have to be learned as new words, and say why."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: point every verb at somebody",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six verbs of address, six pronouns. Run the grid by ear, not by reading it."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich sehe dich. Ich sehe ihn. Ich sehe euch.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich sehe dich. Ich sehe ihn. Ich sehe euch.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich höre dich. Er hört uns. Wir hören euch.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich höre dich. Er hört uns. Wir hören euch.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich verstehe dich.\" and \"Verstehst du mich?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich verstehe dich.\" and \"Verstehst du mich?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich frage dich.\" and \"Ich helfe dir.\" — one takes the done-to shape, one takes the to-whom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich frage dich.\" and \"Ich helfe dir.\" — one takes the done-to shape, one takes the to-whom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two verbs of the page — \"Ich lese es. Ich schreibe es.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two verbs of the page — \"Ich lese es. Ich schreibe es.\"]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — the row that moves",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six words now move together on one row. Say the article, then the whole family, then the pronoun that replaces it."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Hund becomes den Hund, einen Hund, keinen Hund, meinen Hund becomes ihn\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Hund → den Hund, einen Hund, keinen Hund, meinen Hund → ihn\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Kaffee becomes den Kaffee becomes ihn\"; \"der Tee becomes den Tee becomes ihn\"; \"der Wein becomes den Wein becomes ihn\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Kaffee → den Kaffee → ihn\"; \"der Tee → den Tee → ihn\"; \"der Wein → den Wein → ihn\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the people — \"den Bruder, den Vater, den Freund becomes ihn\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the people — \"den Bruder, den Vater, den Freund → ihn\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the body — \"den Arm, den Fuß, den Finger, den Kopf, den Mund becomes ihn\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the body — \"den Arm, den Fuß, den Finger, den Kopf, den Mund → ihn\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two rows that stand still — \"die Katze becomes sie\", \"die Milch becomes sie\", \"das Brot becomes es\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two rows that stand still — \"die Katze → sie\", \"die Milch → sie\", \"das Brot → es\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: bent back",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ich wasche mich. Du wäschst dich. Er wäscht sich.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ich wasche mich. Du wäschst dich. Er wäscht sich.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Wir waschen uns. Ihr wascht euch.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Wir waschen uns. Ihr wascht euch.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the greeting that turns out to be one of these — \"Freut mich.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the greeting that turns out to be one of these — \"Freut mich.\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which pronoun replaces a der-word being done to? (Ihn.) Which two pronouns never change shape? (Sie and es.) How many English words does sich cover? (Four or more.) And which English pronoun is euch? (You — the object form that took the whole job.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

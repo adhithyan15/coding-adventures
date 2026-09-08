@@ -1,0 +1,17 @@
+{
+  "id": "GE-PATH-A1-NEGATION",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "lessons": [
+    "GE-C32-kein",
+    "GE-C32-keine",
+    "GE-C32-keinen",
+    "GE-C32-kein-oder-nicht",
+    "GE-C32-nicht-stellung",
+    "GE-R32-nichts-davon"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-A1-NEGATION"
+  ],
+  "after": []
+}

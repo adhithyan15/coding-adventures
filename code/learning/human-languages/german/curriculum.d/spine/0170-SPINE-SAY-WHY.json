@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "CONNECTIVE-BECAUSE"
+  "segments": [
+    "GE-PATH-A1-VERBINDUNGEN"
   ],
+  "omits": [],
   "relocates": {}
 }
