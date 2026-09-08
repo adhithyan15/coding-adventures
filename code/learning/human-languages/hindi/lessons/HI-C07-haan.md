@@ -76,4 +76,5 @@ warms up a plain yes into a courteous one.
 
 [PAUSE 3s] How do you say yes in Hindi? (**hāṃ**, हाँ.) What does the
 **chandrabindu** ँ do to the vowel? (**Nasalises** it — sends it through the
-nose.) How do you make *hāṃ* polite? (Add **जी** — *jī hāṃ*.) Next: **नहीं**, no.
+nose.) How do you make *hāṃ* polite? (Add **जी** — *jī hāṃ*.) Next: **नहीं**
+(*nahīṃ*), no.
