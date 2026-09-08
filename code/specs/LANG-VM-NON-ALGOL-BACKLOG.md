@@ -1516,3 +1516,11 @@ exercising comparisons, loop state and rounding. Probe real Erlang before any
 coverage promotion. Preserve hard errors and exact stdout. Commit a separate
 contract before backend changes if a defect appears. Larger strings and host
 input remain behind this bounded proof; retain VM-060b and VM-013 separately.
+
+### VM-040 COBOL comparison literal contract
+
+The IF probe rejects Int(3) in cmp_gt. Extend the existing checked Var/Int
+arithmetic operand conversion to the six comparison operations. Keep all
+operand ordering, 0/1 result conventions and unsupported-kind errors. Verify
+literal/literal and both mixed forms for less, equal and greater inputs across
+all six comparisons, then rerun the four COBOL cases before promotion.
