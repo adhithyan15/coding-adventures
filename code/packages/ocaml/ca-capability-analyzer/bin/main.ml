@@ -1,5 +1,7 @@
 open Coding_adventures_capability_analyzer
 
+let exit_with_code ~code = Stdlib.exit code
+
 let () =
   let dir = ref "." and verbose = ref false in
   let options =
@@ -18,7 +20,4 @@ let () =
     run ~dir:!dir ~verbose:!verbose ~stdout:(output_string stdout)
       ~stderr:(output_string stderr)
   in
-  (* [exit] cannot return to Bisect's post-expression probe. Keep the real
-     command path measured and exclude only that structurally unreachable
-     probe. *)
-  (exit exit_code [@coverage off])
+  exit_with_code ~code:exit_code
