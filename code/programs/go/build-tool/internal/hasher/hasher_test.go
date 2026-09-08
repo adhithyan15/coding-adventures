@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"sort"
 	"strings"
@@ -20,9 +21,12 @@ import (
 type sourceCollectionFixture struct {
 	Input struct {
 		Options struct {
-			Mode         string   `json:"mode"`
-			DeclaredSrcs []string `json:"declared_srcs"`
-			Candidates   []struct {
+			Language       string   `json:"language"`
+			PackageRoot    string   `json:"package_root"`
+			Mode           string   `json:"mode"`
+			RegistrySHA256 string   `json:"registry_sha256"`
+			DeclaredSrcs   []string `json:"declared_srcs"`
+			Candidates     []struct {
 				Path       string `json:"path"`
 				Kind       string `json:"kind"`
 				ContentHex string `json:"content_hex"`
@@ -79,7 +83,10 @@ func readJSONFixture[T any](t *testing.T, name string) T {
 
 func materializeSourceFixture(t *testing.T, fixture sourceCollectionFixture) string {
 	t.Helper()
-	root := t.TempDir()
+	root := filepath.Join(t.TempDir(), filepath.FromSlash(fixture.Input.Options.PackageRoot))
+	if err := os.MkdirAll(root, 0o755); err != nil {
+		t.Fatal(err)
+	}
 	linkTargets := map[string]string{}
 	for _, candidate := range fixture.Input.Options.Candidates {
 		if candidate.Kind == "symlink" || candidate.Kind == "reparse_point" {
@@ -408,14 +415,19 @@ func TestNeutralSourceCollectionFixtures(t *testing.T) {
 	for _, name := range []string{
 		"source-collection-extension.json",
 		"source-collection-declared.json",
+		"source-collection-registry-roles.json",
+		"source-collection-engram-wasm-exact-inputs.json",
 	} {
 		t.Run(name, func(t *testing.T) {
 			fixture := readJSONFixture[sourceCollectionFixture](t, name)
+			if fixture.Input.Options.RegistrySHA256 != languageSourceInputRegistryDigest {
+				t.Fatalf("fixture registry digest %q does not match production %q", fixture.Input.Options.RegistrySHA256, languageSourceInputRegistryDigest)
+			}
 			root := materializeSourceFixture(t, fixture)
 			pkg := discovery.Package{
-				Name:         "ocaml/demo",
+				Name:         fixture.Input.Options.Language + "/demo",
 				Path:         root,
-				Language:     "ocaml",
+				Language:     fixture.Input.Options.Language,
 				DeclaredSrcs: fixture.Input.Options.DeclaredSrcs,
 			}
 
@@ -522,33 +534,80 @@ func TestCollectorsRejectPackageRootLink(t *testing.T) {
 }
 
 func TestCollectSourceFilesEmpty(t *testing.T) {
-	root := t.TempDir()
-	pkg := discovery.Package{
-		Name:     "unknown/empty",
-		Path:     root,
-		Language: "unknown",
-	}
-
-	files := collectSourceFiles(pkg)
-	if len(files) != 0 {
-		t.Fatalf("expected 0 files, got %d", len(files))
+	for _, root := range []string{t.TempDir(), filepath.Join(t.TempDir(), "missing")} {
+		pkg := discovery.Package{Name: "unknown/empty", Path: root, Language: "unknown"}
+		if _, err := collectSourceFilesChecked(pkg); err == nil || err.Error() != "unsupported source language" {
+			t.Fatalf("unknown language must fail before walking %q: %v", root, err)
+		}
 	}
 }
 
 func TestGeneratedDirectoryRegistryIsExactAndComplete(t *testing.T) {
-	want := []string{
-		".build", ".cargo", ".claude", ".dart_tool", ".git", ".gradle", ".hg",
-		".mypy_cache", ".pytest_cache", ".ruff_cache", ".stack-work", ".svn", ".tox",
-		".venv", "Pods", "__pycache__", "_build", "build", "cover", "deps", "dist",
-		"dist-newstyle", "gradle-build", "node_modules", "target", "vendor",
-	}
-	got := make([]string, 0, len(generatedDirectoryComponents))
-	for component := range generatedDirectoryComponents {
-		got = append(got, component)
-	}
+	want := append([]string(nil), languageSourceInputRegistry.UniversalInputs.GeneratedDirectoryComponents...)
+	got := append([]string(nil), generatedDirectoryComponents()...)
+	sort.Strings(want)
 	sort.Strings(got)
 	if strings.Join(got, "\n") != strings.Join(want, "\n") {
 		t.Fatalf("generated-directory registry mismatch: got %v, want %v", got, want)
+	}
+}
+
+func TestProductionLanguageSourceInputRegistryExactlyMatchesNeutralRegistry(t *testing.T) {
+	contents, err := os.ReadFile(filepath.Clean(filepath.Join(fixturePath(t, "unused"), "..", "..", "language-source-input-registry.json")))
+	if err != nil {
+		t.Fatal(err)
+	}
+	checked, err := decodeLanguageSourceInputRegistry(contents)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(checked, languageSourceInputRegistry) {
+		t.Fatal("generated production registry differs from checked neutral registry")
+	}
+	if len(checked.Languages) != 23 {
+		t.Fatalf("expected 23 languages, got %d", len(checked.Languages))
+	}
+	seen := make(map[string]bool, len(checked.Languages))
+	for _, language := range checked.Languages {
+		if seen[language.Language] {
+			t.Fatalf("duplicate language %q", language.Language)
+		}
+		seen[language.Language] = true
+	}
+	missing := checked
+	missing.UniversalInputs.RootExactBasenames = nil
+	if reflect.DeepEqual(missing, languageSourceInputRegistry) {
+		t.Fatal("missing selector must not equal production")
+	}
+	extra := checked
+	extra.UniversalInputs.RootExactBasenames = append(append([]string(nil), checked.UniversalInputs.RootExactBasenames...), "undeclared.extra")
+	if reflect.DeepEqual(extra, languageSourceInputRegistry) {
+		t.Fatal("undeclared selector must not equal production")
+	}
+}
+
+func TestLanguageSourceInputRegistryGeneratorRoundTrip(t *testing.T) {
+	commandName := "pwsh"
+	if runtime.GOOS == "windows" {
+		if _, err := exec.LookPath(commandName); err != nil {
+			commandName = "powershell"
+		}
+	}
+	output := filepath.Join(t.TempDir(), "language_source_input_registry_generated.go")
+	command := exec.Command(commandName, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", filepath.Join("..", "..", "tools", "generate-language-source-input-registry.ps1"), "-OutputPath", output)
+	if combined, err := command.CombinedOutput(); err != nil {
+		t.Fatalf("registry generator failed: %v: %s", err, combined)
+	}
+	generated, err := os.ReadFile(output)
+	if err != nil {
+		t.Fatal(err)
+	}
+	checked, err := os.ReadFile("language_source_input_registry_generated.go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(generated) != string(checked) {
+		t.Fatal("generated registry source is stale")
 	}
 }
 
