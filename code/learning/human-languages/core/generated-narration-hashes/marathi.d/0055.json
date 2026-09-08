@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:3f5af0d5855d2e05",
+  "lessonIds": [
+    "MR-C55-saha",
+    "MR-C55-saat",
+    "MR-C55-aath",
+    "MR-C55-nau",
+    "MR-R55-six-to-nine"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch55.txt",
+  "json": "marathi/narration/ch55.json",
+  "textHash": "fnv1a64:6eb6a7ce1235d080",
+  "jsonHash": "fnv1a64:d02a0a1ea34ea61a",
+  "findings": []
+}

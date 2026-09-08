@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:141492a78657d17e",
+  "lessonIds": [
+    "MR-C58-satra",
+    "MR-C58-athra",
+    "MR-C58-vis",
+    "MR-C58-ekonis",
+    "MR-R58-seventeen-to-twenty"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch58.txt",
+  "json": "marathi/narration/ch58.json",
+  "textHash": "fnv1a64:3e9d6d53f604f770",
+  "jsonHash": "fnv1a64:e39ea35d16361c03",
+  "findings": []
+}

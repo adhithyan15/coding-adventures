@@ -1,0 +1,21 @@
+{
+  "chapter": 55,
+  "title": "Six, Seven, Eight, Nine",
+  "label": "ch:mr-six-to-nine",
+  "canDo": "I can count from six to nine, four numbers further than the book has taken me since chapter thirteen.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "MR-R55-six-to-nine",
+    "kind": "production",
+    "summary": "Complete MR-R55-six-to-nine and count from ek to nau without stopping -- four numbers more than chapter thirteen left you with.",
+    "assesses": [
+      "MR-LEX-SAHA",
+      "MR-LEX-SAAT",
+      "MR-LEX-AATH",
+      "MR-LEX-NAU"
+    ],
+    "note": "The count has stood at five since chapter 13; MR-A1-QU-02 names six-to-twenty as one point because Marathi's teens are irregular enough to be learned rather than derived."
+  }
+}

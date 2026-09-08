@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:2bef4d105a4d42b2",
+  "lessonIds": [
+    "MR-C54-thoda",
+    "MR-C54-puresa",
+    "MR-C54-barach",
+    "MR-C54-kiti-excl",
+    "MR-R54-how-much"
+  ],
+  "tex": "marathi/book/chapters/ch54-amounts.tex"
+}

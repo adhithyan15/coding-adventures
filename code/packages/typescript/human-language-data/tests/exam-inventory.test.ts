@@ -1068,6 +1068,24 @@ describe("the committed Marathi A1 inventory", () => {
     // stale note was corrected. Work therefore leaves the empty-category list
     // -- on a note fix, not on a lesson, which is worth saying plainly.
     //
+    // 157 -> 161: the numbers tranche (chapters 55-59). Nineteen items for
+    // four points is the WORST ratio in this file, and it was taken anyway,
+    // because MR-A1-QU-03 -- cardinals to a hundred -- is the most blocking
+    // single point left: age, value and price, personal data on a form and the
+    // interview's opening question all wait on a number above five, and none
+    // of them can move until the count does. Six to twenty is the half of it
+    // that fits in one tranche; the tens are the other half. Quantifiers 2/6
+    // to 4/6, Shopping and "Money and the economy" off the empty-category
+    // list, Devanagari letters and signs 15/24 to 17/24.
+    //
+    // 151 -> 157: the degree-and-amount tranche (chapters 53-54), which
+    // teaches no adjective at all and multiplies the eight the previous one
+    // taught. Seven items, six points, and the ratio is the point: khuup and
+    // jaraa alone close three (ADJ-06, AP-01, ADV-03), because every one of
+    // those points was blocked behind SPINE-DESCRIBE-QUALITIES rather than
+    // behind its own vocabulary. The adjective 5/7 to 6/7, "The adjective
+    // phrase" off the empty-category list at 1/1, Adverbs 6/8 to 7/8.
+    //
     // 142 -> 151, which is exactly half. The adjective tranche (chapters
     // 49-52) closes SPINE-DESCRIBE-QUALITIES, an A1 CORE node this track had
     // never realized: forty-eight chapters could name a house, put a room in
@@ -1097,19 +1115,19 @@ describe("the committed Marathi A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(151);
-    expect(coverage.unmapped).toBe(150);
+    expect(coverage.covered).toBe(161);
+    expect(coverage.unmapped).toBe(140);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
-    for (const empty of ["Demonstratives", "Temporal notions", "Shopping"]) {
+    for (const empty of ["Demonstratives", "Temporal notions", "Personal identity"]) {
       expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
     }
     expect(coverage.byCategory["Coordination"]!.covered).toBe(5);
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 151/301 points covered (50%)",
+      "marathi A1 (partial inventory): 161/301 points covered (53%)",
     );
   }, 60_000);
 });

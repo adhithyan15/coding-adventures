@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C53-jara",
+    "language": "marathi",
+    "chapter": 53,
+    "sequence": 2110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:053cd704978cb6a8"
+  },
+  "findings": []
+}

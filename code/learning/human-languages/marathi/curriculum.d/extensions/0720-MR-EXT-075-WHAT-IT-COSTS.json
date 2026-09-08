@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-075-WHAT-IT-COSTS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can write the ai vowel sign and ask and answer a price with any number to twenty.",
+  "prerequisites": [
+    "MR-EXT-074-SEVENTEEN-TO-TWENTY"
+  ],
+  "lessons": [
+    "MR-W59-ai-matra",
+    "MR-C59-paise",
+    "MR-C59-rupaya",
+    "MR-R59-what-it-costs"
+  ]
+}

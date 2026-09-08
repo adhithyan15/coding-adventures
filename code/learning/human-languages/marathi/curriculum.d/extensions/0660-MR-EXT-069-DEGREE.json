@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-069-DEGREE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can turn any adjective I own up or down with khuup and jaraa, and strengthen a word further by repeating it.",
+  "prerequisites": [
+    "MR-EXT-068-EASY-HARD-TALL"
+  ],
+  "lessons": [
+    "MR-C53-khuup",
+    "MR-C53-jara",
+    "MR-C53-reduplication",
+    "MR-R53-very"
+  ]
+}

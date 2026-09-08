@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C53-khuup",
+    "language": "marathi",
+    "chapter": 53,
+    "sequence": 2100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:821a782d4f89255c"
+  },
+  "findings": []
+}

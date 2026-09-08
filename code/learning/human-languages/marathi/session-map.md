@@ -484,11 +484,88 @@ not meet for another 180 lessons — and teaching **चांगला** turned 
 measurable forward reference. The table now runs on **माझा / माझी / माझं**,
 which the reader has owned since chapter 9.
 
+## Chapters 53–54 — degree and amount
+
+| Session | Lesson | Job |
+|---|---|---|
+| 290 | C53-khuup | **खूप** — every adjective gains a second strength |
+| 291 | C53-jara | **जरा** — the other direction, and a softened request |
+| 292 | C53-reduplication | say it twice: **खूप खूप धन्यवाद** |
+| 293 | R53-very | one adjective, three strengths |
+| 294 | C54-thoda | **थोडा** — an AMOUNT word, so it agrees |
+| 295 | C54-puresa | **पुरेसा** — and **पुरे!**, which stops the pouring |
+| 296 | C54-barach | **बराच** — **बरा** with the emphatic **-च** |
+| 297 | C54-kiti-excl | **किती** before an adjective stops asking |
+| 298 | R54-how-much | the amount scale, the degree scale, the exclamation |
+
+Neither chapter teaches an adjective. They multiply the nine the previous
+tranche taught, which is why they sit immediately after it: `MR-A1-ADJ-06`,
+`MR-A1-AP-01` and `MR-A1-ADV-03` were blocked behind
+`SPINE-DESCRIBE-QUALITIES` and not behind their own vocabulary, so **खूप** and
+**जरा** released three points between them.
+
+The contrast the tranche turns on is **degree** against **amount**. **जरा**
+modifies an adjective and never changes; **थोडा** measures a noun and agrees.
+English calls both *a little*, so chapter 54 names the difference on its first
+page rather than leaving a learner to find it.
+
+## Chapters 55–59 — the numbers, six to twenty
+
+| Session | Lesson | Job |
+|---|---|---|
+| 299 | C55-saha | **सहा** — the first number past five since chapter 13 |
+| 300 | C55-saat | **सात** — Sanskrit *sapta* with the p worn away |
+| 301 | C55-aath | **आठ** — where a Sanskrit cluster became one retroflex |
+| 302 | C55-nau | **नऊ** — the same word as *new*, then and now |
+| 303 | R55-six-to-nine | count to nine |
+| 304 | C56-daha | **दहा** — the ten every teen is built out of |
+| 305 | C56-akra | **अकरा** — *one-ten*, with both halves still audible |
+| 306 | C56-bara | **बारा** — the same construction, second time |
+| 307 | W56-au-matra | **ौ** — taught here because चौदा needs it next chapter |
+| 308 | R56-ten-to-twelve | the worn-down **दश** at the end of the teens |
+| 309 | C57-tera | **तेरा** — three-ten |
+| 310 | C57-chauda | **चौदा** — the word the **ौ** was for |
+| 311 | C57-pandhra | **पंधरा** — with **पाच** squeezed into its front |
+| 312 | C57-sola | **सोळा** — six-ten, on Marathi's own **ळ** |
+| 313 | R57-thirteen-to-sixteen | take each teen apart |
+| 314 | C58-satra | **सतरा** — seven-ten |
+| 315 | C58-athra | **अठरा** — eight-ten, the last of the **-रा** family |
+| 316 | C58-vis | **वीस** — the round number, taught before nineteen |
+| 317 | C58-ekonis | **एकोणीस** — **एक** + **ऊन** + **वीस**, counted backwards |
+| 318 | R58-seventeen-to-twenty | one to twenty, without stopping |
+| 319 | W59-ai-matra | **ै** — one lesson before the word that spends it |
+| 320 | C59-paise | **पैसे** — money, and plural only |
+| 321 | C59-rupaya | **रुपया** — Sanskrit *rūpya*, wrought silver |
+| 322 | R59-what-it-costs | ask a price and answer it |
+
+**One numeral per lesson** looks extravagant until you see why it is
+affordable. Marathi's numbers are the Sanskrit ones worn down, and every one
+still shows the wear: **अकरा** is *one-ten*, **पंधरा** has **पाच** inside it,
+**सोळा** has **सहा**. By the third teen the reader is learning one construction
+rather than fifteen words, which is why the etymology is load-bearing here and
+not decoration.
+
+**Twenty comes before nineteen.** **एकोणीस** counts DOWN from **वीस**, so the
+round number has to exist first. Teaching them in numerical order would also
+have put **वीस** in bold one lesson before it was taught — a forward reference
+the order change removes for free.
+
+**The two vowel signs are not taught together.** **ौ** sits in chapter 56
+because **चौदा** needs it in chapter 57; **ै** sits in chapter 59 one lesson
+before **पैसे**. Pairing them would have left one idle for fifteen lessons,
+which is exactly what the letter ledger's unspent-window check is for.
+
+**The retrieval bullets in a numeral lesson look unrelated to numbers, and
+that is the design.** Twenty-four added lessons opened 37 reinforcement windows
+that did not previously fit; each was assigned to the earliest lesson inside its
+own window, computed from the arithmetic rather than guessed. Total misses did
+not move: 342 before, 342 after.
+
 ## Next
 
-Degree and quantity — **खूप**, **जरा**, **थोडा**, **पुरेसा**, **बराच** — and the
-exclamative **किती!**. Six inventory points sit behind roughly six words, and
-they are worth taking now precisely because the adjectives they modify have just
-arrived: `MR-A1-AP-01` and `MR-A1-ADJ-06` were both blocked behind
-`SPINE-DESCRIBE-QUALITIES` and are not any more. After that, the **reph** and
-the **rakaar** (`MR-A1-OR-21`), which also unlock **पर्यंत** and `MR-A1-P-05`.
+**The tens.** *तीस, चाळीस, पन्नास, साठ, सत्तर, ऐंशी, नव्वद* and *शंभर*, plus the
+rule that a unit fuses onto the front of a ten, close `MR-A1-QU-03` and with it
+age, the interview's opening question and half of price. *ऐंशी* needs the
+INDEPENDENT **ऐ** of `MR-A1-OR-12`, so that script debt rides along with it.
+After that, the **Devanagari digits** (`MR-A1-OR-24`), which unlock the writing
+paper's practical form, and the ordinals.

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C57-tera",
+    "language": "marathi",
+    "chapter": 57,
+    "sequence": 2300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b44509e041c82660"
+  },
+  "findings": []
+}

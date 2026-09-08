@@ -1,0 +1,20 @@
+{
+  "chapter": 59,
+  "title": "What It Costs",
+  "label": "ch:mr-what-it-costs",
+  "canDo": "I can write the ai vowel sign, name money and the rupee, and ask and answer a price with any number up to twenty.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "MR-R59-what-it-costs",
+    "kind": "production",
+    "summary": "Complete MR-R59-what-it-costs and run a whole exchange",
+    "assesses": [
+      "MR-SCRIPT-AI-MATRA-01",
+      "MR-LEX-PAISE",
+      "MR-LEX-RUPAYA"
+    ],
+    "note": " ask kitii rupaye?, answer with a number to twenty, and say what money you have."
+  }
+}

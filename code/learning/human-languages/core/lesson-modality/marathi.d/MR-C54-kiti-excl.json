@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C54-kiti-excl",
+    "language": "marathi",
+    "chapter": 54,
+    "sequence": 2170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:819d714ab039928e"
+  },
+  "findings": []
+}

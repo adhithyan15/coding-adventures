@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C56-bara",
+    "language": "marathi",
+    "chapter": 56,
+    "sequence": 2270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a77d3cd7aeec1576"
+  },
+  "findings": []
+}

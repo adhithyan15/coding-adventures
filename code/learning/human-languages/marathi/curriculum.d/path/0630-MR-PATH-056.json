@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-056",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "MR-C53-khuup",
+    "MR-C53-jara",
+    "MR-C53-reduplication",
+    "MR-R53-very"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-069-DEGREE"
+  ],
+  "after": []
+}

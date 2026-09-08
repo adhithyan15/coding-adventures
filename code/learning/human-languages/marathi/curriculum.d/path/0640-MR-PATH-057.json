@@ -1,0 +1,16 @@
+{
+  "id": "MR-PATH-057",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "MR-C54-thoda",
+    "MR-C54-puresa",
+    "MR-C54-barach",
+    "MR-C54-kiti-excl",
+    "MR-R54-how-much"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-070-AMOUNTS"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C57-pandhra",
+    "language": "marathi",
+    "chapter": 57,
+    "sequence": 2320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49af6e3724e613cb"
+  },
+  "findings": []
+}

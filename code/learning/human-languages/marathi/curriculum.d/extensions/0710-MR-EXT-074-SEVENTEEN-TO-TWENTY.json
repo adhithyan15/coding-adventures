@@ -1,0 +1,17 @@
+{
+  "id": "MR-EXT-074-SEVENTEEN-TO-TWENTY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can count to twenty, and build nineteen as one less than twenty.",
+  "prerequisites": [
+    "MR-EXT-073-THIRTEEN-TO-SIXTEEN"
+  ],
+  "lessons": [
+    "MR-C58-satra",
+    "MR-C58-athra",
+    "MR-C58-vis",
+    "MR-C58-ekonis",
+    "MR-R58-seventeen-to-twenty"
+  ]
+}

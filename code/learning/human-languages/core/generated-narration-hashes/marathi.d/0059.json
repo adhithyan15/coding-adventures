@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:651df1e7b88151be",
+  "lessonIds": [
+    "MR-W59-ai-matra",
+    "MR-C59-paise",
+    "MR-C59-rupaya",
+    "MR-R59-what-it-costs"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch59.txt",
+  "json": "marathi/narration/ch59.json",
+  "textHash": "fnv1a64:90c93376c496378e",
+  "jsonHash": "fnv1a64:1fe785bada2d017f",
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W59-ai-matra",
+    "language": "marathi",
+    "chapter": 59,
+    "sequence": 2400,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:740be9936773a6a6",
+    "detachableSegments": [
+      "Script",
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
