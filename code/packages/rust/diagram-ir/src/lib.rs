@@ -595,6 +595,7 @@ pub enum ChartKind {
     Pie,
     Sankey,
     Quadrant,
+    Radar,
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]
