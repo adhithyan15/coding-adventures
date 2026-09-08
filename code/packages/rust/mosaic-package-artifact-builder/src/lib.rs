@@ -1439,6 +1439,10 @@ fn ignored_native_property(
     native_radio_groups: &HashSet<String>,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
+        (_, "font-size") if !matches!(backend, Backend::React | Backend::Electron) => Some((
+            "typography.font-size-binding-unimplemented",
+            "layout font-size bindings are currently implemented only by React/Electron; static mosstyle typography is unaffected",
+        )),
         ("HostTable", "focusable" | "a11y-label") if backend != Backend::React => Some((
             "accessibility.table-focus-unimplemented",
             "authored table focus and accessible naming are currently implemented only by React",
@@ -6502,6 +6506,23 @@ layout AccessibleText {
                 ],
                 "unexpected {backend:?} degradation inventory"
             );
+        }
+    }
+
+    #[test]
+    fn typography_bindings_are_explicitly_degraded_outside_react() {
+        let pkg = make_package("mosaic-pkg-scaled-text", &["ScaledText"]);
+        fs::write(pkg.path().join("src/ScaledText.mil"),
+            "component ScaledText { slot text-size : number ; }\n").unwrap();
+        fs::write(pkg.path().join("src/ScaledText.mll"),
+            "layout ScaledText { Column [ root ] { Text (content: \"Title\", font-size: slot: text-size) HostButton (label: \"Action\", font-size: slot: text-size) HostInput (font-size: slot: text-size) HostTable (font-size: slot: text-size) } }\n").unwrap();
+        for backend in [Backend::Compose, Backend::Flutter, Backend::Qt, Backend::SwiftUI, Backend::Xaml, Backend::Html, Backend::WebComponent, Backend::React, Backend::Electron] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(&BuildOptions {
+                package_root: pkg.path().to_path_buf(), output_root: out.path().to_path_buf(),
+                backend, emit_project: false, theme: None,
+            }, BuildProfile::NativeComplete).unwrap();
+            assert_eq!(report.degradations.iter().filter(|entry| entry.code == "typography.font-size-binding-unimplemented").count(), if matches!(backend, Backend::React | Backend::Electron) { 0 } else { 4 }, "{backend:?}");
         }
     }
 
