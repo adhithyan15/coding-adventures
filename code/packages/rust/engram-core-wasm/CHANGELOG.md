@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+### Fixed -- three ways a collection could name something it does not contain
+
+Each of these is a place where an id was used verbatim where the sibling code
+path checked it, so a collection or draft naming something absent wrote to a
+phantom target rather than being refused.
+
+**A note could be saved into a deck that does not exist.**
+`note_from_editor_selection` validated the note type and not the deck, though
+both come from the same editor draft. The editor path upheld it on its own --
+`NoteEditorSelectDeck` resolves an *index* into `state.decks` -- so nothing
+reached it today, but the note *and its generated cards* would have landed in a
+deck no deck list can reach, with the editor rendering a selected-deck index of
+-1 so the UI could not say where they went. An empty id still means "inherit the
+existing note's deck" and is left alone.
+
+**A phantom `active_session.deck_id` resolved to itself.**
+`selected_deck_id_with_override` filtered its override argument against
+`state.decks` but returned `active_session.deck_id` unchecked, and
+`active_session` is part of `AppState` -- so a collection naming a deleted deck
+resolved to that phantom, which then became the target of writes such as
+`rebuild_filtered_deck`. In-app this is a no-op, since `DeleteDeck` clears
+`active_session` when it targets the deleted deck; it matters for a collection
+that arrives from outside. It now falls through to the first real deck, which is
+what already happens when there is no active session.
+
+**A "new" draft could adopt an existing id and overwrite it.** `draft_is_new`
+and the draft's id are set together by `start_new`, which mints a fresh id, so
+they cannot disagree by any route through the event surface. Set independently,
+`draftIsNew` beside an id something already holds turned "create" into
+"overwrite": for a note, replacing its fields and deck; for a note type, saving
+the blank two-field `default_note_type_model` over a real one, discarding its
+fields and templates and breaking every note built on it. A new draft now keeps
+its freshly minted id when the supplied one is taken. An id nothing holds is
+still honoured, so a caller can still choose its own.
+
 ### Fixed — deleting a note or note type was a silent no-op (#13933)
 
 The user clicked delete and nothing happened: no deletion, no error, no

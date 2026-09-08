@@ -467,9 +467,7 @@ mod media_data {
         serializer.serialize_str(&encode(data, &STANDARD))
     }
 
-    pub fn deserialize<'de, D: Deserializer<'de>>(
-        deserializer: D,
-    ) -> Result<Vec<u8>, D::Error> {
+    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Vec<u8>, D::Error> {
         deserializer.deserialize_any(MediaDataVisitor)
     }
 
@@ -595,7 +593,6 @@ pub struct DeckStats {
     pub buried_count: usize,
     pub average_ease_factor: f64,
 }
-
 
 #[cfg(all(test, feature = "serde"))]
 mod media_data_tests {
