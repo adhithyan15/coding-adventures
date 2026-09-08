@@ -77,7 +77,9 @@ instructions overwrite PC with a computed target address.
 ### Memory
 
 64 KiB of byte-addressed big-endian memory (indices 0x0000–0xFFFF).
-All multi-byte accesses are big-endian.  Addresses wrap modulo MEM\_SIZE.
+All multi-byte accesses are big-endian. The checked Rust implementation
+requires natural alignment and rejects accesses whose complete range is not
+inside memory. It never wraps an instruction or data access.
 
 HALT is the 32-bit word 0x00000000 (UDF #0 — permanently undefined in AArch64;
 used here as a sentinel that stops simulation).
@@ -320,7 +322,8 @@ MUL is MADD Ra=XZR.
 | STRB Wt, [Xn, #imm]  | 8     | N/A      | Xn + imm                 |
 | STRH Wt, [Xn, #imm]  | 16    | N/A      | Xn + imm                 |
 
-Pre/post-indexed and register-offset forms are also supported.
+Only the unsigned-offset forms in the table are part of this functional cell.
+Pre/post-indexed and register-offset forms remain outside its decode boundary.
 
 ### Branch
 
@@ -421,7 +424,7 @@ algorithm produces a 64-bit repeating bitmask:
 def decode_bitmask(N: int, immr: int, imms: int, sf: int) -> int:
     """
     Decode the logical immediate encoding into a 64-bit integer.
-    N=1 forces 64-bit element width even on W-register instructions.
+    N=1 forces 64-bit element width and is invalid for W-register instructions.
     """
     if N == 1:
         len_ = 6  # element length in bits: 2^len_
@@ -446,9 +449,9 @@ def decode_bitmask(N: int, immr: int, imms: int, sf: int) -> int:
 
 ---
 
-## SIM00 Compliance
+## Python SIM00 Oracle
 
-The simulator implements `Simulator[AArch64State]`:
+The legacy Python oracle implements `Simulator[AArch64State]`:
 
 | Method            | Behaviour                                         |
 |-------------------|---------------------------------------------------|
@@ -479,6 +482,41 @@ class AArch64State:
     @property def v(self)  -> bool  # oVerflow flag
 ```
 
+Its permissive wrapping/error-string lifecycle is retained only as the
+common-decode differential oracle. It is not the normative checked Rust
+lifecycle.
+
+## Normative Rust Completion Boundary
+
+`aarch64-simulator` owns exactly 65,536 memory bytes, 32 64-bit GPR slots,
+separate 64-bit SP and PC values, four NZCV bits, halt state, and installed
+origin/length metadata. XZR is zero on reset, restore, reads, writes, and every
+instruction commit. Program origins and PCs are four-byte aligned; multi-byte
+data accesses are naturally aligned; fetch and data ranges never wrap.
+
+The public boundary provides deterministic reset, validated complete restore,
+checked origin-aware load, checked register/SP/NZCV/byte access, atomic
+single-step, transactional bounded execution, and immutable complete state.
+Successful traces contain the raw word and complete before/after states.
+Fetch, data, range, alignment, post-halt, malformed/reserved-decode, and
+step-limit failures are typed and preserve the required pre-operation state.
+
+The supported instruction surface is exactly the integer families enumerated
+above: immediate/shifted arithmetic and logical operations, move-wide,
+unsigned-offset integer loads/stores, immediate/test/register branches,
+one-/two-/three-source integer operations, conditional select, NOP, SVC as a
+no-op, and the all-zero halt sentinel. Other instruction classes fail closed.
+Condition 15 in `B.cond`, invalid logical-immediate masks, invalid 32-bit shift
+or move-wide forms, and noncanonical fixed/reserved fields are not aliases.
+
+Conformance consists of fourteen Rust lifecycle/decode/fault tests, a
+reproducible 836-vector Python full-state differential over every common valid
+decode family, the Python oracle's 151-test suite, strict Rustfmt/Clippy/
+rustdoc, the existing Rust encoder/backend consumers, and 97.20% package line
+coverage (938/965). Structured encoders emit the spec's big-endian teaching
+transport; the existing production `aarch64-encoder` remains native
+little-endian and is intentionally separate.
+
 ---
 
 ## Simplifications
@@ -486,10 +524,10 @@ class AArch64State:
 1. **Integer only**: FPR/SIMD registers (V0–V31) and floating-point
    instructions are not simulated.
 2. **No EL switching**: Exception levels (EL0–EL3) are not modelled.
-3. **No MMU**: All addresses are physical; wraps modulo MEM\_SIZE.
+3. **No MMU**: All addresses are physical and checked against the 64 KiB range.
 4. **OE/flags**: Only S-suffix and compare instructions set NZCV.
 5. **UDIV/SDIV by zero** returns 0 (UNDEFINED in the spec; our choice).
 6. **No delay slots**: AArch64 has none — branches take effect immediately.
-7. **SVC/HVC/SMC**: Treated as NOP.
-8. **No barriers**: DMB/DSB/ISB treated as NOP.
+7. **SVC**: Treated as NOP. HVC and SMC are unsupported typed decode faults.
+8. **No barriers**: DMB/DSB/ISB are unsupported typed decode faults.
 9. **PSTATE fields**: only NZCV are tracked; DAIF, SPSel, etc. are ignored.
