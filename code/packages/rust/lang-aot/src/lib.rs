@@ -854,7 +854,7 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
     // `Int`, but `lstore` would tag it as `Long` in the verifier's type state →
     // `VerifyError: type mismatch` when the subsequent `iload` reads an `Int`
     // slot that the verifier sees as `Long`. (BA-JVM-INPUT)
-    const WIDE_I64_BUILTINS: &[&str] = &["print_i64", "input_i64"];
+    const WIDE_I64_BUILTINS: &[&str] = &["print_i64", "input_i64", "input_more"];
     let module_prints = module.functions.iter().any(|f| {
         f.instructions.iter().any(|i| {
             i.op == "call_builtin"

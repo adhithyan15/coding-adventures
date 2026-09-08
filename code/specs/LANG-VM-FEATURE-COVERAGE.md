@@ -27,7 +27,7 @@ refusal also does not imply the complete driver refuses that feature.
 | Dartmouth BASIC | 51 | 357 | Random differential suite and frontend JIT tests |
 | Oct | 12 | 84 | Frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025 |
-| FLOW-MATIC | 8 | 40 | Four output rows on seven columns; four input/EOF rows on native/LLVM/WASM; frontend JIT stream tests |
+| FLOW-MATIC | 8 | 44 | Four output rows on seven columns; four input/EOF rows on native/LLVM/WASM/JVM; frontend JIT stream tests |
 | COBOL-60 | 58 | 406 | Much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
@@ -208,3 +208,8 @@ VM-039b: the same four FLOW-MATIC input programs now pass on WASM. Current
 main has one additional ALGOL row, so their current indices are 439–442 and
 the complete corpus contains 443 programs. This adds four declared cells and
 no programs. JVM/CLR and VM/JIT matrix adapters remain subsequent slices.
+
+VM-039c JVM: all four input/EOF rows and five BASIC input regressions passed
+on a real JVM with positive execution sentinels and zero skips. The shared
+Java host regression also checks repeated peeks, mixed numeric/string reads
+and I/O failure propagation. CLR and VM/JIT EOF matrix coverage remain pending.
