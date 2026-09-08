@@ -7,6 +7,7 @@ import {
   tf,
   transientAdaptive,
 } from "@coding-adventures/spice-engine";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   NetlistParseError,
@@ -84,6 +85,38 @@ C1 out 0 1u IC=0
     expect(transientPoints[0].voltage("out")).toBeGreaterThan(0.0);
 
     expect(runNetlist(deck)).toHaveLength(4);
+  });
+
+  it("runs the shared Berkeley v1 operating-point corpus", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/berkeley-v1-op-corpus.json", import.meta.url),
+      "utf8",
+    )) as {
+      schemaVersion: number;
+      suite: string;
+      cases: readonly {
+        id: string;
+        kind: string;
+        deck: string;
+        probe: string;
+        expected: { min: number; max: number };
+      }[];
+    };
+
+    expect(corpus.schemaVersion).toBe(1);
+    expect(corpus.suite).toBe("berkeley-v1-op");
+    expect(corpus.cases.map((testCase) => testCase.kind)).toEqual([
+      "D", "NPN", "NJF", "NMOS",
+    ]);
+
+    for (const testCase of corpus.cases) {
+      const results = parseNetlist(testCase.deck).runAnalysisPlan();
+      expect(results.map((result) => result.kind), testCase.id).toEqual(["op"]);
+      const op = results[0].result as { voltage(node: string): number | undefined };
+      const value = op.voltage(testCase.probe);
+      expect(value, testCase.id).toBeGreaterThanOrEqual(testCase.expected.min);
+      expect(value, testCase.id).toBeLessThanOrEqual(testCase.expected.max);
+    }
   });
 
   it("parses reactive elements, VCCS, source waveforms, and analysis cards", () => {

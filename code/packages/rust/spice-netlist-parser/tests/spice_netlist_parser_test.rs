@@ -189,6 +189,49 @@ C1 out 0 1u IC=0
 }
 
 #[test]
+fn runs_shared_berkeley_v1_operating_point_corpus() {
+    let corpus: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../grammars/spice/berkeley-v1-op-corpus.json"
+    ))
+    .expect("shared Berkeley v1 corpus should be valid JSON");
+
+    assert_eq!(corpus["schemaVersion"], 1);
+    assert_eq!(corpus["suite"], "berkeley-v1-op");
+    let cases = corpus["cases"]
+        .as_array()
+        .expect("shared Berkeley v1 corpus should contain cases");
+    assert_eq!(
+        cases
+            .iter()
+            .map(|case| case["kind"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        vec!["D", "NPN", "NJF", "NMOS"]
+    );
+
+    for case in cases {
+        let case_id = case["id"].as_str().unwrap();
+        let parsed = parse_netlist(case["deck"].as_str().unwrap())
+            .unwrap_or_else(|error| panic!("{case_id}: {error}"));
+        let results = parsed
+            .run_analysis_plan()
+            .unwrap_or_else(|error| panic!("{case_id}: {error}"));
+        assert_eq!(results.len(), 1, "{case_id}");
+        let AnalysisResult::Op(op) = &results[0].result else {
+            panic!("{case_id}: expected .op result");
+        };
+        let value = op
+            .voltage(case["probe"].as_str().unwrap())
+            .unwrap_or_else(|| panic!("{case_id}: missing probe"));
+        let expected = &case["expected"];
+        assert!(
+            value >= expected["min"].as_f64().unwrap()
+                && value <= expected["max"].as_f64().unwrap(),
+            "{case_id}: {value} outside expected window"
+        );
+    }
+}
+
+#[test]
 fn parses_reactive_elements_vccs_source_waveforms_and_analysis_cards() {
     let parsed = parse_netlist(
         r#"

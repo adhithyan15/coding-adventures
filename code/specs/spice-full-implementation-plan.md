@@ -31,13 +31,56 @@ current parser surface conflicts with Berkeley SPICE correctness, shared grammar
 contracts, source-span diagnostics, or cross-language parity, break it and fix
 the Rust, Python, and TypeScript surfaces together.
 
-## Current PR Slice
+## Berkeley SPICE v1 Completion Program
 
-1. Python and TypeScript Berkeley SPICE MOS nominal-temperature validation parity.
-   - Status: current PR completion candidate.
-   - Reject zero, negative, and non-finite `TNOM` / `T_NOM` values with the
-     shared diagnostic.
-   - Preserve positive Kelvin values through canonical Level-1 lowering.
+The first product cut is a command-line and API-capable Berkeley SPICE /
+SPICE2-SPICE3 core. It is complete only when a frozen executable corpus has
+the same accepted/rejected deck behavior and numerical oracle results in
+Python, Rust, and TypeScript.  A structural fixture inventory, a single
+model-card parameter, or a UI artifact is not a completion signal.
+
+### Prioritized backlog
+
+1. **Executable Berkeley v1 corpus gate** (current).
+   - Promote the existing diode, BJT, JFET, and Level-1 MOS reference-deck
+     matrix from descriptive coverage rows to runnable cross-language cases
+     with numerical oracles and tolerances.
+   - Foundation: the four-device `.op` corpus in
+     `code/grammars/spice/berkeley-v1-op-corpus.json` is the first shared,
+     parser-executed gate. Its numerical windows are intentionally broad enough
+     to preserve cross-language solver parity while catching model or lowering
+     regressions.
+   - Next: extend that same corpus and runner pattern to the currently
+     supported `.dc`, `.ac`, `.tran`, and `.tf` surfaces, then add accepted and
+     deliberately rejected Berkeley syntax cases. Classify every case as
+     passing, a proven implementation gap, or deliberate exclusion; no silent
+     skips.
+
+2. **Corpus-blocking Berkeley core closure**.
+   - Fix the grouped failures found by the executable gate, batched by a
+     coherent device or analysis contract across all three languages.  Do not
+     split work by individual model-card parameter unless it independently
+     blocks a corpus case.
+
+3. **Berkeley v1 release gate and CLI/API contract**.
+   - Freeze the supported-card matrix, stable diagnostics, result schemas,
+     corpus pass threshold, and command-line/text entrypoints.  Publish a
+     single release-readiness report that distinguishes supported behavior from
+     deliberate exclusions.
+
+4. **Post-Berkeley product tracks** (not Berkeley completion blockers).
+   - ngspice and vendor-dialect compatibility, nested sweeps and raw-format
+     interchange, advanced nonlinear convergence work, mixed-signal coupling,
+     and the Mosaic/LTspice-style UI move only after item 3 is green.
+
+### Operating rules
+
+- Keep PRs centered on a corpus gate or a coherent failing contract, not an
+  individual diagnostic column, field alias, or presentation artifact.
+- Reprioritize from corpus evidence after every merge.  Newly discovered work
+  must be logged here before a next item is selected.
+- The stale MOS `TNOM` validation candidate is folded into item 2 if and only
+  if it fails a Berkeley v1 corpus case.
 
 ## Completed Slices
 

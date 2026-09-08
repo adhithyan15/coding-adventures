@@ -1,4 +1,6 @@
+import json
 from math import isclose
+from pathlib import Path
 
 import pytest
 from mosfet_models import Level1Model, MosfetType
@@ -122,6 +124,25 @@ C1 out 0 1u IC=0
     assert results[3].result.points[-1].node_voltages["out"] > 0.0
 
     assert len(run_netlist(deck)) == 4
+
+
+def test_runs_shared_berkeley_v1_operating_point_corpus() -> None:
+    corpus_path = (
+        Path(__file__).resolve().parents[4]
+        / "grammars/spice/berkeley-v1-op-corpus.json"
+    )
+    corpus = json.loads(corpus_path.read_text(encoding="utf-8"))
+
+    assert corpus["schemaVersion"] == 1
+    assert corpus["suite"] == "berkeley-v1-op"
+    assert [case["kind"] for case in corpus["cases"]] == ["D", "NPN", "NJF", "NMOS"]
+
+    for case in corpus["cases"]:
+        results = parse_netlist(case["deck"]).run_analysis_plan()
+        assert [result.kind for result in results] == ["op"], case["id"]
+        value = results[0].result.node_voltages[case["probe"]]
+        expected = case["expected"]
+        assert expected["min"] <= value <= expected["max"], case["id"]
 
 
 def test_parse_reactive_elements_and_analysis_cards() -> None:
