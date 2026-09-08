@@ -29,6 +29,15 @@ focused Clippy; relevant VM/JIT tests if their implementation changes. Keep
 this slice in lang-aot harness code unless a separately reproduced core defect
 requires a committed repair contract. Security review precedes a ready PR.
 
+VM-039d probes on row 443 failed in both VM and JIT with an unregistered
+input_more builtin. After registration, all 28 FLOW-MATIC cells (443–446,
+seven standard backends) passed in fresh processes with execution sentinels
+and zero skips. Ten BASIC input cells on VM/JIT also passed. The shared-queue
+regression and direct compiled-callback proof passed; all-target lang-aot
+Clippy is clean. No VM/JIT core implementation changes were required and no
+full matrix rerun is claimed. VM-059 remains the next separately scoped
+encoded-CIL input audit after this PR merges.
+
 ## VM-039c CLR contract (selected after #14544 merged)
 
 Main is `a355f64a2a`. JVM PR #14544 merged after every applicable check

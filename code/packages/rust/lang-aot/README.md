@@ -566,3 +566,12 @@ Numeric reads return zero at EOF or for malformed/out-of-range input, using
 Int32 or Int64 according to the destination. I/O exceptions propagate.
 Four FLOW-MATIC input/EOF cases execute through ilasm and dotnet in the LANG
 matrix. This proof does not extend the encoded CIL simulator input surface.
+
+### Portable input EOF on VM and JIT
+
+The LANG matrix registers `input_more` on VMCore and both JIT tiers, sharing
+the byte queue consumed by numeric and string input. Peeking returns 1 while
+bytes remain and 0 at EOF, without consuming input. The four FLOW-MATIC
+input/EOF programs cover all seven standard columns. The JIT matrix uses its
+normal interpreter/compiled pipeline; a separate direct test explicitly
+compiles and executes the peek callback to prove the compiled path too.
