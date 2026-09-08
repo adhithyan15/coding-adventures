@@ -51,6 +51,23 @@ where
     Ok(session.execute(navigation, &pipeline, fetcher)?.is_some())
 }
 
+fn activate_control(session: &mut BrowserSession, x: f64, y: f64, width: f64, height: f64) -> bool {
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    session.activate_control(x, y, &pipeline).is_some()
+}
+
 struct OwnedFetcher(Box<dyn BrowserResourceFetcher>);
 
 impl BrowserResourceFetcher for OwnedFetcher {
@@ -176,6 +193,9 @@ impl CairoBrowserHost {
     pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
         let width = self.width;
         let height = self.height;
+        if activate_control(self.controller.session_mut(), x, y, width, height) {
+            return Ok(true);
+        }
         let fetcher = &self.fetcher;
         self.controller.activate_link(x, y, |session, navigation| {
             execute_navigation(session, navigation, width, height, fetcher)
@@ -841,6 +861,30 @@ mod tests {
         assert!(host.resize(240.0, 120.0));
         let (width, height, _) = host.render_rgba().expect("resized page renders");
         assert_eq!((width, height), (240, 120));
+    }
+
+    #[test]
+    fn common_cairo_surface_activation_reflows_form_controls_before_links() {
+        let fetcher = |url: &str| Ok(page(url, "Controls", "<input id='check' type='checkbox'>"));
+        let mut host = CairoBrowserHost::new_with_fetcher(
+            "http://example.test/",
+            320.0,
+            180.0,
+            Box::new(fetcher),
+        )
+        .unwrap();
+        let region = host
+            .controller
+            .session()
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .controls[0]
+            .clone();
+        assert!(host.activate_link(region.x + 1.0, region.y + 1.0).unwrap());
+        assert!(host.controller.session().controls().controls()[0].checked);
+        assert_eq!(host.props().address, "http://example.test/");
     }
 
     #[test]

@@ -457,6 +457,14 @@ fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
     let capture = venture_browser_visual_fixtures::capture("http://venture.test")
         .expect("capture Venture's deterministic real-page fixture");
     capture.assert_valid();
+    let controls = venture_browser_visual_fixtures::load_form_controls_page("http://venture.test")
+        .expect("load Venture's deterministic form-control fixture");
+    assert_eq!(controls.paint.controls.len(), 10);
+    assert!(controls
+        .paint
+        .controls
+        .iter()
+        .any(|control| control.disabled));
 }
 
 #[test]

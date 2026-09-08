@@ -162,6 +162,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
   through shared layout metadata, paint scenes, deterministic fixtures,
   native Canvas/Cairo/Skia/SVG execution, and explicit GPU degradation
   diagnostics.
+- [x] **P2 browser convergence — reusable form controls.** Add shared
+  input/button/textarea/select intrinsic sizing, computed appearance and state,
+  focus/disabled/checked/value semantics, keyboard and pointer interaction,
+  backend-neutral paint and hit regions, and one deterministic fixture used by
+  every available Venture host. Completed with dedicated layout/state crates,
+  typed control metadata and diagnostics, retained pointer/keyboard reduction,
+  native host activation, and cross-format deterministic fixture coverage.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

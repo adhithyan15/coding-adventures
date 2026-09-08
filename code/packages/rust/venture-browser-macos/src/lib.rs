@@ -122,6 +122,31 @@ where
     Ok(session)
 }
 
+fn activate_control_at(
+    session: &mut BrowserSession,
+    viewport_x: f64,
+    viewport_y: f64,
+    width: f64,
+    height: f64,
+) -> bool {
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    session
+        .activate_control(viewport_x, viewport_y, &pipeline)
+        .is_some()
+}
+
 /// Activate the link at a viewport coordinate through the native page
 /// pipeline.
 ///
@@ -150,6 +175,12 @@ where
         &metrics,
         &resolver,
     );
+    if session
+        .activate_control(viewport_x, viewport_y, &pipeline)
+        .is_some()
+    {
+        return Ok(true);
+    }
     Ok(session
         .activate_link(viewport_x, viewport_y, &pipeline, fetcher)?
         .is_some())
@@ -551,6 +582,9 @@ impl MacBrowserHost {
     pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
         let width = self.width;
         let height = self.height;
+        if activate_control_at(self.controller.session_mut(), x, y, width, height) {
+            return Ok(true);
+        }
         let fetcher = &self.fetcher;
         self.controller.activate_link(x, y, |session, navigation| {
             navigate_session(session, navigation, width, height, fetcher)

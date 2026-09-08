@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Route WinUI surface clicks through shared form-control activation before
+  link navigation.
+
 ## 0.9.1
 
 - Coordinate the package with Venture's first immutable pre-1.0 release.

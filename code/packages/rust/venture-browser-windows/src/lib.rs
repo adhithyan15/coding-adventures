@@ -51,6 +51,23 @@ where
     Ok(session.execute(navigation, &pipeline, fetcher)?.is_some())
 }
 
+fn activate_control(session: &mut BrowserSession, x: f64, y: f64, width: f64, height: f64) -> bool {
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    session.activate_control(x, y, &pipeline).is_some()
+}
+
 struct OwnedFetcher(Box<dyn BrowserResourceFetcher>);
 
 impl BrowserResourceFetcher for OwnedFetcher {
@@ -172,6 +189,9 @@ impl WindowsBrowserHost {
     pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
         let width = self.width;
         let height = self.height;
+        if activate_control(self.controller.session_mut(), x, y, width, height) {
+            return Ok(true);
+        }
         let fetcher = &self.fetcher;
         self.controller.activate_link(x, y, |session, navigation| {
             execute_navigation(session, navigation, width, height, fetcher)
