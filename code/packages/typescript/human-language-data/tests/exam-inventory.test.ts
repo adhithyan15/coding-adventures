@@ -806,18 +806,61 @@ describe("the committed German A1 inventory", () => {
     expect(unknown).toEqual([]);
   }, 60_000);
 
+  it("never lets an unmapped point read as 'nobody has looked yet'", () => {
+    // The rule Marathi has had since HL-C290, applied here for the reason it was
+    // written: every one of this inventory's 49 unmapped points carried NO note,
+    // so "the corpus does not teach it" and "nobody has checked" were the same
+    // JSON. Sixteen of the 49 turned out to be fully taught and merely unprobed,
+    // and the only way to tell the two apart was to read 297 lessons. A note is
+    // what stops that reading being redone.
+    for (const point of inventory.points) {
+      if (point.probe !== null) continue;
+      expect(point.note?.trim(), `${point.id} is unmapped and must say why`).toBeTruthy();
+    }
+  });
+
   it("reports the same grammar-shaped gap French does", () => {
-    // German holds 123 atoms across 106 lessons and SIX of them are grammar. The
-    // categories that stay empty are the ones a candidate is examined on: the
-    // article system, questions, prepositions. Vocabulary is again the strongest
-    // column. Two independent tracks, one shape — see HL-C226.
+    // German holds 468 atoms across 297 lessons. The categories that stay empty
+    // are the ones a candidate is examined on: questions and prepositions.
+    // Vocabulary is again the strongest column. Two independent tracks, one
+    // shape — see HL-C226.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(70);
-    expect(coverage.covered).toBe(21);
-    for (const empty of ["Der Artikel", "Die Frage", "Die Praeposition"]) {
+    // 21 -> 37, and NOT ONE LESSON CHANGED. Sixteen points were taught in full
+    // and had `probe: null`, which `exam-inventory.ts` documents as "no atom in
+    // the corpus corresponds to this point" — a finding, scored as uncovered.
+    // Here it was not a finding; it was 49 points nobody had written a probe for,
+    // 33 of them genuinely open and 16 of them closed since the chapter that
+    // taught them was generated. Each of the sixteen was confirmed by reading the
+    // lesson, not by the atom's name looking right:
+    //
+    //   A1-N-01  A1-N-02  A1-ART-01  A1-ART-02   the capitalisation lesson states
+    //     the rule outright; GE-C01-der-die-das states three genders AND that they
+    //     are unpredictable; GE-C06-ein-eine gives ein/eine off the der/die/das split.
+    //   A1-PRO-01  A1-PRO-03   all eight nominative pronouns have their own lessons,
+    //     and GE-C05-ihr prints the du/Sie/ihr register grid.
+    //   A1-V-01  A1-V-02  A1-V-03   chapter 26 gives sein one lesson PER PERSON,
+    //     chapter 22 does the same for haben, and the weak endings are five atoms
+    //     across chapters 2 and 5. The paradigms exist as cells, which is why no
+    //     single atom looked like the point.
+    //   A1-V-08  A1-V-09   the haben-perfect and the sein-perfect, chapters 24 and 29.
+    //   A1-SATZ-01  A1-AUS-01   verb-second is named in chapter 2; the three umlauts
+    //     are three sound atoms plus the fronting rule in the writing segment.
+    //   A1-LEX-01  A1-LEX-08  A1-LEX-12   seven greetings, all seven weekdays, all
+    //     twelve months, all four seasons, fourteen everyday verbs.
+    //
+    // A tranche aimed at any of those sixteen would have written a second lesson
+    // for material already in the book. That is the failure an inventory exists to
+    // prevent, and it had been running in the flattering direction for months.
+    expect(coverage.covered).toBe(37);
+    // Der Artikel leaves this list at 2/5 — der/die/das and ein/eine were always
+    // taught. Questions and prepositions are genuinely empty: no lesson in the
+    // track owns wer, wann, warum, welcher, or any preposition as a preposition.
+    for (const empty of ["Die Frage", "Die Praeposition"]) {
       expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
     }
+    expect(coverage.byCategory["Der Artikel"]).toEqual({ enumerated: 5, covered: 2 });
     expect(coverage.byCategory["Grundwortschatz"]!.covered).toBeGreaterThan(0);
   }, 60_000);
 });
