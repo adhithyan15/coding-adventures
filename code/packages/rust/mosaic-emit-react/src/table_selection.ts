@@ -2,7 +2,7 @@
 // within the nearest scroll frame; do not move document scroll or keyboard focus.
 export function mosaic$revealTableCell(table: HTMLTableElement | null, row: number, col: number): void {
   if (!table || !Number.isInteger(row) || !Number.isInteger(col) || row < 0 || col < 0) return;
-  const renderedRow = table.tBodies[0]?.rows[row];
+  const renderedRow = Array.from(table.tBodies).find(body => !body.hasAttribute('data-mosaic-spacer'))?.rows[row];
   const cell = renderedRow && Array.from(renderedRow.cells).filter(cell => cell.tagName === 'TD')[col];
   if (!cell) return;
   for (let frame = table.parentElement; frame && frame !== document.body; frame = frame?.parentElement ?? null) {

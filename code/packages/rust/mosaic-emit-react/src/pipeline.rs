@@ -3687,6 +3687,7 @@ fn emit_host_table_jsx(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
+    let mut virtual_window = false;
     let mut selection_ref = if let (Some(row), Some(col)) = (
         find_slot_ref_prop(node, "selected-row"),
         find_slot_ref_prop(node, "selected-col"),
@@ -3729,6 +3730,7 @@ fn emit_host_table_jsx(
                     let shift_event = to_camel_case_first_lower(&strip_on_prefix(shift_name));
                     validate_emit_name(&shift_event)?;
                     if reveal.is_empty() { reveal = ", undefined".into(); }
+                    virtual_window = true;
                     wheel = format!(", {{ offset: {offset}, total: {total}, shift: rows => dispatch({{ type: \"{shift_event}\", rows }}) }}");
                 }
             }
@@ -3821,6 +3823,11 @@ fn emit_host_table_jsx(
         )?);
     }
     if let Some(b) = tbody {
+        // React owns both spacer sections. Runtime measurement changes only
+        // their height; semantic data rows stay in their own tbody.
+        if virtual_window {
+            out.push_str(&format!("{pad}  <tbody data-mosaic-spacer=\"before\" aria-hidden=\"true\"><tr style={{{{ height: 0 }}}}><td style={{{{ padding: 0, border: 0 }}}} /></tr></tbody>\n"));
+        }
         out.push_str(&emit_host_table_section_jsx(
             b,
             "tbody",
@@ -3832,6 +3839,9 @@ fn emit_host_table_jsx(
             emits,
             for_payload,
         )?);
+        if virtual_window {
+            out.push_str(&format!("{pad}  <tbody data-mosaic-spacer=\"after\" aria-hidden=\"true\"><tr style={{{{ height: 0 }}}}><td style={{{{ padding: 0, border: 0 }}}} /></tr></tbody>\n"));
+        }
     }
     if let Some(f) = tfoot {
         out.push_str(&emit_host_table_section_jsx(
@@ -10019,6 +10029,10 @@ mod tests {
         layout.root.props.extend([slot_ref_prop("viewport-offset", "offset"), slot_ref_prop("total-rows", "total")]);
         let out = from_pipeline(&model, &layout, &empty_style("X")).unwrap().output;
         assert!(out.contains("undefined, { offset: offset, total: total, shift: rows => dispatch({ type: \"shift\", rows }) }"));
+        layout.root.children.push(LayoutNode { tag: "HostTableBody".into(), props: vec![], children: vec![], part_name: None });
+        let out = from_pipeline(&model, &layout, &empty_style("X")).unwrap().output;
+        assert!(out.contains("data-mosaic-spacer=\"before\" aria-hidden=\"true\""));
+        assert!(out.contains("data-mosaic-spacer=\"after\" aria-hidden=\"true\""));
     }
 
     #[test]
