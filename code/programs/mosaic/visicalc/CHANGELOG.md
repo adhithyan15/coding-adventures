@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+- Add a compact, themed selection readout with overflow truncation and complete
+  Rust-owned cell descriptions for the host's atomic polite live region.
+
 - Move through the workbook with measured wheel/trackpad row shifts while keeping
-  realization bounded. A whole-workbook scrollbar remains unfinished.
+  realization bounded. React physical extent now spans the whole workbook; native acceptance remains.
 
 - Use RowHeaderGrid with pinned absolute row labels, semantic headings and
   aligned 80px data columns. Keep selection clear of the leading header.
