@@ -27,6 +27,8 @@ const FRAGMENT_CONTEXT_MARKER: &str = "data-venture-fragment-context";
 pub struct HtmlParseOptions {
     pub scripting: HtmlScriptingMode,
     pub initial_tokenizer_context: HtmlInitialTokenizerContext,
+    pub fragment_document_mode: HtmlDocumentMode,
+    pub fragment_has_form_ancestor: bool,
 }
 
 impl Default for HtmlParseOptions {
@@ -34,8 +36,18 @@ impl Default for HtmlParseOptions {
         Self {
             scripting: HtmlScriptingMode::Enabled,
             initial_tokenizer_context: HtmlInitialTokenizerContext::Data,
+            fragment_document_mode: HtmlDocumentMode::Quirks,
+            fragment_has_form_ancestor: false,
         }
     }
+}
+
+/// Document mode inherited from the context document during fragment parsing.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HtmlDocumentMode {
+    NoQuirks,
+    LimitedQuirks,
+    Quirks,
 }
 
 /// Initial tokenizer context for parser-approved document or fragment parsing.
@@ -756,6 +768,43 @@ pub fn parse_html_fragment_for_context_with_options(
     )
 }
 
+/// Parse an HTML fragment using an existing element as its context.
+///
+/// Unlike the name-only context helpers, this preserves the context element's
+/// namespace and attributes when they affect tree construction.
+pub fn parse_html_fragment_for_element(
+    source: &str,
+    context_element: &Element,
+) -> Result<Vec<Node>, ParseError> {
+    Ok(parse_html_fragment_for_element_with_diagnostics(source, context_element)?.nodes)
+}
+
+/// Parse an HTML fragment using an existing context element plus diagnostics.
+pub fn parse_html_fragment_for_element_with_diagnostics(
+    source: &str,
+    context_element: &Element,
+) -> Result<FragmentOutput, ParseError> {
+    parse_html_fragment_for_element_with_diagnostics_and_options(
+        source,
+        context_element,
+        HtmlParseOptions::default(),
+    )
+}
+
+/// Parse an HTML fragment using an existing context element with explicit options.
+pub fn parse_html_fragment_for_element_with_options(
+    source: &str,
+    context_element: &Element,
+    options: HtmlParseOptions,
+) -> Result<Vec<Node>, ParseError> {
+    Ok(parse_html_fragment_for_element_with_diagnostics_and_options(
+        source,
+        context_element,
+        options,
+    )?
+    .nodes)
+}
+
 /// Parse a complete HTML string into a DOM document plus diagnostics with explicit parser options.
 pub fn parse_html_with_diagnostics_and_options(
     source: &str,
@@ -827,10 +876,43 @@ pub fn parse_html_fragment_for_context_with_diagnostics_and_options(
     options: HtmlParseOptions,
 ) -> Result<FragmentOutput, ParseError> {
     let context_element = context_element.to_ascii_lowercase();
-    let lex_context = fragment_initial_lex_context(&context_element, options)
+    parse_html_fragment_for_context_parts_with_diagnostics_and_options(
+        source,
+        &context_element,
+        &[],
+        options,
+    )
+}
+
+/// Parse an HTML fragment using an existing context element plus diagnostics and options.
+pub fn parse_html_fragment_for_element_with_diagnostics_and_options(
+    source: &str,
+    context_element: &Element,
+    options: HtmlParseOptions,
+) -> Result<FragmentOutput, ParseError> {
+    let context_name = fragment_context_identifier(context_element);
+    parse_html_fragment_for_context_parts_with_diagnostics_and_options(
+        source,
+        &context_name,
+        &context_element.attributes,
+        options,
+    )
+}
+
+fn parse_html_fragment_for_context_parts_with_diagnostics_and_options(
+    source: &str,
+    context_element: &str,
+    context_attributes: &[Attribute],
+    options: HtmlParseOptions,
+) -> Result<FragmentOutput, ParseError> {
+    let lex_context = fragment_initial_lex_context(context_element, options)
         .unwrap_or_else(|| options.initial_tokenizer_context.lex_context());
     let mut lexer = create_html_lexer_with_context(&lex_context)?;
-    let mut parser = HtmlParser::with_fragment_context_options(options, &context_element);
+    let mut parser = HtmlParser::with_fragment_context_attributes_options(
+        options,
+        context_element,
+        context_attributes,
+    );
 
     for ch in source.chars() {
         let mut buffer = [0; 4];
@@ -4497,6 +4579,7 @@ impl HtmlParser {
     }
 
     fn with_body_fragment_options(options: HtmlParseOptions) -> Self {
+        let quirks_mode = options.fragment_document_mode == HtmlDocumentMode::Quirks;
         let mut html = Node::element("html".to_string(), Vec::new());
         let Node::Element(ref mut html_element) = html else {
             unreachable!("Node::element must construct an element");
@@ -4524,7 +4607,7 @@ impl HtmlParser {
             options,
             is_fragment: true,
             initial_insertion_mode: false,
-            quirks_mode: true,
+            quirks_mode,
             strip_next_leading_lf: false,
             explicit_head_end_seen: false,
             explicit_body_end_seen: false,
@@ -4544,8 +4627,21 @@ impl HtmlParser {
         }
     }
 
+    #[cfg(test)]
     fn with_fragment_context_options(options: HtmlParseOptions, context_element: &str) -> Self {
-        let (document, open_elements) = fragment_context_shell(context_element);
+        Self::with_fragment_context_attributes_options(options, context_element, &[])
+    }
+
+    fn with_fragment_context_attributes_options(
+        options: HtmlParseOptions,
+        context_element: &str,
+        context_attributes: &[Attribute],
+    ) -> Self {
+        let quirks_mode = options.fragment_document_mode == HtmlDocumentMode::Quirks;
+        let form_element_pointer_set =
+            options.fragment_has_form_ancestor || matches!(context_element, "form");
+        let (document, open_elements) =
+            fragment_context_shell(context_element, context_attributes);
 
         Self {
             document,
@@ -4560,7 +4656,7 @@ impl HtmlParser {
             options,
             is_fragment: true,
             initial_insertion_mode: false,
-            quirks_mode: true,
+            quirks_mode,
             strip_next_leading_lf: false,
             explicit_head_end_seen: false,
             explicit_body_end_seen: false,
@@ -4574,7 +4670,7 @@ impl HtmlParser {
                 .collect(),
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
-            form_element_pointer_set: matches!(context_element, "form"),
+            form_element_pointer_set,
             foreign_cdata_text: None,
             current_token_emission_position: None,
             scripted_parser_suspended: false,
@@ -5162,7 +5258,7 @@ impl HtmlParser {
         if !in_foreign_content
             && !self.is_fragment
             && self.explicit_head_end_seen
-            && !self.has_open_element("head")
+            && !self.has_open_html_element("head")
             && !self.document_has_body_element()
             && is_head_element(&name)
         {
@@ -5299,7 +5395,7 @@ impl HtmlParser {
         }
         if !in_foreign_content
             && self.current_element_is("html")
-            && !self.has_open_element("head")
+            && !self.has_open_html_element("head")
             && !self.has_open_element("body")
             && !self.document_has_body_element()
             && !self.body_has_non_whitespace_child()
@@ -5311,7 +5407,7 @@ impl HtmlParser {
         }
 
         if !in_foreign_content {
-            if self.has_open_element("head")
+            if self.has_open_html_element("head")
                 && !self.current_element_is("head")
                 && !self.has_open_html_template_element()
                 && starts_body_after_head(&name)
@@ -5355,7 +5451,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && is_table_only_start_tag(&name)
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && !self.has_open_html_template_element()
         {
             self.diagnostics.push(
@@ -5387,7 +5483,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.has_open_html_template_element()
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && self.current_template_insertion_mode() == Some(TemplateInsertionMode::Body)
             && matches!(
                 name.as_str(),
@@ -5408,7 +5504,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.has_open_html_template_element()
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && self.current_template_insertion_mode() == Some(TemplateInsertionMode::Body)
             && name == "tr"
             && self.current_element_is("template")
@@ -5429,7 +5525,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.has_open_html_template_element()
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && name == "tr"
             && self.current_has_child_element("thead")
             && !self.current_element_is("tbody")
@@ -5439,7 +5535,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.has_open_html_template_element()
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && name == "tr"
             && !self.current_element_is("template")
             && !self.current_element_is("tbody")
@@ -5458,7 +5554,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.first_authored_open_template_index().is_some()
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && (is_table_section(&name) || matches!(name.as_str(), "caption" | "colgroup"))
             && !(name == "tfoot" && self.current_has_child_element("thead"))
             && (self.current_last_child_element_is("td")
@@ -5480,7 +5576,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.has_open_html_template_element()
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && matches!(name.as_str(), "td" | "th")
             && !self.current_element_is("tr")
             && self.current_has_child_element("tr")
@@ -5654,10 +5750,13 @@ impl HtmlParser {
                 )
                 .at_emission(self.current_token_emission_position),
             );
-            if self.form_element_pointer_set {
+            let has_open_template = self.has_open_html_template_element();
+            if self.form_element_pointer_set && !has_open_template {
                 return;
             }
-            self.form_element_pointer_set = true;
+            if !has_open_template {
+                self.form_element_pointer_set = true;
+            }
             self.append_node(Node::element(name, attributes));
             return;
         }
@@ -5758,7 +5857,7 @@ impl HtmlParser {
         if !in_foreign_content
             && name == "select"
             && self.has_open_html_template_element()
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && self.current_element_is_table_structure()
         {
             self.close_open_element_if(is_table_context_element);
@@ -5795,7 +5894,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.has_open_html_template_element()
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && self.current_element_is_table_structure()
             && is_paragraph_boundary_element(&name)
         {
@@ -5886,7 +5985,7 @@ impl HtmlParser {
             return;
         }
 
-        if !in_foreign_content && name == "head" && self.has_open_element("head") {
+        if !in_foreign_content && name == "head" && self.has_open_html_element("head") {
             self.diagnostics.push(
                 ParserDiagnostic::new(
                     "unexpected-head-start-tag",
@@ -5985,7 +6084,7 @@ impl HtmlParser {
         let node = element_node(name.clone(), attributes, namespace);
         let inserted_path = if !in_foreign_content
             && self.current_element_is_table_structure()
-            && self.has_open_element("table")
+            && self.has_open_html_element("table")
             && !starts_table_context(&name)
             && !is_head_element(&name)
         {
@@ -6097,7 +6196,8 @@ impl HtmlParser {
         } else {
             text
         };
-        let text = if self.current_element_is_marked_fragment_context("colgroup")
+        let text = if self.current_namespace().is_none()
+            && self.current_element_is_marked_fragment_context("colgroup")
             && !is_html_whitespace_text(&text)
         {
             self.diagnostics.push(
@@ -6177,7 +6277,7 @@ impl HtmlParser {
         }
 
         if self.has_open_html_template_element()
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && self.current_element_is("template")
             && self.current_has_child_element("tr")
             && !is_html_whitespace_text(&text)
@@ -6246,7 +6346,7 @@ impl HtmlParser {
             return;
         }
 
-        if self.has_open_element("head")
+        if self.has_open_html_element("head")
             && !self.current_element_is("head")
             && !self.has_open_html_template_element()
             && !self.current_element_is("noframes")
@@ -6286,7 +6386,7 @@ impl HtmlParser {
             }
         }
 
-        let text = if self.current_element_is("head") {
+        let text = if self.current_namespace().is_none() && self.current_element_is("head") {
             match text
                 .char_indices()
                 .find(|(_, character)| !is_html_whitespace(*character))
@@ -6302,7 +6402,10 @@ impl HtmlParser {
             text
         };
 
-        if !is_html_whitespace_text(&text) && self.current_element_is("head") {
+        if !is_html_whitespace_text(&text)
+            && self.current_namespace().is_none()
+            && self.current_element_is("head")
+        {
             self.pop_current_if(|name| name == "head");
         }
 
@@ -6312,7 +6415,7 @@ impl HtmlParser {
             text
         };
 
-        if self.current_element_is("colgroup") {
+        if self.current_namespace().is_none() && self.current_element_is("colgroup") {
             let leading_end = text
                 .char_indices()
                 .find(|(_, character)| !is_html_whitespace(*character))
@@ -7889,7 +7992,7 @@ impl HtmlParser {
             && self.first_authored_open_template_index().is_some()
             && self.current_namespace().is_none()
             && self.current_element_is("template")
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && (self.current_last_child_element_is("td")
                 || self.current_last_child_element_is("th")
                 || self.current_last_child_element_is("tr"))
@@ -7907,7 +8010,7 @@ impl HtmlParser {
             && self.first_authored_open_template_index().is_some()
             && self.current_namespace().is_none()
             && self.current_element_is("template")
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && (self.current_last_child_element_is("td")
                 || self.current_last_child_element_is("th"))
         {
@@ -7924,7 +8027,7 @@ impl HtmlParser {
             && self.first_authored_open_template_index().is_some()
             && self.current_namespace().is_none()
             && self.current_element_is("template")
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
             && (self.current_last_child_element_is("td")
                 || self.current_last_child_element_is("th"))
         {
@@ -7940,7 +8043,7 @@ impl HtmlParser {
         if matches!(name, "head" | "frameset")
             && self.first_authored_open_template_index().is_some()
             && self.current_namespace().is_none()
-            && !self.has_open_element("table")
+            && !self.has_open_html_element("table")
         {
             self.diagnostics.push(
                 ParserDiagnostic::new(
@@ -8050,7 +8153,7 @@ impl HtmlParser {
                     .at_emission(self.current_token_emission_position),
                 );
             }
-            "head" if !self.has_open_element("head") && !self.has_open_element("body") => {
+            "head" if !self.has_open_html_element("head") && !self.has_open_element("body") => {
                 self.strip_next_leading_lf = false;
             }
             "body" if !self.has_open_element("body") && self.has_open_table_context() => {
@@ -8097,7 +8200,7 @@ impl HtmlParser {
                     .at_emission(self.current_token_emission_position),
                 );
             }
-            "p" if self.has_open_element("head") && !self.has_open_element("body") => {
+            "p" if self.has_open_html_element("head") && !self.has_open_element("body") => {
                 self.diagnostics.push(
                     ParserDiagnostic::new(
                         "unexpected-p-end-tag-before-body",
@@ -8195,7 +8298,7 @@ impl HtmlParser {
                 self.append_start_tag("p".to_string(), Vec::new(), false);
                 self.close_element("p");
             }
-            "html" if self.has_open_element("head") && !self.has_open_element("body") => {
+            "html" if self.has_open_html_element("head") && !self.has_open_element("body") => {
                 self.pop_current_if(|current| current == "head");
                 self.append_implied_element("body");
             }
@@ -9118,7 +9221,8 @@ impl HtmlParser {
 
     fn pop_head_descendants(&mut self) {
         let Some(head_index) = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| name == "head")
+            element_ref_at_path(&self.document, path)
+                .is_some_and(|element| element.namespace.is_none() && element.name == "head")
         }) else {
             return;
         };
@@ -10557,7 +10661,8 @@ impl HtmlParser {
             return false;
         };
         let Some(table_path) = open_elements.iter().rfind(|path| {
-            element_at_path(&self.document, path).is_some_and(is_table_context_element)
+            element_ref_at_path(&self.document, path)
+                .is_some_and(is_html_table_context_element)
         }) else {
             return false;
         };
@@ -10737,7 +10842,10 @@ impl HtmlParser {
         self.open_elements
             .iter()
             .skip(element_index + 1)
-            .any(|path| element_at_path(&self.document, path).is_some_and(is_table_context_element))
+            .any(|path| {
+                element_ref_at_path(&self.document, path)
+                    .is_some_and(is_html_table_context_element)
+            })
     }
 
     fn open_element_is_fostered_before_open_table(&self, element_index: usize) -> bool {
@@ -10747,7 +10855,8 @@ impl HtmlParser {
         let Some(table_path) = self.open_elements[..element_index]
             .iter()
             .rfind(|candidate| {
-                element_at_path(&self.document, candidate).is_some_and(is_table_context_element)
+                element_ref_at_path(&self.document, candidate)
+                    .is_some_and(is_html_table_context_element)
             })
         else {
             return false;
@@ -10756,16 +10865,18 @@ impl HtmlParser {
     }
 
     fn has_open_table_context(&self) -> bool {
-        self.open_elements
-            .iter()
-            .any(|path| element_at_path(&self.document, path).is_some_and(is_table_context_element))
+        self.open_elements.iter().any(|path| {
+            element_ref_at_path(&self.document, path)
+                .is_some_and(is_html_table_context_element)
+        })
     }
 
     fn current_parent_has_table_ancestor(&self) -> bool {
         let current_parent_path = self.current_parent_path();
         self.open_elements.iter().any(|path| {
             current_parent_path.starts_with(path)
-                && element_at_path(&self.document, path).is_some_and(is_table_context_element)
+                && element_ref_at_path(&self.document, path)
+                    .is_some_and(is_html_table_context_element)
         })
     }
 
@@ -10773,8 +10884,9 @@ impl HtmlParser {
         let current_parent_path = self.current_parent_path();
         self.open_elements.iter().any(|path| {
             current_parent_path.starts_with(path)
-                && element_at_path(&self.document, path)
-                    .is_some_and(|name| matches!(name, "td" | "th"))
+                && element_ref_at_path(&self.document, path).is_some_and(|element| {
+                    element.namespace.is_none() && matches!(element.name.as_str(), "td" | "th")
+                })
         })
     }
 
@@ -10782,7 +10894,9 @@ impl HtmlParser {
         let current_parent_path = self.current_parent_path();
         self.open_elements.iter().any(|path| {
             current_parent_path.starts_with(path)
-                && element_at_path(&self.document, path).is_some_and(|name| name == ancestor_name)
+                && element_ref_at_path(&self.document, path).is_some_and(|element| {
+                    element.namespace.is_none() && element.name == ancestor_name
+                })
         })
     }
 
@@ -10890,7 +11004,8 @@ impl HtmlParser {
         let current_parent_path = self.current_parent_path();
         let Some(table_index) = self.open_elements.iter().rposition(|path| {
             current_parent_path.starts_with(path)
-                && element_at_path(&self.document, path).is_some_and(is_table_context_element)
+                && element_ref_at_path(&self.document, path)
+                    .is_some_and(is_html_table_context_element)
         }) else {
             return false;
         };
@@ -11152,12 +11267,13 @@ impl HtmlParser {
     }
 
     fn current_element_is_table_structure(&self) -> bool {
-        self.current_element_name().is_some_and(|current| {
-            matches!(
-                current,
-                "table" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr"
-            )
-        })
+        self.current_namespace().is_none()
+            && self.current_element_name().is_some_and(|current| {
+                matches!(
+                    current,
+                    "table" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr"
+                )
+            })
     }
 
     fn in_frameset_text_context(&self) -> bool {
@@ -12452,11 +12568,24 @@ fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
     fragment
 }
 
-fn fragment_context_shell(context_element: &str) -> (Document, Vec<Vec<usize>>) {
+fn fragment_context_shell(
+    context_element: &str,
+    context_attributes: &[Attribute],
+) -> (Document, Vec<Vec<usize>>) {
     let chain = fragment_context_chain(context_element);
     let foreign_context = foreign_fragment_context(context_element);
     let mut document = Document::new();
-    let html = marked_shell_element("html", context_element == "html", context_element, None);
+    let html = marked_shell_element(
+        "html",
+        context_element == "html",
+        context_element,
+        None,
+        if context_element == "html" {
+            context_attributes
+        } else {
+            &[]
+        },
+    );
     document.push_child(html);
 
     let mut open_elements = vec![vec![0]];
@@ -12475,6 +12604,11 @@ fn fragment_context_shell(context_element: &str) -> (Document, Vec<Vec<usize>>) 
                 marker,
                 context_element,
                 namespace,
+                if index == chain.len() - 1 {
+                    context_attributes
+                } else {
+                    &[]
+                },
             ));
             parent.children.len() - 1
         };
@@ -12549,16 +12683,28 @@ fn marked_shell_element(
     marker: bool,
     context_element: &str,
     namespace: Option<&str>,
+    context_attributes: &[Attribute],
 ) -> Node {
     let attributes = if marker {
-        vec![Attribute {
+        let mut attributes = context_attributes.to_vec();
+        attributes.push(Attribute {
             name: FRAGMENT_CONTEXT_MARKER.to_string(),
             value: context_element.to_string(),
-        }]
+        });
+        attributes
     } else {
         Vec::new()
     };
     element_node(name.to_string(), attributes, namespace)
+}
+
+fn fragment_context_identifier(context_element: &Element) -> String {
+    let name = context_element.name.to_ascii_lowercase();
+    match context_element.namespace.as_deref() {
+        Some("svg") => format!("svg {name}"),
+        Some("math") => format!("math {name}"),
+        _ => name,
+    }
 }
 
 fn fragment_initial_lex_context(
@@ -13176,10 +13322,13 @@ fn doctype_triggers_quirks(
 
     if let Some(public_identifier) = public_identifier {
         let public_identifier = public_identifier.to_ascii_lowercase();
+        let is_html_4_frameset_or_transitional = public_identifier
+            .starts_with("-//w3c//dtd html 4.01 frameset")
+            || public_identifier.starts_with("-//w3c//dtd html 4.01 transitional");
         if public_identifier == "html"
             || public_identifier.starts_with("-//w3c//dtd html 3.2")
-            || public_identifier.starts_with("-//w3c//dtd html 4.01 frameset")
-            || public_identifier.starts_with("-//w3c//dtd html 4.01 transitional")
+            || (is_html_4_frameset_or_transitional
+                && system_identifier.is_none_or(str::is_empty))
         {
             return true;
         }
@@ -13210,6 +13359,10 @@ fn is_table_context_element(name: &str) -> bool {
         name,
         "table" | "caption" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr" | "td" | "th"
     )
+}
+
+fn is_html_table_context_element(element: &Element) -> bool {
+    element.namespace.is_none() && is_table_context_element(&element.name)
 }
 
 fn starts_table_context(name: &str) -> bool {
@@ -39803,6 +39956,20 @@ mod tests {
     }
 
     #[test]
+    fn table_form_recovery_ignores_an_outer_form_pointer_inside_template_content() {
+        let source = "<!doctype html><form id=outer><template><table><form id=inner></table></template>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+        let inner = find_element_by_id(&outer.children, "inner")
+            .expect("template table recovery should preserve its own form element");
+        assert_eq!(inner.name, "form");
+        assert!(output
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nested-form-start-tag"));
+    }
+
+    #[test]
     fn reports_form_end_tags_that_leave_a_non_form_current_node() {
         for source in [
             "<!doctype html><form><div></form><div>",
@@ -41262,6 +41429,179 @@ mod tests {
         let paragraph = element(&body(&document).children[0]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(element(&paragraph.children[0]).name, "table");
+    }
+
+    #[test]
+    fn fragment_parsing_honors_the_context_document_mode() {
+        for mode in [HtmlDocumentMode::NoQuirks, HtmlDocumentMode::LimitedQuirks] {
+            let nodes = parse_html_fragment_for_context_with_options(
+                "<p><table></table>",
+                "div",
+                HtmlParseOptions {
+                    fragment_document_mode: mode,
+                    ..HtmlParseOptions::default()
+                },
+            )
+            .unwrap();
+            assert_eq!(nodes.len(), 2, "unexpected fragment shape for {mode:?}");
+            assert_eq!(element(&nodes[0]).name, "p");
+            assert!(element(&nodes[0]).children.is_empty());
+            assert_eq!(element(&nodes[1]).name, "table");
+        }
+
+        let quirks = parse_html_fragment_for_context_with_options(
+            "<p><table></table>",
+            "div",
+            HtmlParseOptions {
+                fragment_document_mode: HtmlDocumentMode::Quirks,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(quirks.len(), 1);
+        let paragraph = element(&quirks[0]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(element(&paragraph.children[0]).name, "table");
+    }
+
+    #[test]
+    fn fragment_parsing_honors_a_form_ancestor_of_the_context_element() {
+        let standalone = parse_html_fragment_for_context("<form>x</form>", "div").unwrap();
+        assert_eq!(standalone.len(), 1);
+        assert_eq!(element(&standalone[0]).name, "form");
+
+        let inside_form = parse_html_fragment_for_context_with_options(
+            "<form>x</form>",
+            "div",
+            HtmlParseOptions {
+                fragment_has_form_ancestor: true,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(inside_form, vec![Node::text("x")]);
+
+        let form_context = parse_html_fragment_for_context("<form>x</form>", "form").unwrap();
+        assert_eq!(form_context, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn html_4_doctypes_distinguish_empty_and_nonempty_system_identifiers() {
+        let public_identifier = "-//W3C//DTD HTML 4.01 Transitional//EN";
+        for (system_identifier, table_is_inside_paragraph) in
+            [(None, true), (Some(""), true), (Some("legacy.dtd"), false)]
+        {
+            let system_identifier = system_identifier
+                .map(|identifier| format!(" \"{identifier}\""))
+                .unwrap_or_default();
+            let source = format!(
+                "<!DOCTYPE html PUBLIC \"{public_identifier}\"{system_identifier}><p><table></table>"
+            );
+            let document = parse_html(&source).unwrap();
+            let body = body(&document);
+
+            assert_eq!(
+                element(&body.children[0]).name,
+                "p",
+                "unexpected first element for {source}"
+            );
+            assert_eq!(
+                element(&body.children[0])
+                    .children
+                    .first()
+                    .is_some_and(|node| element(node).name == "table"),
+                table_is_inside_paragraph,
+                "unexpected quirks mode for {source}"
+            );
+        }
+    }
+
+    #[test]
+    fn foreign_table_fragment_context_does_not_satisfy_html_table_scope() {
+        let context = Element {
+            namespace: Some("svg".to_string()),
+            name: "table".to_string(),
+            attributes: Vec::new(),
+            children: Vec::new(),
+        };
+        let nodes = parse_html_fragment_for_element("<desc><td>x", &context).unwrap();
+
+        assert_eq!(nodes.len(), 1);
+        let desc = element(&nodes[0]);
+        assert_eq!(desc.namespace.as_deref(), Some("svg"));
+        assert_eq!(desc.name, "desc");
+        assert_eq!(desc.children, vec![Node::text("x")]);
+
+        let nodes = parse_html_fragment_for_element("<desc><li>x", &context).unwrap();
+        let desc = element(&nodes[0]);
+        let list_item = element(&desc.children[0]);
+        assert_eq!(list_item.namespace, None);
+        assert_eq!(list_item.name, "li");
+        assert_eq!(list_item.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn foreign_head_fragment_context_does_not_trigger_html_head_cleanup() {
+        let context = Element {
+            namespace: Some("svg".to_string()),
+            name: "head".to_string(),
+            attributes: Vec::new(),
+            children: Vec::new(),
+        };
+        let direct_text = parse_html_fragment_for_element("x", &context).unwrap();
+        assert_eq!(direct_text, vec![Node::text("x")]);
+
+        let nodes = parse_html_fragment_for_element("<desc><p>x", &context).unwrap();
+
+        assert_eq!(nodes.len(), 1);
+        let desc = element(&nodes[0]);
+        assert_eq!(desc.namespace.as_deref(), Some("svg"));
+        assert_eq!(desc.name, "desc");
+        let paragraph = element(&desc.children[0]);
+        assert_eq!(paragraph.namespace, None);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn foreign_button_fragment_context_does_not_suppress_paragraph_closure() {
+        let context = Element {
+            namespace: Some("svg".to_string()),
+            name: "button".to_string(),
+            attributes: Vec::new(),
+            children: Vec::new(),
+        };
+        let nodes = parse_html_fragment_for_element("<desc><p>a<div>b", &context).unwrap();
+
+        assert_eq!(nodes.len(), 1);
+        let desc = element(&nodes[0]);
+        assert_eq!(desc.namespace.as_deref(), Some("svg"));
+        assert_eq!(desc.name, "desc");
+        assert_eq!(desc.children.len(), 2);
+        let paragraph = element(&desc.children[0]);
+        assert_eq!(paragraph.namespace, None);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("a")]);
+        let division = element(&desc.children[1]);
+        assert_eq!(division.namespace, None);
+        assert_eq!(division.name, "div");
+        assert_eq!(division.children, vec![Node::text("b")]);
+    }
+
+    #[test]
+    fn foreign_table_structure_fragment_context_does_not_enter_table_text_mode() {
+        for name in ["colgroup", "tbody", "tr"] {
+            let context = Element {
+                namespace: Some("svg".to_string()),
+                name: name.to_string(),
+                attributes: Vec::new(),
+                children: Vec::new(),
+            };
+            let output = parse_html_fragment_for_element_with_diagnostics("x", &context).unwrap();
+
+            assert_eq!(output.nodes, vec![Node::text("x")], "context {name}");
+            assert!(output.parser_diagnostics.is_empty(), "context {name}");
+        }
     }
 
     #[test]
@@ -42935,6 +43275,59 @@ mod tests {
         let inner = find_first_element_in_nodes(&direct_document.children, "math").unwrap();
         assert_eq!(inner.namespace.as_deref(), Some("svg"));
         assert_eq!(element_text_content(inner), "E");
+    }
+
+    #[test]
+    fn fragment_context_preserves_annotation_xml_encoding_integration_state() {
+        let context = Element {
+            namespace: Some("math".to_string()),
+            name: "annotation-xml".to_string(),
+            attributes: Vec::new(),
+            children: Vec::new(),
+        };
+        let foreign = parse_html_fragment_for_element("<style><img></style>", &context).unwrap();
+        assert_eq!(foreign.len(), 2);
+        let style = element(&foreign[0]);
+        assert_eq!(style.name, "style");
+        assert_eq!(style.namespace.as_deref(), Some("math"));
+        assert!(style.children.is_empty());
+        let image = element(&foreign[1]);
+        assert_eq!(image.name, "img");
+        assert_eq!(image.namespace, None);
+
+        let mut unsupported = context.clone();
+        unsupported.attributes.push(Attribute {
+            name: "encoding".to_string(),
+            value: "text/plain".to_string(),
+        });
+        let unsupported =
+            parse_html_fragment_for_element("<style><img></style>", &unsupported).unwrap();
+        assert_eq!(unsupported.len(), 2);
+        assert_eq!(element(&unsupported[0]).namespace.as_deref(), Some("math"));
+        assert_eq!(element(&unsupported[1]).name, "img");
+
+        for encoding in [
+            "text/html",
+            "APPLICATION/XHTML+XML",
+            "Application/Xhtml+Xml",
+        ] {
+            let context = Element {
+                namespace: Some("math".to_string()),
+                name: "annotation-xml".to_string(),
+                attributes: vec![Attribute {
+                    name: "encoding".to_string(),
+                    value: encoding.to_string(),
+                }],
+                children: Vec::new(),
+            };
+            let integrated =
+                parse_html_fragment_for_element("<style><img></style>", &context).unwrap();
+            assert_eq!(integrated.len(), 1);
+            let style = element(&integrated[0]);
+            assert_eq!(style.name, "style");
+            assert_eq!(style.namespace, None);
+            assert_eq!(style.children, vec![Node::text("<img>")]);
+        }
     }
 
     #[test]
