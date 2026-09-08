@@ -2757,6 +2757,44 @@ impl Compiler {
         })
     }
 
+    /// Admit finite arithmetic over initialized local real snapshots only when
+    /// it proves an integral result within the bounded-unroll cap. Calls and
+    /// conditionals stay dynamic so this proof cannot erase runtime work.
+    fn static_nonnegative_tracked_real_arithmetic_power_chain(
+        &self,
+        nodes: &[&GrammarASTNode],
+    ) -> Option<u32> {
+        self.static_nonnegative_power_chain_with(nodes, &|node| {
+            if self.contains_conditional_expression(node)
+                || self.contains_procedure_call(node)
+                || self.contains_power_operator(node)
+                || !self.contains_binary_real_arithmetic(node)
+            {
+                return None;
+            }
+            let dependencies = self.tracked_integer_expression_dependencies(node)?;
+            if dependencies.is_empty() {
+                return None;
+            }
+            for name in dependencies {
+                let binding = self.require_var(&name).ok()?;
+                if binding.ty != ScalarType::Real
+                    || binding.is_global
+                    || binding.array.is_some()
+                    || self.active_by_name_binding(&name).is_some()
+                    || !self.static_real_slots.contains_key(&binding.slot)
+                {
+                    return None;
+                }
+            }
+            let value = self.static_tracked_exponent_real_value(node)?;
+            (value >= 0.0
+                && value <= MAX_POW_UNROLL_EXPONENT as f64
+                && value.fract() == 0.0)
+                .then_some(value as u32)
+        })
+    }
+
     /// Admit exact integral standard-function results over tracked real locals
     /// without admitting arbitrary tracked real exponent arithmetic. Every real
     /// dependency must occur beneath a pure built-in call, where the existing
@@ -2993,6 +3031,9 @@ impl Compiler {
                 })
                 .or_else(|| {
                     self.static_nonnegative_tracked_real_snapshot_power_chain(exponents)
+                })
+                .or_else(|| {
+                    self.static_nonnegative_tracked_real_arithmetic_power_chain(exponents)
                 });
             return self.exact_tracked_standard_function_operand(base)
                 && self.contains_pure_standard_function_call(base)
@@ -3048,6 +3089,32 @@ impl Compiler {
         direct_nodes(node)
             .into_iter()
             .any(|child| self.contains_pure_standard_function_call(child))
+    }
+
+    fn contains_procedure_call(&self, node: &GrammarASTNode) -> bool {
+        node.rule_name == "proc_call"
+            || direct_nodes(node)
+                .into_iter()
+                .any(|child| self.contains_procedure_call(child))
+    }
+
+    fn contains_binary_real_arithmetic(&self, node: &GrammarASTNode) -> bool {
+        let sequence = pieces(node);
+        (sequence.len() >= 3
+            && sequence.iter().skip(1).step_by(2).any(|piece| {
+                matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-" | "*" | "/"))
+            })) || direct_nodes(node)
+            .into_iter()
+            .any(|child| self.contains_binary_real_arithmetic(child))
+    }
+
+    fn contains_power_operator(&self, node: &GrammarASTNode) -> bool {
+        pieces(node)
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+            || direct_nodes(node)
+                .into_iter()
+                .any(|child| self.contains_power_operator(child))
     }
 
     /// Recognize checked integer arithmetic whose leaves are literals, exact
@@ -7780,6 +7847,14 @@ impl Compiler {
                 .flatten()
             })
             .or_else(|| {
+                (base.ty == ScalarType::Real
+                    && self.contains_pure_standard_function_call(base_node))
+                .then(|| {
+                    self.static_nonnegative_tracked_real_arithmetic_power_chain(exponent_nodes)
+                })
+                .flatten()
+            })
+            .or_else(|| {
                 (base.ty == ScalarType::Real)
                     .then(|| {
                         self.static_nonnegative_tracked_real_standard_expression_power_chain(
@@ -11545,6 +11620,36 @@ mod tests {
         assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
         assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
         assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
+    fn al4_path_independent_standard_results_compose_through_tracked_real_arithmetic_powers() {
+        let module = compile_source(
+            "begin real power, offset, gate, exponent, saved; power := 0.5; offset := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (power + offset)) + 6.0; gate := 1.0; power := 9.0; offset := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("finite tracked-real arithmetic may bound a power around a built-in result");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
+    fn al4_tracked_real_arithmetic_power_operands_fail_closed() {
+        for source in [
+            "begin real power, offset, gate, exponent, saved; power := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (power + offset)) end",
+            "begin real power, offset, gate, exponent, saved; power := 0.5; offset := 0.25; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (power + offset)) end",
+            "begin real power, offset, saved; power := 0.5; offset := 0.5; saved := 6.0 ^ (power + offset) end",
+            "begin real power, offset, gate, exponent, saved; power := 0.5; offset := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (power + (if gate = 0.0 then offset else offset))) end",
+            "begin real power, offset, gate, exponent, saved; power := 0.5; offset := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ ((power + offset) ^ 1)) end",
+            "begin real procedure choose(x); value x; real x; choose := x; real power, offset, gate, exponent, saved; power := 0.5; offset := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (power + choose(offset))) end",
+        ] {
+            let module = compile_source(source, "test")
+                .expect("unproven or standard-free arithmetic powers must remain dynamic");
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"), "{source}");
+        }
     }
 
     #[test]
