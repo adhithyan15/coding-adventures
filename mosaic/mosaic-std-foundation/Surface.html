@@ -47,9 +47,17 @@ iframe.preview { background:var(--card); border:1px solid var(--line); border-ra
 
 <h2>Preview</h2>
 
-<div class="err">This component could not be rendered.
 
-mosaic-compile: html pipeline emit error: moslayout primitive &#39;$mosaic-child-slot&#39; is not yet supported by the pipeline HTML emitter</div>
+<div class="gallery">
+<figure class="shot">
+<figcaption>Default</figcaption>
+<div class="err">mosaic-compile: html pipeline emit error: moslayout primitive &#39;$mosaic-child-slot&#39; is not yet supported by the pipeline HTML emitter</div>
+</figure>
+</div>
+<p class="note">One frame per story, each the real emitted html project running its own runtime.
+Stories live beside the component in <code>Surface.stories.json</code> — the same file MosaicBook
+reads, so the dev server and this site cannot disagree.</p>
+
 
 <h2>Slots</h2>
 <table><tr><th>Name</th><th>Type</th><th>Values</th></tr>

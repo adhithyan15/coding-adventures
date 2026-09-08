@@ -47,12 +47,18 @@ iframe.preview { background:var(--card); border:1px solid var(--line); border-ra
 
 <h2>Preview</h2>
 
-<iframe class="preview" src="CardBrowser/index.html" title="CardBrowser preview"
- loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
-<p class="note">The real emitted html project, running its own runtime — not a screenshot and not a
-re-render. Slot values are samples: the first legal member of each <code>one-of</code> axis, and the
-slot's own name for text, because this component has no stories yet.
-<a href="CardBrowser/index.html" target="_blank" rel="noopener">Open it on its own</a>.</p>
+
+<div class="gallery">
+<figure class="shot">
+<figcaption>Default</figcaption>
+<iframe class="preview" src="CardBrowser/Default/index.html" title="Default" loading="lazy"
+ sandbox="allow-scripts allow-same-origin"></iframe>
+
+</figure>
+</div>
+<p class="note">One frame per story, each the real emitted html project running its own runtime.
+Stories live beside the component in <code>CardBrowser.stories.json</code> — the same file MosaicBook
+reads, so the dev server and this site cannot disagree.</p>
 
 
 <h2>Slots</h2>
