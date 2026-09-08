@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add backend-neutral editor presentation geometry, control viewport scrolling,
+  pointer drag selection, deterministic caret blink, composition candidate
+  rectangles, and password-safe clipboard operations.
+
 - Add UTF-8-safe selection and range editing, caret navigation, composition
   state, multiline editing, password-safe display projection, and reusable
   invalid-control focus/accessibility metadata.

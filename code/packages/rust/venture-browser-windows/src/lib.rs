@@ -290,6 +290,49 @@ impl WindowsBrowserHost {
         changed
     }
 
+    pub fn control_copy(&self) -> Option<String> {
+        self.controller.session().control_copy()
+    }
+
+    pub fn control_cut(&mut self) -> Option<String> {
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        let payload = self.controller.session_mut().control_cut(&pipeline);
+        if payload.is_some() {
+            self.controller.synchronize_session_state();
+        }
+        payload
+    }
+
+    pub fn control_paste(&mut self, text: &str) -> bool {
+        self.control_text_input(text)
+    }
+
+    pub fn advance_caret_blink(&mut self, elapsed_ms: u64) -> bool {
+        self.controller
+            .session_mut()
+            .control_advance_caret_blink(elapsed_ms)
+    }
+
+    pub fn ime_candidate_rect_json(&mut self) -> Option<String> {
+        let rect = self.controller.session_mut().focused_ime_candidate_rect()?;
+        Some(format!(
+            "{{\"x\":{},\"y\":{},\"width\":{},\"height\":{}}}",
+            rect.x, rect.y, rect.width, rect.height
+        ))
+    }
+
     pub fn update_hover(&mut self, x: f64, y: f64) -> bool {
         self.controller.update_hover(x, y)
     }
@@ -586,6 +629,59 @@ mod ffi {
     }
 
     #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_control_copy(
+        host: *mut WindowsBrowserHost,
+    ) -> *mut c_char {
+        host.as_ref()
+            .and_then(WindowsBrowserHost::control_copy)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_control_cut(
+        host: *mut WindowsBrowserHost,
+    ) -> *mut c_char {
+        host.as_mut()
+            .and_then(WindowsBrowserHost::control_cut)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_control_paste(
+        host: *mut WindowsBrowserHost,
+        text: *const c_char,
+    ) -> u8 {
+        string_arg(text)
+            .and_then(|text| host.as_mut().map(|host| host.control_paste(&text) as u8))
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_caret_tick(
+        host: *mut WindowsBrowserHost,
+        elapsed_ms: u64,
+    ) -> u8 {
+        host.as_mut()
+            .map(|host| host.advance_caret_blink(elapsed_ms) as u8)
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_ime_candidate_rect(
+        host: *mut WindowsBrowserHost,
+    ) -> *mut c_char {
+        host.as_mut()
+            .and_then(WindowsBrowserHost::ime_candidate_rect_json)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
     pub unsafe extern "C" fn venture_browser_windows_activate_link(
         host: *mut WindowsBrowserHost,
         x: f64,
@@ -879,6 +975,15 @@ mod tests {
         assert_eq!(
             host.controller.session().controls().controls()[0].value,
             "native-venture"
+        );
+        assert!(host.control_key_down(ControlKey::Home, false).unwrap());
+        assert!(host.control_key_down(ControlKey::ArrowRight, true).unwrap());
+        assert_eq!(host.control_copy().as_deref(), Some("n"));
+        assert_eq!(host.control_cut().as_deref(), Some("n"));
+        assert!(host.control_paste("N"));
+        assert_eq!(
+            host.controller.session().controls().controls()[0].value,
+            "Native-venture"
         );
     }
 

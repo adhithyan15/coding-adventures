@@ -41,6 +41,11 @@ private interface VentureNative : Library {
     fun venture_browser_compose_scroll(host: Pointer, deltaY: Double): Byte
     fun venture_browser_compose_control_key(host: Pointer, key: String, shift: Byte): Byte
     fun venture_browser_compose_control_text(host: Pointer, text: String): Byte
+    fun venture_browser_compose_control_copy(host: Pointer): Pointer?
+    fun venture_browser_compose_control_cut(host: Pointer): Pointer?
+    fun venture_browser_compose_control_paste(host: Pointer, text: String): Byte
+    fun venture_browser_compose_caret_tick(host: Pointer, elapsedMilliseconds: Long): Byte
+    fun venture_browser_compose_ime_candidate_rect(host: Pointer): Pointer?
     fun venture_browser_compose_activate_link(host: Pointer, x: Double, y: Double): Byte
     fun venture_browser_compose_update_hover(host: Pointer, x: Double, y: Double): Byte
     fun venture_browser_compose_scroll_metrics(

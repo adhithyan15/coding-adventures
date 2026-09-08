@@ -348,6 +348,11 @@ bool MosaicHost::loadBridge()
   RESOLVE(scrollCommand_, "scroll_command");
   RESOLVE(controlKey_, "control_key");
   RESOLVE(controlText_, "control_text");
+  RESOLVE(controlCopy_, "control_copy");
+  RESOLVE(controlCut_, "control_cut");
+  RESOLVE(controlPaste_, "control_paste");
+  RESOLVE(caretTick_, "caret_tick");
+  RESOLVE(imeCandidateRect_, "ime_candidate_rect");
   RESOLVE(scrollMetrics_, "scroll_metrics");
   RESOLVE(activateLink_, "activate_link");
   RESOLVE(updateHover_, "update_hover");
@@ -357,7 +362,8 @@ bool MosaicHost::loadBridge()
 #undef RESOLVE
 
   if (!new_ || !free_ || !applyProps_ || !handleEvent_ || !scroll_
-      || !scrollCommand_ || !controlKey_ || !controlText_ || !scrollMetrics_
+      || !scrollCommand_ || !controlKey_ || !controlText_ || !controlCopy_
+      || !controlCut_ || !controlPaste_ || !caretTick_ || !imeCandidateRect_ || !scrollMetrics_
       || !activateLink_ || !updateHover_
       || !resize_ || !render_ || !stringFree_) {
     library_.unload();

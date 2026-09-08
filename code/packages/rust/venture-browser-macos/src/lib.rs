@@ -737,6 +737,49 @@ impl MacBrowserHost {
         changed
     }
 
+    pub fn control_copy(&self) -> Option<String> {
+        self.controller.session().control_copy()
+    }
+
+    pub fn control_cut(&mut self) -> Option<String> {
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        let payload = self.controller.session_mut().control_cut(&pipeline);
+        if payload.is_some() {
+            self.controller.synchronize_session_state();
+        }
+        payload
+    }
+
+    pub fn control_paste(&mut self, text: &str) -> bool {
+        self.control_text_input(text)
+    }
+
+    pub fn advance_caret_blink(&mut self, elapsed_ms: u64) -> bool {
+        self.controller
+            .session_mut()
+            .control_advance_caret_blink(elapsed_ms)
+    }
+
+    pub fn ime_candidate_rect_json(&mut self) -> Option<String> {
+        let rect = self.controller.session_mut().focused_ime_candidate_rect()?;
+        Some(format!(
+            "{{\"x\":{},\"y\":{},\"width\":{},\"height\":{}}}",
+            rect.x, rect.y, rect.width, rect.height
+        ))
+    }
+
     pub fn update_hover(&mut self, x: f64, y: f64) -> bool {
         self.controller.update_hover(x, y)
     }
@@ -1012,6 +1055,59 @@ mod mosaic_ffi {
                 .unwrap_or(0)
         }))
         .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_control_copy(
+        host: *mut MacBrowserHost,
+    ) -> *mut c_char {
+        host.as_ref()
+            .and_then(MacBrowserHost::control_copy)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_control_cut(
+        host: *mut MacBrowserHost,
+    ) -> *mut c_char {
+        host.as_mut()
+            .and_then(MacBrowserHost::control_cut)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_control_paste(
+        host: *mut MacBrowserHost,
+        text: *const c_char,
+    ) -> u8 {
+        string_arg(text)
+            .and_then(|text| host.as_mut().map(|host| host.control_paste(&text) as u8))
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_caret_tick(
+        host: *mut MacBrowserHost,
+        elapsed_ms: u64,
+    ) -> u8 {
+        host.as_mut()
+            .map(|host| host.advance_caret_blink(elapsed_ms) as u8)
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_ime_candidate_rect(
+        host: *mut MacBrowserHost,
+    ) -> *mut c_char {
+        host.as_mut()
+            .and_then(MacBrowserHost::ime_candidate_rect_json)
+            .and_then(|value| CString::new(value).ok())
+            .map(CString::into_raw)
+            .unwrap_or(std::ptr::null_mut())
     }
 
     #[no_mangle]

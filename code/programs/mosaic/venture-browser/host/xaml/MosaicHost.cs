@@ -1325,6 +1325,28 @@ public static class MosaicHost
             IntPtr browser,
             [MarshalAs(UnmanagedType.LPUTF8Str)] string text);
 
+        [DllImport(Library, EntryPoint = "venture_browser_windows_control_copy",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr ControlCopy(IntPtr browser);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_control_cut",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr ControlCut(IntPtr browser);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_control_paste",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern byte ControlPaste(
+            IntPtr browser,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_caret_tick",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern byte CaretTick(IntPtr browser, ulong elapsedMilliseconds);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_ime_candidate_rect",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr ImeCandidateRect(IntPtr browser);
+
         [DllImport(Library, EntryPoint = "venture_browser_windows_activate_link",
             CallingConvention = CallingConvention.Cdecl)]
         internal static extern byte ActivateLink(IntPtr browser, double x, double y);

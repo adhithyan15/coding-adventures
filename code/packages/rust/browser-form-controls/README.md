@@ -15,5 +15,13 @@ only exposed to layout through their masked `display_value`. Invalid forms can
 focus the first failing control and synchronize `aria-invalid` plus an
 accessible description without putting validation policy in native adapters.
 
+`ControlEditorPresentation` converts that retained state into reusable logical
+rectangles for carets, selections, composition underlines, validation, and IME
+candidate placement. Pointer placement and drag selection use explicit text
+metrics, control viewports scroll to reveal the caret, and blink timing advances
+only from host-supplied elapsed time. Clipboard copy/cut/paste remains in the
+shared reducer; password controls never return clipboard payloads.
+
 Specs: [`UI53-layout-controls`](../../../specs/UI53-layout-controls.md) and
-[`UI55-form-editing`](../../../specs/UI55-form-editing.md).
+[`UI55-form-editing`](../../../specs/UI55-form-editing.md), and
+[`UI56-editor-presentation`](../../../specs/UI56-editor-presentation.md).

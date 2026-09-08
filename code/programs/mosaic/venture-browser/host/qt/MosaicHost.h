@@ -7,6 +7,7 @@
 #include <QPointer>
 #include <QQuickPaintedItem>
 #include <QVariantMap>
+#include <cstdint>
 
 class QQmlComponent;
 class MosaicHost;
@@ -67,6 +68,8 @@ private:
   using ScrollCommandFn = unsigned char (*)(void *, const char *);
   using ControlKeyFn = unsigned char (*)(void *, const char *, unsigned char);
   using ControlTextFn = unsigned char (*)(void *, const char *);
+  using ControlClipboardFn = char *(*)(void *);
+  using CaretTickFn = unsigned char (*)(void *, std::uint64_t);
   using ScrollMetricsFn = unsigned char (*)(void *, double *, double *, double *, double *);
   using PointFn = unsigned char (*)(void *, double, double);
   using ResizeFn = unsigned char (*)(void *, double, double);
@@ -97,6 +100,11 @@ private:
   ScrollCommandFn scrollCommand_ = nullptr;
   ControlKeyFn controlKey_ = nullptr;
   ControlTextFn controlText_ = nullptr;
+  ControlClipboardFn controlCopy_ = nullptr;
+  ControlClipboardFn controlCut_ = nullptr;
+  ControlTextFn controlPaste_ = nullptr;
+  CaretTickFn caretTick_ = nullptr;
+  ControlClipboardFn imeCandidateRect_ = nullptr;
   ScrollMetricsFn scrollMetrics_ = nullptr;
   PointFn activateLink_ = nullptr;
   PointFn updateHover_ = nullptr;
