@@ -1190,6 +1190,7 @@ members = [
   "oauth-credential-custody",
   "oauth-credential-sealed-store",
   "oauth-installed-app-host",
+  "oauth-private-key-signer",
   "vault-pm-storage-storage-core",
   "vault-pm-storage-removable",
   "vault-pm-repository",
