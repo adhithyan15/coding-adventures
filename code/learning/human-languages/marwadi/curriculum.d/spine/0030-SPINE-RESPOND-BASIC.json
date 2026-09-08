@@ -1,6 +1,7 @@
 {
   "segments": [
-    "MW-PATH-003"
+    "MW-PATH-003",
+    "MW-PATH-032"
   ],
   "omits": [
     "RESPONSE-NO",

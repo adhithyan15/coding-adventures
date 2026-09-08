@@ -75,11 +75,20 @@ number has to exist first. The ten digits **० १ २ ३ ४ ५ ६ ७ ८ 
 at a time, with the four a Latin-trained eye misreads -- **४**, **५**, **७**,
 **८** -- drilled beside the six it guesses. A seller's **बीस।** can now be
 understood and answered with **दस करो।**, and the chapter-31 exchange runs again
-with six turns instead of five. Eleven to nineteen wait on four independent
-vowels and **ळ**; ordinals wait on a citable source rather than on a sign; and
-the track still has no word for no, which a course that can now name a price
-feels more sharply than one that could not.
-The track now contains 312 canonical lessons and 84 distinct taught
+with six turns instead of five.
+Chapters 37--39 close the two gaps that tranche named. **इग्यारा, बारा, तेरा,
+चौदा, पंदरा, सोळा, सतरा, अठारा, उघणीस** fill the hole between ten and twenty,
+one to a lesson and each heard before it is written, and they cost the hand
+exactly the four signs the earlier note had priced: **इ**, **ळ**, **अ** and
+**उ**. **उघणीस** is the point of the run rather than its last item -- the
+**णीस** in it is **बीस**, so nineteen is *one short of twenty*, built on the
+number above it, which is why twenty was taught first. And **कोनी** gives the
+track a word for **no** at last: four signs it has had since chapter 5, taught
+against the **हां सा** of chapter 3 and run as a two-line move -- **कोनी।**
+then **पाछे मिलसू।**, the goodbye that in a bazaar is a walk-away rather than a
+farewell. Ordinals still wait on a citable source rather than on a sign: the
+sweep looked again and found none, and none was invented.
+The track now contains 341 canonical lessons and 94 distinct taught
 headwords, five of them verbs. That is still a small pre-A1
 capability, not completion of pre-A1 and not exam readiness. The curriculum map
 records every untouched spine concept explicitly so the remaining work stays

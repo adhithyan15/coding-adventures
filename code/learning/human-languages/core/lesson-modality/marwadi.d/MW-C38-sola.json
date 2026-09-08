@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C38-sola",
+    "language": "marwadi",
+    "chapter": 38,
+    "sequence": 3270,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fb2e9a970e44bad3"
+  },
+  "findings": []
+}

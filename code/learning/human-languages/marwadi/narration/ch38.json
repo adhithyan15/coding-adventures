@@ -1,0 +1,1528 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 38,
+  "title": "Sixteen to Nineteen, Counting Down",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:3c5d1124612d3aa9",
+  "lessons": [
+    {
+      "id": "MW-W38-lla",
+      "sequence": 3250,
+      "title": "ळ (ḷa) — the letter Hindi does not have",
+      "headword": "ळ",
+      "romanization": "ḷa",
+      "gloss": "the retroflex l Marwari keeps and Hindi does not",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a3f57a8ad31417f0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — a second l"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — a second l until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 14,
+              "perItem": false,
+              "source": "[PAUSE 14s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say igyārā, five lessons back — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *igyārā*, five lessons back — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lāvo, the bring-request verb — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lāvo*, the bring-request verb — **R4**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say caudā — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **caudā** — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a second l",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ळ — ḷa — the retroflex l."
+            },
+            {
+              "kind": "speech",
+              "text": "ल has been in the hand since chapter 7. ळ (ḷa) is a second l made with the tongue curled back to the roof of the mouth, and it is a real difference in Marwari, not a spelling variant."
+            },
+            {
+              "kind": "speech",
+              "text": "It is worth knowing whose letter this is. Standard Hindi has no ळ (ḷa); Marwari, Marathi, Gujarati, Rajasthani more widely and the southern languages all do. A page with ळ (ḷa) on it is announcing that it is not Hindi."
+            },
+            {
+              "kind": "speech",
+              "text": "Sixteen is the number that needs it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ळ (ḷa) three times. Write ल beside it and say which one curls the tongue back. Say both aloud twice, listening for the difference rather than looking for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The second of the four signs the teens ask for."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Omniglot, Numbers in Rajasthani; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W38-lla-recall",
+              "prompt": "Write the retroflex l, the one Hindi does not use.",
+              "assesses": [
+                "MW-SCRIPT-LLA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ळ",
+                "ळ ḷa",
+                "ळ lla"
+              ],
+              "feedback": {
+                "correct": "That is the Marwari l with the tongue curled back.",
+                "incorrect": "The plain l is ल. The retroflex one is ळ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C38-hear-sola",
+      "sequence": 3260,
+      "title": "Hear soḷā — sixteen",
+      "headword": "soḷā",
+      "romanization": "soḷā",
+      "gloss": "sixteen — the retroflex l in a number",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1cd401f868ffe12d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ळ (ḷa) — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ळ** — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say terā, five lessons back — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *terā*, five lessons back — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write लावो — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **लावो** — **R4**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write चौदा — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **चौदा** — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "soḷā — sixteen."
+            },
+            {
+              "kind": "speech",
+              "text": "Six is chha. Sixteen is soḷā, and the two share nothing you can hear — the teens have worn their small numbers down further here than anywhere else in the set."
+            },
+            {
+              "kind": "speech",
+              "text": "What they do share is the retroflex ḷ you have just written. Curl the tongue back for it: so-ḷā, not so-lā. This is where the new letter earns its lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C38-hear-sola-count",
+              "prompt": "Say fifteen, then sixteen.",
+              "assesses": [
+                "MW-LEX-SOLA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "pandarā soḷā",
+                "pandarā, soḷā",
+                "pandara sola",
+                "pandara, sola"
+              ],
+              "feedback": {
+                "correct": "Curl the tongue back on the l of sixteen.",
+                "incorrect": "Fifteen is pandarā; sixteen is soḷā, with the retroflex l."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C38-sola",
+      "sequence": 3270,
+      "title": "सोळा (soḷā) — sixteen on the page",
+      "headword": "सोळा",
+      "romanization": "soḷā",
+      "gloss": "sixteen, on the page — the new letter between two old marks",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:fb2e9a970e44bad3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say soḷā before you look at it — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *soḷā* before you look at it — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write चौदा, five lessons back — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **चौदा**, five lessons back — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chāy lāvo — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chāy lāvo* — **R4**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pandarā — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **pandarā** — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सो + ळा becomes सोळा — soḷā — sixteen."
+            },
+            {
+              "kind": "speech",
+              "text": "सो is already a word in this book: a hundred. Sixteen is that syllable with ळा after it — which is why the retroflex letter had to come first."
+            },
+            {
+              "kind": "speech",
+              "text": "Write सो and सोळा (soḷā) one above the other. Two signs apart, a hundred and sixteen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy सोळा (soḷā) once while looking. Write सो above it and ल below it, then say which of the three lines is the hundred and which letter is the one Hindi does not have."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Rajasthani."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C38-sola-dictation",
+              "prompt": "From soḷā, write sixteen.",
+              "assesses": [
+                "MW-SCRIPT-SOLA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "सोळा",
+                "सोळा sixteen",
+                "सोळा — sixteen"
+              ],
+              "feedback": {
+                "correct": "The hundred's सो, then the retroflex ळा.",
+                "incorrect": "Build it as सो + ळा, with the curled l."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W38-a",
+      "sequence": 3280,
+      "title": "अ — the vowel that has no mark",
+      "headword": "अ",
+      "romanization": "a",
+      "gloss": "the standing letter for short a — the vowel every consonant already carries",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d162d3f22e4ac6e0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the vowel with no mark at all"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the vowel with no mark at all until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write सोळा (soḷā) — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **सोळा** — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write पंदरा, five lessons back — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **पंदरा**, five lessons back — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write चाय लावो — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **चाय लावो** — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the vowel with no mark at all",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अ — a — the short vowel every bare consonant already says."
+            },
+            {
+              "kind": "speech",
+              "text": "Every other vowel in this book arrived twice: as a mark and as a standing letter. अ is different, and the difference is the point of the lesson. Its mark is nothing at all — a consonant written plain, क, is already read ka. That is why you have written this vowel a thousand times without ever seeing it."
+            },
+            {
+              "kind": "speech",
+              "text": "When a word begins on that sound there is no consonant to hide inside, so the letter has to appear. आ, isolated in chapter 2, is its long partner: the same shape with one upright added."
+            },
+            {
+              "kind": "speech",
+              "text": "Eighteen is what needs it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace अ three times. Write आ beside it and mark the one stroke that makes the vowel long. Then write क and say what vowel is already in it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The third of the four signs."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Omniglot, Numbers in Rajasthani; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W38-a-recall",
+              "prompt": "Write the standing letter for short a.",
+              "assesses": [
+                "MW-SCRIPT-A-INDEPENDENT-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "अ",
+                "अ a"
+              ],
+              "feedback": {
+                "correct": "Its mark is nothing at all, so it only ever shows at the front of a word.",
+                "incorrect": "The long one is आ. The short one is अ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C38-hear-satara",
+      "sequence": 3290,
+      "title": "Hear satarā — seventeen",
+      "headword": "satarā",
+      "romanization": "satarā",
+      "gloss": "seventeen — seven, keeping both its letters",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db2e305955931751",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write अ (a) — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **अ** — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pandarā, five lessons back — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pandarā*, five lessons back — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "run the five requests in a row — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: run the five requests in a row — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "satarā — seventeen."
+            },
+            {
+              "kind": "speech",
+              "text": "Seven is sāt. Seventeen is satarā, and this is the clearest one in the whole set: सात is still visible inside it, with only its long vowel shortened before the -arā ending arrives."
+            },
+            {
+              "kind": "speech",
+              "text": "If you have been listening for the shape rather than learning the words, this is the one that proves the shape works."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C38-hear-satara-count",
+              "prompt": "Say sixteen, then seventeen.",
+              "assesses": [
+                "MW-LEX-SATARA-01",
+                "MW-LEX-SOLA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "soḷā satarā",
+                "soḷā, satarā",
+                "sola satara",
+                "sola, satara"
+              ],
+              "feedback": {
+                "correct": "Seventeen still has sāt inside it.",
+                "incorrect": "Sixteen is soḷā; seventeen keeps the sound of seven."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C38-satara",
+      "sequence": 3300,
+      "title": "सतरा (satarā) — seventeen on the page",
+      "headword": "सतरा",
+      "romanization": "satarā",
+      "gloss": "seventeen, on the page — seven with its long mark taken off",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d46c57a53f7417a7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 14,
+              "perItem": false,
+              "source": "[PAUSE 14s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say satarā before you look at it — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *satarā* before you look at it — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ळ (ḷa) — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ळ** — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "run the exchange dikhāvo — karo — lo — do — lāvo once — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: run the exchange **dikhāvo — karo — lo — do — lāvo** once — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स + त + रा becomes सतरा — satarā — seventeen."
+            },
+            {
+              "kind": "speech",
+              "text": "Write सात and then सतरा (satarā) underneath it. The difference is one mark: the ा of seven is gone, and रा is added."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole spelling, and it is the tidiest evidence in the set that the teens are built rather than learned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write सात, then cover it and write सतरा (satarā) from memory. Compare them letter by letter and name the single mark that differs. Then write सोळा (soḷā) above both and read the three down the page."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Rajasthani."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C38-satara-dictation",
+              "prompt": "From satarā, write seventeen.",
+              "assesses": [
+                "MW-SCRIPT-SATARA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "सतरा",
+                "सतरा seventeen",
+                "सतरा — seventeen"
+              ],
+              "feedback": {
+                "correct": "Seven without its long mark, then रा.",
+                "incorrect": "Start from सात, take off the ा, add रा."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C38-hear-athara",
+      "sequence": 3310,
+      "title": "Hear aṭhārā — eighteen",
+      "headword": "aṭhārā",
+      "romanization": "aṭhārā",
+      "gloss": "eighteen — eight, opening on the vowel with no mark",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27388fce930e6016",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write सतरा (satarā) — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **सतरा** — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say soḷā, five lessons back — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *soḷā*, five lessons back — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "run the six-turn numbered exchange once — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: run the six-turn numbered exchange once — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aṭhārā — eighteen."
+            },
+            {
+              "kind": "speech",
+              "text": "Eight is āṭh. Eighteen is aṭhārā: the same two sounds, with the length moved from the front of the word to the middle of it."
+            },
+            {
+              "kind": "speech",
+              "text": "Say them back to back — āṭh, aṭhārā — and hear the long vowel change places. Eighteen is the second of the two teens that begin on a vowel, which is why the letter came before it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C38-hear-athara-count",
+              "prompt": "Say seventeen, then eighteen.",
+              "assesses": [
+                "MW-LEX-ATHARA-01",
+                "MW-LEX-SATARA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "satarā aṭhārā",
+                "satarā, aṭhārā",
+                "satara athara",
+                "satara, athara"
+              ],
+              "feedback": {
+                "correct": "The long vowel of eight has moved to the middle.",
+                "incorrect": "Seventeen is satarā; eighteen opens short and lengthens after the ṭh."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C38-athara",
+      "sequence": 3320,
+      "title": "अठारा (aṭhārā) — eighteen on the page",
+      "headword": "अठारा",
+      "romanization": "aṭhārā",
+      "gloss": "eighteen, on the page — the standing a doing its only job",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a651897155031913",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 14,
+              "perItem": false,
+              "source": "[PAUSE 14s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aṭhārā before you look at it — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aṭhārā* before you look at it — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write अ, four lessons back — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **अ**, four lessons back — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write सोळा (soḷā) — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **सोळा** — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अ + ठा + रा becomes अठारा — aṭhārā — eighteen."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the standing अ doing the one thing it exists for. Write आठ and अठारा (aṭhārā) one above the other:"
+            },
+            {
+              "kind": "speech",
+              "text": "आठ opens on the long आ;"
+            },
+            {
+              "kind": "speech",
+              "text": "अठारा (aṭhārā) opens on the short अ, and moves the length onto ठा."
+            },
+            {
+              "kind": "speech",
+              "text": "Two letters that differ by one stroke, at the front of two numbers ten apart. This is the pair most worth writing twice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write आठ, cover it, write अठारा (aṭhārā) from memory, then uncover and compare the first letter of each. Say which is long and which is short."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Rajasthani."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C38-athara-dictation",
+              "prompt": "From aṭhārā, write eighteen. Mind the first letter.",
+              "assesses": [
+                "MW-SCRIPT-ATHARA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "अठारा",
+                "अठारा eighteen",
+                "अठारा — eighteen"
+              ],
+              "feedback": {
+                "correct": "Short अ at the front, long ा in the middle.",
+                "incorrect": "Eight starts आ; eighteen starts अ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W38-u",
+      "sequence": 3330,
+      "title": "उ (u) — the last standing vowel",
+      "headword": "उ",
+      "romanization": "u",
+      "gloss": "the standing letter for short u — the last of the four the teens need",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9a5f2af87de62c50",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the fifth standing vowel"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the fifth standing vowel until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 16,
+              "perItem": false,
+              "source": "[PAUSE 16s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write अठारा (aṭhārā) — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **अठारा** — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ळ (ḷa), and say which language does not have it — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ळ**, and say which language does not have it — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write अ (a) — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **अ** — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write इ — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **इ** — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the fifth standing vowel",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उ — u — the vowel that hangs under a consonant, standing up."
+            },
+            {
+              "kind": "speech",
+              "text": "Since chapter 13 the hand has hooked ु beneath a letter, and since chapter 6 the longer ू. Neither can begin a word."
+            },
+            {
+              "kind": "speech",
+              "text": "उ is the fifth vowel this book has had to stand up — after आ, ई, ए and अ — and it is the last one the numbers ask for. Nineteen needs it, and nineteen is the last of the teens."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace उ three times. Write ु under a consonant beside it and say which of the two can open a word. Then write the five standing vowels in a row — अ आ इ ई and उ — and say each aloud."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fourth and last of the signs the teens ask for."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Omniglot, Numbers in Rajasthani; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W38-u-recall",
+              "prompt": "Write the standing letter for short u, not its hook.",
+              "assesses": [
+                "MW-SCRIPT-U-INDEPENDENT-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "उ",
+                "उ u"
+              ],
+              "feedback": {
+                "correct": "That is the letter; ु is the hook that hangs under a consonant.",
+                "incorrect": "The hook is ु. The letter stands on the line: उ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C38-hear-ughanis",
+      "sequence": 3340,
+      "title": "Hear ughaṇīs — nineteen",
+      "headword": "ughaṇīs",
+      "romanization": "ughaṇīs",
+      "gloss": "nineteen — one short of twenty, which is why twenty came first",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:772c191d895bf3cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 16,
+              "perItem": false,
+              "source": "[PAUSE 16s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write उ (u) — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **उ** — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say satarā, five lessons back — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *satarā*, five lessons back — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say igyārā — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say **igyārā** — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ughaṇīs — nineteen."
+            },
+            {
+              "kind": "speech",
+              "text": "Every other teen has been the small number plus an ending. This one is not."
+            },
+            {
+              "kind": "speech",
+              "text": "Nine is no, and there is no no in ughaṇīs. What is in it is -ṇīs, which is bīs, twenty, worn down — and ugha-, which means one short of. So nineteen in Marwari is not \"nine-and-ten\". It is one less than twenty, and it is built on the number above it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why twenty was taught before the teens rather than after them. A course that counted straight up would have printed bīs inside nineteen before it had taught bīs. The language counts down here, so the book did too."
+            },
+            {
+              "kind": "speech",
+              "text": "Turner records the same habit further up: ekuṇcālīs, one short of forty, for thirty-nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C38-hear-ughanis-count",
+              "prompt": "Say nineteen, then twenty, then say which number nineteen is built on.",
+              "assesses": [
+                "MW-LEX-UGHANIS-01",
+                "MW-LEX-BEES-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "ughaṇīs bīs bīs",
+                "ughaṇīs bīs — bīs",
+                "ughanis bees bees",
+                "ughaṇīs, bīs, bīs",
+                "ughanis, bees, bees"
+              ],
+              "feedback": {
+                "correct": "Nineteen is one short of twenty, not nine-and-ten.",
+                "incorrect": "Listen for -ṇīs at the end of nineteen: that is bīs."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C38-ughanis",
+      "sequence": 3350,
+      "title": "उघणीस (ughaṇīs) — nineteen on the page",
+      "headword": "उघणीस",
+      "romanization": "ughaṇīs",
+      "gloss": "nineteen, on the page — twenty visible inside it",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5d4a15c59d7eacf9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 14,
+              "perItem": false,
+              "source": "[PAUSE 14s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ughaṇīs before you look at it — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ughaṇīs* before you look at it — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say aṭhārā, four lessons back — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *aṭhārā*, four lessons back — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write सतरा (satarā) — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **सतरा** — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write इग्यारा — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **इग्यारा** — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उ + घ + णी + स becomes उघणीस — ughaṇīs — nineteen."
+            },
+            {
+              "kind": "speech",
+              "text": "Four pieces and no new sign: उ from the last lesson, घ from chapter 10, the retroflex ण from chapter 4, and स from the first page of the book."
+            },
+            {
+              "kind": "speech",
+              "text": "Write बीस under it. The ीस at the end of nineteen is the ीस of twenty, with a retroflex ण in front of it instead of ब. What the ear was told, the page shows."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy उघणीस (ughaṇīs) once while looking, then write बीस beneath it and ring the ीस in both. Finish by writing अठारा (aṭhārā) above the pair, so eighteen, nineteen and twenty stand in a column."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Rajasthani."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C38-ughanis-dictation",
+              "prompt": "Write nineteen, then twenty, and ring the piece they share.",
+              "assesses": [
+                "MW-SCRIPT-UGHANIS-01",
+                "MW-SCRIPT-BEES-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "उघणीस बीस",
+                "उघणीस, बीस",
+                "ughanis bees",
+                "उघणीस बीस ीस"
+              ],
+              "feedback": {
+                "correct": "They share ीस, because nineteen is built on twenty.",
+                "incorrect": "Nineteen is उघणीस and twenty is बीस; look at their last two signs."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R38-count-twenty",
+      "sequence": 3360,
+      "title": "One to twenty, and the number that counts backwards",
+      "headword": "इग्यारा — उघणीस — बीस",
+      "romanization": "igyārā — ughaṇīs — bīs",
+      "gloss": "the whole count from one to twenty, and the one number that is built downwards",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e51874d42b299ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write उघणीस (ughaṇīs) — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **उघणीस** — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write अठारा (aṭhārā), four lessons back — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **अठारा**, four lessons back — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "run the five-turn counter exchange, with no figures in it — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: run the five-turn counter exchange, with no figures in it — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The count is complete for the first time. Run it four ways."
+            },
+            {
+              "kind": "speech",
+              "text": "Say one to twenty straight through, out loud, once slowly and once fast."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear six of the twenty named out of order; say each back and say the one above it."
+            },
+            {
+              "kind": "speech",
+              "text": "Write four of the nine teens from dictation."
+            },
+            {
+              "kind": "speech",
+              "text": "Write the four signs this run of numbers added — इ, ळ (ḷa), अ, उ — and beside each write the number that needed it."
+            },
+            {
+              "kind": "speech",
+              "text": "Then answer aloud: which of the twenty is not built on a smaller number, and what is it built on instead?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Omniglot, Numbers in Rajasthani; Marwari Pathshala, Lesson 9; Turner, A Comparative Dictionary of the Indo-Aryan Languages."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R38-count-twenty-down",
+              "prompt": "Write the number that means one short of twenty, and say what it is built on.",
+              "assesses": [
+                "MW-LEX-UGHANIS-01",
+                "MW-LEX-BEES-01",
+                "MW-SCRIPT-UGHANIS-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "उघणीस बीस",
+                "उघणीस, बीस",
+                "उघणीस — bīs",
+                "ughanis bees"
+              ],
+              "feedback": {
+                "correct": "Nineteen is built on twenty, which is why twenty was taught first.",
+                "incorrect": "It is the last of the teens: उघणीस, and the -ीस in it is बीस."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

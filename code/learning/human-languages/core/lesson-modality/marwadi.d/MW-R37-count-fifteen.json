@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R37-count-fifteen",
+    "language": "marwadi",
+    "chapter": 37,
+    "sequence": 3240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3c54ef7a6a2764a"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "language": "marwadi",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:5b8ac0c93f7c056f",
+  "lessonIds": [
+    "MW-W37-i",
+    "MW-C37-hear-igyaara",
+    "MW-C37-igyaara",
+    "MW-C37-hear-baara",
+    "MW-C37-baara",
+    "MW-C37-hear-tera",
+    "MW-C37-tera",
+    "MW-C37-hear-chauda",
+    "MW-C37-chauda",
+    "MW-C37-hear-pandara",
+    "MW-C37-pandara",
+    "MW-R37-count-fifteen"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 0,
+  "text": "marwadi/narration/ch37.txt",
+  "json": "marwadi/narration/ch37.json",
+  "textHash": "fnv1a64:65f60872951bc523",
+  "jsonHash": "fnv1a64:0b9d3f47984330fb",
+  "findings": []
+}

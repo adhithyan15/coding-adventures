@@ -1,0 +1,24 @@
+{
+  "chapter": 38,
+  "title": "Sixteen to Nineteen, Counting Down",
+  "label": "ch:mw-teens-to-nineteen",
+  "canDo": "I can say and write sixteen to nineteen in Marwadi, count one to twenty straight through, and say why nineteen is built on twenty rather than on nine.",
+  "payoff": {
+    "lesson": "MW-R38-count-twenty",
+    "kind": "four-skill-function-map",
+    "summary": "One to twenty run four ways, with the four new signs written against the numbers that needed them, and the subtractive nineteen named and explained.",
+    "assesses": [
+      "MW-LEX-SOLA-01",
+      "MW-LEX-SATARA-01",
+      "MW-LEX-ATHARA-01",
+      "MW-LEX-UGHANIS-01",
+      "MW-SCRIPT-SOLA-01",
+      "MW-SCRIPT-SATARA-01",
+      "MW-SCRIPT-ATHARA-01",
+      "MW-SCRIPT-UGHANIS-01",
+      "MW-SCRIPT-LLA-01",
+      "MW-SCRIPT-A-INDEPENDENT-01",
+      "MW-SCRIPT-U-INDEPENDENT-01"
+    ]
+  }
+}

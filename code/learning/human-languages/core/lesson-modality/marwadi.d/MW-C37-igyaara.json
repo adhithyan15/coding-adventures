@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C37-igyaara",
+    "language": "marwadi",
+    "chapter": 37,
+    "sequence": 3150,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:46a635d95ba1ea3c"
+  },
+  "findings": []
+}
