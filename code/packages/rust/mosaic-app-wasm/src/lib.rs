@@ -1,5 +1,7 @@
 //! Scalar WebAssembly exports over the standard Mosaic runtime.
-use mosaic_app_runtime::{Event, MosaicApp, MosaicRuntime, Snapshot, StartContext};
+use mosaic_app_runtime::{
+    EffectId, EffectResult, Event, MosaicApp, MosaicRuntime, RuntimeError, Snapshot, StartContext,
+};
 use serde::Deserialize;
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
@@ -7,11 +9,67 @@ use std::collections::BTreeMap;
 #[derive(Deserialize)]
 #[serde(tag = "op", rename_all = "camelCase", deny_unknown_fields)]
 enum Request {
-    Create { context: StartContext },
-    Dispatch { handle: u32, event: Event },
-    Snapshot { handle: u32 },
-    Restore { handle: u32, snapshot: Snapshot },
-    Destroy { handle: u32 },
+    Create {
+        context: StartContext,
+    },
+    Dispatch {
+        handle: u32,
+        event: Event,
+    },
+    CompleteEffect {
+        handle: u32,
+        id: EffectId,
+        result: EffectResult,
+    },
+    Snapshot {
+        handle: u32,
+    },
+    Restore {
+        handle: u32,
+        snapshot: Snapshot,
+    },
+    Destroy {
+        handle: u32,
+    },
+}
+
+struct Failure {
+    message: String,
+    code: &'static str,
+    pending: Vec<EffectId>,
+}
+impl From<String> for Failure {
+    fn from(message: String) -> Self {
+        Self {
+            message,
+            code: "invalidRequest",
+            pending: vec![],
+        }
+    }
+}
+impl From<&str> for Failure {
+    fn from(message: &str) -> Self {
+        message.to_owned().into()
+    }
+}
+impl Failure {
+    fn runtime<E: std::fmt::Display>(error: RuntimeError<E>) -> Self {
+        let pending = if let RuntimeError::PendingEffects(ids) = &error {
+            ids.clone()
+        } else {
+            vec![]
+        };
+        let code = if pending.is_empty() {
+            "runtime"
+        } else {
+            "pendingEffects"
+        };
+        Self {
+            message: error.to_string(),
+            code,
+            pending,
+        }
+    }
 }
 
 /// One module's independent application instances and owned transport buffers.
@@ -35,8 +93,9 @@ impl<A: MosaicApp> Default for Bridge<A> {
 impl<A: MosaicApp> Bridge<A> {
     /// Execute JSON without exposing application pointers to the host.
     pub fn request(&mut self, bytes: &[u8], factory: impl FnOnce() -> A) -> Value {
-        let result = (|| -> Result<Value, String> {
-            let request: Request = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
+        let result = (|| -> Result<Value, Failure> {
+            let request: Request =
+                serde_json::from_slice(bytes).map_err(|e| Failure::from(e.to_string()))?;
             match request {
                 Request::Create { context } => {
                     let handle = self.next_handle;
@@ -44,7 +103,7 @@ impl<A: MosaicApp> Bridge<A> {
                         .checked_add(1)
                         .ok_or("application handle limit reached")?;
                     let mut app = MosaicRuntime::new(factory());
-                    let update = app.start(context).map_err(|e| e.to_string())?;
+                    let update = app.start(context).map_err(Failure::runtime)?;
                     self.apps.insert(handle, app);
                     self.next_handle = next;
                     Ok(json!({ "handle": handle, "update": update }))
@@ -59,29 +118,38 @@ impl<A: MosaicApp> Bridge<A> {
                     let update = self
                         .app(handle)?
                         .dispatch(event)
-                        .map_err(|e| e.to_string())?;
+                        .map_err(Failure::runtime)?;
+                    Ok(json!(update))
+                }
+                Request::CompleteEffect { handle, id, result } => {
+                    let update = self
+                        .app(handle)?
+                        .complete_effect(id, result)
+                        .map_err(Failure::runtime)?;
                     Ok(json!(update))
                 }
                 Request::Snapshot { handle } => {
-                    let snapshot = self.app(handle)?.snapshot().map_err(|e| e.to_string())?;
+                    let snapshot = self.app(handle)?.snapshot().map_err(Failure::runtime)?;
                     Ok(json!(snapshot))
                 }
                 Request::Restore { handle, snapshot } => {
                     let update = self
                         .app(handle)?
                         .restore(snapshot)
-                        .map_err(|e| e.to_string())?;
+                        .map_err(Failure::runtime)?;
                     Ok(json!(update))
                 }
             }
         })();
         match result {
             Ok(value) => json!({ "ok": true, "value": value }),
-            Err(error) => json!({ "ok": false, "error": error }),
+            Err(error) => {
+                json!({ "ok": false, "error": error.message, "code": error.code, "pendingEffects": error.pending })
+            }
         }
     }
 
-    fn app(&mut self, handle: u32) -> Result<&mut MosaicRuntime<A>, String> {
+    fn app(&mut self, handle: u32) -> Result<&mut MosaicRuntime<A>, Failure> {
         self.apps
             .get_mut(&handle)
             .ok_or_else(|| "unknown application handle".into())

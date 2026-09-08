@@ -7,11 +7,51 @@
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::collections::BTreeSet;
 use std::error::Error;
 use std::fmt;
 
-/// The JSON protocol version understood by this release.
+/// Default JSON protocol version, retained for existing hosts.
 pub const PROTOCOL_VERSION: u32 = 1;
+/// Opt-in protocol with dedicated awaited-effect completion.
+pub const EFFECT_PROTOCOL_VERSION: u32 = 2;
+pub type EffectId = u64;
+const MAX_EFFECT_ID: u64 = 9_007_199_254_740_991;
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Delivery {
+    #[default]
+    Notify,
+    Await,
+}
+
+/// Exactly one externally tagged outcome. Cancellation is not a failure.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum EffectResult {
+    Ok(Value),
+    Cancelled(EmptyOutcome),
+    Failed(EffectFailure),
+}
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EmptyOutcome {}
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EffectFailure {
+    pub message: String,
+}
+#[derive(Debug)]
+pub enum EffectCompletionError<E> {
+    Unsupported,
+    Application(E),
+}
+impl<E> From<E> for EffectCompletionError<E> {
+    fn from(error: E) -> Self {
+        Self::Application(error)
+    }
+}
 
 /// Application behavior implemented once in Rust.
 ///
@@ -24,7 +64,7 @@ pub trait MosaicApp {
     /// Produce the initial view model for a newly created application.
     fn start(&mut self, context: StartContext) -> Result<AppUpdate, Self::Error>;
 
-    /// Apply one semantic UI or host-effect event.
+    /// Apply one semantic UI event.
     fn dispatch(&mut self, event: Event) -> Result<AppUpdate, Self::Error>;
 
     /// Return an opaque, versioned application snapshot when supported.
@@ -32,6 +72,16 @@ pub trait MosaicApp {
 
     /// Replace application state from an opaque snapshot and render it.
     fn restore(&mut self, snapshot: Snapshot) -> Result<AppUpdate, Self::Error>;
+
+    /// Complete an awaited capability without consuming a UI event sequence.
+    /// As with dispatch, an error must leave application state unchanged.
+    fn complete_effect(
+        &mut self,
+        _id: EffectId,
+        _result: EffectResult,
+    ) -> Result<AppUpdate, EffectCompletionError<Self::Error>> {
+        Err(EffectCompletionError::Unsupported)
+    }
 }
 
 /// Host information supplied at application startup.
@@ -80,7 +130,7 @@ pub enum Platform {
     Web,
 }
 
-/// A semantic UI event or a completed host effect.
+/// A semantic UI event. Awaited results use the dedicated completion method.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Event {
@@ -115,7 +165,9 @@ pub struct Snapshot {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Effect {
-    pub id: u64,
+    pub id: EffectId,
+    #[serde(default)]
+    pub delivery: Delivery,
     pub kind: String,
     pub payload: Value,
 }
@@ -159,7 +211,7 @@ impl AppUpdate {
 }
 
 /// A complete update sent to a generated host.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Update {
     pub protocol_version: u32,
@@ -169,10 +221,29 @@ pub struct Update {
     pub announcements: Vec<Announcement>,
 }
 
+// Protocol 1 keeps its original effect shape; v2 always includes Delivery.
+impl Serialize for Update {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeStruct;
+        let effects: Vec<Value> = self.effects.iter().map(|effect| {
+            if self.protocol_version == PROTOCOL_VERSION {
+                serde_json::json!({"id": effect.id, "kind": effect.kind, "payload": effect.payload})
+            } else { serde_json::json!(effect) }
+        }).collect();
+        let mut wire = serializer.serialize_struct("Update", 5)?;
+        wire.serialize_field("protocolVersion", &self.protocol_version)?;
+        wire.serialize_field("revision", &self.revision)?;
+        wire.serialize_field("props", &self.props)?;
+        wire.serialize_field("effects", &effects)?;
+        wire.serialize_field("announcements", &self.announcements)?;
+        wire.end()
+    }
+}
+
 impl Update {
-    fn from_app(revision: u64, app: AppUpdate) -> Self {
+    fn from_app(protocol_version: u32, revision: u64, app: AppUpdate) -> Self {
         Self {
-            protocol_version: PROTOCOL_VERSION,
+            protocol_version,
             revision,
             props: app.props,
             effects: app.effects,
@@ -191,6 +262,10 @@ enum RuntimeState {
 pub struct MosaicRuntime<A> {
     app: A,
     state: RuntimeState,
+    protocol_version: u32,
+    pending: BTreeSet<EffectId>,
+    last_effect_id: EffectId,
+    poisoned: bool,
 }
 
 impl<A: MosaicApp> MosaicRuntime<A> {
@@ -198,11 +273,59 @@ impl<A: MosaicApp> MosaicRuntime<A> {
         Self {
             app,
             state: RuntimeState::Created,
+            protocol_version: PROTOCOL_VERSION,
+            pending: BTreeSet::new(),
+            last_effect_id: 0,
+            poisoned: false,
         }
+    }
+
+    fn healthy(&self) -> Result<(), RuntimeError<A::Error>> {
+        if self.poisoned {
+            Err(RuntimeError::Poisoned)
+        } else {
+            Ok(())
+        }
+    }
+
+    // Bad application output cannot be rolled back generically. Refuse further
+    // use of that instance instead of retrying against potentially changed state.
+    fn accept_effects(&mut self, update: &AppUpdate) -> Result<(), RuntimeError<A::Error>> {
+        let mut batch = BTreeSet::new();
+        for effect in &update.effects {
+            let unsupported = self.protocol_version < EFFECT_PROTOCOL_VERSION
+                && effect.delivery == Delivery::Await;
+            let invalid = self.protocol_version == EFFECT_PROTOCOL_VERSION
+                && (effect.id <= self.last_effect_id
+                    || effect.id > MAX_EFFECT_ID
+                    || !batch.insert(effect.id));
+            if unsupported || invalid {
+                self.poisoned = true;
+                return Err(if unsupported {
+                    RuntimeError::EffectsRequireV2
+                } else {
+                    RuntimeError::InvalidEffectId(effect.id)
+                });
+            }
+        }
+        if self.protocol_version == EFFECT_PROTOCOL_VERSION {
+            if let Some(id) = batch.last() {
+                self.last_effect_id = *id;
+            }
+            self.pending.extend(
+                update
+                    .effects
+                    .iter()
+                    .filter(|effect| effect.delivery == Delivery::Await)
+                    .map(|effect| effect.id),
+            );
+        }
+        Ok(())
     }
 
     /// Start the app exactly once and assign revision 1.
     pub fn start(&mut self, context: StartContext) -> Result<Update, RuntimeError<A::Error>> {
+        self.healthy()?;
         if self.state != RuntimeState::Created {
             return Err(RuntimeError::AlreadyStarted);
         }
@@ -210,17 +333,20 @@ impl<A: MosaicApp> MosaicRuntime<A> {
         if !context.text_scale.is_finite() || context.text_scale <= 0.0 {
             return Err(RuntimeError::InvalidTextScale);
         }
-
+        let version = context.protocol_version;
         let app_update = self.app.start(context).map_err(RuntimeError::Application)?;
+        self.protocol_version = version;
+        self.accept_effects(&app_update)?;
         self.state = RuntimeState::Running {
             last_sequence: 0,
             revision: 1,
         };
-        Ok(Update::from_app(1, app_update))
+        Ok(Update::from_app(version, 1, app_update))
     }
 
     /// Dispatch the next event in sequence and assign the next revision.
     pub fn dispatch(&mut self, event: Event) -> Result<Update, RuntimeError<A::Error>> {
+        self.healthy()?;
         validate_protocol(event.protocol_version)?;
         let RuntimeState::Running {
             last_sequence,
@@ -229,7 +355,12 @@ impl<A: MosaicApp> MosaicRuntime<A> {
         else {
             return Err(RuntimeError::NotStarted);
         };
-
+        if event.protocol_version != self.protocol_version {
+            return Err(RuntimeError::ProtocolVersionMismatch {
+                expected: self.protocol_version,
+                received: event.protocol_version,
+            });
+        }
         let expected = last_sequence
             .checked_add(1)
             .ok_or(RuntimeError::SequenceOverflow)?;
@@ -242,28 +373,75 @@ impl<A: MosaicApp> MosaicRuntime<A> {
         let next_revision = revision
             .checked_add(1)
             .ok_or(RuntimeError::RevisionOverflow)?;
-
         let app_update = self
             .app
             .dispatch(event)
             .map_err(RuntimeError::Application)?;
+        self.accept_effects(&app_update)?;
         self.state = RuntimeState::Running {
             last_sequence: expected,
             revision: next_revision,
         };
-        Ok(Update::from_app(next_revision, app_update))
+        Ok(Update::from_app(
+            self.protocol_version,
+            next_revision,
+            app_update,
+        ))
     }
 
-    /// Snapshot a running app without changing its sequence or revision.
-    pub fn snapshot(&self) -> Result<Option<Snapshot>, RuntimeError<A::Error>> {
+    fn settled(&self) -> Result<(), RuntimeError<A::Error>> {
+        self.healthy()?;
         if self.state == RuntimeState::Created {
             return Err(RuntimeError::NotStarted);
         }
+        if !self.pending.is_empty() {
+            return Err(RuntimeError::PendingEffects(self.pending_effects()));
+        }
+        Ok(())
+    }
+
+    /// Snapshot a settled app without changing its sequence or revision.
+    pub fn snapshot(&self) -> Result<Option<Snapshot>, RuntimeError<A::Error>> {
+        self.settled()?;
         self.app.snapshot().map_err(RuntimeError::Application)
     }
 
-    /// Restore a running app and assign a new revision without consuming an event.
+    /// Restore a settled app without consuming an event or recycling effect IDs.
     pub fn restore(&mut self, snapshot: Snapshot) -> Result<Update, RuntimeError<A::Error>> {
+        self.settled()?;
+        let RuntimeState::Running {
+            last_sequence,
+            revision,
+        } = self.state
+        else {
+            unreachable!()
+        };
+        let next_revision = revision
+            .checked_add(1)
+            .ok_or(RuntimeError::RevisionOverflow)?;
+        let app_update = self
+            .app
+            .restore(snapshot)
+            .map_err(RuntimeError::Application)?;
+        self.accept_effects(&app_update)?;
+        self.state = RuntimeState::Running {
+            last_sequence,
+            revision: next_revision,
+        };
+        Ok(Update::from_app(
+            self.protocol_version,
+            next_revision,
+            app_update,
+        ))
+    }
+
+    /// Accept a pending result and advance revision, preserving UI event sequence.
+    pub fn complete_effect(
+        &mut self,
+        id: EffectId,
+        result: EffectResult,
+    ) -> Result<Update, RuntimeError<A::Error>> {
+        self.healthy()?;
         let RuntimeState::Running {
             last_sequence,
             revision,
@@ -271,50 +449,65 @@ impl<A: MosaicApp> MosaicRuntime<A> {
         else {
             return Err(RuntimeError::NotStarted);
         };
+        if self.protocol_version < EFFECT_PROTOCOL_VERSION {
+            return Err(RuntimeError::EffectsRequireV2);
+        }
+        if !self.pending.contains(&id) {
+            return Err(RuntimeError::UnknownEffect(id));
+        }
         let next_revision = revision
             .checked_add(1)
             .ok_or(RuntimeError::RevisionOverflow)?;
-
         let app_update = self
             .app
-            .restore(snapshot)
-            .map_err(RuntimeError::Application)?;
+            .complete_effect(id, result)
+            .map_err(|error| match error {
+                EffectCompletionError::Unsupported => RuntimeError::CompletionUnsupported,
+                EffectCompletionError::Application(error) => RuntimeError::Application(error),
+            })?;
+        self.accept_effects(&app_update)?;
+        self.pending.remove(&id);
         self.state = RuntimeState::Running {
             last_sequence,
             revision: next_revision,
         };
-        Ok(Update::from_app(next_revision, app_update))
+        Ok(Update::from_app(
+            self.protocol_version,
+            next_revision,
+            app_update,
+        ))
     }
 
+    /// Outstanding Await IDs, in ascending order, for host diagnostics.
+    pub fn pending_effects(&self) -> Vec<EffectId> {
+        self.pending.iter().copied().collect()
+    }
     pub fn current_revision(&self) -> Option<u64> {
         match self.state {
             RuntimeState::Created => None,
             RuntimeState::Running { revision, .. } => Some(revision),
         }
     }
-
     pub fn next_sequence(&self) -> Option<u64> {
         match self.state {
             RuntimeState::Created => None,
             RuntimeState::Running { last_sequence, .. } => last_sequence.checked_add(1),
         }
     }
-
     pub fn app(&self) -> &A {
         &self.app
     }
-
     pub fn into_inner(self) -> A {
         self.app
     }
 }
 
 fn validate_protocol<E>(received: u32) -> Result<(), RuntimeError<E>> {
-    if received == PROTOCOL_VERSION {
+    if matches!(received, PROTOCOL_VERSION | EFFECT_PROTOCOL_VERSION) {
         Ok(())
     } else {
         Err(RuntimeError::ProtocolVersionMismatch {
-            expected: PROTOCOL_VERSION,
+            expected: EFFECT_PROTOCOL_VERSION,
             received,
         })
     }
@@ -331,6 +524,12 @@ pub enum RuntimeError<E> {
     SequenceOverflow,
     RevisionOverflow,
     Application(E),
+    PendingEffects(Vec<EffectId>),
+    UnknownEffect(EffectId),
+    InvalidEffectId(EffectId),
+    EffectsRequireV2,
+    CompletionUnsupported,
+    Poisoned,
 }
 
 impl<E: fmt::Display> fmt::Display for RuntimeError<E> {
@@ -352,6 +551,14 @@ impl<E: fmt::Display> fmt::Display for RuntimeError<E> {
             Self::SequenceOverflow => f.write_str("Mosaic event sequence overflow"),
             Self::RevisionOverflow => f.write_str("Mosaic update revision overflow"),
             Self::Application(error) => write!(f, "Mosaic application error: {error}"),
+            Self::PendingEffects(ids) => write!(f, "Mosaic pending effects: {ids:?}"),
+            Self::UnknownEffect(id) => write!(f, "unknown or completed Mosaic effect: {id}"),
+            Self::InvalidEffectId(id) => write!(f, "invalid or reused Mosaic effect id: {id}"),
+            Self::EffectsRequireV2 => f.write_str("awaited Mosaic effects require protocol 2"),
+            Self::CompletionUnsupported => {
+                f.write_str("application does not implement effect completion")
+            }
+            Self::Poisoned => f.write_str("Mosaic instance produced invalid effects; recreate it"),
         }
     }
 }
@@ -387,6 +594,7 @@ mod tests {
         dispatches: usize,
         restores: usize,
         fail_next_dispatch: bool,
+        effect: Option<(EffectId, Delivery)>,
     }
 
     impl MosaicApp for TestApp {
@@ -406,7 +614,8 @@ mod tests {
             Ok(AppUpdate {
                 props: json!({ "event": event.name }),
                 effects: vec![Effect {
-                    id: 7,
+                    id: self.effect.unwrap_or((7, Delivery::Notify)).0,
+                    delivery: self.effect.unwrap_or((7, Delivery::Notify)).1,
                     kind: "storage.set".to_string(),
                     payload: json!({ "key": "counter", "value": 1 }),
                 }],
@@ -468,6 +677,112 @@ mod tests {
     }
 
     #[test]
+    fn version_one_wire_shape_is_unchanged_and_version_two_is_explicit() {
+        for version in [PROTOCOL_VERSION, EFFECT_PROTOCOL_VERSION] {
+            let mut runtime = MosaicRuntime::new(TestApp::default());
+            runtime
+                .start(StartContext {
+                    protocol_version: version,
+                    ..start_context()
+                })
+                .unwrap();
+            let mut event = Event::new(1, "increment", json!({}));
+            event.protocol_version = version;
+            let update = runtime.dispatch(event).unwrap();
+            let wire = serde_json::to_value(&update).unwrap();
+            if version == PROTOCOL_VERSION {
+                assert_eq!(
+                    wire["effects"][0],
+                    json!({"id": 7, "kind": "storage.set", "payload": {"key": "counter", "value": 1}})
+                );
+            } else {
+                assert_eq!(wire["effects"][0]["delivery"], "notify");
+            }
+            assert_eq!(serde_json::from_value::<Update>(wire).unwrap(), update);
+        }
+    }
+
+    #[test]
+    fn invalid_output_poisoning_prevents_retry_against_changed_app_state() {
+        for (version, id, delivery) in [
+            (1, 1, Delivery::Await),
+            (2, 0, Delivery::Notify),
+            (2, MAX_EFFECT_ID + 1, Delivery::Await),
+        ] {
+            let mut runtime = MosaicRuntime::new(TestApp {
+                effect: Some((id, delivery)),
+                ..TestApp::default()
+            });
+            runtime
+                .start(StartContext {
+                    protocol_version: version,
+                    ..start_context()
+                })
+                .unwrap();
+            let mut event = Event::new(1, "increment", json!({}));
+            event.protocol_version = version;
+            assert!(runtime.dispatch(event.clone()).is_err());
+            assert!(matches!(
+                runtime.dispatch(event),
+                Err(RuntimeError::Poisoned)
+            ));
+            assert!(matches!(runtime.snapshot(), Err(RuntimeError::Poisoned)));
+            assert_eq!(runtime.app().dispatches, 1);
+        }
+        let mut runtime = MosaicRuntime::new(TestApp::default());
+        runtime
+            .start(StartContext {
+                protocol_version: 2,
+                ..start_context()
+            })
+            .unwrap();
+        for sequence in [1, 2] {
+            let mut event = Event::new(sequence, "increment", json!({}));
+            event.protocol_version = 2;
+            let result = runtime.dispatch(event);
+            if sequence == 1 {
+                assert!(result.is_ok());
+            } else {
+                assert!(matches!(result, Err(RuntimeError::InvalidEffectId(7))));
+            }
+        }
+        assert!(matches!(
+            runtime.restore(snapshot()),
+            Err(RuntimeError::Poisoned)
+        ));
+        assert_eq!(runtime.app().restores, 0);
+    }
+
+    #[test]
+    fn default_completion_and_pending_restore_never_silently_drop_work() {
+        let mut runtime = MosaicRuntime::new(TestApp {
+            effect: Some((1, Delivery::Await)),
+            ..TestApp::default()
+        });
+        runtime
+            .start(StartContext {
+                protocol_version: 2,
+                ..start_context()
+            })
+            .unwrap();
+        let mut event = Event::new(1, "increment", json!({}));
+        event.protocol_version = 2;
+        runtime.dispatch(event).unwrap();
+        assert!(matches!(
+            runtime.restore(snapshot()),
+            Err(RuntimeError::PendingEffects(_))
+        ));
+        assert_eq!(runtime.app().restores, 0);
+        assert!(matches!(
+            runtime.complete_effect(1, EffectResult::Cancelled(EmptyOutcome {})),
+            Err(RuntimeError::CompletionUnsupported)
+        ));
+        assert_eq!(runtime.pending_effects(), vec![1]);
+        assert_eq!(runtime.current_revision(), Some(2));
+        assert_eq!(runtime.next_sequence(), Some(2));
+    }
+
+    #[test]
     fn rejects_calls_before_start_and_a_second_start() {
         let mut runtime = MosaicRuntime::new(TestApp::default());
 
@@ -493,15 +808,15 @@ mod tests {
     fn rejects_wrong_protocol_before_calling_the_app() {
         let mut runtime = MosaicRuntime::new(TestApp::default());
         let context = StartContext {
-            protocol_version: PROTOCOL_VERSION + 1,
+            protocol_version: EFFECT_PROTOCOL_VERSION + 1,
             ..start_context()
         };
         assert!(matches!(
             runtime.start(context),
             Err(RuntimeError::ProtocolVersionMismatch {
-                expected: PROTOCOL_VERSION,
+                expected: EFFECT_PROTOCOL_VERSION,
                 received
-            }) if received == PROTOCOL_VERSION + 1
+            }) if received == EFFECT_PROTOCOL_VERSION + 1
         ));
         assert_eq!(runtime.app().starts, 0);
 

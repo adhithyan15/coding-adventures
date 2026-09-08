@@ -44,3 +44,20 @@ The Node tests load compiled artifacts, exercise independent runtime instances,
 failed-event retries, opaque snapshots and teardown, and replay VisiCalc's
 shared presentation contract. Browser rendering acceptance belongs to the root
 application integration; these tests do not establish visual or native parity.
+
+## Effect completion
+
+`module.create({protocolVersion: 2})` enables UI47's dedicated channel. Call
+`host.completeEffect(id, {ok: payload})`, `{cancelled: {}}`, or
+`{failed: {message: "..."}}`. The returned update can contain further effects.
+Completions advance revision but do not consume dispatch sequence. Failed calls
+retain the last successful `host.update`. Disposed hosts reject callbacks locally;
+wire requests also reject destroyed handles, which are never reused.
+
+The new wire request is `{op: "completeEffect", handle, id, result}`. Errors
+preserve the existing `error` string and add `code` and `pendingEffects` fields.
+JavaScript throws `MosaicHostError`; pending snapshot/restore errors have code
+`"pendingEffects"` and the outstanding IDs. Defer autosave until completion;
+neither snapshot nor restore silently abandons or replays a pending operation.
+Actual file/clipboard/dialog execution belongs to capability handlers and is not
+implemented by this transport. Existing create calls default to protocol 1.

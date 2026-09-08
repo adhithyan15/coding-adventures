@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #define MOSAIC_APP_PROTOCOL_VERSION 1u
+#define MOSAIC_APP_EFFECT_PROTOCOL_VERSION 2u
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,7 +34,8 @@ enum {
     MOSAIC_STATUS_APPLICATION_ERROR = 4,
     MOSAIC_STATUS_ENCODE_ERROR = 5,
     MOSAIC_STATUS_PANIC = 6,
-    MOSAIC_STATUS_POISONED = 7
+    MOSAIC_STATUS_POISONED = 7,
+    MOSAIC_STATUS_PENDING_EFFECTS = 8
 };
 
 /* On success, output buffers contain JSON. On failure they contain a bounded
@@ -43,6 +45,11 @@ mosaic_status mosaic_app_create(mosaic_bytes start, mosaic_handle *app,
                                 mosaic_buffer *initial_update);
 mosaic_status mosaic_app_dispatch(mosaic_handle app, mosaic_bytes event,
                                   mosaic_buffer *update);
+/* Protocol 2 only. id is a JSON integer; result is one tagged outcome:
+ * {"ok": value}, {"cancelled": {}}, or {"failed": {"message": "..."}}.
+ * The handle must still be live. Completion does not consume an event sequence. */
+mosaic_status mosaic_app_complete_effect(mosaic_handle app, mosaic_bytes id,
+                                         mosaic_bytes result, mosaic_buffer *update);
 mosaic_status mosaic_app_snapshot(mosaic_handle app, mosaic_buffer *snapshot);
 mosaic_status mosaic_app_restore(mosaic_handle app, mosaic_bytes snapshot,
                                  mosaic_buffer *update);

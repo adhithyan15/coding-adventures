@@ -29,3 +29,15 @@ handle, and later calls return `MOSAIC_STATUS_POISONED`; unknown state is never
 allowed to continue silently.
 
 See [`include/mosaic_app.h`](include/mosaic_app.h) for the C contract.
+
+Protocol 2 adds `mosaic_app_complete_effect(app, id, result, update)`: `id` is
+a borrowed JSON integer and `result` a borrowed tagged JSON outcome (`ok`,
+`cancelled`, or `failed`). The output follows the same owned-buffer rules as
+dispatch. Completion does not consume a UI event sequence. Snapshot and restore
+return `MOSAIC_STATUS_PENDING_EFFECTS` (8) with pending IDs in the diagnostic
+while awaited work remains. Existing status numbers and v1 symbols are unchanged.
+Generated native hosts still opt into v1 until their capability handlers migrate.
+
+Callbacks must remain bound to the originating live handle. Cancel or detach
+callbacks before destroying it; a freed raw C pointer must never be passed back
+to the ABI, even if another allocation happens to occupy that address.

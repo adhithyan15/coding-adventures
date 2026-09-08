@@ -1,6 +1,6 @@
 # UI47 — Host capability effects: giving `Effect` a completion path
 
-**Status:** Specification (decision recorded, not yet implemented)
+**Status:** Protocol core implemented (#14547); capability handlers and native host migrations remain
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI31 (host table), `mosaic-app-runtime`, `mosaic-app-capi`
 **Decides:** #13645. **Unblocks:** #13728, and through it #13640.
@@ -29,8 +29,9 @@ worse about it.
 
 ## 2. What is actually there today
 
-Every claim in this section was re-verified against `main` at the time of
-writing rather than carried over from the issue that prompted it. Two of the
+This section records the pre-implementation investigation. The runtime, C ABI,
+WASM bridge and conformance fixture now implement the channel described in §5;
+file handlers and native host migrations remain separate work. Two of the
 issue's characterisations turned out to be understated; §4 covers those.
 
 ### 2.1 `hostIntent` — the working mechanism
@@ -198,8 +199,9 @@ failure will show an error banner for an ordinary user action.
 
 ### 5.3 Version negotiation
 
-`mosaic_app_create` already carries a `StartContext`. It gains a protocol
-version, and the app learns what the host supports:
+`mosaic_app_create` already carries a `StartContext` with a protocol version.
+Version 1 remains the default; hosts opt into version 2 and the app learns what
+the host supports:
 
 - A **v1 host** with a **v2 app**: the app is told the host cannot complete
   effects and must degrade deliberately — refusing an import with a clear
@@ -246,7 +248,8 @@ the app is snapshotted?** The honest answer is that a snapshot taken mid-effect
 must either refuse, or record the pending effect and re-emit it on restore.
 Section 8 now settles that question (#13932): refuse standalone snapshot and
 restore while any Await effect remains outstanding. This unblocks the protocol
-implementation tracked in #14547; it does not mean the channel exists yet.
+implementation tracked in #14547. The core channel is implemented; this does not
+establish capability execution or native host acceptance.
 
 **The deciding argument** is that (B) is not actually a resting place. It is
 today's situation with a name, and today's situation already silently swallows
