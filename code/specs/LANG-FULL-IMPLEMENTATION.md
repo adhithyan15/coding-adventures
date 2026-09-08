@@ -31,6 +31,12 @@ boolean array through a rank-aware value formal with two non-unit lower bounds.
 The callee's checkerboard and the caller's unchanged initialized cells verify
 both descriptor metadata and isolated array value storage.
 
+**AL4 path-independent standard-result arithmetic:** an exact result produced
+by a pure built-in over conditional tracked-real branches may compose with
+finite literal `+`, `-`, `*`, or `/` arithmetic before feeding another pure
+built-in bounded exponent. The selector still executes; bare tracked-real
+arithmetic, non-finite results, effectful selectors, and overrides fail closed.
+
 **AL-multidim-string-capture:** the seven-backend matrix executes a nested
 procedure that writes a two-dimensional string-array value formal through its
 captured descriptor. Lexical ordering plus equality and inequality of separate
