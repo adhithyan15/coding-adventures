@@ -34,6 +34,145 @@ pub enum JsonValue {
     Null,
 }
 
+/// Closed serialization failure class.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum JsonSerializeErrorKind {
+    /// An array or object exceeded the caller's nesting bound.
+    DepthLimit,
+    /// A floating-point value was NaN or infinite and has no JSON form.
+    NonFiniteNumber,
+}
+
+/// Input-free JSON serialization error.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct JsonSerializeError {
+    kind: JsonSerializeErrorKind,
+}
+
+impl JsonSerializeError {
+    /// Return the closed failure class.
+    pub const fn kind(&self) -> JsonSerializeErrorKind {
+        self.kind
+    }
+}
+
+impl Display for JsonSerializeError {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        write!(formatter, "json serialization {:?}", self.kind)
+    }
+}
+
+impl std::error::Error for JsonSerializeError {}
+
+/// Serialize one JSON value with [`DEFAULT_MAX_DEPTH`].
+pub fn serialize(value: &JsonValue) -> Result<String, JsonSerializeError> {
+    serialize_with_depth_limit(value, DEFAULT_MAX_DEPTH)
+}
+
+/// Serialize one JSON value while rejecting arrays/objects deeper than
+/// `max_depth`.
+///
+/// `max_depth == 0` permits scalar roots and rejects every container. Object
+/// order and duplicate member names are preserved exactly.
+pub fn serialize_with_depth_limit(
+    value: &JsonValue,
+    max_depth: usize,
+) -> Result<String, JsonSerializeError> {
+    let mut output = String::new();
+    write_value(value, 0, max_depth, &mut output)?;
+    Ok(output)
+}
+
+fn write_value(
+    value: &JsonValue,
+    depth: usize,
+    max_depth: usize,
+    output: &mut String,
+) -> Result<(), JsonSerializeError> {
+    match value {
+        JsonValue::Object(members) => {
+            enter_serialized_container(depth, max_depth)?;
+            output.push('{');
+            for (index, (name, member)) in members.iter().enumerate() {
+                if index != 0 {
+                    output.push(',');
+                }
+                write_string(name, output);
+                output.push(':');
+                write_value(member, depth + 1, max_depth, output)?;
+            }
+            output.push('}');
+        }
+        JsonValue::Array(values) => {
+            enter_serialized_container(depth, max_depth)?;
+            output.push('[');
+            for (index, member) in values.iter().enumerate() {
+                if index != 0 {
+                    output.push(',');
+                }
+                write_value(member, depth + 1, max_depth, output)?;
+            }
+            output.push(']');
+        }
+        JsonValue::String(value) => write_string(value, output),
+        JsonValue::Number(JsonNumber::Integer(value)) => output.push_str(&value.to_string()),
+        JsonValue::Number(JsonNumber::Float(value)) => {
+            if !value.is_finite() {
+                return Err(JsonSerializeError {
+                    kind: JsonSerializeErrorKind::NonFiniteNumber,
+                });
+            }
+            let mut rendered = value.to_string();
+            if !rendered
+                .bytes()
+                .any(|byte| matches!(byte, b'.' | b'e' | b'E'))
+            {
+                rendered.push_str(".0");
+            }
+            output.push_str(&rendered);
+        }
+        JsonValue::Bool(true) => output.push_str("true"),
+        JsonValue::Bool(false) => output.push_str("false"),
+        JsonValue::Null => output.push_str("null"),
+    }
+    Ok(())
+}
+
+fn enter_serialized_container(depth: usize, max_depth: usize) -> Result<(), JsonSerializeError> {
+    if depth >= max_depth {
+        Err(JsonSerializeError {
+            kind: JsonSerializeErrorKind::DepthLimit,
+        })
+    } else {
+        Ok(())
+    }
+}
+
+fn write_string(value: &str, output: &mut String) {
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+
+    output.push('"');
+    for character in value.chars() {
+        match character {
+            '"' => output.push_str("\\\""),
+            '\\' => output.push_str("\\\\"),
+            '\u{0008}' => output.push_str("\\b"),
+            '\u{000c}' => output.push_str("\\f"),
+            '\n' => output.push_str("\\n"),
+            '\r' => output.push_str("\\r"),
+            '\t' => output.push_str("\\t"),
+            '\u{0000}'..='\u{001f}' => {
+                let code = character as usize;
+                output.push_str("\\u00");
+                output.push(char::from(HEX[code >> 4]));
+                output.push(char::from(HEX[code & 0x0f]));
+            }
+            _ => output.push(character),
+        }
+    }
+    output.push('"');
+}
+
 /// Closed parse failure class.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum JsonErrorKind {
@@ -411,6 +550,72 @@ fn hex_value(byte: u8) -> Option<u8> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn serializes_every_value_shape_and_preserves_duplicate_members() {
+        let value = JsonValue::Object(vec![
+            ("a".to_owned(), JsonValue::Number(JsonNumber::Integer(1))),
+            (
+                "a".to_owned(),
+                JsonValue::Number(JsonNumber::Float(-2_500.0)),
+            ),
+            (
+                "v".to_owned(),
+                JsonValue::Array(vec![
+                    JsonValue::Bool(true),
+                    JsonValue::Bool(false),
+                    JsonValue::Null,
+                    JsonValue::String("x".to_owned()),
+                ]),
+            ),
+        ]);
+
+        let encoded = serialize(&value).unwrap();
+        assert_eq!(encoded, r#"{"a":1,"a":-2500.0,"v":[true,false,null,"x"]}"#);
+        assert_eq!(parse(&encoded).unwrap(), value);
+    }
+
+    #[test]
+    fn serialization_escapes_controls_and_preserves_unicode() {
+        let value = JsonValue::String(
+            "quote \" slash \\ / controls \u{0000}\u{0008}\u{000c}\n\r\t café λ 🚀".to_owned(),
+        );
+        let encoded = serialize(&value).unwrap();
+
+        assert_eq!(
+            encoded,
+            r#""quote \" slash \\ / controls \u0000\b\f\n\r\t café λ 🚀""#
+        );
+        assert_eq!(parse(&encoded).unwrap(), value);
+    }
+
+    #[test]
+    fn serialization_rejects_non_finite_numbers_without_value_text() {
+        for value in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            let error = serialize(&JsonValue::Number(JsonNumber::Float(value))).unwrap_err();
+            assert_eq!(error.kind(), JsonSerializeErrorKind::NonFiniteNumber);
+            let rendered = format!("{error:?} {error}");
+            assert!(!rendered.contains("NaN"));
+            assert!(!rendered.contains("inf"));
+        }
+    }
+
+    #[test]
+    fn serialization_depth_limit_matches_parser_depth_limit() {
+        let value = JsonValue::Array(vec![JsonValue::Array(vec![JsonValue::Number(
+            JsonNumber::Integer(0),
+        )])]);
+        assert_eq!(
+            serialize_with_depth_limit(&value, 1).unwrap_err().kind(),
+            JsonSerializeErrorKind::DepthLimit
+        );
+        let encoded = serialize_with_depth_limit(&value, 2).unwrap();
+        assert!(parse_with_depth_limit(&encoded, 2).is_ok());
+        assert_eq!(
+            serialize_with_depth_limit(&JsonValue::Null, 0).unwrap(),
+            "null"
+        );
+    }
 
     #[test]
     fn parses_every_value_shape_and_preserves_duplicate_members() {
