@@ -470,6 +470,18 @@ validation. Theme/config overrides, organic seeded boundary waviness, exact
 cliff styling, transition arrowheads, accessibility directives, and overflow
 badges remain unsupported at the partial level.
 
+### TreeView Native Slice
+
+The initial Mermaid 11.16.1 TreeView slice recognizes `treeView-beta` and
+parses indentation-based and standard/heavy box-drawing hierarchies into
+dedicated tree IR. File/directory identity, quoted and bare labels, title and
+accessibility metadata, `:::class`, `icon()`, and `##` descriptions survive
+through deterministic row layout and backend-neutral connector, highlight,
+marker, and glyph PaintInstructions with native Metal-to-PNG validation.
+Configuration-driven default and filename/extension icon maps, external icon
+pack artwork, custom row geometry, exact typography, and interactive behavior
+remain unsupported at the partial level.
+
 ### Structural Groups
 
 Nested containers such as C4 boundaries are semantic structural groups, not

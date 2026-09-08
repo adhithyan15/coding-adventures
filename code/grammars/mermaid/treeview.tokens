@@ -1,0 +1,15 @@
+# @version 1
+# Mermaid 11.16.1 TreeView token grammar.
+# Upstream: packages/parser/src/language/treeView/treeView.langium
+
+case_sensitive: true
+
+skip:
+  COMMENT = /[ \t]*%%[^\r\n]*/
+
+NEWLINE = /\r?\n/
+HEADER = /treeView-beta[ \t]*/
+TITLE = /[ \t]*title(?:[ \t]+[^\r\n]*)?/
+ACC_TITLE = /[ \t]*accTitle[ \t]*:[^\r\n]*/
+ACC_DESCR = /[ \t]*accDescr(?:[ \t]*:[^\r\n]*|[ \t]*\{[^}]*\})/
+NODE_LINE = /[ \t]*[^\r\n]+/

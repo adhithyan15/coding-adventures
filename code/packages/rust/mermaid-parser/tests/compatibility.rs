@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_cynefin, parse_event_modeling, parse_ishikawa, parse_radar, parse_sequence_diagram, parse_timeline, parse_treemap, parse_venn, parse_wardley, parse_xychart,
+    parse_cynefin, parse_event_modeling, parse_ishikawa, parse_radar, parse_sequence_diagram, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -60,6 +60,19 @@ const VENN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../
 const ISHIKAWA_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-corpus.json"));
 const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-corpus.json"));
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
+const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
+
+#[test]
+fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
+    let corpus: Value = serde_json::from_str(TREEVIEW_CORPUS).expect("treeview corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let diagram = parse_treeview(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("treeview fixture {name} failed: {error}"));
+        assert!(!diagram.nodes.is_empty());
+    }
+}
 
 #[test]
 fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
@@ -806,4 +819,20 @@ fn cynefin_dispatches_to_dedicated_domain_map_ir() {
         _ => panic!("cynefin should lower to dedicated domain-map IR"),
     }
     assert!(parse_cynefin("cynefin-beta\n\"orphan item\"").is_err());
+}
+
+#[test]
+fn treeview_dispatches_to_dedicated_tree_ir() {
+    let diagram = parse_any_mermaid("treeView-beta\nproject/ :::highlight\n  App.tsx icon(logos:react) ## main component")
+        .expect("treeview subset should parse");
+    match diagram {
+        mermaid_parser::MermaidDiagram::TreeView(diagram) => {
+            assert_eq!(diagram.nodes.len(), 2);
+            assert_eq!(diagram.nodes[1].parent_id.as_deref(), Some("treeview-1"));
+            assert_eq!(diagram.nodes[1].icon.as_deref(), Some("logos:react"));
+            assert_eq!(diagram.nodes[1].description.as_deref(), Some("main component"));
+        }
+        _ => panic!("treeview should lower to dedicated tree IR"),
+    }
+    assert!(parse_treeview("treeView-beta\n\"unterminated").is_err());
 }
