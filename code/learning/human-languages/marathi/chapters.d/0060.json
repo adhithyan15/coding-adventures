@@ -1,0 +1,23 @@
+{
+  "chapter": 60,
+  "title": "Which One in the Line",
+  "label": "ch:mr-ordinals",
+  "canDo": "I can say first to fifth in Marathi, tell the four ordinals Marathi inherited whole from the ones it builds, and agree any of them with a masculine, feminine or neuter thing.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "MR-R60-first-to-fifth",
+    "kind": "production",
+    "summary": "Complete MR-R60-first-to-fifth and run pahilaa to paachvaa, then say which one of the five you could have worked out.",
+    "assesses": [
+      "MR-GRAMMAR-ORDINAL-SET",
+      "MR-LEX-TISRA",
+      "MR-LEX-PAHILA",
+      "MR-LEX-CHAUTHA",
+      "MR-LEX-PACHVA",
+      "MR-GRAMMAR-ORDINAL-VA"
+    ],
+    "note": "The chapter opens on SECOND and teaches no new word to do it: duSraa has been in the reader's mouth since chapter 31 as the partner of ek, glossed there as 'the other, the second'. first arrives THIRD, because pahilaa carries no ek and a word can only be seen to break a shape once the shape has been seen twice."
+  }
+}

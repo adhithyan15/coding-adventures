@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:9e96c6bae8d758ce",
+  "lessonIds": [
+    "MR-C60-dusra-ordinal",
+    "MR-C60-tisra",
+    "MR-C60-pahila",
+    "MR-C60-chautha",
+    "MR-C60-pachva",
+    "MR-R60-first-to-fifth"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch60.txt",
+  "json": "marathi/narration/ch60.json",
+  "textHash": "fnv1a64:07febc637b53ae0c",
+  "jsonHash": "fnv1a64:d1b034ed4d1a22c3",
+  "findings": []
+}

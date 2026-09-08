@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:30c2d82883272545",
+  "lessonIds": [
+    "MR-C61-sahava",
+    "MR-C61-satva",
+    "MR-C61-aathva",
+    "MR-C61-navva",
+    "MR-C61-dahava",
+    "MR-R61-sixth-to-tenth"
+  ],
+  "tex": "marathi/book/chapters/ch61-ordinals-sixth-to-tenth.tex"
+}

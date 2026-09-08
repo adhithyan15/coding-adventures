@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C60-pachva",
+    "language": "marathi",
+    "chapter": 60,
+    "sequence": 2480,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:69bf2f128e5cfe75"
+  },
+  "findings": []
+}

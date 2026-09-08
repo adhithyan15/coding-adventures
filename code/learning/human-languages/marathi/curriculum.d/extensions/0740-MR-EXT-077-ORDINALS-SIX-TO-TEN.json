@@ -1,0 +1,18 @@
+{
+  "id": "MR-EXT-077-ORDINALS-SIX-TO-TEN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can build any ordinal from sixth upwards by putting -vaa on the number.",
+  "prerequisites": [
+    "MR-EXT-076-ORDINALS-ONE-TO-FIVE"
+  ],
+  "lessons": [
+    "MR-C61-sahava",
+    "MR-C61-satva",
+    "MR-C61-aathva",
+    "MR-C61-navva",
+    "MR-C61-dahava",
+    "MR-R61-sixth-to-tenth"
+  ]
+}

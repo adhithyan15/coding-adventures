@@ -6,7 +6,9 @@
     "MR-PATH-059",
     "MR-PATH-060",
     "MR-PATH-061",
-    "MR-PATH-062"
+    "MR-PATH-062",
+    "MR-PATH-063",
+    "MR-PATH-064"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"
