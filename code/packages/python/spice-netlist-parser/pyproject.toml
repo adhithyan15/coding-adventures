@@ -29,6 +29,9 @@ classifiers = [
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
 
+[project.scripts]
+spice-netlist-parser = "spice_netlist_parser.cli:main"
+
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
 

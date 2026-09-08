@@ -22,6 +22,8 @@ import {
   mosfetFromModelCard,
   mutualInductor,
   normalizeModelCard,
+  formatDeckTableJson,
+  runDeck,
   resistor,
   transmissionLine,
   vccs,
@@ -652,6 +654,44 @@ export function runAnalysisPlan(
 
 export function runNetlist(text: string): AnalysisExecutionResult[] {
   return runAnalysisPlan(parseNetlist(text));
+}
+
+export const CLI_RESULT_SCHEMA_VERSION = 1;
+
+export function runNetlistJson(text: string): string {
+  const parsed = parseNetlist(text);
+  const execution = runDeck(parsed.circuit, text);
+  return `${JSON.stringify(canonicalJson({
+    schemaVersion: CLI_RESULT_SCHEMA_VERSION,
+    title: parsed.title ?? null,
+    analyses: execution.executions.map((item, index) => ({
+      index,
+      kind: item.plan.analysis,
+      records: cliTableRecords(item.plan.analysis, item.table),
+    })),
+  }))}\n`;
+}
+
+function cliTableRecords(analysis: string, table: string): unknown {
+  const records = JSON.parse(formatDeckTableJson(table)) as Record<string, string>[];
+  return analysis === "tran"
+    ? records
+      .filter((record) => record.Time !== "0.000000e+00")
+      .map((record, index) => ({ ...record, Index: String(index) }))
+    : records;
+}
+
+function canonicalJson(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(canonicalJson);
+  }
+  if (value !== null && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return Object.fromEntries(
+      Object.keys(record).sort().map((key) => [key, canonicalJson(record[key])]),
+    );
+  }
+  return value;
 }
 
 export function selectOutputs(

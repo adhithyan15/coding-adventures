@@ -4,12 +4,13 @@ use std::{
 };
 
 use spice_engine::{
-    ac_sweep, dc_op_with_options, dc_sweep, mosfet_from_model_card, normalize_model_card, tf,
-    transient_with_method, AcPoint, AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs,
-    Ccvs, Circuit, Complex, CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element,
-    ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType,
-    MutualInductor, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TfResult,
-    TransientMethod, TransientPoint, TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
+    ac_sweep, dc_op_with_options, dc_sweep, format_deck_table_json, mosfet_from_model_card,
+    normalize_model_card, run_deck, tf, transient_with_method, AcPoint, AdaptiveTransientOptions,
+    Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, Complex, CurrentSource, DcOpOptions,
+    DcResult, DcSweepPoint, Diode, Element, ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet,
+    MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, SpiceError, TfResult, TransientMethod, TransientPoint, TransmissionLine, Vccs,
+    Vcvs, VoltageSource, Waveform,
 };
 
 const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
@@ -1014,6 +1015,54 @@ pub fn run_analysis_plan(
 pub fn run_netlist(text: &str) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
     let parsed = parse_netlist(text)?;
     run_analysis_plan(&parsed)
+}
+
+pub const CLI_RESULT_SCHEMA_VERSION: u32 = 1;
+
+pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
+    let parsed = parse_netlist(text)?;
+    let execution = run_deck(&parsed.circuit, text)?;
+    let analyses = execution
+        .executions
+        .iter()
+        .enumerate()
+        .map(|(index, item)| {
+            serde_json::json!({
+                "index": index,
+                "kind": item.plan.analysis,
+                "records": cli_table_records(&item.plan.analysis, &item.table),
+            })
+        })
+        .collect::<Vec<_>>();
+    Ok(format!(
+        "{}\n",
+        serde_json::to_string(&serde_json::json!({
+            "schemaVersion": CLI_RESULT_SCHEMA_VERSION,
+            "title": parsed.title,
+            "analyses": analyses,
+        }))
+        .expect("CLI result envelope must serialize")
+    ))
+}
+
+fn cli_table_records(analysis: &str, table: &str) -> serde_json::Value {
+    let records = serde_json::from_str::<Vec<serde_json::Value>>(&format_deck_table_json(table))
+        .expect("engine deck table JSON must be valid");
+    let records = records
+        .into_iter()
+        .filter(|record| {
+            analysis != "tran"
+                || record.get("Time").and_then(serde_json::Value::as_str) != Some("0.000000e+00")
+        })
+        .enumerate()
+        .map(|(index, mut record)| {
+            if analysis == "tran" {
+                record["Index"] = serde_json::Value::String(index.to_string());
+            }
+            record
+        })
+        .collect();
+    serde_json::Value::Array(records)
 }
 
 pub fn select_outputs(

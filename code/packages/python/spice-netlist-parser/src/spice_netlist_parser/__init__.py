@@ -1,6 +1,7 @@
 """SPICE3 netlist parser for the coding-adventures SPICE engine."""
 
 from spice_netlist_parser.parser import (
+    CLI_RESULT_SCHEMA_VERSION,
     AcAnalysis,
     AnalysisExecutionResult,
     AnalysisKind,
@@ -39,6 +40,7 @@ from spice_netlist_parser.parser import (
     parse_netlist,
     run_analysis_plan,
     run_netlist,
+    run_netlist_json,
     select_outputs,
 )
 
@@ -51,6 +53,7 @@ __all__ = [
     "AnalysisKind",
     "AnalysisPlanStep",
     "AnalysisResult",
+    "CLI_RESULT_SCHEMA_VERSION",
     "DcAnalysis",
     "DistortionAnalysis",
     "FourAnalysis",
@@ -86,5 +89,6 @@ __all__ = [
     "parse_netlist",
     "run_analysis_plan",
     "run_netlist",
+    "run_netlist_json",
     "select_outputs",
 ]

@@ -50,6 +50,19 @@ R2 out 0 1k
 """)
 ```
 
+## Command line
+
+Run a deck with a portable JSON result envelope:
+
+```console
+spice-netlist-parser run --json circuit.cir
+cat circuit.cir | spice-netlist-parser run --json -
+```
+
+The version-1 envelope contains the deck title and source-ordered analysis
+records. Its object keys are canonicalized across the Python, Rust, and
+TypeScript ports; transient records begin after initialization at `t=0`.
+
 `.save`, `.probe`, `.print`, and `.plot` cards can be applied to executed
 analysis results with `netlist.select_outputs(results)`. Supported `.measure`
 cards can be evaluated with `netlist.measure_results(results)`; the first

@@ -41,7 +41,7 @@ model-card parameter, or a UI artifact is not a completion signal.
 
 ### Prioritized backlog
 
-1. **Executable Berkeley v1 corpus gate** (current).
+1. **Executable Berkeley v1 corpus gate** (completed).
    - Promote the existing diode, BJT, JFET, and Level-1 MOS reference-deck
      matrix from descriptive coverage rows to runnable cross-language cases
      with numerical oracles and tolerances.
@@ -53,14 +53,14 @@ model-card parameter, or a UI artifact is not a completion signal.
    - The numerical phase batches `.dc`, `.ac`, `.tran`, and `.tf` into that
      same corpus rather than paying CI separately for each analysis. It also
      makes parsed `.tf` cards executable across the three ports.
-   - Current phase: add a shared accepted/rejected Berkeley syntax corpus.
-     The corpus includes logical `+` continuation cards, comments, `.end`
+   - The shared accepted/rejected Berkeley syntax corpus includes logical `+`
+     continuation cards, comments, `.end`
      boundaries, case-insensitive subcircuit use, and explicit exclusions.
      Classify every case as passing, a proven implementation gap, or deliberate
      exclusion; no silent skips.
-   - Next: use the combined numerical and syntax corpus evidence to identify a
-     genuinely blocking device or analysis contract. If none is found, advance
-     directly to the release gate rather than inventing parameter-sized work.
+   - Status: the numerical corpus landed in PR #14485 and the syntax corpus in
+     PR #14513. Neither phase exposed a remaining Berkeley-core contract
+     blocker, so the work has advanced directly to the release gate.
 
 2. **Corpus-blocking Berkeley core closure**.
    - Fix the grouped failures found by the executable gate, batched by a
@@ -73,6 +73,15 @@ model-card parameter, or a UI artifact is not a completion signal.
      corpus pass threshold, and command-line/text entrypoints.  Publish a
      single release-readiness report that distinguishes supported behavior from
      deliberate exclusions.
+   - Discovery: the three parser packages expose runnable library APIs, and
+     the engines already produce parity-tested deck tables and JSON records,
+     but no package exposes a user-facing CLI. This phase owns one common
+     `spice-netlist-parser run --json <deck>` contract, including stdin,
+     deterministic per-analysis table records, and stable nonzero failures.
+   - Current phase: ship the version-1 JSON envelope across all three CLIs.
+     It canonically orders JSON object keys and presents transient records after
+     the initialization sample so the Python, Rust, and TypeScript executables
+     produce the same result stream for the shared CLI corpus.
 
 4. **Post-Berkeley product tracks** (not Berkeley completion blockers).
    - ngspice and vendor-dialect compatibility, nested sweeps and raw-format
