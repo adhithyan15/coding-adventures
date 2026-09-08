@@ -26,6 +26,15 @@ The current native pipeline supports documented subsets of:
 - `block` / `block-beta`
 - `packet` / `packet-beta`
 - `kanban`
+- `architecture` / `architecture-beta`
+
+The initial Architecture subset parses groups, services, declared containment,
+standard icon identifiers, titles, and undirected or right-directed edge syntax into the
+shared structural semantic IR. Existing structural layout and PaintScene
+lowering provide deterministic backend-neutral group, node, edge, and shaped
+text rendering. Junctions, alignment hints, group-edge modifiers, left and
+bidirectional arrows, custom icon text, icon artwork, edge labels, port-aware routing, and configuration remain
+outside the partial compatibility claim.
 
 The initial `kanban` subset preserves indentation-defined columns and cards,
 including plain labels and explicit `id[label]` forms, in typed board IR.

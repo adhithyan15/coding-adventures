@@ -934,6 +934,7 @@ pub enum StructuralKind {
     Er,
     C4,
     Requirement,
+    Architecture,
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]

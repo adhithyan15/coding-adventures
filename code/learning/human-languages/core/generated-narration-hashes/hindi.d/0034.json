@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 34,
-  "sourceHash": "fnv1a64:43106338dad4e939",
+  "sourceHash": "fnv1a64:ff0cdc3789bd5088",
   "lessonIds": [
     "HI-C34-sochna",
     "HI-C34-samajhna",
@@ -13,6 +13,6 @@
   "text": "hindi/narration/ch34.txt",
   "json": "hindi/narration/ch34.json",
   "textHash": "fnv1a64:dee9ab01b138da96",
-  "jsonHash": "fnv1a64:11df0c02967e1d8b",
+  "jsonHash": "fnv1a64:49209c8bcdf5a9c3",
   "findings": []
 }
