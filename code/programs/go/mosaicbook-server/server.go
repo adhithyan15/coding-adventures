@@ -59,7 +59,7 @@ func newServer(root string, compilerPath string) *Server {
 	}
 
 	// Initial discovery on startup so /api/stories returns data immediately.
-	comps, err := discoverComponents(root)
+	comps, err := s.discoverValidatedComponents()
 	if err != nil {
 		log.Printf("initial discovery error: %v", err)
 	}
@@ -131,7 +131,7 @@ func (s *Server) handleAPIStories(w http.ResponseWriter, r *http.Request) {
 	// Re-discover on every request so changes made between watcher ticks are
 	// visible immediately.  The watcher handles background refresh; this call
 	// is an extra safety net and is fast enough for a local dev tool.
-	comps, err := discoverComponents(s.root)
+	comps, err := s.discoverValidatedComponents()
 	if err != nil {
 		http.Error(w, fmt.Sprintf("discovery error: %v", err), http.StatusInternalServerError)
 		return

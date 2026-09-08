@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Fixed
+
+- Validate every populated three-file story fixture against the component's
+  parsed `.mil` contract. MosaicBook now asks `mosaic-compile --describe` for
+  slot names and types, rejects undeclared slots and mismatched scalar/list
+  values, and enforces closed `one-of` sets through `StoriesError` instead of
+  silently rendering the component's default state (#14435).
+
 ### Security
 
 - **Bounded-memory subprocess output capture** (#13179, filed alongside
