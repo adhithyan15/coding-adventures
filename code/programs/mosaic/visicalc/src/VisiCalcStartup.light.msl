@@ -1,0 +1,14 @@
+style VisiCalcStartup {
+  part surface { color-scheme: light; background: #f4f3ed; color: #203d34; min-height: 100vh; padding: 24px; box-sizing: border-box; font-family: sans-serif; align-items: center; justify-content: center; gap: 24px; }
+  part card { width: 100%; max-width: 480px; box-sizing: border-box; padding: 32px; background: #fffef9; border: 1px solid #dce2d9; border-radius: 16px; gap: 16px; }
+  part eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #66746b; }
+  part brand { font-family: serif; font-size: 44px; font-weight: 400; letter-spacing: 1px; }
+  part paper { gap: 8px; padding: 8px 0px; }
+  part paper-first { flex: 1; height: 32px; background: #deeddd; border: 1px solid #c9dcc9; border-radius: 4px; }
+  part paper-second { flex: 1; height: 32px; background: #deeddd; border: 1px solid #c9dcc9; border-radius: 4px; }
+  part paper-third { flex: 1; height: 32px; background: #deeddd; border: 1px solid #c9dcc9; border-radius: 4px; }
+  part heading { font-size: 19px; font-weight: 600; }
+  part message { font-size: 14px; line-height: 1.6; color: #66746b; }
+  part retry-button { padding: 12px 20px; min-height: 44px; border-radius: 8px; border: 1px solid #29684e; background: #29684e; color: #ffffff; font-size: 14px; font-weight: 600; cursor: pointer; }
+  part signature { font-family: serif; font-size: 15px; color: #66746b; }
+}

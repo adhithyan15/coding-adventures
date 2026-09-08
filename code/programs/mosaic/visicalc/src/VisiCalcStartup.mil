@@ -1,0 +1,6 @@
+component VisiCalcStartup {
+  slot heading : text ;
+  slot message : text ;
+  slot can-retry : bool ;
+  emit onRetry ;
+}
