@@ -15,14 +15,14 @@
     "number": 14659,
     "url": "https://github.com/adhithyan15/coding-adventures/pull/14659",
     "branch": "codex/build-tool-go-language-source-registry-20260908",
-    "implementation_revision": "dda8f9e3e39561a575681d6aafaa62f695adbae8",
+    "implementation_revision": "2ceba3d23ea9c819e879ab10f16b1c5e2f38b8f1",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-08T16:10:34Z",
+    "observed_at": "2026-09-08T18:43:00Z",
     "pr_number": 14659,
     "status": "checks-pending",
-    "notes": "Opened ready-for-review PR #14659 from exact published implementation head dda8f9e3e39561a575681d6aafaa62f695adbae8 after all local validation and independent review passed. GitHub reports the PR open with checks pending; auto-merge remains disabled until every required check is terminal and acceptable and mergeability is clean."
+    "notes": "Both CI builds failed at HASH_PACKAGE_FAILED for unknown/blog. Actual logs showed the strict registry adopter could not hash the repository-owned code/sites packages. The focused repair maps only canonical code/sites/<name> roots to the existing TypeScript source-input profile while retaining their unknown/* graph identities, adds exact path/input regressions, and classifies the separate authored Markdown/SVG registry gap. After a conflict-free rebase across 21 new main commits, the full Go suite, race, vet, module verification, tidy-diff, trimpath build, 24 schema tests, 80 neutral runner tests, state DAG, diff hygiene, and a real 5,172-package all-language dry plan pass. The repaired head is ready for an exact-lease force-push; auto-merge remains disabled until replacement checks are terminal and acceptable and mergeability is clean."
   },
   "last_inventory": {
     "revision": "668e551588ebf183e4f7c2835e47ebeed9d37230",
@@ -978,6 +978,8 @@
       "final_review_notes": "Independent read-only security review issued SHIP after targeted fixes for package-root authority, generated and sensitive paths, cross-list prefix collisions, scoped exact/suffix redundancy, package-exact full-casefold matching, bounded strict JSON, generator digest agreement, and direct dependency metadata. A final exact-base audit proved all seven approved registry blobs byte-identical after rebasing to b47d16146f and found zero overlap with intervening main changes. Independent inventory audits reconciled every new identity and semantic delta, produced the next-three readiness ranking, and confirmed the final counts and collision-free topology.",
       "publication_revision": "dda8f9e3e39561a575681d6aafaa62f695adbae8",
       "publication_notes": "Opened ready-for-review PR #14659 after a normal first push from exact origin/main 668e551588ebf183e4f7c2835e47ebeed9d37230. Immediately before publication the target remote branch and prior PR were absent, all 13 changed paths had zero exact overlap across 14 open PRs, local corpus, Go, race, vet, coverage, generator, build-file, parity, state-DAG, security, and diff gates passed, and independent review issued SHIP. GitHub checks are pending and auto-merge remains disabled.",
+      "ci_repair_revision": "2ceba3d23ea9c819e879ab10f16b1c5e2f38b8f1",
+      "ci_repair_notes": "The two failed CI builds both stopped before package execution with HASH_PACKAGE_FAILED for unknown/blog. The repair preserves legacy unknown/* graph identities while recognizing only canonical code/sites roots as TypeScript source-input profiles and hashing their real code/sites repository paths. The merged neutral registry and digest remain byte-identical; authored site Markdown/SVG coverage is classified under a separate dependent owner. After the conflict-free rebase onto b6888ebfdd218b58807599f0dfa685efa30bd77d, the full Go suite, hasher race suite, vet, module verification, tidy-diff, trimpath build, 24 schema tests, 80 neutral runner tests, 5,172-package all-language dry plan, state DAG, and diff checks pass.",
       "notes": "Production Go currently owns 14 source-language entries, 14 metadata-language entries, and a 26-name generated-component registry, but the neutral registry adds reviewed Rust companions and package resources for hybrid lanes. Replace the engine-local maps with an exact complete projection and prove no missing or undeclared-extra selector."
     },
     {
