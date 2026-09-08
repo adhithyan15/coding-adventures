@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "FA-W19-digits-zero-one",
+    "language": "persian",
+    "chapter": 19,
+    "sequence": 870,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:764933aec5fc8bbf",
+    "detachableSegments": [
+      "Script — the shapes, and the direction"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

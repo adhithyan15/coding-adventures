@@ -1,0 +1,18 @@
+{
+  "id": "FA-EXT-025-COUNT-TEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say and recognise every Persian number from one to ten, and explain the Iranian s-to-h rule that shapes one of them.",
+  "prerequisites": [
+    "FA-EXT-024-COUNT-FIVE"
+  ],
+  "lessons": [
+    "FA-C17-shesh",
+    "FA-C17-haft",
+    "FA-C17-hasht",
+    "FA-C17-noh",
+    "FA-C17-dah",
+    "FA-C17-practice"
+  ]
+}

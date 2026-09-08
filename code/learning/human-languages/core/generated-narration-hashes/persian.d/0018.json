@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:d266850c0b41e0f2",
+  "lessonIds": [
+    "FA-C18-yazdah",
+    "FA-C18-sizdah",
+    "FA-C18-panzdah",
+    "FA-C18-bist-sad",
+    "FA-C18-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch18.txt",
+  "json": "persian/narration/ch18.json",
+  "textHash": "fnv1a64:27c743a2d901fefd",
+  "jsonHash": "fnv1a64:add94e23643f2a61",
+  "findings": []
+}

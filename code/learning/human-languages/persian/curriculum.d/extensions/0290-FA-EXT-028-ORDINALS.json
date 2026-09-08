@@ -1,0 +1,16 @@
+{
+  "id": "FA-EXT-028-ORDINALS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can build the ordinal of any number I can count to, and say which of them is a borrowing.",
+  "prerequisites": [
+    "FA-EXT-027-DIGITS"
+  ],
+  "lessons": [
+    "FA-C20-avval",
+    "FA-C20-dovvom-sevvom",
+    "FA-C20-chaharom",
+    "FA-C20-practice"
+  ]
+}

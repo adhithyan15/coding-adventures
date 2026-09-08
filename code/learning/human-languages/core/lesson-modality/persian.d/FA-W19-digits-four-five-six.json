@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "FA-W19-digits-four-five-six",
+    "language": "persian",
+    "chapter": 19,
+    "sequence": 890,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ef55e0fc9670bd17",
+    "detachableSegments": [
+      "Script — the shapes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

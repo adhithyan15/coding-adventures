@@ -12,7 +12,7 @@ it("pins Persian continuity", () => expectLanguageContinuity("persian"));
 it("pins Persian modality", () => expectLanguageModality("persian"));
 it("pins Persian lesson-content budgets", () =>
   expectLanguageLessonBudgets("persian", {
-    lessons: 71,
+    lessons: 97,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,

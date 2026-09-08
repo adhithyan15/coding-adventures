@@ -1,7 +1,11 @@
 {
-  "segments": [],
-  "omits": [
-    "NUMBER-ONE-TO-FIVE"
+  "segments": [
+    "FA-PATH-017",
+    "FA-PATH-018",
+    "FA-PATH-019",
+    "FA-PATH-020",
+    "FA-PATH-021"
   ],
+  "omits": [],
   "relocates": {}
 }

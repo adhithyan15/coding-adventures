@@ -1,0 +1,20 @@
+{
+  "chapter": 20,
+  "title": "Which One: the Ordinals",
+  "label": "ch:fa-ordinals",
+  "canDo": "I can say first, second, third and fourth, build the ordinal of any number I can count to, and write two of them from memory.",
+  "payoff": {
+    "lesson": "FA-C20-practice",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "One borrowed ordinal at the head of the series, one ending that makes all the rest, and the two forms whose letters chapter 15 already gave.",
+    "assesses": [
+      "FA-LEX-AVVAL",
+      "FA-ETYMON-AVVAL",
+      "FA-LEX-DOVVOM",
+      "FA-LEX-SEVVOM",
+      "FA-MORPH-ORDINAL-OM",
+      "FA-LEX-CHAHAROM",
+      "FA-PERFORMANCE-ORDINALS"
+    ]
+  }
+}

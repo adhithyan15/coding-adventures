@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:d185c9fee5fb9083",
+  "lessonIds": [
+    "FA-C16-yek",
+    "FA-C16-do",
+    "FA-C16-se",
+    "FA-C16-chahar",
+    "FA-C16-panj",
+    "FA-C16-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch16.txt",
+  "json": "persian/narration/ch16.json",
+  "textHash": "fnv1a64:202b7ee9af081c19",
+  "jsonHash": "fnv1a64:5839234d5cdbdf16",
+  "findings": []
+}

@@ -1,0 +1,786 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 17,
+  "title": "Six to Ten, and One Sound Law",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:6deecce58af6d0d5",
+  "lessons": [
+    {
+      "id": "FA-C17-shesh",
+      "sequence": 760,
+      "title": "شش (shesh) — six, and the short vowel you cannot see",
+      "headword": "شش",
+      "romanization": "shesh",
+      "gloss": "six — one letter written twice",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:274c58afb7016a3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to five, then five to one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شش — shesh — six."
+            },
+            {
+              "kind": "speech",
+              "text": "Two letters, and they are the same letter. The vowel between them is short, so Persian does not write it — which is the script chapter's rule doing exactly what it said it would: a Persian word can be read only once you have heard it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — six, with the s moved",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شش (shesh) continues Middle Persian shash, from Indo-European swéḱs, \"six.\" English six, Latin sex, Greek héx and Sanskrit ṣaṣ are the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shesh — six",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shesh** — six]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "shesh from swéḱs becomes English six, Latin sex",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **shesh** ← \\**swéḱs* → English **six**, Latin **sex**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "chahâr, panj, shesh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **chahâr, panj, shesh**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: شش (shesh); Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C17-shesh-vowel",
+              "prompt": "How many letters are in شش (shesh), and how many sounds?",
+              "assesses": [
+                "FA-LEX-SHESH"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "two letters, three sounds",
+                "2 letters 3 sounds",
+                "two letters and three sounds"
+              ],
+              "feedback": {
+                "correct": "The short vowel between them is not written.",
+                "incorrect": "Two letters on the page; sh-e-sh in the mouth."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C17-haft",
+      "sequence": 770,
+      "title": "هفت (haft) — seven, and the rule behind it",
+      "headword": "هفت",
+      "romanization": "haft",
+      "gloss": "seven — and the one sound change that unlocks half of Persian",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71161f29c6d90114",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say shesh and its English cousin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هفت — haft — seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — one sound change, many words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هفت (haft) comes from Proto-Iranian haptá, from Indo-European septm, \"seven.\" Latin septem, English seven and Sanskrit saptá all keep the s."
+            },
+            {
+              "kind": "speech",
+              "text": "Persian does not, and that is not an accident about this word. Iranian turned Indo-European s into h at the front of a word, everywhere, and once you know that one change a great many Persian words stop looking foreign. Set the pairs side by side:"
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit saptá — Persian haft."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit sindhu, \"river\" — Persian hind (and, through Persian, India)."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit soma — Avestan haoma."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the single most useful sound law in the language for a reader who knows any European one, and a number is where it is easiest to see."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haft — seven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **haft** — seven]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "haft from septm becomes Latin septem, English seven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **haft** ← \\**septm* → Latin **septem**, English **seven**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "APPLY",
+              "instruction": "s at the front becomes h — saptá becomes haft",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU APPLY: *s* at the front becomes *h* — **saptá** → **haft**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "panj, shesh, haft",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **panj, shesh, haft**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: هفت (haft); Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C17-haft-law",
+              "prompt": "Latin has septem and Persian has haft. What happened to the s?",
+              "assesses": [
+                "FA-SOUND-IRANIAN-S-TO-H"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "it became h",
+                "s became h",
+                "it became an h",
+                "s > h"
+              ],
+              "feedback": {
+                "correct": "Iranian turned word-initial s into h, everywhere.",
+                "incorrect": "Iranian turned word-initial s into h."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C17-hasht",
+      "sequence": 780,
+      "title": "هشت (hasht) — eight, and a rule that does not apply",
+      "headword": "هشت",
+      "romanization": "hasht",
+      "gloss": "eight — an h that the rule does not explain",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85ad70e9922f7683",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say haft, and what Iranian did to every word-initial s."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هشت — hasht — eight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — an h with a different explanation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هشت (hasht) goes back to Indo-European oḱtṓw, \"eight\" — Latin octō, Greek oktṓ, English eight. There is no s anywhere in that history, so the rule you learned one lesson ago cannot be what put the h on the front."
+            },
+            {
+              "kind": "speech",
+              "text": "What put it there was haft standing next to it. Seven and eight are said together more often than almost any other pair of words, and the h- of haft spread onto its neighbour. A rule and an exception, one lesson apart, and the exception is the more human of the two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hasht — eight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **hasht** — eight]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "hasht from oḱtṓw becomes Latin octō, English eight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **hasht** ← \\**oḱtṓw* → Latin **octō**, English **eight**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "shesh, haft, hasht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **shesh, haft, hasht**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: هشت (hasht); Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C17-hasht-h",
+              "prompt": "Why does hasht begin with h, when octo and eight do not?",
+              "assesses": [
+                "FA-ETYMON-HASHT"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "it copied haft",
+                "from haft next to it",
+                "haft spread its h",
+                "because of haft"
+              ],
+              "feedback": {
+                "correct": "Seven pulled eight into line.",
+                "incorrect": "The s-to-h rule cannot apply — there was never an s. haft is the reason."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C17-noh",
+      "sequence": 790,
+      "title": "نه (noh) — nine, and the word it is spelled exactly like",
+      "headword": "نه",
+      "romanization": "noh",
+      "gloss": "nine — the second number the hand can already make, and a warning",
+      "script": "perso-arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d3457e0c517e7bba",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say hasht, and why its h is there."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نه — noh — nine."
+            },
+            {
+              "kind": "speech",
+              "text": "ن and ه. Both are yours from the script chapter, so this is the second of the twelve numbers you can write as well as say — the other was سه."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — and a collision the script cannot show",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نه continues Middle Persian noh, from Indo-European h1newn, \"nine.\" Latin novem, English nine and Sanskrit náva are the same word."
+            },
+            {
+              "kind": "speech",
+              "text": "Now look at the spelling against a word from the opening chapter. نه (noh) is also na, \"no\" — the same two letters, because the vowel that tells them apart is short and Persian does not write short vowels. Only the sentence separates nine from no."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the clearest case in the book of the trade the script chapter named. Persian writes fewer signs than it says, and the reader pays for it exactly here."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noh — nine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **noh** — nine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "noh from h1newn becomes Latin novem, English nine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **noh** ← \\**h1newn* → Latin **novem**, English **nine**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "نه (noh) — nun, then he",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **نه** — nun, then he]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "the same two letters said na are \"no\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: the same two letters said **na** are \"no\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: نه (noh); Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C17-noh-collision",
+              "prompt": "نه (noh) can be read two ways. Give both.",
+              "assesses": [
+                "FA-LEX-NOH",
+                "FA-LEX-NA-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "noh, nine; na, no",
+                "noh nine and na no",
+                "nine and no",
+                "na = no, noh = nine"
+              ],
+              "feedback": {
+                "correct": "Only the sentence tells you which.",
+                "incorrect": "Said noh it is nine; said na it is no."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C17-dah",
+      "sequence": 800,
+      "title": "ده (dah) — ten, and the building block for nine more numbers",
+      "headword": "ده",
+      "romanization": "dah",
+      "gloss": "ten — and the piece every number from eleven to nineteen is built on",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e9647c5fa4969af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say noh and haft, and what نه can also mean."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ده — dah — ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — decem, ten, dah",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ده continues Middle Persian dah, from Indo-European dekm, \"ten.\" Latin decem (and through it decimal, December), English ten and Sanskrit dáśa are the same word."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold on to this one. Persian builds every number from eleven to nineteen by putting a unit in front of dah — yâz-dah, si-dah, chahâr-dah — so the next chapter costs one rule rather than nine words. Ten has to be learned before the teens can be, and now it is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dah — ten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **dah** — ten]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "dah from dekm becomes Latin decem, English ten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **dah** ← \\**dekm* → Latin **decem**, English **ten**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "haft, hasht, noh, dah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **haft, hasht, noh, dah**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: ده (dah); Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C17-dah-meaning",
+              "prompt": "Type the Persian word for 'ten'.",
+              "assesses": [
+                "FA-LEX-DAH"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ده",
+                "dah"
+              ],
+              "feedback": {
+                "correct": "Right: ده dah.",
+                "incorrect": "Use ده — dah."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C17-practice",
+      "sequence": 810,
+      "title": "Payoff — one to ten",
+      "headword": "شش هفت هشت نه ده",
+      "romanization": "shesh haft hasht noh dah",
+      "gloss": "one to ten, shuffled, and the two of the ten this book can write",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e084411c0a39348",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to five, then say what Iranian did to word-initial s."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear all ten named singly and out of order, and say each."
+            },
+            {
+              "kind": "speech",
+              "text": "Count backwards from dah to yek."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the ten printed shuffled and say each."
+            },
+            {
+              "kind": "speech",
+              "text": "Write سه and نه (noh), the two whose letters the script chapter gave you."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the English cousin of each of the ten. Every one has one."
+            },
+            {
+              "kind": "speech",
+              "text": "Then group them by what happened to the first sound: haft shows the s-to-h rule, hasht borrowed its h from haft, and shesh kept its s because the rule only touches the front of a word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C17-practice-ten",
+              "prompt": "Count aloud from one to ten in Persian.",
+              "assesses": [
+                "FA-PERFORMANCE-COUNT-TEN"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "yek do se chahâr panj shesh haft hasht noh dah",
+                "yek, do, se, chahâr, panj, shesh, haft, hasht, noh, dah",
+                "yek do se chahar panj shesh haft hasht noh dah"
+              ],
+              "feedback": {
+                "correct": "Ten numbers, and the book can finally hear a price.",
+                "incorrect": "Run it slowly: yek, do, se, chahâr, panj, shesh, haft, hasht, noh, dah."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

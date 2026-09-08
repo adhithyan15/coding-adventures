@@ -1,0 +1,620 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 18,
+  "title": "The Teens Are a Rule, Not Nine Words",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d266850c0b41e0f2",
+  "lessons": [
+    {
+      "id": "FA-C18-yazdah",
+      "sequence": 820,
+      "title": "یازده (yâzdah) — eleven, and one rule for nine numbers",
+      "headword": "یازده",
+      "romanization": "yâzdah",
+      "gloss": "eleven — and the rule that hands you eight more numbers with it",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07ed5860d6138104",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to ten, then say dah on its own and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word, and then a rule",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "یازده — yâzdah — eleven."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it slowly and the ten is audible at the end: yâz + dah. The first piece is yek worn down; the second is the word for ten you learned in the last lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole of the teens. Persian puts the unit in front of ten and stops:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "12, davâz-dah — from do.",
+                "14, chahâr-dah — chahâr unchanged.",
+                "19, nuz-dah — from noh."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Nine numbers, one rule, and the unit is a number you already have. This is why ten had to come first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yâzdah — eleven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **yâzdah** — eleven]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SPLIT",
+              "instruction": "yâz + dah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SPLIT: *yâz* + *dah*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "chahâr + dah becomes chahârdah, fourteen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: *chahâr* + *dah* → **chahârdah**, fourteen]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: یازده (yâzdah); Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C18-yazdah-rule",
+              "prompt": "Build fourteen from chahâr and dah.",
+              "assesses": [
+                "FA-GRAMMAR-TEENS-DAH"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "chahârdah",
+                "chahardah",
+                "chahâr dah",
+                "chahârdah — fourteen"
+              ],
+              "feedback": {
+                "correct": "Unit first, ten second.",
+                "incorrect": "Put the unit in front of dah: chahârdah."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C18-sizdah",
+      "sequence": 830,
+      "title": "سیزده (sizdah) — thirteen, and how far a unit can bend",
+      "headword": "سیزده",
+      "romanization": "sizdah",
+      "gloss": "thirteen — the unit wears down, and the rule still holds",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e2cffeab9df5cf8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say yâzdah, split it in two, and build fourteen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سیزده — sizdah — thirteen."
+            },
+            {
+              "kind": "speech",
+              "text": "si + dah. The unit is se, with its vowel lengthened and darkened — and English does the same thing without anyone noticing: three becomes thir- in thirteen, and five becomes fif- in fifteen."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen past the bending, then, and hear what does not bend: the ten stays the same, on the end, every time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sizdah — thirteen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **sizdah** — thirteen]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SPLIT",
+              "instruction": "si + dah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SPLIT: *si* + *dah*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COMPARE",
+              "instruction": "se becomes si, as English three becomes thir-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COMPARE: **se** → *si*, as English **three** → *thir*-]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: سیزده (sizdah); Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C18-sizdah-split",
+              "prompt": "Which part of sizdah never changes across the teens?",
+              "assesses": [
+                "FA-LEX-SIZDAH"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "dah",
+                "-dah",
+                "the dah",
+                "the ten"
+              ],
+              "feedback": {
+                "correct": "The ten is the constant; the unit bends.",
+                "incorrect": "The ending: dah."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C18-panzdah",
+      "sequence": 840,
+      "title": "پانزده (pânzdah) — fifteen, and the one irregularity worth naming",
+      "headword": "پانزده",
+      "romanization": "pânzdah",
+      "gloss": "fifteen — a nasal that appears out of nowhere, twice",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5adc692455c2be8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say sizdah and split it, then say panj."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پانزده — pânzdah — fifteen."
+            },
+            {
+              "kind": "speech",
+              "text": "pân + z + dah. There is an n in there that panj does not have in the place you would expect it, and there is a z that came from the j."
+            },
+            {
+              "kind": "speech",
+              "text": "Sixteen does the same thing: shânzdah, from shesh. Fifteen and sixteen are the only two of the nine teens that bend this far, and they bend the same way — so it is one irregularity, met once, not two."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pânzdah — fifteen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **pânzdah** — fifteen]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shânzdah — sixteen, the same bend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shânzdah** — sixteen, the same bend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "yâzdah, sizdah, pânzdah and the ten inside each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **yâzdah, sizdah, pânzdah** and the ten inside each]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: پانزده (pânzdah); Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C18-panzdah-pair",
+              "prompt": "Which other teen bends the same way as pânzdah?",
+              "assesses": [
+                "FA-LEX-PANZDAH"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "shânzdah",
+                "shanzdah",
+                "sixteen",
+                "shânzdah, sixteen"
+              ],
+              "feedback": {
+                "correct": "Fifteen and sixteen, and no others.",
+                "incorrect": "Sixteen: shânzdah."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C18-bist-sad",
+      "sequence": 850,
+      "title": "بیست and صد — twenty and a hundred",
+      "headword": "بیست صد",
+      "romanization": "bist sad",
+      "gloss": "twenty and a hundred — the two amounts a price actually names",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9b225ce12c3e6d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say pânzdah and sizdah, and split each in two."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — two words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بیست — bist — twenty صد — sad — a hundred."
+            },
+            {
+              "kind": "speech",
+              "text": "Two words, taken together because a price names one or the other far more often than it names any of the eighteen numbers between them."
+            },
+            {
+              "kind": "speech",
+              "text": "صد is two letters and it is the largest number in this book. Its first letter, ص, is one no lesson has taught the hand to make — it enters this book by eye only, the way most of the track's words have, and reading is what the number needs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The words, taken apart — viginti and centum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بیست goes back to Indo-European wikmtih, \"twenty\" — Latin vīgintī, Sanskrit vimshati."
+            },
+            {
+              "kind": "speech",
+              "text": "صد goes back to kmtom, \"hundred\" — Latin centum, Greek hekatón, English hundred. The Latin form is the one English borrowed twice over, in century and per cent, so a reader who has ever seen a percentage has already met sad's cousin."
+            },
+            {
+              "kind": "speech",
+              "text": "The spelling is the joke: صد is written with a borrowed Arabic letter for a word that is not Arabic at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bist — twenty; sad — a hundred",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **bist** — twenty; **sad** — a hundred]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "sad from kmtom becomes Latin centum, English hundred",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **sad** ← \\**kmtom* → Latin **centum**, English **hundred**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "dah, bist, sad — the three round amounts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **dah, bist, sad** — the three round amounts]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: صد; Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C18-bist-sad-round",
+              "prompt": "Say ten, twenty and a hundred in Persian.",
+              "assesses": [
+                "FA-LEX-BIST",
+                "FA-LEX-SAD"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "dah bist sad",
+                "dah, bist, sad"
+              ],
+              "feedback": {
+                "correct": "The three round amounts.",
+                "incorrect": "dah, bist, sad."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C18-practice",
+      "sequence": 860,
+      "title": "Payoff — one to twenty, and the hundred above it",
+      "headword": "یازده سیزده پانزده بیست صد",
+      "romanization": "yâzdah sizdah pânzdah bist sad",
+      "gloss": "the teens built rather than memorised, and the two round amounts above them",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3363558687bac895",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to ten, then say a hundred."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three of the nine teens were taught. Build the other six rather than recalling them."
+            },
+            {
+              "kind": "speech",
+              "text": "From do, chahâr, haft, hasht and noh, build twelve, fourteen, seventeen, eighteen and nineteen by putting the unit in front of dah. Then check each against a printed list and repair only what missed."
+            },
+            {
+              "kind": "speech",
+              "text": "Say sixteen, and say which taught number it bends like."
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to twenty straight through."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear twelve amounts named singly, from yek to sad, and say each."
+            },
+            {
+              "kind": "speech",
+              "text": "The point of the chapter is that six of these nine numbers were never taught and you can say them anyway. That is what a rule buys and a word list does not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Omniglot, Numbers in Persian."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C18-practice-build",
+              "prompt": "Build seventeen and nineteen from haft, noh and dah.",
+              "assesses": [
+                "FA-PERFORMANCE-COUNT-TWENTY"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "hifdah nuzdah",
+                "hifdah, nuzdah",
+                "haftdah nohdah",
+                "hifdah and nuzdah"
+              ],
+              "feedback": {
+                "correct": "Unit in front, ten behind — worn down at the join.",
+                "incorrect": "haft + dah and noh + dah, with the join worn: hifdah, nuzdah."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
