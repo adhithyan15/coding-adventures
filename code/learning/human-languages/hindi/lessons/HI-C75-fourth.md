@@ -8,9 +8,9 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 3190
 chapter: 82
 type: word
-headword: "चौथा"
-gloss: "fourth — a fourth shape, and the last of the four you must learn as words"
-romanization: "cauthā"
+headword: "चौथा / चौथी"
+gloss: "fourth / feminine fourth — a fourth shape, and the last of the four you must learn as words"
+romanization: "cauthā / cauthī"
 concept_tag: HI-ORDINAL-FOURTH
 prerequisites: [HI-C75-third, HI-C74-exit, HI-C70-chahna, HI-C68-language, HI-C19-age-grammar, HI-C26-raat]
 sounds: []
@@ -75,6 +75,6 @@ everything after — with one hole, which gets a lesson of its own.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C75-ORDINAL-01, HI-LEX-C75-ORDINAL-02, HI-LEX-C75-ORDINAL-03, HI-LEX-C75-ORDINAL-04, HI-LEX-C75-ORDINAL-05] -->
 
-[PAUSE 3s] Say the fourth day. (**चौथा दिन**.) What ending does it take? (**-था**, not the
+[PAUSE 3s] Say the fourth day. (**चौथा** (*cauthā*) **दिन**.) What ending does it take? (**-था**, not the
 *-सरा* of the last two.) And how many of the ordinals have to be learned as
 separate words? (**Four** — and you now have them.)

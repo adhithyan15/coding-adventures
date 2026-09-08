@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "First, Second, Third",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:af8305d30f39f71c",
+  "sourceHash": "fnv1a64:3ce446c1fdd047a5",
   "lessons": [
     {
       "id": "HI-C75-first",
@@ -547,16 +547,16 @@
       "id": "HI-C75-fourth",
       "sequence": 3190,
       "title": "चौथा (cauthā) — fourth",
-      "headword": "चौथा",
-      "romanization": "cauthā",
-      "gloss": "fourth — a fourth shape, and the last of the four you must learn as words",
+      "headword": "चौथा / चौथी",
+      "romanization": "cauthā / cauthī",
+      "gloss": "fourth / feminine fourth — a fourth shape, and the last of the four you must learn as words",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac933c59e4fca278",
+      "sourceHash": "fnv1a64:2951de9fa5ffd215",
       "notice": null,
       "blocks": [
         {
