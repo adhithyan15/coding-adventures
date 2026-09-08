@@ -8,9 +8,9 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 3200
 chapter: 82
 type: word
-headword: "पाँचवाँ"
-gloss: "fifth — where the rule finally arrives: number plus -वाँ"
-romanization: "pā̃cvā̃"
+headword: "पाँचवाँ / पाँचवीं / बीसवाँ / सौवाँ"
+gloss: "fifth / feminine fifth / twentieth / hundredth — where the rule finally arrives: number plus -वाँ"
+romanization: "pā̃cvā̃ / pā̃cvī̃ / bīsvā̃ / sauvā̃"
 concept_tag: HI-ORDINAL-FIFTH
 prerequisites: [HI-C75-fourth, HI-C74-late, HI-C70-infinitive-object, HI-C68-english, HI-S123-letter-da, HI-C27-shubh-raatri]
 sounds: []
@@ -59,7 +59,7 @@ chandrabindu you learned in the writing chapters is doing both.
 ## Grammar Lens: the number, plus -वाँ
 <!-- hl-knowledge: introduces=[HI-GRAMMAR-C75-ORDINAL-07]; assesses=[] -->
 
-**पाँच** → **पाँचवाँ**. Nothing is taken away and nothing is reshaped: the
+**पाँच** → **पाँचवाँ** (*pā̃cvā̃*). Nothing is taken away and nothing is reshaped: the
 cardinal stands whole and **-वाँ** goes on the end.
 
 It goes on doing that for every number above five. **बीस** gives **बीसवाँ**,
@@ -81,4 +81,4 @@ One number after this breaks it. Everything else obeys.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C75-ORDINAL-01, HI-LEX-C75-ORDINAL-02, HI-LEX-C75-ORDINAL-03, HI-LEX-C75-ORDINAL-04, HI-LEX-C75-ORDINAL-05, HI-LEX-C75-ORDINAL-06, HI-GRAMMAR-C75-ORDINAL-07] -->
 
 [PAUSE 3s] How is an ordinal made from five upward? (**The plain number, plus -वाँ**.) How
-many nasal hooks are in *पाँचवाँ*? (**Two**.) And say "twentieth". (**बीसवाँ**.)
+many nasal hooks are in **पाँचवाँ** (*pā̃cvā̃*)? (**Two**.) And say "twentieth". (**बीसवाँ**.)

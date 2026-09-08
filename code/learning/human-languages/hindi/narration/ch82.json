@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "First, Second, Third",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3ce446c1fdd047a5",
+  "sourceHash": "fnv1a64:a0fcda8c0dac89bb",
   "lessons": [
     {
       "id": "HI-C75-first",
@@ -720,16 +720,16 @@
       "id": "HI-C75-fifth",
       "sequence": 3200,
       "title": "पाँचवाँ (pā̃cvā̃) — fifth, and the rule at last",
-      "headword": "पाँचवाँ",
-      "romanization": "pā̃cvā̃",
-      "gloss": "fifth — where the rule finally arrives: number plus -वाँ",
+      "headword": "पाँचवाँ / पाँचवीं / बीसवाँ / सौवाँ",
+      "romanization": "pā̃cvā̃ / pā̃cvī̃ / bīsvā̃ / sauvā̃",
+      "gloss": "fifth / feminine fifth / twentieth / hundredth — where the rule finally arrives: number plus -वाँ",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d2df046ca51b811",
+      "sourceHash": "fnv1a64:8c53e697c48516b5",
       "notice": null,
       "blocks": [
         {
