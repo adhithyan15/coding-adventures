@@ -137,21 +137,37 @@ describe("the committed Arabic A1 inventory", () => {
     }
   });
 
-  it("reports a joining column of ZERO, and the worst script closure in the series", () => {
+  it("reports a joining column no longer at ZERO, and the worst script closure in the series", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(238);
-    expect(coverage.covered).toBe(106);
-    expect(coverage.unmapped).toBe(132);
+    // 106 -> 123: the present-tense-and-joining tranche (chapters 37-41).
+    // Sixteen items closed seventeen points, and the lever was a TENSE rather
+    // than vocabulary: AR-A1-V-05 blocked لا أفهم, which blocked the whole of
+    // AR-A1-FUN-15, and one prefix released both. The joining column then came
+    // almost free, because every one of its function words is inside the taught
+    // letter set.
+    expect(coverage.covered).toBe(123);
+    expect(coverage.unmapped).toBe(115);
     expect(coverage.partial).toBe(0);
-    // THE HEADLINE, and the first column in this whole series to measure a flat
-    // zero. و — the commonest word in written Arabic — is GLOSSED once, in
+    // THE HEADLINE WAS a flat zero — the first column in this whole series to
+    // measure one. و, the commonest word in written Arabic, was GLOSSED once in
     // chapter 1's fixed reply ("hear the little wa- at the front; it means
-    // and"), and that sentence introduces no atom. أو's single raw match is the
-    // middle of الأول; لكن, لأن, أنّ and عندما all return zero occurrences.
+    // and") and that sentence introduced no atom; أو's single raw match was the
+    // middle of الأول; لكن, لأن, أنّ and عندما all returned zero.
+    // 0 -> 6. The five that remain each name a LETTER or a construction rather
+    // than an omission: الذي and إلا need ذال and alif-hamza-below, the
+    // distributive needs the numerals, and the maṣdar and the purpose لـ are
+    // constructions no lesson has yet named.
     expect(coverage.byCategory["Ar-rabt (joining and subordination)"]!).toEqual({
       enumerated: 11,
-      covered: 0,
+      covered: 6,
+    });
+    // Negation closes outright, 2/5 -> 5/5: ليس for the verbless sentence, ما
+    // for the past, لا for the present, and لا … ولا for both at once.
+    expect(coverage.byCategory["An-nafy (negation)"]!).toEqual({
+      enumerated: 5,
+      covered: 5,
     });
     // Nothing can be pointed at: هذا and هذه both return zero occurrences.
     expect(coverage.byCategory["Al-ishara (demonstratives and deixis)"]!).toEqual({
@@ -162,6 +178,14 @@ describe("the committed Arabic A1 inventory", () => {
     // violations across 102 lessons, and headwordsWithoutRomanization 37 —
     // against 0 for both Bengali and Urdu. ف alone is shown in 34 lessons and
     // taught in none. All eighteen writing lessons sit in chapters 1-4.
+    //
+    // The twenty-one lessons of chapters 37-41 moved NONE of those numbers:
+    // violations held at 57, taught at 30, shown at 45, never-taught at 15, and
+    // headwordsWithoutRomanization at 37 (every new lesson declares one). Each
+    // new body was written inside the taught letter set, and the exemption was
+    // used three times, for the three headwords that could not be: لا أفهم,
+    // لماذا؟ and كرّر من فضلك. exposureOnly rose 7 -> 13, which is that choice
+    // made visible rather than hidden.
     expect(coverage.byCategory["Al-khatt (script and orthography)"]!).toEqual({
       enumerated: 12,
       covered: 4,
@@ -170,7 +194,7 @@ describe("the committed Arabic A1 inventory", () => {
     // the strongest columns measured anywhere in this series.
     expect(coverage.byCategory["Al-ism (the noun)"]!).toEqual({ enumerated: 8, covered: 7 });
     expect(formatExamCoverage(coverage)).toContain(
-      "arabic A1 (partial inventory): 106/238 points covered (45%)",
+      "arabic A1 (partial inventory): 123/238 points covered (52%)",
     );
   }, 60_000);
 });

@@ -1,0 +1,21 @@
+{
+  "chapter": 40,
+  "title": "Why, That, and When",
+  "label": "ch:ar-why-that-and-when",
+  "canDo": "I can ask why with لماذا, answer it with لأن, report what I write or think with أنّ, and put one event beside another in time with حينما.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-R40-why-that-when",
+    "kind": "speaking",
+    "summary": "The first three-clause Arabic sentence in this track: an acceptance, an objection and a reason, built from حسنًا, لكن and لأن over the present tense of chapter 37.",
+    "assesses": [
+      "AR-LEX-C40-LIMADHA-01",
+      "AR-LEX-C40-LIANNA-01",
+      "AR-GRAMMAR-C40-ANNA-01",
+      "AR-LEX-C40-HINAMA-01"
+    ],
+    "note": "Three of the four share a visible piece with another: لماذا and لأن both open with لـ, لأن contains أنّ, and حينما contains the same ما as لماذا."
+  }
+}

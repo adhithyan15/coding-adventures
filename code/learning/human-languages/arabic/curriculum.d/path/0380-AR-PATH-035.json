@@ -1,0 +1,16 @@
+{
+  "id": "AR-PATH-035",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "AR-C38-wa",
+    "AR-C38-aw",
+    "AR-C38-lakin",
+    "AR-C38-hasanan",
+    "AR-R38-two-at-once"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-035-JOINING"
+  ],
+  "after": []
+}

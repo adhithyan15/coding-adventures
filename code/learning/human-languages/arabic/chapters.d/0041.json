@@ -1,0 +1,20 @@
+{
+  "chapter": 41,
+  "title": "Calling Somebody, and Asking Again",
+  "label": "ch:ar-calling-somebody-and-asking-again",
+  "canDo": "I can call somebody by name with يا, ask them to say it again with كرّر من فضلك, and run the whole first meeting of chapters one to four with the repair kit inside it.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-R41-calling-and-asking-again",
+    "kind": "speaking",
+    "summary": "The greeting, name and wellbeing exchanges of chapters 1-4 -- untouched for more than a hundred lessons -- are run cold and then broken on purpose, so the learner uses عفوا, لا أفهم and كرّر من فضلك to get the conversation back.",
+    "assesses": [
+      "AR-GRAMMAR-C41-YA-01",
+      "AR-FUNC-C41-KARRIR-01",
+      "AR-FUNC-C37-LA-AFHAM-01"
+    ],
+    "note": "يا is one letter and stands between a learner who can give their own name and a learner who can call anybody by theirs."
+  }
+}

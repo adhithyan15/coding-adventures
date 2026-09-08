@@ -933,7 +933,10 @@
       "id": "AR-A1-ADV-08",
       "category": "Az-zarf (adverbs)",
       "label": "لماذا ('why') against لأن ('because')",
-      "probe": null,
+      "probe": [
+        "AR-LEX-C40-LIMADHA-01",
+        "AR-LEX-C40-LIANNA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -944,7 +947,7 @@
         "A1-SUB-06"
       ],
       "arabicSpecific": false,
-      "note": "NEITHER EXISTS: لماذا returns zero occurrences and لأن returns zero. A learner cannot ask for a reason or give one."
+      "note": "Closed by chapter 40, and it needed both halves. لماذا's ذال has no lesson in the script ladder, so the word is printed whole in the lesson that owns it — one of three uses of the headword exemption in this tranche — and named in romanization everywhere else."
     },
     {
       "id": "AR-A1-V-01",
@@ -1026,13 +1029,15 @@
         "A1-V-08"
       ],
       "arabicSpecific": false,
-      "note": "COMPLETELY ABSENT, AND IT IS THE LARGEST STRUCTURAL GAP IN THIS FILE. Eleven verbs are taught and not one of them can be conjugated for 'I'. The past-tense person suffixes are a single closed table; one lesson would turn the whole of chapters 28-32 from a reading list into a speaking stock."
+      "note": "STILL COMPLETELY ABSENT, and it is now the largest structural gap in this file on its own. Chapter 37 taught the PRESENT tense for the first person, which is the other half of the pair this file said an A1 Arabic learner needs; the past-tense person suffixes are still a single closed table nobody has written."
     },
     {
       "id": "AR-A1-V-05",
       "category": "Al-fil (the verb, and the root-and-pattern engine)",
       "label": "the present tense",
-      "probe": null,
+      "probe": [
+        "AR-GRAMMAR-C37-PRESENT-I-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1044,7 +1049,7 @@
         "A1-V-03"
       ],
       "arabicSpecific": false,
-      "note": "ABSENT, WITH ONE ACCIDENTAL EXCEPTION. The only present-tense verb form anywhere in the corpus is لا أعرف ('I do not know'), given as an EXAMPLE inside the chapter-5 negation lesson and never taught as a form. Arabic marks the present with prefixes, not suffixes, so this does not come free with AR-A1-V-04 and needs a lesson of its own."
+      "note": "Closed by AR-C37-present (chapter 37), which realizes VERB-PRESENT-HABITUAL on SPINE-SAY-WHAT-I-DO. Taught as this note asked — as a lesson of its own, on the PREFIX, against the suffix the past tense uses — for the first person only. أكتب and أسأل are inside the taught letter set; أفهم and أعرف are not, and are named in romanization."
     },
     {
       "id": "AR-A1-V-06",
@@ -1079,7 +1084,7 @@
         "A1-F4-01"
       ],
       "arabicSpecific": false,
-      "note": "Untaught. No verb in the corpus appears in any command form, so no instruction can be given."
+      "note": "Half taught. AR-C41-karrir gives the imperative كرّر — the first command in the corpus — but as one fixed exponent inside a repair phrase rather than as a form built from a rule, so no instruction can be given with any other verb. The point stays null until a lesson derives the imperative from the present tense chapter 37 taught."
     },
     {
       "id": "AR-A1-V-08",
@@ -1289,13 +1294,15 @@
         "A1-SV-06"
       ],
       "arabicSpecific": false,
-      "note": "Untaught. Arabic's default word order is verb-subject-object and no lesson says so, which matters more than it would for a European language because the eleven taught verbs are all citation forms with no sentence around them."
+      "note": "Untaught. Chapter 37's present tense gives the corpus its first verbs with a person on them, so a verbal sentence is now buildable in principle; no lesson says that Arabic's default order is verb-subject-object, and that statement is what this point asks for."
     },
     {
       "id": "AR-A1-SEN-03",
       "category": "Al-jumla (the sentence)",
       "label": "the yes-or-no question, with هل or أ",
-      "probe": null,
+      "probe": [
+        "AR-GRAMMAR-C39-HAL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1305,7 +1312,7 @@
         "A1-OS-02"
       ],
       "arabicSpecific": false,
-      "note": "Untaught. Arabic marks a yes-or-no question with a particle rather than with intonation, so unlike the Indic tracks in this series this cannot be done by prosody alone — it needs the word, and the word is not there. نعم and لا are taught in chapter 5 as answers to a question the book cannot ask."
+      "note": "Closed by AR-C39-hal (chapter 39), which realizes QUESTION-POLAR. The note's point stands and is made in the lesson: unlike the Indic tracks in this series, Arabic cannot do this with prosody, so the particle IS the question."
     },
     {
       "id": "AR-A1-SEN-04",
@@ -1347,7 +1354,9 @@
       "id": "AR-A1-SEN-06",
       "category": "Al-jumla (the sentence)",
       "label": "the vocative يا, which Arabic puts before every name it calls",
-      "probe": null,
+      "probe": [
+        "AR-GRAMMAR-C41-YA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1358,7 +1367,7 @@
         "A1-F5-03"
       ],
       "arabicSpecific": false,
-      "note": "UNTAUGHT, and it is one letter. Arabic does not address a person by a bare name — يا محمد, not محمد — so a learner who has been taught how to give their own name still cannot call anybody by theirs."
+      "note": "Closed by AR-C41-ya (chapter 41). It was, as the note said, one letter — two, in fact, and both long taught."
     },
     {
       "id": "AR-A1-SEN-07",
@@ -1540,7 +1549,9 @@
       "id": "AR-A1-NEG-03",
       "category": "An-nafy (negation)",
       "label": "ليس, the negator of a verbless sentence",
-      "probe": null,
+      "probe": [
+        "AR-GRAMMAR-C39-LAYSA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1550,13 +1561,15 @@
         "A1-OS-05"
       ],
       "arabicSpecific": false,
-      "note": "ABSENT: ليس returns zero occurrences. The nominal sentence is the one thing this corpus teaches productively (AR-A1-SEN-01) and it cannot be denied — الجو حار can be said and 'it is not hot' cannot."
+      "note": "Closed by AR-C39-laysa (chapter 39). The note was exact about the shape of the hole: the nominal sentence is what this corpus teaches best and could not deny. اسمي حسن is now deniable with the frame chapter 2 taught."
     },
     {
       "id": "AR-A1-NEG-04",
       "category": "An-nafy (negation)",
       "label": "ما, the negator of a past-tense verb",
-      "probe": null,
+      "probe": [
+        "AR-GRAMMAR-C39-MA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1566,13 +1579,15 @@
         "A1-OS-01"
       ],
       "arabicSpecific": false,
-      "note": "Untaught. Arabic uses a different word to negate the past from the one it uses for the present, so this does not come free with AR-A1-NEG-02 — and the past is the only tense the corpus teaches."
+      "note": "Closed by AR-C39-ma (chapter 39), which realizes VERB-NEGATE on SPINE-NEGATE-AND-ASK. Taught as a DIFFERENT word from لا rather than as a variant of it, and connected to the ما of ما اسمك so the reader sees one particle doing three jobs."
     },
     {
       "id": "AR-A1-NEG-05",
       "category": "An-nafy (negation)",
       "label": "negative coordination: لا … ولا",
-      "probe": null,
+      "probe": [
+        "AR-GRAMMAR-C39-LA-WALA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1582,13 +1597,15 @@
         "A1-CO-02"
       ],
       "arabicSpecific": false,
-      "note": "Untaught, and downstream of the empty joining column."
+      "note": "Closed by AR-C39-la-wala (chapter 39). It arrives one lesson after the joiner it is built on, which is what made it cheap: ولا is و written onto a second لا."
     },
     {
       "id": "AR-A1-JOIN-01",
       "category": "Ar-rabt (joining and subordination)",
       "label": "و, the prefixed 'and'",
-      "probe": null,
+      "probe": [
+        "AR-LEX-C38-WA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1598,13 +1615,15 @@
         "A1-CO-01"
       ],
       "arabicSpecific": false,
-      "note": "GLOSSED ONCE, TAUGHT NEVER — and this is the headline of the file. و is the commonest word in written Arabic. Chapter 1's as-salāmu ʿalaykum lesson says, of the fixed reply, 'hear the little wa- at the front; it means and' — and that sentence introduces NO atom, so nothing in the corpus is probeable for it and nothing later builds on it. A learner who owns 36 chapters of vocabulary — six colours, eight foods, four family words, the weekdays, the months — cannot say 'bread and water'."
+      "note": "Closed by AR-C38-wa (chapter 38). The chapter-1 sentence this note quoted — 'hear the little wa- at the front; it means and' — is quoted back inside the lesson, and the greeting reply is run in its practice with every word owned."
     },
     {
       "id": "AR-A1-JOIN-02",
       "category": "Ar-rabt (joining and subordination)",
       "label": "أو ('or')",
-      "probe": null,
+      "probe": [
+        "AR-LEX-C38-AW-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1615,13 +1634,15 @@
         "A1-F3-02"
       ],
       "arabicSpecific": false,
-      "note": "ABSENT. The one raw match for أو was checked in context and is the middle of الأول ('the first') in the months lesson. No alternative can be offered."
+      "note": "Closed by AR-C38-aw (chapter 38), taught against و rather than beside it: one is written joined to the next word and one stands apart, and they are a single letter different."
     },
     {
       "id": "AR-A1-JOIN-03",
       "category": "Ar-rabt (joining and subordination)",
       "label": "لكن ('but')",
-      "probe": null,
+      "probe": [
+        "AR-LEX-C38-LAKIN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1632,7 +1653,7 @@
         "A1-F2-09"
       ],
       "arabicSpecific": false,
-      "note": "ABSENT: zero occurrences. Nothing can be qualified or contradicted."
+      "note": "Closed by AR-C38-lakin (chapter 38), taken apart to show the لا of chapter 5 at the front of it — the same move English made in but, from be-ūtan."
     },
     {
       "id": "AR-A1-JOIN-04",
@@ -1654,7 +1675,9 @@
       "id": "AR-A1-JOIN-05",
       "category": "Ar-rabt (joining and subordination)",
       "label": "أنّ / أن, the complementiser: 'I think THAT …'",
-      "probe": null,
+      "probe": [
+        "AR-GRAMMAR-C40-ANNA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1664,7 +1687,7 @@
         "A1-SUB-03"
       ],
       "arabicSpecific": false,
-      "note": "ABSENT: zero occurrences as a word. No opinion can be reported, which is why the whole opinion block of the functional column below is null."
+      "note": "Closed by AR-C40-anna (chapter 40). The reader meets أنّ one lesson earlier without being told, welded onto لـ inside لأنّ, which is why the lesson can open by taking a word apart rather than by introducing a particle."
     },
     {
       "id": "AR-A1-JOIN-06",
@@ -1681,13 +1704,15 @@
         "A1-SUB-05"
       ],
       "arabicSpecific": false,
-      "note": "Untaught — the same absence recorded from the pronoun side at AR-A1-PRON-07, filed here so the joining column is a complete work queue on its own."
+      "note": "Untaught. الذي needs ذال, which the script ladder has not reached, and the same absence is recorded from the pronoun side at AR-A1-PRON-07. This is a script lesson before it is a vocabulary one."
     },
     {
       "id": "AR-A1-JOIN-07",
       "category": "Ar-rabt (joining and subordination)",
       "label": "لأن ('because')",
-      "probe": null,
+      "probe": [
+        "AR-LEX-C40-LIANNA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1697,13 +1722,15 @@
         "A1-SUB-06"
       ],
       "arabicSpecific": false,
-      "note": "ABSENT: zero occurrences, on both halves of Spanish's why/because pair."
+      "note": "Closed by AR-C40-lianna (chapter 40), which realizes CONNECTIVE-BECAUSE on SPINE-SAY-WHY. Both halves of the pair this note named are taught, one lesson apart, and the lesson shows that they differ by one particle behind the same لـ."
     },
     {
       "id": "AR-A1-JOIN-08",
       "category": "Ar-rabt (joining and subordination)",
       "label": "عندما ('when') as a clause joiner",
-      "probe": null,
+      "probe": [
+        "AR-LEX-C40-HINAMA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "AR-CORPUS",
@@ -1713,7 +1740,7 @@
         "A1-SUB-08"
       ],
       "arabicSpecific": false,
-      "note": "ABSENT: zero occurrences."
+      "note": "Closed by AR-C40-hinama (chapter 40). عندما, the word this point was first written around, needs دال, which the script ladder has not reached; it is named in the lesson in romanization and حينما carries the point. حينما is built on حين plus the same ما the reader has now met three times."
     },
     {
       "id": "AR-A1-JOIN-09",
@@ -1762,7 +1789,7 @@
         "A1-CO-05"
       ],
       "arabicSpecific": false,
-      "note": "SHOWN AND NOT TAUGHT. لا إله إلا الله is quoted in full in the chapter-5 negation lesson, which is the corpus's only exceptive sentence; the frame is not named and no atom carries it."
+      "note": "SHOWN AND NOT TAUGHT, and now blocked by a letter as well: إلا opens with alif-hamza-below, which no lesson teaches. لا إله إلا الله is still the corpus's only exceptive sentence and the frame is still unnamed."
     },
     {
       "id": "AR-A1-REG-01",
@@ -2519,7 +2546,10 @@
       "id": "AR-A1-FUN-15",
       "category": "Al-wazaif (communicative functions)",
       "label": "say you do not understand, and ask for a repeat",
-      "probe": null,
+      "probe": [
+        "AR-FUNC-C37-LA-AFHAM-01",
+        "AR-FUNC-C41-KARRIR-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2531,13 +2561,15 @@
         "A1-F6-04"
       ],
       "arabicSpecific": false,
-      "note": "UNTAUGHT, AND IT IS THE ONE HOLE IN AN OTHERWISE STRONG REPAIR KIT. فهم is taught in chapter 31 — as فَهِمَ, 'he understood' — and لا is taught in chapter 5 as a verb negator, so لا أفهم is one present-tense form away and that form does not exist anywhere (AR-A1-V-05). Nor is there any way to ask somebody to repeat or to slow down: 'repeat' and 'slowly' appear in two lessons as English prose and قال is taught only as 'he said'. Everything else a beginner needs when a conversation goes wrong — sorry, excuse me, pardon, please, thank you — this corpus has."
+      "note": "Closed by chapters 37 and 41, and the note's own accounting was the design: لا (ch5) plus فهم (ch31) plus the present tense is لا أفهم, and كرّر من فضلك pairs a Form II imperative on ك-ر-ر with the من فضلك of chapter 6. The one hole in an otherwise strong repair kit is now filled, and it cost one new verb."
     },
     {
       "id": "AR-A1-FUN-16",
       "category": "Al-wazaif (communicative functions)",
       "label": "show that you are following what is said",
-      "probe": null,
+      "probe": [
+        "AR-FUNC-C38-HASANAN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2548,7 +2580,7 @@
         "A1-F6-04"
       ],
       "arabicSpecific": false,
-      "note": "Untaught. There is no طيب, no ماشي and no MSA equivalent taught as a backchannel, which is the one everyday conversational move Bengali covers and Arabic does not."
+      "note": "Closed by AR-C38-hasanan (chapter 38). حسنًا wears the same -an ending as شكرًا and عفوًا, both already taught, so the reader owns the shape and only the root is new."
     },
     {
       "id": "AR-A1-FUN-17",
@@ -2575,7 +2607,10 @@
       "id": "AR-A1-FUN-18",
       "category": "Al-wazaif (communicative functions)",
       "label": "agree and disagree with an opinion",
-      "probe": null,
+      "probe": [
+        "AR-FUNC-C38-HASANAN-01",
+        "AR-LEX-C38-LAKIN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -2588,7 +2623,7 @@
         "A1-NG6-06"
       ],
       "arabicSpecific": false,
-      "note": "Untaught beyond نعم and لا, and blocked further by the missing لكن."
+      "note": "Closed by chapter 38: حسنًا accepts, لكن turns, and حسنًا، لكن … is the half-agreement almost every real disagreement starts with. The note named لكن as the further blocker and it is now taught."
     },
     {
       "id": "AR-A1-FUN-19",
@@ -3083,7 +3118,9 @@
       "id": "AR-A1-FUN-44",
       "category": "Al-wazaif (communicative functions)",
       "label": "address somebody by name or title",
-      "probe": null,
+      "probe": [
+        "AR-GRAMMAR-C41-YA-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -3094,7 +3131,7 @@
         "A1-F5-03"
       ],
       "arabicSpecific": false,
-      "note": "Untaught — see AR-A1-SEN-06. Arabic needs يا before a name and it is not there."
+      "note": "Closed by AR-C41-ya (chapter 41) — see AR-A1-SEN-06. A learner who could give their own name can now call somebody by theirs."
     },
     {
       "id": "AR-A1-FUN-45",

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:e56ea075c3b727c7",
+  "lessonIds": [
+    "AR-C39-laysa",
+    "AR-C39-ma",
+    "AR-C39-la-wala",
+    "AR-C39-hal",
+    "AR-R39-denying-and-asking"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch39.txt",
+  "json": "arabic/narration/ch39.json",
+  "textHash": "fnv1a64:b0b23677a3e86e28",
+  "jsonHash": "fnv1a64:32e8f8ebcf7c93a3",
+  "findings": []
+}

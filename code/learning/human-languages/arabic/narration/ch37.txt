@@ -1,0 +1,99 @@
+Arabic, chapter 37: The Tense That Was Missing.
+3 lessons. All 3 can be done entirely by ear.
+
+
+Lesson 1 of 3.
+أكتب (aktub) — the tense that was missing.
+
+Warm-up.
+[pause 2 seconds]
+Eleven verbs in this book and every one of them is a past tense, third person, masculine: kataba, "he wrote." Nothing here has ever happened now, and nothing has ever happened to you.
+
+You'll want to know: the أ- in front.
+كتب — kataba — he wrote, أكتب — aktub — I write.
+سأل — saʾala — he asked, أسأل — asʾal — I ask.
+The past tense marks who is speaking at the end of the word. The present marks it at the front, with a prefix, and أ is the prefix for I. Nothing is added at the back at all.
+
+Grammar Lens: the front of the word, not the back.
+[a table of 3 rows, read aloud]
+root: ك-ت-ب. past, he: كتب. present, I: أكتب (aktub).
+root: س-أ-ل. past, he: سأل. present, I: أسأل.
+root: ح-ب-ب. past, he: أحبّ. present, I: أحبّ.
+The third row is a warning as much as an example: أحبّ is he loved and I love on the page, and only the vowels tell them apart — aḥabba against uḥibb. Arabic does not usually write those vowels. Context does the work, and this is where a reader starts needing it.
+That أ is old. Hebrew and Aramaic mark their first person the same way, at the front, with the same letter. It is older than either language.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — kataba … aktub]
+[pause 8 seconds for the answer]
+[your turn — say: the second pair — saʾala … asʾal]
+[pause 8 seconds for the answer]
+[your turn — say: uḥibb — I love]
+[pause 8 seconds for the answer]
+[your turn — say: the one this book most needs, in romanization — afham, I understand]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does the past tense mark the person, and where does the present? (Past at the end; present at the front.) Which letter is the prefix for I? (أ.) And why can أحبّ be read two ways? (The vowels that separate them are not written.)
+Source: Unicode Arabic chart.
+
+
+Lesson 2 of 3.
+لا أفهم (lā afham) — I do not understand.
+
+Warm-up.
+[pause 2 seconds]
+لا has been in this book since chapter five, named there as the word that negates a present-tense verb. The book had no present-tense verb until the lesson before this one.
+[your turn — recall: the item before this — the prefix that means I, on aktub]
+[pause 8 seconds for the answer]
+
+You'll want to know: لا أفهم.
+لا أفهم — lā afham — I do not understand.
+Two words, and both halves were already in the book: لا from chapter five, and فهم — fahima, "he understood" — from chapter thirty-one. All that was missing was the prefix the last lesson taught.
+لا goes in front of the verb, which is where the chapter-five lesson said it goes, and the verb keeps its own shape.
+
+Grammar Lens: the same operation on every verb you own.
+[a table of 3 rows, read aloud]
+أكتب (aktub) means I write.
+لا أكتب (aktub) means I do not write.
+لا أسأل means I do not ask.
+Nothing moves and nothing is added at the end. This is the operation a beginner uses more than any other, and this book could not perform it on any verb until this chapter.
+One note on the page rather than the language: فاء, the letter in the middle of أفهم, has no lesson in this track's script ladder yet, so the sentence is printed whole here, in the lesson that owns it, and named in romanization wherever else it appears.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: lā afham]
+[pause 8 seconds for the answer]
+[your turn — say: the affirmative it denies — afham]
+[pause 8 seconds for the answer]
+[your turn — say: lā aktub … lā asʾal]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does لا stand in relation to the verb? (In front of it.) Which two chapters supplied the halves of this sentence? (Five, for لا, and thirty-one, for فهم.) And what did the sentence need that neither of them had? (The present tense, from the lesson before this one.)
+Source: Unicode Arabic chart.
+
+
+Lesson 3 of 3.
+Now, and not — the present tense, and the first sentence in this book that a lost learner can say.
+
+Warm-up.
+[pause 4 seconds]
+Two items landed in this chapter and one of them was a whole tense. Name the prefix, and name the sentence it unlocked.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: three verbs in the past, as the book taught them — kataba, saʾala, fahima]
+[pause 8 seconds for the answer]
+[your turn — say: the same three in the present, for yourself — aktub, asʾal, afham]
+[pause 8 seconds for the answer]
+[your turn — say: each of them denied — lā aktub, lā asʾal, lā afham]
+[pause 8 seconds for the answer]
+[your turn — recall: the very first verb this book taught, nine chapters back — dhahaba]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which end of the verb carries the person in the present tense? (The front.) Where does لا go? (In front of the whole verb.) And how many new words did lā afham need? (None — both halves were already taught, and only the tense was missing.)

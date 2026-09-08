@@ -1,0 +1,17 @@
+{
+  "language": "arabic",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:cbb4cb159f56eb6b",
+  "lessonIds": [
+    "AR-C37-present",
+    "AR-C37-la-afham",
+    "AR-R37-now-and-not"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "arabic/narration/ch37.txt",
+  "json": "arabic/narration/ch37.json",
+  "textHash": "fnv1a64:ad3985de760f292f",
+  "jsonHash": "fnv1a64:a3832bdd764f2033",
+  "findings": []
+}

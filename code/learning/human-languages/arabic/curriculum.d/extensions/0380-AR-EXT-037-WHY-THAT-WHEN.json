@@ -1,0 +1,17 @@
+{
+  "id": "AR-EXT-037-WHY-THAT-WHEN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask for a reason, give one, report what I think, and place one event beside another in time.",
+  "prerequisites": [
+    "AR-EXT-036-DENY-AND-ASK"
+  ],
+  "lessons": [
+    "AR-C40-limadha",
+    "AR-C40-lianna",
+    "AR-C40-anna",
+    "AR-C40-hinama",
+    "AR-R40-why-that-when"
+  ]
+}

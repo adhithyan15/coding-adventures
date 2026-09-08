@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C41-karrir",
+    "language": "arabic",
+    "chapter": 41,
+    "sequence": 1200,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:49e2273c766a369a"
+  },
+  "findings": []
+}
