@@ -2913,10 +2913,10 @@ impl Compiler {
 
     /// A pure conditional may feed a standard function even when its branch
     /// values differ, provided the function maps every branch to the same
-    /// exact result. Such a result may compose with finite literal arithmetic
-    /// and exact tracked scalar snapshots before feeding another built-in. The
-    /// selector remains part of emitted IIR, and untracked values remain
-    /// excluded.
+    /// exact result. Such a result may compose with finite literal arithmetic,
+    /// bounded literal powers, and exact tracked scalar snapshots before
+    /// feeding another built-in. The selector remains part of emitted IIR, and
+    /// untracked values remain excluded.
     fn exact_tracked_standard_function_operand(&self, node: &GrammarASTNode) -> bool {
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             return self.static_predicate_dependencies(condition).is_some()
@@ -2945,6 +2945,33 @@ impl Compiler {
             return true;
         }
         let sequence = pieces(node);
+        if node.rule_name == "expr_pow"
+            && sequence
+                .iter()
+                .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+        {
+            if sequence.len().is_multiple_of(2) {
+                return false;
+            }
+            let mut operands = Vec::new();
+            for (index, piece) in sequence.iter().enumerate() {
+                if index.is_multiple_of(2) {
+                    let Piece::Node(operand) = piece else {
+                        return false;
+                    };
+                    operands.push(*operand);
+                } else if !matches!(piece, Piece::Op(op) if op == "^" || op == "**") {
+                    return false;
+                }
+            }
+            let Some((base, exponents)) = operands.split_first() else {
+                return false;
+            };
+            return self.exact_tracked_standard_function_operand(base)
+                && self.contains_pure_standard_function_call(base)
+                && literal_nonnegative_integral_arithmetic_power_chain(exponents).is_some()
+                && self.static_tracked_exponent_real_value(node).is_some();
+        }
         sequence.len() >= 3
             && !sequence.len().is_multiple_of(2)
             && sequence.iter().skip(1).step_by(2).all(|piece| {
@@ -11429,6 +11456,32 @@ mod tests {
         .expect("an uninitialized real snapshot must retain runtime power");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+    }
+
+    #[test]
+    fn al4_path_independent_standard_results_compose_through_literal_powers() {
+        let module = compile_source(
+            "begin real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ 1) + 6.0; gate := 1.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
+            "test",
+        )
+        .expect("a path-independent built-in result may compose through a bounded literal power");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+    }
+
+    #[test]
+    fn al4_path_independent_standard_result_literal_powers_fail_closed() {
+        for source in [
+            "begin integer power; real gate, exponent, saved; power := 1; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) end",
+            "begin real exponent, saved; exponent := 2.0; saved := 6.0 ^ entier((exponent + 0.5) ^ 1) end",
+        ] {
+            let module = compile_source(source, "test")
+                .expect("unbounded or standard-free powers must retain runtime power");
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"), "{source}");
+        }
     }
 
     #[test]

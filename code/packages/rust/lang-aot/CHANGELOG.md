@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.299.0 — 2026-09-08 — powered ALGOL standard results
+
+The seven-backend ALGOL matrix now proves a path-independent pure built-in
+result may compose through a bounded variable-free integral power.
+
 ## 0.298.0 — 2026-09-08 — tracked reals in ALGOL standard-result arithmetic
 
 The seven-backend ALGOL matrix now proves a finite tracked local real snapshot
