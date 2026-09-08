@@ -8,6 +8,27 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-039b implementation contract (selected after #14488 merged)
+
+Refreshed main is `1d1db6507d`. VM-039a merged after all applicable checks
+passed, including both final gates. No new defect outranks the next adapter:
+WASM input/EOF for the identical four FLOW-MATIC rows 438–441.
+
+Add WASM to those rows without changing source, stdin or expected output.
+First execute a discriminating cell and record the current failure. Introduce
+`env.__input_more() -> i64` alongside the existing input_i64 import: preserve
+feature detection, import ordering, function indices and destination writes.
+The matrix host adapter must inspect the same per-program byte queue consumed
+by InputI64Func without mutating it. Empty input returns zero; repeated peeks
+remain stable before and after consumption. Host import errors must remain
+hard failures, never post-detection skips. Document the new host ABI.
+
+Validate all four new WASM cells with positive sentinels, direct repeated-peek
+and shared-buffer assertions, the complete iir-to-wasm suite and focused Clippy.
+Native/LLVM behavior remains the previously merged proof; JVM/CLR and shared
+VM/JIT matrix callbacks remain subsequent slices. Update counts by four cells,
+not four programs. Security review precedes publishing a ready PR.
+
 ## VM-039a implementation contract (selected after #14471 merged)
 
 Refreshed main is `1ff49866a8`. VM-038 merged with every applicable
