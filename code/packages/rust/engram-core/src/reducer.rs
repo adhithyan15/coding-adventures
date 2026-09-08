@@ -1492,7 +1492,8 @@ fn card_bury_kind(state: &AppState, card_id: &str, now: u64) -> Option<BuryCardK
             .is_some_and(|buried_until| buried_until > now)
         || (progress.state == CardState::Buried
             && progress
-                .buried_until.is_none_or(|buried_until| buried_until > now))
+                .buried_until
+                .is_none_or(|buried_until| buried_until > now))
     {
         return None;
     }

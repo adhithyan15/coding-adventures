@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+### Fixed -- a deeply nested search query aborted the process
+
+`SearchParser` is recursive descent with no depth bound. Every `(` costs a
+`parse_primary` -> `parse_or` -> `parse_and` -> `parse_unary` -> `parse_primary`
+cycle of stack frames, and every space-separated leading `-` costs a
+`parse_unary` frame, so the query was a stack-depth dial that whoever supplied
+the query got to turn.
+
+This is not a panic. Verified locally: it is `fatal runtime error: stack
+overflow, aborting`, SIGABRT, which `catch_unwind` cannot contain and no caller
+can recover from. The browser build's stack is roughly 1 MB, a few thousand
+frames.
+
+It matters beyond a badly typed query because Engram renders browser props on
+every props build -- including the one that follows a snapshot restore. A saved
+query is therefore parsed with no interaction at all, so a corrupt or hostile
+snapshot would abort on open, and abort again on every subsequent launch, with
+no way back into the app.
+
+Nesting past `MAX_SEARCH_DEPTH` (64) is now a `SearchError`. 64 is far past any
+query a person writes and far short of any stack; a test pins both sides of the
+boundary, since a limit that rejected ordinary queries would be a worse bug than
+the one it fixes.
+
 - Added `get_deck_stats_for_all_decks`, which computes every deck's stats in a
   single pass. `get_deck_stats_for_state` rebuilds its card-progress and
   imported-schedule indexes on each call, so asking it once per deck to render
