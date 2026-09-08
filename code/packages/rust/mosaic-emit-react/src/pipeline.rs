@@ -213,6 +213,19 @@ pub struct EmitOptions {
     /// `mosaic-compile --backend react`) see no behaviour change.
     pub emit_project: bool,
 
+    /// Author-supplied slot values — a story's fixtures (#14459).
+    ///
+    /// React's emitted component takes its props at runtime, so unlike the
+    /// static html backend there is nothing to bake into the component
+    /// itself. Fixtures instead replace the generated *fallback props* in
+    /// `src/main.tsx`, which is what the project renders before a host
+    /// supplies anything. That is the value a reader of a component page or a
+    /// demo app actually sees.
+    ///
+    /// Empty means "no fixtures": the generated samples are used, which is the
+    /// pre-existing behaviour.
+    pub slot_values: HashMap<String, String>,
+
     /// Pinned exact version of `react` + `react-dom` to write into
     /// `package.json`. Per UI32 spec §3.6.3, pinning is mandatory
     /// to defeat supply-chain drift.
@@ -238,6 +251,7 @@ impl Default for EmitOptions {
     fn default() -> Self {
         Self {
             emit_project: false,
+            slot_values: HashMap::new(),
             pinned_react: "18.3.1".to_string(),
             pinned_vite: "7.3.6".to_string(),
             pinned_vite_react_plugin: "4.3.3".to_string(),
@@ -350,7 +364,7 @@ fn build_react_project_files(
         vite_config: build_vite_config(),
         tsconfig_json: build_tsconfig_json(),
         index_html: build_index_html(name),
-        main_tsx: build_main_tsx(name, &interface.slots),
+        main_tsx: build_main_tsx(name, &interface.slots, &options.slot_values),
         readme: build_react_readme(&npm_name, name),
     })
 }
@@ -431,22 +445,61 @@ fn build_index_html(component_name: &str) -> String {
     )
 }
 
-fn build_main_tsx(component_name: &str, slots: &[SlotDecl]) -> String {
-    let fallback_props = build_fallback_props_object(slots);
+fn build_main_tsx(
+    component_name: &str,
+    slots: &[SlotDecl],
+    slot_values: &HashMap<String, String>,
+) -> String {
+    let fallback_props = build_fallback_props_object(slots, slot_values);
     format!(
         "{BANNER_TS}import {{ StrictMode, useCallback, useEffect, useState, type ComponentProps }} from \"react\";\nimport {{ createRoot }} from \"react-dom/client\";\nimport type {{ Root as ReactRoot }} from \"react-dom/client\";\nimport {{ {component_name} }} from \"../{component_name}\";\n\ntype RootComponentProps = ComponentProps<typeof {component_name}>;\ntype RootSlotProps = Omit<RootComponentProps, \"dispatch\">;\ntype RootEvent = Parameters<RootComponentProps[\"dispatch\"]>[0];\ntype HostPropsResponse = Partial<RootSlotProps> | {{ props?: Partial<RootSlotProps> }} | void;\ntype MosaicHost = {{\n  getProps?: (request: {{ component: string }}) => HostPropsResponse | Promise<HostPropsResponse>;\n  handleEvent?: (request: {{ component: string; event: RootEvent }}) => HostPropsResponse | Promise<HostPropsResponse>;\n}};\n\ndeclare global {{\n  interface Window {{\n    mosaicHost?: MosaicHost;\n    __mosaicReactRoot?: ReactRoot;\n  }}\n}}\n\nconst fallbackProps = {fallback_props} satisfies RootSlotProps;\nconst MOSAIC_HOST_READY_EVENT = \"mosaic-host-ready\";\n\nfunction normalizeHostProps(response: HostPropsResponse): Partial<RootSlotProps> | undefined {{\n  if (response === undefined || response === null) {{\n    return undefined;\n  }}\n  if (\"props\" in response && response.props !== undefined) {{\n    return response.props;\n  }}\n  return response as Partial<RootSlotProps>;\n}}\n\nfunction Root() {{\n  const [props, setProps] = useState<RootSlotProps>(fallbackProps);\n\n  const refreshProps = useCallback(async () => {{\n    const response = await window.mosaicHost?.getProps?.({{ component: \"{component_name}\" }});\n    const nextProps = normalizeHostProps(response);\n    if (nextProps !== undefined) {{\n      setProps(current => ({{ ...current, ...nextProps }}));\n    }}\n  }}, []);\n\n  useEffect(() => {{\n    const handleHostReady = () => {{\n      void refreshProps();\n    }};\n    window.addEventListener(MOSAIC_HOST_READY_EVENT, handleHostReady);\n    void refreshProps();\n    return () => {{\n      window.removeEventListener(MOSAIC_HOST_READY_EVENT, handleHostReady);\n    }};\n  }}, [refreshProps]);\n\n  const dispatch = useCallback(\n    async (event: RootEvent) => {{\n      const response = await window.mosaicHost?.handleEvent?.({{ component: \"{component_name}\", event }});\n      const nextProps = normalizeHostProps(response);\n      if (nextProps !== undefined) {{\n        setProps(current => ({{ ...current, ...nextProps }}));\n      }} else {{\n        await refreshProps();\n      }}\n    }},\n    [refreshProps],\n  );\n\n  return <{component_name} {{...props}} dispatch={{dispatch}} />;\n}}\n\nconst rootEl = document.getElementById(\"root\");\nif (rootEl === null) {{\n  throw new Error(\"#root not found in index.html\");\n}}\n\nconst root = window.__mosaicReactRoot ?? createRoot(rootEl);\nwindow.__mosaicReactRoot = root;\n\nroot.render(\n  <StrictMode>\n    <Root />\n  </StrictMode>\n);\n"
     )
 }
 
-fn build_fallback_props_object(slots: &[SlotDecl]) -> String {
+fn build_fallback_props_object(
+    slots: &[SlotDecl],
+    slot_values: &HashMap<String, String>,
+) -> String {
     let mut out = "{\n".to_string();
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
-        let value = sample_ts_value_for_slot(slot);
+        // A fixture wins over the generated sample. Without this a story that
+        // sets `variant: danger` renders the sample's `primary`, which is the
+        // accepted-and-dropped behaviour #14459 exists to end.
+        let value = match slot_values.get(&slot.name) {
+            Some(fixture) => ts_literal_for_fixture(&slot.r#type, fixture),
+            None => sample_ts_value_for_slot(slot),
+        };
         writeln!(out, "  {field}: {value},").unwrap();
     }
     out.push('}');
     out
+}
+
+/// Render a fixture value as a TypeScript literal for the slot's type.
+///
+/// Fixtures arrive as strings (that is the shape `--fixtures` parses into), so
+/// the slot's declared type decides how they are written: a `bool` slot must
+/// emit `true`, not `"true"`, or the generated project fails to type-check
+/// against its own props.
+///
+/// A value that does not parse for its type falls back to a quoted string
+/// rather than emitting invalid TypeScript. Rejecting it belongs in fixture
+/// validation (#14435), which can report it properly; silently emitting broken
+/// output here would be worse than a wrong-looking prop.
+fn ts_literal_for_fixture(slot_type: &SlotType, value: &str) -> String {
+    match slot_type {
+        SlotType::Number => match value.parse::<f64>() {
+            Ok(n) if n.is_finite() => format!("{n}"),
+            _ => js_string_literal(value),
+        },
+        SlotType::Bool => match value {
+            "true" => "true".to_string(),
+            "false" => "false".to_string(),
+            _ => js_string_literal(value),
+        },
+        _ => js_string_literal(value),
+    }
 }
 
 fn sample_ts_value_for_slot(slot: &SlotDecl) -> String {
@@ -5495,6 +5548,73 @@ mod tests {
                 children: Vec::new(),
             },
         }
+    }
+
+    // --- Story fixtures (#14459) ---------------------------------------
+
+    /// Fixtures replace the generated fallback props, and two fixture sets
+    /// must produce two different projects.
+    ///
+    /// React's component takes props at runtime, so there is nothing to bake
+    /// into the component itself -- fixtures land in `src/main.tsx`'s
+    /// fallbackProps, which is what the project renders before a host supplies
+    /// anything, and therefore what a component page or demo app shows.
+    #[test]
+    fn fixtures_replace_generated_fallback_props() {
+        let slots = vec![
+            SlotDecl {
+                name: "label".to_string(),
+                r#type: SlotType::Text,
+                required: false,
+                default: None,
+            },
+            SlotDecl {
+                name: "variant".to_string(),
+                r#type: SlotType::OneOf(vec!["primary".to_string(), "danger".to_string()]),
+                required: false,
+                default: None,
+            },
+        ];
+
+        let mut danger = HashMap::new();
+        danger.insert("label".to_string(), "Overdue".to_string());
+        danger.insert("variant".to_string(), "danger".to_string());
+
+        let with_fixtures = build_fallback_props_object(&slots, &danger);
+        let without = build_fallback_props_object(&slots, &HashMap::new());
+
+        assert!(with_fixtures.contains("\"Overdue\""), "{with_fixtures}");
+        assert!(with_fixtures.contains("\"danger\""), "{with_fixtures}");
+        // The sample fallback would have picked the FIRST one-of member.
+        assert!(without.contains("\"primary\""), "{without}");
+        assert_ne!(
+            with_fixtures, without,
+            "a fixture must change the generated props"
+        );
+    }
+
+    /// A fixture is written as a literal of the slot's declared type. A `bool`
+    /// slot emitting `"true"` instead of `true` would not type-check against
+    /// the project's own props.
+    #[test]
+    fn fixtures_render_as_typed_literals() {
+        assert_eq!(ts_literal_for_fixture(&SlotType::Bool, "true"), "true");
+        assert_eq!(ts_literal_for_fixture(&SlotType::Number, "42"), "42");
+        assert_eq!(
+            ts_literal_for_fixture(&SlotType::Text, "hi"),
+            "\"hi\"".to_string()
+        );
+        // A value that does not parse for its type falls back to a quoted
+        // string rather than emitting invalid TypeScript. Rejecting it is
+        // fixture validation's job (#14435), which can report it properly.
+        assert_eq!(
+            ts_literal_for_fixture(&SlotType::Number, "abc"),
+            "\"abc\"".to_string()
+        );
+        assert_eq!(
+            ts_literal_for_fixture(&SlotType::Bool, "yes"),
+            "\"yes\"".to_string()
+        );
     }
 
     /// Helper: build a component with the given name, slots, and emits.

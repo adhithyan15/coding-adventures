@@ -828,6 +828,11 @@ fn run_pipeline(
             // path — same TSX bytes, same exit code.
             let react_opts = mosaic_emit_react::pipeline::EmitOptions {
                 emit_project,
+                // Fixtures replace the generated fallback props in main.tsx --
+                // what the project renders before a host supplies anything,
+                // and therefore what a component page or demo app shows
+                // (#14459).
+                slot_values: pipeline_slot_values(fixtures_path),
                 ..Default::default()
             };
             let result = mosaic_emit_react::pipeline::from_pipeline_with_options(
