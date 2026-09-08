@@ -1,6 +1,8 @@
 # json-value
 
-Typed representation of JSON data in Rust. Converts the generic AST produced by `json-parser` into a `JsonValue` enum that you can pattern-match on.
+Compatibility facade for typed JSON data in Rust. It converts the generic AST
+produced by `json-parser` while re-exporting the canonical `JsonValue` and
+`JsonNumber` types owned by `bounded-json`.
 
 ## Where it fits
 
@@ -51,4 +53,5 @@ match value {
 
 ## Dependencies
 
+- `bounded-json` for the shared value model
 - `json-parser` (which depends on `json-lexer` -> `lexer` -> `grammar-tools`)
