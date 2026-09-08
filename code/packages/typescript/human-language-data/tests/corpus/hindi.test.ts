@@ -1,4 +1,6 @@
 import { expect, it } from "vitest";
+import { loadEverything, loadExamInventory } from "../../src/loader.js";
+import { formatExamCoverage, measureExamCoverage } from "../../src/exam-inventory.js";
 import { loadTrackLessons } from "../../src/loader.js";
 import { readingOrder } from "../../src/ramp.js";
 import { measureScriptClosure } from "../../src/script-closure.js";
@@ -107,3 +109,28 @@ it("removes support gently from a known phrase to a no-model two-sentence purpos
   expect(markdown[5]).toContain("two meanings in the requested order");
   expect(markdown[5]).toContain("one **।** after each sentence");
 });
+
+// ---------------------------------------------------------------------------
+// HINDI A1 COVERAGE WAS MEASURABLE AND MEASURED BY NOBODY.
+//
+// `core/exam-inventory-hindi-a1.json` is the largest Indo-Aryan inventory in the
+// corpus and no test loaded it. Twenty-two of the twenty-five committed
+// inventories were pinned; Hindi, Sanskrit and Telugu were the three that were
+// not, and they looked no different from the twenty-two from outside. A number
+// nothing reads is not a measurement, however carefully it was computed.
+//
+// Falsified before being kept: a fabricated atom id in the inventory fails the
+// census's existence gate, and nulling any covered point's probe fails the
+// count below.
+// ---------------------------------------------------------------------------
+it("pins Hindi A1 exam coverage, which nothing read before", () => {
+  const { lessons } = loadEverything();
+  const coverage = measureExamCoverage(loadExamInventory("hindi", "A1"), lessons);
+  expect(coverage.enumerated).toBe(282);
+  expect(coverage.covered).toBe(192);
+  expect(coverage.unmapped).toBe(90);
+  expect(coverage.partial).toBe(0);
+  expect(formatExamCoverage(coverage)).toContain(
+    "hindi A1 (partial inventory): 192/282 points covered (68%)",
+  );
+}, 120_000);
