@@ -4,9 +4,9 @@ Thin wrapper around the operating-system cryptographic random source.
 
 ## What It Does
 
-Provides a typed, explicit API over the OS CSPRNG — `getrandom(2)` on
-Linux, `getentropy(2)` on macOS, `BCryptGenRandom` on Windows, via
-the `getrandom` crate shim:
+Provides a typed, explicit API over the OS CSPRNG — `/dev/urandom` on
+Unix and `BCryptGenRandom` on Windows — through a repository-owned
+platform boundary:
 
 - `fill_random(&mut [u8]) -> Result<(), CsprngError>`
 - `random_bytes(n: usize) -> Result<Vec<u8>, _>`
@@ -18,14 +18,13 @@ All four reject zero-length requests with `CsprngError::ZeroLengthRequest`
 
 ## Why A Wrapper
 
-The `rand` and `getrandom` crates are large and expose several
-overlapping APIs. For the D18 Chief-of-Staff Vault stack, we want a
-single, tiny, audited entry point that:
+For the D18 Chief-of-Staff Vault stack, we want a single, tiny, audited
+entry point that:
 
 - Makes the trust boundary explicit: "this is **the** call that goes
   to the OS."
-- Returns a stable local error type so call sites don't import
-  `getrandom`'s `#[non_exhaustive]` `Error`.
+- Returns a stable local error type so call sites do not import a
+  platform-specific error type.
 - Gives fixed-size integer and array helpers so callers don't
   hand-assemble bytes.
 - Documents what this crate does *not* do (no pool mixing, no
@@ -86,8 +85,10 @@ computation.
 
 ## Implementation Notes
 
-- Wraps the `getrandom` crate; we do not re-implement the per-OS FFI.
-- `#![deny(unsafe_code)]` — zero unsafe in this wrapper.
+- Uses safe standard-library reads from `/dev/urandom` on Unix.
+- Links directly to Windows CNG and confines unsafe code to one documented
+  `BCryptGenRandom` call.
+- Has no normal dependencies.
 - Explicit `ZeroLengthRequest` error for zero-length inputs.
 - Error type wraps the OS-level message as a `String` so callers can
   log it. Does not leak file paths or other sensitive context.

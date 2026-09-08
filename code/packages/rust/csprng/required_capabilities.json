@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/csprng",
   "capabilities": ["os_random"],
-  "justification": "Reads bytes from the operating-system CSPRNG (getrandom(2) on Linux, getentropy(2) on macOS, BCryptGenRandom on Windows). No filesystem writes, no network, no process spawning."
+  "justification": "Reads bytes from the operating-system CSPRNG (/dev/urandom on Unix, BCryptGenRandom on Windows). No filesystem writes, no network, no process spawning."
 }
