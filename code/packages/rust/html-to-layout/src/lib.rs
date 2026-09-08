@@ -308,17 +308,17 @@ where
     let theme = &context.theme;
     let style = root_computed_style(context);
     let ancestors = Vec::new();
-    let mut counters = CounterContext::default();
-    let mut control_index = 0;
-    let _root_counter_scope = counters.enter(&style.counter_reset, &style.counter_set);
-    counters.increment(&style.counter_increment);
+    let mut state = ConversionState::default();
+    let _root_counter_scope = state
+        .counters
+        .enter(&style.counter_reset, &style.counter_set);
+    state.counters.increment(&style.counter_increment);
     let children = convert_children(
         &render_tree.children,
         context,
         &style,
         &ancestors,
-        &mut counters,
-        &mut control_index,
+        &mut state,
         is_visited,
     );
 
@@ -351,14 +351,19 @@ where
     root
 }
 
+#[derive(Default)]
+struct ConversionState {
+    counters: CounterContext,
+    control_index: usize,
+}
+
 fn convert_node<F>(
     node: &BrowserRenderNode,
     context: &HtmlStyleContext,
     inherited: &HtmlComputedStyle,
     ancestors: &[&BrowserRenderNode],
     position: Option<NodePosition>,
-    counters: &mut CounterContext,
-    control_index: &mut usize,
+    state: &mut ConversionState,
     is_visited: &F,
 ) -> Option<LayoutNode>
 where
@@ -373,8 +378,10 @@ where
         return None;
     }
 
-    let counter_scope = counters.enter(&style.counter_reset, &style.counter_set);
-    counters.increment(&style.counter_increment);
+    let counter_scope = state
+        .counters
+        .enter(&style.counter_reset, &style.counter_set);
+    state.counters.increment(&style.counter_increment);
 
     let supports_generated = node.name.is_some()
         && node.role != "control"
@@ -382,9 +389,17 @@ where
     let mut generated = Vec::new();
     if supports_generated {
         if display == "list-item" {
-            counters.set("list-item", list_item_ordinal(node, ancestors));
+            state
+                .counters
+                .set("list-item", list_item_ordinal(node, ancestors));
             if let Some(marker) = marker_box(
-                node, context, &style, ancestors, position, counters, is_visited,
+                node,
+                context,
+                &style,
+                ancestors,
+                position,
+                &state.counters,
+                is_visited,
             ) {
                 generated.push(marker);
             }
@@ -397,7 +412,7 @@ where
             &style,
             ancestors,
             position,
-            counters,
+            &state.counters,
             is_visited,
         ) {
             generated.push(before);
@@ -407,8 +422,8 @@ where
     let mut next_ancestors = ancestors.to_vec();
     next_ancestors.push(node);
     let control_key = (node.role == "control").then(|| {
-        let key = control_key(node, *control_index);
-        *control_index += 1;
+        let key = control_key(node, state.control_index);
+        state.control_index += 1;
         key
     });
     let mut layout = match display {
@@ -423,15 +438,16 @@ where
             context,
             &style,
             &next_ancestors,
-            counters,
-            control_index,
+            state,
             is_visited,
         ),
     };
 
     if supports_generated {
         if display == "list-item" {
-            counters.set("list-item", list_item_ordinal(node, ancestors));
+            state
+                .counters
+                .set("list-item", list_item_ordinal(node, ancestors));
         }
         let after = pseudo_box(
             node,
@@ -441,7 +457,7 @@ where
             &style,
             ancestors,
             position,
-            counters,
+            &state.counters,
             is_visited,
         );
         if !generated.is_empty() || after.is_some() {
@@ -509,7 +525,7 @@ where
     layout
         .ext
         .insert("positioned".into(), positioned_ext(style.positioned));
-    counters.exit(counter_scope);
+    state.counters.exit(counter_scope);
     Some(layout)
 }
 
@@ -518,8 +534,7 @@ fn convert_children<F>(
     context: &HtmlStyleContext,
     inherited: &HtmlComputedStyle,
     ancestors: &[&BrowserRenderNode],
-    counters: &mut CounterContext,
-    control_index: &mut usize,
+    state: &mut ConversionState,
     is_visited: &F,
 ) -> Vec<LayoutNode>
 where
@@ -543,8 +558,7 @@ where
                 inherited,
                 ancestors,
                 position,
-                counters,
-                control_index,
+                state,
                 is_visited,
             )
         })
@@ -556,8 +570,7 @@ fn container_or_fallback<F>(
     context: &HtmlStyleContext,
     style: &HtmlComputedStyle,
     ancestors: &[&BrowserRenderNode],
-    counters: &mut CounterContext,
-    control_index: &mut usize,
+    state: &mut ConversionState,
     is_visited: &F,
 ) -> LayoutNode
 where
@@ -568,8 +581,7 @@ where
         context,
         style,
         ancestors,
-        counters,
-        control_index,
+        state,
         is_visited,
     );
 
