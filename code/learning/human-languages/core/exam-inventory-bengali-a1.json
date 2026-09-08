@@ -496,7 +496,16 @@
       "id": "BN-A1-Q-04",
       "category": "Shongkhya (numerals and quantity)",
       "label": "ordinal numerals: প্রথম, দ্বিতীয়",
-      "probe": null,
+      "probe": [
+        "BN-LEX-C27-PROTHOM-01",
+        "BN-LEX-C27-DITIYO-01",
+        "BN-LEX-C27-TRITIYO-01",
+        "BN-LEX-C27-CHOTURTHO-01",
+        "BN-LEX-C27-PONCHOM-01",
+        "BN-GRAMMAR-C27-ORDINAL-TATSAMA-01",
+        "BN-GRAMMAR-C27-ORDINAL-TIYO-01",
+        "BN-ETYMON-C27-PONCHO-PANCH-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "BN-CORPUS",
@@ -507,7 +516,7 @@
         "A1-NG3-06"
       ],
       "bengaliSpecific": false,
-      "note": "Untaught. No ordinal exists in the corpus, so nothing can be put in a sequence — not a floor, not a date, not a turn."
+      "note": "Chapter 38, seven lessons, one of them the letter ঞ that পঞ্চম needed. All five are tatsama -- borrowed back from Sanskrit -- and the chapter says so rather than pretending they are built on the cardinals. It opens on দ্বিতীয় because chapter 12 already told the reader the old dv- survives only in re-borrowed words, and closes on পঞ্চম because Samsad keeps পঞ্চ as a Bengali word for five and পাঁচ is that word with the nasal worn down into the chandrabindu chapter 12 taught. প্রথম lands fourth: it has no number in it at all, and that gap is Sanskrit's rather than Bengali's."
     },
     {
       "id": "BN-A1-Q-05",

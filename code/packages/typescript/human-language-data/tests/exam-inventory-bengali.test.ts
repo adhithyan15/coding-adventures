@@ -146,8 +146,15 @@ describe("the committed Bengali A1 inventory", () => {
     // in the corpus and taught nowhere, and six points sat behind it: the
     // classifier, the indefinite, the distributive pair, the demonstrative
     // stacking rule and এটা. Teaching one consonant unblocked a whole grammar.
-    expect(coverage.covered).toBe(138);
-    expect(coverage.unmapped).toBe(106);
+    //
+    // 138 -> 139: the ordinal tranche (chapter 38). Nine items closed ONE
+    // point, BN-A1-Q-04, and the ratio is the opposite of the one above: every
+    // one of the five ordinals is a separate borrowed word, none of them
+    // unblocks anything else, and the sixth item is the letter ঞ that পঞ্চম
+    // needed. An ordinal column is expensive in a language that borrowed the
+    // whole of it.
+    expect(coverage.covered).toBe(139);
+    expect(coverage.unmapped).toBe(105);
     expect(coverage.partial).toBe(0);
     // The headline was an EMPTY joining column: আর and এবং ("and"), কিন্তু
     // ("but"), কারণ ("because"), যে ("that") and যখন ("when") all returned ZERO
@@ -210,7 +217,39 @@ describe("the committed Bengali A1 inventory", () => {
       covered: 8,
     });
     expect(formatExamCoverage(coverage)).toContain(
-      "bengali A1 (partial inventory): 138/244 points covered (57%)",
+      "bengali A1 (partial inventory): 139/244 points covered (57%)",
     );
+  }, 60_000);
+
+  // The ordinal point, named rather than left to the aggregate. Both halves were
+  // falsified before this was kept: a fabricated id fails the "probes only atoms
+  // that EXIST" test above, and nulling the probe fails the coverage total.
+  it("closes BN-A1-Q-04 on nine atoms, five borrowed words and a letter", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "bengali");
+    const ordinals = inventory.points.find((point) => point.id === "BN-A1-Q-04");
+    expect(ordinals?.probe).toEqual([
+      // The five words, in numerical order here and in NO other order in the
+      // chapter: it teaches second, third, fourth, first, fifth.
+      "BN-LEX-C27-PROTHOM-01",
+      "BN-LEX-C27-DITIYO-01",
+      "BN-LEX-C27-TRITIYO-01",
+      "BN-LEX-C27-CHOTURTHO-01",
+      "BN-LEX-C27-PONCHOM-01",
+      // That all five are tatsama -- borrowed back out of Sanskrit -- which is
+      // the fact the whole chapter hangs on and the reason it opens on SECOND:
+      // chapter 12 had already told the reader that the old dv- survives only
+      // in re-borrowed words.
+      "BN-GRAMMAR-C27-ORDINAL-TATSAMA-01",
+      // The -তীয় shape, claimed on তৃতীয় rather than on দ্বিতীয় because one
+      // word is not a shape.
+      "BN-GRAMMAR-C27-ORDINAL-TIYO-01",
+      // The payoff: পাঁচ is পঞ্চ with the nasal worn down into the chandrabindu.
+      "BN-ETYMON-C27-PONCHO-PANCH-01",
+    ]);
+    for (const atom of ordinals?.probe ?? []) expect(taught.has(atom), atom).toBe(true);
+    // পঞ্চম could not be written before this tranche: ঞ was shown in the corpus
+    // and taught nowhere. It is taught now, and that is what carries the word.
+    expect(taught.has("BN-SCRIPT-NYA-01")).toBe(true);
   }, 60_000);
 });

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C27-choturtho",
+    "language": "bengali",
+    "chapter": 38,
+    "sequence": 1960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4d02cf4671ed0e8"
+  },
+  "findings": []
+}

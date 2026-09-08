@@ -1,0 +1,26 @@
+{
+  "chapter": 38,
+  "title": "Which One in the Line",
+  "label": "ch:bn-ordinals",
+  "canDo": "I can say first to fifth in Bengali, put an ordinal in front of a noun without changing it, and say which layer of the language every one of them comes from.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "BN-R27-first-to-fifth",
+    "kind": "production",
+    "summary": "Complete BN-R27-first-to-fifth, run prothom to ponchom, and say which one of the five you could have built from a number you already had.",
+    "assesses": [
+      "BN-LEX-C27-DITIYO-01",
+      "BN-GRAMMAR-C27-ORDINAL-TATSAMA-01",
+      "BN-LEX-C27-TRITIYO-01",
+      "BN-GRAMMAR-C27-ORDINAL-TIYO-01",
+      "BN-LEX-C27-CHOTURTHO-01",
+      "BN-LEX-C27-PROTHOM-01",
+      "BN-SCRIPT-NYA-01",
+      "BN-LEX-C27-PONCHOM-01",
+      "BN-ETYMON-C27-PONCHO-PANCH-01"
+    ],
+    "note": "BN-A1-Q-04 read 'Untaught. No ordinal exists in the corpus.' The chapter opens on SECOND rather than first, because chapter 12 already told the reader that the old dv- cluster is gone from the everyday numeral but alive in words borrowed straight back out of Sanskrit -- so ditiyo is the one ordinal whose relation to its cardinal the reader has already been taught. It closes on FIFTH, which needed the letter nya, because ponchom is built on ponchô and paanch is ponchô with that same nasal worn down into the chandrabindu chapter 12 taught. prothom lands fourth: it is the one with no number in it at all, and that is legible only after a shape has held twice."
+  }
+}
