@@ -6,7 +6,11 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-use coding_adventures_oauth::{OAuthTraceId, ProviderId};
+use coding_adventures_base64::{encode_into as encode_base64_into, STANDARD};
+use coding_adventures_oauth::{
+    OAuthTraceId, ProviderConfig, ProviderId, TokenExchangeRequest, TokenRefreshRequest,
+    TokenResponseContext, TokenRevocationRequest,
+};
 use coding_adventures_zeroize::Zeroizing;
 use std::collections::BTreeMap;
 use std::fmt::{self, Debug, Display, Formatter};
@@ -69,6 +73,175 @@ impl Debug for ClientSecretKey {
             .debug_struct("ClientSecretKey")
             .field("provider", &self.provider)
             .field("reference", &self.reference)
+            .finish()
+    }
+}
+
+/// Password-based client authentication selected entirely by provider data.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ClientSecretAuthenticationMethod {
+    /// RFC 6749 HTTP Basic authentication (the preferred password method).
+    ClientSecretBasic,
+    /// RFC 6749 `client_id` and `client_secret` request-body parameters.
+    ClientSecretPost,
+}
+
+/// Provider-bound client authentication without raw secret material.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ClientSecretAuthentication {
+    key: ClientSecretKey,
+    method: ClientSecretAuthenticationMethod,
+}
+
+impl ClientSecretAuthentication {
+    /// Bind a provider/opaque-reference key to one wire authentication method.
+    pub const fn new(key: ClientSecretKey, method: ClientSecretAuthenticationMethod) -> Self {
+        Self { key, method }
+    }
+
+    /// Return the provider and opaque reference used for custody access.
+    pub const fn key(&self) -> &ClientSecretKey {
+        &self.key
+    }
+
+    /// Return the provider-selected wire authentication method.
+    pub const fn method(&self) -> ClientSecretAuthenticationMethod {
+        self.method
+    }
+}
+
+/// Secret-bearing HTTP request material released only after custody audit.
+pub struct ClientSecretAuthenticatedRequest {
+    provider: ProviderId,
+    trace: OAuthTraceId,
+    endpoint: String,
+    form_body: Zeroizing<String>,
+    authorization_header: Option<Zeroizing<String>>,
+}
+
+impl ClientSecretAuthenticatedRequest {
+    /// Return the provider identity used for routing and external-effect audit.
+    pub const fn provider(&self) -> &ProviderId {
+        &self.provider
+    }
+
+    /// Return the correlation identity used for custody and transport audit.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.trace
+    }
+
+    /// Borrow the validated HTTPS endpoint.
+    pub fn endpoint(&self) -> &str {
+        &self.endpoint
+    }
+
+    /// Borrow the wipe-on-drop form body for an authorized transport.
+    pub fn form_body(&self) -> &str {
+        self.form_body.as_str()
+    }
+
+    /// Borrow the wipe-on-drop Authorization value when Basic was selected.
+    pub fn authorization_header(&self) -> Option<&str> {
+        self.authorization_header
+            .as_ref()
+            .map(|header| header.as_str())
+    }
+
+    /// Return the exact request media type.
+    pub const fn content_type(&self) -> &'static str {
+        "application/x-www-form-urlencoded"
+    }
+}
+
+impl Debug for ClientSecretAuthenticatedRequest {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ClientSecretAuthenticatedRequest")
+            .field("provider", &self.provider)
+            .field("trace", &self.trace)
+            .field("endpoint", &"<redacted>")
+            .field("form_body", &"<redacted>")
+            .field(
+                "has_authorization_header",
+                &self.authorization_header.is_some(),
+            )
+            .finish()
+    }
+}
+
+/// Authenticated authorization-code exchange plus its response binding.
+pub struct ClientSecretAuthenticatedTokenExchange {
+    request: ClientSecretAuthenticatedRequest,
+    response_context: TokenResponseContext,
+}
+
+impl ClientSecretAuthenticatedTokenExchange {
+    /// Borrow the authenticated wire request.
+    pub const fn request(&self) -> &ClientSecretAuthenticatedRequest {
+        &self.request
+    }
+
+    /// Borrow the exact provider/trace response binding.
+    pub const fn response_context(&self) -> &TokenResponseContext {
+        &self.response_context
+    }
+}
+
+impl Debug for ClientSecretAuthenticatedTokenExchange {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ClientSecretAuthenticatedTokenExchange")
+            .field("request", &self.request)
+            .field("response_context", &self.response_context)
+            .finish()
+    }
+}
+
+/// Authenticated refresh grant plus its response binding.
+pub struct ClientSecretAuthenticatedTokenRefresh {
+    request: ClientSecretAuthenticatedRequest,
+    response_context: TokenResponseContext,
+}
+
+impl ClientSecretAuthenticatedTokenRefresh {
+    /// Borrow the authenticated wire request.
+    pub const fn request(&self) -> &ClientSecretAuthenticatedRequest {
+        &self.request
+    }
+
+    /// Borrow the exact provider/trace response binding.
+    pub const fn response_context(&self) -> &TokenResponseContext {
+        &self.response_context
+    }
+}
+
+impl Debug for ClientSecretAuthenticatedTokenRefresh {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ClientSecretAuthenticatedTokenRefresh")
+            .field("request", &self.request)
+            .field("response_context", &self.response_context)
+            .finish()
+    }
+}
+
+/// Authenticated RFC 7009 revocation request.
+pub struct ClientSecretAuthenticatedTokenRevocation {
+    request: ClientSecretAuthenticatedRequest,
+}
+
+impl ClientSecretAuthenticatedTokenRevocation {
+    /// Borrow the authenticated wire request.
+    pub const fn request(&self) -> &ClientSecretAuthenticatedRequest {
+        &self.request
+    }
+}
+
+impl Debug for ClientSecretAuthenticatedTokenRevocation {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ClientSecretAuthenticatedTokenRevocation")
+            .field("request", &self.request)
             .finish()
     }
 }
@@ -410,11 +583,184 @@ impl<S: ClientSecretStore> ClientSecretCustody<S> {
         let result = self.store.delete(key, expected).map_err(map_store_error);
         finish(audit, key, trace, ClientSecretAuditAction::Delete, result)
     }
+
+    /// Authenticate an audited authorization-code exchange through custody.
+    pub fn authenticate_token_exchange<A: ClientSecretAuditSink>(
+        &self,
+        config: &ProviderConfig,
+        authentication: &ClientSecretAuthentication,
+        request: TokenExchangeRequest,
+        audit: &mut A,
+    ) -> Result<ClientSecretAuthenticatedTokenExchange, ClientSecretCustodyError> {
+        let response_context = request.response_context();
+        let authenticated = self.authenticate_request(
+            config,
+            authentication,
+            request.provider(),
+            request.trace(),
+            request.client_id(),
+            request.endpoint(),
+            request.form_body(),
+            audit,
+        )?;
+        Ok(ClientSecretAuthenticatedTokenExchange {
+            request: authenticated,
+            response_context,
+        })
+    }
+
+    /// Authenticate an audited refresh grant through custody.
+    pub fn authenticate_token_refresh<A: ClientSecretAuditSink>(
+        &self,
+        config: &ProviderConfig,
+        authentication: &ClientSecretAuthentication,
+        request: TokenRefreshRequest,
+        audit: &mut A,
+    ) -> Result<ClientSecretAuthenticatedTokenRefresh, ClientSecretCustodyError> {
+        let response_context = request.response_context();
+        let authenticated = self.authenticate_request(
+            config,
+            authentication,
+            request.provider(),
+            request.trace(),
+            request.client_id(),
+            request.endpoint(),
+            request.form_body(),
+            audit,
+        )?;
+        Ok(ClientSecretAuthenticatedTokenRefresh {
+            request: authenticated,
+            response_context,
+        })
+    }
+
+    /// Authenticate an audited RFC 7009 revocation through custody.
+    pub fn authenticate_token_revocation<A: ClientSecretAuditSink>(
+        &self,
+        config: &ProviderConfig,
+        authentication: &ClientSecretAuthentication,
+        request: TokenRevocationRequest,
+        audit: &mut A,
+    ) -> Result<ClientSecretAuthenticatedTokenRevocation, ClientSecretCustodyError> {
+        let authenticated = self.authenticate_request(
+            config,
+            authentication,
+            request.provider(),
+            request.trace(),
+            request.client_id(),
+            request.endpoint(),
+            request.form_body(),
+            audit,
+        )?;
+        Ok(ClientSecretAuthenticatedTokenRevocation {
+            request: authenticated,
+        })
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn authenticate_request<A: ClientSecretAuditSink>(
+        &self,
+        config: &ProviderConfig,
+        authentication: &ClientSecretAuthentication,
+        provider: &ProviderId,
+        trace: OAuthTraceId,
+        request_client_id: &str,
+        endpoint: &str,
+        form_body: &str,
+        audit: &mut A,
+    ) -> Result<ClientSecretAuthenticatedRequest, ClientSecretCustodyError> {
+        if config.provider() != provider
+            || config.client_id() != request_client_id
+            || authentication.key().provider() != provider
+        {
+            return Err(ClientSecretCustodyError::InvalidInput);
+        }
+        self.with_secret(authentication.key(), trace, audit, |secret, _revision| {
+            build_authenticated_request(
+                provider.clone(),
+                trace,
+                endpoint.to_owned(),
+                form_body,
+                request_client_id,
+                secret,
+                authentication.method(),
+            )
+        })
+    }
 }
 
 impl<S: ClientSecretStore> Debug for ClientSecretCustody<S> {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         formatter.write_str("ClientSecretCustody(<redacted>)")
+    }
+}
+
+fn build_authenticated_request(
+    provider: ProviderId,
+    trace: OAuthTraceId,
+    endpoint: String,
+    form_body: &str,
+    client_id: &str,
+    client_secret: &str,
+    method: ClientSecretAuthenticationMethod,
+) -> ClientSecretAuthenticatedRequest {
+    let (form_body, authorization_header) = match method {
+        ClientSecretAuthenticationMethod::ClientSecretBasic => {
+            let mut credentials = Zeroizing::new(form_encode(client_id));
+            credentials.push(':');
+            append_form_encoded(&mut credentials, client_secret);
+            let mut header = Zeroizing::new(String::from("Basic "));
+            encode_base64_into(credentials.as_bytes(), &STANDARD, &mut header);
+            (form_without_client_id(form_body), Some(header))
+        }
+        ClientSecretAuthenticationMethod::ClientSecretPost => {
+            let mut body = Zeroizing::new(form_body.to_owned());
+            body.push_str("&client_secret=");
+            append_form_encoded(&mut body, client_secret);
+            (body, None)
+        }
+    };
+    ClientSecretAuthenticatedRequest {
+        provider,
+        trace,
+        endpoint,
+        form_body,
+        authorization_header,
+    }
+}
+
+fn form_without_client_id(form_body: &str) -> Zeroizing<String> {
+    let mut output = Zeroizing::new(String::with_capacity(form_body.len()));
+    for parameter in form_body
+        .split('&')
+        .filter(|parameter| !parameter.starts_with("client_id="))
+    {
+        if !output.is_empty() {
+            output.push('&');
+        }
+        output.push_str(parameter);
+    }
+    output
+}
+
+fn form_encode(value: &str) -> String {
+    let mut output = String::with_capacity(value.len());
+    append_form_encoded(&mut output, value);
+    output
+}
+
+fn append_form_encoded(output: &mut String, value: &str) {
+    for byte in value.bytes() {
+        if byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'.' | b'_' | b'~') {
+            output.push(char::from(byte));
+        } else if byte == b' ' {
+            output.push('+');
+        } else {
+            const HEX: &[u8; 16] = b"0123456789ABCDEF";
+            output.push('%');
+            output.push(char::from(HEX[usize::from(byte >> 4)]));
+            output.push(char::from(HEX[usize::from(byte & 0x0f)]));
+        }
     }
 }
 
@@ -598,6 +944,11 @@ fn map_store_error(error: ClientSecretStoreError) -> ClientSecretCustodyError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_oauth::{
+        begin_authorization, complete_authorization, prepare_token_refresh,
+        prepare_token_revocation, Audited, EntropySource, OAuthAuditError, OAuthAuditEvent,
+        OAuthAuditSink, OAuthError, RevocationTokenHint,
+    };
 
     #[derive(Default)]
     struct Audit {
@@ -618,6 +969,24 @@ mod tests {
         }
     }
 
+    #[derive(Default)]
+    struct OAuthAudit;
+
+    impl OAuthAuditSink for OAuthAudit {
+        fn publish(&mut self, _event: &OAuthAuditEvent) -> Result<(), OAuthAuditError> {
+            Ok(())
+        }
+    }
+
+    struct FixedEntropy([u8; 64]);
+
+    impl EntropySource for FixedEntropy {
+        fn fill(&mut self, destination: &mut [u8]) -> Result<(), OAuthError> {
+            destination.copy_from_slice(&self.0[..destination.len()]);
+            Ok(())
+        }
+    }
+
     fn key() -> ClientSecretKey {
         ClientSecretKey::new(
             ProviderId::new("provider-a").expect("valid provider"),
@@ -631,6 +1000,26 @@ mod tests {
 
     fn secret(value: &str) -> Zeroizing<String> {
         Zeroizing::new(value.to_string())
+    }
+
+    fn config() -> ProviderConfig {
+        ProviderConfig::new(
+            ProviderId::new("provider-a").expect("valid provider"),
+            "https://authorize.example/oauth2/auth",
+            "https://token.example/oauth2/token",
+            "client id/plus+",
+            "http://127.0.0.1:53682/callback",
+        )
+        .expect("valid config")
+        .with_distinct_redirect_uri()
+        .with_revocation_endpoint("https://token.example/oauth2/revoke")
+        .expect("valid revocation endpoint")
+    }
+
+    fn release<T>(audited: Audited<T>) -> T {
+        audited
+            .publish_then_release(&mut OAuthAudit)
+            .expect("oauth audit and preparation")
     }
 
     #[test]
@@ -756,5 +1145,195 @@ mod tests {
             ClientSecretCustodyError::Backend.to_string(),
             "oauth client-secret custody: Backend"
         );
+    }
+
+    #[test]
+    fn basic_authenticates_exchange_without_duplicate_body_identity() {
+        let custody = ClientSecretCustody::new(InMemoryClientSecretStore::new());
+        let key = key();
+        let mut audit = Audit::default();
+        custody
+            .create(&key, secret("s e:c/r+et"), trace(), &mut audit)
+            .expect("create");
+        audit.events.clear();
+
+        let config = config();
+        let begin = release(begin_authorization(
+            &config,
+            &["files.read"],
+            trace(),
+            &mut FixedEntropy([0x29; 64]),
+        ));
+        let state = begin
+            .url()
+            .as_str()
+            .split('&')
+            .find_map(|parameter| parameter.strip_prefix("state="))
+            .expect("state")
+            .to_owned();
+        let (_, transaction) = begin.into_parts();
+        let exchange = release(complete_authorization(
+            transaction,
+            &format!("http://127.0.0.1:53682/callback?code=code-value&state={state}"),
+        ));
+        let authentication = ClientSecretAuthentication::new(
+            key,
+            ClientSecretAuthenticationMethod::ClientSecretBasic,
+        );
+        let authenticated = custody
+            .authenticate_token_exchange(&config, &authentication, exchange, &mut audit)
+            .expect("authenticate exchange");
+
+        assert_eq!(authenticated.request().provider().as_str(), "provider-a");
+        assert_eq!(authenticated.request().trace(), trace());
+        assert_eq!(
+            authenticated.request().authorization_header(),
+            Some("Basic Y2xpZW50K2lkJTJGcGx1cyUyQjpzK2UlM0FjJTJGciUyQmV0")
+        );
+        assert!(!authenticated.request().form_body().contains("client_id="));
+        assert!(!authenticated
+            .request()
+            .form_body()
+            .contains("client_secret="));
+        assert_eq!(authenticated.response_context().trace(), trace());
+        assert_eq!(audit.events.len(), 2);
+        assert_eq!(
+            audit.events[0].outcome(),
+            ClientSecretAuditOutcome::Attempted
+        );
+        assert_eq!(
+            audit.events[1].outcome(),
+            ClientSecretAuditOutcome::Succeeded
+        );
+    }
+
+    #[test]
+    fn post_authenticates_refresh_and_revocation_in_the_form_body() {
+        let custody = ClientSecretCustody::new(InMemoryClientSecretStore::new());
+        let key = key();
+        let mut audit = Audit::default();
+        custody
+            .create(&key, secret("s e:c/r+et"), trace(), &mut audit)
+            .expect("create");
+        audit.events.clear();
+        let config = config();
+        let authentication = ClientSecretAuthentication::new(
+            key,
+            ClientSecretAuthenticationMethod::ClientSecretPost,
+        );
+
+        let refresh = release(prepare_token_refresh(
+            &config,
+            secret("refresh-token"),
+            &["files.read"],
+            trace(),
+        ));
+        let refresh = custody
+            .authenticate_token_refresh(&config, &authentication, refresh, &mut audit)
+            .expect("authenticate refresh");
+        assert_eq!(refresh.request().authorization_header(), None);
+        assert!(refresh
+            .request()
+            .form_body()
+            .contains("client_id=client%20id%2Fplus%2B"));
+        assert!(refresh
+            .request()
+            .form_body()
+            .ends_with("client_secret=s+e%3Ac%2Fr%2Bet"));
+        assert_eq!(refresh.response_context().trace(), trace());
+
+        let revocation = release(prepare_token_revocation(
+            &config,
+            secret("access-token"),
+            RevocationTokenHint::AccessToken,
+            trace(),
+        ));
+        let revocation = custody
+            .authenticate_token_revocation(&config, &authentication, revocation, &mut audit)
+            .expect("authenticate revocation");
+        assert_eq!(revocation.request().authorization_header(), None);
+        assert!(revocation
+            .request()
+            .form_body()
+            .ends_with("client_secret=s+e%3Ac%2Fr%2Bet"));
+        assert_eq!(audit.events.len(), 4);
+        assert!(audit.events.iter().all(|event| event.trace() == trace()));
+    }
+
+    #[test]
+    fn provider_or_client_mismatch_fails_before_secret_access() {
+        let custody = ClientSecretCustody::new(InMemoryClientSecretStore::new());
+        let config = config();
+        let other_key = ClientSecretKey::new(
+            ProviderId::new("provider-b").expect("provider"),
+            ClientSecretReference::new([0x72; 32]),
+        );
+        let authentication = ClientSecretAuthentication::new(
+            other_key,
+            ClientSecretAuthenticationMethod::ClientSecretPost,
+        );
+        let refresh = release(prepare_token_refresh(
+            &config,
+            secret("refresh-token"),
+            &[],
+            trace(),
+        ));
+        let mut audit = Audit::default();
+
+        let result =
+            custody.authenticate_token_refresh(&config, &authentication, refresh, &mut audit);
+        assert!(matches!(
+            result,
+            Err(ClientSecretCustodyError::InvalidInput)
+        ));
+        assert!(audit.events.is_empty());
+
+        let authentication = ClientSecretAuthentication::new(
+            key(),
+            ClientSecretAuthenticationMethod::ClientSecretPost,
+        );
+        let wrong_client_config = ProviderConfig::new(
+            ProviderId::new("provider-a").expect("provider"),
+            "https://authorize.example/oauth2/auth",
+            "https://token.example/oauth2/token",
+            "another-client",
+            "http://127.0.0.1:53682/callback",
+        )
+        .expect("config");
+        let refresh = release(prepare_token_refresh(
+            &config,
+            secret("refresh-token"),
+            &[],
+            trace(),
+        ));
+        let result = custody.authenticate_token_refresh(
+            &wrong_client_config,
+            &authentication,
+            refresh,
+            &mut audit,
+        );
+        assert!(matches!(
+            result,
+            Err(ClientSecretCustodyError::InvalidInput)
+        ));
+        assert!(audit.events.is_empty());
+    }
+
+    #[test]
+    fn authenticated_request_debug_redacts_all_wire_secrets() {
+        let request = build_authenticated_request(
+            ProviderId::new("provider-a").expect("provider"),
+            trace(),
+            "https://token.example/oauth2/token".to_owned(),
+            "grant_type=refresh_token&refresh_token=raw-token&client_id=client",
+            "client",
+            "raw-secret",
+            ClientSecretAuthenticationMethod::ClientSecretBasic,
+        );
+        let debug = format!("{request:?}");
+        assert!(!debug.contains("raw-token"));
+        assert!(!debug.contains("raw-secret"));
+        assert!(!debug.contains("Basic "));
+        assert!(debug.contains("has_authorization_header: true"));
     }
 }
