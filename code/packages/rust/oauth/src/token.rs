@@ -67,6 +67,7 @@ impl TokenExchangeRequest {
 pub struct TokenRefreshRequest {
     provider: ProviderId,
     trace: OAuthTraceId,
+    client_id: String,
     endpoint: String,
     form_body: Zeroizing<String>,
 }
@@ -75,6 +76,16 @@ impl TokenRefreshRequest {
     /// Return the provider identifier for transport authorization.
     pub fn provider(&self) -> &ProviderId {
         &self.provider
+    }
+
+    /// Return the caller-owned correlation identity.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.trace
+    }
+
+    /// Return the exact client identity bound to this refresh.
+    pub fn client_id(&self) -> &str {
+        &self.client_id
     }
 
     /// Borrow the validated HTTPS token endpoint.
@@ -108,6 +119,7 @@ impl Debug for TokenRefreshRequest {
             .debug_struct("TokenRefreshRequest")
             .field("provider", &self.provider)
             .field("trace", &self.trace)
+            .field("client_id", &"<redacted>")
             .field("endpoint", &"<redacted>")
             .field("form_body", &"<redacted>")
             .finish()
@@ -138,6 +150,7 @@ pub fn prepare_token_refresh(
         Ok(TokenRefreshRequest {
             provider: config.provider.clone(),
             trace,
+            client_id: config.client_id.clone(),
             endpoint: config.token_endpoint.clone(),
             form_body: render_secret_form(parameters),
         })
@@ -171,6 +184,8 @@ impl RevocationTokenHint {
 /// A prepared RFC 7009 revocation request with a wipe-on-drop body.
 pub struct TokenRevocationRequest {
     provider: ProviderId,
+    trace: OAuthTraceId,
+    client_id: String,
     endpoint: String,
     form_body: Zeroizing<String>,
 }
@@ -179,6 +194,16 @@ impl TokenRevocationRequest {
     /// Return the provider identifier for transport authorization.
     pub fn provider(&self) -> &ProviderId {
         &self.provider
+    }
+
+    /// Return the caller-owned correlation identity.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.trace
+    }
+
+    /// Return the exact client identity bound to this revocation.
+    pub fn client_id(&self) -> &str {
+        &self.client_id
     }
 
     /// Borrow the validated HTTPS revocation endpoint.
@@ -202,6 +227,8 @@ impl Debug for TokenRevocationRequest {
         formatter
             .debug_struct("TokenRevocationRequest")
             .field("provider", &self.provider)
+            .field("trace", &self.trace)
+            .field("client_id", &"<redacted>")
             .field("endpoint", &"<redacted>")
             .field("form_body", &"<redacted>")
             .finish()
@@ -226,6 +253,8 @@ pub fn prepare_token_revocation(
                 ))?;
         Ok(TokenRevocationRequest {
             provider: config.provider.clone(),
+            trace,
+            client_id: config.client_id.clone(),
             endpoint,
             form_body: render_secret_form([
                 ("token", token.as_str()),

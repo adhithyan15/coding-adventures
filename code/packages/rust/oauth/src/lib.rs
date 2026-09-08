@@ -233,6 +233,11 @@ impl ProviderConfig {
     pub fn provider(&self) -> &ProviderId {
         &self.provider
     }
+
+    /// Return the registered client identifier for request authentication.
+    pub fn client_id(&self) -> &str {
+        &self.client_id
+    }
 }
 
 impl Debug for ProviderConfig {
@@ -386,6 +391,7 @@ pub fn pkce_s256_challenge(verifier: &PkceVerifier) -> String {
 pub struct TokenExchangeRequest {
     provider: ProviderId,
     trace: OAuthTraceId,
+    client_id: String,
     endpoint: String,
     form_body: Zeroizing<String>,
 }
@@ -394,6 +400,16 @@ impl TokenExchangeRequest {
     /// Return the provider identifier for transport authorization and audit.
     pub fn provider(&self) -> &ProviderId {
         &self.provider
+    }
+
+    /// Return the correlation identity inherited from authorization.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.trace
+    }
+
+    /// Return the exact client identity bound to this exchange.
+    pub fn client_id(&self) -> &str {
+        &self.client_id
     }
 
     /// Borrow the validated HTTPS token endpoint.
@@ -417,6 +433,7 @@ impl Debug for TokenExchangeRequest {
         formatter
             .debug_struct("TokenExchangeRequest")
             .field("provider", &self.provider)
+            .field("client_id", &"<redacted>")
             .field("endpoint", &"<redacted>")
             .field("form_body", &"<redacted>")
             .finish()
@@ -682,6 +699,7 @@ fn prepare_token_exchange(
     Ok(TokenExchangeRequest {
         provider: transaction.provider,
         trace: transaction.trace,
+        client_id: transaction.client_id,
         endpoint: transaction.token_endpoint,
         form_body,
     })
