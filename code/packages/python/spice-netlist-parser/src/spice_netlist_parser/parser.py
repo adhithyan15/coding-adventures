@@ -695,6 +695,7 @@ def run_netlist(text: str) -> list[AnalysisExecutionResult]:
 
 
 CLI_RESULT_SCHEMA_VERSION = 1
+CLI_ERROR_CODE = "SPICE_CLI_ERROR"
 
 
 def run_netlist_json(text: str) -> str:

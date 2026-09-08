@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
 
-import { CLI_RESULT_SCHEMA_VERSION, runNetlistJson } from "../src/index.js";
+import { CLI_ERROR_CODE, CLI_RESULT_SCHEMA_VERSION, runNetlistJson } from "../src/index.js";
 
 describe("Berkeley SPICE CLI contract", () => {
   it("returns the shared JSON envelope for the core analysis plan", () => {
@@ -46,5 +46,66 @@ describe("Berkeley SPICE CLI contract", () => {
 
     expect(result.status, result.stderr).toBe(0);
     expect(JSON.parse(result.stdout).title).toBe(testCase.expected.title);
+  });
+
+  it("reports the shared stable failure code", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
+      "utf8",
+    )) as {
+      failureCases: readonly { deck: string; expected: { exitStatus: number; diagnosticCode: string } }[];
+    };
+    const testCase = corpus.failureCases[0]!;
+    const result = spawnSync(
+      process.execPath,
+      [fileURLToPath(new URL("../dist/cli.js", import.meta.url)), "run", "--json", "-"],
+      { encoding: "utf8", input: testCase.deck },
+    );
+
+    expect(result.status).toBe(testCase.expected.exitStatus);
+    expect(result.stderr).toMatch(new RegExp(`^${testCase.expected.diagnosticCode}: `));
+    expect(result.stderr).toMatch(new RegExp(`^${CLI_ERROR_CODE}: `));
+  });
+
+  it("freezes the shared Berkeley v1 release gate", () => {
+    const readCorpus = (name: string): Record<string, unknown> => JSON.parse(readFileSync(
+      new URL(`../../../../grammars/spice/${name}`, import.meta.url),
+      "utf8",
+    )) as Record<string, unknown>;
+    const release = readCorpus("berkeley-v1-release-manifest.json");
+    const core = readCorpus("berkeley-v1-op-corpus.json");
+    const syntax = readCorpus("berkeley-v1-syntax-corpus.json");
+    const cli = readCorpus("berkeley-v1-cli-corpus.json");
+    const gate = release.corpusGate as {
+      minimumCoreCaseCount: number;
+      requiredAnalysisKinds: readonly string[];
+      requiredDeviceKinds: readonly string[];
+      minimumSyntaxCaseCount: number;
+      requiredSyntaxClassifications: readonly string[];
+      minimumCliSuccessCaseCount: number;
+      minimumCliFailureCaseCount: number;
+    };
+    const coreCases = core.cases as readonly { analysis: string; kind: string }[];
+    const syntaxCases = syntax.cases as readonly { classification: string }[];
+    const cliCases = cli.cases as readonly unknown[];
+    const cliFailureCases = cli.failureCases as readonly unknown[];
+    const cliContract = release.cli as {
+      result: { schemaVersion: number };
+      failureDiagnostic: { code: string };
+    };
+
+    expect(release).toMatchObject({ schemaVersion: 1, suite: "berkeley-v1-release" });
+    expect(coreCases.length).toBeGreaterThanOrEqual(gate.minimumCoreCaseCount);
+    expect(new Set(coreCases.map((testCase) => testCase.analysis)))
+      .toEqual(expect.objectContaining(new Set(gate.requiredAnalysisKinds)));
+    expect(new Set(coreCases.map((testCase) => testCase.kind)))
+      .toEqual(expect.objectContaining(new Set(gate.requiredDeviceKinds)));
+    expect(syntaxCases.length).toBeGreaterThanOrEqual(gate.minimumSyntaxCaseCount);
+    expect(new Set(syntaxCases.map((testCase) => testCase.classification)))
+      .toEqual(expect.objectContaining(new Set(gate.requiredSyntaxClassifications)));
+    expect(cliCases.length).toBeGreaterThanOrEqual(gate.minimumCliSuccessCaseCount);
+    expect(cliFailureCases.length).toBeGreaterThanOrEqual(gate.minimumCliFailureCaseCount);
+    expect(cliContract.result.schemaVersion).toBe(CLI_RESULT_SCHEMA_VERSION);
+    expect(cliContract.failureDiagnostic.code).toBe(CLI_ERROR_CODE);
   });
 });

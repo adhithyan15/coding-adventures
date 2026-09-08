@@ -68,7 +68,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      split work by individual model-card parameter unless it independently
      blocks a corpus case.
 
-3. **Berkeley v1 release gate and CLI/API contract**.
+3. **Berkeley v1 release gate and CLI/API contract** (completed).
    - Freeze the supported-card matrix, stable diagnostics, result schemas,
      corpus pass threshold, and command-line/text entrypoints.  Publish a
      single release-readiness report that distinguishes supported behavior from
@@ -78,10 +78,17 @@ model-card parameter, or a UI artifact is not a completion signal.
      but no package exposes a user-facing CLI. This phase owns one common
      `spice-netlist-parser run --json <deck>` contract, including stdin,
      deterministic per-analysis table records, and stable nonzero failures.
-   - Current phase: ship the version-1 JSON envelope across all three CLIs.
-     It canonically orders JSON object keys and presents transient records after
-     the initialization sample so the Python, Rust, and TypeScript executables
-     produce the same result stream for the shared CLI corpus.
+   - The version-1 JSON envelope landed in PR #14539. It canonically orders
+     JSON object keys and presents transient records after the initialization
+     sample so the Python, Rust, and TypeScript executables produce the same
+     result stream for the shared CLI corpus.
+   - The release-readiness phase freezes its support/exclusion matrix, corpus
+     thresholds, JSON result fields, stable CLI failure code, and command-line
+     entrypoint in `berkeley-v1-release-manifest.json` and the companion
+     readiness report. The three package suites execute that gate directly.
+   - Status: completed in the Berkeley v1 release-readiness slice. The next
+     actionable work is the post-Berkeley product track, beginning with a
+     separately scoped CLI/API workflow and then the Mosaic UI surface.
 
 4. **Post-Berkeley product tracks** (not Berkeley completion blockers).
    - ngspice and vendor-dialect compatibility, nested sweeps and raw-format

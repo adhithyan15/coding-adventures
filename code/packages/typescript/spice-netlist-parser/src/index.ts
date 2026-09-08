@@ -657,6 +657,7 @@ export function runNetlist(text: string): AnalysisExecutionResult[] {
 }
 
 export const CLI_RESULT_SCHEMA_VERSION = 1;
+export const CLI_ERROR_CODE = "SPICE_CLI_ERROR";
 
 export function runNetlistJson(text: string): string {
   const parsed = parseNetlist(text);
