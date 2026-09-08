@@ -13282,6 +13282,25 @@ rebased without conflict onto that exact revision. A fresh collision-checked
 inventory produced the same counts and no new identity, collision, unknown
 bucket, or parity owner, so the OCaml analyzer remains the selected tranche.
 
+The selected tranche now has specification, neutral fixtures, tests, source,
+package metadata, documentation, and an independent CI gate committed. The
+analyzer uses compiler-libs ASTs rather than textual matching; tracks lexical
+aliases, opens, and shadowing; fails closed on malformed input and symlinks;
+and covers the repository's closed filesystem, network, process, environment,
+time, standard-stream, FFI, Dynlink, Marshal, and Obj boundaries. Local
+bytecode tests, manifest/schema gates, OCAML03 lock validation, opam lint,
+formatting, the Go capability references, and scans of all five emerging OCaml
+packages pass. The branch preview remains collision-free at the established
+1,415 identities and 4,631 slots while OCaml advances from four to five
+emerging packages.
+
+All six implementation commits then rebased without conflict onto exact
+`origin/main` `3de5e8e7b0cb85353605ef9749dc13e3e35556f8`. Native linking and numeric
+bisect_ppx coverage must run on hosted Linux because the local Windows OCaml
+port cannot resolve its native runtime symbols. Publication remains gated on
+that hosted evidence and the required independent security review; no second
+parity implementation is active.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
