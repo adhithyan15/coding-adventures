@@ -8,6 +8,34 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-039c implementation contract (selected after #14511 merged)
+
+Refreshed main is `53795b6fe5`. VM-039b merged after every applicable
+current-head check passed, including both gates. No newly confirmed defect
+outranks the next adapter slice: JVM and CLR input/EOF for the same four
+FLOW-MATIC source/input/output cases. Re-enumerate their indices on this main.
+
+Probe each backend before implementing. For JVM, add `input_more` to the
+validator and lower it to `env.BasicRuntime.inputMore()J`. The host must share
+one lookahead-capable stream across numeric reads, string reads and peeks;
+never consume input on repeated peeks and never convert an I/O failure to EOF.
+Preserve destination widths and existing BASIC input regressions.
+
+For CLR, inspect both encoded and textual CIL paths and the actual runner:
+no simulator-only result may be reported as real CoreCLR execution. The
+existing textual input_i64 arm calls Parse even though its comment promises
+zero at EOF; a partial-record probe must establish actual behavior before
+repair. If confirmed, record and prioritize the bounded parse/EOF repair
+contract before changing it. Preserve short signed-decimal line semantics,
+zero-filled partial records and unchanged fields when a read starts at EOF.
+
+Add each column only after its four programs agree in real execution, with
+positive row/source checks and honest missing-tool gates. Add stable-peek
+regressions and run relevant backend suites, existing BASIC input cells and
+Clippy. Split JVM and CLR publication if the CLR repair is independently
+substantial; retain one active ready PR and security review before every push.
+VM/JIT common matrix callbacks remain the final VM-039 slice.
+
 ## VM-039b implementation contract (selected after #14488 merged)
 
 Refreshed main is `1d1db6507d`. VM-039a merged after all applicable checks
