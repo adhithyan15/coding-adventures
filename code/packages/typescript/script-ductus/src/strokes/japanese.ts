@@ -1,6 +1,7 @@
 // Authored japanese ductus records. This is the stable source-ownership boundary.
 
 import type { DuctusEntry } from "./registry.ts";
+import type { StrokeSource } from "../strokes.ts";
 import { SCRIPTS, type ScriptData } from "../scriptdata.ts";
 
 const canonicalScript = (id: string): ScriptData => {
@@ -11,6 +12,9 @@ const canonicalScript = (id: string): ScriptData => {
 };
 
 const japanese = canonicalScript("japanese");
+
+const strokeSource = (glyph: string): StrokeSource =>
+  japanese.letters.find((letter) => letter.glyph === glyph)!.strokeOrderSource!;
 
 export const entries: DuctusEntry[] = [
   // Sirgazil's 23-frame animation writes hiragana し in one uninterrupted
@@ -52,8 +56,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "し")!
-        .strokeOrderSource!,
+      source: strokeSource("し"),
     },
   ],
   // Sirgazil's 20-frame animation writes hiragana く in one uninterrupted
@@ -94,8 +97,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "く")!
-        .strokeOrderSource!,
+      source: strokeSource("く"),
     },
   ],
   // Sirgazil's 31-frame animation writes hiragana た in four pen-down runs:
@@ -167,8 +169,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "た")!
-        .strokeOrderSource!,
+      source: strokeSource("た"),
     },
   ],
   // Sirgazil's 35-frame animation writes ね in two pen-down runs: the short
@@ -259,8 +260,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "ね")!
-        .strokeOrderSource!,
+      source: strokeSource("ね"),
     },
   ],
   // Sirgazil's 29-frame animation writes み in two pen-down runs: the top bar,
@@ -352,8 +352,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "み")!
-        .strokeOrderSource!,
+      source: strokeSource("み"),
     },
   ],
   // Sirgazil's 33-frame animation writes せ in three pen-down runs: the long
@@ -437,8 +436,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "せ")!
-        .strokeOrderSource!,
+      source: strokeSource("せ"),
     },
   ],
   // Sirgazil's 28-frame animation writes て in one uninterrupted run: the
@@ -494,8 +492,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "て")!
-        .strokeOrderSource!,
+      source: strokeSource("て"),
     },
   ],
   // Sirgazil's 32-frame animation writes な in four pen-down runs: horizontal,
@@ -589,8 +586,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "な")!
-        .strokeOrderSource!,
+      source: strokeSource("な"),
     },
   ],
   // Sirgazil's つ animation supplies the one-run movement. Unicode identifies
@@ -633,8 +629,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "っ")!
-        .strokeOrderSource!,
+      source: strokeSource("っ"),
     },
   ],
   // Sirgazil's 28-frame animation writes も in three pen-down runs: descend
@@ -707,8 +702,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "も")!
-        .strokeOrderSource!,
+      source: strokeSource("も"),
     },
   ],
   // Sirgazil's 30-frame animation writes わ in two pen-down runs: the long
@@ -792,8 +786,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "わ")!
-        .strokeOrderSource!,
+      source: strokeSource("わ"),
     },
   ],
   // Sirgazil's 30-frame animation writes ゆ in two pen-down runs: the left
@@ -885,8 +878,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "ゆ")!
-        .strokeOrderSource!,
+      source: strokeSource("ゆ"),
     },
   ],
   // Sirgazil's corrected 26-frame animation writes よ with a short
@@ -930,8 +922,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "よ")!
-        .strokeOrderSource!,
+      source: strokeSource("よ"),
     },
   ],
   // Sirgazil's 32-frame animation writes め in two runs: the short left
@@ -988,8 +979,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "め")!
-        .strokeOrderSource!,
+      source: strokeSource("め"),
     },
   ],
   // Sirgazil's 24-frame animation writes つ in one uninterrupted run: sweep
@@ -1024,8 +1014,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "つ")!
-        .strokeOrderSource!,
+      source: strokeSource("つ"),
     },
   ],
   // Sirgazil's 26-frame animation writes hiragana ろ in a single pen-down run:
@@ -1090,8 +1079,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "ろ")!
-        .strokeOrderSource!,
+      source: strokeSource("ろ"),
     },
   ],
   // Small ゅ takes ゆ's two-run movement, exactly as small っ takes つ's. The
@@ -1188,8 +1176,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "ゅ")!
-        .strokeOrderSource!,
+      source: strokeSource("ゅ"),
     },
   ],
   // The counter tranche adds six independently written hiragana. Each path
@@ -1235,8 +1222,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "の")!
-        .strokeOrderSource!,
+      source: strokeSource("の"),
     },
   ],
   [
@@ -1277,8 +1263,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "ひ")!
-        .strokeOrderSource!,
+      source: strokeSource("ひ"),
     },
   ],
   [
@@ -1334,8 +1319,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "ふ")!
-        .strokeOrderSource!,
+      source: strokeSource("ふ"),
     },
   ],
   [
@@ -1402,8 +1386,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "ほ")!
-        .strokeOrderSource!,
+      source: strokeSource("ほ"),
     },
   ],
   [
@@ -1461,8 +1444,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "む")!
-        .strokeOrderSource!,
+      source: strokeSource("む"),
     },
   ],
   [
@@ -1512,8 +1494,7 @@ export const entries: DuctusEntry[] = [
           ],
         },
       ],
-      source: japanese.letters.find((letter) => letter.glyph === "や")!
-        .strokeOrderSource!,
+      source: strokeSource("や"),
     },
   ],
 ];
