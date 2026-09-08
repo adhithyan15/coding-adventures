@@ -2739,10 +2739,11 @@ impl Compiler {
     }
 
     /// Recognize the existing exact integer exponent language plus built-in
-    /// `sqrt` over exact tracked integer arithmetic. Integral square-root forms
-    /// may compose through checked addition, subtraction, multiplication, pure
-    /// path-independent conditionals, further exact integral square roots, and
-    /// pure integer-valued standard functions.
+    /// `sqrt` and canonical transcendental functions over exact tracked integer
+    /// arithmetic. Integral real-function forms may compose through checked
+    /// addition, subtraction, multiplication, pure path-independent
+    /// conditionals, further exact integral real functions, and pure
+    /// integer-valued standard functions.
     fn exact_tracked_integral_exponent_expression(&self, node: &GrammarASTNode) -> bool {
         if self.exact_tracked_integer_expression(node) {
             return true;
@@ -2792,7 +2793,10 @@ impl Compiler {
         };
         let target_name = self.resolve_procedure_identity(&name);
         if self.proc_sigs.contains_key(&target_name)
-            || !matches!(target_name.as_str(), "abs" | "sign" | "entier" | "sqrt")
+            || !matches!(
+                target_name.as_str(),
+                "abs" | "sign" | "entier" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+            )
         {
             return false;
         }
@@ -10913,6 +10917,50 @@ mod tests {
             let main = module.get_function("main").expect("has main");
             assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
             if source.contains("procedure sign") || source.contains("procedure sqrt") {
+                assert!(main.instructions.iter().any(|instr| instr.op == "call"));
+            }
+        }
+    }
+
+    #[test]
+    fn al4_canonical_tracked_real_function_exponents_unroll_real_powers() {
+        for (initial, exponent_expression) in [
+            (0, "sin(exponent) + 2"),
+            (0, "cos(exponent) + 1"),
+            (1, "ln(exponent) + 2"),
+            (0, "exp(exponent) + 1"),
+            (0, "arctan(exponent) + 2"),
+        ] {
+            let source = format!(
+                "begin integer exponent; real saved; exponent := {initial}; saved := 6.0 ^ ({exponent_expression}) + 6.0; exponent := 9; if saved = 42.0 then output(42) else output(1) end"
+            );
+            let module = compile_source(&source, "test")
+                .expect("a canonical tracked real function should provide an exact exponent");
+            let main = module.get_function("main").expect("has main");
+            assert!(
+                main.instructions.iter().all(|instr| instr.op != "f64_pow"),
+                "{exponent_expression} retained f64_pow"
+            );
+            assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+        }
+    }
+
+    #[test]
+    fn al4_tracked_real_function_exponents_retain_unsafe_runtime_power() {
+        for source in [
+            "begin integer exponent; real saved; exponent := 1; saved := 6.0 ^ (cos(exponent) + 1) end",
+            "begin integer exponent; real saved; exponent := 2; saved := 6.0 ^ (ln(exponent) + 2) end",
+            "begin integer exponent; real saved; exponent := 0; saved := 6.0 ^ (cos(exponent) + 64) end",
+            "begin real procedure cos(x); value x; integer x; cos := 1.0; integer exponent; real saved; exponent := 0; saved := 6.0 ^ (cos(exponent) + 1) end",
+        ] {
+            let module = compile_source(source, "test")
+                .expect("unsafe tracked real functions must retain runtime power lowering");
+            let main = module.get_function("main").expect("has main");
+            assert!(
+                main.instructions.iter().any(|instr| instr.op == "f64_pow"),
+                "{source}"
+            );
+            if source.contains("real procedure cos") {
                 assert!(main.instructions.iter().any(|instr| instr.op == "call"));
             }
         }

@@ -1558,6 +1558,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — canonical exact outputs from real standard functions may
+    // provide bounded exponents over tracked local integer snapshots.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer exponent; real saved; exponent := 0; saved := 6.0 ^ (cos(exponent) + 1) + 6.0; exponent := 9; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — equal branches of a pure runtime conditional may retain
     // bounded multiplication while the selector branch still lowers.
     Prog {
@@ -9245,6 +9254,29 @@ fn algol_tracked_sqrt_standard_function_exponents_run_on_every_available_standar
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the tracked sqrt standard-function exponent did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_canonical_tracked_real_function_exponents_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("6.0 ^ (cos(exponent) + 1)")
+        })
+        .expect("the ALGOL canonical tracked real-function program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the canonical tracked real-function exponent did not run"
             );
             continue;
         };
