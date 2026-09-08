@@ -4509,16 +4509,19 @@ fn validate_command_deck_reference(
         // creates *configuration*, not content. A preset for a deck that does
         // not exist is inert -- options are read while scheduling that deck's
         // cards, and a deck with no existence has none -- so nothing behaves
-        // wrongly because of it. It does survive `DeleteDeck`, which cleans
-        // cards, notes, sessions and reviews but not presets; that is worth
-        // fixing by making the deletion complete rather than by refusing the
-        // write, and it is filed separately.
+        // wrongly because of it.
         //
-        // Refusing it here would also be a behaviour change on a documented
-        // command that callers may reasonably issue before creating the deck.
-        // The cost of being wrong in that direction is a host that cannot
-        // configure a deck; the cost of the current behaviour is a few hundred
-        // bytes of state nothing reads.
+        // Such a preset is permanent, but not for the reason it first looks
+        // like: `DeleteDeck` *does* filter `deck_options` by `deck_id`. It
+        // simply never runs for a deck that was never created, so there is no
+        // deletion to complete. Making the cascade "more complete" would fix
+        // nothing.
+        //
+        // Refusing the write here would be a behaviour change on a documented
+        // command that callers may reasonably issue before creating the deck --
+        // an existing test pins that permissive behaviour. The cost of being
+        // wrong in that direction is a host that cannot configure a deck; the
+        // cost of leaving it is a few hundred bytes nothing reads.
         FacadeCommand::SetDeckOptions { .. } => None,
 
         // Safe no-ops on a missing deck, listed rather than omitted so the

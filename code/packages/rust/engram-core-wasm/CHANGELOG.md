@@ -29,9 +29,11 @@ be widened by accident:
   on one collection, will do.
 - `setDeckOptions` creates *configuration*, not content. A preset for a deck
   that does not exist is inert, since options are read while scheduling that
-  deck's cards and it has none. It does outlive `DeleteDeck`, which cleans
-  cards, notes, sessions and reviews but not presets -- that is worth fixing by
-  making the deletion complete (#14576) rather than by refusing the write.
+  deck's cards and it has none. Such a preset is permanent -- but because
+  `DeleteDeck` never runs for a deck that was never created, not because the
+  cascade is incomplete: it already filters `deck_options` by `deck_id`.
+  Refusing the write would change documented behaviour an existing test pins,
+  for a few hundred bytes nothing reads.
 
 ### Fixed -- rebuilding a filtered deck that does not exist emptied the collection (#14531)
 
