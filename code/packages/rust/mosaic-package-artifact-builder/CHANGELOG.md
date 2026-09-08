@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Report unsupported layout font-size bindings as explicit backend degradations,
+  keeping native-complete acceptance honest while React/Electron support lands.
+
 ### Fixed — load owner palettes during standalone package composition
 
 Manifest-aware component composition now loads the owning package's scoped

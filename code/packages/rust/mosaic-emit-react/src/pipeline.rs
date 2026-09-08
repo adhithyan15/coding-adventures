@@ -143,6 +143,8 @@ pub enum PipelineEmitError {
     /// relative reference with no scheme (`"#"`, `"/about"`) is
     /// unaffected -- only an explicit, disallowed scheme is rejected.
     UnsafeUriScheme(String),
+    /// A bound typography property cannot be projected safely.
+    InvalidTypography,
 }
 
 #[derive(Clone, Copy)]
@@ -154,6 +156,7 @@ struct ForPayloadScope<'a> {
 impl std::fmt::Display for PipelineEmitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            PipelineEmitError::InvalidTypography => write!(f, "font-size must be a positive finite number or a numeric slot reference on Text, HostButton, HostInput, or HostTable"),
             PipelineEmitError::ComponentNameMismatch {
                 mosmodel,
                 moslayout,
@@ -975,6 +978,9 @@ fn emit_jsx_tree(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
+    // Validate before specialized emitters can silently drop an authored font.
+    bound_typography_style(node)?;
+
     // `HostSurface` is the cross-backend composition seam for host-owned
     // content such as Venture's browser viewport. React/Electron hosts pass
     // any ReactNode (canvas, webview, native bridge wrapper, ...); Mosaic
@@ -1312,7 +1318,11 @@ fn emit_jsx_tree(
     // clobber the value the host bound, which is exactly the "my binding did nothing"
     // confusion this feature removes. See `dynamic_bound_style` for why this can't
     // live in mosstyle.
-    let size_style = dynamic_bound_style(node)?;
+    let mut size_style = dynamic_bound_style(node)?;
+    let typography = bound_typography_style(node)?;
+    if !typography.is_empty() {
+        size_style.push_str(&format!(", {typography}"));
+    }
 
     let style_attr = if merged_style.is_empty() && state_spreads.is_empty() && size_style.is_empty()
     {
@@ -1929,6 +1939,7 @@ fn emit_host_input_jsx(
         .as_deref()
         .and_then(|n| part_styles.get(n).map(String::as_str))
         .unwrap_or("");
+    let part_style_str = merge_styles(part_style_str, &bound_typography_style(node)?);
     if !part_style_str.is_empty() {
         attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
     }
@@ -2095,6 +2106,7 @@ fn emit_host_button_jsx(
         .as_deref()
         .and_then(|n| part_styles.get(n).map(String::as_str))
         .unwrap_or("");
+    let part_style_str = merge_styles(part_style_str, &bound_typography_style(node)?);
     if !part_style_str.is_empty() {
         attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
     }
@@ -3904,6 +3916,7 @@ fn emit_host_table_jsx(
         .as_deref()
         .and_then(|n| part_styles.get(n).map(String::as_str))
         .unwrap_or("");
+    let part_style_str = merge_styles(part_style_str, &bound_typography_style(node)?);
     let style_attr = if part_style_str.is_empty() {
         String::new()
     } else {
@@ -4804,6 +4817,29 @@ fn find_keyword_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a st
         }
         None
     })
+}
+
+/// Numeric typography binding, independent of compile-time theme styles.
+fn bound_typography_style(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|prop| prop.name == "font-size") else {
+        return Ok(String::new());
+    };
+    if !matches!(node.tag.as_str(), "Text" | "HostButton" | "HostInput" | "HostTable") {
+        return Err(PipelineEmitError::InvalidTypography);
+    }
+    match &prop.value {
+        LayoutPropValue::Number(value) if value.is_finite() && *value > 0.0 => {
+            Ok(format!("fontSize: {value}"))
+        }
+        LayoutPropValue::SlotRef(slot) => {
+            let slot = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&slot).map_err(PipelineEmitError::UnsafeSlotName)?;
+            // Invalid live values retain the author's fallback. A conditional
+            // spread also avoids undefined wiping out an earlier fontSize.
+            Ok(format!("...((typeof {slot} === \"number\" && Number.isFinite({slot}) && {slot} > 0) ? {{ fontSize: {slot} }} : {{}})"))
+        }
+        _ => Err(PipelineEmitError::InvalidTypography),
+    }
 }
 
 /// Find a prop on `node` whose value is a `Number`. Returns the f64, or
@@ -8929,6 +8965,38 @@ mod tests {
                 children: vec![],
             },
         }
+    }
+
+    #[test]
+    fn typography_bindings_reach_text_and_specialized_controls_after_defaults() {
+        for tag in ["Text", "HostButton", "HostInput", "HostTable"] {
+            let node = LayoutNode {
+                tag: tag.into(), part_name: Some("label".into()),
+                props: vec![size_prop("font-size", LayoutPropValue::SlotRef("text-size".into()))],
+                children: vec![],
+            };
+            let styles = HashMap::from([("label".into(), "fontSize: 13".into())]);
+            let out = emit_jsx_tree(&node, 0, &styles, &[], &[], &[], None).unwrap();
+            assert!(out.contains("fontSize: textSize"), "{tag}: {out}");
+            assert!(out.find("fontSize: 13").unwrap() < out.find("fontSize: textSize").unwrap(), "{tag}: {out}");
+            assert!(out.contains("Number.isFinite(textSize) && textSize > 0"), "{tag}: {out}");
+            assert_eq!(out.matches(" style=").count(), 1, "{tag}: {out}");
+        }
+    }
+
+    #[test]
+    fn typography_literals_are_positive_numbers_and_slots_are_safe() {
+        let mut node = text_layout(size_prop("font-size", LayoutPropValue::Number(19.5))).root;
+        assert_eq!(bound_typography_style(&node).unwrap(), "fontSize: 19.5");
+        for value in [LayoutPropValue::Number(0.0), LayoutPropValue::Number(-1.0),
+            LayoutPropValue::Number(f64::INFINITY), LayoutPropValue::String("19px".into()),
+            LayoutPropValue::Expr("size * 2".into()), LayoutPropValue::SlotRef("bad} injected".into())] {
+            node.props[0].value = value;
+            assert!(bound_typography_style(&node).is_err());
+        }
+        node.props[0].value = LayoutPropValue::Number(19.0);
+        node.tag = "HostLink".into();
+        assert!(matches!(emit_jsx_tree(&node, 0, &HashMap::new(), &[], &[], &[], None), Err(PipelineEmitError::InvalidTypography)));
     }
 
     #[test]

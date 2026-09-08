@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- Bind numeric font sizes on Text, HostButton, HostInput and HostTable after
+  authored styles. Invalid live values preserve the fallback; invalid literal
+  shapes and unsupported placements fail compilation.
+
 - Preserve Text accessibility in the compiler pipeline: level-two headings,
   literal/slot accessible names, and hidden/decorative text. Heading defaults
   retain authored typography without browser-added margins.

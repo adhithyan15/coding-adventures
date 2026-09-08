@@ -9,6 +9,28 @@ motivating gap as every size prop here, just not a *size*) on any layout node.
 
 ---
 
+### Numeric typography bindings
+
+`Text`, `HostButton`, `HostInput` and `HostTable` accept a layout `font-size`
+property in React/Electron. Its value is a positive finite numeric literal or
+a numeric slot reference, in logical pixels. For example:
+
+```mll
+Text [ title ] (content: "Workbook", font-size: slot: title-size)
+```
+
+The application computes the scaled number; the emitter does not guess a scale
+or modify unrelated layout dimensions. A valid binding overrides the static
+mosstyle font size, including state styles, and follows prop updates. Invalid
+live values (non-numeric, non-finite or non-positive) retain the authored
+fallback. Invalid literals, expressions, CSS strings and unsupported primitive
+placements are compile errors. Static mosstyle typography is unchanged.
+
+Other backends report `typography.font-size-binding-unimplemented` in package
+degradation analysis. This foundation does not claim native typography scaling,
+startup context propagation, or application layout acceptance; those are tracked
+in #14661. The initial compiler slice is #14677.
+
 ## 1. The gap
 
 Mosaic splits appearance cleanly: **moslayout** says what the tree is, **mosstyle**
