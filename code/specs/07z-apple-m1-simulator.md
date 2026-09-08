@@ -320,3 +320,34 @@ FCVTZS of NaN returns 0 (saturated conversion).
 - No half-precision (H registers) or byte FP
 - No SVE/SVE2 extensions
 - No crypto extensions (AES, SHA2 hardware)
+
+---
+
+## Normative Rust Completion Contract (RCPU-049)
+
+The Rust `apple-m1-simulator` package is the checked functional implementation
+of this layer. Its persistent architectural state is exactly 64 KiB of memory,
+32 64-bit GPR slots, separate 64-bit SP and PC, four NZCV bits, 32 128-bit
+vector/FP registers, and one halt bit. Installed origin and length are validated
+lifecycle metadata. XZR is zero in every observable state; S/D writes clear the
+unused upper vector bits.
+
+The package implements the complete checked AArch64 integer surface from Spec
+07v plus every scalar-FP, FP load/store, NEON integer/FP, DUP, and FMLA family
+defined above. Teaching words and programs use big-endian transport. Scalar
+single-precision results are rounded to IEEE binary32; double results use IEEE
+binary64; FCMP and FCVTZS retain the documented NaN behavior. The model does
+not add fused host semantics to the repository's documented FMLA expression.
+
+Public restore, origin-aware load, register/vector/flag/stack/byte access,
+fetch, and data operations validate invariants and ranges. Unknown, reserved,
+misaligned, out-of-range, post-halt, and step-limit conditions are typed
+failures. A failed instruction changes no state. A failed bounded run restores
+the complete pre-run state. Successful traces contain raw instruction bits and
+complete before/after snapshots.
+
+Completion requires the manual lifecycle/decode/fault suites, the reproducible
+360-vector Python Apple-specific full-state differential, the delegated
+AArch64 core's 836-vector differential, all 109 Python Apple M1 tests, Rust
+AArch64 functional/gate consumers, strict Rustfmt/Clippy/rustdoc, and package
+line coverage above 80%. The accepted RCPU-049 result is 88.37% (646/731).

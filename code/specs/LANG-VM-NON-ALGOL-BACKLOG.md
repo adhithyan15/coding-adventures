@@ -1506,3 +1506,40 @@ All 12 Oct and 26 Nib BEAM programs passed again, along with 93 backend tests
 and all-target Clippy for iir-to-beam and lang-aot. No seven-column rerun is
 claimed. Remaining COBOL BEAM rows require further probes after this PR merges;
 only four of the 58 COBOL rows now declare BEAM, for 410 total declared cells.
+
+## VM-040 COBOL control and rounding probe (after #14670)
+
+PR #14670 merged as 55f803c1ee after all 46 checks succeeded or skipped.
+Prioritize the next four COBOL cases: IF/ELSE, rounded division, PERFORM TIMES,
+and COMPUTE precedence. They reuse the newly proven literal arithmetic while
+exercising comparisons, loop state and rounding. Probe real Erlang before any
+coverage promotion. Preserve hard errors and exact stdout. Commit a separate
+contract before backend changes if a defect appears. Larger strings and host
+input remain behind this bounded proof; retain VM-060b and VM-013 separately.
+
+### VM-040 COBOL comparison literal contract
+
+The IF probe rejects Int(3) in cmp_gt. Extend the existing checked Var/Int
+arithmetic operand conversion to the six comparison operations. Keep all
+operand ordering, 0/1 result conventions and unsupported-kind errors. Verify
+literal/literal and both mixed forms for less, equal and greater inputs across
+all six comparisons, then rerun the four COBOL cases before promotion.
+
+### VM-040 COBOL counted-loop literal move contract
+
+IF and rounded division pass after comparison support. PERFORM TIMES then
+rejects mov Int(3), used to initialize its counter. Permit checked Var/Int
+operands in mov through the same conversion helper; retain missing-source and
+unsupported-kind errors. The executed counted loop must print 1, 2, 3 and stop.
+Include positive and negative immediate moves in direct runtime coverage.
+
+### VM-040 COBOL control and rounding validation
+
+The four selected programs pass real Erlang and fresh matrix processes with
+positive execution sentinels (rows 395-398 before the final main refresh).
+All 54 direct comparison/move cases, 15 arithmetic cases, the earlier four
+COBOL cases, 12 Oct and 26 Nib programs pass. All 93 backend tests and Clippy
+for both affected packages with all targets pass. Eight COBOL rows now declare
+BEAM (414 total declared cells); no complete seven-column rerun is claimed.
+Reprioritize remaining COBOL proofs against other BEAM and host ABI work after
+merge, preserving the separate ALGOL owner.

@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Go build-tool language source-input registry
+
+- Replaced the Go hasher's partial source and metadata maps with a generated,
+  strictly decoded projection of the complete checked 23-language registry and
+  all seven selector roles. The runtime no longer depends on neutral fixtures.
+- Added fail-closed unknown-language precedence, exact canonical package-root
+  binding, scoped/root selector preservation, universal capability metadata,
+  exact generated-component pruning, canonical digest checks, four neutral
+  production-path fixtures, and a deterministic generator round trip.
+
 ### Build-tool graph and diff neutral corpus
 
 - Closed graph as a bounded process-free domain with an independent iterative

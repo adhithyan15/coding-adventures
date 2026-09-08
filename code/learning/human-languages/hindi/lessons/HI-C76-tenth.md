@@ -8,9 +8,9 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 3250
 chapter: 83
 type: word
-headword: "दसवाँ"
-gloss: "tenth — the ten closed, and the ending carrying on past it"
-romanization: "dasvā̃"
+headword: "दसवाँ / दसवीं"
+gloss: "tenth / feminine tenth — the ten closed, and the ending carrying on past it"
+romanization: "dasvā̃ / dasvī̃"
 concept_tag: HI-ORDINAL-TENTH
 prerequisites: [HI-C76-ninth, HI-C75-fifth, HI-C69-ki, HI-C69-go, HI-C22-gyarah-bees, HI-C32-shubh-sandhya]
 sounds: []
@@ -66,12 +66,14 @@ hundred; the ending you learned at five reaches every number you will ever say.
 
 [PAUSE 1s]
 - [YOU SAY: *dasvā̃*]
+- [YOU SAY: *dasvī̃ kitāb* — the tenth book]
 - [YOU SAY: the ten in order, *pahlā* to *dasvā̃*]
 - [YOU SAY: past ten — *gyārahvā̃*, *bīsvā̃*, *sauvā̃*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C76-ORDINAL-01, HI-LEX-C76-ORDINAL-02, HI-LEX-C76-ORDINAL-03, HI-LEX-C76-ORDINAL-04, HI-LEX-C76-ORDINAL-05] -->
 
-[PAUSE 3s] Say the ten in order. (***Pahlā*** through ***dasvā̃***.) How much had to be
-learned as words? (**Five** — and one ending for the rest.) And say "eleventh".
-(**ग्यारहवाँ**.)
+[PAUSE 3s] Say the tenth day. (**दसवाँ** (*dasvā̃*) **दिन**.) What changes for a feminine
+noun? (**दसवीं**.) Now say the ten in order. (***Pahlā*** through ***dasvā̃***.) How
+much had to be learned as words? (**Five** — and one ending for the rest.) And say
+"eleventh". (**ग्यारहवाँ**.)

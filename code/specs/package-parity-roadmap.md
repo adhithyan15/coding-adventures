@@ -1765,7 +1765,7 @@ implementation languages and 267 missing slots to reach all 15. After Priority
 | Language lane | Current high-consensus gaps | Pairing rule |
 |---|---:|---|
 | C# | 0 | Complete; paired native package wave |
-| Dart | 98 | Close the reopened 14-of-15 set, then dependencies before consumers |
+| Dart | 97 | Close the reopened 14-of-15 set, then dependencies before consumers |
 | Elixir | 1 | Close `image-codec-png`, then retain as a reference lane |
 | F# | 0 | Complete; paired native package wave |
 | Go | 0 | Complete; primary build-tool and portable-core reference lane |
@@ -1777,7 +1777,7 @@ implementation languages and 267 missing slots to reach all 15. After Priority
 | Python | 1 | Classify the remaining self-hosted `python-parser` carefully |
 | Ruby | 1 | Close `image-codec-png`, then retain as a reference lane |
 | Rust | 1 | Close `image-codec-png`; reference broad and singleton families |
-| Swift | 52 | Data structures and generated frontends before native app surfaces |
+| Swift | 51 | Data structures and generated frontends before native app surfaces |
 | TypeScript | 0 | Complete; reference lane for web-capable portable contracts |
 
 Zero-gap lanes remain active reference and conformance lanes; they are not
@@ -13384,6 +13384,194 @@ merged PR #14604. These additions bring the state to 753 unique owners: 211 merg
 541 pending, and exactly this graph/diff owner PR-open as #14615, with complete
 dependencies, no cycle, and no merged-to-unfinished
 edge.
+
+### Post-PR #14615 reconciliation and Go source-registry selection
+
+PR #14615 completed every reported check acceptably at exact head
+`26436208e66cebe63baaf6fba9232b145bcc55d3`. Both duplicate Ubuntu builds and
+repository-metadata contracts passed, both final CI gates passed, and GitHub
+reported the branch clean and mergeable. Guarded squash auto-merge was enabled
+and GitHub merged the reviewed head at `2026-09-08T13:27:07Z` as
+`3afe6de3678f56b3a39c10b040aff9d7fa74a13a`, without a plain manual merge
+command.
+
+Before implementation, seven non-overlapping ARMv7-A, bounded-JSON storage,
+VisiCalc, HTML parser, Mermaid Wardley, browser form-control, and ALGOL result-
+composition merges advanced exact `origin/main` to
+`a94930658181ef406fac9b49c72356d692b7e09d`. The
+collision-checked schema-3 inventory there has 15 established lanes, 1,424
+implementation identities, 4,645 implementation slots, and 1,463 all-reported
+identities. The breadth bands are 175/265, 123/934, 177/2,230, and 949/13,286.
+Rust has 765 singletons;
+OCaml remains emerging with five packages; canonical collisions and unknown
+language buckets remain zero. PR #14614 adds Rust beside Python for the
+`armv7a-simulator` identity, so a new exact two-lane classification owner now
+owns Spec 07x reconciliation, applicable-lane review, bounded traces, and the
+Rust package's missing explicit empty capability profile. The current high-
+consensus table is corrected to 97 Dart and 51 Swift gaps. Haskell has four
+structural gaps, but its counted generic `font-parser` wrapper remains
+separately owned FNT00 semantic debt.
+
+The two new identities are the deterministic Rust-only `layout-controls` and
+`browser-form-controls` UI53 cores. Exact dependency-shaped owners now require
+a bounded neutral metadata and intrinsic-sizing contract first, followed by
+browser retained-tree state transitions dependent on both that contract and the
+existing portable HTML frontend. The Wardley merge adds no identity or slot,
+but it extends existing Mermaid lexer, parser, IR, geometry, and paint packages
+with a distinct semantic family. A neutral Wardley pipeline owner and a
+selection-blocked established-lane rollout umbrella now prevent that semantic
+gap from being hidden by stable package counts.
+
+Parallel read-only audits decomposed work while CI ran. They add an independent
+Java/Kotlin process-free graph/diff owner and give it, plus the existing Dart
+core, both merged neutral graph/diff and repository-boundary prerequisites.
+Java and Kotlin must remain separate idiomatic engines sharing only fixtures;
+neither is a reviewed shared-engine exception. The audits also split the stale
+Haskell tail into event-loop, neutral Brotli repair, Haskell Brotli, ct-compare,
+and PNG children; add exact Haskell/Swift CLI-parser, Starlark-metering, and
+validation-oracle leaves; and add selection-blocked native-adapter closure
+gates for both lanes.
+
+The same refresh corrects the Haskell capability audit to 204 packages and four
+programs and registers a Swift capability audit for 162 packages and 12
+programs. It classifies the previously unowned `mosaic-flux-swiftui` and
+`PaintVmDirect2DNative` Swift singletons as platform/runtime boundaries that
+need truthful capability and applicability decisions, not automatic portable
+rollout. `swift-hash-functions-lane-parity` is the first exact child split from
+Swift's remaining high-consensus classifier because it unlocks bloom-filter,
+hash-map, hyperloglog, and the in-memory-store chain. The stale Chief channel
+crypto owner is now selection-blocked pending reconciliation with already
+merged D18F/D18P fixture work.
+
+After these additions the state has 774 unique owners: 212 merged, 561 pending,
+and exactly one in progress. All IDs are unique, every dependency resolves, the
+graph is acyclic, and no merged owner depends on unfinished work. The selected
+`build-tool-go-language-source-input-registry-adoption` owner begins on fresh
+branch `codex/build-tool-go-language-source-registry-20260908` from exact merged
+main `a94930658181ef406fac9b49c72356d692b7e09d`. Its four formal prerequisites are merged, it has no live implementation-
+path overlap, and it reaches 24 unfinished descendants through native snapshot
+stability, dependency hashing, repository-boundary diff/digest, the Go oracle,
+all-language build tools, and OCaml promotion. Dart and JVM graph/diff cores are
+the next ready audited alternatives after this serial PR.
+
+### Go source-registry implementation-time parallel refresh
+
+While the Go registry owner was being implemented, parallel read-only audits
+continued against advancing main instead of idling behind the serial PR lane.
+At exact `origin/main` `6e574ef49900748a20b6dfef11d4c54636d2a84a`, the
+collision-checked schema-3 inventory has 15 established lanes, 1,426
+implementation identities, 4,647 implementation slots, and 1,465 all-reported
+identities. The breadth bands are 175/265, 123/934, 177/2,230, and 951/13,314;
+Rust has 767 singletons, emerging OCaml remains at five packages, and canonical
+collisions and unknown language buckets remain zero.
+
+Exactly two new identities appeared. `armv7a-gatelevel-singleton-classification`
+owns the Rust-only Spec 07x2 gate-level package behind the existing two-lane
+functional ARMv7-A classifier. `oauth-credential-sealed-store-portable-conformance`
+owns deterministic storage composition behind the credential-custody and Vault
+sealed-store portable cores, while its dependent native-authority review remains
+selection-blocked and now gates the broader broker/custody review.
+
+Stable package topology did not hide the semantic deltas. A new CLR call-token
+table owner captures exact MethodDef validation and cross-lane no-mutation
+behavior after the Rust repair; a Mosaic browser package-composition owner
+captures the shared compiler/emitter behavior exposed by recent form-control
+work. Existing Engram native-ABI and script-ductus owners absorb XAML
+relocatability and Japanese stroke-evidence updates. Gujarati curriculum,
+TypeScript development-lock changes, and ALGOL result-path work add no further
+identity, build-tool contract, or unowned portable surface.
+
+The resulting state has 779 unique owners: 212 merged, 566 pending, and exactly
+one in progress, with 1,321 dependency edges, no missing dependency, no cycle,
+and no merged-to-unfinished edge. The active Go implementation paths remain
+disjoint from all of these inventory and readiness findings.
+
+### Go source-registry latest-main readiness packet
+
+Parallel audit continued through exact `origin/main`
+`f1d5a6134c6329fdaf6c41e83cbdb2b761b32818` while the Go implementation was
+validated. The collision-clean inventory now has 1,430 established-lane
+identities, 4,652 implementation slots, 1,470 all-reported identities, and
+1,204 Rust packages. The breadth bands are 175/265, 123/934, 178/2,243, and
+954/13,356; canonical collisions and unknown language buckets remain zero.
+
+The refresh adds two Rust-only identities. `browser-form-submission` is owned
+by `browser-form-submission-portable-core-classification` behind the existing
+form-control and HTML frontend contracts. `riscv-gatelevel` is owned by
+`riscv-gatelevel-singleton-classification` behind a new six-lane checked RV32I
+functional classifier. The latter preserves the gate-level package as a
+separate topology and resource contract while sharing the normative functional
+corpus.
+
+Three topology-neutral semantic deltas also receive exact owners.
+`oct-eight-backend-language-neutral-conformance` freezes output separation and
+byte-width behavior across its 96 execution cells.
+`mermaid-cynefin-language-neutral-conformance` owns the parser-to-paint subset,
+and its selection-blocked rollout owner prevents the Rust slice from being
+mistaken for completed established-lane parity. Existing browser bridge,
+network-capability, local HTTP, form-control, and Mosaic composition owners now
+record the corresponding PR #14630 and #14640 evidence and residual native or
+authority boundaries.
+
+Later merges add two more dependency-shaped surfaces. The Rust-only
+`oauth-client-secret-custody` identity has a portable audit-first custody owner
+and now gates the broader selection-blocked credential-broker review. The
+Rust `spice-mosaic-app` identity and authored special-lane
+`mosaic-pkg-spice-workbench` identity share a portable workbench owner behind
+Mosaic runtime and browser-composition contracts; its C ABI and WASM shells
+remain in a dependent selection-blocked native review.
+
+PR #14643 is topology-neutral but extends deterministic HTML adoption-agency
+recovery. Its tree-shape, reconstruction-order, marker-boundary, diagnostic,
+and resource-bound evidence stays with `html-frontend-portable-conformance`;
+rendering and browser-host authority remain out of scope.
+
+PR #14647 adds Rust beside Python for `riscv-rv64i-simulator`, moving that
+identity from the singleton band into the two-to-four band. A new exact
+two-lane owner covers the Spec 07y state, lifecycle, RV64I+M, transaction,
+trace, and 364-vector differential contract. PR #14642 is topology-neutral and
+extends the existing ALGOL IIR neutral owner with exact tracked-integer power
+evidence across seven execution paths. The French curriculum correction adds
+no package or runtime contract.
+
+The state therefore has 789 unique owners: 212 merged, 576 pending, and exactly
+one in progress, with 1,332 dependency edges, no duplicate ID, missing
+dependency, cycle, or merged-to-unfinished edge. The next three ready new
+owners by cross-lane leverage are the six-lane RV32I classifier, neutral
+Mermaid Cynefin contract, and eight-backend Oct contract. The UI54 owner waits
+on form controls and HTML frontend; the Cynefin rollout waits on its neutral
+contract.
+
+### Go source-registry CI repair and parallel backlog packet
+
+Full-repository CI for PR #14659 exposed the two `code/sites` packages as
+legacy `unknown/*` graph identities that the strict Go registry adopter could
+not hash. The focused repair preserves those graph identities but maps only
+canonical `code/sites/<name>` roots to the existing TypeScript source-input
+profile and frames their real repository paths. The complete Go suite, race,
+vet, module verification, generator-stability, 24 schema tests, 80 neutral
+runner tests, and a real 5,170-package all-language dry plan pass locally.
+
+That repair deliberately does not mutate the merged neutral registry. The
+blog's authored `data/*.md` posts and `data/assets/*.svg` file remain a newly
+classified gap under
+`build-tool-site-authored-resource-source-input-extension`. That dependent
+owner must evolve the neutral digest, refresh every already-adopted engine
+projection, add exact site fixtures, and avoid widening unrelated TypeScript
+data directories.
+
+Parallel read-only backlog work continued while CI ran. The next recommended
+implementation owner remains `riscv-simulator-six-lane-classification`, but its
+first tranche should be the classification, normative checked-execution spec,
+and neutral fixture corpus rather than six implementations at once. The audit
+found that the current 256-vector oracle covers only successful Rust-local
+execution; error, lifecycle, atomicity, rollback, and bounded-run cases need a
+neutral fixture family before lane rollout. The Rust checked runner also needs
+a hard step/trace ceiling. Elixir has no simulator yet, while Go, Python, Ruby,
+and TypeScript still need a checked transactional boundary. Mermaid Cynefin and
+Oct remain the next alternatives but overlap live work, so they rank behind the
+RV32I contract tranche. With the new site-resource owner, the state has 790
+unique owners: 212 merged, 577 pending, and one PR open.
 
 ## Autonomous Loop Protocol
 
