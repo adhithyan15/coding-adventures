@@ -1066,6 +1066,24 @@ pub struct LayoutedIshikawaBone { pub from: Point, pub to: Point, pub label: Str
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedIshikawaDiagram { pub width: f64, pub height: f64, pub effect: String, pub effect_x: f64, pub effect_y: f64, pub effect_width: f64, pub effect_height: f64, pub spine_from: Point, pub spine_to: Point, pub bones: Vec<LayoutedIshikawaBone> }
 
+// STRATEGIC MAP FAMILY
+#[derive(Clone, Debug, PartialEq)]
+pub struct WardleyNode { pub id: String, pub label: String, pub visibility: f64, pub evolution: f64, pub anchor: bool }
+#[derive(Clone, Debug, PartialEq)]
+pub struct WardleyLink { pub source: String, pub target: String }
+#[derive(Clone, Debug, PartialEq)]
+pub struct WardleyEvolution { pub component: String, pub target: f64 }
+#[derive(Clone, Debug, PartialEq)]
+pub struct WardleyDiagram { pub title: Option<String>, pub width: f64, pub height: f64, pub stages: Vec<String>, pub nodes: Vec<WardleyNode>, pub links: Vec<WardleyLink>, pub evolves: Vec<WardleyEvolution> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyNode { pub id: String, pub label: String, pub position: Point, pub anchor: bool }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyLink { pub from: Point, pub to: Point }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyEvolution { pub from: Point, pub to: Point }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub stages: Vec<String>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>, pub evolves: Vec<LayoutedWardleyEvolution> }
+
 // STRUCTURAL FAMILY
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralKind {

@@ -7,7 +7,7 @@
 //! bounding box of all elements) and passes elements through unchanged.
 
 use std::collections::HashMap;
-use diagram_ir::{GeoElement, GeometricDiagram, IshikawaDiagram, LayoutedGeometricDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, Point, VennDiagram};
+use diagram_ir::{GeoElement, GeometricDiagram, IshikawaDiagram, LayoutedGeometricDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
 
 pub const VERSION: &str = "0.1.0";
 
@@ -96,6 +96,26 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
     }
     LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), effect_x, effect_y: spine_y - effect_height / 2.0,
         effect_width, effect_height, spine_from, spine_to, bones }
+}
+
+/// Map Wardley visibility/evolution coordinates onto a deterministic Cartesian canvas.
+pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
+    let width = diagram.width.max(420.0); let height = diagram.height.max(300.0);
+    let left = 62.0; let right = 28.0; let top = if diagram.title.is_some() { 48.0 } else { 24.0 }; let bottom = 52.0;
+    let point = |visibility: f64, evolution: f64| Point {
+        x: left + evolution * (width - left - right), y: top + (1.0 - visibility) * (height - top - bottom),
+    };
+    let nodes: Vec<_> = diagram.nodes.iter().map(|node| LayoutedWardleyNode { id: node.id.clone(), label: node.label.clone(),
+        position: point(node.visibility, node.evolution), anchor: node.anchor }).collect();
+    let positions: HashMap<_, _> = diagram.nodes.iter().zip(nodes.iter()).map(|(source, layout)| (source.label.as_str(), layout.position.clone())).collect();
+    let links = diagram.links.iter().filter_map(|link| Some(LayoutedWardleyLink {
+        from: positions.get(link.source.as_str())?.clone(), to: positions.get(link.target.as_str())?.clone(),
+    })).collect();
+    let evolves = diagram.evolves.iter().filter_map(|evolve| {
+        let node = diagram.nodes.iter().find(|node| node.label == evolve.component)?;
+        Some(LayoutedWardleyEvolution { from: positions.get(node.label.as_str())?.clone(), to: point(node.visibility, evolve.target) })
+    }).collect();
+    LayoutedWardleyDiagram { width, height, title: diagram.title.clone(), stages: diagram.stages.clone(), nodes, links, evolves }
 }
 
 /// Resolve canvas size and produce a `LayoutedGeometricDiagram`.
@@ -253,5 +273,17 @@ mod tests {
         let layout = layout_ishikawa(&diagram, 640.0);
         assert!(layout.bones[0].from.y < layout.spine_from.y);
         assert!(layout.bones[1].from.y > layout.spine_from.y);
+    }
+
+
+    #[test]
+    fn wardley_layout_maps_visibility_up_and_evolution_right() {
+        let diagram = WardleyDiagram { title: None, width: 600.0, height: 400.0, stages: vec!["Genesis".into(), "Commodity".into()],
+            nodes: vec![diagram_ir::WardleyNode { id: "a".into(), label: "A".into(), visibility: 0.8, evolution: 0.2, anchor: false },
+                diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false }],
+            links: vec![], evolves: vec![] };
+        let layout = layout_wardley(&diagram);
+        assert!(layout.nodes[0].position.y < layout.nodes[1].position.y);
+        assert!(layout.nodes[0].position.x < layout.nodes[1].position.x);
     }
 }
