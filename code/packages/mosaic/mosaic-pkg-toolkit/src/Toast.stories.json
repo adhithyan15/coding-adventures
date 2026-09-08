@@ -1,0 +1,40 @@
+{
+  "stories": [
+    {
+      "name": "Primary",
+      "fixtures": {
+        "title": "Primary",
+        "message": "A primary toast.",
+        "variant": "primary",
+        "open": true
+      }
+    },
+    {
+      "name": "Success",
+      "fixtures": {
+        "title": "Success",
+        "message": "A success toast.",
+        "variant": "success",
+        "open": true
+      }
+    },
+    {
+      "name": "Danger",
+      "fixtures": {
+        "title": "Danger",
+        "message": "A danger toast.",
+        "variant": "danger",
+        "open": true
+      }
+    },
+    {
+      "name": "Warning",
+      "fixtures": {
+        "title": "Warning",
+        "message": "A warning toast.",
+        "variant": "warning",
+        "open": true
+      }
+    }
+  ]
+}
