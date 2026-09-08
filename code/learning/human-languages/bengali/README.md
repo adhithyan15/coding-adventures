@@ -123,6 +123,17 @@ before the whole; and a book you can read straight through.
   keeps পঞ্চ as a Bengali word for *five* and পাঁচ is that word with the nasal
   worn down into the chandrabindu chapter 12 taught. It buys one letter, ঞ, and
   spends it on that demonstration. In the book.
+- **Chapter 39 — Ten Shapes, and Two That Lie** ([`lessons/BN-W07-*`](./lessons/)):
+  the ten Bengali digits ০ ১ ২ ৩ ৪ ৫ ৬ ৭ ৮ ৯. Sixty script lessons had taught
+  letters and nothing else, so a price, a date, a clock face and a page number
+  were all unreadable. The order is by **what the reader can bring to each
+  shape**: ০ and ২ agree with the Western digit of the same value; ৩ is the
+  taught letter **ও** with its right-hand stroke removed; ১, ৫ and ৬ carry
+  nothing; and the last four are two false-friend pairs — **৪ is drawn as an 8
+  and means four**, **৭ is drawn as a 9 and means seven** — each taught
+  immediately after the Bengali digit whose value its shape suggests. The
+  chapter claims **no pen path** for any of them, because none can be sourced.
+  In the book.
 
 ### The script strand, interleaved
 
@@ -157,7 +168,8 @@ whose words it hands to the eye:
 - **Chapter 21 — The Face on the Page**: চোখ, নাক and মুখ read free, then ৃ and
   হৃদয় — the only one of the four body words that needed a new sign.
 - **Chapter 24 — The Last Sign, and Six Words Back**: ী, then লাল, কালো, সাদা,
-  নীল, তিন and এক.
+  নীল, তিন and এক. **তিন here is the WORD**; the digit ৩ waits until chapter 39,
+  and the distinction between them is what that chapter is for.
 
 Every one of those words was romanized and spoken in an **earlier** chapter
 before it was ever shown as a shape to decode. That ordering is the point: the
@@ -185,8 +197,11 @@ from 33 to 46 distinct headwords, and close two universal concepts —
 `COURTESY-PLEASE` and `COURTESY-SORRY` — this track had never realized,
 plus `GREETING-WELCOME`.
 
-The script strand carries `scriptLessons` 60 and `taughtGlyphs` 34, with
-**`neverTaughtGlyphs` at 11**. Interleaving the strand (HL-C194) moved the
+The script strand carries `scriptLessons` 71 and `taughtGlyphs` **47**, with
+**`neverTaughtGlyphs` at 8**. Ten of those taught glyphs are the digits of
+chapter 39, which moved neither the violation count nor the never-taught count:
+the digits were never *shown* before they were taught, so they were never part of
+either debt. Interleaving the strand (HL-C194) moved the
 closure *violation* count 65 → 41 without adding a lesson; teaching the eight
 shapes that already had a glossed word waiting for them, and giving Sanskrit
 citation forms in IAST rather than in Bengali script, moved it **41 → 21**

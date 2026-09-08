@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W07-digit-false-friends",
+    "language": "bengali",
+    "chapter": 39,
+    "sequence": 2110,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6c7e91efce157200",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

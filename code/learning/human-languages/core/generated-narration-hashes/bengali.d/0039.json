@@ -1,0 +1,26 @@
+{
+  "language": "bengali",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:2fefd3eaff04c1a4",
+  "lessonIds": [
+    "BN-W07-digit-zero",
+    "BN-W07-digit-two",
+    "BN-W07-digit-three",
+    "BN-W07-digit-one",
+    "BN-W07-digit-five",
+    "BN-W07-digit-six",
+    "BN-W07-digit-eight",
+    "BN-W07-digit-four",
+    "BN-W07-digit-nine",
+    "BN-W07-digit-seven",
+    "BN-W07-digit-false-friends",
+    "BN-R28-read-a-number"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch39.txt",
+  "json": "bengali/narration/ch39.json",
+  "textHash": "fnv1a64:407163c39fe83801",
+  "jsonHash": "fnv1a64:ae3c55bf87c48a96",
+  "findings": []
+}
