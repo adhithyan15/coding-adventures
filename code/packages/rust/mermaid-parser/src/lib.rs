@@ -27,7 +27,7 @@ use mermaid_lexer::{
     try_tokenize_mermaid_mindmap, try_tokenize_mermaid_packet, try_tokenize_mermaid_timeline,
     try_tokenize_mermaid_eventmodeling, try_tokenize_mermaid_radar, try_tokenize_mermaid_xychart,
     try_tokenize_mermaid_treemap, try_tokenize_mermaid_venn, try_tokenize_mermaid_ishikawa,
-    try_tokenize_mermaid_wardley,
+    try_tokenize_mermaid_wardley, try_tokenize_mermaid_cynefin,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -68,6 +68,7 @@ const TREEMAP_PARSER_GRAMMAR_SOURCE: &str =
 const VENN_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/venn.grammar");
 const ISHIKAWA_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/ishikawa.grammar");
 const WARDLEY_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/wardley.grammar");
+const CYNEFIN_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/cynefin.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
@@ -569,7 +570,8 @@ use diagram_ir::{
     TaskStart, TemporalBody, TemporalDiagram, TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
-    IshikawaCause, IshikawaDiagram, WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode,
+    CynefinDiagram, CynefinDomain, CynefinTransition, IshikawaCause, IshikawaDiagram,
+    WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -667,6 +669,7 @@ impl MermaidDiagramType {
                 | Self::Venn
                 | Self::Ishikawa
                 | Self::Wardley
+                | Self::Cynefin
                 | Self::Timeline
                 | Self::Requirement
                 | Self::Pie
@@ -695,6 +698,7 @@ pub enum MermaidDiagram {
     Venn(VennDiagram),
     Ishikawa(IshikawaDiagram),
     Wardley(WardleyDiagram),
+    Cynefin(CynefinDiagram),
 }
 
 /// Detect a Mermaid 11.16.1 diagram family from its header.
@@ -829,6 +833,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Venn => parse_venn(source).map(MermaidDiagram::Venn),
         MermaidDiagramType::Ishikawa => parse_ishikawa(source).map(MermaidDiagram::Ishikawa),
         MermaidDiagramType::Wardley => parse_wardley(source).map(MermaidDiagram::Wardley),
+        MermaidDiagramType::Cynefin => parse_cynefin(source).map(MermaidDiagram::Cynefin),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -3087,6 +3092,45 @@ fn parse_wardley_coordinates(value: &str, line: usize) -> Result<(f64, f64), Par
 
 fn wardley_name(value: &str) -> String { value.trim().trim_matches('"').trim().to_string() }
 fn wardley_error(line: usize, message: impl Into<String>) -> ParseError { ParseError { message: message.into(), line, col: 1 } }
+
+// ── cynefin parser ───────────────────────────────────────────────────────
+
+/// Parse Mermaid 11.16.1 Cynefin domains, items, and cross-domain transitions.
+pub fn parse_cynefin(source: &str) -> Result<CynefinDiagram, ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let tokens = try_tokenize_mermaid_cynefin(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let grammar = parse_parser_grammar(CYNEFIN_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse cynefin.grammar: {error}"));
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
+        .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
+    let mut diagram = CynefinDiagram { title: None, domains: Vec::new(), transitions: Vec::new() };
+    let mut current_domain: Option<usize> = None;
+    for (index, raw) in prepared.lines().enumerate() {
+        let line_number = index + 1; let line = raw.trim();
+        if line.is_empty() || matches!(line.to_ascii_lowercase().as_str(), "cynefin-beta" | "cynefin-beta:") { continue; }
+        if let Some(title) = line.strip_prefix("title ") { diagram.title = Some(title.trim().to_string()); current_domain = None; continue; }
+        if let Some((from, rest)) = line.split_once("-->") {
+            let (to, label) = rest.split_once(':').map_or((rest, None), |(to, label)| (to, Some(label.trim().trim_matches('"').to_string())));
+            let from = from.trim().to_ascii_lowercase(); let to = to.trim().to_ascii_lowercase();
+            if from != to { diagram.transitions.push(CynefinTransition { from, to, label }); }
+            current_domain = None; continue;
+        }
+        let lower = line.to_ascii_lowercase();
+        if matches!(lower.as_str(), "complex" | "complicated" | "clear" | "chaotic" | "confusion") {
+            let domain_index = if let Some(existing) = diagram.domains.iter().position(|domain| domain.name == lower) { existing }
+                else { diagram.domains.push(CynefinDomain { name: lower, items: Vec::new() }); diagram.domains.len() - 1 };
+            current_domain = Some(domain_index); continue;
+        }
+        if line.starts_with('"') && line.ends_with('"') {
+            let Some(domain) = current_domain.and_then(|domain| diagram.domains.get_mut(domain)) else {
+                return Err(ParseError { message: "Cynefin item requires a preceding domain".into(), line: line_number, col: 1 });
+            };
+            domain.items.push(line.trim_matches('"').to_string()); continue;
+        }
+        return Err(ParseError { message: format!("unsupported Cynefin statement: {line}"), line: line_number, col: 1 });
+    }
+    Ok(diagram)
+}
 
 // ── radar-beta parser ─────────────────────────────────────────────────────
 
