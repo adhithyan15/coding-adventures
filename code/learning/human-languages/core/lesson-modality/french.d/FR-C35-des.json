@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C35-des",
+    "language": "french",
+    "chapter": 39,
+    "sequence": 1430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2687b0929f2f50b2"
+  },
+  "findings": []
+}

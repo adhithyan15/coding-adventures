@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:48a3945ca50945b9",
+  "lessonIds": [
+    "FR-C40-beaucoup",
+    "FR-C40-un-peu",
+    "FR-C40-tres",
+    "FR-C40-assez",
+    "FR-C40-monsieur",
+    "FR-R40-combien"
+  ],
+  "tex": "french/book/chapters/ch44-quantity.tex"
+}

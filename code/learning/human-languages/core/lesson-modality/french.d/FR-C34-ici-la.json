@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C34-ici-la",
+    "language": "french",
+    "chapter": 38,
+    "sequence": 1350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e82ed738fbf18cea"
+  },
+  "findings": []
+}

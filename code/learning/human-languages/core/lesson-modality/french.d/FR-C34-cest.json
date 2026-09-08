@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C34-cest",
+    "language": "french",
+    "chapter": 38,
+    "sequence": 1340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:373476bcd951f51f"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:dc4f426da5e4f2a3",
+  "lessonIds": [
+    "FR-C36-svo",
+    "FR-C36-et",
+    "FR-C36-ou-conj",
+    "FR-C36-mais",
+    "FR-C36-parce-que",
+    "FR-R36-deux-idees"
+  ],
+  "tex": "french/book/chapters/ch40-joiners.tex"
+}

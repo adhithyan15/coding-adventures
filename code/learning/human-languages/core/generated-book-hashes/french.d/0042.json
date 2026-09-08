@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:4caa17db20a40b5e",
+  "lessonIds": [
+    "FR-C38-consonne-finale",
+    "FR-C38-pluriel-s",
+    "FR-C38-feminin-e",
+    "FR-C38-pluriel-x",
+    "FR-C38-pas-de",
+    "FR-R38-ce-quon-nentend-pas"
+  ],
+  "tex": "french/book/chapters/ch42-silent.tex"
+}

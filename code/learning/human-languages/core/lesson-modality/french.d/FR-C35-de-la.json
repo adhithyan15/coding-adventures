@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C35-de-la",
+    "language": "french",
+    "chapter": 39,
+    "sequence": 1420,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9eb36cbccd644bb3"
+  },
+  "findings": []
+}

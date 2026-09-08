@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R34-voici-tout",
+    "language": "french",
+    "chapter": 38,
+    "sequence": 1380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3903a8a5c24746a"
+  },
+  "findings": []
+}

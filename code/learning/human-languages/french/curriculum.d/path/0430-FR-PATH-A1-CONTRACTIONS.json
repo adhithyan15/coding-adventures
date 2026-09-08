@@ -1,0 +1,17 @@
+{
+  "id": "FR-PATH-A1-CONTRACTIONS",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "FR-C35-a",
+    "FR-C35-de",
+    "FR-C35-au-aux",
+    "FR-C35-de-la",
+    "FR-C35-des",
+    "FR-R35-au-cafe"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-A1-CONTRACTIONS"
+  ],
+  "after": []
+}

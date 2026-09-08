@@ -1,0 +1,882 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 41,
+  "title": "Three More Ways to Use a Verb",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3a89e65fdb2ec3dd",
+  "lessons": [
+    {
+      "id": "FR-C37-imperatif",
+      "sequence": 1510,
+      "title": "Parle! — the command, and the pronoun that goes missing",
+      "headword": "Parle ! Écoute !",
+      "romanization": "Parle ! Écoute !",
+      "gloss": "the command — the present tense with its pronoun taken away, and one letter taken off besides",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5379f408ad4fdc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "French insists on a subject pronoun in every sentence — you were told why: the endings are silent, so je, tu and ils carry the person alone. There is one place it lets the pronoun go."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the four melted words — au, aux, du, des",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the four melted words — *au, aux, du, des*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To tell somebody to do something, take the tu form and drop the tu — and, for an -er verb, drop the -s as well."
+            },
+            {
+              "kind": "speech",
+              "text": "tu parles becomes Parle!, tu écoutes becomes Écoute!"
+            },
+            {
+              "kind": "speech",
+              "text": "vous parlez becomes Parlez! — the polite one, unchanged."
+            },
+            {
+              "kind": "speech",
+              "text": "The lost -s is a spelling rule and nothing more: it was silent anyway, so the command sounds identical to the form it came from. Only the page changes."
+            },
+            {
+              "kind": "speech",
+              "text": "And you have been doing this since the pointing chapter without being told. voici and voilà are vois — the command form of voir, \"see\" — welded to ci and là. The shape was in your mouth before it had a name."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the form, then the command — \"tu parles becomes Parle!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the form, then the command — \"tu parles → Parle !\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Écoute!\" and the polite \"Écoutez!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Écoute !\" and the polite \"Écoutez !\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the -er verbs you own — \"Travaille! Habite! Aime! Demande! Marche!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *-er* verbs you own — \"Travaille ! Habite ! Aime ! Demande ! Marche !\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the command you have said all along — \"Voici\", and the vois inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the command you have said all along — \"Voici\", and the *vois* inside it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you build a command? (Take the tu form, drop the pronoun — and the -s on an -er verb.) Does it sound different from tu parles? (No — the s was silent.) Which word you have said for two chapters is a frozen command? (Voici.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C37-futur-proche",
+      "sequence": 1520,
+      "title": "je vais partir — the future made out of \"go\"",
+      "headword": "je vais partir",
+      "romanization": "je vais partir",
+      "gloss": "the near future — aller plus an infinitive, which is exactly what English does with going to",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca8b6f8840d65349",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Aller is yours, and so is the rule that a second verb after vouloir, pouvoir or devoir never changes. Put those two together before you read on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aller + an unchanged second verb says the thing is about to happen."
+            },
+            {
+              "kind": "speech",
+              "text": "Je vais partir. — I'm going to leave."
+            },
+            {
+              "kind": "speech",
+              "text": "Je vais travailler. — I'm going to work."
+            },
+            {
+              "kind": "speech",
+              "text": "The second verb sits in its dictionary form and stays there, exactly as it does after je veux, je peux and je dois. So this is not a new construction; it is a fourth verb walking into a chain you already own."
+            },
+            {
+              "kind": "speech",
+              "text": "What makes it worth a lesson is that English does the identical thing and nobody notices. I am going to leave has no walking in it at all — the verb of motion has been emptied out and pointed at time. French emptied its own verb of motion the same way, separately, and the two languages arrived at the same idiom by the same road."
+            },
+            {
+              "kind": "speech",
+              "text": "Spoken French uses this far more than the one-word future that grammars teach first. It is the ordinary way to talk about tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Je vais partir.\" and \"Je vais travailler.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Je vais partir.\" and \"Je vais travailler.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with the verbs of the page — \"Je vais lire. Je vais écrire.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with the verbs of the page — \"Je vais lire. Je vais écrire.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Je vais dormir. Je vais marcher.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Je vais dormir. Je vais marcher.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chain, four verbs deep — \"je veux dormir, je peux dormir, je dois dormir, je vais dormir\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chain, four verbs deep — \"je veux dormir, je peux dormir, je dois dormir, je vais dormir\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two pieces make the near future? (Aller plus a verb in its dictionary form.) What does English use for the same job? (Going to — its own emptied verb of motion.) Say \"I'm going to read.\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C37-finir",
+      "sequence": 1530,
+      "title": "finir — the second regular family",
+      "headword": "finir",
+      "romanization": "finir",
+      "gloss": "to finish — and the second regular family, which grows an extra syllable in the plural",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8c7c0b96a64dee6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "parler gave you the biggest verb family in French. dormir was irregular and had to be learned as itself. There is a second regular family between them, and it also ends in -ir."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "finir — to finish."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin finire, from finis, \"end\" — the same root inside English final, finish, finite and define."
+            },
+            {
+              "kind": "speech",
+              "text": "Said fee-NEER, with the r sounded, which is where it differs from an -er infinitive: parler ends in a clean ay and finir ends in a real r."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the plural grows a syllable",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In the singular the stem is fini-; in the plural an extra -iss- appears before the ending."
+            },
+            {
+              "kind": "speech",
+              "text": "Singular: je finis, tu finis, il finit — all three the same noise, which is the ordinary French silence you have met on parle, parles and parlent."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: nous finissons, vous finissez, ils finissent — an extra syllable in every one, and that syllable is what tells the ear a plural is happening."
+            },
+            {
+              "kind": "speech",
+              "text": "The -iss- is a fossil. Latin had a suffix -isc- that meant begin to, and finire picked it up as finiscere, \"to begin to end.\" The starting sense wore away completely; the syllable stayed. So nous finissons is carrying a meaning the verb has not had for fifteen hundred years."
+            },
+            {
+              "kind": "speech",
+              "text": "Dozens of everyday verbs run this pattern — choisir, grandir, réussir — and every one of them adds the same syllable in the same three places."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the infinitive, with its r sounded — \"finir\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the infinitive, with its *r* sounded — \"finir\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three singular forms, all one noise — \"je finis, tu finis, il finit\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three singular forms, all one noise — \"je finis, tu finis, il finit\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plural, hearing the extra syllable — \"nous finissons, vous finissez, ils finissent\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plural, hearing the extra syllable — \"nous finissons, vous finissez, ils finissent\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three infinitive endings side by side — \"parler, finir, dormir\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three infinitive endings side by side — \"parler, finir, dormir\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with the near future — \"Je vais finir.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with the near future — \"Je vais finir.\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What appears in the plural of finir? (An extra -iss-.) What did that syllable once mean? (Begin to — Latin's -isc-.) Name the three infinitive endings you now own. (-er, -ir, and the irregular -ir of dormir.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C37-ne-chute",
+      "sequence": 1540,
+      "title": "je sais pas — the ne that speech leaves out",
+      "headword": "je sais pas",
+      "romanization": "je sais pas",
+      "gloss": "the ne that speech drops — and the pas that was once a step",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c6c68d62d2f1416",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say je ne comprends pas. Two words wrap the verb. In ordinary speech one of them is usually gone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In speech the ne drops and the pas carries the negative alone."
+            },
+            {
+              "kind": "speech",
+              "text": "written: Je ne sais pas., said: Je sais pas."
+            },
+            {
+              "kind": "speech",
+              "text": "This is not slang and it is not careless. It is what most French speakers do most of the time, and a learner who says every ne sounds like a written page read aloud."
+            },
+            {
+              "kind": "speech",
+              "text": "The reason it can happen at all is in the history of pas. That word was the noun for a step: je ne marche pas first meant I do not walk a step, with the step there for emphasis, exactly as English says not a bit or not a jot. French did the same with point (a dot) and mie (a crumb)."
+            },
+            {
+              "kind": "speech",
+              "text": "Then the emphasiser took over. Pas spread to every verb, lost its meaning entirely, and ended up carrying the negation by itself — after which the original ne became the optional half. The word that was decoration is now the load bearer, and the word that did the work is the one that falls off."
+            },
+            {
+              "kind": "speech",
+              "text": "Write both. Say one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "written, then spoken — \"Je ne sais pas.\" / \"Je sais pas.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: written, then spoken — \"Je ne sais pas.\" / \"Je sais pas.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Je ne comprends pas.\" / \"Je comprends pas.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Je ne comprends pas.\" / \"Je comprends pas.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with this chapter's verb — \"Je ne finis pas.\" / \"Je finis pas.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with this chapter's verb — \"Je ne finis pas.\" / \"Je finis pas.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the step that is no longer a step — pas, the noun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the step that is no longer a step — *pas*, the noun]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer-words you keep — \"non\" and the one that contradicts a negative, \"si\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer-words you keep — \"non\" and the one that contradicts a negative, \"si\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which half of the negative does speech drop? (The ne.) What was pas before it was a negative? (A step — a noun, put in for emphasis.) Which two other nouns did French use the same way? (Point and mie.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C37-on",
+      "sequence": 1550,
+      "title": "on — the pronoun that was a word for man",
+      "headword": "on",
+      "romanization": "on",
+      "gloss": "one, people, and in practice we — a noun for man that turned into a pronoun",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c16bfc69991b95a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You own six subject pronouns and none of them can say people in general. Say personne, then take the pronoun built out of a word like it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "on — one, people, they — and in everyday speech, we."
+            },
+            {
+              "kind": "speech",
+              "text": "On parle français ici. — French is spoken here. / People speak French here."
+            },
+            {
+              "kind": "speech",
+              "text": "On y va. — Let's go. (Literally: one goes there.)"
+            },
+            {
+              "kind": "speech",
+              "text": "It takes the same ending as il and elle, so nothing new has to be learned to use it: on parle, on finit, on va."
+            },
+            {
+              "kind": "speech",
+              "text": "on is Latin homo, \"man,\" worn down to two letters. Two neighbours did the identical thing with their own words: German turned Mann into the pronoun man, and English turned one into the pronoun one — one does not do such things. Three languages, three words for a person, all promoted to mean anybody at all."
+            },
+            {
+              "kind": "speech",
+              "text": "What French then did that the others did not is let it take over nous. On y va is what people actually say for let's go, and nous survives mostly in writing. So the pronoun for nobody in particular has quietly become the pronoun for us."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "on — one syllable, nasal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *on* — one syllable, nasal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"On parle français ici.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"On parle français ici.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one everybody says — \"On y va.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one everybody says — \"On y va.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with this chapter's verbs — \"On finit.\" \"On va travailler.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with this chapter's verbs — \"On finit.\" \"On va travailler.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with the dropped ne — \"On sait pas.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with the dropped *ne* — \"On sait pas.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three cousins — French on, German man, English one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three cousins — French *on*, German *man*, English *one*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin word is on? (Homo, \"man\".) Which ending does it take? (The same as il — on parle.) What does it stand in for in everyday speech? (Nous — \"we\".) Say \"let's go.\""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R37-on-y-va",
+      "sequence": 1560,
+      "title": "On y va! — the chapter, run cold",
+      "headword": "On y va !",
+      "romanization": "On y va !",
+      "gloss": "three more ways to use a verb, plus the pronoun for everybody, run over the whole verb list",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40afd9a90809f385",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three of the five things in this chapter are shapes a verb can take and two are words. Sort them, then say which shape leaves the pronoun out and which word replaces one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: every verb, three ways",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every verb the book owns, commanded, put in the near future, and refused."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "commanded — \"Parle! Travaille! Écoute! Marche! Demande!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: commanded — \"Parle ! Travaille ! Écoute ! Marche ! Demande !\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "about to happen — \"Je vais lire. Je vais écrire. Je vais dormir. Je vais courir.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: about to happen — \"Je vais lire. Je vais écrire. Je vais dormir. Je vais courir.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "refused, in speech — \"Je comprends pas. J'entends pas. Je finis pas.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: refused, in speech — \"Je comprends pas. J'entends pas. Je finis pas.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the false friend, still false — demander asks, it does not demand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the false friend, still false — *demander* asks, it does not demand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that means both walk and work — marcher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that means both walk and work — *marcher*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — on, and the whole table",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The whole table, with on in front of it and the joiners between."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"On va au café. On prend du pain et du fromage.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"On va au café. On prend du pain et du fromage.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Il y a du café et du thé, mais il n'y a pas de lait.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Il y a du café et du thé, mais il n'y a pas de lait.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"On finit le pain, parce qu'on a faim.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"On finit le pain, parce qu'on a faim.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole table in the plural — \"des œufs, du sel, du sucre, du beurre, de l'eau\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole table in the plural — \"des œufs, du sel, du sucre, du beurre, de l'eau\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"On parle français ici, mais on parle anglais là-bas.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"On parle français ici, mais on parle anglais là-bas.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three cousins of on — French on, German man, English one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three cousins of *on* — French *on*, German *man*, English *one*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you build a command? (The tu form without its pronoun — and without its -s on an -er verb.) What two pieces make the near future? (Aller plus a plain verb.) What grows in the plural of finir? (An extra -iss-.) Which half of the negative does speech drop? (The ne.) And what was on in Latin? (Homo, \"man\".)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

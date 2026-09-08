@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:16f28e032dfc7994",
+  "lessonIds": [
+    "FR-C40-beaucoup",
+    "FR-C40-un-peu",
+    "FR-C40-tres",
+    "FR-C40-assez",
+    "FR-C40-monsieur",
+    "FR-R40-combien"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch44.txt",
+  "json": "french/narration/ch44.json",
+  "textHash": "fnv1a64:bb3e6b979a136eca",
+  "jsonHash": "fnv1a64:824dafba736fd49d",
+  "findings": []
+}

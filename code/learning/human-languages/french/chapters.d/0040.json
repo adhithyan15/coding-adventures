@@ -1,0 +1,22 @@
+{
+  "chapter": 40,
+  "title": "Two Ideas, One Sentence",
+  "label": "ch:fr-joiners",
+  "canDo": "I can name the order a French sentence holds to, and join two thoughts with and, or, but and because.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FR-R36-deux-idees",
+    "kind": "production",
+    "summary": "Every verb the book owns is given a reason. The chapter also names the sentence shape the reader has been building for thirty-odd chapters without being told what it was, and says why French is stricter about word order than Latin ever was: Latin's endings said who did what, French wore them off, and position had to take the job.",
+    "assesses": [
+      "FR-GRAM-SVO-01",
+      "FR-LEX-ET-01",
+      "FR-LEX-OU-CONJ-02",
+      "FR-LEX-MAIS-03",
+      "FR-LEX-PARCEQUE-01"
+    ],
+    "note": "et was glue in two practice dialogues and never a word; ou is the third pair the accent keeps apart, after a/a-grave and la/la-grave; and parce que closes SPINE-SAY-WHY's only omission."
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:5c85eb27d89ffa6e",
+  "lessonIds": [
+    "FR-C37-imperatif",
+    "FR-C37-futur-proche",
+    "FR-C37-finir",
+    "FR-C37-ne-chute",
+    "FR-C37-on",
+    "FR-R37-on-y-va"
+  ],
+  "tex": "french/book/chapters/ch41-verb-ways.tex"
+}

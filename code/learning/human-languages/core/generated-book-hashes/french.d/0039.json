@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:71df980e1db997f4",
+  "lessonIds": [
+    "FR-C35-a",
+    "FR-C35-de",
+    "FR-C35-au-aux",
+    "FR-C35-de-la",
+    "FR-C35-des",
+    "FR-R35-au-cafe"
+  ],
+  "tex": "french/book/chapters/ch39-contractions.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:8013111c912f1e74",
+  "lessonIds": [
+    "FR-C34-il-y-a",
+    "FR-C34-cest",
+    "FR-C34-ici-la",
+    "FR-C34-voici",
+    "FR-C34-ce-cette",
+    "FR-R34-voici-tout"
+  ],
+  "tex": "french/book/chapters/ch38-pointing.tex"
+}

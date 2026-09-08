@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R40-combien",
+    "language": "french",
+    "chapter": 44,
+    "sequence": 1740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f812f21f7b23083"
+  },
+  "findings": []
+}

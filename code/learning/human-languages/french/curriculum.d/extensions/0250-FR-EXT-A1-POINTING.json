@@ -1,0 +1,16 @@
+{
+  "id": "FR-EXT-A1-POINTING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use il y a, c'est, voici, the demonstrative ce/cet/cette/ces, and ici/la/la-bas.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C34-il-y-a",
+    "FR-C34-cest",
+    "FR-C34-ici-la",
+    "FR-C34-voici",
+    "FR-C34-ce-cette",
+    "FR-R34-voici-tout"
+  ]
+}

@@ -1,5 +1,7 @@
 {
-  "segments": [],
+  "segments": [
+    "FR-PATH-A1-POINTING"
+  ],
   "omits": [
     "LODGING-ROOM"
   ],

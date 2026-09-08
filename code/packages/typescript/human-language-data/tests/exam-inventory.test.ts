@@ -715,19 +715,54 @@ describe("the committed French A1 inventory", () => {
     //
     // The other 32 now each carry a note saying what the track holds and what is
     // missing, so the next author does not repeat the 232-lesson read.
-    expect(coverage.covered).toBe(42);
-    expect(coverage.byCategory["L'interrogation"]).toEqual({ enumerated: 5, covered: 5 });
-    // Lexique de base closes outright: ten of ten. It is the column vocabulary
-    // work moves, and it has now run out of room, which is the finding -- every
-    // remaining point in this inventory is grammar or a function word.
-    expect(coverage.byCategory["Lexique de base"]).toEqual({ enumerated: 10, covered: 10 });
-    // The shape, not the score: the sentence-level categories are still empty.
-    // No quantity of headwords moves these -- only grammar chapters like the one
-    // that closed L'interrogation.
-    for (const empty of ["La phrase", "Les prepositions"]) {
-      expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
+    //
+    // 42 -> 67. Seven chapters, thirty-five items, thirty-nine atoms, forty-two
+    // lessons. Twenty-five points close and EIGHT COLUMNS go to full:
+    //
+    //   Le verbe            12/17 -> 17/17
+    //   Lexique de base     10/10 -> 10/10  (already full)
+    //   Les pronoms          2/5  ->  5/5
+    //   La phrase            0/4  ->  4/4
+    //   Le nom               1/4  ->  4/4
+    //   Prononciation        4/5  ->  5/5
+    //   La negation          2/3  ->  3/3
+    //   L'interrogation      5/5  ->  5/5  (already full)
+    //
+    // The ratio is high because the track was FULL OF UNOWNED FUNCTION WORDS. et
+    // was glue in two practice dialogues; et toi ? was a phrase in two more; de
+    // was inside du and never met alone; que was inside est-ce que and parce que
+    // and never met at all. Eleven words this tranche teaches were already in the
+    // book's own prose with no lesson owning any of them, which is why 35 items
+    // buy 25 points.
+    expect(coverage.covered).toBe(67);
+    for (const full of [
+      "Le nom", "Les pronoms", "Le verbe", "La negation",
+      "L'interrogation", "La phrase", "Prononciation et orthographe",
+      "Lexique de base",
+    ]) {
+      const column = coverage.byCategory[full];
+      expect(column?.covered, full).toBe(column?.enumerated);
     }
+    // Les prepositions moves 0 -> 1 and no further, on purpose: a, de and their
+    // four contractions close A1-PREP-01, and the other three points are place,
+    // country and time preposition SETS -- six, four and four words each, one
+    // point apiece. They are the worst ratio left in the inventory and the next
+    // tranche's job.
+    expect(coverage.byCategory["Les prepositions"]).toEqual({ enumerated: 4, covered: 1 });
   }, 60_000);
+
+  it("closes A1-PH-02 on a word the book was already using and had never taught", () => {
+    // Named rather than left to the aggregate. `et` appears in FR-C03-practice as
+    // "the glue word", glossed inside a dialogue and owned by nothing; `ou` and
+    // `mais` were not in the corpus at all. The point needs all three, so it
+    // could not close on the one the book was already saying.
+    //
+    // Both halves falsified before this was kept: a fabricated id fails the
+    // "probes only atoms that EXIST" test above, and nulling this probe drops the
+    // total to 66.
+    const point = inventory.points.find((p) => p.id === "A1-PH-02");
+    expect(point?.probe).toEqual(["FR-LEX-ET-01", "FR-LEX-OU-CONJ-02", "FR-LEX-MAIS-03"]);
+  });
 
   it("never lets an unmapped point read as 'nobody has looked yet'", () => {
     // The rule Marathi has had since HL-C290. Thirty-two of this inventory's 41

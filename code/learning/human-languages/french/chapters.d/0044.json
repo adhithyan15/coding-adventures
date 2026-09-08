@@ -1,0 +1,22 @@
+{
+  "chapter": 44,
+  "title": "How Much, and What to Call People",
+  "label": "ch:fr-quantity",
+  "canDo": "I can say a lot, a little, very and enough, and address somebody the way French expects.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-R40-combien",
+    "kind": "production",
+    "summary": "Combien ? has had no possible answer since it was taught, and now it has four. The chapter also finishes the bare-de rule: a quantity word is already measuring, so the measuring article drops -- which is the same reason the partitive collapses after a negative, one chapter earlier.",
+    "assesses": [
+      "FR-LEX-BEAUCOUP-01",
+      "FR-LEX-UNPEU-02",
+      "FR-LEX-TRES-03",
+      "FR-LEX-ASSEZ-04",
+      "FR-LEX-MONSIEUR-01"
+    ],
+    "note": "assez is the word that ties the chapter together, because it behaves like beaucoup in front of a noun and like tres in front of an adjective, so the two halves of the rule meet inside one word."
+  }
+}

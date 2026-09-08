@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:a0fbf2465a44a906",
+  "lessonIds": [
+    "FR-C38-consonne-finale",
+    "FR-C38-pluriel-s",
+    "FR-C38-feminin-e",
+    "FR-C38-pluriel-x",
+    "FR-C38-pas-de",
+    "FR-R38-ce-quon-nentend-pas"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch42.txt",
+  "json": "french/narration/ch42.json",
+  "textHash": "fnv1a64:0aeedd87343b8e85",
+  "jsonHash": "fnv1a64:99a1052fbefcd933",
+  "findings": []
+}

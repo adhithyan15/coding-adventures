@@ -1,0 +1,23 @@
+{
+  "chapter": 41,
+  "title": "Three More Ways to Use a Verb",
+  "label": "ch:fr-verb-ways",
+  "canDo": "I can give a command, say what is about to happen, run the second regular verb family, drop the ne the way speakers do, and use on.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "FR-R37-on-y-va",
+    "kind": "production",
+    "summary": "Every verb the book owns is commanded, put in the near future and refused. The imperative costs almost nothing because voici and voila have been frozen commands since the pointing chapter, and the near future costs nothing at all because it walks into the modal chain the reader already owns -- a fourth verb in a slot built for three.",
+    "assesses": [
+      "FR-GRAM-IMPERATIF-01",
+      "FR-GRAM-FUTUR-PROCHE-01",
+      "FR-LEX-FINIR-01",
+      "FR-GRAM-IR-PRESENT-02",
+      "FR-GRAM-NE-CHUTE-01",
+      "FR-LEX-ON-01"
+    ],
+    "note": "The ne-drop is a register fact rather than a form, and it is the difference between reading French aloud and speaking it. It is taught beside pas's history because the two are the same story: the emphasiser took over and the original negative became optional."
+  }
+}

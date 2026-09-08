@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:1b3aeaeed573429a",
+  "lessonIds": [
+    "FR-C36-svo",
+    "FR-C36-et",
+    "FR-C36-ou-conj",
+    "FR-C36-mais",
+    "FR-C36-parce-que",
+    "FR-R36-deux-idees"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch40.txt",
+  "json": "french/narration/ch40.json",
+  "textHash": "fnv1a64:76bdacff837eb127",
+  "jsonHash": "fnv1a64:860e6a9449314194",
+  "findings": []
+}
