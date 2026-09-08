@@ -19,21 +19,21 @@
     "notes": "Every reported check reached a terminal acceptable conclusion on exact head 26436208e66cebe63baaf6fba9232b145bcc55d3. GitHub reported the PR MERGEABLE and CLEAN, the loop enabled squash auto-merge, and GitHub merged PR #14615 as 3afe6de3678f56b3a39c10b040aff9d7fa74a13a at 2026-09-08T13:27:07Z without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "a94930658181ef406fac9b49c72356d692b7e09d",
+    "revision": "6e574ef49900748a20b6dfef11d4c54636d2a84a",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1424,
-    "implementation_package_slots": 4645,
-    "all_reported_identities": 1463,
+    "implementation_identities": 1426,
+    "implementation_package_slots": 4647,
+    "all_reported_identities": 1465,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 177,
     "two_to_four_missing_slots": 2230,
-    "singleton_packages": 949,
-    "singleton_missing_slots": 13286,
-    "rust_singletons": 765,
+    "singleton_packages": 951,
+    "singleton_missing_slots": 13314,
+    "rust_singletons": 767,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -5146,6 +5146,7 @@
       "status": "pending",
       "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review"],
       "branch": null,
+      "classification_notes": "Merged PR #14620 makes the Engram XAML payload relocatable through static CRT selection, copied DLL discovery, and bcryptprimitives placement; retain that Windows packaging and launch evidence in this native ABI owner.",
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Discovered in the collision-clean d2dbd94aeb inventory after merged PR #13674 added Rust-only engram-mosaic-app. The Engram-specific cdylib/rlib adapter maps the compiled EngramApp MIL surface of 254 props and 88 events plus a selected-deck cursor to EngramSession, supplies production SystemTime, provides versioned snapshots, and exports the fixed mosaic-app-capi ABI for generated Qt, Flutter, Compose, SwiftUI, and XAML hosts. Review complete slot/event and envelope-name coverage, payload mapping, transactional failures, snapshot schema/version and byte bounds, stable payload-free errors, dynamic-library symbols, returned-buffer/lifetime/panic containment through the existing Mosaic ABI owners, truthful time:read:* capability metadata, and real platform packaging/launch evidence. Before claiming a standard runtime lane, resolve or explicitly retain PR #13686's report that Engram host assets replace generated MosaicHost.cpp/.h. Protocol-v1 effect completion remains with the portable runtime, C ABI, and generated-binding owners, while the existing bespoke file-picker, sidecar, and import/export authority is explicitly owned by engram-native-host-import-export-authority-review. Keep the bespoke engram-capi adapters until the generic contract supports completion. Do not manufacture fifteen implementations of this application-specific native adapter. This wrapper/native-authority item is excluded from autonomous parity selection."
@@ -6206,7 +6207,7 @@
       "status": "pending",
       "depends_on": [],
       "branch": null,
-      "classification_notes": "Open PR #12956 adds sourced Persian shin as a body-first zero-lift run followed by three freehand dots across curriculum, human-language-data, script-ductus, and Language Ladder; retain that authored-data provenance and geometry evidence in this existing owner.",
+      "classification_notes": "Open PR #12956 adds sourced Persian shin as a body-first zero-lift run followed by three freehand dots across curriculum, human-language-data, script-ductus, and Language Ladder; retain that authored-data provenance and geometry evidence in this existing owner. Merged PR #14616 adds source-verified Japanese ro and small-yu stroke evidence across the same authored-data boundary; retain its provenance, movement order, and cross-consumer consistency here.",
       "pr_number": null,
       "notes": "Discovered in the collision-clean post-#11334 inventory after external PR #11224 added the TypeScript script-ductus singleton. Extract the HL11/package contract and closed fixtures for bounded TrueType cmap/glyf parsing, the authored stroke schema and provenance, fraction-on-ink/meeting/coverage invariants, the filmstrip tree, stable hostile-font errors, and XML name/escaping safety. Add explicit empty capability metadata. Treat the canonical curriculum JSON and citations as one shared data authority; lane ports must consume it rather than duplicating or ad-libbing culturally authored claims. Merged PR #12722 adds sourced Malayalam short-e authored strokes and package/catalog consumption; retain that additional provenance evidence inside this neutral-data owner. Merged PR #12746 adds sourced Tamil independent short-e authored data with two runs and six connected movements plus the independent-vowel versus dependent-sign distinction; keep that provenance and geometry evidence in the same shared-data owner. Merged PRs #12733 and #12770 add authored Chinese vocabulary-cluster ductus and Persian pe geometry plus curriculum evidence; retain those culturally authored data and provenance additions here without creating per-script parity owners. Merged PR #12938 adds sourced Kannada independent i as one zero-lift, four-movement path with a middle-stem retrace plus curriculum, human-language-data, and Language Ladder consumption; retain the citation, pen-lift count, movement ordering, outline fit, and cross-consumer consistency in this shared authored-data owner. Merged PR #12944 adds sourced Malayalam chillu LL as a one-run bowl-and-right-stem form with cross-consumer curriculum, human-language-data, script-ductus, and Language Ladder checks; retain its provenance, stroke order, outline fit, and shared-data consistency here. Merged PR #12949 adds sourced Malayalam chillu RR as one zero-lift, three-movement arch, loop, inner-return, and above-line-hook run with curriculum, human-language-data, script-ductus, and Language Ladder checks; retain its citation, animation-derived order, outline fit, and cross-consumer consistency in this same shared authored-data owner."
     },
@@ -8421,10 +8422,29 @@
       "notes": "Discovered in the collision-checked 2516389f inventory after merged PR #13682 added the Rust-only oauth-credential-custody identity. Define language-neutral fixtures and established-lane implementations for bounded opaque account and provider keys, metadata and scope validation, zeroizing credential records, audit-before-access and durable-success-before-release ordering, one-shot access and refresh disclosure, exact-revision compare-and-swap rotation and delete, omitted-refresh retention, redacted stable errors, and injected storage/audit failures. Keep filesystem, Vault, database, network, browser, clock, entropy, provider registration, durable audit transport, and concrete credential-store authority injected or native."
     },
     {
+      "id": "oauth-credential-sealed-store-portable-conformance",
+      "title": "Fixture and port OAuth credential sealed-store composition",
+      "status": "pending",
+      "depends_on": ["oauth-credential-custody-portable-conformance", "vault-sealed-store-portable-core-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14624 inventory after the Rust-only oauth-credential-sealed-store identity appeared. Define language-neutral fixtures and established-lane implementations for fixed namespace and key derivation, a bounded versioned zeroizing envelope, SHA-256 revision binding, exact compare-and-swap and delete recovery, corruption and stable redacted error mapping, and deterministic injected-backend semantics. Keep entropy, cryptography, plaintext and key custody, filesystem, Vault, database, and host storage effects outside this portable composition."
+    },
+    {
+      "id": "oauth-credential-sealed-store-native-authority-review",
+      "title": "Review OAuth credential sealed-store native authority",
+      "status": "pending",
+      "depends_on": ["oauth-credential-sealed-store-portable-conformance", "vault-sealed-store-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Review the concrete Rust SealedStore composition and its transitive os_random declaration after the portable contract is extracted. Require truthful entropy, cryptography, plaintext and key custody, zeroization, backend-effect, failure-redaction, and platform evidence. This credential and native-storage authority item is excluded from autonomous selection."
+    },
+    {
       "id": "oauth-credential-broker-vault-custody-and-scope",
       "title": "Review OAuth credential-broker, vault custody, and authorized scope",
       "status": "pending",
-      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-host-authority-review", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-credential-custody-portable-conformance"],
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-host-authority-review", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-credential-custody-portable-conformance", "oauth-credential-sealed-store-native-authority-review"],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
@@ -9200,6 +9220,33 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the exact-main inventory after merged PR #14614 added Rust beside Python for the `armv7a-simulator` identity. Reconcile both lanes against Spec 07x: exact 64 KiB wrapping memory, register/CPSR state, checked atomic load/restore/step/run semantics, bounded traces, 16/32-bit encodings, stable typed failures, and the Python differential oracle. Add the Rust package's missing explicit empty capability profile and classify applicable-lane expansion or reviewed exceptions separately from the legacy six-lane `arm-simulator` owner."
+    },
+    {
+      "id": "armv7a-gatelevel-singleton-classification",
+      "title": "Classify ARMv7-A Thumb-2 gate-level simulator portability",
+      "status": "pending",
+      "depends_on": ["armv7a-simulator-two-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14624 inventory after the Rust-only armv7a-gatelevel identity appeared. Classify its exact 524,833-DFF topology, shared checked lifecycle, bounded deterministic traces and failures, and 417-vector functional differential against Spec 07x2. Define a language-neutral gate-level corpus and applicable-lane rollout or narrow reviewed resource exceptions, and add the missing truthful explicit empty capability profile. Keep native execution, files, processes, environment, network, clocks, devices, and unconstrained traces outside this owner."
+    },
+    {
+      "id": "clr-simulator-call-token-table-conformance",
+      "title": "Define portable CLR call-token table conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the semantic delta audit after merged PR #14621 hardened Rust CLR call dispatch without changing inventory topology. Define a neutral MethodDef token corpus for exact high-byte table validation, one-based ordinals, MemberRef and non-0x06 rejection before argument, frame, or state mutation, invalid ordinals, bounded calls, and stable diagnostics. Reconcile all eight established CLR simulator lanes and retain C/C++ emerging evidence; their current low-24-bit masking must not alias a same-row MemberRef into MethodDef."
+    },
+    {
+      "id": "mosaic-browser-package-composition-portable-conformance",
+      "title": "Define portable Mosaic browser package composition",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14624 semantic audit of existing Rust Mosaic compiler and emitter identities. Define bounded language-neutral fixtures for declared same-package export qualification and inlining, unknown PascalCase refusal, compatible Input single-line and multiline lowering, value, placeholder, max-length, read-only, accessibility, and event behavior, and consistent HTML, WebComponent, and React artifacts. Keep browsers, files, processes, network, clocks, native rendering, and package installation outside this deterministic composition contract."
     },
     {
       "id": "armv7-gatelevel-singleton-classification",
