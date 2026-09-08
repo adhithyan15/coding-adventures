@@ -1,4 +1,9 @@
 {
   "version": 1,
-  "language": "urdu"
+  "language": "urdu",
+  "conceptAliases": {
+    "QUESTION-WHERE": [
+      "UR-WHERE"
+    ]
+  }
 }

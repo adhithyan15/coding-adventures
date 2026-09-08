@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 26,
+  "output": "urdu/book/chapters/ch26-whose-and-who-to.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

@@ -237,7 +237,20 @@ describe("real curriculum", () => {
       // kit under SPINE-POLITE-REQUEST-REPAIR. Atom counts are 3 / 4 / 5 / 3, all well
       // inside the 12-atom chapter budget, and every headword was chosen from the
       // fifteen letters the script ladder has actually taught.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
+      // 22 -> 27: the oblique tranche. Chapter 23 teaches the direct/oblique split as
+      // a RULE before any postposition that needs it -- the inventory called it "the
+      // invisible prerequisite under four of the five points" in this column -- and
+      // then spends three lessons on کو, میں and پر. 24 gives the demonstratives their
+      // oblique shapes and closes the ک- / یہ- / وہ- place frame, emptying
+      // SPINE-ASK-LOCATION's omission ledger; 25 is the plural and the oblique plural;
+      // 26 is possession for the remaining persons plus اپنا, the tag and the vocative;
+      // 27 is the track's first place names, emptying SPINE-NAME-EVERYDAY-THINGS's.
+      // Atom counts are 5 / 4 / 4 / 4 / 4, all inside the 12-atom chapter budget, and
+      // every headword is spellable with the fifteen letters the ladder has taught.
+    ).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+      26, 27,
+    ]);
     expect(
       books.books
         .find((book) => book.language === "russian")

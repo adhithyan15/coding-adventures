@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C23-oblique",
+    "language": "urdu",
+    "chapter": 23,
+    "sequence": 1220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b919221fc4637d78"
+  },
+  "findings": []
+}

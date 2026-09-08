@@ -1,0 +1,21 @@
+{
+  "chapter": 27,
+  "title": "Where You Are From",
+  "label": "ch:ur-where-you-are-from",
+  "canDo": "I can name a city, a country and a place, and I can say which place I am from.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R27-where-you-are-from",
+    "kind": "speaking",
+    "summary": "The book writes its first place name. With شہر, ملک, لاہور and the nisba -ی, a learner can finally answer the two questions every A1 speaking test asks after a name -- and the three words come from Persian, Arabic and Sanskrit respectively, which is the layering of Urdu shown on a map.",
+    "assesses": [
+      "UR-LEX-SHAHR",
+      "UR-LEX-MULK",
+      "UR-LEX-LAHORE",
+      "UR-GRAMMAR-NISBA"
+    ],
+    "note": "The corpus did not write its own language's name in its own script, nor any city or country. This chapter is the first place name of any kind in 108 lessons."
+  }
+}

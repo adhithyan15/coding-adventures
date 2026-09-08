@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C26-is-ka",
+    "language": "urdu",
+    "chapter": 26,
+    "sequence": 1370,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:780c846452194ae8"
+  },
+  "findings": []
+}

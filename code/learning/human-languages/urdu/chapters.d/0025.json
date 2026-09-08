@@ -1,0 +1,21 @@
+{
+  "chapter": 25,
+  "title": "More Than One",
+  "label": "ch:ur-more-than-one",
+  "canDo": "I can make a noun plural, and I can make it plural before a postposition, which is the one ending in Urdu that is never ambiguous.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-R25-more-than-one",
+    "kind": "production",
+    "summary": "No noun in this book had ever been more than one. The four-cell table closes, two of its cells collide on purpose, and ہم gives the track its first plural pronoun and its first plural possessive.",
+    "assesses": [
+      "UR-GRAMMAR-PLURAL",
+      "UR-GRAMMAR-OBLIQUE-PLURAL",
+      "UR-LEX-HUM",
+      "UR-GRAMMAR-HAMARA"
+    ],
+    "note": "The plural of a masculine -ا noun is spelled exactly like its oblique singular, and the chapter teaches the collision rather than hiding it: the postposition is what settles the reading."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 26,
+  "title": "Whose, and Who To",
+  "label": "ch:ur-whose-and-who-to",
+  "canDo": "I can say whose something is for any person, mark when the owner is also the subject, invite agreement, and call somebody.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-R26-whose-and-who-to",
+    "kind": "speaking",
+    "summary": "The possessive column fills from two of six to five of six, and اپنا adds a distinction English has not got at all -- his own room against somebody else's -- which Urdu requires and a learner cannot skip.",
+    "assesses": [
+      "UR-GRAMMAR-IS-KA",
+      "UR-GRAMMAR-APNA",
+      "UR-FUNC-HAI-NA",
+      "UR-FUNC-VOCATIVE"
+    ],
+    "note": "The tag ہے نا؟ introduces no new vocabulary: both halves have been in the book since chapters two and nineteen and nobody had put them together."
+  }
+}

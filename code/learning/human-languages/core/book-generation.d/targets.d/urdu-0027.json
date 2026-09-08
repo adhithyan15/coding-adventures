@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 27,
+  "output": "urdu/book/chapters/ch27-where-you-are-from.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}
