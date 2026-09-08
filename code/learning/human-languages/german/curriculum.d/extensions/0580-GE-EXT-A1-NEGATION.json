@@ -1,0 +1,16 @@
+{
+  "id": "GE-EXT-A1-NEGATION",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can cancel a noun with kein in its three shapes, cancel anything else with nicht, and put nicht where the sentence wants it.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C32-kein",
+    "GE-C32-keine",
+    "GE-C32-keinen",
+    "GE-C32-kein-oder-nicht",
+    "GE-C32-nicht-stellung",
+    "GE-R32-nichts-davon"
+  ]
+}

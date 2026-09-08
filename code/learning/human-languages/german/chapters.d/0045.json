@@ -1,0 +1,23 @@
+{
+  "chapter": 45,
+  "title": "Not One, Not a Scrap",
+  "label": "ch:ge-negation",
+  "canDo": "I can say that I have none of a thing, choose correctly between German's two negatives, and put the second one where the sentence wants it.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GE-R32-nichts-davon",
+    "kind": "production",
+    "summary": "Every noun the book owns is cancelled and every verb it owns is refused, in one pass: the six things on the table, the household, the four words on the face, and the verbs. The chapter costs two new words and one welded ending, because kein is ein with two letters on the front and keinen carries the -en that the einen lesson already handed over as a bare word.",
+    "assesses": [
+      "GE-LEX-KEIN-01",
+      "GE-ETYMON-KEIN-NICHT-EIN-02",
+      "GE-LEX-KEINE-01",
+      "GE-LEX-KEINEN-01",
+      "GE-GRAMMAR-KEIN-VS-NICHT-01",
+      "GE-GRAMMAR-NICHT-STELLUNG-01"
+    ],
+    "note": "kein is the cheapest point in the German inventory: two words close A1-ART-03 and A1-NEG-02 together, and the nicht-position rule closes A1-NEG-01, which had been half owned since the wellbeing lessons, with the word taught and its placement never stated."
+  }
+}

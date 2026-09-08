@@ -519,8 +519,86 @@ six forms of a verb should use them for something real before meeting its past.
 | der angekommene Zug | the one position where the ending comes back |
 | practice | *haben* or *sein*, until the choice is a reflex |
 
+## Chapter 45 — Not One, Not a Scrap
+
+| Session | What it adds |
+|---|---|
+| kein | "no" in front of a *der* or *das* word — *ni* + *ein*, "not one" |
+| keine | the same word before a *die*-word and before every plural |
+| keinen | the *-en* the *einen* lesson handed over as a bare word |
+| kein oder nicht | which negative to reach for, and the test that decides |
+| nicht am Ende | where *nicht* stands, and why the end of the sentence |
+| Nichts davon | every noun cancelled, every verb refused |
+
+## Chapter 46 — When the Verb Steps to the Front
+
+| Session | What it adds |
+|---|---|
+| Wohnst du in Berlin? | the verb moves to first place; the *do* English built instead |
+| Komm! | the bare stem, and the one place German drops its subject |
+| wer | "who", and the *w-* that answers English *wh-* |
+| wann | "when", and the calendar suddenly askable |
+| warum | "why" — two words welded, as English welded *wherefore* |
+| Frag mich! | every statement flipped, every verb commanded |
+
+## Chapter 47 — Which One, and the Form the Book Owed You
+
+| Session | What it adds |
+|---|---|
+| welcher | "which", built *what-like*, as English built *which* |
+| wie viel · wie viele | how much against how many; *viel* is English *full* |
+| den | the *der* row moves and the other two stand still |
+| Der Tag ist gut | an adjective takes an ending only in front of its noun |
+| es gibt | "it gives" — and what follows it is an object |
+| Welchen? | every *der*-word run through the shape it takes |
+
+## Chapter 48 — Two Thoughts, One Sentence
+
+| Session | What it adds |
+|---|---|
+| oder | "or", and the tag question that needs no verb |
+| aber | "but", with nothing in the sentence moved |
+| sondern | the second "but", for correcting a negative |
+| denn | "because", verb still in slot two |
+| weil | "because", verb at the end — the third thing sent there |
+| Zwei Gedanken | every verb given a reason, both ways |
+
+## Chapter 49 — Mine, Yours, His, Hers
+
+| Session | What it adds |
+|---|---|
+| mein | pulled out of *mein Name ist*; six words, one ending set |
+| dein | English *thine*, on the *th* → *d* shift a third time |
+| sein | "his" — and the collision with the verb *to be* |
+| ihr | "her" — a word already doing two other jobs |
+| Das ist mein Bruder | introducing somebody else, with a *das* that ignores gender |
+| Wer ist das? | everybody introduced, everything claimed |
+
+## Chapter 50 — The One It Happens To
+
+| Session | What it adds |
+|---|---|
+| dich | the fourth shape of *du*, where English kept none |
+| ihn | the sixth word to move on the *der* row |
+| uns | one word for two jobs — the place German is simpler |
+| euch | Old English *ēow*, the word that became *you* |
+| sich | one German word where English needs four |
+| mich, dich, sich | every verb of address pointed at every person |
+
+## Chapter 51 — The Bracket
+
+| Session | What it adds |
+|---|---|
+| können | "can", from a root that meant *know* |
+| möchten | "would like" — politeness as a bent vowel |
+| müssen | "must", and the ending missing in both languages |
+| die Verbklammer | the modal second, the infinitive last |
+| gegangen | the strong participle, *ge-* … *-en* |
+| Was kann ich? | the bracket over every verb, and seven chapters in one breath |
+
 ## Next
 
 Nothing to retire. German has no hand-written chapters left, and neither
 does any other track — the corpus is generated end to end. What comes next for
-this track is depth rather than migration; see `../BACKLOG.d/`.
+this track is the dative and the prepositions that govern it, which is the one
+A1 column chapters 45–51 did not touch; see `../BACKLOG.d/`.

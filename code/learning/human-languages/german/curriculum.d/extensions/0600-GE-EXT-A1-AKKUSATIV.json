@@ -1,0 +1,18 @@
+{
+  "id": "GE-EXT-A1-AKKUSATIV",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask which one and how many, mark a der-word as the thing being done to, say that something exists, and leave a predicative adjective bare.",
+  "prerequisites": [
+    "GE-EXT-A1-FRAGE"
+  ],
+  "lessons": [
+    "GE-C34-welcher",
+    "GE-C34-wie-viel",
+    "GE-C34-den",
+    "GE-C34-praedikativ",
+    "GE-C34-es-gibt",
+    "GE-R34-welchen"
+  ]
+}

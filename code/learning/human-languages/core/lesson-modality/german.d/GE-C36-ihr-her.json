@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C36-ihr-her",
+    "language": "german",
+    "chapter": 49,
+    "sequence": 1330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a32ddea8e129262e"
+  },
+  "findings": []
+}

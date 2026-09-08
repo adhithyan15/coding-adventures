@@ -1,0 +1,22 @@
+{
+  "chapter": 51,
+  "title": "The Bracket",
+  "label": "ch:ge-klammer",
+  "canDo": "I can say what I can, must and would like to do, hold the second verb until the end of the sentence, and build both families of past participle.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "GE-R38-was-kann-ich",
+    "kind": "production",
+    "summary": "Every verb in the book is put inside a bracket, and then the seven preceding chapters are run in one breath over one small set of nouns. The chapter names a habit the reader has met three times already -- a separable prefix, a past participle and a nicht that cancels a verb all go to the same last slot -- so the modal bracket arrives as the fourth instance of one rule rather than a fourth rule.",
+    "assesses": [
+      "GE-LEX-KOENNEN-01",
+      "GE-LEX-MOECHTEN-01",
+      "GE-LEX-MUESSEN-01",
+      "GE-GRAMMAR-VERBKLAMMER-01",
+      "GE-GRAMMAR-PARTIZIP-GE-EN-01"
+    ],
+    "note": "The strong participle is here rather than in the past-tense chapters on purpose: gegangen has been on the page since the sein-perfect lesson and no lesson named the -en family, so the atom that closes A1-V-10 could only be written once the reader had a reason to compare two verb shapes in the same slot."
+  }
+}

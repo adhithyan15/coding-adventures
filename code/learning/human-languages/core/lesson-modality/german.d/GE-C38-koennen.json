@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C38-koennen",
+    "language": "german",
+    "chapter": 51,
+    "sequence": 1420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ba4b8d69b7ca9da"
+  },
+  "findings": []
+}

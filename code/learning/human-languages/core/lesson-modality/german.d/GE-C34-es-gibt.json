@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C34-es-gibt",
+    "language": "german",
+    "chapter": 47,
+    "sequence": 1220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f39e8027e20ffd4"
+  },
+  "findings": []
+}

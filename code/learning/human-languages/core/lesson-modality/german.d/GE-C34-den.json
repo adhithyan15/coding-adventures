@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C34-den",
+    "language": "german",
+    "chapter": 47,
+    "sequence": 1200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:751417a0849f09e7"
+  },
+  "findings": []
+}

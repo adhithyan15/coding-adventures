@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:1bfa6c6640471f98",
+  "lessonIds": [
+    "GE-C35-oder",
+    "GE-C35-aber",
+    "GE-C35-sondern",
+    "GE-C35-denn",
+    "GE-C35-weil",
+    "GE-R35-zwei-gedanken"
+  ],
+  "tex": "german/book/chapters/ch48-verbindungen.tex"
+}

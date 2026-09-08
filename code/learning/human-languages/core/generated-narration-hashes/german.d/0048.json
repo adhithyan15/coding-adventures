@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:2208691a91f5edb0",
+  "lessonIds": [
+    "GE-C35-oder",
+    "GE-C35-aber",
+    "GE-C35-sondern",
+    "GE-C35-denn",
+    "GE-C35-weil",
+    "GE-R35-zwei-gedanken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "german/narration/ch48.txt",
+  "json": "german/narration/ch48.json",
+  "textHash": "fnv1a64:b694ed29e23541fd",
+  "jsonHash": "fnv1a64:1204b3dff6a8fb03",
+  "findings": []
+}

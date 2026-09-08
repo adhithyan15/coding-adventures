@@ -87,13 +87,14 @@ according to the current prioritization run.
 | RCPU-039 / RCPU-040 | 2004 | ARMv7 educational baseline (07b) | Complete: `arm-simulator` | Complete: `armv7-gatelevel` |
 | RCPU-041 / RCPU-042 | 2004 | ARMv7-A / Thumb-2 (07x) | Complete: `armv7a-simulator` | Complete: `armv7a-gatelevel` |
 | RCPU-043 / RCPU-044 | 2010 | RISC-V RV32I (07a) | Complete: `riscv-simulator` | Complete: `riscv-gatelevel` |
-| RCPU-045 / RCPU-046 | 2010 | RISC-V RV64I + M | Complete: `riscv-rv64i-simulator` | Missing |
+| RCPU-045 / RCPU-046 | 2010 | RISC-V RV64I + M | Complete: `riscv-rv64i-simulator` | Complete: `riscv-rv64i-gatelevel` |
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-046**, the RISC-V RV64I + M gate-level implementation.
-The checked Spec 07y functional implementation is complete; pair priority now
-advances to its gate partner while earlier cells publish one at a time.
+Current selection: **RCPU-047**, the AArch64 (ARMv8-A) functional implementation.
+The checked Spec 07y functional and gate implementations are complete;
+chronological priority now advances to the AArch64 functional cell while
+earlier completed cells publish one at a time.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -561,6 +562,8 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-09-07 | RCPU-046 is complete. | Resolved; selects RCPU-047 chronologically | `riscv-rv64i-gatelevel` now has the exact 526,401-DFF topology, independent complete RV64I+M execution, repository-gate strict decode, 64-bit Boolean/ripple arithmetic/compare/barrel-shift/address/branch networks, 32-bit word-result networks, and fixed-width multiply/divide networks; the shared typed atomic lifecycle; all 364 Python full-state hashes in complete functional trace/state lockstep; manual topology/lifecycle/fault suites; normative Spec 07y2; strict checks; the functional consumer and declared BUILD target; and 98.76% package line coverage (717/726). |
+| 2026-09-07 | RCPU-046 baseline audit found no Rust, Python, or other RV64I+M gate-level package and no normative Spec 07y2. The completed RCPU-045 state establishes exactly 526,401 persistent bits: 524,288 memory bits, 2,048 x0-x31 bits (with writes to x0 discarded and restore requiring zero), 64 PC bits, and one halt bit. Installed origin/length remain validated lifecycle metadata. The RV32I gate package supplies reusable DFF packing and lifecycle patterns, but its 32-bit datapath, five privileged CSRs, trap/MRET behavior, and base-only instruction surface differ materially from Spec 07y RV64I+M. | P0, chronological gate completion | Create `riscv-rv64i-gatelevel` and normative Spec 07y2 with exactly 526,401 clocked DFFs; repository-gate strict decode, 64-bit Boolean/ripple arithmetic/compare/barrel-shift/address/branch networks, 32-bit word-result networks, and fixed-width multiply/divide networks; an independent complete RV64I+M execution path; the shared typed atomic functional lifecycle; all 364 Python full-state hashes in complete functional trace/state lockstep plus every manual topology/lifecycle/fault edge; strict checks; consumers; and at least 80% coverage. |
 | 2026-09-07 | RCPU-045 is complete. | Resolved; selects RCPU-046 by pair priority | `riscv-rv64i-simulator` now has exact 64 KiB state, 32x64-bit GPRs with x0 enforced, 64-bit PC, halt and installed-range metadata, checked restore/load/direct access, typed fail-closed fetch/alignment/range/decode faults, atomic steps, transactional bounded runs, complete traces/results, the complete Spec 07y RV64I+M integer surface, structured encoders, nine lifecycle/fault and encoder suites, and a reproducible 364-vector Python full-state differential over every decode family and arithmetic edge seed. All 14 Rust test functions and the Python oracle's 96 tests pass; strict Rustfmt, Clippy, rustdoc, the BUILD consumer, and corpus regeneration are green; package line coverage is 97.09% (700/721). |
 | 2026-09-07 | RCPU-045 strict-decode audit found that the first Rust FENCE arm accepted nonzero reserved `rd` and `rs1` fields, despite the checked boundary promising fail-closed malformed encodings. The no-op execution result concealed the malformed instruction. | P0 strict decode correctness | Require zero `rd` and `rs1` for FENCE as well as FENCE.I, retain legal `fm`/predecessor/successor bits, and add a malformed family matrix proving JALR, branch, load, store, shift, register, word, fence, and SYSTEM reserved encodings fail atomically. |
 | 2026-09-07 | RCPU-045 lifecycle expansion found that the first Rust bounded-run implementation only tested `halted` before each step. A halt executed as exactly the final permitted instruction was therefore misreported as `StepLimitExceeded` and the successful halt transition was rolled back; a zero-budget run on an already halted machine was likewise misclassified. | P0 correctness defect discovered before differential publication | Treat already halted state as a successful zero-step result, and test for a newly reached halt immediately after recording every successful trace. Preserve transactional rollback only for genuine exhaustion and faults, with exact-budget ECALL and zero-sentinel lifecycle regressions. |

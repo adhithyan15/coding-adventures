@@ -1,0 +1,23 @@
+{
+  "chapter": 48,
+  "title": "Two Thoughts, One Sentence",
+  "label": "ch:ge-verbindungen",
+  "canDo": "I can join two thoughts with and, or, but, but-rather and because, and I know which of them sends the verb to the end.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "GE-R35-zwei-gedanken",
+    "kind": "production",
+    "summary": "Every verb the book owns is given a reason, twice: once with denn and the verb in slot two, once with weil and the verb walked to the far end. The chapter is where the reader learns that German saves its last position for the piece that completes the sense -- the third time the book has sent something there, after the separable prefix and the nicht that cancels a verb.",
+    "assesses": [
+      "GE-LEX-ODER-01",
+      "GE-LEX-ABER-01",
+      "GE-LEX-SONDERN-01",
+      "GE-LEX-DENN-01",
+      "GE-LEX-WEIL-01",
+      "GE-GRAMMAR-VERB-LETZT-01"
+    ],
+    "note": "sondern earns its slot on a pattern the reader already holds: German marks the correction of a negative twice, once with doch in an answer and once with sondern inside a sentence, and English has no separate word for either."
+  }
+}

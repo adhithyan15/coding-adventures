@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:cac8e3ae08de0c1d",
+  "lessonIds": [
+    "GE-C37-dich",
+    "GE-C37-ihn",
+    "GE-C37-uns",
+    "GE-C37-euch",
+    "GE-C37-sich",
+    "GE-R37-mich-dich-sich"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch50.txt",
+  "json": "german/narration/ch50.json",
+  "textHash": "fnv1a64:454464fdd8110f57",
+  "jsonHash": "fnv1a64:1293eaa93595c780",
+  "findings": []
+}

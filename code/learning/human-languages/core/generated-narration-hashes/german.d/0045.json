@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:2aab1881e505aa09",
+  "lessonIds": [
+    "GE-C32-kein",
+    "GE-C32-keine",
+    "GE-C32-keinen",
+    "GE-C32-kein-oder-nicht",
+    "GE-C32-nicht-stellung",
+    "GE-R32-nichts-davon"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch45.txt",
+  "json": "german/narration/ch45.json",
+  "textHash": "fnv1a64:f4f1331979fbc1c3",
+  "jsonHash": "fnv1a64:174dab74b1f754ef",
+  "findings": []
+}

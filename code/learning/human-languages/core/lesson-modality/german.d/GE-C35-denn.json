@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C35-denn",
+    "language": "german",
+    "chapter": 48,
+    "sequence": 1270,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:863f05063a342d2e"
+  },
+  "findings": []
+}
