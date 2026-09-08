@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Report unsupported native table focus and naming explicitly.
+
 - Diagnose unsupported measured table wheel routing on non-React backends.
 
 ### Fixed — XAML layout variants have distinct generated types
