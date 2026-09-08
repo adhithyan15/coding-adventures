@@ -313,6 +313,10 @@ impl WasmValue {
             // level too -- same "GC and funcref/externref alike default to
             // null" reasoning as `Anyref`/`StructRefAny` above.
             | ValueType::ArrayRefAny
+            // W39 slice 4 Correction 3: `NonNullAnyref` is nullable at the
+            // runtime-value level too -- same "non-null is purely static"
+            // reasoning as `NonNullArrayAny`/`NonNullStructRef` above.
+            | ValueType::NonNullAnyref
             | ValueType::Funcref
             | ValueType::Externref
             | ValueType::Exnref
@@ -2951,14 +2955,19 @@ pub enum DecodedOperand {
     /// | 0x1C | ref.i31             | —        | —         | —     |
     /// | 0x1D | i31.get_s           | —        | —         | —     |
     /// | 0x1E | i31.get_u           | —        | —         | —     |
+    /// | 0x18 | br_on_cast          | ht1      | labelidx  | ht2 (+ `flags`, W39 slice 4) |
+    /// | 0x19 | br_on_cast_fail     | ht1      | labelidx  | ht2 (+ `flags`, W39 slice 4) |
     ///
-    /// Carrying all four together (rather than a bare `Int(sub)`) lets the
+    /// Carrying all five together (rather than a bare `Int(sub)`) lets the
     /// single `0xFB` handler dispatch *and* read its indices from one place.
+    /// `flags` (W39 slice 4) is the one field only `br_on_cast`/`br_on_
+    /// cast_fail` ever populate — every other sub-opcode leaves it `0`.
     Gc {
         sub: u8,
         type_idx: u32,
         field_idx: u32,
         extra: u32,
+        flags: u8,
     },
     /// An atomic memory operation's (WASM18) decoded immediates: the
     /// `0xFE` sub-opcode plus the memarg offset. Unlike `Gc` (which needs
@@ -3147,13 +3156,13 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
             } else {
                 0
             };
-            let (type_idx, field_idx, extra) = match sub {
+            let (type_idx, field_idx, extra, flags) = match sub {
                 // struct.new / struct.new_default: one index immediate (the
                 // struct type).
                 0x00 | 0x01 => {
                     let (t, sz) = decode_leb_u32(code, offset);
                     offset += sz;
-                    (t, 0, 0)
+                    (t, 0, 0, 0)
                 }
                 // ref.test (0x14) / ref.test null (0x15) / ref.cast (0x16) /
                 // ref.cast null (0x17): one heap-type immediate each (LANG77
@@ -3182,7 +3191,7 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 0x14..=0x17 => {
                     let (t, sz) = decode_leb_u32(code, offset);
                     offset += sz;
-                    (t, 0, 0)
+                    (t, 0, 0, 0)
                 }
                 // struct.get / struct.get_s / struct.get_u / struct.set: two
                 // index immediates (type, field).
@@ -3190,7 +3199,7 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     let (t, sz1) = decode_leb_u32(code, offset);
                     let (f, sz2) = decode_leb_u32(code, offset + sz1);
                     offset += sz1 + sz2;
-                    (t, f, 0)
+                    (t, f, 0, 0)
                 }
                 // array.new / array.new_default / array.get / array.get_s /
                 // array.get_u / array.set: one index immediate (the array
@@ -3198,7 +3207,7 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 0x06 | 0x07 | 0x0B | 0x0C | 0x0D | 0x0E => {
                     let (t, sz) = decode_leb_u32(code, offset);
                     offset += sz;
-                    (t, 0, 0)
+                    (t, 0, 0, 0)
                 }
                 // array.new_fixed: type index PLUS a literal element count
                 // (carried in `extra`, unlike every other immediate here
@@ -3207,13 +3216,13 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     let (t, sz1) = decode_leb_u32(code, offset);
                     let (n, sz2) = decode_leb_u32(code, offset + sz1);
                     offset += sz1 + sz2;
-                    (t, 0, n)
+                    (t, 0, n, 0)
                 }
                 // array.len: NO type immediate at all -- an array's length
                 // is a property of the heap object itself (W33 fourth
                 // slice; see `wasm-wast-parser::encode_array_len`'s own doc
                 // comment for the real spec rationale).
-                0x0F => (0, 0, 0),
+                0x0F => (0, 0, 0, 0),
                 // array.new_data <type_idx> <data_idx> (W38 slice 3:
                 // `code/specs/W38-wasm-gc-array-bulk-ops.md`): TWO index
                 // immediates -- same two-index decode shape struct.get/
@@ -3226,7 +3235,7 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     let (t, sz1) = decode_leb_u32(code, offset);
                     let (data_idx, sz2) = decode_leb_u32(code, offset + sz1);
                     offset += sz1 + sz2;
-                    (t, data_idx, 0)
+                    (t, data_idx, 0, 0)
                 }
                 // array.new_elem <type_idx> <elem_idx> (W38 slice 5:
                 // `code/specs/W38-wasm-gc-array-bulk-ops.md`): same
@@ -3237,7 +3246,7 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     let (t, sz1) = decode_leb_u32(code, offset);
                     let (elem_idx, sz2) = decode_leb_u32(code, offset + sz1);
                     offset += sz1 + sz2;
-                    (t, elem_idx, 0)
+                    (t, elem_idx, 0, 0)
                 }
                 // array.fill: one index immediate (the array type) -- W38
                 // slice 2, same one-index decode shape as `0x06 | 0x07`
@@ -3245,7 +3254,7 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 0x10 => {
                     let (t, sz) = decode_leb_u32(code, offset);
                     offset += sz;
-                    (t, 0, 0)
+                    (t, 0, 0, 0)
                 }
                 // array.copy <dest_type_idx> <src_type_idx>: TWO index
                 // immediates -- W38 slice 2, same two-index decode shape
@@ -3258,7 +3267,7 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     let (dest_t, sz1) = decode_leb_u32(code, offset);
                     let (src_t, sz2) = decode_leb_u32(code, offset + sz1);
                     offset += sz1 + sz2;
-                    (dest_t, src_t, 0)
+                    (dest_t, src_t, 0, 0)
                 }
                 // array.init_data <type_idx> <data_idx> (W38 slice 3): same
                 // two-index decode shape as `array.new_data` (`0x09`) above
@@ -3267,7 +3276,7 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     let (t, sz1) = decode_leb_u32(code, offset);
                     let (data_idx, sz2) = decode_leb_u32(code, offset + sz1);
                     offset += sz1 + sz2;
-                    (t, data_idx, 0)
+                    (t, data_idx, 0, 0)
                 }
                 // array.init_elem <type_idx> <elem_idx> (W38 slice 5): same
                 // two-index decode shape as `array.init_data` (`0x12`)
@@ -3277,15 +3286,50 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     let (t, sz1) = decode_leb_u32(code, offset);
                     let (elem_idx, sz2) = decode_leb_u32(code, offset + sz1);
                     offset += sz1 + sz2;
-                    (t, elem_idx, 0)
+                    (t, elem_idx, 0, 0)
+                }
+                // br_on_cast (0x18) / br_on_cast_fail (0x19) (W39 slice 4:
+                // `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`): FOUR
+                // immediates per the real spec's own binary grammar --
+                // `flags: u8, $l: labelidx, ht1: heaptype, ht2: heaptype`.
+                // `flags` is a single RAW byte (bit 0 = "rt1 nullable", bit
+                // 1 = "rt2 nullable") -- NOT itself LEB128-encoded, so it's
+                // read exactly like `sub` was above (one byte, unconditional
+                // advance), not through `decode_leb_u32`. `$l` is a plain
+                // label-index LEB128, same shape `br`/`br_if`'s own flat
+                // `Int` operand already decodes elsewhere (just spilled into
+                // this op's own `field_idx` slot instead, since a `Gc`
+                // operand carries no bare `Int` alongside it). `ht1`/`ht2`
+                // are decoded IDENTICALLY to `ref.test`/`ref.cast`'s own
+                // single heap-type immediate just above (`0x14..=0x17`) --
+                // an abstract single-byte tag or a real type-section index,
+                // indistinguishable at decode time, disambiguated later at
+                // USE time by `AbstractHeapType::from_byte` (reused
+                // verbatim, not reimplemented). Unlike every other GcOp
+                // above, this is the one WasmGC instruction pair that needs
+                // all FOUR numeric slots simultaneously (`type_idx` = ht1,
+                // `field_idx` = labelidx, `extra` = ht2, plus the new
+                // `flags` field) -- there is no existing field left over to
+                // repurpose the flags byte into without risking corruption
+                // of a legitimately large label index or type index under
+                // adversarial input, so `GcOp` grows a real fourth field
+                // instead (see `GcOp::flags`'s own doc comment).
+                0x18 | 0x19 => {
+                    let f = if offset < code.len() { code[offset] } else { 0 };
+                    offset += 1;
+                    let (label_idx, sz1) = decode_leb_u32(code, offset);
+                    let (ht1, sz2) = decode_leb_u32(code, offset + sz1);
+                    let (ht2, sz3) = decode_leb_u32(code, offset + sz1 + sz2);
+                    offset += sz1 + sz2 + sz3;
+                    (ht1, label_idx, ht2, f)
                 }
                 // ref.i31 / i31.get_s / i31.get_u (W20) (and any unknown
                 // sub-opcode): no immediates.
-                _ => (0, 0, 0),
+                _ => (0, 0, 0, 0),
             };
             instructions.push(DecodedInstruction {
                 opcode: 0xFB,
-                operand: DecodedOperand::Gc { sub, type_idx, field_idx, extra },
+                operand: DecodedOperand::Gc { sub, type_idx, field_idx, extra, flags },
             });
             continue;
         }
@@ -3894,7 +3938,22 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
                 // `ValueType::NullFuncref`'s own doc comment), so each is
                 // safe to special-case here without risking a genuine
                 // multi-byte type-index prefix collision.
-                0x40 | 0x7F | 0x7E | 0x7D | 0x7C | 0x7B | 0x70 | 0x6F | 0x69 | 0x71..=0x74 => {
+                // W39 slice 4: `eqref`/`i31ref`/`structref`/`arrayref`/
+                // `anyref` (`0x6A`-`0x6E`) join this same explicit-arm
+                // treatment -- the identical real, previously-undetected
+                // gap the rest of this arm's own doc comment already
+                // describes for v128/funcref/externref/exnref/the four
+                // bottom types: each byte's LEB128 continuation bit is
+                // clear (a real, plausible type-section index for a large
+                // module), and until this arm existed each one instead
+                // fell into the generic signed-LEB128 branch below,
+                // producing a bogus negative sentinel `block_arity` can't
+                // recognize (see that function's own matching fix) --
+                // found live via `br_on_cast.wast`'s own `(block (result
+                // structref) ...)` blocktype, newly reachable once
+                // `br_on_cast` itself parses (see `wasm-validator`'s
+                // matching `decode_blocktype` fix for the full account).
+                0x40 | 0x7F | 0x7E | 0x7D | 0x7C | 0x7B | 0x70 | 0x6F | 0x69 | 0x71..=0x74 | 0x6A..=0x6E => {
                     (DecodedOperand::Int(byte as i64), 1)
                 }
                 // `(ref null $t)` / `(ref $t)` as a single-value blocktype
@@ -5196,7 +5255,24 @@ pub struct GcOp {
     pub field_idx: u32,
     /// `array.new_fixed`'s literal element-count immediate (W33 fourth
     /// slice; 0 for every other op, which has no count immediate at all).
+    /// W39 slice 4 (`code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`)
+    /// REPURPOSES this same slot for `br_on_cast`/`br_on_cast_fail`'s
+    /// SECOND heap-type immediate (`ht2`) — neither op ever touches an
+    /// array literal count, so there is no real ambiguity, same reuse
+    /// discipline as `field_idx`'s own doc comment above.
     pub extra: u32,
+    /// `br_on_cast`/`br_on_cast_fail`'s raw flags byte (W39 slice 4): bit 0
+    /// = "rt1 (the operand's static type) is nullable", bit 1 = "rt2 (the
+    /// cast target) is nullable" — the two bits the real spec's own binary
+    /// grammar packs into one immediate byte ahead of the label index. `0`
+    /// for every other op (none of which carries a flags byte at all).
+    /// Genuinely a NEW field, unlike `field_idx`/`extra` above: this is the
+    /// one WasmGC op needing all three existing `u32` slots (`type_idx` =
+    /// ht1, `field_idx` = labelidx, `extra` = ht2) simultaneously, with no
+    /// spare slot left to steal bits from without risking silent
+    /// corruption of a legitimately large label or type index under
+    /// adversarial input.
+    pub flags: u8,
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -5263,13 +5339,14 @@ fn convert_operand(
             br_table_targets.push(table);
             Some(Operand::Index(idx))
         }
-        DecodedOperand::Gc { sub, type_idx, field_idx, extra } => {
+        DecodedOperand::Gc { sub, type_idx, field_idx, extra, flags } => {
             let idx = gc_ops.len();
             gc_ops.push(GcOp {
                 sub: *sub,
                 type_idx: *type_idx,
                 field_idx: *field_idx,
                 extra: *extra,
+                flags: *flags,
             });
             Some(Operand::Index(idx))
         }
@@ -6031,6 +6108,37 @@ fn ref_matches_concrete_type(ctx: &WasmExecutionContext, type_idx: u32, payload:
     }
 }
 
+// ── Helper: does a full VALUE (not just a non-null payload) match reference
+//    type `(ref null? type_idx)`? (W39 slice 4) ──────────────────────────
+//
+// `ref_matches_concrete_type`/`ref_matches_abstract_heap_type` above only
+// ever answer "does this NON-NULL payload match" — the caller (`ref.test`/
+// `ref.cast`'s own `0x14..=0x17` handler) has always had to separately
+// special-case `WasmValue::Ref(None)` (against the sub-opcode's own
+// nullable bit) and `WasmValue::I32(_)` (a live i31 payload, tested via
+// `i31_matches_abstract_heap_type` instead, since a live i31 never reaches
+// `ref_matches_concrete_type` as a `Ref` at all — see that function's own
+// doc comment) around every call site. `br_on_cast`/`br_on_cast_fail` (W39
+// slice 4) need the EXACT same three-way dispatch — this factors it into
+// one shared helper so both instruction families call the identical logic
+// instead of a second hand-copied match arm (the spec's own explicit
+// instruction: "REUSE this exact type-test logic, not duplicate it").
+//
+// `nullable` here is specifically the CAST TARGET's own nullability bit —
+// for `ref.test (ref null $t)` that's `$t`'s own null flag; for `br_on_cast
+// $l rt1 rt2` it's rt2's null flag (`null2?`), never rt1's — matching the
+// real spec's own rule that whether a null value takes the branch depends
+// purely on rt2, never rt1 (`code/specs/
+// W39-wasm-gc-ref-eq-cast-br-on-cast.md`'s own "Real spec text" section).
+fn value_matches_reftype(ctx: &WasmExecutionContext, type_idx: u32, nullable: bool, value: &WasmValue) -> bool {
+    match *value {
+        WasmValue::Ref(Some(payload)) => ref_matches_concrete_type(ctx, type_idx, payload),
+        WasmValue::Ref(None) => nullable,
+        WasmValue::I32(_) => AbstractHeapType::from_byte(type_idx).is_some_and(i31_matches_abstract_heap_type),
+        _ => false, // any other numeric/v128 value is not a ref at all
+    }
+}
+
 // ── Helper: pop a *non-null* i31ref payload (W20) ─────────────────────────
 //
 // Used by `i31.get_s`/`i31.get_u`. An `i31ref` is carried on the value stack
@@ -6233,6 +6341,18 @@ fn block_arity(block_type: i64, types: &[FuncType]) -> (usize, usize) {
         // match's own doc comment for why this was a real, previously-
         // undetected gap for the 3 non-MVP-scalar types).
         0x7C..=0x7F | 0x7B | 0x70 | 0x6F => (0, 1),
+        // W39 slice 4: `eqref`/`i31ref`/`structref`/`arrayref`/`anyref`
+        // (`0x6A`-`0x6E`) -- same real, previously-latent gap as `0x69`/
+        // `0x71..=0x74` below: without this arm, the raw byte (correctly
+        // now recognized as a plain `Int(byte)` sentinel by
+        // `decode_function_body`'s own "blocktype" operand decoder, see
+        // that match's own doc comment) fell into the generic `n if n>=0`
+        // arm's `false` branch below and silently returned `(0, 0)`
+        // instead of the correct `(0, 1)` -- a wrong control-flow arity a
+        // validated module could now genuinely reach at runtime once
+        // `wasm-validator`'s matching `decode_blocktype` fix lets these
+        // blocktypes validate successfully.
+        0x6A..=0x6E => (0, 1),
         // `exnref` (`0x69` = 105, W24) -- MUST be matched here, before the
         // generic type-index arm below: 105 is a plausible real type-section
         // index for a module declaring 106+ types, so without this explicit
@@ -7188,27 +7308,79 @@ fn register_numeric_i64(vm: &mut GenericVM) {
             // match a live i31 value.
             0x14 | 0x15 => {
                 let nullable = op.sub == 0x15;
-                let matches = match pop_wasm(vm)? {
-                    WasmValue::Ref(Some(payload)) => ref_matches_concrete_type(ctx, op.type_idx, payload),
-                    WasmValue::Ref(None) => nullable,
-                    WasmValue::I32(_) => AbstractHeapType::from_byte(op.type_idx).is_some_and(i31_matches_abstract_heap_type),
-                    _ => false, // any other numeric/v128 value is not a ref at all
-                };
+                let value = pop_wasm(vm)?;
+                let matches = value_matches_reftype(ctx, op.type_idx, nullable, &value);
                 push_wasm(vm, WasmValue::I32(if matches { 1 } else { 0 }));
             }
             0x16 | 0x17 => {
                 let nullable = op.sub == 0x17;
                 let value = pop_wasm(vm)?;
-                let matches = match value {
-                    WasmValue::Ref(Some(payload)) => ref_matches_concrete_type(ctx, op.type_idx, payload),
-                    WasmValue::Ref(None) => nullable,
-                    WasmValue::I32(_) => AbstractHeapType::from_byte(op.type_idx).is_some_and(i31_matches_abstract_heap_type),
-                    _ => false,
-                };
+                let matches = value_matches_reftype(ctx, op.type_idx, nullable, &value);
                 if !matches {
                     return Err(VMError::GenericError("cast failure".into()));
                 }
                 push_wasm(vm, value);
+            }
+
+            // `br_on_cast` (0x18) / `br_on_cast_fail` (0x19) (W39 slice 4:
+            // `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`) --
+            // conditional branches that run the SAME dynamic type test
+            // `ref.test`/`ref.cast` use (`value_matches_reftype`, reused
+            // verbatim, not reimplemented) against a value already on the
+            // operand stack, branching on success (`br_on_cast`) or
+            // failure (`br_on_cast_fail`) instead of pushing an `i32`.
+            //
+            // Real spec typing rule (fetched, `code/specs/
+            // W39-wasm-gc-ref-eq-cast-br-on-cast.md`'s own "Real spec
+            // text" section):
+            //   br_on_cast      $l rt1 rt2 : [t0* rt1] -> [t0* rt1\rt2]
+            //   br_on_cast_fail $l rt1 rt2 : [t0* rt1] -> [t0* rt2]
+            // Neither instruction pops the tested value unconditionally
+            // the way `ref.test` does -- on EITHER path (branch taken or
+            // fallen through) the value stays logically present as the
+            // top of the `t0*` stack the label/fallthrough expects (only
+            // its STATIC type narrows, never its runtime representation --
+            // this engine's `WasmValue` doesn't carry a separate boxed
+            // "narrowed" form, see `ref.cast`'s own precedent just above).
+            // So: PEEK (never pop) the operand, decide match/no-match, then
+            // either call `execute_branch` (which itself pops exactly
+            // `label.arity` values off the now-still-present stack -- the
+            // tested value among them -- unwinds, and re-pushes them,
+            // exactly as `br`/`br_if`'s own `0x0C`/`0x0D` handlers already
+            // do) or simply `advance_pc()` and leave the value in place for
+            // whatever comes next. This is simpler AND safer than a
+            // pop-then-conditionally-repush pattern: there is no window
+            // where the value is off the stack and a `?`-propagated error
+            // from the type test would leave the stack short by one.
+            //
+            // Null handling (the one piece of genuinely new runtime logic,
+            // per the spec's own explicit warning to test both directions):
+            // `value_matches_reftype`'s own `WasmValue::Ref(None) =>
+            // nullable` arm, given `null2` (rt2's OWN nullability bit, NOT
+            // rt1's -- `flags` bit 1), already computes exactly "does a
+            // null operand match rt2" -- which for `br_on_cast` IS "does a
+            // null operand branch" (spec: "if rt2 contains null, branches
+            // on null; otherwise does not") and for `br_on_cast_fail` is
+            // the exact input to the SAME test inverted (spec: "if rt2
+            // contains null, does NOT branch on null; otherwise does") --
+            // both directions fall out of one shared `matches` computation
+            // with no special-cased null branch needed, verified by this
+            // slice's own direct unit tests (`br_on_cast`/`br_on_cast_fail`
+            // against a literal null operand, `null2` true vs. false).
+            0x18 | 0x19 => {
+                let null2 = op.flags & 0b10 != 0;
+                let value = peek_wasm(vm)?;
+                let matches = value_matches_reftype(ctx, op.extra, null2, &value);
+                let take_branch = if op.sub == 0x18 { matches } else { !matches };
+                if take_branch {
+                    let label_index = op.field_idx as usize;
+                    execute_branch(vm, ctx, label_index)?;
+                    return Ok(None);
+                }
+                // Fall through: leave the (still-peeked, never popped)
+                // value on the stack and let the shared `vm.advance_pc()`
+                // just below the match run exactly once -- calling it here
+                // too would double-advance.
             }
 
             // `any.convert_extern` (0x1A) / `extern.convert_any` (0x1B)
@@ -17290,6 +17462,248 @@ mod tests {
         ];
         let mut struct_engine = gc_engine(struct_code, vec![ValueType::I32], vec![0]);
         assert_eq!(struct_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "i31ref must NOT match a live struct object");
+    }
+
+    // ── W39 slice 4 (`code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`):
+    // `br_on_cast`/`br_on_cast_fail` (0xFB 0x18/0x19) direct unit tests.
+    //
+    // Bytecode shape shared by every test below: a single `block $l
+    // (result anyref)` (blocktype byte `0x6E`, recognized as a real
+    // single-value blocktype by this slice's own `block_arity` fix --
+    // arity `(0, 1)`, matching the `br_on_cast`/`br_on_cast_fail`
+    // spec's own `[t0* rt1] -> ...` typing rule where `t0*` is empty
+    // here). `execute_branch` doesn't type-check the value it re-pushes
+    // (raw execution, no validator in the loop) -- only ITS OWN COUNT
+    // matters -- so mismatching the block's nominal result type against
+    // what's actually pushed on either path is harmless for these tests,
+    // exactly like this file's pre-existing `ref.cast` tests above
+    // (`Anyref`-declared results that actually push `Ref(Some(_))`).
+    //
+    // Each test distinguishes "branch taken" from "fell through" by an
+    // observably different final value: the ORIGINAL operand re-appears
+    // unchanged on the taken-branch path (per the real spec: neither
+    // instruction's runtime REPRESENTATION changes on either path, only
+    // the STATIC type narrows -- see `execute_branch`'s own doc comment
+    // in `wasm-execution`'s `0x18 | 0x19` handler), while the fallthrough
+    // path explicitly `drop`s it and pushes a distinct sentinel
+    // (`i32.const 111`) that could only be reached by NOT branching.
+    #[test]
+    fn test_br_on_cast_i31_match_branches_with_narrowed_value_unchanged() {
+        // `br_on_cast $l anyref (ref i31)` against a live i31 value: must
+        // MATCH and branch, re-pushing the SAME i31 payload (7) at the
+        // label -- proving both the dynamic test AND the branch mechanics
+        // (not just "didn't crash").
+        let code = vec![
+            0x02, 0x6E, // block $l (result anyref)
+            0x41, 7, 0xFB, 0x1C, // i32.const 7; ref.i31 -> I32(7), an i31 value
+            0xFB, 0x18, 0x01, 0x00, 0x6E, 0x6C, // br_on_cast 0, flags=null1 (anyref is nullable), depth=0, ht1=any, ht2=i31
+            // Fallthrough-only poison (must NOT execute if the branch is correctly taken):
+            0x1A, 0x41, 50, // drop; i32.const 50
+            0x0B, // end block
+            0x0B, // end function
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(7)],
+            "a matching i31 value must take the branch, re-pushing the SAME payload -- 50 would mean it wrongly fell through"
+        );
+    }
+
+    #[test]
+    fn test_br_on_cast_i31_vs_struct_no_match_falls_through() {
+        // `br_on_cast $l anyref (ref struct)` against a live i31 value:
+        // i31 is never a struct, so this must NOT match -- fall through,
+        // leaving the i31 value in place for whatever runs next (here,
+        // `drop` + a sentinel).
+        let code = vec![
+            0x02, 0x6E, // block $l (result anyref)
+            0x41, 42, 0xFB, 0x1C, // i32.const 42; ref.i31 -> I32(42)
+            0xFB, 0x18, 0x01, 0x00, 0x6E, 0x6B, // br_on_cast 0 anyref (ref struct) -- must NOT match
+            0x1A, 0x41, 50, // drop; i32.const 50 -- reached only on fallthrough
+            0x0B,
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(50)],
+            "an i31 value must NOT match `(ref struct)` -- 42 would mean it wrongly took the branch"
+        );
+    }
+
+    #[test]
+    fn test_br_on_cast_fail_i31_match_falls_through() {
+        // `br_on_cast_fail`'s own mirror-image test: a MATCHING i31 value
+        // means the cast does NOT fail, so `br_on_cast_fail` must NOT
+        // branch -- the exact inverse of `br_on_cast`'s own match case
+        // just above.
+        let code = vec![
+            0x02, 0x6E,
+            0x41, 7, 0xFB, 0x1C, // I32(7), an i31 value
+            0xFB, 0x19, 0x01, 0x00, 0x6E, 0x6C, // br_on_cast_fail 0 anyref (ref i31) -- matches, so must NOT branch
+            0x1A, 0x41, 50,
+            0x0B,
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(50)],
+            "br_on_cast_fail must NOT branch when the cast succeeds -- 7 would mean it wrongly took the branch"
+        );
+    }
+
+    #[test]
+    fn test_br_on_cast_fail_no_match_branches() {
+        // The inverse: a NON-matching i31-vs-struct test means the cast
+        // FAILS, so `br_on_cast_fail` must branch, re-pushing the SAME
+        // original i31 payload unchanged.
+        let code = vec![
+            0x02, 0x6E,
+            0x41, 42, 0xFB, 0x1C, // I32(42), an i31 value
+            0xFB, 0x19, 0x01, 0x00, 0x6E, 0x6B, // br_on_cast_fail 0 anyref (ref struct) -- does not match, so must branch
+            0x1A, 0x41, 50,
+            0x0B,
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(42)],
+            "br_on_cast_fail must branch when the cast fails, re-pushing the SAME operand -- 50 would mean it wrongly fell through"
+        );
+    }
+
+    // ── Null-handling directionality (W39 slice 4's own explicitly
+    // flagged "one piece of genuinely new, easy-to-get-backwards runtime
+    // logic" -- verified BOTH directions, for BOTH instructions, per the
+    // spec's own "Verification plan"). Real spec rule: whether a null
+    // operand takes the branch depends purely on `rt2`'s OWN nullability
+    // bit (`flags` bit 1, `null2` here) -- NEVER `rt1`'s (`flags` bit 0,
+    // `null1`, set to 1/nullable in every test below and never varied,
+    // to prove it truly has no effect on the null-handling decision).
+    #[test]
+    fn test_br_on_cast_null_operand_branches_when_ht2_is_nullable() {
+        // `br_on_cast $l (ref null any) (ref null struct) (ref.null any)`:
+        // rt2 IS nullable, so per the spec ("if rt2 contains null,
+        // branches on null") this must take the branch.
+        let code = vec![
+            0x02, 0x6E,
+            0xD0, 0x6E, // ref.null any -> Ref(None)
+            0xFB, 0x18, 0x03, 0x00, 0x6E, 0x6B, // flags = null1|null2 (0b11); ht1=any, ht2=struct (nullable)
+            0x1A, 0x41, 50,
+            0x0B,
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert!(
+            matches!(result[0], WasmValue::Ref(None)),
+            "a null operand must take the branch when rt2 is nullable, got {result:?} (I32(50) would mean it wrongly fell through)"
+        );
+    }
+
+    #[test]
+    fn test_br_on_cast_null_operand_falls_through_when_ht2_is_non_nullable() {
+        // The inverse: rt2 is NON-nullable, so per the spec ("otherwise
+        // does not [branch on null]") this must fall through.
+        let code = vec![
+            0x02, 0x6E,
+            0xD0, 0x6E, // ref.null any -> Ref(None)
+            0xFB, 0x18, 0x01, 0x00, 0x6E, 0x6B, // flags = null1 only (0b01); ht2=struct (NON-nullable)
+            0x1A, 0x41, 50,
+            0x0B,
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(50)],
+            "a null operand must NOT take the branch when rt2 is non-nullable"
+        );
+    }
+
+    #[test]
+    fn test_br_on_cast_fail_null_operand_falls_through_when_ht2_is_nullable() {
+        // `br_on_cast_fail`'s own mirror: rt2 nullable means a null
+        // operand MATCHES (does not fail), so per the spec ("if rt2
+        // contains null, does NOT branch on null") this must fall
+        // through -- the exact inverse of `br_on_cast`'s own nullable-ht2
+        // case above.
+        let code = vec![
+            0x02, 0x6E,
+            0xD0, 0x6E,
+            0xFB, 0x19, 0x03, 0x00, 0x6E, 0x6B, // flags = null1|null2; ht2=struct (nullable)
+            0x1A, 0x41, 50,
+            0x0B,
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(50)],
+            "br_on_cast_fail must NOT branch on a null operand when rt2 is nullable"
+        );
+    }
+
+    #[test]
+    fn test_br_on_cast_fail_null_operand_branches_when_ht2_is_non_nullable() {
+        // The inverse: rt2 non-nullable means a null operand does NOT
+        // match (the cast fails), so per the spec ("otherwise does
+        // [branch]") this must branch, re-pushing the same null.
+        let code = vec![
+            0x02, 0x6E,
+            0xD0, 0x6E,
+            0xFB, 0x19, 0x01, 0x00, 0x6E, 0x6B, // flags = null1 only; ht2=struct (NON-nullable)
+            0x1A, 0x41, 50,
+            0x0B,
+            0x0B,
+        ];
+        let mut engine = gc_engine(code, vec![ValueType::I32], vec![0]);
+        let result = engine.call_function(0, &[]).unwrap();
+        assert!(
+            matches!(result[0], WasmValue::Ref(None)),
+            "br_on_cast_fail must branch on a null operand when rt2 is non-nullable, got {result:?}"
+        );
+    }
+
+    #[test]
+    fn test_decode_br_on_cast_consumes_exactly_flags_labelidx_ht1_ht2_bytes() {
+        // Security-relevant (see `code/specs/
+        // W39-wasm-gc-ref-eq-cast-br-on-cast.md`'s "Trap conditions"
+        // section): `br_on_cast`/`br_on_cast_fail`'s own four immediates
+        // (`flags: u8`, `labelidx: LEB`, `ht1`, `ht2`, both heap-type
+        // immediates) must be consumed EXACTLY -- an under/over-read would
+        // desync every later instruction in the same function body. Two
+        // GC ops back-to-back with a KNOWN-length encoding (a single-byte
+        // label index and two single-byte abstract heap-type tags each) --
+        // if `br_on_cast`'s own decode consumed the wrong number of
+        // bytes, `ref.i31`'s own opcode byte immediately after would be
+        // misread as part of `br_on_cast`'s immediates instead of a
+        // separate, correctly-decoded instruction.
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0xFB, 0x18, 0x03, 0x00, 0x6E, 0x6B, // br_on_cast 0, flags=3, ht1=any, ht2=struct
+                0xFB, 0x1C, // ref.i31 -- must decode as its OWN instruction, not swallowed
+                0x0B,
+            ],
+        };
+        let instrs = decode_function_body(&body);
+        assert_eq!(instrs.len(), 3, "br_on_cast + ref.i31 + end -- a byte-count desync would collapse or corrupt this");
+        assert_eq!(instrs[0].opcode, 0xFB);
+        assert!(
+            matches!(
+                instrs[0].operand,
+                DecodedOperand::Gc { sub: 0x18, type_idx: 0x6E, field_idx: 0, extra: 0x6B, flags: 0x03 }
+            ),
+            "br_on_cast's own four immediates must decode to (ht1=any, labelidx=0, ht2=struct, flags=3), got {:?}",
+            instrs[0].operand
+        );
+        assert_eq!(instrs[1].opcode, 0xFB);
+        assert!(matches!(instrs[1].operand, DecodedOperand::Gc { sub: 0x1C, .. }), "the very next instruction must decode as ref.i31, not be corrupted by a br_on_cast byte-count desync");
+        assert_eq!(instrs[2].opcode, 0x0B);
     }
 
     #[test]

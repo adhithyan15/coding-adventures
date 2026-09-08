@@ -369,6 +369,25 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>, module: &Wa
                 // `i31.wast`).
                 Some("eq") => Ok(ValueType::Eqref),
                 Some("struct") => Ok(ValueType::StructRefAny),
+                // `(ref null any)` (W39 slice 4 Correction 3: `code/specs/
+                // W39-wasm-gc-ref-eq-cast-br-on-cast.md`) -- the NULLABLE
+                // counterpart of the non-null `(ref any)` fix just below
+                // this function (its own 2-item non-null branch), needed
+                // for the identical reason: `br_on_cast.wast`'s own
+                // `(func (param (ref null any)) (result (ref $t)) ...)`
+                // function signature is a genuine param declaration, not
+                // an instruction-local type immediate `ref.test`/`ref.
+                // cast`/`br_on_cast`'s own LOCAL parsing could intercept.
+                // Maps to the SAME `ValueType::Anyref` the bare `anyref`
+                // keyword already produces (this is not a new variant,
+                // unlike the non-null case) -- but widening ITS reach here
+                // risked the identical regression class: `ref_eq.wast`'s
+                // own `assert_invalid (param $r (ref null any)) ...`
+                // case relied on this exact rejection. Kept correctly
+                // rejected anyway by the SAME targeted `wasm-validator`
+                // `0xD3` check the non-null case needed, widened to cover
+                // plain `Anyref` too -- see that arm's own doc comment.
+                Some("any") => Ok(ValueType::Anyref),
                 Some(_) => Ok(concrete_ref_value_type(module, resolve_idx(type_names, &items[2], "type")?, true)),
                 None => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: "list".to_string(), expected: "a value type" }),
             };
@@ -387,29 +406,51 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>, module: &Wa
         if items.len() == 2 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("array") {
             return Ok(ValueType::NonNullArrayAny);
         }
+        // `(ref any)` -- non-null reference to the ABSTRACT top of the
+        // `any` hierarchy (W39 slice 4 Correction 3: `code/specs/
+        // W39-wasm-gc-ref-eq-cast-br-on-cast.md`), needed for a genuine
+        // FUNCTION SIGNATURE / block-result declaration (`br_on_cast.
+        // wast`'s own `(func (param (ref any)) (result (ref $t)) ...)`) --
+        // unlike Correction 2's five abstract non-null forms below,
+        // `ref.test`/`ref.cast`/`br_on_cast`'s own local, per-instruction
+        // parsing can't help here: a function param type has no "parse it
+        // locally inside one instruction's own encoder" escape hatch, so
+        // THIS one form genuinely widens the shared parser. Must come
+        // before the generic `(ref $t)` concrete-reference branch below,
+        // same reasoning as `i31`/`array` just above (`any` is a bare
+        // keyword here, not a type name to resolve). See `ValueType::
+        // NonNullAnyref`'s own doc comment for the real regression this
+        // risked (`ref_eq.wast`'s own `assert_invalid (ref any)` param
+        // case) and how it's kept correctly rejected anyway (`wasm-
+        // validator`'s `0xD3` arm now does one narrow, targeted check).
+        if items.len() == 2 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("any") {
+            return Ok(ValueType::NonNullAnyref);
+        }
         // W32 second slice: `(ref $t)` -- non-null concrete reference, no
-        // `null` keyword. Must come AFTER the `(ref i31)`/`(ref array)`
-        // checks above (both stay their own dedicated variant regardless
-        // of nullability spelling, see those branches' own doc comments)
-        // so it only ever catches a real named/numeric type reference here.
+        // `null` keyword. Must come AFTER the `(ref i31)`/`(ref array)`/
+        // `(ref any)` checks above (all three stay their own dedicated
+        // variant regardless of nullability spelling, see those branches'
+        // own doc comments) so it only ever catches a real named/numeric
+        // type reference here.
         //
-        // Non-null `(ref any)`/`(ref eq)`/`(ref struct)`/`(ref func)`/
-        // `(ref extern)` remain UNRECOGNIZED here, same as before W39 --
-        // this function is shared by every reference-type-typed
-        // declaration in the text format (params, locals, globals, block
-        // types, ...), and loosening it to accept these five here was
-        // tried and reverted: `ref_eq.wast`'s own `assert_invalid` cases
-        // rely on exactly this rejection (a `(param $r (ref func))`
-        // declaration must be rejected SOMEWHERE for `(ref.eq (local.get
-        // $r) ...)` to correctly fail as "type mismatch" -- today that
-        // "somewhere" is this parser, since `wasm-validator`'s own `ref.eq`
-        // arm doesn't yet do real per-operand type checking; loosening
-        // parsing here without ALSO tightening that validator arm would
-        // silently regress those three corpus directives from "correctly
-        // rejected" to "wrongly accepted"). `ref.test`/`ref.cast`'s own
-        // encoder (W39 slice 2b, below) needs these five forms too, but
-        // parses them ITSELF, locally, rather than widening this shared
-        // function's blast radius -- see that encoder's own doc comment.
+        // Non-null `(ref eq)`/`(ref struct)`/`(ref func)`/`(ref extern)`
+        // remain UNRECOGNIZED here, same as before W39 -- this function is
+        // shared by every reference-type-typed declaration in the text
+        // format (params, locals, globals, block types, ...), and
+        // loosening it to accept these four (plus `any`, before W39 slice
+        // 4's Correction 3 above) here was tried and reverted: `ref_eq.
+        // wast`'s own `assert_invalid` cases rely on exactly this
+        // rejection (a `(param $r (ref func))` declaration must be
+        // rejected SOMEWHERE for `(ref.eq (local.get $r) ...)` to
+        // correctly fail as "type mismatch" -- today that "somewhere" is
+        // this parser, since `wasm-validator`'s own `ref.eq` arm doesn't do
+        // real per-operand type checking for THESE four; loosening parsing
+        // here without ALSO tightening that validator arm would silently
+        // regress those corpus directives from "correctly rejected" to
+        // "wrongly accepted"). `ref.test`/`ref.cast`'s own encoder (W39
+        // slice 2b, below) needs all five forms too, but parses them
+        // ITSELF, locally, rather than widening this shared function's
+        // blast radius -- see that encoder's own doc comment.
         if items.len() == 2 && items[0].as_atom() == Some("ref") {
             return Ok(concrete_ref_value_type(module, resolve_idx(type_names, &items[1], "type")?, false));
         }
@@ -4775,6 +4816,125 @@ fn encode_array_segment_sourced(name: &str, args: &[SExpr], icx: &mut InstrCtx, 
     Ok(())
 }
 
+/// Parse a `ref.test`/`ref.cast`/`br_on_cast`/`br_on_cast_fail` (W39 slices
+/// 2 and 4: `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`) reftype
+/// immediate -- `(ref ht)` (non-null) / `(ref null ht)` (nullable) or a
+/// bare abbreviation like `structref`/`i31ref`/`$t0` -- into its binary
+/// heap-type-immediate bytes plus whether the reftype ITSELF is nullable.
+/// Factored out of `ref.test`/`ref.cast`'s own encoder (W39 slice 2) so
+/// `br_on_cast`/`br_on_cast_fail` (W39 slice 4) can reuse the EXACT same
+/// logic for their own two reftype immediates (`ht1`/`ht2`) instead of a
+/// second hand-copied match -- the spec's own explicit instruction ("reuse
+/// slice 2's own heap-type-immediate encoder verbatim").
+///
+/// `(ref any)` / `(ref eq)` / `(ref struct)` / `(ref func)` / `(ref
+/// extern)` -- the non-null spelling of five abstract-hierarchy heap
+/// types, a real corpus need (`ref_test.wast`'s own `(ref.test (ref any)
+/// ...)`/`(ref eq)`/`(ref struct)`/`(ref func)`/`(ref extern)`, confirmed
+/// by direct read) -- are handled LOCALLY, right here, rather than by
+/// widening `parse_value_type`'s own shared non-null `(ref X)` branch:
+/// that was tried first and reverted -- `parse_value_type` is shared by
+/// every reference-typed declaration in the text format, and loosening it
+/// there let `ref_eq.wast`'s own `assert_invalid` param-type cases
+/// (`(param $r (ref func))`, expected to be REJECTED as "type mismatch")
+/// parse successfully instead, silently regressing three corpus
+/// directives from "correctly rejected" to "wrongly accepted" (this
+/// crate's `ref.eq` validator arm doesn't do real per-operand type
+/// checking, so nothing downstream caught it). Matching this crate's own
+/// "minimal, targeted fix" discipline, this local match keeps the widened
+/// acceptance scoped to exactly the instructions that actually need it.
+/// `(ref null any)` and the four bottom heap types' own `(ref null X)`
+/// compound spelling get the same local-only treatment, one level over --
+/// see the match arms below for the full accounting.
+fn parse_gc_reftype_immediate(ty_expr: &SExpr, icx: &InstrCtx) -> Result<(Vec<u8>, bool), WastParseError> {
+    let local_abstract = if let Some(items) = ty_expr.as_list() {
+        if items.len() == 2 && items[0].as_atom() == Some("ref") {
+            match items[1].as_atom() {
+                Some("any") => Some(ValueType::Anyref),
+                Some("eq") => Some(ValueType::Eqref),
+                Some("struct") => Some(ValueType::StructRefAny),
+                Some("func") => Some(ValueType::Funcref),
+                Some("extern") => Some(ValueType::Externref),
+                _ => None,
+            }
+        } else if items.len() == 3 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("null") {
+            // `(ref null any)` / the four bottom heap types' own `(ref null
+            // X)` compound spelling (`nofunc`/`noextern`/`none`/`noexn`) --
+            // see this function's own doc comment for the regression this
+            // avoids by staying local instead of widening the shared
+            // `parse_value_type`. These map to the SAME `ValueType::
+            // Null{Ref,Funcref,Externref,Exnref}`/`Anyref` variants
+            // `parse_value_type`'s own bare-atom match already produces for
+            // `nullref`/`nullfuncref`/`nullexternref`/`nullexnref`/`anyref`
+            // (and this function's own `parsed_ty` match below already has
+            // arms for all of them, unconditionally nullable) -- no new
+            // untested surface, just a second parse route into the same
+            // variants.
+            match items[2].as_atom() {
+                Some("any") => Some(ValueType::Anyref),
+                Some("none") => Some(ValueType::NullRef),
+                Some("nofunc") => Some(ValueType::NullFuncref),
+                Some("noextern") => Some(ValueType::NullExternref),
+                Some("noexn") => Some(ValueType::NullExnref),
+                _ => None,
+            }
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+    let parsed_ty = match local_abstract {
+        Some(vt) => vt,
+        None => parse_value_type(ty_expr, &icx.module.type_names, &icx.module.module)?,
+    };
+    let (immediate, nullable): (Vec<u8>, bool) = match parsed_ty {
+        ValueType::NonNullConcreteFuncRef(idx) => (wasm_leb128::encode_unsigned(idx as u64), false),
+        ValueType::ConcreteFuncRef(idx) => (wasm_leb128::encode_unsigned(idx as u64), true),
+        // W39 slice 2a: concrete struct/array heap types.
+        ValueType::NonNullStructRef(idx) | ValueType::NonNullArrayRef(idx) => (wasm_leb128::encode_unsigned(idx as u64), false),
+        ValueType::StructRef(idx) | ValueType::ArrayRef(idx) => (wasm_leb128::encode_unsigned(idx as u64), true),
+        // W39 slice 2b: genuinely abstract heap types, one single-byte
+        // tag each (`parse_ref_null_heap_type`'s own established
+        // bytes). `NonNullArrayAny` and the four bottom types each have
+        // exactly ONE real spelling (see their own `parse_value_type`
+        // doc comments), so their nullability is a fixed constant, not
+        // read off `ty_expr`; every other abstract variant here
+        // collapses multiple spellings, so `heap_type_expr_is_nullable`
+        // recovers which one was actually written.
+        ValueType::I31ref => (vec![0x6C], heap_type_expr_is_nullable(ty_expr)),
+        ValueType::Eqref => (vec![0x6D], heap_type_expr_is_nullable(ty_expr)),
+        ValueType::StructRefAny => (vec![0x6B], heap_type_expr_is_nullable(ty_expr)),
+        ValueType::Anyref => (vec![0x6E], heap_type_expr_is_nullable(ty_expr)),
+        ValueType::Funcref => (vec![0x70], heap_type_expr_is_nullable(ty_expr)),
+        ValueType::Externref => (vec![0x6F], heap_type_expr_is_nullable(ty_expr)),
+        ValueType::Exnref => (vec![0x69], heap_type_expr_is_nullable(ty_expr)),
+        // `arrayref` only spells the nullable form (`(ref array)`'s own
+        // non-null form is the DISTINCT `NonNullArrayAny` variant
+        // handled next), so this is unconditionally nullable.
+        ValueType::ArrayRefAny => (vec![0x6A], true),
+        ValueType::NonNullArrayAny => (vec![0x6A], false),
+        // The four bottom heap types (`nullref`/`nullfuncref`/
+        // `nullexternref`/`nullexnref`): each is ONLY ever produced by
+        // `parse_value_type`'s bare-atom match (no `(ref null X)`/
+        // `(ref X)` compound spelling reaches these arms), and each
+        // names the bottom of its hierarchy -- inhabited by the null
+        // reference alone -- so nullable is unconditionally `true`.
+        ValueType::NullRef => (vec![0x71], true),
+        ValueType::NullFuncref => (vec![0x73], true),
+        ValueType::NullExternref => (vec![0x72], true),
+        ValueType::NullExnref => (vec![0x74], true),
+        _ => {
+            return Err(WastParseError::UnexpectedToken {
+                pos: ty_expr.pos(),
+                found: "unsupported heap type".to_string(),
+                expected: "a concrete or abstract (ref [null] ht) heap type",
+            });
+        }
+    };
+    Ok((immediate, nullable))
+}
+
 /// Encode a **folded** instruction (`(name args...)`) — `args` mixes zero
 /// or more operand sub-expressions (encoded first, recursively) with this
 /// instruction's own trailing immediate atoms, per instruction kind. See
@@ -5036,132 +5196,7 @@ fn encode_flat_instr(
     // left undone here rather than adding untested surface.
     if name == "ref.test" || name == "ref.cast" {
         let ty_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
-        // `(ref any)` / `(ref eq)` / `(ref struct)` / `(ref func)` /
-        // `(ref extern)` -- the non-null spelling of five abstract-hierarchy
-        // heap types, a real corpus need (`ref_test.wast`'s own `(ref.test
-        // (ref any) ...)`/`(ref eq)`/`(ref struct)`/`(ref func)`/`(ref
-        // extern)`, confirmed by direct read). Handled LOCALLY, right here,
-        // rather than by widening `parse_value_type`'s own shared non-null
-        // `(ref X)` branch: that was tried first and reverted -- `parse_
-        // value_type` is shared by every reference-typed declaration in the
-        // text format, and loosening it there let `ref_eq.wast`'s own
-        // `assert_invalid` param-type cases (`(param $r (ref func))`,
-        // expected to be REJECTED as "type mismatch") parse successfully
-        // instead, silently regressing three corpus directives from
-        // "correctly rejected" to "wrongly accepted" (this crate's `ref.eq`
-        // validator arm doesn't do real per-operand type checking, so
-        // nothing downstream caught it). Matching this crate's own
-        // "minimal, targeted fix" discipline, this local match keeps the
-        // widened acceptance scoped to exactly the one instruction pair
-        // that actually needs it.
-        // `(ref null any)` -- the SAME kind of local-only gap as the five
-        // non-null forms above, one level over: the shared function's own
-        // 3-item `(ref null X)` branch already recognizes `func`/`extern`/
-        // `i31`/`eq`/`struct` (W08/W20/W37) but never grew an `any` arm,
-        // and `ref_cast.wast`'s own `(ref.cast (ref null any) ...)` needs
-        // exactly this spelling. Same regression risk as above applies
-        // (`ref_eq.wast`'s own `(ref null any)`-typed param at line 129
-        // also expects rejection) — handled locally for the same reason.
-        let local_abstract = if let Some(items) = ty_expr.as_list() {
-            if items.len() == 2 && items[0].as_atom() == Some("ref") {
-                match items[1].as_atom() {
-                    Some("any") => Some(ValueType::Anyref),
-                    Some("eq") => Some(ValueType::Eqref),
-                    Some("struct") => Some(ValueType::StructRefAny),
-                    Some("func") => Some(ValueType::Funcref),
-                    Some("extern") => Some(ValueType::Externref),
-                    _ => None,
-                }
-            } else if items.len() == 3 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("null") {
-                // `(ref null any)` -- see this arm's pre-existing doc
-                // comment above. W39 slice 3 addendum: `ref_test.wast`'s
-                // own "Concrete Types" module (byte 2623/2900-ish region,
-                // surfaced only once slice 3's own `any.convert_extern`
-                // fix let parsing get this far) also uses `(ref.test (ref
-                // null nofunc) ...)` / `(ref.test (ref null noextern)
-                // ...)` -- the four BOTTOM heap types' own `(ref null X)`
-                // compound spelling, which the shared `parse_value_type`'s
-                // 3-item null branch never grew an arm for (only `func`/
-                // `extern`/`i31`/`eq`/`struct` -- see that function's own
-                // doc comment). Same "handle locally, don't widen the
-                // shared parser" discipline as `any` above: these four
-                // map to the SAME `ValueType::Null{Ref,Funcref,Externref,
-                // Exnref}` variants `parse_value_type`'s own bare-atom
-                // match already produces for `nullref`/`nullfuncref`/
-                // `nullexternref`/`nullexnref` (and this encoder's own
-                // `parsed_ty` match below already has arms for all four,
-                // unconditionally nullable -- see those arms' own doc
-                // comment for why: today they're only ever reached via
-                // the bare-atom spelling, this adds the compound `(ref
-                // null X)` spelling as a second route to the exact same
-                // variants). `noexn`/`none` are included alongside the
-                // two corpus-proven cases (`nofunc`/`noextern`) because
-                // they share this exact match arm and their own encode
-                // arms already exist and are already exercised via the
-                // bare-atom spelling -- no new untested surface, just a
-                // second parse route into it.
-                match items[2].as_atom() {
-                    Some("any") => Some(ValueType::Anyref),
-                    Some("none") => Some(ValueType::NullRef),
-                    Some("nofunc") => Some(ValueType::NullFuncref),
-                    Some("noextern") => Some(ValueType::NullExternref),
-                    Some("noexn") => Some(ValueType::NullExnref),
-                    _ => None,
-                }
-            } else {
-                None
-            }
-        } else {
-            None
-        };
-        let parsed_ty = match local_abstract {
-            Some(vt) => vt,
-            None => parse_value_type(ty_expr, &icx.module.type_names, &icx.module.module)?,
-        };
-        let (immediate, nullable): (Vec<u8>, bool) = match parsed_ty {
-            ValueType::NonNullConcreteFuncRef(idx) => (wasm_leb128::encode_unsigned(idx as u64), false),
-            ValueType::ConcreteFuncRef(idx) => (wasm_leb128::encode_unsigned(idx as u64), true),
-            // W39 slice 2a: concrete struct/array heap types.
-            ValueType::NonNullStructRef(idx) | ValueType::NonNullArrayRef(idx) => (wasm_leb128::encode_unsigned(idx as u64), false),
-            ValueType::StructRef(idx) | ValueType::ArrayRef(idx) => (wasm_leb128::encode_unsigned(idx as u64), true),
-            // W39 slice 2b: genuinely abstract heap types, one single-byte
-            // tag each (`parse_ref_null_heap_type`'s own established
-            // bytes). `NonNullArrayAny` and the four bottom types each have
-            // exactly ONE real spelling (see their own `parse_value_type`
-            // doc comments), so their nullability is a fixed constant, not
-            // read off `ty_expr`; every other abstract variant here
-            // collapses multiple spellings, so `heap_type_expr_is_nullable`
-            // recovers which one was actually written.
-            ValueType::I31ref => (vec![0x6C], heap_type_expr_is_nullable(ty_expr)),
-            ValueType::Eqref => (vec![0x6D], heap_type_expr_is_nullable(ty_expr)),
-            ValueType::StructRefAny => (vec![0x6B], heap_type_expr_is_nullable(ty_expr)),
-            ValueType::Anyref => (vec![0x6E], heap_type_expr_is_nullable(ty_expr)),
-            ValueType::Funcref => (vec![0x70], heap_type_expr_is_nullable(ty_expr)),
-            ValueType::Externref => (vec![0x6F], heap_type_expr_is_nullable(ty_expr)),
-            ValueType::Exnref => (vec![0x69], heap_type_expr_is_nullable(ty_expr)),
-            // `arrayref` only spells the nullable form (`(ref array)`'s own
-            // non-null form is the DISTINCT `NonNullArrayAny` variant
-            // handled next), so this is unconditionally nullable.
-            ValueType::ArrayRefAny => (vec![0x6A], true),
-            ValueType::NonNullArrayAny => (vec![0x6A], false),
-            // The four bottom heap types (`nullref`/`nullfuncref`/
-            // `nullexternref`/`nullexnref`): each is ONLY ever produced by
-            // `parse_value_type`'s bare-atom match (no `(ref null X)`/
-            // `(ref X)` compound spelling reaches these arms), and each
-            // names the bottom of its hierarchy -- inhabited by the null
-            // reference alone -- so nullable is unconditionally `true`.
-            ValueType::NullRef => (vec![0x71], true),
-            ValueType::NullFuncref => (vec![0x73], true),
-            ValueType::NullExternref => (vec![0x72], true),
-            ValueType::NullExnref => (vec![0x74], true),
-            _ => {
-                return Err(WastParseError::UnexpectedToken {
-                    pos: ty_expr.pos(),
-                    found: "unsupported heap type".to_string(),
-                    expected: "a concrete or abstract (ref [null] ht) heap type",
-                });
-            }
-        };
+        let (immediate, nullable) = parse_gc_reftype_immediate(ty_expr, icx)?;
         encode_instr_list(&args[1..], icx, out)?;
         out.push(0xFB);
         out.push(match (name, nullable) {
@@ -5171,6 +5206,51 @@ fn encode_flat_instr(
             (_, _) => 0x17, // "ref.cast", nullable
         });
         out.extend(immediate);
+        return Ok(());
+    }
+    // `br_on_cast` / `br_on_cast_fail` (W39 slice 4: `code/specs/
+    // W39-wasm-gc-ref-eq-cast-br-on-cast.md`) -- conditional branches that
+    // dynamically test a value already on the stack against a reftype,
+    // branching on success (`br_on_cast`) or failure (`br_on_cast_fail`).
+    // Real grammar: `(br_on_cast $l rt1 rt2 <value>?)` -- a label, TWO full
+    // reftype descriptors (`rt2 <: rt1`, checked at validation time, not
+    // here), then an OPTIONAL folded value expression. The value operand is
+    // genuinely optional in the real corpus (`br_on_cast.wast`'s own
+    // `(br_on_cast $l2 structref (ref $st))`, no trailing expression at
+    // all) -- the tested value is then whatever a PRIOR instruction already
+    // left on the operand stack (typically an enclosing block's own
+    // `param`), exactly the same "operand may already be on the stack, not
+    // necessarily supplied inline" shape `encode_instr_list` already
+    // handles generically for zero-or-more trailing args (an empty slice
+    // emits no bytes at all, leaving whatever's already on the stack
+    // untouched).
+    //
+    // `ht1`/`ht2` are parsed via the EXACT SAME `parse_gc_reftype_
+    // immediate` helper `ref.test`/`ref.cast` just above use (the spec's
+    // own explicit instruction: "reusing slice 2's own heap-type-immediate
+    // encoder verbatim for `ht1`/`ht2`") -- not reimplemented. Binary
+    // layout, per the real spec's own table (`code/specs/
+    // W39-wasm-gc-ref-eq-cast-br-on-cast.md`'s "Real spec text" section):
+    // `0xFB 0x18/0x19 <flags:u8> <labelidx:LEB> <ht1> <ht2>` -- `flags` bit
+    // 0 = rt1 nullable, bit 1 = rt2 nullable, matching `wasm-execution`'s
+    // decoder byte-for-byte (see that crate's own `GcOp::flags` doc
+    // comment).
+    if name == "br_on_cast" || name == "br_on_cast_fail" {
+        let label_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+        let rt1_expr = args.get(1).ok_or(WastParseError::UnexpectedEof)?;
+        let rt2_expr = args.get(2).ok_or(WastParseError::UnexpectedEof)?;
+        let (ht1, null1) = parse_gc_reftype_immediate(rt1_expr, icx)?;
+        let (ht2, null2) = parse_gc_reftype_immediate(rt2_expr, icx)?;
+        let value_args = if args.len() > 3 { &args[3..] } else { &[] };
+        encode_instr_list(value_args, icx, out)?;
+        out.push(0xFB);
+        out.push(if name == "br_on_cast" { 0x18 } else { 0x19 });
+        let flags: u8 = (null1 as u8) | ((null2 as u8) << 1);
+        out.push(flags);
+        let depth = icx.resolve_label(label_expr)?;
+        out.extend(wasm_leb128::encode_unsigned(depth as u64));
+        out.extend(ht1);
+        out.extend(ht2);
         return Ok(());
     }
     // `struct.new`/`struct.new_default`/.../`array.len` (GC proposal, W33

@@ -1,5 +1,51 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.109 — 2026-09-08 — `br_on_cast`/`br_on_cast_fail` text parsing (W39 slice 4)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 4 of 5.
+
+**`br_on_cast`/`br_on_cast_fail` added to the folded-instruction encoder**
+(`encode_flat_instr`, despite the name -- the crate's own FOLDED-form
+handler; see that function's own doc comment). Real grammar: `(br_on_cast
+$l rt1 rt2 <value>?)` -- a label, TWO full reftype descriptors, then an
+OPTIONAL trailing value expression (genuinely optional in the real
+corpus: `br_on_cast.wast`'s own `(br_on_cast $l2 structref (ref $st))`
+has none at all -- the tested value is whatever a prior instruction
+already left on the stack; `encode_instr_list` already handles an empty
+operand slice correctly, emitting no bytes). Binary layout: `0xFB
+0x18/0x19 <flags:u8> <labelidx:LEB> <ht1> <ht2>`, `flags` bit 0/1 =
+rt1/rt2 nullable.
+
+**`parse_gc_reftype_immediate` factored out of `ref.test`/`ref.cast`'s
+own encoder** (W39 slice 2) into a standalone function, so `br_on_cast`/
+`br_on_cast_fail`'s own two reftype immediates reuse the EXACT same
+logic for both of them instead of a second hand-copied match -- the
+spec's own explicit instruction ("reuse slice 2's own heap-type-immediate
+encoder verbatim"). `ref.test`/`ref.cast`'s own call site is now a
+one-line call into the shared helper; behavior is byte-for-byte
+unchanged (confirmed by the full existing `ref_test.wast`/`ref_cast.wast`
+test suite staying green).
+
+**Correction 3 (non-null `(ref any)`/`(ref null any)`): the shared
+`parse_value_type` widened, not just an instruction-local encoder.**
+`br_on_cast.wast`'s own `(func (param (ref any)) (result (ref $t)) ...)`
+and `(func (param (ref null any)) ...)` are genuine function-signature
+declarations -- unlike Correction 2's five abstract non-null forms
+(handled entirely inside `ref.test`/`ref.cast`'s own local match), a
+param type has no per-instruction escape hatch, so `parse_value_type`'s
+shared non-null `(ref X)` branch grew a real `Some("any") =>
+Ok(ValueType::NonNullAnyref)` arm, and its 3-item null branch grew
+`Some("any") => Ok(ValueType::Anyref)`. **This risked the exact
+regression class Correction 2's own addendum already found once**:
+`ref_eq.wast`'s own two `assert_invalid` cases (`(param $r (ref any))`
+and `(param $r (ref null any))`, both `(ref.eq (local.get $r) (local.get
+$r))`, both expecting "type mismatch") relied entirely on these spellings
+failing to PARSE. Kept correctly rejected anyway by a real, targeted
+`wasm-validator` `0xD3` check instead (see that crate's own CHANGELOG) --
+confirmed safe against the full 257-file corpus, not assumed (no other
+vendored `.wast` file calls `ref.eq` on a genuinely `anyref`-typed
+operand expecting success).
+
 ## 0.1.108 — 2026-09-07 — `any.convert_extern`/`extern.convert_any` wired into the text parser (W39 slice 3)
 
 Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 3 of 5.

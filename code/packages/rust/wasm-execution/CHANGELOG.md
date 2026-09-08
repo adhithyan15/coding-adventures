@@ -2,6 +2,81 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.101] - 2026-09-08 - `br_on_cast`/`br_on_cast_fail` execution, plus two pre-existing gaps found live (W39 slice 4)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 4 of 5.
+
+**`GcOp` grows a real fourth field, `flags: u8`.** Every other WasmGC op
+so far fit its immediates into the existing `type_idx`/`field_idx`/`extra`
+`u32` slots (some repurposed, per each field's own doc comment); `br_on_
+cast`/`br_on_cast_fail` are the first to need FOUR numbers simultaneously
+(`ht1` -> `type_idx`, `labelidx` -> `field_idx`, `ht2` -> `extra`, plus the
+raw `flags` byte itself) with no spare slot to bit-pack the flags into
+without risking silent corruption of a legitimately large label or type
+index under adversarial input -- so this is a real new field, not another
+reuse. `DecodedOperand::Gc` grew the matching `flags` field; every other
+sub-opcode leaves it `0`.
+
+**Decoder** (`decode_function_body`'s `0xFB` match): new `0x18 | 0x19` arm
+reads the flags byte (raw, NOT LEB128 -- a single non-continuation byte
+per the real spec's own binary grammar), then `labelidx` (LEB128), then
+`ht1`/`ht2` (each decoded IDENTICALLY to `ref.test`/`ref.cast`'s own
+single heap-type immediate -- an abstract tag byte or a real type-section
+index, disambiguated later at USE time by the SAME `AbstractHeapType::
+from_byte` those two instructions already use).
+
+**Execution handler**: `value_matches_reftype`, a new shared helper
+factored out of `ref.test`/`ref.cast`'s own `0x14`-`0x17` match arms (the
+spec's own explicit instruction: "reuse this exact type-test logic, not
+duplicate it") -- both instruction families now call the identical
+three-way dispatch (`Ref(Some(_))` -> `ref_matches_concrete_type`,
+`Ref(None)` -> the target's own nullable bit, `I32(_)` -> `i31_matches_
+abstract_heap_type`) instead of two hand-copied matches. `br_on_cast`/
+`br_on_cast_fail`'s own `0x18 | 0x19` handler PEEKS (never pops) the
+operand, runs this same test against `ht2`/`null2` (rt2's OWN nullability
+bit -- never rt1's, per the real spec's own rule that only rt2 decides
+whether a null value branches), then either calls `execute_branch` (the
+SAME helper `br`/`br_if` already use -- it pops exactly `label.arity`
+values off the still-present stack, unwinds, re-pushes them, and jumps)
+or simply lets the shared `vm.advance_pc()` at the end of the `0xFB`
+closure run, leaving the value in place for the fallthrough path. Peeking
+instead of pop-then-conditionally-repush avoids a window where a
+`?`-propagated error from the type test could leave the stack short by
+one.
+
+**Two genuinely pre-existing gaps found live by this slice's own full
+corpus re-verification, fixed in the same pass:**
+1. **`decode_function_body`'s "blocktype" operand decoder and
+   `block_arity` both lacked arms for `0x6A`-`0x6E`** (the `eq`/`i31`/
+   `struct`/`array`/`any` abstract hierarchy tops as single-value
+   blocktype results) -- each byte fell into the generic signed-LEB128
+   branch, producing a bogus negative sentinel `block_arity`'s own
+   `n if n>=0` guard rejects, silently returning `(0, 0)` instead of the
+   correct `(0, 1)`. Invisible before this slice because `wasm-validator`'s
+   OWN identical gap (see that crate's CHANGELOG) always rejected these
+   blocktypes at structural validation time first, before execution could
+   ever be reached with one; fixing the validator's copy alone would have
+   let a real, WRONG control-flow arity reach this runtime unnoticed.
+2. See `wasm-types`/`wasm-validator`'s own CHANGELOGs for the third gap
+   (`is_assignable`'s missing `StructRef(_)`/`ArrayRef(_)` `<: Anyref`
+   edges) found in the same investigation -- no `wasm-execution` change
+   needed for that one, it's purely a static-validation-time rule.
+
+**Tests**: 9 new direct unit tests (`test_br_on_cast_*`/`test_br_on_cast_
+fail_*`) -- match/no-match for both instructions, all four null-handling
+directionality combinations (`ht2` nullable vs. non-nullable, both
+instructions -- the spec's own explicitly flagged "one piece of
+genuinely new, easy-to-get-backwards runtime logic"), plus a byte-count
+decode regression test (`test_decode_br_on_cast_consumes_exactly_flags_
+labelidx_ht1_ht2_bytes`) guarding against the exact "immediate-decoding
+desync" class of bug the spec's own "Trap conditions" section calls out
+by name. These tests exercise real corpus paths the vendored `br_on_
+cast.wast`/`br_on_cast_fail.wast` corpus itself currently CANNOT --
+both files' own richest test content (the `br_on_i31`/`br_on_struct`/
+`br_on_array`/`null-diff` functions) is gated behind a separate,
+unimplemented instruction pair, `br_on_null`/`br_on_non_null` (see this
+slice's own PR description for the corpus delta and the follow-up flag).
+
 ## [0.9.100] - 2026-09-07 - `any.convert_extern`/`extern.convert_any` real conversion semantics (W39 slice 3)
 
 Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 3 of 5.

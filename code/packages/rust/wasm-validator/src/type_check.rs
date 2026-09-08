@@ -321,6 +321,33 @@ fn is_assignable(actual: ValueType, expected: ValueType, module: TypeContext) ->
         || matches!((actual, expected), (ValueType::NonNullStructRef(_), ValueType::StructRefAny))
         || matches!((actual, expected), (ValueType::StructRef(_), ValueType::Eqref))
         || matches!((actual, expected), (ValueType::NonNullStructRef(_), ValueType::Eqref))
+        // W39 slice 4 Correction 3 addendum: a genuine, PRE-EXISTING gap
+        // found live by this slice's own corpus re-verification (not
+        // assumed) -- `(StructRef(_), Anyref)` was never listed directly
+        // here, even though `NonNullStructRef(_) <: Anyref` (via
+        // `is_non_null_subtype_of`, below) and `StructRef(_) <: Eqref <:
+        // Anyref` (the two arms directly above, plus the `(Eqref,
+        // Anyref)` arm just below) both already existed -- this
+        // function's own documented "no transitive closure" contract
+        // means a value SATISFYING both of those two-hop chains
+        // separately still doesn't satisfy the direct one-hop check this
+        // arm performs, so the missing direct edge was a real, reachable
+        // rejection wherever a NULLABLE concrete struct/array reference
+        // (as opposed to its non-null or abstract-top counterparts, both
+        // already covered) flowed into an `anyref`-typed slot. Surfaced
+        // by `br_on_cast_fail.wast`'s own "Abstract Types" module, whose
+        // `init` function's `(table.set (i32.const 2) (struct.new $st
+        // (i32.const 6)))`-style entries later read back through
+        // `table.get` as `StructRef`/`ArrayRef` and flow into an
+        // `anyref`-declared param/result -- unreachable before THIS
+        // slice's own `(ref null any)` parser widening (Correction 3) let
+        // that module's functions parse at all. The array-hierarchy twin
+        // just below (`ArrayRef(_), Anyref`) completes the identical gap
+        // one hierarchy over, added preemptively for the same "complete
+        // the hierarchy per the real rules, not just today's one proven
+        // case" precedent this function's own W37/W38 doc comments above
+        // already establish.
+        || matches!((actual, expected), (ValueType::StructRef(_), ValueType::Anyref))
         || matches!((actual, expected), (ValueType::Eqref, ValueType::Anyref))
         || matches!((actual, expected), (ValueType::StructRefAny, ValueType::Eqref))
         || matches!((actual, expected), (ValueType::StructRefAny, ValueType::Anyref))
@@ -341,6 +368,10 @@ fn is_assignable(actual: ValueType, expected: ValueType, module: TypeContext) ->
         || matches!((actual, expected), (ValueType::NonNullArrayRef(_), ValueType::Eqref))
         || matches!((actual, expected), (ValueType::ArrayRefAny, ValueType::Eqref))
         || matches!((actual, expected), (ValueType::ArrayRefAny, ValueType::Anyref))
+        // W39 slice 4 Correction 3 addendum: the array-hierarchy twin of
+        // `StructRef(_) <: Anyref` above -- see that arm's own doc
+        // comment for the full account of this pre-existing gap.
+        || matches!((actual, expected), (ValueType::ArrayRef(_), ValueType::Anyref))
         // W39 slice 2 (`code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`):
         // `I31ref`'s own missing `<: Eqref`/`<: Anyref` edges -- explicitly
         // flagged as a known, pre-existing gap by this function's own W37
@@ -607,6 +638,37 @@ fn decode_blocktype(module: TypeContext<'_>, code: &[u8], offset: usize) -> Resu
         0x72 => Ok((vec![], vec![ValueType::NullExternref], 1)),
         0x74 => Ok((vec![], vec![ValueType::NullExnref], 1)),
         0x71 => Ok((vec![], vec![ValueType::NullRef], 1)),
+        // W39 slice 4: the `eq`/`i31`/`struct`/`array`/`any` abstract
+        // hierarchy tops (`0x6A`-`0x6E`) as single-value blocktype
+        // results -- the SAME real gap the cases above already fixed once
+        // each for v128/funcref/externref/exnref/the four bottom types:
+        // every one of these bytes has its LEB128 continuation bit clear,
+        // so a module declaring enough types could plausibly hit one as a
+        // REAL type-section index too, but until this arm existed they
+        // instead fell into the generic signed-LEB128 fallback below,
+        // which happily "succeeded" by decoding a bogus NEGATIVE index
+        // (`0x6B` StructRefAny's own payload bits sign-extend to `-21`,
+        // e.g.) and then correctly rejecting it as `TypeIndexOutOfBounds`
+        // -- a real, previously-latent bug, not merely a missed
+        // optimization: any module using `(block (result structref) ...)`
+        // (or `anyref`/`eqref`/`i31ref`/`arrayref`) as a genuine
+        // single-value blocktype was UNCONDITIONALLY rejected, even
+        // though every one of these bytes already has a real, single-byte
+        // `ValueType::byte_tag()` encoding (`wasm-types`) that never
+        // needed a type-section lookup at all. Found live by this slice's
+        // own corpus re-verification: `br_on_cast.wast`'s "Concrete
+        // Types" module (`(block (result structref) (br_on_cast ...))`,
+        // nested inside ANOTHER `(block (result structref) ...)`) newly
+        // reaches this exact code path once `br_on_cast` itself parses --
+        // this bug was always there, just never reachable before because
+        // the whole file failed to parse first. `wasm-execution`'s own
+        // `block_arity` (the runtime-side mirror of this function) has
+        // the IDENTICAL gap -- see that function's own matching fix.
+        0x6E => Ok((vec![], vec![ValueType::Anyref], 1)),
+        0x6D => Ok((vec![], vec![ValueType::Eqref], 1)),
+        0x6C => Ok((vec![], vec![ValueType::I31ref], 1)),
+        0x6B => Ok((vec![], vec![ValueType::StructRefAny], 1)),
+        0x6A => Ok((vec![], vec![ValueType::ArrayRefAny], 1)),
         // `(ref null $t)` / `(ref $t)` as a single-value blocktype result
         // (W32 second slice: real corpus regression found, not a
         // hypothetical -- `ref.wast`'s own `block-result-invalid`/
@@ -2644,6 +2706,54 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_val(&mut stack, frame!())?;
                         stack.push(StackType::Unknown);
                     }
+                    0x18 | 0x19 => {
+                        // br_on_cast / br_on_cast_fail <flags:u8> <labelidx>
+                        // <ht1> <ht2> (W39 slice 4: `code/specs/
+                        // W39-wasm-gc-ref-eq-cast-br-on-cast.md`) -- modeled
+                        // directly on `br_if`'s own arm (`0x0D` below):
+                        // decode every immediate (consuming the RIGHT number
+                        // of bytes is the hard requirement here -- an
+                        // under/over-read would desync `offset` for every
+                        // later instruction in this function body, the same
+                        // class of bug this crate's own `array.init_elem`
+                        // arm doc comment already calls out by name), bounds-
+                        // check the branch target via the SAME
+                        // `resolve_label_target` helper `br`/`br_if` already
+                        // use, then pop ONE generic value (`pop_val`, the
+                        // tested operand of static type `rt1`) and push
+                        // `StackType::Unknown` back for whichever path
+                        // continues in-line.
+                        //
+                        // This deliberately does NOT compute the real
+                        // `rt1\rt2` difference type the spec's own formal
+                        // typing rule calls for -- per `code/specs/
+                        // W39-wasm-gc-ref-eq-cast-br-on-cast.md`'s own
+                        // "Real spec text" section: this validator's
+                        // existing `StackType::Unknown` convention already
+                        // satisfies any downstream `pop_val`/`pop_expect`
+                        // check (`ref.cast`'s own `0x16`/`0x17` arm just
+                        // above already pushes `Unknown` unconditionally,
+                        // not a real narrowed `rt`), so matching that same
+                        // established looseness here is a deliberate scope
+                        // choice, not an oversight -- see the spec's own
+                        // "Explicitly out of scope" item 3.
+                        //
+                        // `ht1`/`ht2`'s decoded VALUES aren't consulted here
+                        // at all (only their byte LENGTHS, to stay in sync) --
+                        // a full static `rt2 <: rt1` check would need real
+                        // `ValueType` resolution for both, which this
+                        // permissive pass deliberately skips, same as
+                        // `ref.cast`'s own heap-type immediate just above.
+                        offset += 1; // flags: a single raw byte, not LEB128
+                        let (depth, sz1) = decode_idx(code, offset)?;
+                        let (_, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad br_on_cast ht1: {e}")))?;
+                        let (_, sz3) = decode_unsigned(code, offset + sz1 + sz2).map_err(|e| ValidationError::Other(format!("bad br_on_cast ht2: {e}")))?;
+                        offset += sz1 + sz2 + sz3;
+                        resolve_label_target(control_stack.len(), depth)
+                            .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br_on_cast/br_on_cast_fail target {depth} out of range")))?;
+                        pop_val(&mut stack, frame!())?;
+                        stack.push(StackType::Unknown);
+                    }
                     0x1C => {
                         // ref.i31 (W20; this crate previously called it
                         // i31.new): pops I32, pushes i31ref.
@@ -2827,8 +2937,51 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // expected-type check) and pushes `I32`, exactly like
                 // `ref.is_null`'s own `0xD1` arm two values instead of one.
                 // No immediate bytes to consume.
-                pop_val(&mut stack, frame!())?;
-                pop_val(&mut stack, frame!())?;
+                //
+                // W39 slice 4 Correction 3 addendum: TWO narrow exceptions
+                // to that established looseness, added when `parse_value_
+                // type` grew real `(ref any)`/`(ref null any)` support
+                // (needed for `br_on_cast.wast`'s own `(param (ref any))`/
+                // `(param (ref null any))` function signatures -- see
+                // `ValueType::NonNullAnyref`'s own doc comment in `wasm-
+                // types`). Before that widening, EITHER spelling as a
+                // param type simply failed to PARSE, which is what kept
+                // `ref_eq.wast`'s own two `assert_invalid` cases (`(param
+                // $r (ref any))` / `(param $r (ref null any))`, both
+                // `(ref.eq (local.get $r) (local.get $r))`, both expecting
+                // "type mismatch") correctly rejected. Once either spelling
+                // parses, that same module would otherwise reach HERE and
+                // be wrongly accepted (this arm's own `pop_val` doesn't
+                // check anything) -- so these two operand shapes get a
+                // real, targeted check: `any` sits strictly ABOVE `eq` in
+                // the hierarchy (never below or beside it), so neither a
+                // `NonNullAnyref`- nor a plain `Anyref`-typed operand can
+                // ever be a real `eqref`, and both must be rejected here,
+                // the same "type mismatch" outcome the real spec's own
+                // typing rule ($[(ref null eq) (ref null eq)] -> [i32]$)
+                // would reach via full per-operand type checking -- this is
+                // NOT a general reintroduction of that checking (every
+                // other `ValueType`, including `Eqref`/`StructRefAny`/
+                // `ArrayRefAny`/`I31ref`, all genuinely assignable to
+                // `eqref`, still flows through unchecked, matching this
+                // arm's pre-existing looseness), just the two cases this
+                // slice's own parser widening made newly reachable. Direct
+                // corpus check (not assumed): no vendored `.wast` file
+                // anywhere in the 257-file corpus calls `ref.eq` on a
+                // genuinely `anyref`-typed operand expecting success (the
+                // three OTHER real `ref.eq` call sites outside `ref_eq.
+                // wast` itself -- `table_init.wast`/`table_init64.wast`/
+                // `array_new_elem.wast`/`array_init_elem.wast` -- all
+                // compare `arrayref`-typed table/array entries, a
+                // DIFFERENT `ValueType` this check does not touch), so
+                // this tightening carries no regression risk against
+                // anything this arm's own looseness was relied on for.
+                let a = pop_val(&mut stack, frame!())?;
+                let b = pop_val(&mut stack, frame!())?;
+                let is_any = |v: StackType| matches!(v, StackType::Known(ValueType::NonNullAnyref) | StackType::Known(ValueType::Anyref));
+                if is_any(a) || is_any(b) {
+                    err!("type mismatch: ref.eq operand statically typed `(ref [null] any)` is not assignable to `eqref`");
+                }
                 push_val(&mut stack, ValueType::I32);
             }
 

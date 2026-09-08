@@ -2,6 +2,48 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.28] - 2026-09-08 (feat: `ValueType::NonNullAnyref` -- W39 slice 4, `br_on_cast`/`br_on_cast_fail`)
+
+Per `code/specs/W39-wasm-gc-ref-eq-cast-br-on-cast.md`, slice 4 of 5 (Correction 3).
+
+- **New variant `ValueType::NonNullAnyref`** -- the non-null counterpart of
+  `Anyref` (the GC hierarchy's own `(ref any)`, as opposed to the existing
+  nullable `(ref null any)`/bare `anyref`), needed because `br_on_cast.
+  wast`/`br_on_cast_fail.wast` declare real function signatures like
+  `(func (param (ref any)) (result (ref any))) ...)` -- a genuine param/
+  result type declaration, not just an instruction-local type immediate
+  `ref.test`/`ref.cast`/`br_on_cast`'s own encoder could intercept
+  locally. Binary encoding `[0x64, 0x6E]` (the function-references
+  proposal's non-null reftype-constructor byte, same as `NonNullArrayAny`'s
+  own `[0x64, 0x66]`, followed by `any`'s own abstract heap-type tag).
+  Only this ONE variant was added (not `NonNullEqref`/`NonNullStructRefAny`
+  too) -- direct corpus read confirmed only `(ref any)` is proven needed
+  by the six-file W39 cluster, matching this campaign's "don't build
+  untested surface" discipline.
+- **`byte_tag()`/`encode()`** updated (multi-byte, `None`/`[0x64, 0x6E]`).
+- **`is_non_null_subtype_of`**: `NonNullAnyref <: Anyref` (the one edge
+  ABOVE this variant -- `any` is already the top of its own hierarchy, no
+  further hop needed), plus three edges INTO it from below, found live by
+  this slice's own corpus re-verification (not merely mirrored
+  speculatively): `NonNullStructRef(_)`/`NonNullArrayRef(_)`/
+  `NonNullArrayAny` are each already `<: Anyref`; none of them is ever
+  null at the type level, so each also needed a direct `<: NonNullAnyref`
+  edge for `type-subtyping.wast`'s own `$f2`/`$f3` function-subtype chain
+  (`(result (ref any))` <- `(result (ref $s))`, real spec covariant-result
+  subtyping) to validate. `I31ref` deliberately excluded -- this crate's
+  `I31ref` collapses both the nullable and non-null text spellings into
+  one variant, so treating it as unconditionally `<:` a non-null top would
+  wrongly accept a genuinely-nullable value; no corpus case needs it.
+- **A separate, genuinely pre-existing gap found and fixed in the same
+  pass**: `wasm-validator::is_assignable` never had a direct
+  `(StructRef(_), Anyref)` / `(ArrayRef(_), Anyref)` edge (only their
+  non-null and abstract-hierarchy-top counterparts did) -- invisible until
+  `br_on_cast_fail.wast`'s own "Abstract Types" module (unblocked by this
+  same slice's `(ref null any)` parser widening) became the first real
+  corpus case to route a NULLABLE concrete struct/array reference into an
+  `anyref`-typed slot. See `wasm-validator`'s own CHANGELOG for the full
+  account.
+
 ## [0.1.27] - 2026-09-02 (feat: `Element::declared_type` -- W38 slices 4/5, GC array bulk ops)
 
 Slices 4/5 of `code/specs/W38-wasm-gc-array-bulk-ops.md`'s six-slice plan

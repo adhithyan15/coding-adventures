@@ -802,3 +802,128 @@ own phrasing ("closes the remainder... that slice 2 alone doesn't")
 implied — in practice, slice 3 is a prerequisite for the LARGE majority of
 both files, not a small remainder. See `wasm-conformance`'s own CHANGELOG
 for the exact before/after table.
+
+## Slice 4 implementation addendum, and epic status (real findings, corrections to Design §4)
+
+Slice 4 (`br_on_cast`/`br_on_cast_fail`, `0xFB 0x18`/`0x19`) landed
+implementing exactly the Design section's own plan: `GcOp` grew a real
+fourth field (`flags: u8`, the one WasmGC op needing all three existing
+`u32` slots simultaneously with no spare one to repurpose), `wasm-
+execution`'s `value_matches_reftype` factors the shared dynamic-test
+logic out of `ref.test`/`ref.cast`'s own arms so both instruction
+families call it identically, `wasm-validator`'s `0x18 | 0x19` arm mirrors
+`br_if`'s own shape and deliberately pushes `StackType::Unknown` rather
+than computing the real `rt1\rt2` difference type (per Design §4's own
+explicit sidestep), and `wasm-wast-parser`'s `br_on_cast`/`br_on_cast_
+fail` folded-form encoder reuses `ref.test`/`ref.cast`'s own heap-type-
+immediate logic verbatim (factored into `parse_gc_reftype_immediate`).
+
+**Correction 3 needed only one variant, exactly as the Design section's
+own "check the corpus before deciding" instruction predicted**:
+`ValueType::NonNullAnyref` alone (not `NonNullEqref`/`NonNullStructRefAny`)
+— direct corpus read confirmed only `(ref any)` is used, as non-null
+`(ref any)` AND nullable `(ref null any)` BOTH needed widening the shared
+`parse_value_type` (not just an instruction-local fix), because `br_on_
+cast.wast`'s own function signatures declare `(ref any)`/`(ref null any)`
+as genuine PARAM/RESULT types — unlike Correction 2's five abstract
+non-null forms, there is no per-instruction escape hatch for a function
+signature. This reopened the exact regression class Correction 2's own
+addendum already found once: `ref_eq.wast`'s `assert_invalid` cases for
+BOTH spellings relied on parse-time rejection alone. Fixed by a real,
+narrow `wasm-validator` `ref.eq` (`0xD3`) check instead (reject a
+`NonNullAnyref`/`Anyref`-typed operand — `any` sits strictly above `eq`),
+confirmed safe against the full 257-file corpus (see `wasm-validator`'s
+own CHANGELOG).
+
+**Two genuinely pre-existing bugs, invisible before this slice, found by
+this slice's own mandatory full-corpus diff and fixed in the same pass**
+(both are the same class of "latent until something reaches it" gap
+Correction 2's item 3/4 already reported once each, for a different
+region of the same type lattice):
+1. `wasm-validator::decode_blocktype` / `wasm-execution`'s matching
+   blocktype operand decoder + `block_arity` had no arm for the `eq`/
+   `i31`/`struct`/`array`/`any` abstract hierarchy tops (`0x6A`-`0x6E`) as
+   single-value blocktype results — each byte fell into the generic
+   signed-LEB128 type-index path, decoding a bogus negative index
+   (`0x6B` → `-21`) that validation correctly rejected as `TypeIndex
+   OutOfBounds`, meaning ANY module using `(block (result structref) ...)`
+   (or the other four) was unconditionally invalid, even though each byte
+   already has a real single-byte encoding needing no type-section lookup
+   at all.
+2. `wasm-validator::is_assignable` had no direct `(StructRef(_), Anyref)`
+   / `(ArrayRef(_), Anyref)` edge — only their non-null and abstract-top
+   counterparts did, and this function's own documented "no transitive
+   closure" contract means satisfying two separate two-hop chains doesn't
+   imply satisfying the direct one-hop check.
+
+Both were real, reachable bugs on `main` before this slice, simply never
+exercised by any corpus fixture until `br_on_cast`/`br_on_cast_fail`
+parsing let `br_on_cast.wast`/`br_on_cast_fail.wast`'s own "Concrete
+Types"/"Abstract Types" modules reach them for the first time. Fixed
+directly rather than deferred, per this campaign's own "don't defer a bug
+that breaks the premise" discipline — both gated real corpus files THIS
+slice is responsible for.
+
+**Net corpus effect, measured (not the "31 NYS → ~0" the spec's own
+"Recommended slice decomposition" implicitly projected)**: `br_on_cast.
+wast` 31→33 NYS (+2), `br_on_cast_fail.wast` 31→32 NYS (+1),
+`type-subtyping.wast` 13→12 NYS (-1, a side effect of the `NonNullAnyref`
+lattice fix). **Zero new `fail` anywhere in the 257-file corpus.** The
+NYS increase in the two target files is real and expected, not a
+regression, for two investigated-not-assumed reasons — see `wasm-
+conformance`'s own CHANGELOG for the full accounting:
+
+1. **The dominant blocker: `br_on_null`/`br_on_non_null` are ALSO
+   completely unimplemented in this codebase** (confirmed by a `grep`
+   across every crate in the workspace — zero hits for either name
+   outside the corpus fixtures). Both files' own richest test content
+   (the "Abstract Types" module's `br_on_i31`/`br_on_struct`/`br_on_
+   array`/`null-diff` functions — the assert_return cases that would
+   actually PROVE the dynamic-test and null-handling logic correct end
+   to end) all lead with a `br_on_null`/`br_on_non_null` call and are
+   entirely gated behind it — 27 of each file's own 31 pre-slice NYS
+   directives. This is a genuinely SEPARATE instruction pair (a
+   different proposal; this spec's own opcode table never listed either
+   name) discovered live during this slice's own re-verification, exactly
+   the same "flag it, don't implement it" situation slice 3's own agent
+   already hit once for `ref_cast.wast`'s `ref.as_non_null` gap. **Not
+   implemented here — flagged as a separate follow-up.**
+2. The remaining NYS movement (6/5 `assert_invalid` cases per file) is
+   `br_on_cast`/`br_on_cast_fail` becoming reachable for the first time,
+   exposing that Design §4's own deliberate scope boundary (no `rt1\rt2`/
+   label-type validation) means these specific cases — previously
+   "passing" only because the whole file failed to parse for an unrelated
+   reason — now correctly report `NotYetSupported` instead of a
+   grounded rejection. A more honest number, not a worse one.
+
+Real, positive, corpus-grounded progress this slice DOES prove: both
+files' "Concrete Types"/setup modules — previously 100% blocked — now
+parse, structurally validate, and EXECUTE, exercising `br_on_cast`
+against a real eight-struct-type nominal subtyping lattice end-to-end.
+The null-handling directionality (the one piece of runtime logic Design
+§4 flagged as easy to get backwards) is verified by direct `wasm-
+execution` unit tests instead, since the corpus itself cannot currently
+reach that code path (blocked by `br_on_null` above).
+
+**Epic status: NOT fully closed.** Slices 1-3 are complete and fully
+closed per their own CHANGELOGs. Slice 4 (`br_on_cast`/`br_on_cast_fail`)
+is IMPLEMENTED and verified by direct unit tests, but the vendored
+`br_on_cast.wast`/`br_on_cast_fail.wast` corpus files themselves remain
+mostly `NotYetSupported`, gated by residuals genuinely outside this
+spec's own scope:
+- `br_on_null`/`br_on_non_null` (a separate, unimplemented instruction
+  pair) — the dominant blocker for both `br_on_cast.wast`/`br_on_cast_
+  fail.wast`, flagged above.
+- `ref.as_non_null` (already flagged separately by slice 3) — still open,
+  gates `ref_cast.wast`'s own remaining NYS, unrelated to this slice.
+- The 6/5 `br_on_cast`/`br_on_cast_fail` `assert_invalid` cases needing
+  `rt1\rt2`/label-type validation this slice deliberately left unbuilt
+  (Design §4, "Explicitly out of scope" item 3).
+
+Slice 5 ("full corpus re-verification") is effectively folded into this
+slice's own verification pass above — a separate slice-5 PR is not
+needed; whoever picks up `br_on_null`/`br_on_non_null` next should re-run
+the same full-diff methodology once that instruction pair lands, since it
+is very likely to unblock the LARGE majority of both files' remaining
+NYS counts in one move (mirroring how slice 3's `any.convert_extern`
+unblocked the majority of `ref_test.wast`/`ref_cast.wast`).
