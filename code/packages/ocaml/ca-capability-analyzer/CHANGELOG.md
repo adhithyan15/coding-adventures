@@ -16,3 +16,8 @@ All notable changes to this package are recorded here.
 - Strict schema-v1 manifest parsing with the closed Spec 13 taxonomy.
 - Stable `CAP001` and `CAP002` findings, CLI exit codes, library API, shared
   behavior fixtures, package integration tests, and measured coverage gates.
+- Fail-closed sensitive first-class references and constrained includes,
+  package-bound regular manifests, unsupported generated-source rejection, and
+  fixed file-count, depth, per-file, manifest, and aggregate byte ceilings.
+- A self-contained package fixture mirror, numeric 95% source-coverage gate,
+  and executable Windows BUILD syntax.

@@ -115,6 +115,7 @@ jobs:
       run_contracts_adj_stdlib: ${{ steps.detect.outputs.run_contracts_adj_stdlib }}
       run_contracts_build_tool_conformance: ${{ steps.detect.outputs.run_contracts_build_tool_conformance }}
       run_contracts_capability_cage: ${{ steps.detect.outputs.run_contracts_capability_cage }}
+      run_ocaml_capability_gate: ${{ steps.detect.outputs.run_ocaml_capability_gate }}
       run_build_macos_os_suites: ${{ steps.detect.outputs.run_build_macos_os_suites }}
       run_build_windows_os_suites: ${{ steps.detect.outputs.run_build_windows_os_suites }}
     steps:
@@ -621,7 +622,7 @@ jobs:
   ocaml-capability-gate:
     name: OCaml capability gate
     needs: detect
-    if: needs.detect.outputs.run_contracts_capability_cage == 'true'
+    if: needs.detect.outputs.run_ocaml_capability_gate == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
@@ -658,6 +659,16 @@ jobs:
           cd code/packages/ocaml/ca-capability-analyzer
           opam install . --deps-only --with-test --with-dev-setup \
             --yes --require-checksums
+          rm -f bisect*.coverage
+          BISECT_FILE="$PWD/bisect" opam exec -- \
+            dune runtest --force --instrument-with bisect_ppx
+          opam exec -- bisect-ppx-report summary --per-file \
+            --expect src/coding_adventures_capability_analyzer.ml \
+            bisect*.coverage | tee _build/coverage-summary.txt
+          python test/check_coverage.py \
+            --summary _build/coverage-summary.txt \
+            --source src/coding_adventures_capability_analyzer.ml \
+            --minimum 95
           opam exec -- dune build bin/main.exe
 
       - name: Analyze every OCaml package and program independently
@@ -2944,7 +2955,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, build]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -2953,6 +2964,7 @@ jobs:
         env:
           DETECT_RESULT: ${{ needs.detect.result }}
           CONTRACTS_RESULT: ${{ needs.contracts.result }}
+          OCAML_CAPABILITY_RESULT: ${{ needs['ocaml-capability-gate'].result }}
           PHY_RESULT: ${{ needs['phy00-phy01-fixture-consumers'].result }}
           D18F_RESULT: ${{ needs['d18f-message-conformance'].result }}
           D18P_RESULT: ${{ needs['d18p-channel-conformance'].result }}
@@ -2967,9 +2979,9 @@ jobs:
           UNICODE17_SWIFT_RESULT: ${{ needs['unicode17-swift-conformance'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

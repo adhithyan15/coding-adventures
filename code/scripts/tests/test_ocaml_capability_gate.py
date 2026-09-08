@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 import unittest
@@ -19,6 +20,15 @@ MANIFEST_SCHEMA_PATH = (
 )
 
 
+def load_coverage_gate():
+    path = PACKAGE_ROOT / "test/check_coverage.py"
+    spec = importlib.util.spec_from_file_location("ocaml_coverage_gate", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 class OcamlCapabilityGateTest(unittest.TestCase):
     def test_behavior_fixture_is_schema_valid(self) -> None:
         schema = json.loads(
@@ -29,6 +39,12 @@ class OcamlCapabilityGateTest(unittest.TestCase):
         ids = [case["id"] for case in document["cases"]]
         self.assertEqual(len(ids), len(set(ids)))
         self.assertGreaterEqual(len(ids), 15)
+        packaged = json.loads(
+            (
+                PACKAGE_ROOT / "test/fixtures/ocaml-capability-analyzer-v1/cases.json"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual(packaged, document)
 
     def test_manifest_schema_allows_ocaml_exceptions(self) -> None:
         schema = json.loads(MANIFEST_SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -57,6 +73,32 @@ class OcamlCapabilityGateTest(unittest.TestCase):
                 opam, rf'"{re.escape(dependency)}"[^\n]*= "{re.escape(version)}"'
             )
 
+    def test_numeric_coverage_gate_is_fail_closed(self) -> None:
+        gate = load_coverage_gate()
+        summary = (
+            "Coverage: 95/100 (95.00%)\n"
+            "File 'src/coding_adventures_capability_analyzer.ml': "
+            "95/100 (95.00%)\n"
+        )
+        self.assertEqual(
+            gate.source_percentage(
+                summary, "src/coding_adventures_capability_analyzer.ml"
+            ),
+            95.0,
+        )
+        with self.assertRaises(ValueError):
+            gate.source_percentage(summary, "src/missing.ml")
+        self.assertEqual(
+            gate.require_minimum(
+                summary, "src/coding_adventures_capability_analyzer.ml", 95.0
+            ),
+            95.0,
+        )
+        with self.assertRaises(ValueError):
+            gate.require_minimum(
+                summary, "src/coding_adventures_capability_analyzer.ml", 95.01
+            )
+
     def test_ci_registry_routes_all_ocaml_analyzer_inputs(self) -> None:
         registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
         gate = registry["gates"]["contracts-capability-cage"]
@@ -69,21 +111,34 @@ class OcamlCapabilityGateTest(unittest.TestCase):
         ):
             self.assertIn(path, gate["paths"])
 
+        job_gate = registry["gates"]["ocaml-capability-gate"]
+        self.assertEqual(job_gate["scope"], "job")
+        self.assertIn("code/packages/ocaml/**", job_gate["paths"])
+        self.assertIn("code/programs/ocaml/**", job_gate["paths"])
+
     def test_workflow_has_an_independent_fail_closed_job(self) -> None:
         workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
         required_fragments = (
             "ocaml-capability-gate:",
             "name: OCaml capability gate",
-            "needs.detect.outputs.run_contracts_capability_cage == 'true'",
+            "run_ocaml_capability_gate: ${{ steps.detect.outputs.run_ocaml_capability_gate }}",
+            "needs.detect.outputs.run_ocaml_capability_gate == 'true'",
             "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
             "ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0",
             "ocaml-base-compiler.5.2.1",
             "opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff",
             "opam install . --deps-only --with-test --with-dev-setup",
+            "dune runtest --force --instrument-with bisect_ppx",
+            "bisect-ppx-report summary --per-file",
+            "test/check_coverage.py",
+            "--minimum 95",
             "opam exec -- dune build bin/main.exe",
             "find code/packages/ocaml code/programs/ocaml",
             'test "${#roots[@]}" -gt 0',
             '"$analyzer" --dir "$(dirname "$project")"',
+            "needs: [detect, contracts, ocaml-capability-gate,",
+            "OCAML_CAPABILITY_RESULT: ${{ needs['ocaml-capability-gate'].result }}",
+            '"$OCAML_CAPABILITY_RESULT"',
         )
         for fragment in required_fragments:
             self.assertIn(fragment, workflow)

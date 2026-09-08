@@ -352,6 +352,21 @@
         "code/programs/go/capability-cage-generator/**"
       ]
     },
+    "ocaml-capability-gate": {
+      "scope": "job",
+      "description": "Compiler-libs capability analysis for every OCaml package and program.",
+      "packages": [
+        "ocaml/ca-capability-analyzer"
+      ],
+      "paths": [
+        "code/packages/ocaml/**",
+        "code/programs/ocaml/**",
+        "code/specs/fixtures/ocaml-capability-analyzer-v1/**",
+        "code/specs/OCAML06-capability-analyzer.md",
+        "code/specs/schemas/required_capabilities.schema.json",
+        "code/scripts/tests/test_ocaml_capability_gate.py"
+      ]
+    },
     "build-macos-os-suites": {
       "scope": "step",
       "description": "Suites that run only on the macOS build leg, independent of any toolchain flag.",

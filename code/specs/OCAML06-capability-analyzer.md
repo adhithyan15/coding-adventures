@@ -27,16 +27,19 @@ and Yojson 3.0.0. `compiler-libs.common` supplies the parser and AST. The
 analyzer does not invoke the compiler, shell, package manager, or another
 language analyzer.
 
-Its own manifest declares only the filesystem reads and directory listing
-needed to load source and the manifest, plus standard output for CLI reports.
-Parsing via `compiler-libs` does not require a banned-construct exception.
+Its own manifest declares the filesystem reads and directory listing needed to
+load source and the manifest, standard output for CLI reports, and the
+create/write/delete actions used by isolated temporary-fixture tests. Parsing
+via `compiler-libs` does not require a banned-construct exception.
 
 ## Inputs and exit behavior
 
 The CLI accepts `--dir PACKAGE_DIR` and optional `--verbose`. The directory
 defaults to `.`. It recursively analyzes regular `.ml` and `.mli` files in
 deterministic relative-path order, while rejecting symlinked source inputs and
-skipping `_build`, `.git`, `_opam`, and `node_modules` directories.
+skipping `_build`, `.git`, `_opam`, and `node_modules` directories. `.mll` and
+`.mly` inputs, Dune preprocessing/generator stanzas, AST extensions, and source
+attributes are rejected until the analyzer can inspect their generated output.
 
 The scanner applies fixed resource ceilings before parsing: at most 10,000
 source files, at most 4 MiB per source file, at most 64 MiB across all source
@@ -79,11 +82,12 @@ supported opens:
 
 | OCaml surface | Capability |
 |---|---|
-| `open_in`, `open_in_bin`, `In_channel.open_text`, `In_channel.open_bin` | `fs:read:*` |
-| `open_out`, `open_out_bin`, `open_out_gen`, `Out_channel.open_text`, `Out_channel.open_bin` | `fs:write:*` |
-| `Sys.file_exists`, `Sys.is_directory`, `Sys.read_directory`, `Unix.stat`, `Unix.lstat`, `Unix.opendir`, `Unix.readdir` | `fs:list:*` |
+| `open_in`, `open_in_bin`, `In_channel.open_text`, `In_channel.open_bin`, `In_channel.with_open_text`, `In_channel.with_open_bin` | `fs:read:*` |
+| `open_out`, `open_out_bin`, `open_out_gen`, `Out_channel.open_text`, `Out_channel.open_bin`, `Out_channel.with_open_text`, `Out_channel.with_open_bin` | `fs:write:*` |
+| `Sys.file_exists`, `Sys.is_directory`, `Sys.read_directory`, `Unix.stat`, `Unix.lstat`, `Unix.realpath`, `Unix.opendir`, `Unix.readdir` | `fs:list:*` |
 | `Sys.remove`, `Unix.unlink`, `Unix.rmdir` | `fs:delete:*` |
-| `Sys.rename`, `Unix.rename`, `Unix.mkdir`, `Unix.chmod`, `Unix.chown` | `fs:write:*` |
+| `Unix.mkdir`, `Unix.symlink` | `fs:create:*` |
+| `Sys.rename`, `Unix.rename`, `Unix.chmod`, `Unix.chown` | `fs:write:*` |
 | `Unix.openfile` | both `fs:read:*` and `fs:write:*` conservatively |
 | `Unix.socket`, `Unix.socketpair`, `Unix.connect`, `Unix.send*`, `Unix.recv*`, `Unix.shutdown` | `net:connect:*` |
 | `Unix.bind`, `Unix.listen`, `Unix.accept`, `Unix.accept_non_intr` | `net:listen:*` |
@@ -105,10 +109,12 @@ cannot be resolved statically, the broad action-level capability is emitted.
 
 ## Names, aliases, opens, and shadowing
 
-The analyzer resolves direct module aliases such as `module U = Unix`, local
-aliases introduced by `let module`, and `Stdlib.Unix`-style qualified paths.
-It resolves `open Unix`, `let open Unix in ...`, and `Unix.(...)` for the rule
-table above.
+The analyzer resolves direct and constrained module aliases such as
+`module U = Unix`, local aliases introduced by `let module`, includes, and
+`Stdlib.Unix`-style qualified paths. It resolves `open Unix`,
+`let open Unix in ...`, and `Unix.(...)` for the rule table above. A sensitive
+function used as a first-class value is detected at the reference, so value
+aliases and higher-order arguments cannot bypass a capability or hard ban.
 
 A locally bound value shadows an unqualified standard-library name in its
 lexical scope. Function parameters, `let`, `let rec`, match cases, loops, and
@@ -116,10 +122,10 @@ exception handlers contribute bindings. A locally defined module shadows a
 previous alias. Qualified calls through an unknown or shadowing module are not
 attributed to the standard library.
 
-Dynamic module expressions that affect a capability-bearing open or alias,
-first-class-module dispatch used as a call receiver, and extension nodes in
-call position are unsupported and fail with an explicit analysis error instead
-of being silently ignored.
+Dynamic module expressions that contain a capability-bearing module but cannot
+be resolved, first-class-module dispatch used as a call receiver, generated
+source inputs, attributes, and extension nodes are unsupported and fail with an
+explicit analysis error instead of being silently ignored.
 
 ## Banned constructs
 

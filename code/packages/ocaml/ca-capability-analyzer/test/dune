@@ -1,6 +1,8 @@
 (test
  (name test_capability_analyzer)
  (modes byte)
+ (deps
+  (glob_files_rec fixtures/*))
  (libraries alcotest coding_adventures_capability_analyzer yojson unix)
  (instrumentation
   (backend bisect_ppx)))

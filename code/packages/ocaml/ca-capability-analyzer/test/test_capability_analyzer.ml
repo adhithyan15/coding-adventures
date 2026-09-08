@@ -4,23 +4,43 @@ let unwrap = function
   | Ok value -> value
   | Error message -> Alcotest.fail message
 
-let code_root () =
+let package_root () =
   let rec search remaining directory =
     let marker =
       Filename.concat directory
-        "specs/fixtures/ocaml-capability-analyzer-v1/cases.json"
+        "test/fixtures/ocaml-capability-analyzer-v1/cases.json"
     in
     if Sys.file_exists marker then directory
     else if remaining = 0 then
-      Alcotest.fail "could not locate the repository code root"
+      Alcotest.fail "could not locate the package fixture root"
     else search (remaining - 1) (Filename.dirname directory)
   in
   search 12 (Sys.getcwd ())
 
 let fixture_root () =
-  Filename.concat (code_root ()) "specs/fixtures/ocaml-capability-analyzer-v1"
+  Filename.concat (package_root ()) "test/fixtures/ocaml-capability-analyzer-v1"
 
 let sorted strings = List.sort_uniq String.compare strings
+
+let write_file path contents =
+  Out_channel.with_open_bin path (fun channel ->
+      Out_channel.output_string channel contents)
+
+let rec remove_tree path =
+  match (Unix.lstat path).st_kind with
+  | Unix.S_DIR ->
+      Sys.readdir path
+      |> Array.iter (fun name -> remove_tree (Filename.concat path name));
+      Unix.rmdir path
+  | _ -> Sys.remove path
+
+let with_temp_directory callback =
+  let directory = Filename.temp_file "ocaml-capability-" "-test" in
+  Sys.remove directory;
+  Unix.mkdir directory 0o700;
+  Fun.protect
+    ~finally:(fun () -> remove_tree directory)
+    (fun () -> callback directory)
 
 let detected_strings detections =
   detections
@@ -183,6 +203,19 @@ let test_manifest_duplicate_capability () =
   | Error _ -> ()
   | Ok _ -> Alcotest.fail "duplicate capability was accepted"
 
+let test_manifest_package_name_boundary () =
+  match
+    parse_manifest
+      {|{
+        "version": 1,
+        "package": "ocaml/-invalid",
+        "capabilities": [],
+        "justification": "Rejects a package name whose first segment character is punctuation."
+      }|}
+  with
+  | Error _ -> ()
+  | Ok _ -> Alcotest.fail "schema-incompatible package name was accepted"
+
 let test_evaluate_undeclared_and_declared () =
   let detections, banned =
     unwrap
@@ -282,30 +315,106 @@ let test_parse_error_fails_closed () =
   | Error _ -> ()
   | Ok _ -> Alcotest.fail "invalid OCaml parsed successfully"
 
+let test_unsupported_ast_fails_closed () =
+  let rejected =
+    [
+      "let value = [%generated]";
+      "let[@generated] value = 1";
+      "let read = input_line";
+    ]
+  in
+  List.iter
+    (fun source ->
+      match analyze_source ~filename:"unsupported.ml" Implementation source with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.failf "unsupported AST was accepted: %s" source)
+    rejected
+
+let test_directory_input_boundaries () =
+  with_temp_directory (fun directory ->
+      let oversized = Filename.concat directory "oversized.ml" in
+      write_file oversized (String.make ((4 * 1024 * 1024) + 1) 'x');
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "oversized source was accepted");
+      Sys.remove oversized;
+      let generated = Filename.concat directory "lexer.mll" in
+      write_file generated "rule token = parse eof { () }\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "generated source input was accepted");
+      Sys.remove generated;
+      write_file (Filename.concat directory "input.ml") "let x = 1\n";
+      write_file
+        (Filename.concat directory "dune")
+        "(library (name generated) (preprocess (pps unsafe_ppx)))\n";
+      match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "Dune preprocessing was accepted")
+
+let test_manifest_identity_and_kind () =
+  with_temp_directory (fun directory ->
+      let manifest = Filename.concat directory "required_capabilities.json" in
+      write_file manifest
+        {|{
+          "version": 1,
+          "package": "ocaml/not-this-directory",
+          "capabilities": [],
+          "justification": "This deliberately mismatched profile must fail closed."
+        }|};
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "mismatched manifest identity was accepted");
+      Sys.remove manifest;
+      let target = Filename.concat directory "manifest-target.json" in
+      write_file target "{}";
+      try
+        Unix.symlink target manifest;
+        match analyze_directory directory with
+        | Error _ -> ()
+        | Ok _ -> Alcotest.fail "symlinked manifest was accepted"
+      with Unix.Unix_error _ -> ())
+
 let test_directory_analysis () =
-  let clean = Filename.concat (fixture_root ()) "package-clean" in
-  let denied = Filename.concat (fixture_root ()) "package-violation" in
-  let broken = Filename.concat (fixture_root ()) "package-parse-error" in
-  let clean_result = unwrap (analyze_directory clean) in
-  Alcotest.(check bool) "clean package" true (passed clean_result);
-  let denied_result = unwrap (analyze_directory denied) in
-  Alcotest.(check bool) "violation package" false (passed denied_result);
-  Alcotest.(check (list string))
-    "violation code" [ "CAP001" ]
-    (List.map (fun violation -> violation.code) denied_result.violations);
-  Alcotest.(check (list string))
-    "deterministic relative paths"
-    [ "src/nested/violation.ml" ]
-    (denied_result.detected
-    |> List.map (fun (detection : detection) -> detection.file)
-    |> sorted);
-  match analyze_directory broken with
-  | Error _ -> ()
-  | Ok _ -> Alcotest.fail "directory parse failure was ignored"
+  with_temp_directory (fun root ->
+      let make_package name source manifest =
+        let directory = Filename.concat root name in
+        Unix.mkdir directory 0o700;
+        write_file (Filename.concat directory "input.ml") source;
+        Option.iter
+          (write_file (Filename.concat directory "required_capabilities.json"))
+          manifest;
+        directory
+      in
+      let clean_name = "clean" in
+      let clean =
+        make_package clean_name "let value = Sys.getenv \"FIXTURE_VALUE\"\n"
+          (Some
+             (Printf.sprintf
+                {|{"version":1,"package":"ocaml/%s","capabilities":[{"category":"env","action":"read","target":"FIXTURE_VALUE","justification":"Reads one deterministic fixture environment variable."}],"justification":"Fixture package for a declared environment read."}|}
+                clean_name))
+      in
+      let denied =
+        make_package "denied" "let value = Sys.getenv \"UNDECLARED\"\n" None
+      in
+      let broken = make_package "broken" "let =\n" None in
+      let clean_result = unwrap (analyze_directory clean) in
+      Alcotest.(check bool) "clean package" true (passed clean_result);
+      let denied_result = unwrap (analyze_directory denied) in
+      Alcotest.(check bool) "violation package" false (passed denied_result);
+      Alcotest.(check (list string))
+        "violation code" [ "CAP001" ]
+        (List.map (fun violation -> violation.code) denied_result.violations);
+      Alcotest.(check (list string))
+        "deterministic relative paths" [ "input.ml" ]
+        (denied_result.detected
+        |> List.map (fun (detection : detection) -> detection.file)
+        |> sorted);
+      match analyze_directory broken with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "directory parse failure was ignored")
 
 let test_cli_results () =
-  let clean = Filename.concat (fixture_root ()) "package-clean" in
-  let denied = Filename.concat (fixture_root ()) "package-violation" in
   let capture dir verbose =
     let output = Buffer.create 128 and errors = Buffer.create 128 in
     let code =
@@ -314,18 +423,25 @@ let test_cli_results () =
     in
     (code, Buffer.contents output, Buffer.contents errors)
   in
-  let code, output, errors = capture clean true in
-  Alcotest.(check int) "clean exit" 0 code;
-  Alcotest.(check bool) "verbose output" true (String.length output > 0);
-  Alcotest.(check string) "clean stderr" "" errors;
-  let code, output, _ = capture denied false in
-  Alcotest.(check int) "violation exit" 1 code;
-  Alcotest.(check bool) "violation output" true (String.length output > 0);
-  let code, _, errors =
-    capture (Filename.concat (fixture_root ()) "missing") false
-  in
-  Alcotest.(check int) "error exit" 2 code;
-  Alcotest.(check bool) "error output" true (String.length errors > 0)
+  with_temp_directory (fun root ->
+      let clean = Filename.concat root "clean" in
+      let denied = Filename.concat root "denied" in
+      Unix.mkdir clean 0o700;
+      Unix.mkdir denied 0o700;
+      write_file (Filename.concat clean "clean.ml") "let x = 1\n";
+      write_file
+        (Filename.concat denied "denied.ml")
+        "let value = Sys.getenv \"UNDECLARED\"\n";
+      let code, output, errors = capture clean true in
+      Alcotest.(check int) "clean exit" 0 code;
+      Alcotest.(check bool) "verbose output" true (String.length output > 0);
+      Alcotest.(check string) "clean stderr" "" errors;
+      let code, output, _ = capture denied false in
+      Alcotest.(check int) "violation exit" 1 code;
+      Alcotest.(check bool) "violation output" true (String.length output > 0);
+      let code, _, errors = capture (Filename.concat root "missing") false in
+      Alcotest.(check int) "error exit" 2 code;
+      Alcotest.(check bool) "error output" true (String.length errors > 0))
 
 let test_format_and_sorting () =
   let detections, banned =
@@ -357,6 +473,8 @@ let () =
             test_behavior_fixture;
           Alcotest.test_case "parse errors fail closed" `Quick
             test_parse_error_fails_closed;
+          Alcotest.test_case "unsupported AST fails closed" `Quick
+            test_unsupported_ast_fails_closed;
           Alcotest.test_case "stable formatting" `Quick test_format_and_sorting;
         ] );
       ( "manifests",
@@ -367,6 +485,8 @@ let () =
           Alcotest.test_case "shape errors" `Quick test_manifest_shape_errors;
           Alcotest.test_case "duplicate capability" `Quick
             test_manifest_duplicate_capability;
+          Alcotest.test_case "package name boundary" `Quick
+            test_manifest_package_name_boundary;
         ] );
       ( "policy",
         [
@@ -380,6 +500,10 @@ let () =
       ( "integration",
         [
           Alcotest.test_case "directory" `Quick test_directory_analysis;
+          Alcotest.test_case "input boundaries" `Quick
+            test_directory_input_boundaries;
+          Alcotest.test_case "manifest identity" `Quick
+            test_manifest_identity_and_kind;
           Alcotest.test_case "CLI" `Quick test_cli_results;
         ] );
     ]

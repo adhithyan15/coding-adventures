@@ -137,10 +137,13 @@ let valid_package_name package =
   let prefix_length = String.length prefix in
   String.length package > prefix_length
   && String.starts_with ~prefix package
+  && (match package.[prefix_length] with
+     | 'a' .. 'z' | '0' .. '9' -> true
+     | _ -> false)
   && String.for_all
        (function 'a' .. 'z' | '0' .. '9' | '_' | '-' -> true | _ -> false)
-       (String.sub package prefix_length
-          (String.length package - prefix_length))
+       (String.sub package (prefix_length + 1)
+          (String.length package - prefix_length - 1))
 
 let parse_capability index value =
   let context = Printf.sprintf "capability %d" index in
@@ -450,13 +453,30 @@ let resolve_module_segments environment segments =
           else if String_set.mem root canonical_modules then Some segments
           else None)
 
-let resolve_module_expression environment module_expression =
+let rec resolve_module_expression environment module_expression =
   match module_expression.pmod_desc with
   | Pmod_ident identifier ->
       Option.bind
         (longident_segments identifier.txt)
         (resolve_module_segments environment)
+  | Pmod_constraint (body, _) -> resolve_module_expression environment body
   | _ -> None
+
+let rec module_expression_mentions_sensitive environment module_expression =
+  match module_expression.pmod_desc with
+  | Pmod_ident identifier -> (
+      match longident_segments identifier.txt with
+      | Some segments ->
+          Option.is_some (resolve_module_segments environment segments)
+      | None -> false)
+  | Pmod_apply (left, right) ->
+      module_expression_mentions_sensitive environment left
+      || module_expression_mentions_sensitive environment right
+  | Pmod_apply_unit body | Pmod_constraint (body, _) ->
+      module_expression_mentions_sensitive environment body
+  | Pmod_functor (_, body) ->
+      module_expression_mentions_sensitive environment body
+  | Pmod_structure _ | Pmod_unpack _ | Pmod_extension _ -> false
 
 let pattern_names pattern =
   let names = ref String_set.empty in
@@ -639,43 +659,58 @@ let detect_standard_channel context environment location module_name
         (evidence module_name function_name)
   | _ -> ()
 
+let detect_resolved context environment location module_name function_name
+    arguments =
+  capabilities_for module_name function_name
+  |> List.iter (fun detected ->
+         add_detection context location detected
+           (evidence module_name function_name));
+  detect_standard_channel context environment location module_name function_name
+    arguments;
+  if arguments = [] && standard_channel_function module_name function_name then
+    add_error context location
+      (Printf.sprintf
+         "first-class use of %s.%s is unsupported by capability analysis"
+         module_name function_name);
+  if module_name = "Obj" then
+    let construct = "Obj." ^ function_name in
+    add_banned context location ~exemptible:false construct
+      (construct ^ " bypasses OCaml type safety")
+  else if
+    module_name = "Marshal"
+    && List.mem function_name [ "from_channel"; "from_string"; "from_bytes" ]
+  then
+    let construct = "Marshal." ^ function_name in
+    add_banned context location ~exemptible:false construct
+      (construct ^ " reconstructs unchecked runtime values")
+  else if
+    module_name = "Dynlink"
+    && List.mem function_name [ "loadfile"; "loadfile_private" ]
+  then
+    let construct = "Dynlink." ^ function_name in
+    add_banned context location ~required_capability:(capability "ffi" "load")
+      ~exemptible:true construct
+      (construct ^ " loads native or bytecode modules at runtime")
+
 let detect_call context environment expression function_expression arguments =
   match function_expression.pexp_desc with
   | Pexp_ident identifier -> (
       match resolve_call environment identifier.txt with
       | None -> ()
       | Some (module_name, function_name) ->
-          capabilities_for module_name function_name
-          |> List.iter (fun detected ->
-                 add_detection context expression.pexp_loc detected
-                   (evidence module_name function_name));
-          detect_standard_channel context environment expression.pexp_loc
-            module_name function_name arguments;
-          if module_name = "Obj" then
-            let construct = "Obj." ^ function_name in
-            add_banned context expression.pexp_loc ~exemptible:false construct
-              (construct ^ " bypasses OCaml type safety")
-          else if
-            module_name = "Marshal"
-            && List.mem function_name
-                 [ "from_channel"; "from_string"; "from_bytes" ]
-          then
-            let construct = "Marshal." ^ function_name in
-            add_banned context expression.pexp_loc ~exemptible:false construct
-              (construct ^ " reconstructs unchecked runtime values")
-          else if
-            module_name = "Dynlink"
-            && List.mem function_name [ "loadfile"; "loadfile_private" ]
-          then
-            let construct = "Dynlink." ^ function_name in
-            add_banned context expression.pexp_loc
-              ~required_capability:(capability "ffi" "load") ~exemptible:true
-              construct
-              (construct ^ " loads native or bytecode modules at runtime"))
+          detect_resolved context environment expression.pexp_loc module_name
+            function_name arguments)
   | Pexp_extension _ ->
       add_error context expression.pexp_loc
         "extension node in call position is unsupported by capability analysis"
   | _ -> ()
+
+let detect_reference context environment expression identifier =
+  match resolve_call environment identifier with
+  | None -> ()
+  | Some (module_name, function_name) ->
+      detect_resolved context environment expression.pexp_loc module_name
+        function_name []
 
 let add_external context location =
   let required_capability = capability "ffi" "call" in
@@ -686,18 +721,25 @@ let add_external context location =
 let detect_marshal_closures context environment expression identifier =
   match longident_segments identifier with
   | None -> ()
-  | Some segments -> (
-      match last_two (normalize_stdlib_prefix segments) with
-      | Some (module_name, "Closures") ->
-          let canonical =
-            resolve_module_segments environment [ module_name ]
-            |> Option.value ~default:[ module_name ]
-          in
-          if List.rev canonical |> List.hd = "Marshal" then
-            add_banned context expression.pexp_loc ~exemptible:false
-              "Marshal.Closures"
-              "Marshal.Closures serializes executable closures"
-      | _ -> ())
+  | Some segments ->
+      let segments = normalize_stdlib_prefix segments in
+      let is_marshal =
+        match segments with
+        | [ "Closures" ] ->
+            List.exists
+              (fun path -> List.rev path |> List.hd = "Marshal")
+              environment.opens
+        | _ -> (
+            match last_two segments with
+            | Some (module_name, "Closures") -> (
+                match resolve_module_segments environment [ module_name ] with
+                | Some canonical -> List.rev canonical |> List.hd = "Marshal"
+                | None -> false)
+            | _ -> false)
+      in
+      if is_marshal then
+        add_banned context expression.pexp_loc ~exemptible:false
+          "Marshal.Closures" "Marshal.Closures serializes executable closures"
 
 let rec source_iterator context environment =
   {
@@ -721,6 +763,11 @@ and walk_expression context environment expression =
   (match expression.pexp_desc with
   | Pexp_apply (function_expression, arguments) ->
       detect_call context environment expression function_expression arguments
+  | Pexp_ident identifier ->
+      detect_reference context environment expression identifier.txt
+  | Pexp_extension _ ->
+      add_error context expression.pexp_loc
+        "extension expression is unsupported by capability analysis"
   | Pexp_construct (identifier, _) ->
       detect_marshal_closures context environment expression identifier.txt
   | _ -> ());
@@ -774,9 +821,25 @@ and walk_expression context environment expression =
       let body_environment =
         match resolve_module_expression environment declaration.popen_expr with
         | Some path -> open_module environment path
-        | None -> environment
+        | None ->
+            if
+              module_expression_mentions_sensitive environment
+                declaration.popen_expr
+            then
+              add_error context declaration.popen_loc
+                "unresolved sensitive local open is unsupported by capability \
+                 analysis";
+            environment
       in
       walk_expression context body_environment body
+  | Pexp_apply (function_expression, arguments) ->
+      (match function_expression.pexp_desc with
+      | Pexp_ident _ -> ()
+      | _ -> walk_expression context environment function_expression);
+      List.iter
+        (fun (_, argument) -> walk_expression context environment argument)
+        arguments
+  | Pexp_ident _ -> ()
   | _ ->
       Ast_iterator.default_iterator.expr
         (source_iterator context environment)
@@ -839,9 +902,18 @@ and walk_structure context environment structure =
           walk_module_expression context current binding.pmb_expr;
           match binding.pmb_name.txt with
           | None -> current
-          | Some name ->
-              bind_module current name
-                (resolve_module_expression current binding.pmb_expr))
+          | Some name -> (
+              match resolve_module_expression current binding.pmb_expr with
+              | Some alias -> bind_module current name (Some alias)
+              | None ->
+                  if
+                    module_expression_mentions_sensitive current
+                      binding.pmb_expr
+                  then
+                    add_error context binding.pmb_loc
+                      "unresolved sensitive module alias is unsupported by \
+                       capability analysis";
+                  bind_module current name None))
       | Pstr_recmodule bindings ->
           List.iter
             (fun binding ->
@@ -857,9 +929,31 @@ and walk_structure context environment structure =
           walk_module_expression context current declaration.popen_expr;
           match resolve_module_expression current declaration.popen_expr with
           | Some path -> open_module current path
-          | None -> current)
-      | Pstr_include declaration ->
+          | None ->
+              if
+                module_expression_mentions_sensitive current
+                  declaration.popen_expr
+              then
+                add_error context declaration.popen_loc
+                  "unresolved sensitive open is unsupported by capability \
+                   analysis";
+              current)
+      | Pstr_include declaration -> (
           walk_module_expression context current declaration.pincl_mod;
+          match resolve_module_expression current declaration.pincl_mod with
+          | Some path -> open_module current path
+          | None ->
+              if
+                module_expression_mentions_sensitive current
+                  declaration.pincl_mod
+              then
+                add_error context declaration.pincl_loc
+                  "unresolved sensitive include is unsupported by capability \
+                   analysis";
+              current)
+      | Pstr_extension _ ->
+          add_error context item.pstr_loc
+            "structure extension is unsupported by capability analysis";
           current
       | _ ->
           Ast_iterator.default_iterator.structure_item
@@ -869,8 +963,16 @@ and walk_structure context environment structure =
     environment structure
 
 and walk_signature context environment signature =
-  Ast_iterator.default_iterator.signature
-    (source_iterator context environment)
+  List.iter
+    (fun item ->
+      match item.psig_desc with
+      | Psig_extension _ ->
+          add_error context item.psig_loc
+            "signature extension is unsupported by capability analysis"
+      | _ ->
+          Ast_iterator.default_iterator.signature_item
+            (source_iterator context environment)
+            item)
     signature
 
 let compare_detection (left : detection) (right : detection) =
@@ -907,10 +1009,26 @@ let analyze_source ~filename kind source =
   let context =
     { filename; detections = ref []; banned = ref []; errors = ref [] }
   in
+  let attribute_iterator =
+    {
+      Ast_iterator.default_iterator with
+      attribute =
+        (fun _ attribute ->
+          if not (String.starts_with ~prefix:"ocaml." attribute.attr_name.txt)
+          then
+            add_error context attribute.attr_loc
+              (Printf.sprintf
+                 "attribute %s is unsupported by capability analysis"
+                 attribute.attr_name.txt));
+    }
+  in
   (match parsed with
   | `Implementation structure ->
+      attribute_iterator.structure attribute_iterator structure;
       ignore (walk_structure context empty_environment structure)
-  | `Interface signature -> walk_signature context empty_environment signature);
+  | `Interface signature ->
+      attribute_iterator.signature attribute_iterator signature;
+      walk_signature context empty_environment signature);
   match List.rev !(context.errors) with
   | first :: rest -> Error (String.concat "\n" (first :: rest))
   | [] ->
@@ -1031,9 +1149,38 @@ let evaluate ~dir ~(manifest : manifest) ~detections ~banned =
 
 let passed result = result.violations = []
 let format_violation violation = violation.message
+let max_manifest_bytes = 1024 * 1024
+let max_source_file_bytes = 4 * 1024 * 1024
+let max_total_source_bytes = 64 * 1024 * 1024
+let max_source_files = 10_000
+let max_directory_depth = 64
 
-let read_file path =
-  try Ok (In_channel.with_open_bin path In_channel.input_all)
+let contains_substring text needle =
+  let text_length = String.length text
+  and needle_length = String.length needle in
+  let rec search index =
+    index + needle_length <= text_length
+    && (String.sub text index needle_length = needle || search (index + 1))
+  in
+  needle_length = 0 || search 0
+
+let read_file ~max_bytes path =
+  try
+    In_channel.with_open_bin path (fun channel ->
+        let length = In_channel.length channel in
+        if length > Int64.of_int max_bytes then
+          Error
+            (Printf.sprintf "reading %s: input is %Ld bytes; limit is %d" path
+               length max_bytes)
+        else if length > Int64.of_int Sys.max_string_length then
+          Error
+            (Printf.sprintf "reading %s: input exceeds string capacity" path)
+        else
+          match
+            In_channel.really_input_string channel (Int64.to_int length)
+          with
+          | Some source -> Ok source
+          | None -> Error (Printf.sprintf "reading %s: input changed size" path))
   with Sys_error message ->
     Error (Printf.sprintf "reading %s: %s" path message)
 
@@ -1041,11 +1188,20 @@ let empty_manifest package = { package; capabilities = []; exceptions = [] }
 
 let load_manifest directory =
   let path = Filename.concat directory "required_capabilities.json" in
-  if not (Sys.file_exists path) then
-    Ok (empty_manifest ("ocaml/" ^ Filename.basename directory))
-  else
-    let* source = read_file path in
-    parse_manifest source
+  let expected_package = "ocaml/" ^ Filename.basename directory in
+  match Unix.lstat path with
+  | exception Unix.Unix_error (Unix.ENOENT, _, _) ->
+      Ok (empty_manifest expected_package)
+  | stats when stats.st_kind <> Unix.S_REG ->
+      Error (path ^ " must be a regular, non-symlink file")
+  | _ ->
+      let* source = read_file ~max_bytes:max_manifest_bytes path in
+      let* manifest = parse_manifest source in
+      if manifest.package <> expected_package then
+        Error
+          (Printf.sprintf "manifest package %S must equal %S" manifest.package
+             expected_package)
+      else Ok manifest
 
 let excluded_directory name =
   List.mem name [ "_build"; ".git"; "_opam"; "node_modules" ]
@@ -1063,14 +1219,22 @@ let normalize_relative path =
       path
 
 let discover_sources root =
-  let rec walk relative directory =
+  let sources = ref [] in
+  let source_count = ref 0 in
+  let total_bytes = ref 0 in
+  let rec walk depth relative directory =
+    if depth > max_directory_depth then
+      raise
+        (Failure
+           (Printf.sprintf "source directory depth exceeds limit %d at %s"
+              max_directory_depth relative));
     let entries =
       try Sys.readdir directory |> Array.to_list |> List.sort String.compare
       with Sys_error message ->
         raise (Failure (Printf.sprintf "listing %s: %s" directory message))
     in
-    List.fold_left
-      (fun paths name ->
+    List.iter
+      (fun name ->
         let absolute = Filename.concat directory name in
         let child_relative =
           if relative = "" then name else Filename.concat relative name
@@ -1089,17 +1253,76 @@ let discover_sources root =
               (Failure
                  (Printf.sprintf "symlinked package input is not allowed: %s"
                     child_relative))
-        | Unix.S_DIR when excluded_directory name -> paths
-        | Unix.S_DIR -> paths @ walk child_relative absolute
+        | Unix.S_DIR when excluded_directory name -> ()
+        | Unix.S_DIR -> walk (depth + 1) child_relative absolute
         | Unix.S_REG -> (
             match source_kind name with
             | Some kind ->
-                paths @ [ (normalize_relative child_relative, absolute, kind) ]
-            | None -> paths)
-        | _ -> paths)
-      [] entries
+                if stats.st_size > max_source_file_bytes then
+                  raise
+                    (Failure
+                       (Printf.sprintf
+                          "source file %s is %d bytes; per-file limit is %d"
+                          child_relative stats.st_size max_source_file_bytes));
+                incr source_count;
+                if !source_count > max_source_files then
+                  raise
+                    (Failure
+                       (Printf.sprintf "source file count exceeds limit %d"
+                          max_source_files));
+                total_bytes := !total_bytes + stats.st_size;
+                if !total_bytes > max_total_source_bytes then
+                  raise
+                    (Failure
+                       (Printf.sprintf "total source bytes exceed limit %d"
+                          max_total_source_bytes));
+                sources :=
+                  (normalize_relative child_relative, absolute, kind)
+                  :: !sources
+            | None ->
+                if
+                  String.ends_with ~suffix:".mll" name
+                  || String.ends_with ~suffix:".mly" name
+                then
+                  raise
+                    (Failure
+                       (Printf.sprintf
+                          "generated OCaml source input is unsupported: %s"
+                          child_relative))
+                else if name = "dune" then
+                  let contents =
+                    match read_file ~max_bytes:max_manifest_bytes absolute with
+                    | Ok contents -> contents
+                    | Error message -> raise (Failure message)
+                  in
+                  let unsupported =
+                    [
+                      "(preprocess";
+                      "(preprocessor_deps";
+                      "(rule";
+                      "(ocamllex";
+                      "(menhir";
+                    ]
+                    |> List.find_opt (contains_substring contents)
+                  in
+                  Option.iter
+                    (fun stanza ->
+                      raise
+                        (Failure
+                           (Printf.sprintf
+                              "unsupported generated-source stanza %s in %s"
+                              stanza child_relative)))
+                    unsupported)
+        | _ -> ())
+      entries
   in
-  try Ok (walk "" root) with Failure message -> Error message
+  try
+    walk 0 "" root;
+    Ok
+      (List.sort
+         (fun (left, _, _) (right, _, _) -> String.compare left right)
+         !sources)
+  with Failure message -> Error message
 
 let analyze_directory directory =
   try
@@ -1109,7 +1332,7 @@ let analyze_directory directory =
     let rec analyze detections banned = function
       | [] -> Ok (detections, banned)
       | (relative, absolute, kind) :: rest ->
-          let* source = read_file absolute in
+          let* source = read_file ~max_bytes:max_source_file_bytes absolute in
           let* file_detections, file_banned =
             analyze_source ~filename:relative kind source
           in
