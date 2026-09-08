@@ -4,6 +4,13 @@ Gate-level MIPS R2000 (1985) simulator in Rust.  Every arithmetic and logical
 data-path operation routes through AND, OR, XOR, NOT gates and a ripple-carry
 adder — no native integer arithmetic in the data path.
 
+The completed machine owns exactly **525,409 persistent D flip-flops**:
+524,288 for 64 KiB memory, 1,120 for 32 GPRs plus HI/LO/PC, and one halt
+latch. Packed stable-Q storage reconstructs and clocks changed state through
+`logic_gates::sequential::register`. The gate package shares complete state,
+typed errors, traces, and transactional checked execution with the functional
+MIPS package, and passes its reproducible 218-vector Python full-state corpus.
+
 ## Architecture
 
 The MIPS R2000 was the first commercial chip implementing the MIPS I
@@ -99,11 +106,12 @@ decoder.rs
   gate-level: all extraction from LSB-first bit arrays, no integer masks
 
 cpu.rs
-  CpuMipsR2000: rf + mem[64KB] + halted
+  CpuMipsR2000: 525,409-DFF rf + mem[64KB] + halted
   execute(program, origin, max_steps) → Result<u32, MipsError>
+  get_state/restore/load_checked/step_checked/run_checked
   Halt: SYSCALL (op=0, funct=0x0C)
   Memory: big-endian, 64 KB flat; word/halfword alignment enforced
-  Errors: MipsError::{SignedOverflow, Misalignment, Break, UnknownOpcode}
+  Shared typed functional errors; checked failures are atomic
 ```
 
 ### Two's complement subtraction
@@ -158,7 +166,7 @@ is subtracted and the quotient bit is set.
 ## Usage
 
 ```rust
-use coding_adventures_mips_r2000_gatelevel::cpu::CpuMipsR2000;
+use coding_adventures_mips_r2000_gatelevel::CpuMipsR2000;
 
 let mut cpu = CpuMipsR2000::new();
 
@@ -205,10 +213,10 @@ assert!(cpu.halted);
   the branch target is computed).
 - **No MMU / TLB**: flat 64 KB address space.
 - **No coprocessors**: CP0 (system control), CP1 (FPU) not implemented.
-- **Division by zero**: returns `(0xFFFF_FFFF, a)` matching hardware
-  undefined behavior — no exception.
+- **Division by zero**: the checked API reports a typed, atomic fault. The
+  compatibility `step` retains the original gate core's legacy behavior.
 - **Unaligned word accesses** (LW/SW to non-4-byte-aligned address) raise
-  `MipsError::Misalignment`.  LWL/LWR/SWL/SWR handle unaligned accesses
+  `MipsError::MisalignedAccess`. LWL/LWR/SWL/SWR handle unaligned accesses
   deliberately.
 
 ## How it fits in the stack

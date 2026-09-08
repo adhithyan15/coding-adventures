@@ -1,0 +1,14 @@
+{
+  "id": "AR-PATH-038",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "AR-C41-ya",
+    "AR-C41-karrir",
+    "AR-R41-calling-and-asking-again"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-038-CALL-AND-REPAIR"
+  ],
+  "after": []
+}

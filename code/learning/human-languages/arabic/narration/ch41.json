@@ -1,0 +1,504 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 41,
+  "title": "Calling Somebody, and Asking Again",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:596d342f5ca8c249",
+  "lessons": [
+    {
+      "id": "AR-C41-ya",
+      "sequence": 1190,
+      "title": "يا (yā) — calling somebody",
+      "headword": "يا",
+      "romanization": "yā",
+      "gloss": "O — the vocative particle Arabic puts before every name it calls, and two letters that stand between the reader and addressing anybody",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aace3c15a2d265b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter two taught you to give your name and to ask for somebody else's. Forty chapters later you still cannot call them by it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the time joiner from the lesson before — ḥīnamā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the time joiner from the lesson before — *ḥīnamā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: يا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "يا حسن — yā Ḥasan — Hasan! (calling him)."
+            },
+            {
+              "kind": "speech",
+              "text": "يا جار — yā jār — neighbour!"
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic does not address a person with a bare name. حسن on its own is a statement about Hasan; يا (yā) حسن is speaking to him. The particle is not optional politeness — it is how the language marks the difference between naming somebody and calling them."
+            },
+            {
+              "kind": "speech",
+              "text": "Two letters, both long since yours, and no ending changes on the name."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "يا (yā) is pan-Semitic and English has no particle of its own to match it. The one place English reaches for something similar is old translation — O Lord, O Israel — where the O is standing in for exactly this. It sounds archaic in English and is entirely everyday in Arabic."
+            },
+            {
+              "kind": "speech",
+              "text": "It goes before a title or a kin term as readily as before a name: يا ابن, يا بنت, yā ṣadīqī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā Ḥasan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā Ḥasan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā jār … yā ṣadīqī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā jār* … *yā ṣadīqī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the name alone, then called — Ḥasan … yā Ḥasan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the name alone, then called — *Ḥasan* … *yā Ḥasan*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the difference between حسن and يا (yā) حسن? (One names him; the other calls him.) Does the name change shape after it? (No.) And what does English use where Arabic uses يا (yā)? (Nothing, ordinarily — only O in old translation.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C41-karrir",
+      "sequence": 1200,
+      "title": "كرّر من فضلك (karrir min faḍlik) — say it again, please",
+      "headword": "كرّر من فضلك",
+      "romanization": "karrir min faḍlik",
+      "gloss": "say it again, please — the second half of a repair kit whose first half arrived four chapters ago, and the first command this book has ever given",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:49e2273c766a369a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter thirty-seven gave you the first thing a lost learner says. Saying it only helps if you can also ask for the sentence back."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the particle from the lesson before, and what it turns a name into — yā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the particle from the lesson before, and what it turns a name into — *yā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كرّر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كرّر — karrir — repeat."
+            },
+            {
+              "kind": "speech",
+              "text": "كرّر من فضلك — karrir min faḍlik — say it again, please."
+            },
+            {
+              "kind": "speech",
+              "text": "The please is not new: chapter six taught it. What is new is the verb, and the shape it comes in — this is the first command in the book, and Arabic builds one by stripping the present tense back to its bare stem."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the shadda. كرّر doubles its middle letter, which is the same Form II shape as fakkara in chapter thirty-two — a pattern that means do it thoroughly, do it repeatedly. On the root ك-ر-ر, \"to return\", that gives exactly do it again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the repair kit, whole",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "when",
+                "say"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "when: you did not follow. say: lā afham.",
+                "when: you want it again. say: karrir min faḍlik.",
+                "when: you are grateful for it. say: shukran."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The inventory that measured this track said the repair kit was strong with one hole in it: sorry, excuse me, pardon, please and thank you were all taught, and I do not understand and say it again were not. Those two are what chapters thirty-seven and forty-one add, and between them they needed one new verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karrir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karrir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karrir min faḍlik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karrir min faḍlik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole kit in order — lā afham … karrir min faḍlik … shukran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole kit in order — *lā afham … karrir min faḍlik … shukran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "and get their attention first — yā Ḥasan, karrir min faḍlik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: and get their attention first — *yā Ḥasan, karrir min faḍlik*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which chapter taught the please in this sentence? (Six.) Which earlier verb wears the same doubled shape? (fakkara, chapter thirty-two.) And what does that shape add to a root? (Doing it thoroughly, or again.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R41-calling-and-asking-again",
+      "sequence": 1210,
+      "title": "Calling somebody, and asking again",
+      "headword": "يا · كرّر من فضلك",
+      "romanization": "yā · karrir min faḍlik",
+      "gloss": "calling somebody, and asking them for the sentence back — with the first meeting of chapters one to three replayed and repaired",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4c1ad16df7e0dd2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two items landed in this chapter: one gets somebody's attention and one asks them for the sentence back. Name both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yā Ḥasan, karrir min faḍlik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yā Ḥasan, karrir min faḍlik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reason you are asking — lā afham li-annanī lā asmaʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reason you are asking — *lā afham li-annanī lā asmaʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "four lessons back, the particle that fronts a question — hal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: four lessons back, the particle that fronts a question — *hal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "nine lessons back, the word that accepts what was said — ḥasanan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: nine lessons back, the word that accepts what was said — *ḥasanan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "five lessons back, ask why, then report the answer — limādhā? … aktub anna …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: five lessons back, ask why, then report the answer — *limādhā?* … *aktub anna …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ten lessons back, refuse both at once — lā shāy wa-lā ḥalīb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ten lessons back, refuse both at once — *lā shāy wa-lā ḥalīb*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — the first meeting, and what to do when it goes wrong",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The exchange this book opened with was taught more than a hundred lessons ago and has not been asked for since. It is also the exact place a beginner loses the thread. Run it cold, and put the new chapter inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the greeting and its reply, and hear the و at the front of the reply — as-salāmu ʿalaykum … wa-ʿalaykum as-salām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the greeting and its reply, and hear the **و** at the front of the reply — *as-salāmu ʿalaykum* … *wa-ʿalaykum as-salām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the name exchange — mā ismuka? … ismī … … tasharrafnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the name exchange — *mā ismuka?* … *ismī …* … *tasharrafnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the wellbeing exchange — kayfa ḥāluka? … bi-khayr, al-ḥamdu li-llāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the wellbeing exchange — *kayfa ḥāluka?* … *bi-khayr, al-ḥamdu li-llāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "now lose the thread and rescue it — ʿafwan, lā afham. karrir min faḍlik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: now lose the thread and rescue it — *ʿafwan, lā afham. karrir min faḍlik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thank them, and close — shukran … maʿa s-salāma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thank them, and close — *shukran* … *maʿa s-salāma*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Five chapters ago this book could not say a verb in the present, deny a nominal sentence, join two nouns, ask a yes-or-no question, give a reason, or say that it had not understood. Say the sentence that was one tense away for thirty-one chapters. (lā afham.) Say what you ask next. (karrir min faḍlik.) And say how you get somebody's attention first. (yā plus their name.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

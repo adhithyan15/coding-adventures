@@ -1,0 +1,17 @@
+{
+  "language": "arabic",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:596d342f5ca8c249",
+  "lessonIds": [
+    "AR-C41-ya",
+    "AR-C41-karrir",
+    "AR-R41-calling-and-asking-again"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch41.txt",
+  "json": "arabic/narration/ch41.json",
+  "textHash": "fnv1a64:15c6bfef020824bd",
+  "jsonHash": "fnv1a64:23f3f02d832a21c7",
+  "findings": []
+}

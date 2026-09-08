@@ -1,0 +1,19 @@
+{
+  "chapter": 37,
+  "title": "The Tense That Was Missing",
+  "label": "ch:ar-the-tense-that-was-missing",
+  "canDo": "I can put a verb in the present tense for myself with the أ- prefix, and I can say لا أفهم -- 'I do not understand' -- which is the sentence a beginner needs most and which this book was one form away from for six chapters.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "AR-R37-now-and-not",
+    "kind": "speaking",
+    "summary": "Eleven verbs taught as third-person past forms become first-person present forms, and each of them is then denied -- so a reading list turns into a speaking stock on one prefix.",
+    "assesses": [
+      "AR-GRAMMAR-C37-PRESENT-I-01",
+      "AR-FUNC-C37-LA-AFHAM-01"
+    ],
+    "note": "لا أفهم needed no new vocabulary: لا came from chapter 5 and فهم from chapter 31, and only the tense was missing."
+  }
+}

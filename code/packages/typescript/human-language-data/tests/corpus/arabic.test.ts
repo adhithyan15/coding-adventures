@@ -18,7 +18,14 @@ it("pins Arabic lesson-content budgets", () =>
     // idiom, sense and culture-claim totals are unchanged at 2 / 3 / 14, because
     // the migration declared atoms and renamed headings without authoring new
     // vocabulary.
-    lessons: 102,
+    //
+    // 102 -> 123: the present-tense-and-joining tranche (chapters 37-41) adds
+    // twenty-one lessons -- sixteen items and five reviews. RE-MEASURED against
+    // the tree. Idioms, senses and culture claims stay at 2 / 3 / 14: a
+    // conjunction is none of the three, and the one lesson that could have
+    // claimed a culture note (يا, whose absence means a learner cannot address
+    // anybody) states a GRAMMATICAL fact about the vocative particle.
+    lessons: 123,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,
@@ -36,7 +43,18 @@ it("pins Arabic's root ledger", () => {
     loadChapterPolicy(root).rootLedgerMinReuse ?? 3,
   );
   expect(ledger.summary).toEqual({
-    roots: 104,
+    // 104 -> 107. The chapters 37-41 tranche declares five roots: k-t-b and
+    // f-h-m already existed and are now SPENT for the first time (payoff 0 -> 1
+    // for both, which is the "1" bucket rising by two), and h-s-n, h-y-n and
+    // k-r-r are new. Two of the three new ones are spent by a later lesson in
+    // the same tranche and one is not, so neverSpent rises by exactly one.
+    // Recorded rather than avoided: each of the three is the teaching point of
+    // its own lesson -- ḥasanan IS the adjective ḥasan with an adverb ending,
+    // ḥīnamā IS ḥīn plus mā, and karrir IS the doubled Form II of k-r-r -- so
+    // dropping the declaration would hide an etymology the lesson is built on.
+    // underspentPercent holds at 98, which is the number that would have moved
+    // if this were padding.
+    roots: 107,
     // HL-C285 retired the superseded AR-W01/W02/W03 writing ladder, which was
     // the only later spend of five Phoenician letter-origin roots (aleph, bet,
     // lamed, mem, shin) and of abjad-vowels. Their PROSE was re-homed into the
@@ -45,9 +63,9 @@ it("pins Arabic's root ledger", () => {
     // so a root introduced and re-used only inside one lesson reads as unspent.
     // This is a real, quantified cost of removing the duplicate ladder, recorded
     // rather than papered over by padding `roots:` onto downstream lessons.
-    underspent: 102,
-    neverSpent: 93,
-    payoffDistribution: { "0": 93, "1": 8, "2": 1, "3": 1, "5": 1 },
+    underspent: 105,
+    neverSpent: 94,
+    payoffDistribution: { "0": 94, "1": 10, "2": 1, "3": 1, "5": 1 },
     underspentPercent: 98,
   });
 });

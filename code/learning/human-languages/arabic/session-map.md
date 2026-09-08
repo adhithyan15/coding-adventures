@@ -36,6 +36,32 @@ greetings, plus the root engine and the attached *al-*.
 | 15 | tasharrafna | تشرفنا | "pleased to meet you" ("we are honoured"; root sh-r-f → *sharīf/sheriff*) |
 | 16 | practice | (dialogue) | the whole exchange |
 
+## Chapters 37–41 — the present tense, joining, and repair
+
+| # | Slug | Item | What it turns on |
+|---|---|---|---|
+| 103 | present | أكتب | the person moves to the front of the word |
+| 104 | la-afham | لا أفهم | لا from ch5, فهم from ch31, and only the tense was missing |
+| 105 | R — now and not | | eleven past-tense verbs become a speaking stock |
+| 106 | wa | و | glossed once in chapter 1 and never taught |
+| 107 | aw | أو | one letter from **و**, and the opposite meaning |
+| 108 | lakin | لكن | **لا** sitting at the front of it, as *out* sits in *but* |
+| 109 | hasanan | حسنًا | the ـًا of شكرًا, on a new root |
+| 110 | R — two at once | | thirty-odd nouns from chapters 33–36, two at a time |
+| 111 | laysa | ليس | the copula-negator that is a fossil of *there-is-not* |
+| 112 | ma | ما | a different word for the past, and the *what* of chapter 2 |
+| 113 | la-wala | لا … ولا | the joiner welded onto a second negator |
+| 114 | hal | هل | Arabic cannot ask with pitch, so the particle IS the question |
+| 115 | R — denying and asking | | three negators, sorted by sentence |
+| 116 | limadha | لماذا | for-what-this, taken apart |
+| 117 | lianna | لأن | the same لـ with a complementiser behind it |
+| 118 | anna | أنّ | already read, one lesson earlier, inside لأنّ |
+| 119 | hinama | حينما | *at-the-moment-that*, and the third job of ما |
+| 120 | R — why, that, when | | the first three-clause Arabic sentence |
+| 121 | ya | يا | one particle between naming somebody and calling them |
+| 122 | karrir | كرّر من فضلك | the first command in the book, on the Form II of فكّر |
+| 123 | R — calling and asking again | | the first meeting, replayed and repaired |
+
 ## Next
 
 Chapter 3 — *kayfa ḥāluka?* ("how are you?") and *al-ḥamdu lillāh* — the

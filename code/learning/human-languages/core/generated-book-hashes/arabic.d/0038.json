@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:269eb3198d5d76b1",
+  "lessonIds": [
+    "AR-C38-wa",
+    "AR-C38-aw",
+    "AR-C38-lakin",
+    "AR-C38-hasanan",
+    "AR-R38-two-at-once"
+  ],
+  "tex": "arabic/book/chapters/ch38-two-at-once.tex"
+}

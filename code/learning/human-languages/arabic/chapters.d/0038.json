@@ -1,0 +1,21 @@
+{
+  "chapter": 38,
+  "title": "Two at Once",
+  "label": "ch:ar-two-at-once",
+  "canDo": "I can join two nouns with و, offer a choice with أو, turn a clause against the one before it with لكن, and accept what somebody said with حسنًا.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-R38-two-at-once",
+    "kind": "production",
+    "summary": "The pantry and family of chapters 33-36 -- tea, coffee, milk, sugar, salt, meat, cheese, food, a cup, a spoon, a son, a daughter, a neighbour, a friend -- becomes combinable for the first time, joined, offered and turned.",
+    "assesses": [
+      "AR-LEX-C38-WA-01",
+      "AR-LEX-C38-AW-01",
+      "AR-LEX-C38-LAKIN-01",
+      "AR-FUNC-C38-HASANAN-01"
+    ],
+    "note": "و is the commonest word in written Arabic and was glossed once, in chapter 1, inside a fixed reply that introduced no atom."
+  }
+}

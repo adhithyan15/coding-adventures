@@ -35,7 +35,7 @@
 //!
 //! # Multiplication (MULT / MULTU)
 //!
-//! Classical shift-and-add: for each of the 32 bits of b, if bit[i] is 1,
+//! Classical shift-and-add: for each of the 32 bits of b, if bit `i` is 1,
 //! add (a << i) into the 64-bit accumulator via `add_64bit`.
 //! Exactly 32 iterations.
 //!
@@ -77,7 +77,13 @@ fn make_result(value: u32, carry: u8, overflow: u8) -> AluResult32 {
     let bits = int_to_bits32(value);
     let zero = crate::bits::compute_zero(value);
     let negative = bits[31];
-    AluResult32 { result: value, carry, overflow, zero, negative }
+    AluResult32 {
+        result: value,
+        carry,
+        overflow,
+        zero,
+        negative,
+    }
 }
 
 // ── Arithmetic operations ──────────────────────────────────────────────────────
@@ -242,7 +248,7 @@ pub fn sra32(a: u32, shamt: u32) -> AluResult32 {
 
 /// Unsigned 32×32 → 64-bit multiply via shift-and-add.
 ///
-/// Algorithm: for each of the 32 bits of b, if bit[i] is 1, add (a << i)
+/// Algorithm: for each of the 32 bits of b, if bit `i` is 1, add (a << i)
 /// into the 64-bit accumulator using `add_64bit` (gate-level).
 /// Exactly 32 iterations.
 ///

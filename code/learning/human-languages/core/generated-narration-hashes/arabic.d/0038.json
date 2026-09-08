@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:49e1cdf8276d854f",
+  "lessonIds": [
+    "AR-C38-wa",
+    "AR-C38-aw",
+    "AR-C38-lakin",
+    "AR-C38-hasanan",
+    "AR-R38-two-at-once"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch38.txt",
+  "json": "arabic/narration/ch38.json",
+  "textHash": "fnv1a64:3f369175e445efa3",
+  "jsonHash": "fnv1a64:0c512de3dbd7469e",
+  "findings": []
+}

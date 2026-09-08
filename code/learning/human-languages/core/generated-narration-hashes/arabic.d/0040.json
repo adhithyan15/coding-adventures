@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:b7413c20cfdd3898",
+  "lessonIds": [
+    "AR-C40-limadha",
+    "AR-C40-lianna",
+    "AR-C40-anna",
+    "AR-C40-hinama",
+    "AR-R40-why-that-when"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch40.txt",
+  "json": "arabic/narration/ch40.json",
+  "textHash": "fnv1a64:693658e07eeccaed",
+  "jsonHash": "fnv1a64:f46fcdf86315f8ae",
+  "findings": []
+}

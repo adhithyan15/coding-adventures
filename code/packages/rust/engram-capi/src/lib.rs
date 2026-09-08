@@ -811,8 +811,9 @@ fn into_cstr(value: String) -> *mut c_char {
 mod tests {
     use super::*;
     use engram_anki_package::{write_legacy_apkg, MediaAsset};
-    use rusqlite::Connection;
     use serde_json::Value;
+    use sqlite_file::page_writer::{write_multi_table_db_with, DbOptions, TableSpec};
+    use sqlite_file::record::SqlValue;
 
     const NOW: u64 = 1_700_000_000_000;
 
@@ -826,14 +827,125 @@ mod tests {
         CString::new(value).unwrap()
     }
 
-    fn v11_apkg_fixture() -> Vec<u8> {
-        let sqlite = tempfile::NamedTempFile::new().unwrap();
-        {
-            let connection = Connection::open(sqlite.path()).unwrap();
-            connection
-                .execute_batch(
-                    r#"
-CREATE TABLE col (
+    /// A V11 Anki collection, built with this repository's own SQLite writer.
+    ///
+    /// This used to drive `rusqlite` -- real bundled C SQLite -- purely to get a
+    /// file with these rows in it. That pulled a C toolchain into the test build
+    /// of the one crate whose entire purpose is not to need one, and while it
+    /// stood, "the Engram crates no longer reference `rusqlite`" was not a claim
+    /// a grep could settle.
+    ///
+    /// Swapping in our own writer does not make anything here circular, because
+    /// nothing in this fixture is an oracle: it is *input*, and what is under
+    /// test is the C ABI's import path. The writer's own correctness is measured
+    /// against real SQLite over in `sqlite-file`, which keeps its `rusqlite`
+    /// dev-dependency for exactly that reason.
+    fn v11_collection_bytes() -> Vec<u8> {
+        // Column 0 of every table below is `id integer primary key`, which SQLite
+        // treats as an alias for the rowid: the row's rowid IS that column, and no
+        // payload is stored for it. So each row passes `SqlValue::Null` in slot 0
+        // and carries the real id as the rowid beside it. Writing `Int(id)` there
+        // would still answer `SELECT id`, but the bytes on disk would be wrong.
+        let col_rows = vec![(
+            1_i64,
+            vec![
+                SqlValue::Null, // id -- rowid alias
+                SqlValue::Int(19_000),         // crt
+                SqlValue::Int(1_700_000_000),  // mod
+                SqlValue::Int(1_700_000_001),  // scm
+                SqlValue::Int(11),             // ver
+                SqlValue::Int(0),              // dty
+                SqlValue::Int(-1),             // usn
+                SqlValue::Int(1_700_000_002),  // ls
+                SqlValue::Text("{}".into()),   // conf
+                SqlValue::Text(
+                    r#"{"100":{"id":100,"name":"Basic","type":0,"css":"","flds":[{"name":"Front","ord":0},{"name":"Back","ord":1}],"tmpls":[{"name":"Card 1","ord":0,"qfmt":"{{Front}}","afmt":"{{Back}}","did":2}]}}"#
+                        .into(),
+                ), // models
+                SqlValue::Text(
+                    r#"{"2":{"id":2,"name":"Spanish::Latin","desc":"Story deck"}}"#.into(),
+                ), // decks
+                SqlValue::Text(
+                    r#"{
+                            "1": {
+                                "id": 1,
+                                "name": "Default",
+                                "new": {"perDay": 12, "delays": [3, 12], "ints": [2, 5]},
+                                "rev": {"perDay": 80},
+                                "lapse": {"delays": [20], "mult": 0.5}
+                            }
+                        }"#
+                    .into(),
+                ), // dconf
+                SqlValue::Text("{}".into()), // tags
+            ],
+        )];
+
+        let note_rows = vec![(
+            1000_i64,
+            vec![
+                SqlValue::Null,                           // id -- rowid alias
+                SqlValue::Text("guid-1000".into()),       // guid
+                SqlValue::Int(100),                       // mid
+                SqlValue::Int(1_700_000_010),             // mod
+                SqlValue::Int(-1),                        // usn
+                SqlValue::Text(" spanish roots ".into()), // tags
+                SqlValue::Text("hola\u{1f}hello".into()), // flds
+                SqlValue::Text("hola".into()),            // sfld
+                SqlValue::Int(123),                       // csum
+                SqlValue::Int(0),                         // flags
+                SqlValue::Text(String::new()),            // data
+            ],
+        )];
+
+        let card_rows = vec![(
+            2000_i64,
+            vec![
+                SqlValue::Null,                // id -- rowid alias
+                SqlValue::Int(1000),           // nid
+                SqlValue::Int(2),              // did
+                SqlValue::Int(0),              // ord
+                SqlValue::Int(1_700_000_020),  // mod
+                SqlValue::Int(-1),             // usn
+                SqlValue::Int(2),              // type
+                SqlValue::Int(2),              // queue
+                SqlValue::Int(42),             // due
+                SqlValue::Int(7),              // ivl
+                SqlValue::Int(2500),           // factor
+                SqlValue::Int(3),              // reps
+                SqlValue::Int(1),              // lapses
+                SqlValue::Int(0),              // left
+                SqlValue::Int(0),              // odue
+                SqlValue::Int(0),              // odid
+                SqlValue::Int(4),              // flags -- 4 is Anki's blue
+                SqlValue::Text(String::new()), // data
+            ],
+        )];
+
+        let revlog_rows = vec![(
+            3000_i64,
+            vec![
+                SqlValue::Null,        // id -- rowid alias
+                SqlValue::Int(2000),   // cid
+                SqlValue::Int(-1),     // usn
+                SqlValue::Int(3),      // ease
+                SqlValue::Int(7),      // ivl
+                SqlValue::Int(3),      // lastIvl
+                SqlValue::Int(2500),   // factor
+                SqlValue::Int(12_000), // time
+                SqlValue::Int(1),      // type
+            ],
+        )];
+
+        // `graves` carries no rows, exactly as before. It is here because a V11
+        // collection has the table, and an importer that reads the schema should
+        // meet the schema it will meet in the field.
+        let grave_rows: Vec<(i64, Vec<SqlValue>)> = Vec::new();
+
+        let tables: Vec<TableSpec> = vec![
+            (
+                "col",
+                r#"CREATE TABLE col (
   id integer primary key,
   crt integer not null,
   mod integer not null,
@@ -847,8 +959,12 @@ CREATE TABLE col (
   decks text not null,
   dconf text not null,
   tags text not null
-);
-CREATE TABLE notes (
+)"#,
+                &col_rows,
+            ),
+            (
+                "notes",
+                r#"CREATE TABLE notes (
   id integer primary key,
   guid text not null,
   mid integer not null,
@@ -860,8 +976,12 @@ CREATE TABLE notes (
   csum integer not null,
   flags integer not null,
   data text not null
-);
-CREATE TABLE cards (
+)"#,
+                &note_rows,
+            ),
+            (
+                "cards",
+                r#"CREATE TABLE cards (
   id integer primary key,
   nid integer not null,
   did integer not null,
@@ -880,8 +1000,12 @@ CREATE TABLE cards (
   odid integer not null,
   flags integer not null,
   data text not null
-);
-CREATE TABLE revlog (
+)"#,
+                &card_rows,
+            ),
+            (
+                "revlog",
+                r#"CREATE TABLE revlog (
   id integer primary key,
   cid integer not null,
   usn integer not null,
@@ -891,101 +1015,37 @@ CREATE TABLE revlog (
   factor integer not null,
   time integer not null,
   type integer not null
-);
-CREATE TABLE graves (
+)"#,
+                &revlog_rows,
+            ),
+            (
+                "graves",
+                r#"CREATE TABLE graves (
   usn integer not null,
   oid integer not null,
   type integer not null
-);
-"#,
-                )
-                .unwrap();
+)"#,
+                &grave_rows,
+            ),
+        ];
 
-            let decks = r#"{"2":{"id":2,"name":"Spanish::Latin","desc":"Story deck"}}"#;
-            let models = r#"{"100":{"id":100,"name":"Basic","type":0,"css":"","flds":[{"name":"Front","ord":0},{"name":"Back","ord":1}],"tmpls":[{"name":"Card 1","ord":0,"qfmt":"{{Front}}","afmt":"{{Back}}","did":2}]}}"#;
-            connection
-                .execute(
-                    "INSERT INTO col VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
-                    rusqlite::params![
-                        1_i64,
-                        19_000_i64,
-                        1_700_000_000_i64,
-                        1_700_000_001_i64,
-                        11_i64,
-                        0_i64,
-                        -1_i64,
-                        1_700_000_002_i64,
-                        r#"{}"#,
-                        models,
-                        decks,
-                        r#"{
-                            "1": {
-                                "id": 1,
-                                "name": "Default",
-                                "new": {"perDay": 12, "delays": [3, 12], "ints": [2, 5]},
-                                "rev": {"perDay": 80},
-                                "lapse": {"delays": [20], "mult": 0.5}
-                            }
-                        }"#,
-                        r#"{}"#
-                    ],
-                )
-                .unwrap();
-            connection
-                .execute(
-                    "INSERT INTO notes VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
-                    rusqlite::params![
-                        1000_i64,
-                        "guid-1000",
-                        100_i64,
-                        1_700_000_010_i64,
-                        -1_i64,
-                        " spanish roots ",
-                        "hola\u{1f}hello",
-                        "hola",
-                        123_i64,
-                        0_i64,
-                        ""
-                    ],
-                )
-                .unwrap();
-            connection
-                .execute(
-                    "INSERT INTO cards VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18)",
-                    rusqlite::params![
-                        2000_i64,
-                        1000_i64,
-                        2_i64,
-                        0_i64,
-                        1_700_000_020_i64,
-                        -1_i64,
-                        2_i64,
-                        2_i64,
-                        42_i64,
-                        7_i64,
-                        2500_i64,
-                        3_i64,
-                        1_i64,
-                        0_i64,
-                        0_i64,
-                        0_i64,
-                        4_i64,
-                        ""
-                    ],
-                )
-                .unwrap();
-            connection
-                .execute(
-                    "INSERT INTO revlog VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
-                    rusqlite::params![
-                        3000_i64, 2000_i64, -1_i64, 3_i64, 7_i64, 3_i64, 2500_i64, 12_000_i64,
-                        1_i64
-                    ],
-                )
-                .unwrap();
-        }
+        // 4096 and 11 are what the V11 exporter in `engram-anki-package` writes,
+        // and what real Anki produces. Restating them rather than importing them
+        // keeps this fixture independent of the exporter it is used to test
+        // against -- if the exporter's constants drift, this fixture should not
+        // drift with them silently.
+        write_multi_table_db_with(
+            DbOptions {
+                page_size: 4096,
+                user_version: 11,
+            },
+            &tables,
+        )
+        .expect("the V11 fixture collection should be writable")
+    }
 
-        let sqlite_bytes = std::fs::read(sqlite.path()).unwrap();
+    fn v11_apkg_fixture() -> Vec<u8> {
+        let sqlite_bytes = v11_collection_bytes();
         write_legacy_apkg(
             &sqlite_bytes,
             &[
@@ -1185,10 +1245,7 @@ CREATE TABLE graves (
                 parsed["state"]["mediaAssets"][0]["filename"],
                 "audio/hola.mp3"
             );
-            assert_eq!(
-                parsed["state"]["mediaAssets"][0]["data"],
-                json!("bXAz")
-            );
+            assert_eq!(parsed["state"]["mediaAssets"][0]["data"], json!("bXAz"));
             assert_eq!(
                 parsed["state"]["deckOptions"][0]["options"]["newCardsPerDay"],
                 12
@@ -1213,10 +1270,10 @@ CREATE TABLE graves (
             let exported = take(eg_export_anki_apkg(session));
             let exported: Value = serde_json::from_str(&exported).unwrap();
             let exported_apkg = coding_adventures_base64::decode(
-                    exported["apkg"].as_str().unwrap(),
-                    &coding_adventures_base64::STANDARD,
-                )
-                .unwrap();
+                exported["apkg"].as_str().unwrap(),
+                &coding_adventures_base64::STANDARD,
+            )
+            .unwrap();
             let inspected = take(eg_inspect_anki_apkg(
                 session,
                 exported_apkg.as_ptr(),
@@ -1396,10 +1453,10 @@ CREATE TABLE graves (
             let exported: Value = serde_json::from_str(&exported).unwrap();
             assert_eq!(exported["ok"], true);
             let apkg = coding_adventures_base64::decode(
-                    exported["apkg"].as_str().unwrap(),
-                    &coding_adventures_base64::STANDARD,
-                )
-                .unwrap();
+                exported["apkg"].as_str().unwrap(),
+                &coding_adventures_base64::STANDARD,
+            )
+            .unwrap();
 
             let parsed = take(eg_parse_anki_apkg(session, apkg.as_ptr(), apkg.len()));
             let parsed: Value = serde_json::from_str(&parsed).unwrap();
@@ -1412,10 +1469,10 @@ CREATE TABLE graves (
             let modern_exported: Value = serde_json::from_str(&modern_exported).unwrap();
             assert_eq!(modern_exported["ok"], true);
             let modern_apkg = coding_adventures_base64::decode(
-                    modern_exported["apkg"].as_str().unwrap(),
-                    &coding_adventures_base64::STANDARD,
-                )
-                .unwrap();
+                modern_exported["apkg"].as_str().unwrap(),
+                &coding_adventures_base64::STANDARD,
+            )
+            .unwrap();
             let inspected = take(eg_inspect_anki_apkg(
                 session,
                 modern_apkg.as_ptr(),

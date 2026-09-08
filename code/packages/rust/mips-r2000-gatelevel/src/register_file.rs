@@ -16,7 +16,8 @@
 //!
 //! `increment_pc` uses `add_32bit` (gate-level ripple-carry adder) to add 4.
 
-use crate::bits::{add_32bit, bits_to_u32, int_to_bits32};
+use crate::bits::{add_32bit, bits_to_u32};
+use crate::state::clock_word;
 
 /// MIPS R2000 register file.
 ///
@@ -66,7 +67,7 @@ impl RegisterFile32 {
         if n == 0 {
             return; // R0 hardwired to 0
         }
-        self.gprs[n] = int_to_bits32(value);
+        clock_word(&mut self.gprs[n], value);
     }
 
     // ── HI ───────────────────────────────────────────────────────────────────
@@ -78,7 +79,7 @@ impl RegisterFile32 {
 
     /// Write `value` to HI.
     pub fn write_hi(&mut self, value: u32) {
-        self.hi = int_to_bits32(value);
+        clock_word(&mut self.hi, value);
     }
 
     // ── LO ───────────────────────────────────────────────────────────────────
@@ -90,7 +91,7 @@ impl RegisterFile32 {
 
     /// Write `value` to LO.
     pub fn write_lo(&mut self, value: u32) {
-        self.lo = int_to_bits32(value);
+        clock_word(&mut self.lo, value);
     }
 
     // ── PC ───────────────────────────────────────────────────────────────────
@@ -102,7 +103,7 @@ impl RegisterFile32 {
 
     /// Write `value` to PC.
     pub fn write_pc(&mut self, value: u32) {
-        self.pc = int_to_bits32(value);
+        clock_word(&mut self.pc, value);
     }
 
     /// Increment PC by `by` bytes using a gate-level ripple-carry adder.
@@ -121,7 +122,7 @@ impl RegisterFile32 {
     pub fn increment_pc(&mut self, by: u32) {
         let current = bits_to_u32(self.pc);
         let (new_pc, _, _) = add_32bit(current, by, 0);
-        self.pc = int_to_bits32(new_pc);
+        clock_word(&mut self.pc, new_pc);
     }
 }
 

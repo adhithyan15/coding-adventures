@@ -12,7 +12,7 @@
 //!
 //! All bit arrays are LSB-first: index 0 = bit 0 = least-significant.
 //!
-//! ```
+//! ```text
 //! // int_to_bits32(5) → [1, 0, 1, 0, 0, ..., 0]
 //! //                     ↑ bit 0 (value 1)
 //! //                           ↑ bit 2 (value 4)

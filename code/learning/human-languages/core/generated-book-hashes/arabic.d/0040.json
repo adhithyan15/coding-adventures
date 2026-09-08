@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:b4bef7c132d665e3",
+  "lessonIds": [
+    "AR-C40-limadha",
+    "AR-C40-lianna",
+    "AR-C40-anna",
+    "AR-C40-hinama",
+    "AR-R40-why-that-when"
+  ],
+  "tex": "arabic/book/chapters/ch40-why-that-and-when.tex"
+}
