@@ -1397,3 +1397,14 @@ width semantics. Mask u8 arithmetic/unary/bitwise results with255 at lowering;
 leave wider integer types unchanged. Rerun all12Oct programs, including wrap,
 loops/calls, and complement. Add backend structural coverage for masking and
 integer output; preserve existing predicate and wider arithmetic behavior.
+
+### VM-040 Oct validation
+
+All12Oct programs passed on real Erlang; each newly declared Beam cell also
+passed in a fresh process with the positive execution sentinel (rows75-83 and
+381-383 at this revision). The dedicated corpus checks zero return separately
+from stdout, protecting marker separation. The backend suite passed92tests
+before the additional width regression; that regression passed20op/type cases.
+Clippy for iir-to-beam and lang-aot alltargets passed. Remaining VM040families
+are Twig strings/records/closures, Nib, BASIC, FLOW-MATIC and COBOL; re-audit
+current declarations before selection. VM060b hostinput and VM0138008 remain.

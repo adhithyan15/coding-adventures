@@ -7194,3 +7194,11 @@ A source inspection repeated the repository-relative prefix while already in
 the Rust workspace, producing a doubled path. Use workspace-relative paths
 there. Python's Windows console also rejected non-CP1252 source characters;
 use PowerShell Get-Content or explicitly UTF-8 output when displaying source.
+
+### 2026-09-08 — BEAM output proof must preserve stdout and integer width
+
+Oct's first observable BEAM probe exposed three separate gaps: print_i64 was
+rejected, the matrix runner discarded all stdout, and arbitrary-precision
+arithmetic returned -1/300 instead of u8 255/44. Fixing only builtin acceptance
+would hide both later defects. Compare real output as well as a return marker,
+and mask at operation boundaries rather than only when printing.

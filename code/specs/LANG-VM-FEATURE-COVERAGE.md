@@ -25,7 +25,7 @@ refusal also does not imply the complete driver refuses that feature.
 | Nib | 26 | 182 | Intel 4004 BCD simulator proof, separate from standard targets |
 | Brainfuck | 6 | 42 | Dedicated WASM/JVM/CLR and JIT execution |
 | Dartmouth BASIC | 51 | 357 | Random differential suite and frontend JIT tests |
-| Oct | 12 | 84 | Frontend JIT control-flow tests |
+| Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025 |
 | FLOW-MATIC | 8 | 56 | All output and input/EOF rows on seven standard columns; frontend JIT stream tests |
 | COBOL-60 | 58 | 406 | Much larger frontend JIT/oracle suite |
@@ -224,3 +224,7 @@ VM-039d: all four input/EOF sources passed across the seven standard columns
 compiled JIT peek proof passed with a callback counter and failing fallback.
 The normal JIT matrix remains a tiered pipeline; it is not a claim that every
 source entry runs compiled. Encoded CIL input remains VM-059.
+
+VM-040 Oct: all twelve BEAM cells executed in fresh processes with positive
+single-cell sentinels and no skips. The dedicated real-BEAM corpus separately
+checks stdout and zero return values. Intel-8008 semantics remain VM-013.

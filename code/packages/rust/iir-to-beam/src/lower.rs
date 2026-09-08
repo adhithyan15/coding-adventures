@@ -1562,6 +1562,15 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(r2),
                         BEAMOperand::x(rd),
                     ]));
+                    // Erlang integers are unbounded; Oct u8 results wrap at
+                    // the operation boundary, before later calls/comparisons.
+                    if instr.type_hint == "u8" {
+                        instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                            BEAMOperand::f(0), BEAMOperand::u(live),
+                            BEAMOperand::u(import_and as u64),
+                            BEAMOperand::x(rd), BEAMOperand::i(255), BEAMOperand::x(rd),
+                        ]));
+                    }
                 }
 
                 // ── Unary arithmetic: neg, not ──────────────────────────────
@@ -1592,6 +1601,15 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(r),
                         BEAMOperand::x(rd),
                     ]));
+                    // Erlang integers are unbounded; Oct u8 results wrap at
+                    // the operation boundary, before later calls/comparisons.
+                    if instr.type_hint == "u8" {
+                        instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                            BEAMOperand::f(0), BEAMOperand::u(live),
+                            BEAMOperand::u(import_and as u64),
+                            BEAMOperand::x(rd), BEAMOperand::i(255), BEAMOperand::x(rd),
+                        ]));
+                    }
                 }
 
                 // ── Binary bitwise: and, or, xor, shl, shr ─────────────────
@@ -1621,6 +1639,15 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(r2),
                         BEAMOperand::x(rd),
                     ]));
+                    // Erlang integers are unbounded; Oct u8 results wrap at
+                    // the operation boundary, before later calls/comparisons.
+                    if instr.type_hint == "u8" {
+                        instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                            BEAMOperand::f(0), BEAMOperand::u(live),
+                            BEAMOperand::u(import_and as u64),
+                            BEAMOperand::x(rd), BEAMOperand::i(255), BEAMOperand::x(rd),
+                        ]));
+                    }
                 }
 
                 // ── Comparisons: cmp_eq, cmp_ne, cmp_lt, cmp_le, cmp_gt, cmp_ge
@@ -1753,6 +1780,19 @@ pub fn lower_iir_to_beam(
                 //   not    → is_eq_exact      {f,synth} {x,r} {i,0}   (x == 0)
                 // These are the native-Erlang twins of the JVM instanceof/ixor/
                 // if_icmpeq and the CLR isinst/xor/ceq.
+                "call_builtin" if matches!(instr.srcs.first(),
+                    Some(Operand::Var(name)) if name == "print_i64") => {
+                    // Portable Oct output uses the same integer display BIF as
+                    // io_out, with the builtin name occupying the first source.
+                    let rx = operand_reg!(get_src!(instr, 1));
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
+                        BEAMOperand::f(0),
+                        BEAMOperand::u(meta.next_reg as u64),
+                        BEAMOperand::u(import_display as u64),
+                        BEAMOperand::x(rx),
+                        BEAMOperand::x(meta.next_reg),
+                    ]));
+                }
                 "call_builtin" => {
                     let builtin = match instr.srcs.first() {
                         Some(Operand::Var(n)) => n.clone(),
