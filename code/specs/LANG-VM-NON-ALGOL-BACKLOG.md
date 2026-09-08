@@ -8,6 +8,35 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-038 implementation contract (selected after #14463 merged)
+
+Refreshed main is `7593f1253d`. VM-057, VM-047c and VM-049 have
+already merged; no open LANG implementation PR remains. The next ranked
+item is the existing 21-program Macsyma integer/assignment corpus on BEAM.
+Compile every source through the public BEAM entry point even without Erlang.
+When `erl` is available, execute every emitted module and compare the full
+signed integer with the existing oracle. A compilation, process or parse
+failure after tool detection must fail, never turn into a skip. Preserve the
+existing seven-backend floor and add BEAM to the common agreement test.
+Symbolic results remain VM-048. If the probe reveals a lowering defect,
+record and prioritize its repair before changing production code. Validate
+focused execution, the existing conformance suite and Clippy; inspect hosted
+tool availability so local proof is distinguished from hosted coverage.
+
+VM-038 probe: all 21 programs execute on the installed Erlang runtime with
+zero skips and correct signed results; no production lowering repair is needed.
+Hosted setup-beam is gated by `needs_elixir`, but `lang-aot/BUILD` declares
+only dotnet. Add the supported `# needs-toolchain: elixir` declaration so a
+LANG-only PR requests Erlang, matching the existing dotnet declaration pattern.
+This is a test-toolchain dependency, not a new language runtime dependency.
+
+VM-038 local validation: the expanded conformance suite passed all three
+tests, including 21 programs across eight backends (168 agreements), in
+56.53 seconds. BEAM, CLR simulator, JIT, JVM, LLVM, VM, WASM and native AOT
+all executed; zero backend skips. The separate BEAM proof passed all 21
+programs. Focused Clippy passed with warnings denied. No new lowering defect
+was discovered; VM-039 portable FLOW-MATIC input/EOF remains next after merge.
+
 ## VM-049 implementation contract (selected after #14449 merged)
 
 Refreshed main is `df33215f43` (VM-047c merged as `db77422ad1`). No new
@@ -830,7 +859,7 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | done #14394 | VM-046 | Promote COBOL STRING/UNSTRING in separate slices for SIZE, delimiters, pointer and overflow behavior; each slice needs oracle-matched output on its declared code-generation columns. |
 | done (see PR below) | VM-047 | Promote COBOL INSPECT in separate tally, replacement and region slices; preserve first-match/non-rechaining and documented character boundaries; compare executed outputs with the oracle. |
 | done (see PR below) | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |
-| 8 | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
+| selected | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
 | 9 | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
 | 10 | VM-040 | Inventory remaining BEAM cells separately for Twig strings, Twig records/closures, Nib scalars, BASIC f64/I/O, Oct u8/I/O, FLOW-MATIC and COBOL. Each family first gets a discriminating probe; split actual lowering defects before implementation. Brainfuck remains the explicit excluded tape design. |
 | 11 | VM-042 | Pin Brainfuck's intentional BEAM exclusion with a driver-level error assertion for mutable tape operations; distinguish supported frontend compilation from backend refusal. |

@@ -20,6 +20,9 @@
 # build did. This declaration is what VM-032/VM-036 already established for
 # Windows native execution, applied to the CLR-real column.
 # needs-toolchain: dotnet
+# Macsyma and McCarthy conformance execute emitted BEAM modules with erl.
+# CI installs Erlang through its Elixir/setup-beam toolchain gate.
+# needs-toolchain: elixir
 #
 # ONE COMMAND, ONE LINE — DO NOT REFORMAT WITH BACKSLASH CONTINUATIONS. The
 # build tool reads a BUILD file with `readLines` (build-tool/internal/discovery),

@@ -532,3 +532,10 @@ sole sending field is also the receiver, so the frontend's own register (not a
 temporary) is both source and destination of the truncating reshape. Expects
 `S` unchanged; this is the real COBOL construct that reaches WASM
 `str_slice`'s destination-aliases-source lowering path.
+
+**Macsyma on BEAM (VM-038):** `macsyma_conformance.rs` now executes the
+same 21 integer/assignment programs on real Erlang and compares full signed
+results. `macsyma_beam_corpus` also checks compilation without Erlang; runtime
+execution explicitly skips only when the tool is absent. Detected-tool failures
+fail the test. The BUILD declares the Elixir toolchain because hosted CI installs
+Erlang through setup-beam. Symbolic-result parity remains a separate work item.

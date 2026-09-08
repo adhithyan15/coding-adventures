@@ -7095,3 +7095,11 @@ comment describes was live on main at the moment I read the comment.**
 Generalising: before deciding a build output does not need committing, find
 every check that consumes it. I checked one and generalised from it, and the
 one I checked was the one that regenerates it.
+
+### 2026-09-07 — Erlang eval quoting in Windows probes
+
+A manual PowerShell `erl -eval` probe lost its embedded double quotes and
+failed before evaluating the program. Use an argument-preserving subprocess
+API for Erlang expressions. The Rust BEAM corpus runner passes a fixed eval
+argument through `Command`, uses a private working directory, and checks both
+process status and the complete integer output. All 21 programs passed.
