@@ -81,7 +81,7 @@ according to the current prioritization run.
 | RCPU-027 / RCPU-028 | 1985 | ARM1 / ARMv1 | Complete: `arm1-simulator` | Complete: `arm1-gatelevel` |
 | RCPU-029 / RCPU-030 | 1985 | MIPS R2000 | Complete: `mips-r2000-simulator` | Complete: `mips-r2000-gatelevel` |
 | RCPU-031 / RCPU-032 | 1987 | SPARC V8 | Complete: `sparc-v8-simulator` | Complete: `sparc-v8-gatelevel` |
-| RCPU-033 / RCPU-034 | 1992 | DEC Alpha AXP 21064 | Complete: `alpha-axp-simulator` | Missing |
+| RCPU-033 / RCPU-034 | 1992 | DEC Alpha AXP 21064 | Complete: `alpha-axp-simulator` | Complete: `alpha-axp-gatelevel` |
 | RCPU-035 / RCPU-036 | 1992 | PowerPC 601 | Missing | Missing |
 | RCPU-037 / RCPU-038 | 2003 | x86-64 (AMD64) | Audit: `x86-simulator` | Missing |
 | RCPU-039 / RCPU-040 | 2004 | ARMv7 educational baseline (07b) | Audit: `arm-simulator` | Missing |
@@ -91,10 +91,9 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-034**, the DEC Alpha AXP 21064 gate-level Rust
-implementation. The 2026-08-31 prioritization run keeps the Alpha pair
-together after closing its functional cell while completed earlier cells
-publish one at a time.
+Current selection: **RCPU-035**, the PowerPC 601 functional Rust
+implementation. The 2026-08-31 prioritization run closes the Alpha pair and
+advances chronologically while completed earlier cells publish one at a time.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -513,6 +512,17 @@ Strict formatting, Clippy, and rustdoc pass; total Rust line coverage is 88.08%
 Alpha Rust encoder/backend consumer existed to validate. Publication follows
 RCPU-032 and advances to RCPU-034, the Alpha gate-level implementation.
 
+RCPU-034 is complete locally atop RCPU-033. The new gate simulator stores the
+exact 526,465 persistent bits in D flip-flops: 524,288 memory, 2,048 GPR,
+128 PC/nPC, and one halt bit. Combinational decode and 64/128-bit gate networks
+cover the complete Spec 07s integer surface, including fixed-round
+partial-product multiplication and UMULH. Five lifecycle/workload suites, two
+gate-network tests, and the aggregate 624-vector Python full-state differential
+pass. Strict formatting, Clippy, and rustdoc are green; total Rust line coverage
+is 96.80% (726/750). Normative Spec 07s2 pins topology, gate boundaries,
+lifecycle, and conformance. Publication follows RCPU-033 and advances to
+RCPU-035, the PowerPC 601 functional implementation.
+
 ## Cross-language wave
 
 After RCPU-050, freeze the Rust APIs and golden conformance vectors, then port
@@ -539,6 +549,7 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-31 | RCPU-034 has no Rust package or normative Spec 07s2. The Python gate oracle is broad (351 passing tests, 98.91% line coverage) but its 32 registers are host bit lists rather than sequential primitives, memory is a host `bytearray`, nPC and halt are host scalars, and it exposes only the legacy non-transactional SIM00 lifecycle inherited from the functional oracle. Its standalone `uv` project also omits local source declarations for all four repository dependencies, so the audit required an isolated test environment with explicit source paths. | Resolved by RCPU-034; selects RCPU-035 chronologically | Completed as `alpha-axp-gatelevel` with exactly 526,465 persistent DFFs, complete combinational decode and gate datapaths, the shared atomic lifecycle, all 624 full-state vectors, Spec 07s2, strict checks, and 96.80% Rust line coverage. Keep Python packaging enrollment as a P1 infrastructure follow-up rather than changing the oracle during the Rust wave. |
 | 2026-08-31 | RCPU-033 has no Rust package or Rust encoder/backend consumer. Normative Spec 07s and the Python oracle provide a broad 64-bit little-endian integer ISA baseline with 146 passing tests at 88.83% line coverage, but the oracle exposes only legacy SIM00 state: no installed-program range, restore, typed direct access, typed errors, complete atomic traces/results, or transactional runs. Invalid instructions, PAL calls, and alignment failures are converted into a mutated halt state; an already-halted step succeeds; loads cannot select an origin; and no reproducible full-state differential corpus exists. | Resolved by RCPU-033; selects RCPU-034 by pair priority | Completed as `alpha-axp-simulator` with the exact machine, public encoders, validated complete state, typed atomic lifecycle, 624-vector Python full-state differential, all 146 Python tests, strict checks, and 88.08% Rust line coverage. No Alpha Rust consumer existed. Build the DFF/gate partner next. |
 | 2026-08-31 | RCPU-032 baseline has 42 passing tests but only 59.60% package line coverage. All 526,185 persistent architectural bits (524,288 memory, 1,792 physical-register, PC/nPC, CWP/depth, PSR, Y, and halt) are host values and nPC is absent. The gate branch-condition table assigns most condition numbers to the wrong predicates; divide-cc is missing; divide-by-zero saturates instead of faulting; loads retain stale memory; misalignment is accepted; halted/illegal/faulting steps mutate PC or state; non-sentinel traps can halt; state/restore/complete traces/results and typed transactional load/step/run are absent; the differential corpus is absent; and strict formatting already fails. | Resolved by RCPU-032; selects RCPU-033 by chronological pair priority | Completed with the exact 526,185-DFF topology, shared functional lifecycle, fixed-round gate division, all 16 corrected Bicc predicates, atomic trap/fault handling, documented UDIVcc/SDIVcc paths, the complete 248-vector differential, normative Spec 07r2, strict checks, and 94.72% line coverage. |
 | 2026-08-31 | RCPU-032's full-state differential exposed two additional legacy gate defects after the baseline audit: MULScc used a different recurrence from the completed functional/manual contract, and RD `%y` rejected valid encodings whenever `rs1` was nonzero. Native host division also remained beneath the existing UDIV/SDIV facade. | Resolved, P0 functional and gate fidelity | Match the functional MULScc recurrence, accept the architecturally ignored RD `%y` source field, and replace native division with fixed 64-step unsigned/signed restoring gate networks. Pin all fixes through the aggregate differential and divide-cc lifecycle edges. |
