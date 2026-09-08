@@ -83,18 +83,17 @@ self-contained. The package tests also cover strict manifest loading, identity
 and regular-file checks, fixed traversal and input ceilings, the closed 19-pair
 taxonomy, declaration matching, dual FFI opt-in, hard bans, deterministic
 recursive discovery, first-class sensitive references, constrained includes,
-CLI output, and fail-closed parse, generated-source, attribute, and extension
-handling.
+CLI entrypoint arguments and exits, and fail-closed parse, generated-source,
+Dune include/workspace/preprocessor, attribute, and extension handling.
 
 ```bash
 opam exec -- dune build @fmt
 BISECT_FILE="$PWD/bisect" opam exec -- \
   dune runtest --force --instrument-with bisect_ppx
-opam exec -- bisect-ppx-report summary --per-file \
-  --expect src/coding_adventures_capability_analyzer.ml bisect*.coverage \
-  | tee _build/coverage-summary.txt
-python test/check_coverage.py --summary _build/coverage-summary.txt \
-  --source src/coding_adventures_capability_analyzer.ml --minimum 95
+python test/check_coverage.py --coverage-glob "bisect*.coverage" \
+  --summary _build/coverage-summary.txt \
+  --source src/coding_adventures_capability_analyzer.ml \
+  --source bin/main.ml --minimum 95
 ```
 
 The BUILD contracts require at least 95% measured production coverage and an

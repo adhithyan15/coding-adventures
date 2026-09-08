@@ -225,6 +225,13 @@ let parse_manifest text =
           ]
         fields
     in
+    let* () =
+      match List.assoc_opt "$schema" fields with
+      | None -> Ok ()
+      | Some value ->
+          let* _ = string_value ~context:"manifest $schema" value in
+          Ok ()
+    in
     let* version = required_field ~context:"manifest" "version" fields in
     let* () =
       match version with
@@ -476,7 +483,27 @@ let rec module_expression_mentions_sensitive environment module_expression =
       module_expression_mentions_sensitive environment body
   | Pmod_functor (_, body) ->
       module_expression_mentions_sensitive environment body
-  | Pmod_structure _ | Pmod_unpack _ | Pmod_extension _ -> false
+  | Pmod_structure structure ->
+      List.exists
+        (fun item ->
+          match item.pstr_desc with
+          | Pstr_include declaration ->
+              module_expression_mentions_sensitive environment
+                declaration.pincl_mod
+          | Pstr_open declaration ->
+              module_expression_mentions_sensitive environment
+                declaration.popen_expr
+          | Pstr_module binding ->
+              module_expression_mentions_sensitive environment binding.pmb_expr
+          | Pstr_recmodule bindings ->
+              List.exists
+                (fun binding ->
+                  module_expression_mentions_sensitive environment
+                    binding.pmb_expr)
+                bindings
+          | _ -> false)
+        structure
+  | Pmod_unpack _ | Pmod_extension _ -> false
 
 let pattern_names pattern =
   let names = ref String_set.empty in
@@ -812,8 +839,18 @@ and walk_expression context environment expression =
         match name.txt with
         | None -> environment
         | Some name ->
-            bind_module environment name
-              (resolve_module_expression environment module_expression)
+            let resolved =
+              resolve_module_expression environment module_expression
+            in
+            if
+              Option.is_none resolved
+              && module_expression_mentions_sensitive environment
+                   module_expression
+            then
+              add_error context module_expression.pmod_loc
+                "unresolved sensitive local module is unsupported by \
+                 capability analysis";
+            bind_module environment name resolved
       in
       walk_expression context body_environment body
   | Pexp_open (declaration, body) ->
@@ -917,7 +954,12 @@ and walk_structure context environment structure =
       | Pstr_recmodule bindings ->
           List.iter
             (fun binding ->
-              walk_module_expression context current binding.pmb_expr)
+              walk_module_expression context current binding.pmb_expr;
+              if module_expression_mentions_sensitive current binding.pmb_expr
+              then
+                add_error context binding.pmb_loc
+                  "unresolved sensitive recursive module is unsupported by \
+                   capability analysis")
             bindings;
           List.fold_left
             (fun result binding ->
@@ -1155,14 +1197,164 @@ let max_total_source_bytes = 64 * 1024 * 1024
 let max_source_files = 10_000
 let max_directory_depth = 64
 
-let contains_substring text needle =
-  let text_length = String.length text
-  and needle_length = String.length needle in
-  let rec search index =
-    index + needle_length <= text_length
-    && (String.sub text index needle_length = needle || search (index + 1))
+let dune_stanza_head_exists text expected =
+  let length = String.length text in
+  let is_space = function ' ' | '\t' | '\r' | '\n' -> true | _ -> false in
+  let is_boundary index =
+    index >= length
+    ||
+    match text.[index] with
+    | ' ' | '\t' | '\r' | '\n' | ')' | '(' -> true
+    | _ -> false
   in
-  needle_length = 0 || search 0
+  let rec skip_space index =
+    if index < length && is_space text.[index] then skip_space (index + 1)
+    else index
+  in
+  let expected_length = String.length expected in
+  let rec search index =
+    if index >= length then false
+    else if text.[index] <> '(' then search (index + 1)
+    else
+      let head = skip_space (index + 1) in
+      if
+        head + expected_length <= length
+        && String.sub text head expected_length = expected
+        && is_boundary (head + expected_length)
+      then true
+      else search (index + 1)
+  in
+  search 0
+
+let compact_dune text =
+  let output = Buffer.create (String.length text) in
+  let rec normal index =
+    if index < String.length text then
+      match text.[index] with
+      | ' ' | '\t' | '\r' | '\n' -> normal (index + 1)
+      | ';' -> comment (index + 1)
+      | '"' ->
+          Buffer.add_char output '"';
+          quoted (index + 1)
+      | character ->
+          Buffer.add_char output character;
+          normal (index + 1)
+  and comment index =
+    if index < String.length text then
+      if text.[index] = '\n' then normal (index + 1) else comment (index + 1)
+  and quoted index =
+    if index < String.length text then
+      match text.[index] with
+      | '\\' when index + 1 < String.length text ->
+          Buffer.add_char output text.[index];
+          Buffer.add_char output text.[index + 1];
+          quoted (index + 2)
+      | '"' ->
+          Buffer.add_char output '"';
+          normal (index + 1)
+      | character ->
+          Buffer.add_char output character;
+          quoted (index + 1)
+  in
+  normal 0;
+  Buffer.contents output
+
+let remove_dune_comments text =
+  let output = Buffer.create (String.length text) in
+  let rec normal index =
+    if index < String.length text then
+      match text.[index] with
+      | ';' ->
+          Buffer.add_char output ' ';
+          comment (index + 1)
+      | '"' ->
+          Buffer.add_char output '"';
+          quoted (index + 1)
+      | character ->
+          Buffer.add_char output character;
+          normal (index + 1)
+  and comment index =
+    if index < String.length text then
+      if text.[index] = '\n' then (
+        Buffer.add_char output '\n';
+        normal (index + 1))
+      else comment (index + 1)
+  and quoted index =
+    if index < String.length text then
+      match text.[index] with
+      | '\\' when index + 1 < String.length text ->
+          Buffer.add_char output text.[index];
+          Buffer.add_char output text.[index + 1];
+          quoted (index + 2)
+      | '"' ->
+          Buffer.add_char output '"';
+          normal (index + 1)
+      | character ->
+          Buffer.add_char output character;
+          quoted (index + 1)
+  in
+  normal 0;
+  Buffer.contents output
+
+let remove_substrings text needle =
+  let output = Buffer.create (String.length text) in
+  let needle_length = String.length needle in
+  let rec copy index =
+    if index < String.length text then
+      if
+        index + needle_length <= String.length text
+        && String.sub text index needle_length = needle
+      then copy (index + needle_length)
+      else (
+        Buffer.add_char output text.[index];
+        copy (index + 1))
+  in
+  copy 0;
+  Buffer.contents output
+
+let safe_instrumentation_only ~allow_bisect contents =
+  let compact = compact_dune contents in
+  let without_safe =
+    if allow_bisect then
+      remove_substrings compact "(instrumentation(backendbisect_ppx))"
+    else compact
+  in
+  not (dune_stanza_head_exists without_safe "instrumentation")
+
+let unsafe_dune_construct ~allow_bisect contents =
+  let comment_normalized = remove_dune_comments contents in
+  let unsafe_stanzas =
+    [
+      "preprocess";
+      "preprocessor_deps";
+      "rule";
+      "ocamllex";
+      "menhir";
+      "include";
+      "copy_files";
+      "copy_files#";
+      "dynamic_include";
+      "flags";
+      "ocamlc_flags";
+      "ocamlopt_flags";
+      "foreign_stubs";
+      "foreign_archives";
+      "foreign_library";
+      "ctypes";
+      "extra_objects";
+      "link_flags";
+      "c_library_flags";
+      "instrumentation.backend";
+    ]
+  in
+  if not (safe_instrumentation_only ~allow_bisect contents) then
+    Some "(instrumentation ...)"
+  else
+    match
+      List.find_opt (dune_stanza_head_exists comment_normalized) unsafe_stanzas
+    with
+    | Some stanza -> Some ("(" ^ stanza ^ " ...)")
+    | None -> None
 
 let read_file ~max_bytes path =
   try
@@ -1289,21 +1481,27 @@ let discover_sources root =
                        (Printf.sprintf
                           "generated OCaml source input is unsupported: %s"
                           child_relative))
-                else if name = "dune" then
+                else if name = "dune-workspace" then
+                  raise
+                    (Failure
+                       (Printf.sprintf
+                          "Dune workspace input is unsupported by capability \
+                           analysis: %s"
+                          child_relative))
+                else if name = "dune" || name = "dune-project" then
                   let contents =
                     match read_file ~max_bytes:max_manifest_bytes absolute with
                     | Ok contents -> contents
                     | Error message -> raise (Failure message)
                   in
+                  let normalized_child = normalize_relative child_relative in
+                  let allow_bisect =
+                    Filename.basename root = "ca-capability-analyzer"
+                    && List.mem normalized_child
+                         [ "bin/dune"; "src/dune"; "test/dune" ]
+                  in
                   let unsupported =
-                    [
-                      "(preprocess";
-                      "(preprocessor_deps";
-                      "(rule";
-                      "(ocamllex";
-                      "(menhir";
-                    ]
-                    |> List.find_opt (contains_substring contents)
+                    unsafe_dune_construct ~allow_bisect contents
                   in
                   Option.iter
                     (fun stanza ->

@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import re
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -99,6 +101,24 @@ class OcamlCapabilityGateTest(unittest.TestCase):
                 summary, "src/coding_adventures_capability_analyzer.ml", 95.01
             )
 
+    def test_coverage_command_aggregates_every_process_file(self) -> None:
+        gate = load_coverage_gate()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "bisect-a.coverage").touch()
+            (root / "bisect-b.coverage").touch()
+            previous = Path.cwd()
+            try:
+                os.chdir(root)
+                command = gate.coverage_command(
+                    "bisect*.coverage", ["src/library.ml", "bin/main.ml"]
+                )
+            finally:
+                os.chdir(previous)
+        self.assertEqual(command.count("--expect"), 2)
+        self.assertTrue(command[-2].endswith("bisect-a.coverage"))
+        self.assertTrue(command[-1].endswith("bisect-b.coverage"))
+
     def test_ci_registry_routes_all_ocaml_analyzer_inputs(self) -> None:
         registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
         gate = registry["gates"]["contracts-capability-cage"]
@@ -113,6 +133,8 @@ class OcamlCapabilityGateTest(unittest.TestCase):
 
         job_gate = registry["gates"]["ocaml-capability-gate"]
         self.assertEqual(job_gate["scope"], "job")
+        self.assertIn("dune-workspace", job_gate["paths"])
+        self.assertIn("**/dune-workspace", job_gate["paths"])
         self.assertIn("code/packages/ocaml/**", job_gate["paths"])
         self.assertIn("code/programs/ocaml/**", job_gate["paths"])
 
@@ -129,11 +151,13 @@ class OcamlCapabilityGateTest(unittest.TestCase):
             "opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff",
             "opam install . --deps-only --with-test --with-dev-setup",
             "dune runtest --force --instrument-with bisect_ppx",
-            "bisect-ppx-report summary --per-file",
+            '--coverage-glob "bisect*.coverage"',
+            "--source bin/main.ml",
             "test/check_coverage.py",
             "--minimum 95",
             "opam exec -- dune build bin/main.exe",
             "find code/packages/ocaml code/programs/ocaml",
+            'find . -name dune-workspace -print -quit',
             'test "${#roots[@]}" -gt 0',
             '"$analyzer" --dir "$(dirname "$project")"',
             "needs: [detect, contracts, ocaml-capability-gate,",

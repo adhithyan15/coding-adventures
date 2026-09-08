@@ -38,7 +38,19 @@
       "action": "write",
       "target": "*",
       "justification": "Prints deterministic findings and tool errors for developers and CI."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "ocamlrun",
+      "justification": "The entrypoint integration test launches the built bytecode CLI through the reviewed OCaml runtime."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "CAPABILITY_TEST_OCAMLRUN and CAPABILITY_TEST_CLI",
+      "justification": "The entrypoint integration test reads two Dune-provided paths for the reviewed runtime and CLI bytecode."
     }
   ],
-  "justification": "The analyzer reads and lists one selected package tree and prints its deterministic verdict. Its test suite creates, writes, and removes only isolated temporary fixtures; production opens no network connection and starts no process."
+  "justification": "The analyzer reads and lists one selected package tree and prints its deterministic verdict. Its test suite creates, writes, and removes only isolated temporary fixtures and launches the built CLI through the reviewed OCaml runtime; production opens no network connection and starts no process."
 }

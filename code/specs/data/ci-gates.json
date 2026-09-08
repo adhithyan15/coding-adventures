@@ -359,6 +359,8 @@
         "ocaml/ca-capability-analyzer"
       ],
       "paths": [
+        "dune-workspace",
+        "**/dune-workspace",
         "code/packages/ocaml/**",
         "code/programs/ocaml/**",
         "code/specs/fixtures/ocaml-capability-analyzer-v1/**",

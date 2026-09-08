@@ -656,18 +656,18 @@ jobs:
           python code/scripts/ocaml_toolchain_lock.py validate-repository-report \
             --names "$repository_names" \
             --listing "$repository_listing"
+          test -z "$(find . -name dune-workspace -print -quit)"
           cd code/packages/ocaml/ca-capability-analyzer
           opam install . --deps-only --with-test --with-dev-setup \
             --yes --require-checksums
           rm -f bisect*.coverage
           BISECT_FILE="$PWD/bisect" opam exec -- \
             dune runtest --force --instrument-with bisect_ppx
-          opam exec -- bisect-ppx-report summary --per-file \
-            --expect src/coding_adventures_capability_analyzer.ml \
-            bisect*.coverage | tee _build/coverage-summary.txt
           python test/check_coverage.py \
+            --coverage-glob "bisect*.coverage" \
             --summary _build/coverage-summary.txt \
             --source src/coding_adventures_capability_analyzer.ml \
+            --source bin/main.ml \
             --minimum 95
           opam exec -- dune build bin/main.exe
 

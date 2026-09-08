@@ -21,3 +21,6 @@ All notable changes to this package are recorded here.
   fixed file-count, depth, per-file, manifest, and aggregate byte ceilings.
 - A self-contained package fixture mirror, numeric 95% source-coverage gate,
   and executable Windows BUILD syntax.
+- Coverage and subprocess tests for the public CLI entrypoint, strict
+  `$schema` typing, wrapped-sensitive-module rejection, and fail-closed Dune
+  include, workspace, copy, generator, and preprocessor detection.

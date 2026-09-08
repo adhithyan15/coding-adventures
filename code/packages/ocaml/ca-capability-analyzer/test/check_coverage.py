@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import subprocess
 from pathlib import Path
 
 
@@ -26,16 +27,37 @@ def require_minimum(summary: str, source: str, minimum: float) -> float:
     return percentage
 
 
+def coverage_command(pattern: str, sources: list[str]) -> list[str]:
+    coverage_files = sorted(Path.cwd().glob(pattern))
+    if not coverage_files:
+        raise ValueError(f"coverage glob matched no files: {pattern}")
+    command = ["opam", "exec", "--", "bisect-ppx-report", "summary", "--per-file"]
+    for source in sources:
+        command.extend(("--expect", source))
+    command.extend(str(path) for path in coverage_files)
+    return command
+
+
+def generate_summary(path: Path, pattern: str, sources: list[str]) -> None:
+    command = coverage_command(pattern, sources)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as output:
+        subprocess.run(command, check=True, stdout=output, text=True)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--summary", required=True, type=Path)
-    parser.add_argument("--source", required=True)
+    parser.add_argument("--coverage-glob")
+    parser.add_argument("--source", required=True, action="append")
     parser.add_argument("--minimum", required=True, type=float)
     args = parser.parse_args()
-    percentage = require_minimum(
-        args.summary.read_text(encoding="utf-8"), args.source, args.minimum
-    )
-    print(f"{args.source}: {percentage:.2f}% (minimum {args.minimum:.2f}%)")
+    if args.coverage_glob:
+        generate_summary(args.summary, args.coverage_glob, args.source)
+    summary = args.summary.read_text(encoding="utf-8")
+    for source in args.source:
+        percentage = require_minimum(summary, source, args.minimum)
+        print(f"{source}: {percentage:.2f}% (minimum {args.minimum:.2f}%)")
     return 0
 
 

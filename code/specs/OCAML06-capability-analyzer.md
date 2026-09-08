@@ -38,8 +38,15 @@ The CLI accepts `--dir PACKAGE_DIR` and optional `--verbose`. The directory
 defaults to `.`. It recursively analyzes regular `.ml` and `.mli` files in
 deterministic relative-path order, while rejecting symlinked source inputs and
 skipping `_build`, `.git`, `_opam`, and `node_modules` directories. `.mll` and
-`.mly` inputs, Dune preprocessing/generator stanzas, AST extensions, and source
-attributes are rejected until the analyzer can inspect their generated output.
+`.mly` inputs, Dune preprocessing/generator/include/copy/compiler-flag stanzas,
+Dune workspace files, preprocessor flags, foreign-code stanzas, AST extensions,
+and source attributes are rejected. The sole instrumentation exception is the
+exact pinned `bisect_ppx` coverage stanza in this analyzer's reviewed `src`,
+`bin`, and `test` Dune files; every other instrumentation stanza and every
+backend declaration fails closed until the analyzer can inspect its generated
+output. The independent CI gate also rejects any repository
+`dune-workspace`, which could otherwise alter package builds from outside an
+analyzed package root.
 
 The scanner applies fixed resource ceilings before parsing: at most 10,000
 source files, at most 4 MiB per source file, at most 64 MiB across all source

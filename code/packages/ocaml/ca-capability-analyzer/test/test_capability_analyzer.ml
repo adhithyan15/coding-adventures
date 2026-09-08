@@ -177,6 +177,7 @@ let test_manifest_shape_errors () =
       {|{"version": 1, "package": "go/x", "capabilities": [], "justification": "Long enough explanation."}|};
       {|{"version": 1, "package": "ocaml/x", "capabilities": [], "justification": "short"}|};
       {|{"version": 1, "package": "ocaml/x", "capabilities": [], "justification": "Long enough explanation.", "extra": true}|};
+      {|{"$schema": 1, "version": 1, "package": "ocaml/x", "capabilities": [], "justification": "Long enough explanation."}|};
       {|{"version": 1, "package": "ocaml/x", "capabilities": [], "justification": "Long enough explanation.", "banned_construct_exceptions": [{"construct": "external", "language": "go", "justification": "Wrong analyzer language is rejected."}]}|};
     ]
   in
@@ -330,6 +331,45 @@ let test_unsupported_ast_fails_closed () =
       | Ok _ -> Alcotest.failf "unsupported AST was accepted: %s" source)
     rejected
 
+let test_sensitive_module_wrappers_fail_closed () =
+  let rejected =
+    [
+      "module M = struct include Obj end\nlet cast value = M.magic value\n";
+      "module M = struct include Marshal end\n\
+       let decode value = M.from_bytes value 0\n";
+      "module M = struct include Unix end\nlet run value = M.system value\n";
+      "module rec M : sig val magic : 'a -> 'b end = struct include Obj end\n\
+       let cast value = M.magic value\n";
+    ]
+  in
+  List.iter
+    (fun source ->
+      match analyze_source ~filename:"wrapper.ml" Implementation source with
+      | Error _ -> ()
+      | Ok _ ->
+          Alcotest.failf "sensitive module wrapper was accepted: %s" source)
+    rejected
+
+let test_sensitive_local_module_wrappers_fail_closed () =
+  let rejected =
+    [
+      "let cast value = let module M = struct include Obj end in M.magic value\n";
+      "let decode value = let module M = struct include Marshal end in \
+       M.from_bytes value 0\n";
+      "let run value = let module M = struct include Unix end in M.system value\n";
+    ]
+  in
+  List.iter
+    (fun source ->
+      match
+        analyze_source ~filename:"local_wrapper.ml" Implementation source
+      with
+      | Error _ -> ()
+      | Ok _ ->
+          Alcotest.failf "sensitive local module wrapper was accepted: %s"
+            source)
+    rejected
+
 let test_directory_input_boundaries () =
   with_temp_directory (fun directory ->
       let oversized = Filename.concat directory "oversized.ml" in
@@ -347,10 +387,96 @@ let test_directory_input_boundaries () =
       write_file (Filename.concat directory "input.ml") "let x = 1\n";
       write_file
         (Filename.concat directory "dune")
+        "(library (name generated) (instrumentation (backend bisect_ppx)))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "out-of-scope bisect instrumentation was accepted");
+      write_file
+        (Filename.concat directory "dune")
         "(library (name generated) (preprocess (pps unsafe_ppx)))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "Dune preprocessing was accepted");
+      write_file
+        (Filename.concat directory "dune")
+        "(library (name generated) ( preprocess (pps unsafe_ppx)))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ ->
+          Alcotest.fail "whitespace-separated Dune preprocessing was accepted");
+      write_file (Filename.concat directory "dune") "( include generated.inc)\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "Dune include was accepted");
+      write_file
+        (Filename.concat directory "dune")
+        "(library (name generated) (flags (:standard -ppx unsafe_ppx)))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "Dune -ppx flag was accepted");
+      write_file
+        (Filename.concat directory "dune")
+        "(library (name generated) (flags (:standard -pp\tunsafe_pp)))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "Dune tab-separated -pp flag was accepted");
+      write_file
+        (Filename.concat directory "dune")
+        "(library (name generated) (flags (:standard \"-ppx\" \"unsafe_ppx\")))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "quoted Dune -ppx flag was accepted");
+      write_file
+        (Filename.concat directory "dune")
+        "(library (name generated) (flags (:standard \"\\x2dppx\" \
+         \"unsafe_ppx\")))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "escaped Dune -ppx flag was accepted");
+      write_file
+        (Filename.concat directory "dune")
+        "(library (name generated) (instrumentation (backend unsafe_ppx)))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "unsafe Dune instrumentation was accepted");
+      write_file
+        (Filename.concat directory "dune")
+        "(library (name native) (foreign_stubs (language c) (names native)))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "Dune foreign stubs were accepted");
+      write_file
+        (Filename.concat directory "dune")
+        "(library (name native) (ctypes (external_library_name native)))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "Dune ctypes generation was accepted");
+      write_file
+        (Filename.concat directory "dune")
+        "(library (name native) (; hidden field\n\
+        \ ctypes (external_library_name native)))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "comment-hidden Dune ctypes was accepted");
+      write_file
+        (Filename.concat directory "dune")
+        "(library (name native) (extra_objects native) (link_flags -lnative))\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "Dune native link inputs were accepted");
+      write_file
+        (Filename.concat directory "dune")
+        "(dynamic_include generated.inc)\n";
+      (match analyze_directory directory with
+      | Error _ -> ()
+      | Ok _ -> Alcotest.fail "Dune dynamic include was accepted");
+      Sys.remove (Filename.concat directory "dune");
+      write_file
+        (Filename.concat directory "dune-workspace")
+        "(lang dune 3.16)\n";
       match analyze_directory directory with
       | Error _ -> ()
-      | Ok _ -> Alcotest.fail "Dune preprocessing was accepted")
+      | Ok _ -> Alcotest.fail "Dune workspace was accepted")
 
 let test_manifest_identity_and_kind () =
   with_temp_directory (fun directory ->
@@ -475,6 +601,10 @@ let () =
             test_parse_error_fails_closed;
           Alcotest.test_case "unsupported AST fails closed" `Quick
             test_unsupported_ast_fails_closed;
+          Alcotest.test_case "sensitive module wrappers fail closed" `Quick
+            test_sensitive_module_wrappers_fail_closed;
+          Alcotest.test_case "sensitive local module wrappers fail closed"
+            `Quick test_sensitive_local_module_wrappers_fail_closed;
           Alcotest.test_case "stable formatting" `Quick test_format_and_sorting;
         ] );
       ( "manifests",

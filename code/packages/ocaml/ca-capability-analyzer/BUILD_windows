@@ -1,7 +1,6 @@
 opam install . --deps-only --with-test --with-dev-setup --yes --require-checksums
 opam exec -- dune build @fmt
 set BISECT_FILE=%CD%\bisect&& opam exec -- dune runtest --force --instrument-with bisect_ppx
-for %f in (bisect*.coverage) do opam exec -- bisect-ppx-report summary --per-file --expect src/coding_adventures_capability_analyzer.ml %f > _build\coverage-summary.txt
+python test\check_coverage.py --coverage-glob "bisect*.coverage" --summary _build\coverage-summary.txt --source src/coding_adventures_capability_analyzer.ml --source bin/main.ml --minimum 95
 type _build\coverage-summary.txt
-python test\check_coverage.py --summary _build\coverage-summary.txt --source src/coding_adventures_capability_analyzer.ml --minimum 95
 opam exec -- dune build @install
