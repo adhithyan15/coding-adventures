@@ -1,0 +1,933 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 26,
+  "title": "Primo, Secondo, Terzo",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:08a1dfa07ab5548e",
+  "lessons": [
+    {
+      "id": "IT-C26-primo",
+      "sequence": 890,
+      "title": "primo — first, and a word this book already used",
+      "headword": "primo / prima",
+      "romanization": "primo / prima",
+      "gloss": "first — the word this book has used once, inside a gloss, and never taught",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c12bd83a71dc605",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new kind of counting starts here, so the recalls come first, at the four growing distances this book measures."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say la gola — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *la gola* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il caffè — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il caffè* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say abitare — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *abitare* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say uno, due, tre, quattro, cinque — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *uno, due, tre, quattro, cinque* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ciao — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ciao* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say buono / buon — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *buono / buon* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "primo (masculine), prima (feminine) — first. il primo giorno — the first day. la prima volta — the first time."
+            },
+            {
+              "kind": "speech",
+              "text": "Uno, due, tre answer how many. This word answers which one in the line, and Italian keeps a second series for that job. It behaves as any describing word does and changes its ending with what it counts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: already on the page",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This book has used primo once, and hidden it. The seasons lesson glossed primavera as \"the first green\" — prima vera, the first spring — and the word behind that gloss was never given. Now it is."
+            },
+            {
+              "kind": "speech",
+              "text": "One thing to know before you use it. Il primo piano is not the ground floor. Italian calls the ground floor il pianterreno, \"the earth floor\", and starts counting at the top of the first flight of stairs — so il primo piano is what an American calls the second floor. A lift panel in Rome begins T, then 1."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "primo, prima",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *primo, prima*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il primo giorno — the first day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il primo giorno* — the first day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "primavera — the first spring",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *primavera* — the first spring]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the first time.\" (La prima volta.) Which word in this book was already built on primo? (Primavera — the first spring.) And which floor is il primo piano? (The one above the ground floor, which Italian calls il pianterreno.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C26-secondo",
+      "sequence": 900,
+      "title": "secondo — the one that follows, and half a menu",
+      "headword": "secondo / seconda",
+      "romanization": "secondo / seconda",
+      "gloss": "second — the verb inside it, and what it names on every Italian menu",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:987aff0d81f14d87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls before the second ordinal, at the four measured distances."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say primo — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *primo* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il tè — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il tè* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lavorare — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lavorare* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sei, sette, otto, nove, dieci — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sei, sette, otto, nove, dieci* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il / la / lo — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il / la / lo* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say giorno — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *giorno* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "secondo (masculine), seconda (feminine) — second. il secondo giorno — the second day. la seconda volta — the second time."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no due in it. It comes from Latin sequī, \"to follow\", so second place is named for what it does — the place that comes after — and not for the count it sits at. English second, sequel, sequence and consequence are the same root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the two courses",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An Italian menu is written with these two words used as nouns, and once you have them you can read one:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "course",
+                "what arrives"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "course: l'antipasto. what arrives: before the meal.",
+                "course: il primo. what arrives: pasta, rice or soup.",
+                "course: il secondo. what arrives: meat or fish.",
+                "course: il dolce. what arrives: the sweet."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Il primo and il secondo are not \"starter\" and \"main\". They are literally the first and the second, and an Italian ordering both is ordering two courses, not a starter and an entrée. Two ordinals, and half a meal is legible."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "secondo, seconda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *secondo, seconda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la seconda volta — the second time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la seconda volta* — the second time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the menu — antipasto, primo, secondo, dolce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the menu — *antipasto, primo, secondo, dolce*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What verb is secondo built on? (Sequī, to follow.) What are il primo and il secondo on a menu? (The first and second courses — pasta, then meat.) And say \"the second day.\" (Il secondo giorno.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C26-terzo",
+      "sequence": 910,
+      "title": "terzo — where the number starts to show through",
+      "headword": "terzo / terza",
+      "romanization": "terzo / terza",
+      "gloss": "third — the first ordinal with its own number audible inside it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b54af9b6375eeadc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the third ordinal — the first with a number visible inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say secondo — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *secondo* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say il latte — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *il latte* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the fifth chapter's own recombining — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *the fifth chapter's own recombining* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lunedì, martedì, mercoledì — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lunedì, martedì, mercoledì* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say buongiorno — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *buongiorno* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say buonasera — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *buonasera* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "terzo (masculine), terza (feminine) — third. il terzo piano — the third floor. la terza volta — the third time."
+            },
+            {
+              "kind": "speech",
+              "text": "Say tre and then terzo. Two ordinals have gone past with no number in them at all; this is the first where you can hear one. The z is ts — TER-tso."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: a third of something",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Un terzo also means \"a third\", the fraction, and that is the same word used as a noun. Italian names its small fractions with the ordinals:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "fraction",
+                "Italian"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "fraction: a third. Italian: un terzo.",
+                "fraction: a quarter. Italian: un quarto.",
+                "fraction: a fifth. Italian: un quinto."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So the words this chapter is teaching do a second job you will meet in a recipe or on a bill. English does exactly the same thing with a third and a quarter, and for the same reason: the ordinal already names a position in a division."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "terzo, terza — TER-tso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *terzo, terza* — *TER-tso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the join — tre becomes terzo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the join — *tre → terzo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un terzo — a third",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un terzo* — a third]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which number is inside terzo? (Tre.) How is the z said? (Ts — TER-tso.) And what does un terzo mean besides \"the third one\"? (A third — the fraction.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C26-quarto",
+      "sequence": 920,
+      "title": "quarto — the fourth, and a quarter of an hour",
+      "headword": "quarto / quarta",
+      "romanization": "quarto / quarta",
+      "gloss": "fourth — and the quarter of an hour you will need before you need anything else",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91636ad6c3e098dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the fourth — and the phrase that makes these words immediately useful."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say terzo — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *terzo* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lo zucchero — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lo zucchero* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sabato e domenica — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sabato e domenica* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say l'ora — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *l'ora* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say buonanotte — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *buonanotte* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say grazie — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *grazie* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quarto (masculine), quarta (feminine) — fourth. il quarto piano — the fourth floor. la quarta volta — the fourth time."
+            },
+            {
+              "kind": "speech",
+              "text": "Quattro is four and quarto is four with the ordinal ending, the double t squeezed out. Two in a row now behave the same way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: a quarter of an hour",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "un quarto d'ora — a quarter of an hour, fifteen minutes. tre quarti d'ora — three quarters of an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "The clock chapter gave you l'ora. This is what Italian does with it, and it is the single most useful thing in the chapter: fra un quarto d'ora, \"in a quarter of an hour\", is how somebody tells you to wait a bit."
+            },
+            {
+              "kind": "speech",
+              "text": "It also gives you le sei e un quarto — a quarter past six — where the ordinal is doing the work an English speaker expects from \"quarter\". Same idea, and the word you need for it is one you now have."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quarto, quarta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quarto, quarta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un quarto d'ora — a quarter of an hour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un quarto d'ora* — a quarter of an hour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le sei e un quarto — a quarter past six",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le sei e un quarto* — a quarter past six]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a quarter of an hour.\" (Un quarto d'ora.) What number is inside quarto? (Quattro.) And how would you say \"a quarter past six\"? (Le sei e un quarto.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C26-quinto",
+      "sequence": 930,
+      "title": "quinto — the fifth, and a sound the cardinal lost",
+      "headword": "quinto / quinta",
+      "romanization": "quinto / quinta",
+      "gloss": "fifth — where the ordinal kept a sound the cardinal lost",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b331ba453f39be6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recalls first, then the fifth — and a pair that does not rhyme when it ought to."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say quarto — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *quarto* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say l'amico e l'amica — R2, the first real retrieval, five to fifteen lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *l'amico e l'amica* — **R2**, the first real retrieval, five to fifteen lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say la gola — R2, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *la gola* — **R2**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mezzogiorno e mezzanotte — R3, durable, twenty to sixty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mezzogiorno e mezzanotte* — **R3**, durable, twenty to sixty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say i mesi — R3, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *i mesi* — **R3**, a second word from the same distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say prego — R4, recognition at distance, eighty lessons back or more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *prego* — **R4**, recognition at distance, eighty lessons back or more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say prego, go ahead — R4, a second word from the same distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *prego, go ahead* — **R4**, a second word from the same distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: The word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quinto (masculine), quinta (feminine) — fifth. il quinto piano — the fifth floor. la quinta volta — the fifth time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: why cinque and quinto do not match",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say them together: cinque, quinto. They are the same Latin root and they do not sound alike, and the difference is worth a minute."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin had quīnque and quīntus, both beginning kw-. Then the first one was pulled forward by the i that followed and softened all the way to ch- — which is why cinque opens like English chin. The ordinal was not pulled, and it still opens kw-: KWIN-to."
+            },
+            {
+              "kind": "speech",
+              "text": "So this pair is a sound change caught halfway through: one word moved and its twin did not. Listen for the same split in dieci against decimo, five lessons ahead — the cardinal softened, the ordinal did not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quinto, quinta — KWIN-to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quinto, quinta* — *KWIN-to*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — cinque soft, quinto hard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *cinque* soft, *quinto* hard]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la quinta volta — the fifth time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la quinta volta* — the fifth time]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why do cinque and quinto not rhyme? (The cardinal softened its opening to ch- and the ordinal kept kw-.) Say the fifth floor. (Il quinto piano.) And which pair five lessons ahead does the same thing? (Dieci against decimo.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

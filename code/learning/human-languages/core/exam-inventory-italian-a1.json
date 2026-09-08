@@ -554,7 +554,19 @@
       "id": "IT-A1-Q-04",
       "category": "I quantificatori (quantity and number)",
       "label": "ordinal numerals to tenth",
-      "probe": null,
+      "probe": [
+        "IT-LEX-PRIMO-02",
+        "IT-LEX-SECONDO-02",
+        "IT-LEX-TERZO-02",
+        "IT-LEX-QUARTO-02",
+        "IT-LEX-QUINTO-02",
+        "IT-LEX-SESTO-02",
+        "IT-LEX-SETTIMO-02",
+        "IT-LEX-OTTAVO-02",
+        "IT-LEX-NONO-02",
+        "IT-LEX-DECIMO-02",
+        "IT-GRAMMAR-UNDICESIMO-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -563,7 +575,7 @@
       "derivedFrom": [
         "A1-Q-02"
       ],
-      "note": "primo appears once, inside the gloss of primavera as the first green. No ordinal is taught as a word."
+      "note": "CLOSED by the ordinal tranche. primo was the corpus's ONLY occurrence of an ordinal and it was inside a gloss -- primavera, 'the first green' -- so the tranche opens by giving the word behind that gloss. The order is Italian's own: primo and secondo carry no cardinal at all, terzo is the first in which one shows through, ottavo takes -avo and nono is a contraction, and each of those two gets a lesson. decimo closes the ten INHERITED words, and undicesimo then shows the seam -- above ten Italian drops the cardinal's final vowel and adds -esimo, which is one rule for the whole rest of the number line. NOT taught: the ordinal as a fraction beyond naming un terzo and un quarto, and the raised ordinal indicator, which is at IT-A1-ORT-16."
     },
     {
       "id": "IT-A1-Q-05",
@@ -2875,7 +2887,12 @@
       "id": "IT-A1-NG-15",
       "category": "Nozioni generali (general notions)",
       "label": "order: ordinals, prima and dopo",
-      "probe": null,
+      "probe": [
+        "IT-LEX-PRIMA-02",
+        "IT-LEX-DOPO-02",
+        "IT-TASK-C28-ORDINE-02",
+        "IT-LEX-PRIMO-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -2884,7 +2901,7 @@
       "derivedFrom": [
         "A1-NG3-06"
       ],
-      "note": "Absent; see IT-A1-Q-04."
+      "note": "CLOSED. prima and dopo each get a lesson, and the recombining lesson works both systems on the same four things -- the courses of a meal -- so the difference between naming a place (il primo) and naming a relation (dopo il primo) is worked rather than stated. prima is taught as what it is: the feminine of primo, frozen from Latin prima 'at the first', which is why Italian's word for before IS its word for first. The ordinals are at IT-A1-Q-04. NOT taught: poi and infine beyond one occurrence each in the recombining lesson."
     },
     {
       "id": "IT-A1-NG-16",
@@ -2946,7 +2963,11 @@
       "id": "IT-A1-NG-19",
       "category": "Nozioni generali (general notions)",
       "label": "anteriority and posteriority",
-      "probe": null,
+      "probe": [
+        "IT-LEX-PRIMA-02",
+        "IT-LEX-DOPO-02",
+        "IT-TASK-C28-ORDINE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "IT-CORPUS",
@@ -2955,7 +2976,7 @@
       "derivedFrom": [
         "A1-NG4-03"
       ],
-      "note": "prima and dopo are absent; the two past tenses that are taught are never set in order against each other."
+      "note": "CLOSED with IT-A1-NG-15 and by the same two words, both taught in the temporal sense as well as the sequential one: prima di cena, dopo cena, prima o poi, dopodomani. The two past tenses this track teaches are still never set in order against each other, which was the second half of the old note; that needs a tense lesson, not a vocabulary one."
     },
     {
       "id": "IT-A1-NG-20",
@@ -4718,7 +4739,7 @@
         "A1-O4-03",
         "A1-O1-06"
       ],
-      "note": "Sig., Dott., and the raised degree sign of 1o and 1a. THE SPANISH SUPERSCRIPT POINT TRANSFERS RATHER THAN DROPPING: Italian raises an ordinal indicator in exactly the place Spanish raises an abbreviation letter, so the demand survives translation. Nothing in this group is taught."
+      "note": "STILL UNCOVERED, and now for a narrower reason than before. The ordinals themselves are taught (IT-A1-Q-04) and the numeral-plus-raised-letter form is the only piece of this group an ordinal tranche could reach; it is deliberately NOT claimed here, because the raised indicator needs U+00BA and U+00AA added to core/main-font-charset.json and this tranche did not touch that file. Sig. and Dott. are also still absent. THE SPANISH SUPERSCRIPT POINT STILL TRANSFERS RATHER THAN DROPPING. The fix names itself: one charset addition plus one lesson."
     },
     {
       "id": "IT-A1-REG-01",

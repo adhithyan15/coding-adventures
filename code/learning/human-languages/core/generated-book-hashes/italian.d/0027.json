@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:5ea571e820726f67",
+  "lessonIds": [
+    "IT-C27-sesto",
+    "IT-C27-settimo",
+    "IT-C27-ottavo",
+    "IT-C27-nono",
+    "IT-C27-decimo"
+  ],
+  "tex": "italian/book/chapters/ch27-ordinali-al-decimo.tex"
+}
