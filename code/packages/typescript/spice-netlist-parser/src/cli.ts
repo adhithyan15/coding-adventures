@@ -3,7 +3,7 @@
 import { readFile } from "node:fs/promises";
 import { stdin, stderr, stdout } from "node:process";
 
-import { runNetlistJson } from "./index.js";
+import { CLI_ERROR_CODE, runNetlistJson } from "./index.js";
 
 export const CLI_USAGE = "usage: spice-netlist-parser run --json <deck|- >\n";
 
@@ -27,7 +27,7 @@ export async function main(argv: readonly string[]): Promise<number> {
     return 0;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    stderr.write(`SPICE_CLI_ERROR: ${message}\n`);
+    stderr.write(`${CLI_ERROR_CODE}: ${message}\n`);
     return 1;
   }
 }

@@ -4,7 +4,7 @@ use std::{
     process,
 };
 
-use spice_netlist_parser::run_netlist_json;
+use spice_netlist_parser::{run_netlist_json, CLI_ERROR_CODE};
 
 const USAGE: &str = "usage: spice-netlist-parser run --json <deck|- >";
 
@@ -31,7 +31,7 @@ fn main() {
     {
         Ok(output) => print!("{output}"),
         Err(error) => {
-            eprintln!("SPICE_CLI_ERROR: {error}");
+            eprintln!("{CLI_ERROR_CODE}: {error}");
             process::exit(1);
         }
     }
