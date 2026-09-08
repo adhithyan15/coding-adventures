@@ -573,9 +573,11 @@ func validateRegistrySelectorOverlaps(universal universalSourceInputs, language 
 	for _, exact := range language.PackageExactInputs {
 		for _, path := range exact.Paths {
 			parts := strings.Split(path, "/")
-			candidate := registryMatcher{scope: "exact", prefix: path, kind: "basename", value: parts[len(parts)-1]}
+			candidate := registryMatcher{scope: "exact", prefix: path, kind: "basename", value: registryFold(parts[len(parts)-1])}
 			for _, matcher := range matchers {
-				if registryScopesOverlap(candidate, matcher) && registryMatchersOverlap(candidate, matcher) {
+				foldedMatcher := matcher
+				foldedMatcher.value = registryFold(matcher.value)
+				if registryScopesOverlap(candidate, matcher) && registryMatchersOverlap(candidate, foldedMatcher) {
 					return fmt.Errorf("package exact %s overlaps %s %s", path, matcher.role, matcher.value)
 				}
 			}

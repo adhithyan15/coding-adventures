@@ -713,6 +713,17 @@ func TestLanguageSourceInputRegistryRejectsOverlapAndSensitivePaths(t *testing.T
 			},
 		},
 		{
+			name: "package exact basename and global suffix case-fold overlap",
+			mutate: func(registry *languageSourceInputRegistryDocument) {
+				for index := range registry.Languages {
+					if registry.Languages[index].Language == "rust" {
+						registry.Languages[index].PackageExactInputs[0].Paths = []string{"foo.RS"}
+						return
+					}
+				}
+			},
+		},
+		{
 			name: "scoped basename and suffix overlap",
 			mutate: func(registry *languageSourceInputRegistryDocument) {
 				for index := range registry.Languages {
