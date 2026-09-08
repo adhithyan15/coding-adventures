@@ -6,6 +6,9 @@
   zero-dependency `bounded-json` parser, retaining duplicate-field rejection,
   recursive scrubbing, and the existing 64-level OAuth nesting limit while
   removing all external normal dependencies from the OAuth tree.
+- Exposed privacy-safe provider/trace bindings on decoded token responses and
+  the decoder's response-size bound so provider-neutral brokers can validate
+  orchestration boundaries before credential storage.
 - Added an ownership-transferring `TokenCredentials::into_parts` handoff so an
   opaque custodian can ingest decoded credentials without plaintext clones.
 - Exposed read-only provider, trace, and redirect-URI ceremony bindings on

@@ -131,7 +131,7 @@ impl Debug for MixUpDefense {
 }
 
 /// Static provider data for a public installed-app Authorization Code client.
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct ProviderConfig {
     provider: ProviderId,
     authorization_endpoint: String,

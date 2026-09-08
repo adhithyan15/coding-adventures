@@ -344,6 +344,8 @@ pub trait CredentialStore: Send + Sync {
 pub enum CredentialAuditAction {
     /// Create initial credential state.
     Create,
+    /// Read non-secret lifecycle metadata for an authenticated decision.
+    Metadata,
     /// Disclose an access token to one authorized closure.
     AccessToken,
     /// Disclose a refresh token and revision to one authorized closure.
@@ -545,6 +547,46 @@ impl<S: CredentialStore> CredentialCustody<S> {
         Ok(use_token(loaded.record.access_token.as_str()))
     }
 
+    /// Audit, load, then release non-secret lifecycle metadata to one closure.
+    pub fn with_metadata<R, A: CredentialAuditSink>(
+        &self,
+        key: &CredentialKey,
+        trace: OAuthTraceId,
+        audit: &mut A,
+        use_metadata: impl FnOnce(&CredentialMetadata) -> R,
+    ) -> Result<R, CustodyError> {
+        attempt(audit, key, trace, CredentialAuditAction::Metadata)?;
+        let loaded = match self.store.load(key).map_err(map_store_error) {
+            Ok(Some(loaded)) => loaded,
+            Ok(None) => {
+                return finish(
+                    audit,
+                    key,
+                    trace,
+                    CredentialAuditAction::Metadata,
+                    Err(CustodyError::NotFound),
+                )
+            }
+            Err(error) => {
+                return finish(
+                    audit,
+                    key,
+                    trace,
+                    CredentialAuditAction::Metadata,
+                    Err(error),
+                )
+            }
+        };
+        publish(
+            audit,
+            key,
+            trace,
+            CredentialAuditAction::Metadata,
+            CredentialAuditOutcome::Succeeded,
+        )?;
+        Ok(use_metadata(&loaded.record.metadata))
+    }
+
     /// Audit, load, then disclose a refresh token and exact revision once.
     pub fn with_refresh_token<R, A: CredentialAuditSink>(
         &self,
@@ -552,6 +594,19 @@ impl<S: CredentialStore> CredentialCustody<S> {
         trace: OAuthTraceId,
         audit: &mut A,
         use_token: impl FnOnce(&str, CredentialRevision) -> R,
+    ) -> Result<R, CustodyError> {
+        self.with_refresh_material(key, trace, audit, |token, revision, _metadata| {
+            use_token(token, revision)
+        })
+    }
+
+    /// Audit, load, then disclose a refresh token, revision, and public metadata once.
+    pub fn with_refresh_material<R, A: CredentialAuditSink>(
+        &self,
+        key: &CredentialKey,
+        trace: OAuthTraceId,
+        audit: &mut A,
+        use_material: impl FnOnce(&str, CredentialRevision, &CredentialMetadata) -> R,
     ) -> Result<R, CustodyError> {
         attempt(audit, key, trace, CredentialAuditAction::RefreshToken)?;
         let loaded = match self.store.load(key).map_err(map_store_error) {
@@ -591,7 +646,11 @@ impl<S: CredentialStore> CredentialCustody<S> {
             CredentialAuditAction::RefreshToken,
             CredentialAuditOutcome::Succeeded,
         )?;
-        Ok(use_token(refresh_token.as_str(), loaded.revision))
+        Ok(use_material(
+            refresh_token.as_str(),
+            loaded.revision,
+            &loaded.record.metadata,
+        ))
     }
 
     /// Audit and atomically rotate credential state at `expected`.
@@ -1073,6 +1132,50 @@ mod tests {
             Err(CustodyError::Audit)
         );
         assert!(!*called.lock().unwrap());
+    }
+
+    #[test]
+    fn metadata_and_refresh_material_are_audited_before_release() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let initial = create(&custody);
+        let timeline = Arc::new(StdMutex::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            timeline: Some(Arc::clone(&timeline)),
+            ..RecordingAudit::default()
+        };
+
+        custody
+            .with_metadata(&key(), trace(), &mut audit, |metadata| {
+                timeline.lock().unwrap().push("metadata-use");
+                assert_eq!(metadata.expires_at_unix_seconds(), Some(1_000));
+                assert_eq!(metadata.scopes(), ["vault.read", "vault.write"]);
+            })
+            .unwrap();
+        custody
+            .with_refresh_material(&key(), trace(), &mut audit, |token, revision, metadata| {
+                timeline.lock().unwrap().push("refresh-use");
+                assert_eq!(token, "refresh-one");
+                assert_eq!(revision, initial);
+                assert_eq!(metadata.expires_at_unix_seconds(), Some(1_000));
+            })
+            .unwrap();
+
+        assert_eq!(
+            *timeline.lock().unwrap(),
+            [
+                "audit-attempted",
+                "audit-succeeded",
+                "metadata-use",
+                "audit-attempted",
+                "audit-succeeded",
+                "refresh-use",
+            ]
+        );
+        assert_eq!(audit.events[0].action(), CredentialAuditAction::Metadata);
+        assert_eq!(
+            audit.events[2].action(),
+            CredentialAuditAction::RefreshToken
+        );
     }
 
     #[test]
