@@ -8,6 +8,21 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-038 implementation contract (selected after #14463 merged)
+
+Refreshed main is `7593f1253d`. VM-057, VM-047c and VM-049 have
+already merged; no open LANG implementation PR remains. The next ranked
+item is the existing 21-program Macsyma integer/assignment corpus on BEAM.
+Compile every source through the public BEAM entry point even without Erlang.
+When `erl` is available, execute every emitted module and compare the full
+signed integer with the existing oracle. A compilation, process or parse
+failure after tool detection must fail, never turn into a skip. Preserve the
+existing seven-backend floor and add BEAM to the common agreement test.
+Symbolic results remain VM-048. If the probe reveals a lowering defect,
+record and prioritize its repair before changing production code. Validate
+focused execution, the existing conformance suite and Clippy; inspect hosted
+tool availability so local proof is distinguished from hosted coverage.
+
 ## VM-049 implementation contract (selected after #14449 merged)
 
 Refreshed main is `df33215f43` (VM-047c merged as `db77422ad1`). No new
