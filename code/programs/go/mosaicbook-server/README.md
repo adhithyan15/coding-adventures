@@ -13,6 +13,11 @@ wrong JSON type, invalid list element, or value outside a `one-of` set is
 reported in the component's `storiesError`; leaving a slot unset remains a
 valid story state.
 
+When a component belongs to a Mosaic package, the server also passes an
+explicit package search path alongside the owning manifest. Dependency
+resolution therefore works the same whether MosaicBook starts at the
+repository root, the package tree, or another working directory.
+
 Two authoring forms are discovered:
 
 - **Three-file (UI29)** — `Button.mil` + `Button.mll` + `Button.light.msl`

@@ -195,6 +195,9 @@ func compilerArgs(c Component, backend string, outputPath string, fixturesPath s
 	if c.ManifestPath != "" {
 		args = append(args, "--package-manifest", c.ManifestPath)
 	}
+	if c.PackageSearchPath != "" {
+		args = append(args, "--package-search-path", c.PackageSearchPath)
+	}
 	return append(args, "--backend", backend, "--output", outputPath)
 }
 

@@ -146,6 +146,40 @@ func TestDiscoverThreeFile_FindsManifestFromSubdirectory(t *testing.T) {
 	}
 }
 
+func TestDiscoverThreeFile_DerivesSiblingPackageSearchPath(t *testing.T) {
+	collection := t.TempDir()
+	consumer := filepath.Join(collection, "mosaic-pkg-consumer")
+	src := filepath.Join(consumer, "src")
+	if err := os.MkdirAll(src, 0o755); err != nil {
+		t.Fatalf("mkdir: %v", err)
+	}
+	mustWrite(t, filepath.Join(consumer, "mosaic-package.toml"), `[package]
+name = "mosaic-pkg-consumer"
+
+[components]
+exports = ["Shell"]
+
+[dependencies]
+mosaic-pkg-toolkit = "0.1.0"
+`)
+	writeThreeFileComponent(t, src, "Shell", ".light.msl")
+
+	comps, err := discoverComponents(collection)
+	if err != nil {
+		t.Fatalf("discoverComponents: %v", err)
+	}
+	if len(comps) != 1 {
+		t.Fatalf("expected 1 component, got %d", len(comps))
+	}
+	if comps[0].PackageSearchPath != collection {
+		t.Fatalf("PackageSearchPath: got %q, want sibling package collection %q", comps[0].PackageSearchPath, collection)
+	}
+	args := strings.Join(compilerArgs(comps[0], "html", "out.html", ""), " ")
+	if !strings.Contains(args, "--package-search-path "+collection) {
+		t.Fatalf("compiler args do not pass the discovered package collection: %s", args)
+	}
+}
+
 // A component outside any package is still renderable; it just cannot
 // reference siblings.
 func TestDiscoverThreeFile_NoManifestIsNotAnError(t *testing.T) {
@@ -193,6 +227,9 @@ func TestDiscoverThreeFile_WorksFromRelativeRoot(t *testing.T) {
 	if comps[0].ManifestPath == "" {
 		t.Error("ManifestPath: empty when discovering from a relative root")
 	}
+	if comps[0].PackageSearchPath == "" {
+		t.Error("PackageSearchPath: empty when discovering from a relative root")
+	}
 	if comps[0].StylePath == "" {
 		t.Error("StylePath: empty when discovering from a relative root")
 	}
@@ -202,10 +239,11 @@ func TestDiscoverThreeFile_WorksFromRelativeRoot(t *testing.T) {
 
 func TestCompilerArgs_ThreeFileFormPassesManifest(t *testing.T) {
 	c := Component{
-		InterfacePath: "src/Field.mil",
-		LayoutPath:    "src/Field.mll",
-		StylePath:     "src/Field.light.msl",
-		ManifestPath:  "mosaic-package.toml",
+		InterfacePath:     "src/Field.mil",
+		LayoutPath:        "src/Field.mll",
+		StylePath:         "src/Field.light.msl",
+		ManifestPath:      "mosaic-package.toml",
+		PackageSearchPath: "packages/mosaic",
 	}
 	got := strings.Join(compilerArgs(c, "react", "out.tsx", ""), " ")
 
@@ -214,6 +252,7 @@ func TestCompilerArgs_ThreeFileFormPassesManifest(t *testing.T) {
 		"--layout src/Field.mll",
 		"--style src/Field.light.msl",
 		"--package-manifest mosaic-package.toml",
+		"--package-search-path packages/mosaic",
 		"--backend react",
 		"--output out.tsx",
 	} {
