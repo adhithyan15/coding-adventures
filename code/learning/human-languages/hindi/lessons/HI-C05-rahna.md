@@ -8,9 +8,9 @@ sequence: 410
 spine_node: SPINE-SAY-WHAT-I-DO
 chapter: 5
 type: word
-headword: रहना / में
-gloss: to live, to stay; में = in
-romanization: "rahnā / meṁ"
+headword: रहना / रहता / में
+gloss: to live or stay / masculine present form / in
+romanization: "rahnā / rahtā / meṁ"
 concept_tag: VERB-LIVE
 prerequisites: [HI-C05-bolna]
 sounds: [matra-a]
