@@ -57,24 +57,109 @@ pub enum ControlEffect {
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct BrowserControlModel {
     controls: Vec<ControlState>,
+    initial_controls: Vec<ControlState>,
+    bindings: Vec<ControlBinding>,
     focused_key: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ControlBinding {
+    pub key: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub form_owner: Option<String>,
+    pub form_index: Option<usize>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_enctype: Option<String>,
+    pub form_method: Option<String>,
+    pub form_novalidate: bool,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
 }
 
 impl BrowserControlModel {
     pub fn from_render_tree(tree: &BrowserRenderTree) -> Self {
-        let controls = control_states(tree);
+        let mut controls = Vec::new();
+        let mut bindings = Vec::new();
+        let mut control_index = 0;
+        let mut form_index = 0;
+        collect_model_nodes(
+            &tree.children,
+            &mut controls,
+            &mut bindings,
+            &mut control_index,
+            &mut form_index,
+            None,
+        );
         let focused_key = controls
             .iter()
             .find(|control| control.focused && !control.disabled)
             .map(|control| control.key.clone());
         Self {
+            initial_controls: controls.clone(),
             controls,
+            bindings,
             focused_key,
         }
     }
 
     pub fn controls(&self) -> &[ControlState] {
         &self.controls
+    }
+
+    pub fn bindings(&self) -> &[ControlBinding] {
+        &self.bindings
+    }
+
+    pub fn binding(&self, key: &str) -> Option<&ControlBinding> {
+        self.bindings.iter().find(|binding| binding.key == key)
+    }
+
+    pub fn control(&self, key: &str) -> Option<&ControlState> {
+        self.controls.iter().find(|control| control.key == key)
+    }
+
+    pub fn focused_key(&self) -> Option<&str> {
+        self.focused_key.as_deref()
+    }
+
+    pub fn reset_form(
+        &mut self,
+        form_id: Option<&str>,
+        form_index: Option<usize>,
+    ) -> Vec<ControlEffect> {
+        let mut effects = Vec::new();
+        for ((control, initial), binding) in self
+            .controls
+            .iter_mut()
+            .zip(&self.initial_controls)
+            .zip(&self.bindings)
+        {
+            let associated = match binding.form_owner.as_deref() {
+                Some(owner) => form_id == Some(owner),
+                None => binding.form_index == form_index,
+            };
+            if !associated {
+                continue;
+            }
+            let focused = control.focused;
+            let changed = control.value != initial.value
+                || control.checked != initial.checked
+                || control.selected_index != initial.selected_index;
+            *control = initial.clone();
+            control.focused = focused;
+            if changed {
+                effects.push(ControlEffect::ValueChanged {
+                    key: control.key.clone(),
+                    value: control.value.clone(),
+                });
+            }
+        }
+        effects
     }
 
     pub fn focused(&self) -> Option<&ControlState> {
@@ -208,8 +293,14 @@ impl BrowserControlModel {
             }
             ControlKind::Radio => {
                 let name = self.controls[index].name.clone();
-                for control in &mut self.controls {
-                    if control.kind == ControlKind::Radio && control.name == name {
+                let owner = self.bindings[index].form_owner.clone();
+                let form_index = self.bindings[index].form_index;
+                for (control, binding) in self.controls.iter_mut().zip(&self.bindings) {
+                    let same_form = match owner.as_deref() {
+                        Some(owner) => binding.form_owner.as_deref() == Some(owner),
+                        None => binding.form_owner.is_none() && binding.form_index == form_index,
+                    };
+                    if same_form && control.kind == ControlKind::Radio && control.name == name {
                         control.checked = false;
                     }
                 }
@@ -304,6 +395,59 @@ fn collect_nodes(nodes: &[BrowserRenderNode], states: &mut Vec<ControlState>, in
     }
 }
 
+fn collect_model_nodes(
+    nodes: &[BrowserRenderNode],
+    states: &mut Vec<ControlState>,
+    bindings: &mut Vec<ControlBinding>,
+    control_index: &mut usize,
+    next_form_index: &mut usize,
+    containing_form: Option<usize>,
+) {
+    for node in nodes {
+        let containing_form = if node.name.as_deref() == Some("form") {
+            let index = *next_form_index;
+            *next_form_index += 1;
+            Some(index)
+        } else {
+            containing_form
+        };
+        if node.role == "control" && node.control_type.as_deref() != Some("hidden") && !node.hidden
+        {
+            let key = control_key(node, *control_index);
+            *control_index += 1;
+            states.push(project_control(node, key.clone()));
+            bindings.push(ControlBinding {
+                key,
+                id: node.id.clone(),
+                control_type: node
+                    .control_type
+                    .clone()
+                    .unwrap_or_else(|| node.name.clone().unwrap_or_else(|| "text".into())),
+                form_owner: node.form_owner.clone(),
+                form_index: containing_form,
+                form_action: node.form_action.clone(),
+                resolved_form_action: node.resolved_form_action.clone(),
+                form_enctype: node.form_enctype.clone(),
+                form_method: node.form_method.clone(),
+                form_novalidate: node.form_novalidate,
+                pattern: node.pattern.clone(),
+                min: node.min.clone(),
+                max: node.max.clone(),
+                minlength: node.minlength.clone(),
+                maxlength: node.maxlength.clone(),
+            });
+        }
+        collect_model_nodes(
+            &node.children,
+            states,
+            bindings,
+            control_index,
+            next_form_index,
+            containing_form,
+        );
+    }
+}
+
 fn sync_nodes(nodes: &mut [BrowserRenderNode], controls: &[ControlState], index: &mut usize) {
     for node in nodes {
         if node.role == "control" && node.control_type.as_deref() != Some("hidden") && !node.hidden
@@ -395,5 +539,29 @@ mod tests {
         model.pointer_activate("control:2:id:b");
         assert!(!model.controls()[1].checked);
         assert!(model.controls()[2].checked);
+    }
+
+    #[test]
+    fn radio_groups_and_reset_baselines_are_scoped_to_their_form() {
+        let tree = parse_browser_render_tree(
+            "<form id='first'><input id='a' type='radio' name='scope' checked value='a'>\
+             <input id='b' type='radio' name='scope' value='b'><input id='q' value='initial'></form>\
+             <form id='second'><input id='c' type='radio' name='scope' checked value='c'></form>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+
+        model.pointer_activate("control:1:id:b");
+        model.focus("control:2:id:q");
+        model.text_input(" changed");
+        assert!(!model.controls()[0].checked);
+        assert!(model.controls()[1].checked);
+        assert!(model.controls()[3].checked);
+
+        model.reset_form(Some("first"), Some(0));
+        assert!(model.controls()[0].checked);
+        assert!(!model.controls()[1].checked);
+        assert_eq!(model.controls()[2].value, "initial");
+        assert!(model.controls()[3].checked);
     }
 }

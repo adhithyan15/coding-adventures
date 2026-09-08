@@ -1,4 +1,4 @@
-//! Bounded synchronous HTTP/1.0 GET transport.
+//! Bounded synchronous HTTP/1.0 GET and URL-encoded POST transport.
 //!
 //! This crate is intentionally an orchestrator. URL parsing, TCP I/O, HTTP
 //! syntax, and semantic message types remain in their existing packages.
@@ -53,11 +53,28 @@ impl HttpClient {
     /// Perform an HTTP/1.0 GET, following relative or absolute 301/302
     /// redirects up to `max_redirects`.
     pub fn get(&self, url: &str) -> Result<HttpResponse, HttpClientError> {
+        self.request(url, "GET", None, &[])
+    }
+
+    pub fn post_form(&self, url: &str, body: &[u8]) -> Result<HttpResponse, HttpClientError> {
+        self.request(url, "POST", Some("application/x-www-form-urlencoded"), body)
+    }
+
+    fn request(
+        &self,
+        url: &str,
+        method: &str,
+        content_type: Option<&str>,
+        body: &[u8],
+    ) -> Result<HttpResponse, HttpClientError> {
         let mut current = Url::parse(url).map_err(HttpClientError::Url)?;
         let mut redirects_followed = 0;
+        let mut method = method;
+        let mut content_type = content_type;
+        let mut body = body;
 
         loop {
-            let response = self.get_once(&current)?;
+            let response = self.request_once(&current, method, content_type, body)?;
             let is_redirect = matches!(response.head.status, 301 | 302);
             let Some(location) = response.head.header("Location") else {
                 return Ok(response);
@@ -73,10 +90,20 @@ impl HttpClient {
 
             current = current.resolve(location).map_err(HttpClientError::Url)?;
             redirects_followed += 1;
+            // Historical 301/302 behavior converts a submitted POST into GET.
+            method = "GET";
+            content_type = None;
+            body = &[];
         }
     }
 
-    fn get_once(&self, url: &Url) -> Result<HttpResponse, HttpClientError> {
+    fn request_once(
+        &self,
+        url: &Url,
+        method: &str,
+        content_type: Option<&str>,
+        body: &[u8],
+    ) -> Result<HttpResponse, HttpClientError> {
         validate_url(url)?;
         validate_header_value("User-Agent", &self.user_agent)?;
         let host = url.host.as_deref().ok_or(HttpClientError::MissingHost)?;
@@ -85,11 +112,18 @@ impl HttpClient {
         validate_request_target(&target)?;
         let host_header = host_header(url, host, port);
         validate_header_value("Host", &host_header)?;
+        let payload_headers = content_type.map_or_else(String::new, |content_type| {
+            format!(
+                "Content-Type: {content_type}\r\nContent-Length: {}\r\n",
+                body.len()
+            )
+        });
         let request = format!(
-            "GET {target} HTTP/1.0\r\n\
+            "{method} {target} HTTP/1.0\r\n\
              Host: {host_header}\r\n\
              User-Agent: {}\r\n\
              Accept: */*\r\n\
+             {payload_headers}\
              Connection: close\r\n\
              \r\n",
             self.user_agent
@@ -100,6 +134,9 @@ impl HttpClient {
         connection
             .write_all(request.as_bytes())
             .map_err(HttpClientError::Tcp)?;
+        if !body.is_empty() {
+            connection.write_all(body).map_err(HttpClientError::Tcp)?;
+        }
         connection.shutdown_write().map_err(HttpClientError::Tcp)?;
 
         let parsed = read_response_head(&mut connection, self.max_head_bytes)?;
@@ -322,7 +359,7 @@ mod tests {
         let handle = thread::spawn(move || {
             for response in responses {
                 let (mut stream, _) = listener.accept().unwrap();
-                let request = read_request_head(&mut stream);
+                let request = read_request(&mut stream);
                 let _ = request_tx.send(request);
                 stream.write_all(&response).unwrap();
                 stream.flush().unwrap();
@@ -331,7 +368,7 @@ mod tests {
         (format!("http://{address}"), request_rx, handle)
     }
 
-    fn read_request_head(stream: &mut TcpStream) -> Vec<u8> {
+    fn read_request(stream: &mut TcpStream) -> Vec<u8> {
         stream
             .set_read_timeout(Some(Duration::from_secs(5)))
             .unwrap();
@@ -344,6 +381,17 @@ mod tests {
             }
             request.push(byte[0]);
         }
+        let head = String::from_utf8_lossy(&request);
+        let content_length = head
+            .lines()
+            .find_map(|line| {
+                line.strip_prefix("Content-Length: ")
+                    .and_then(|value| value.parse::<usize>().ok())
+            })
+            .unwrap_or(0);
+        let mut body = vec![0; content_length];
+        stream.read_exact(&mut body).unwrap();
+        request.extend(body);
         request
     }
 
@@ -383,6 +431,24 @@ mod tests {
         assert!(request.starts_with("GET /docs/index.html?q=venture HTTP/1.0\r\n"));
         assert!(request.contains("\r\nUser-Agent: Venture/0.1\r\n"));
         assert!(request.contains("\r\nConnection: close\r\n"));
+        server.join().unwrap();
+    }
+
+    #[test]
+    fn posts_urlencoded_body_with_explicit_length() {
+        let response = b"HTTP/1.0 200 OK\r\nContent-Length: 2\r\n\r\nok".to_vec();
+        let (origin, requests, server) = serve(vec![response]);
+
+        let result = test_client()
+            .post_form(&format!("{origin}/submit"), b"q=rust+language")
+            .unwrap();
+
+        assert_eq!(result.body, b"ok");
+        let request = String::from_utf8(requests.recv().unwrap()).unwrap();
+        assert!(request.starts_with("POST /submit HTTP/1.0\r\n"));
+        assert!(request.contains("Content-Type: application/x-www-form-urlencoded\r\n"));
+        assert!(request.contains("Content-Length: 15\r\n"));
+        assert!(request.ends_with("\r\n\r\nq=rust+language"));
         server.join().unwrap();
     }
 

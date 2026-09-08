@@ -10,6 +10,10 @@ pub use browser_bookmarks::{
     BookmarkUrl, MemoryBookmarkRepository,
 };
 pub use browser_form_controls::{BrowserControlModel, ControlEffect, ControlKey};
+use browser_form_submission::{plan_activation, plan_implicit_submission};
+pub use browser_form_submission::{
+    FormActivation, FormDiagnostic, FormEntry, FormMethod, FormNavigation, FormPlanningError,
+};
 pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
 use html_to_layout::{html_media_query_applies, HtmlAuthorStylesheet, HtmlStyleContext, HtmlTheme};
@@ -311,6 +315,31 @@ pub struct BrowserFetchResponse {
     pub body: Vec<u8>,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum BrowserFetchMethod {
+    Get,
+    Post,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserFetchRequest {
+    pub method: BrowserFetchMethod,
+    pub url: String,
+    pub content_type: Option<String>,
+    pub body: Vec<u8>,
+}
+
+impl BrowserFetchRequest {
+    pub fn get(url: impl Into<String>) -> Self {
+        Self {
+            method: BrowserFetchMethod::Get,
+            url: url.into(),
+            content_type: None,
+            body: Vec::new(),
+        }
+    }
+}
+
 impl BrowserFetchResponse {
     pub fn new(
         final_url: impl Into<String>,
@@ -330,6 +359,13 @@ impl BrowserFetchResponse {
 /// Replaceable transport boundary for page and inline-image bytes.
 pub trait BrowserResourceFetcher {
     fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String>;
+
+    fn fetch_request(&self, request: &BrowserFetchRequest) -> Result<BrowserFetchResponse, String> {
+        match request.method {
+            BrowserFetchMethod::Get => self.fetch(&request.url),
+            BrowserFetchMethod::Post => Err("browser fetcher does not support POST".to_string()),
+        }
+    }
 }
 
 impl<F> BrowserResourceFetcher for F
@@ -356,6 +392,21 @@ impl HttpBrowserFetcher {
 impl BrowserResourceFetcher for HttpBrowserFetcher {
     fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String> {
         let response = self.client.get(url).map_err(|error| error.to_string())?;
+        let media_type = response.head.header("Content-Type").map(ToOwned::to_owned);
+        Ok(BrowserFetchResponse::new(
+            response.final_url,
+            response.head.status,
+            media_type,
+            response.body,
+        ))
+    }
+
+    fn fetch_request(&self, request: &BrowserFetchRequest) -> Result<BrowserFetchResponse, String> {
+        let response = match request.method {
+            BrowserFetchMethod::Get => self.client.get(&request.url),
+            BrowserFetchMethod::Post => self.client.post_form(&request.url, &request.body),
+        }
+        .map_err(|error| error.to_string())?;
         let media_type = response.head.header("Content-Type").map(ToOwned::to_owned);
         Ok(BrowserFetchResponse::new(
             response.final_url,
@@ -939,6 +990,14 @@ impl BrowserHostController {
         &mut self.session
     }
 
+    /// Refresh chrome after a platform-owned session action such as form
+    /// activation, which may have completed a navigation internally.
+    pub fn synchronize_session_state(&mut self) {
+        self.hovered_link_url = None;
+        self.chrome.synchronize(&self.session);
+        self.status_text = "Ready".to_string();
+    }
+
     pub fn props(&self) -> BrowserChromeProps {
         self.chrome.props(
             &self.session,
@@ -1124,6 +1183,7 @@ pub struct BrowserSession {
     bookmarks: BookmarkCatalog,
     viewport: Option<BrowserViewport>,
     controls: BrowserControlModel,
+    form_diagnostics: Vec<FormDiagnostic>,
     viewport_height: f64,
     navigation_id: u64,
 }
@@ -1136,6 +1196,7 @@ impl BrowserSession {
             bookmarks: BookmarkCatalog::new(),
             viewport: None,
             controls: BrowserControlModel::default(),
+            form_diagnostics: Vec::new(),
             viewport_height: finite_non_negative(viewport_height),
             navigation_id: 0,
         }
@@ -1263,6 +1324,10 @@ impl BrowserSession {
         &self.controls
     }
 
+    pub fn form_diagnostics(&self) -> &[FormDiagnostic] {
+        &self.form_diagnostics
+    }
+
     pub fn hovered_control_key(&self, viewport_x: f64, viewport_y: f64) -> Option<&str> {
         self.viewport
             .as_ref()?
@@ -1288,6 +1353,188 @@ impl BrowserSession {
         let effect = self.controls.pointer_activate(&key)?;
         self.reflow_controls(pipeline)?;
         Some(effect)
+    }
+
+    pub fn activate_control_and_submit<F, M, S, FM, R>(
+        &mut self,
+        viewport_x: f64,
+        viewport_y: f64,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<Option<ControlEffect>, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let Some(key) = self
+            .hovered_control_key(viewport_x, viewport_y)
+            .map(str::to_owned)
+        else {
+            return Ok(None);
+        };
+        let Some(effect) = self.controls.pointer_activate(&key) else {
+            return Ok(None);
+        };
+        if matches!(effect, ControlEffect::Activated(_)) {
+            let activation = self.plan_form_activation(&key)?;
+            self.apply_form_activation(activation, pipeline, fetcher)?;
+        } else {
+            self.form_diagnostics.clear();
+            self.reflow_controls(pipeline);
+        }
+        Ok(Some(effect))
+    }
+
+    pub fn control_key_down_and_submit<F, M, S, FM, R>(
+        &mut self,
+        key: ControlKey,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<Option<ControlEffect>, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let focused_key = self.controls.focused_key().map(str::to_owned);
+        let focused_accepts_implicit = focused_key
+            .as_deref()
+            .and_then(|focused| self.controls.control(focused))
+            .is_some_and(|control| {
+                control.kind.accepts_text() && control.kind.name() != "textarea"
+            });
+        let effect = self.controls.key_down(key);
+        let activation = match &effect {
+            Some(ControlEffect::Activated(activated)) => {
+                Some(self.plan_form_activation(activated)?)
+            }
+            _ if key == ControlKey::Enter && focused_accepts_implicit => {
+                let focused = focused_key.as_deref().expect("focused key checked above");
+                Some(self.plan_implicit_form_activation(focused)?)
+            }
+            _ => None,
+        };
+        if let Some(activation) = activation {
+            self.apply_form_activation(activation, pipeline, fetcher)?;
+        } else if effect.is_some() {
+            self.form_diagnostics.clear();
+            self.reflow_controls(pipeline);
+        }
+        Ok(effect)
+    }
+
+    fn plan_form_activation(&self, key: &str) -> Result<FormActivation, BrowserLoadError> {
+        let page = self
+            .viewport
+            .as_ref()
+            .map(BrowserViewport::page)
+            .ok_or_else(|| BrowserLoadError::Form {
+                message: "form activation requires a loaded page".into(),
+            })?;
+        plan_activation(&page.document, &self.controls, key, &page.final_url)
+            .map_err(form_load_error)
+    }
+
+    fn plan_implicit_form_activation(
+        &self,
+        focused_key: &str,
+    ) -> Result<FormActivation, BrowserLoadError> {
+        let page = self
+            .viewport
+            .as_ref()
+            .map(BrowserViewport::page)
+            .ok_or_else(|| BrowserLoadError::Form {
+                message: "form activation requires a loaded page".into(),
+            })?;
+        plan_implicit_submission(&page.document, &self.controls, focused_key, &page.final_url)
+            .map_err(form_load_error)
+    }
+
+    fn apply_form_activation<F, M, S, FM, R>(
+        &mut self,
+        activation: FormActivation,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<(), BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        match activation {
+            FormActivation::None => {
+                self.form_diagnostics.clear();
+                self.reflow_controls(pipeline);
+            }
+            FormActivation::Reset {
+                form_id,
+                form_index,
+            } => {
+                self.form_diagnostics.clear();
+                self.controls
+                    .reset_form(form_id.as_deref(), Some(form_index));
+                self.reflow_controls(pipeline);
+            }
+            FormActivation::Invalid(diagnostics) => {
+                self.form_diagnostics = diagnostics;
+                self.reflow_controls(pipeline);
+            }
+            FormActivation::Navigate(navigation) => {
+                self.form_diagnostics.clear();
+                self.execute_form_navigation(navigation, pipeline, fetcher)?;
+            }
+        }
+        Ok(())
+    }
+
+    fn execute_form_navigation<F, M, S, FM, R>(
+        &mut self,
+        navigation: FormNavigation,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<(), BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let request = BrowserFetchRequest {
+            method: match navigation.method {
+                FormMethod::Get => BrowserFetchMethod::Get,
+                FormMethod::Post => BrowserFetchMethod::Post,
+            },
+            url: navigation.url,
+            content_type: navigation.content_type,
+            body: navigation.body,
+        };
+        let mut history = self.history.clone();
+        history.navigate(request.url.clone());
+        let page =
+            pipeline.load_request_pending_with_visited(&request, fetcher, &self.visited_links)?;
+        let mut visited_links = self.visited_links.clone();
+        let _ = visited_links.record(&page.final_url);
+        let controls = BrowserControlModel::from_render_tree(&page.render_tree);
+        history.replace_current(page.final_url.clone());
+        self.viewport = Some(BrowserViewport::new(page, self.viewport_height));
+        self.history = history;
+        self.visited_links = visited_links;
+        self.controls = controls;
+        self.form_diagnostics.clear();
+        self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
+        for request in self.pending_subresource_requests() {
+            let completion = request.resolve(fetcher);
+            self.complete_subresource(completion, pipeline);
+        }
+        Ok(())
     }
 
     pub fn focus_control<M, S, FM, R>(
@@ -1452,6 +1699,7 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        self.form_diagnostics.clear();
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
         Ok(BrowserNavigationUpdate {
             viewport_changed: true,
@@ -1633,6 +1881,7 @@ pub enum BrowserLoadError {
     HttpStatus { url: String, status: u16 },
     UnsupportedMediaType { url: String, media_type: String },
     Parse { url: String, message: String },
+    Form { message: String },
 }
 
 impl fmt::Display for BrowserLoadError {
@@ -1646,11 +1895,18 @@ impl fmt::Display for BrowserLoadError {
                 write!(formatter, "unsupported media type {media_type} for {url}")
             }
             Self::Parse { url, message } => write!(formatter, "failed to parse {url}: {message}"),
+            Self::Form { message } => write!(formatter, "form activation failed: {message}"),
         }
     }
 }
 
 impl std::error::Error for BrowserLoadError {}
+
+fn form_load_error(error: FormPlanningError) -> BrowserLoadError {
+    BrowserLoadError::Form {
+        message: error.to_string(),
+    }
+}
 
 /// Failure while executing a browser command through a native host.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -1830,11 +2086,27 @@ where
     where
         F: BrowserResourceFetcher,
     {
+        self.load_request_pending_with_visited(
+            &BrowserFetchRequest::get(requested_url),
+            document_fetcher,
+            visited_links,
+        )
+    }
+
+    pub fn load_request_pending_with_visited<F>(
+        &self,
+        request: &BrowserFetchRequest,
+        document_fetcher: &F,
+        visited_links: &VisitedLinks,
+    ) -> Result<BrowserPage, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+    {
         let response =
             document_fetcher
-                .fetch(requested_url)
+                .fetch_request(request)
                 .map_err(|message| BrowserLoadError::Fetch {
-                    url: requested_url.to_string(),
+                    url: request.url.clone(),
                     message,
                 })?;
         ensure_success(&response)?;
@@ -1886,7 +2158,7 @@ where
         paint.scene = image_resolution.scene;
 
         Ok(BrowserPage {
-            requested_url: requested_url.to_string(),
+            requested_url: request.url.clone(),
             final_url: response.final_url,
             status: response.status,
             source,
@@ -4055,6 +4327,117 @@ mod tests {
                 .map(|control| control.key.as_str())
                 .collect::<Vec<_>>(),
             vec!["control:0:id:q", "control:1:id:off", "control:2:id:check"]
+        );
+    }
+
+    #[test]
+    fn session_validates_resets_and_posts_forms_transactionally() {
+        struct FormFetcher {
+            requests: RefCell<Vec<BrowserFetchRequest>>,
+        }
+
+        impl BrowserResourceFetcher for FormFetcher {
+            fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String> {
+                self.fetch_request(&BrowserFetchRequest::get(url))
+            }
+
+            fn fetch_request(
+                &self,
+                request: &BrowserFetchRequest,
+            ) -> Result<BrowserFetchResponse, String> {
+                self.requests.borrow_mut().push(request.clone());
+                let body = match request.url.as_str() {
+                    "http://example.test/form" => b"<form method='post' action='/result'><input id='q' name='q' required><button id='reset' type='reset'>Reset</button><button id='submit' type='submit' name='intent' value='save'>Save</button></form>".to_vec(),
+                    "http://example.test/result" => b"<title>Submitted</title><p>accepted</p>".to_vec(),
+                    other => return Err(format!("unexpected form request {other}")),
+                };
+                Ok(BrowserFetchResponse::new(
+                    request.url.clone(),
+                    200,
+                    Some("text/html".into()),
+                    body,
+                ))
+            }
+        }
+
+        fn control_point(session: &BrowserSession, key: &str) -> (f64, f64) {
+            let control = session
+                .viewport()
+                .unwrap()
+                .page()
+                .paint
+                .controls
+                .iter()
+                .find(|control| control.key == key)
+                .unwrap();
+            (control.x + 1.0, control.y + 1.0)
+        }
+
+        let fetcher = FormFetcher {
+            requests: RefCell::new(Vec::new()),
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(420.0, 160.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/form", 160.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        let submit = control_point(&session, "control:2:id:submit");
+        session
+            .activate_control_and_submit(submit.0, submit.1, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(session.form_diagnostics()[0].code, "value-missing");
+        assert_eq!(session.history().back_stack().len(), 0);
+        assert_eq!(fetcher.requests.borrow().len(), 1);
+
+        let query = control_point(&session, "control:0:id:q");
+        session
+            .activate_control_and_submit(query.0, query.1, &pipeline, &fetcher)
+            .unwrap();
+        session.control_text_input("venture", &pipeline).unwrap();
+        let reset = control_point(&session, "control:1:id:reset");
+        session
+            .activate_control_and_submit(reset.0, reset.1, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(session.controls().controls()[0].value, "");
+        assert_eq!(fetcher.requests.borrow().len(), 1);
+
+        let query = control_point(&session, "control:0:id:q");
+        session
+            .activate_control_and_submit(query.0, query.1, &pipeline, &fetcher)
+            .unwrap();
+        session.control_text_input("venture", &pipeline).unwrap();
+        let submit = control_point(&session, "control:2:id:submit");
+        session
+            .activate_control_and_submit(submit.0, submit.1, &pipeline, &fetcher)
+            .unwrap();
+
+        assert_eq!(
+            session.history().current_url(),
+            Some("http://example.test/result")
+        );
+        assert_eq!(
+            session.history().back_stack(),
+            &["http://example.test/form"]
+        );
+        let request = fetcher.requests.borrow()[1].clone();
+        assert_eq!(request.method, BrowserFetchMethod::Post);
+        assert_eq!(
+            request.content_type.as_deref(),
+            Some("application/x-www-form-urlencoded")
+        );
+        assert_eq!(request.body, b"q=venture&intent=save");
+        assert_eq!(
+            session.viewport().unwrap().page().document.title.as_deref(),
+            Some("Submitted")
         );
     }
 

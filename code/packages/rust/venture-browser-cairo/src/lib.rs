@@ -13,10 +13,10 @@ use layout_text_measure_native::NativeMeasurer;
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
-    BrowserFetchResponse, BrowserHostController, BrowserHostEffect, BrowserHostEventOutcome,
-    BrowserLoadError, BrowserNavigation, BrowserNavigationUpdate, BrowserPagePipeline,
-    BrowserResourceFetcher, BrowserScrollCommand, BrowserScrollMetrics, BrowserSession,
-    BrowserSubresourceCompletion, BrowserSubresourceUpdate, HttpBrowserFetcher,
+    BrowserFetchRequest, BrowserFetchResponse, BrowserHostController, BrowserHostEffect,
+    BrowserHostEventOutcome, BrowserLoadError, BrowserNavigation, BrowserNavigationUpdate,
+    BrowserPagePipeline, BrowserResourceFetcher, BrowserScrollCommand, BrowserScrollMetrics,
+    BrowserSession, BrowserSubresourceCompletion, BrowserSubresourceUpdate, HttpBrowserFetcher,
     MemoryBookmarkRepository,
 };
 
@@ -51,7 +51,17 @@ where
     Ok(session.execute(navigation, &pipeline, fetcher)?.is_some())
 }
 
-fn activate_control(session: &mut BrowserSession, x: f64, y: f64, width: f64, height: f64) -> bool {
+fn activate_control<F>(
+    session: &mut BrowserSession,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    fetcher: &F,
+) -> Result<bool, BrowserLoadError>
+where
+    F: BrowserResourceFetcher,
+{
     let theme = mosaic_html_theme();
     let measurer = NativeMeasurer::new();
     let shaper = NativeShaper::new();
@@ -65,7 +75,9 @@ fn activate_control(session: &mut BrowserSession, x: f64, y: f64, width: f64, he
         &metrics,
         &resolver,
     );
-    session.activate_control(x, y, &pipeline).is_some()
+    Ok(session
+        .activate_control_and_submit(x, y, &pipeline, fetcher)?
+        .is_some())
 }
 
 struct OwnedFetcher(Box<dyn BrowserResourceFetcher>);
@@ -73,6 +85,10 @@ struct OwnedFetcher(Box<dyn BrowserResourceFetcher>);
 impl BrowserResourceFetcher for OwnedFetcher {
     fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String> {
         self.0.fetch(url)
+    }
+
+    fn fetch_request(&self, request: &BrowserFetchRequest) -> Result<BrowserFetchResponse, String> {
+        self.0.fetch_request(request)
     }
 }
 
@@ -193,10 +209,11 @@ impl CairoBrowserHost {
     pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
         let width = self.width;
         let height = self.height;
-        if activate_control(self.controller.session_mut(), x, y, width, height) {
+        let fetcher = &self.fetcher;
+        if activate_control(self.controller.session_mut(), x, y, width, height, fetcher)? {
+            self.controller.synchronize_session_state();
             return Ok(true);
         }
-        let fetcher = &self.fetcher;
         self.controller.activate_link(x, y, |session, navigation| {
             execute_navigation(session, navigation, width, height, fetcher)
         })
@@ -801,6 +818,7 @@ fn finite_positive_or(value: f64, fallback: f64) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::cell::RefCell;
     use std::fs;
     use std::time::{SystemTime, UNIX_EPOCH};
     use venture_browser_visual_fixtures::{fixture_response, probe_rgba, FIXTURE_PATH};
@@ -885,6 +903,59 @@ mod tests {
         assert!(host.activate_link(region.x + 1.0, region.y + 1.0).unwrap());
         assert!(host.controller.session().controls().controls()[0].checked);
         assert_eq!(host.props().address, "http://example.test/");
+    }
+
+    #[test]
+    fn common_cairo_surface_submits_forms_through_the_shared_request_boundary() {
+        struct FormFetcher(RefCell<Vec<BrowserFetchRequest>>);
+
+        impl BrowserResourceFetcher for FormFetcher {
+            fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String> {
+                self.fetch_request(&BrowserFetchRequest::get(url))
+            }
+
+            fn fetch_request(
+                &self,
+                request: &BrowserFetchRequest,
+            ) -> Result<BrowserFetchResponse, String> {
+                self.0.borrow_mut().push(request.clone());
+                let body = if request.url == "http://example.test/form" {
+                    "<title>Form</title><form method='post' action='/result'><input name='q' value='venture' required><button id='submit' type='submit' name='intent' value='search'>Search</button></form>"
+                } else if request.url == "http://example.test/result" {
+                    "<title>Result</title><p>accepted</p>"
+                } else {
+                    return Err(format!("unexpected URL {}", request.url));
+                };
+                Ok(BrowserFetchResponse::new(
+                    request.url.clone(),
+                    200,
+                    Some("text/html; charset=utf-8".into()),
+                    body.as_bytes().to_vec(),
+                ))
+            }
+        }
+
+        let mut host = CairoBrowserHost::new_with_fetcher(
+            "http://example.test/form",
+            320.0,
+            180.0,
+            Box::new(FormFetcher(RefCell::new(Vec::new()))),
+        )
+        .unwrap();
+        let submit = host
+            .controller
+            .session()
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .controls[1]
+            .clone();
+
+        assert!(host.activate_link(submit.x + 1.0, submit.y + 1.0).unwrap());
+        assert_eq!(host.props().page_title, "Result");
+        assert_eq!(host.props().address, "http://example.test/result");
+        assert!(!host.props().back_disabled);
     }
 
     #[test]
