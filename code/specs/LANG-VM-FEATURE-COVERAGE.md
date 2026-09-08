@@ -1,6 +1,6 @@
 # LANG VM feature and backend coverage
 
-Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c and VM-039a. This is an inventory of the implemented
+Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c and VM-039b. This is an inventory of the implemented
 frontend families and their executable proof boundaries, not a claim that the
 historical languages or every backend are complete. Follow-up IDs live in the
 [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md).
@@ -26,13 +26,13 @@ refusal also does not imply the complete driver refuses that feature.
 | Brainfuck | 6 | 42 | Dedicated WASM/JVM/CLR and JIT execution |
 | Dartmouth BASIC | 51 | 357 | Random differential suite and frontend JIT tests |
 | Oct | 12 | 84 | Frontend JIT control-flow tests |
-| ALGOL 60 | 232 | 1624 | Separate owner; full-matrix CI exclusion remains VM-025 |
-| FLOW-MATIC | 8 | 36 | Four output rows on seven columns; four input/EOF rows on native/LLVM; frontend JIT stream tests |
+| ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025 |
+| FLOW-MATIC | 8 | 40 | Four output rows on seven columns; four input/EOF rows on native/LLVM/WASM; frontend JIT stream tests |
 | COBOL-60 | 58 | 406 | Much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1470 cells.
+The normal non-ALGOL capstone therefore declares 210 programs and 1474 cells.
 The zeroes for McCarthy and Macsyma mean dedicated coverage, not absent support.
 CLR-real is an additional runner lane for the same CLR backend in McCarthy's
 capstone, not a tenth universal backend.
@@ -203,3 +203,8 @@ also verifies stable non-consuming peeks. The corpus now has 442 programs,
 including eight FLOW-MATIC programs; these rows add eight declared cells, not
 28. WASM/JVM/CLR input adapters and the shared VM/JIT harness remain VM-039
 follow-ups. Existing frontend callbacks already prove VM/JIT record streams.
+
+VM-039b: the same four FLOW-MATIC input programs now pass on WASM. Current
+main has one additional ALGOL row, so their current indices are 439–442 and
+the complete corpus contains 443 programs. This adds four declared cells and
+no programs. JVM/CLR and VM/JIT matrix adapters remain subsequent slices.

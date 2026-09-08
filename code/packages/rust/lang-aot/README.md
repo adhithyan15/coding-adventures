@@ -543,3 +543,9 @@ Erlang through setup-beam. Symbolic-result parity remains a separate work item.
 FLOW-MATIC EOF support (VM-039a): `input_more()` uses a non-consuming stdio
 peek alongside `input_i64`. The native/LLVM input stream proof includes empty
 input and repeated EOF reads; this does not change existing integer parsing.
+
+FLOW-MATIC WASM EOF (VM-039b): modules using `input_more` import
+`env.__input_more() -> i64`. Hosts must return 1 when input remains and 0
+at EOF without consuming the next field. The peek and `env.__input_i64`
+reader must share the same input stream; repeated peeks must be stable.
+The matrix exercises the four native/LLVM input programs on WASM as well.

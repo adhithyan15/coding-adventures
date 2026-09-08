@@ -6388,10 +6388,10 @@ const PROGRAMS: &[Prog] = &[
     },
 
     // VM-039a: real stdin and EOF on the shared native/LLVM runtime.
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm] },
 
 ];
 
@@ -6976,6 +6976,31 @@ impl wasm_execution::HostFunction for GetcharFunc {
     }
 }
 
+/// Peeks at the same queue the integer reader consumes; repeated calls are stable.
+struct InputMoreFunc {
+    input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
+}
+
+impl wasm_execution::HostFunction for InputMoreFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![],
+                results: vec![wasm_types::ValueType::I64],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        _args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let more = !self.input.lock().expect("wasm input lock poisoned").is_empty();
+        Ok(vec![wasm_execution::WasmValue::I64(i64::from(more))])
+    }
+}
+
 /// `env.__input_i64() -> i64` — WASM host import for BASIC `INPUT X`.
 /// Drains the stdin buffer line-by-line: reads bytes up to (and including) the
 /// next `\n`, parses the trimmed ASCII decimal as an i64, and returns the value.
@@ -7287,6 +7312,9 @@ impl wasm_execution::HostInterface for PrintHost {
             // BA-INPUT: `env.__input_i64` reads a full line from the stdin buffer
             // and parses it as an i64; used by BASIC `INPUT X`.
             ("env", "__input_i64") => Some(Box::new(InputI64Func {
+                input: std::sync::Arc::clone(&self.input),
+            })),
+            ("env", "__input_more") => Some(Box::new(InputMoreFunc {
                 input: std::sync::Arc::clone(&self.input),
             })),
             // E4-dyn: `env.__input_str` reads a line and writes a `[i32 len][bytes]`
@@ -13712,4 +13740,25 @@ int main(void) {
         assert!(out.status.success(), "peek process failed");
         assert_eq!(String::from_utf8_lossy(&out.stdout), expected);
     }
+}
+
+/// Covered by BUILD's portable_text_stdout_ filter. Peeking and consuming use
+/// one shared stream, including a final field without a newline.
+#[test]
+fn portable_text_stdout_wasm_input_more_peek() {
+    use wasm_execution::{HostFunction, WasmValue};
+    let input = std::sync::Arc::new(std::sync::Mutex::new(
+        std::collections::VecDeque::from(b"5\n-3".to_vec())));
+    let peek = InputMoreFunc { input: std::sync::Arc::clone(&input) };
+    let read = InputI64Func { input: std::sync::Arc::clone(&input) };
+    for value in [5, -3] {
+        for _ in 0..2 {
+            assert_eq!(peek.call(&[], None).unwrap(), vec![WasmValue::I64(1)]);
+        }
+        assert_eq!(read.call(&[], None).unwrap(), vec![WasmValue::I64(value)]);
+    }
+    for _ in 0..2 {
+        assert_eq!(peek.call(&[], None).unwrap(), vec![WasmValue::I64(0)]);
+    }
+    assert!(input.lock().unwrap().is_empty());
 }

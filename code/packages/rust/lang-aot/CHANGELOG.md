@@ -1,4 +1,13 @@
 # Changelog — `lang-aot`
+
+## Unreleased — FLOW-MATIC WASM EOF (VM-039b)
+
+Add the `input_more` builtin as `env.__input_more() -> i64` and connect
+feature detection, import indices and destination writes. The host returns
+1 when another input field remains and 0 at EOF, without consuming input.
+Four existing FLOW-MATIC matrix rows now execute on WASM; a shared-buffer
+regression verifies repeated peeks before and after integer consumption.
+
 ## Unreleased — FLOW-MATIC EOF peek (VM-039a)
 
 Support the zero-argument `input_more` builtin through the shared C runtime.
