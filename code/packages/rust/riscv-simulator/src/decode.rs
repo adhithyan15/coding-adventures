@@ -1,7 +1,7 @@
 //! Instruction decoder for all RV32I formats.
 
-use std::collections::HashMap;
 use crate::opcodes::*;
+use std::collections::HashMap;
 
 /// Decoded instruction with mnemonic and extracted fields.
 #[derive(Debug, Clone)]
@@ -51,11 +51,18 @@ fn decode_op_imm(raw: u32) -> DecodeResult {
         FUNCT3_XORI => "xori",
         FUNCT3_ORI => "ori",
         FUNCT3_ANDI => "andi",
-        FUNCT3_SLLI => { imm &= 0x1F; "slli" }
+        FUNCT3_SLLI => {
+            imm &= 0x1F;
+            "slli"
+        }
         FUNCT3_SRLI => {
             let funct7 = (raw >> 25) & 0x7F;
             imm &= 0x1F;
-            if funct7 == FUNCT7_ALT { "srai" } else { "srli" }
+            if funct7 == FUNCT7_ALT {
+                "srai"
+            } else {
+                "srli"
+            }
         }
         _ => "opimm_unknown",
     };
@@ -63,8 +70,10 @@ fn decode_op_imm(raw: u32) -> DecodeResult {
     DecodeResult {
         mnemonic: mnemonic.into(),
         fields: HashMap::from([
-            ("rd".into(), rd), ("rs1".into(), rs1),
-            ("imm".into(), imm), ("funct3".into(), funct3),
+            ("rd".into(), rd),
+            ("rs1".into(), rs1),
+            ("imm".into(), imm),
+            ("funct3".into(), funct3),
         ]),
         raw,
     }
@@ -100,8 +109,11 @@ fn decode_r_type(raw: u32) -> DecodeResult {
     DecodeResult {
         mnemonic: mnemonic.into(),
         fields: HashMap::from([
-            ("rd".into(), rd), ("rs1".into(), rs1), ("rs2".into(), rs2),
-            ("funct3".into(), funct3), ("funct7".into(), funct7),
+            ("rd".into(), rd),
+            ("rs1".into(), rs1),
+            ("rs2".into(), rs2),
+            ("funct3".into(), funct3),
+            ("funct7".into(), funct7),
         ]),
         raw,
     }
@@ -114,16 +126,21 @@ fn decode_load(raw: u32) -> DecodeResult {
     let imm = sign_extend(((raw >> 20) & 0xFFF) as i32, 12);
 
     let mnemonic = match funct3 as u32 {
-        FUNCT3_LB => "lb", FUNCT3_LH => "lh", FUNCT3_LW => "lw",
-        FUNCT3_LBU => "lbu", FUNCT3_LHU => "lhu",
+        FUNCT3_LB => "lb",
+        FUNCT3_LH => "lh",
+        FUNCT3_LW => "lw",
+        FUNCT3_LBU => "lbu",
+        FUNCT3_LHU => "lhu",
         _ => "load_unknown",
     };
 
     DecodeResult {
         mnemonic: mnemonic.into(),
         fields: HashMap::from([
-            ("rd".into(), rd), ("rs1".into(), rs1),
-            ("imm".into(), imm), ("funct3".into(), funct3),
+            ("rd".into(), rd),
+            ("rs1".into(), rs1),
+            ("imm".into(), imm),
+            ("funct3".into(), funct3),
         ]),
         raw,
     }
@@ -138,15 +155,19 @@ fn decode_s_type(raw: u32) -> DecodeResult {
     let imm = sign_extend((imm_high << 5) | imm_low, 12);
 
     let mnemonic = match funct3 as u32 {
-        FUNCT3_SB => "sb", FUNCT3_SH => "sh", FUNCT3_SW => "sw",
+        FUNCT3_SB => "sb",
+        FUNCT3_SH => "sh",
+        FUNCT3_SW => "sw",
         _ => "store_unknown",
     };
 
     DecodeResult {
         mnemonic: mnemonic.into(),
         fields: HashMap::from([
-            ("rs1".into(), rs1), ("rs2".into(), rs2),
-            ("imm".into(), imm), ("funct3".into(), funct3),
+            ("rs1".into(), rs1),
+            ("rs2".into(), rs2),
+            ("imm".into(), imm),
+            ("funct3".into(), funct3),
         ]),
         raw,
     }
@@ -166,17 +187,22 @@ fn decode_b_type(raw: u32) -> DecodeResult {
     );
 
     let mnemonic = match funct3 as u32 {
-        FUNCT3_BEQ => "beq", FUNCT3_BNE => "bne",
-        FUNCT3_BLT => "blt", FUNCT3_BGE => "bge",
-        FUNCT3_BLTU => "bltu", FUNCT3_BGEU => "bgeu",
+        FUNCT3_BEQ => "beq",
+        FUNCT3_BNE => "bne",
+        FUNCT3_BLT => "blt",
+        FUNCT3_BGE => "bge",
+        FUNCT3_BLTU => "bltu",
+        FUNCT3_BGEU => "bgeu",
         _ => "branch_unknown",
     };
 
     DecodeResult {
         mnemonic: mnemonic.into(),
         fields: HashMap::from([
-            ("rs1".into(), rs1), ("rs2".into(), rs2),
-            ("imm".into(), imm), ("funct3".into(), funct3),
+            ("rs1".into(), rs1),
+            ("rs2".into(), rs2),
+            ("imm".into(), imm),
+            ("funct3".into(), funct3),
         ]),
         raw,
     }
@@ -207,9 +233,7 @@ fn decode_jalr(raw: u32) -> DecodeResult {
 
     DecodeResult {
         mnemonic: "jalr".into(),
-        fields: HashMap::from([
-            ("rd".into(), rd), ("rs1".into(), rs1), ("imm".into(), imm),
-        ]),
+        fields: HashMap::from([("rd".into(), rd), ("rs1".into(), rs1), ("imm".into(), imm)]),
         raw,
     }
 }
@@ -258,8 +282,10 @@ fn decode_system(raw: u32) -> DecodeResult {
     DecodeResult {
         mnemonic: mnemonic.into(),
         fields: HashMap::from([
-            ("rd".into(), rd), ("rs1".into(), rs1),
-            ("csr".into(), csr), ("funct3".into(), funct3 as i32),
+            ("rd".into(), rd),
+            ("rs1".into(), rs1),
+            ("csr".into(), csr),
+            ("funct3".into(), funct3 as i32),
         ]),
         raw,
     }
