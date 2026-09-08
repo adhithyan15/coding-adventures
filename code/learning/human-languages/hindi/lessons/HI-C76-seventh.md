@@ -8,9 +8,9 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 3220
 chapter: 83
 type: word
-headword: "सातवाँ"
-gloss: "seventh — the rule restored, and the cardinal untouched"
-romanization: "sātvā̃"
+headword: "सातवाँ / सातवीं"
+gloss: "seventh / feminine seventh — the rule restored, and the cardinal untouched"
+romanization: "sātvā̃ / sātvī̃"
 concept_tag: HI-ORDINAL-SEVENTH
 prerequisites: [HI-C76-sixth, HI-C75-second, HI-C71-kyonki, HI-C69-railway, HI-S124-letter-dha, HI-C29-shaam]
 sounds: []
@@ -72,6 +72,6 @@ worth meeting first — they were the price, and it has been paid.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C76-ORDINAL-01, HI-LEX-C76-ORDINAL-02] -->
 
-[PAUSE 3s] Say the seventh day. (**सातवाँ दिन**.) What happens to *सात* on the way?
+[PAUSE 3s] Say the seventh day. (**सातवाँ** (*sātvā̃*) **दिन**.) What happens to *सात* on the way?
 (**Nothing** — it stands whole.) And what changes for a feminine noun?
 (**सातवीं**.)

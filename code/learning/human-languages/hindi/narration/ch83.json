@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Sixth to Tenth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d3f3a8346013da86",
+  "sourceHash": "fnv1a64:da036a6ebb4aa610",
   "lessons": [
     {
       "id": "HI-C76-sixth",
@@ -194,16 +194,16 @@
       "id": "HI-C76-seventh",
       "sequence": 3220,
       "title": "सातवाँ (sātvā̃) — seventh",
-      "headword": "सातवाँ",
-      "romanization": "sātvā̃",
-      "gloss": "seventh — the rule restored, and the cardinal untouched",
+      "headword": "सातवाँ / सातवीं",
+      "romanization": "sātvā̃ / sātvī̃",
+      "gloss": "seventh / feminine seventh — the rule restored, and the cardinal untouched",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01af2c4f1a219792",
+      "sourceHash": "fnv1a64:5a23a679c5a37bc1",
       "notice": null,
       "blocks": [
         {
