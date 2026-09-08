@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+### Fixed -- `rebuild_filtered_deck` moved cards into decks that do not exist
+
+Rebuilding a filtered deck moves cards *out of the decks they are in*, and
+`rebuild_filtered_deck_from_card_ids` did it without checking the destination
+exists. It now declines, returning the state unchanged.
+
+The visible refusal belongs to the callers -- `engram-core-wasm` checks first
+and returns a JSON error -- but guarding only there left the mutation itself
+willing to strand every card it touched. Two paths reach it without passing a
+facade: `reduce(EngramCommand::RebuildFilteredDeck)`, which cannot report an
+error because `reduce` returns `AppState`, and `rebuild_filtered_deck` itself,
+which is publicly re-exported. A future consumer of either would have inherited
+the bug rather than the fix, which is precisely how this family of defects kept
+surfacing one route at a time.
+
+Declining silently here is not trading loud for silent: there is no channel to
+be loud on at this layer, so the choice is between doing nothing and corrupting
+the collection. The callers that can speak still do.
+
 ### Fixed -- a deeply nested search query aborted the process
 
 `SearchParser` is recursive descent with no depth bound. Every `(` costs a
