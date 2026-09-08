@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R23-into-and-onto",
+    "language": "urdu",
+    "chapter": 23,
+    "sequence": 1260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9bebe43521e980a"
+  },
+  "findings": []
+}

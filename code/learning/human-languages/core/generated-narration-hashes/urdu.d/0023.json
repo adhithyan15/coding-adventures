@@ -1,0 +1,20 @@
+{
+  "language": "urdu",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:28e785017af0f314",
+  "lessonIds": [
+    "UR-C23-kamra",
+    "UR-C23-oblique",
+    "UR-C23-ko",
+    "UR-C23-mein",
+    "UR-C23-par",
+    "UR-R23-into-and-onto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "urdu/narration/ch23.txt",
+  "json": "urdu/narration/ch23.json",
+  "textHash": "fnv1a64:32acf8e9977f5bb3",
+  "jsonHash": "fnv1a64:2ffe494a004a86ee",
+  "findings": []
+}

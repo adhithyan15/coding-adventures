@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C23-mein",
+    "language": "urdu",
+    "chapter": 23,
+    "sequence": 1240,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8c3641068712565d"
+  },
+  "findings": []
+}

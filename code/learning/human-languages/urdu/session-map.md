@@ -181,3 +181,29 @@ track's never-revisited atoms from 24 of 59 to 12 of 81.
 | 106 | kya-kaha | کیا کہا؟ | کیا back in the middle, where it means *what* |
 | 107 | aram-se | آرام سے | asking for ease, not for slowness |
 | 108 | R — when you are lost | | the first conversation, ninety lessons back, rescued |
+| 109 | kamra | کمرہ | Portuguese by sea — the same Latin room as *chamber* and *camera* |
+| 110 | oblique | کمرے | the rule that has run silently under کا since chapter three |
+| 111 | ko | کو | the postposition already fused inside *mujhe* |
+| 112 | mein | میں | spelled like *I*, told apart only by where it stands |
+| 113 | par | پر | on, at — and also *but*, which is the same trap twice |
+| 114 | R — into and onto | | everything the book owns, put somewhere at last |
+| 115 | is | اس | یہ bending, and the whole phrase bending with it |
+| 116 | un | ان | a plural that is also a courtesy |
+| 117 | yahan | یہاں | کہاں's ending, with the near head on it |
+| 118 | vahan | وہاں | the reader is asked to predict it first |
+| 119 | R — here, there, where | | the ک- / یہ- / وہ- frame closed |
+| 120 | plural | کمرے | spelled exactly like the oblique singular, on purpose |
+| 121 | oblique-plural | کمروں | the one ending in Urdu that is never ambiguous |
+| 122 | hum | ہم | a plural for one speaker, like آپ and ان |
+| 123 | hamara | ہمارا | میرا turns out to be a fusion, not a word |
+| 124 | R — more than one | | four cells, two of which collide |
+| 125 | is-ka | اس کا | Urdu has no word for *his*; it builds one |
+| 126 | apna | اپنا | Sanskrit *ātman*, and a distinction English cannot draw |
+| 127 | hai-na | ہے نا؟ | no new words — chapters two and nineteen, joined |
+| 128 | vocative | ماں! | a kin term is the rule and a name is the exception |
+| 129 | R — whose and who to | | five of six persons can own something |
+| 130 | shahr | شہر | Persian: the place somebody rules |
+| 131 | mulk | ملک | Arabic: the thing a king owns |
+| 132 | lahore | لاہور | Sanskrit *Lavapuri*, in the book's first place name |
+| 133 | lahori | لاہوری | the nisba already hiding inside *garmī* and *sardī* |
+| 134 | R — where you are from | | the whole introduction, at last |

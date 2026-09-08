@@ -1086,7 +1086,12 @@ fn run_pipeline(
             // HTML shell. Bare invocation (emit_project: false) is
             // byte-identical to pre-UI32 behaviour — same .js, no
             // new files.
-            let wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions { emit_project };
+            let wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions {
+                emit_project,
+                // Fixtures replace the per-slot fallbacks in the emitted slot
+                // table, so a story changes what the element renders (#14459).
+                slot_values: pipeline_slot_values(fixtures_path),
+            };
             let result = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1115,8 +1120,14 @@ fn run_pipeline(
                         _ => relative.to_string(),
                     }
                 };
-                let flat: [(String, &str); 2] = [
+                // main.js was built and then never written, while the emitted index.html
+                // loads it with `<script type="module" src="./main.js">` -- so an emitted
+                // project 404'd on its own entry point and the custom element never
+                // initialised. The artifact builder writes all three; this path wrote two.
+                // Found while wiring story fixtures into the slot table main.js carries.
+                let flat: [(String, &str); 3] = [
                     (side_file_path("index.html"), &proj.index_html),
+                    (side_file_path("main.js"), &proj.main_js),
                     (side_file_path("README.md"), &proj.readme),
                 ];
                 for (path, src) in &flat {

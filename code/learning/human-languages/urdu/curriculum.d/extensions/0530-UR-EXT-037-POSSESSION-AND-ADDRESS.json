@@ -1,0 +1,17 @@
+{
+  "id": "UR-EXT-037-POSSESSION-AND-ADDRESS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say whose something is for any person, mark that the owner is the subject, invite agreement, and call somebody by name.",
+  "prerequisites": [
+    "UR-EXT-036-PLURAL"
+  ],
+  "lessons": [
+    "UR-C26-is-ka",
+    "UR-C26-apna",
+    "UR-C26-hai-na",
+    "UR-C26-vocative",
+    "UR-R26-whose-and-who-to"
+  ]
+}

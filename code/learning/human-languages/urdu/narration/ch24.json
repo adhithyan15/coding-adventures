@@ -1,0 +1,869 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 24,
+  "title": "Here, There, and Where",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:2fd0cd9069c29f9e",
+  "lessons": [
+    {
+      "id": "UR-C24-is",
+      "sequence": 1270,
+      "title": "اس (is) — this, before a postposition",
+      "headword": "اس",
+      "romanization": "is",
+      "gloss": "this, before a postposition — یہ in its oblique shape, without which the demonstratives can only ever be subjects",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c8f504bc4dc1ab3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this and that. Then say what happens to کمرہ when a postposition follows it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the word that heads a reason — kyūṅki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the word that heads a reason — *kyūṅki*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "یہ کمرہ — yih kamrā — this room."
+            },
+            {
+              "kind": "speech",
+              "text": "اس کمرے میں — is kamre meṅ — in this room."
+            },
+            {
+              "kind": "speech",
+              "text": "The demonstrative does what the noun does. یہ is the direct shape; اس is the oblique one, and it appears for the same reason کمرہ became کمرے — a postposition is coming."
+            },
+            {
+              "kind": "speech",
+              "text": "So the whole phrase shifts together. Pointer, adjective and noun all move into the oblique, and only then does the postposition arrive:"
+            },
+            {
+              "kind": "speech",
+              "text": "اس کالے کمرے میں — is kāle kamre meṅ — in this black room."
+            },
+            {
+              "kind": "speech",
+              "text": "Three words changed shape for one little word standing after them. That is what Urdu does instead of case endings."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the far one too",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وہ has the same pair, and its oblique is اس as well in the singular — Urdu's near and far demonstratives collapse into one oblique form and are told apart by context:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "meaning",
+                "direct",
+                "oblique"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "meaning: this. direct: یہ. oblique: اس.",
+                "meaning: that. direct: وہ. oblique: اس (is)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Which means اس (is) کو and اس (is) پر are available for both, and a learner who has been unable to say to him since chapter one can now say it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — yih kamrā, then is kamre meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *yih kamrā*, then *is kamre meṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole phrase moving together — is kāle kamre meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole phrase moving together — *is kāle kamre meṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "on its own — is ko, is par",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: on its own — *is ko*, *is par*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is kām ke liye — for this work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *is kām ke liye* — for this work]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the oblique of یہ? (اس.) And of وہ? (اس as well.) What else in the phrase changes shape with it? (The adjective and the noun — everything before the postposition.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C24-un",
+      "sequence": 1280,
+      "title": "ان (un) — those, and him respectfully",
+      "headword": "ان",
+      "romanization": "un",
+      "gloss": "these, those, before a postposition — the plural oblique, and the shape a respectful \"he\" takes",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52d8005d4b04c255",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say in this room. Then name the three words for you and say which one is the respectful one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ان کو — un ko — to them."
+            },
+            {
+              "kind": "speech",
+              "text": "ان کمروں میں — un kamroṅ meṅ — in those rooms."
+            },
+            {
+              "kind": "speech",
+              "text": "اس is the oblique for one thing. ان (un) is the oblique for more than one, and it serves both یہ and وہ exactly as اس does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a plural that is not about number",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the part a learner has to be told, because guessing it wrong is rude."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter three taught that Urdu says آپ to somebody it respects — a plural form used for one person. It does the same thing about somebody:"
+            },
+            {
+              "kind": "speech",
+              "text": "ان کو — un ko — to him or to her, respectfully."
+            },
+            {
+              "kind": "speech",
+              "text": "So ان (un) کو is to them, and it is also to him, and which one it is depends entirely on who you are talking about. Said of a mother, a teacher, an elder, ان (un) is the only correct choice, and اس would be heard the way calling a stranger by their first name is heard."
+            },
+            {
+              "kind": "speech",
+              "text": "The safe habit while you are learning: ان (un) for anybody older than you, اس (is) for children and for things."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un ko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un ko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two obliques side by side — is ko, un ko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two obliques side by side — *is ko*, *un ko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "of a mother, respectfully — māṅ … un ko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: of a mother, respectfully — *māṅ … un ko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un kamroṅ meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un kamroṅ meṅ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the plural oblique? (ان (un).) Does it always mean more than one person? (No — it is also the respectful him or her.) And which word for you works the same way? (آپ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C24-yahan",
+      "sequence": 1290,
+      "title": "یہاں (yahāṅ) — here",
+      "headword": "یہاں",
+      "romanization": "yahāṅ",
+      "gloss": "here — the near demonstrative on a frame that means place, and an answer کہاں has been waiting six chapters for",
+      "script": "urdu-nastaliq",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:0599d9a88832854c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask where? Then say this, and look at how the two words begin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: یہاں",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "میں یہاں ہوں — maiṅ yahāṅ hūṅ — I am here."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter seventeen taught کہاں — where? — and this book has had no way to answer it ever since. A learner could ask the question and could not receive the reply."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the two words together. کہاں and یہاں (yahāṅ) share their ending, and differ only in the head: ک- asks, یہ- points near. That is not a coincidence to be memorised — it is a frame."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the frame, two thirds filled",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "head",
+                "frame",
+                "word"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "head: ک- asking. frame: thing. word: کیا.",
+                "head: ک- asking. frame: place. word: کہاں.",
+                "head: یہ- near. frame: thing. word: یہ.",
+                "head: یہ- near. frame: place. word: یہاں (yahāṅ).",
+                "head: وہ- far. frame: thing. word: وہ.",
+                "head: وہ- far. frame: place. word: next lesson."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter seventeen already showed you that کیا, کون and کہاں are one family. This is the other half of that observation: the answers are a family too, built on the pointing heads, and the ending is shared across both."
+            },
+            {
+              "kind": "speech",
+              "text": "One cell is still empty, and you can already guess what goes in it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ yahāṅ hūṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṅ yahāṅ hūṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question and its answer — kahāṅ? … yahāṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question and its answer — *kahāṅ?* … *yahāṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "with a room in it — kamrā yahāṅ hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: with a room in it — *kamrā yahāṅ hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two endings, side by side — kahāṅ, yahāṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two endings, side by side — *kahāṅ*, *yahāṅ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do کہاں and یہاں (yahāṅ) share? (Their ending.) What is different? (The head — asking against near.) And which cell of the frame is still empty? (The far one.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C24-vahan",
+      "sequence": 1300,
+      "title": "وہاں (vahāṅ) — there",
+      "headword": "وہاں",
+      "romanization": "vahāṅ",
+      "gloss": "there — the last cell of the frame, and a word the reader can predict before it is shown",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:916b2da4409bdea7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say here. Then say that. Now guess this lesson's word before you read on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وہاں",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وہ وہاں ہے — voh vahāṅ hai — he is there."
+            },
+            {
+              "kind": "speech",
+              "text": "If you guessed it, that is the lesson. The frame is closed:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "head",
+                "thing",
+                "place"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "head: ک- asking. thing: کیا. place: کہاں.",
+                "head: یہ- near. thing: یہ. place: یہاں (yahāṅ).",
+                "head: وہ- far. thing: وہ. place: وہاں (vahāṅ)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Six words, three heads, two frames — and every one of them was predictable from the shape of the others."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what a place word can now do",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These two words and the postpositions of the last chapter answer the same question at different resolutions:"
+            },
+            {
+              "kind": "speech",
+              "text": "وہاں (vahāṅ) — there, gesturing."
+            },
+            {
+              "kind": "speech",
+              "text": "اس (is) کمرے میں — in that room, naming."
+            },
+            {
+              "kind": "speech",
+              "text": "And the denial you already own works on both, because نہیں goes in front of the verb wherever the verb is:"
+            },
+            {
+              "kind": "speech",
+              "text": "وہ وہاں نہیں ہے — voh vahāṅ nahīṅ hai — he is not there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voh vahāṅ hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voh vahāṅ hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — maiṅ yahāṅ hūṅ, voh vahāṅ hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *maiṅ yahāṅ hūṅ*, *voh vahāṅ hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the denial — voh vahāṅ nahīṅ hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the denial — *voh vahāṅ nahīṅ hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gesturing and naming — vahāṅ, then is kamre meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gesturing and naming — *vahāṅ*, then *is kamre meṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole frame — kyā, kahāṅ; yih, yahāṅ; voh, vahāṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole frame — *kyā, kahāṅ; yih, yahāṅ; voh, vahāṅ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the three heads? (ک- asking, یہ- near, وہ- far.) What ending do the place words share? (-اں.) And where does نہیں go in he is not there? (In front of the verb.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R24-here-there-where",
+      "sequence": 1310,
+      "title": "Here, there, and where",
+      "headword": "اس · ان · یہاں · وہاں",
+      "romanization": "is · un · yahāṅ · vahāṅ",
+      "gloss": "the demonstratives learn to bend, and کہاں finally has two answers",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb56b574f49c9c0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two demonstratives learned a second shape in this chapter and two place words closed a frame. Name all four, and say which of the four is also a mark of respect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the obliques — is ko, un ko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the obliques — *is ko*, *un ko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kahāṅ? … yahāṅ … vahāṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kahāṅ?* … *yahāṅ* … *vahāṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gesturing, then naming — vahāṅ, then us kamre meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gesturing, then naming — *vahāṅ*, then *us kamre meṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "two chapters back, the word that asks why — kyūṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: two chapters back, the word that asks *why* — *kyūṅ*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the distant band — everything the book owns, pointed at and placed",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two chapters ago nothing in this book could be anywhere and no demonstrative could stand in front of a postposition. Run the distance, cold."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question family — kyā, kaun, kahāṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question family — *kyā*, *kaun*, *kahāṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer family — yih, yahāṅ; voh, vahāṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer family — *yih*, *yahāṅ*; *voh*, *vahāṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the drinks, placed — chāy yahāṅ hai, pānī vahāṅ hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the drinks, placed — *chāy yahāṅ hai*, *pānī vahāṅ hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole phrase bending together — is kāle kamre meṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole phrase bending together — *is kāle kamre meṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "people, respectfully and not — is ko, then of a mother, un ko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: people, respectfully and not — *is ko*, then of a mother, *un ko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family, placed — māṅ yahāṅ haiṅ, bahan vahāṅ hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family, placed — *māṅ yahāṅ haiṅ*, *bahan vahāṅ hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the weather — sardī hai, and yahāṅ sardī hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the weather — *sardī hai*, and *yahāṅ sardī hai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a denial — voh yahāṅ nahīṅ hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a denial — *voh yahāṅ nahīṅ hai*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the oblique of یہ and of وہ? (اس for both.) What is the plural oblique? (ان (un).) When must you use ان (un) about one person? (When you respect them.) And what do کہاں, یہاں (yahāṅ) and وہاں (vahāṅ) share? (Their ending.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

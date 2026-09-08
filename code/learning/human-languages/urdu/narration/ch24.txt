@@ -1,0 +1,207 @@
+Urdu, chapter 24: Here, There, and Where.
+5 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 5.
+اس (is) — this, before a postposition.
+
+Warm-up.
+[pause 2 seconds]
+Say this and that. Then say what happens to کمرہ when a postposition follows it.
+[your turn — recall: two chapters back, the word that heads a reason — kyūṅki]
+[pause 8 seconds for the answer]
+
+You'll want to know: اس.
+یہ کمرہ — yih kamrā — this room.
+اس کمرے میں — is kamre meṅ — in this room.
+The demonstrative does what the noun does. یہ is the direct shape; اس is the oblique one, and it appears for the same reason کمرہ became کمرے — a postposition is coming.
+So the whole phrase shifts together. Pointer, adjective and noun all move into the oblique, and only then does the postposition arrive:
+اس کالے کمرے میں — is kāle kamre meṅ — in this black room.
+Three words changed shape for one little word standing after them. That is what Urdu does instead of case endings.
+
+Grammar Lens: the far one too.
+وہ has the same pair, and its oblique is اس as well in the singular — Urdu's near and far demonstratives collapse into one oblique form and are told apart by context:
+[a table of 2 rows, read aloud]
+meaning: this. direct: یہ. oblique: اس.
+meaning: that. direct: وہ. oblique: اس (is).
+Which means اس (is) کو and اس (is) پر are available for both, and a learner who has been unable to say to him since chapter one can now say it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — yih kamrā, then is kamre meṅ]
+[pause 8 seconds for the answer]
+[your turn — say: the whole phrase moving together — is kāle kamre meṅ]
+[pause 8 seconds for the answer]
+[your turn — say: on its own — is ko, is par]
+[pause 8 seconds for the answer]
+[your turn — say: is kām ke liye — for this work]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the oblique of یہ? (اس.) And of وہ? (اس as well.) What else in the phrase changes shape with it? (The adjective and the noun — everything before the postposition.)
+Source: Unicode Arabic chart.
+
+
+Lesson 2 of 5.
+ان (un) — those, and him respectfully.
+
+Warm-up.
+[pause 2 seconds]
+Say in this room. Then name the three words for you and say which one is the respectful one.
+
+You'll want to know: ان.
+ان کو — un ko — to them.
+ان کمروں میں — un kamroṅ meṅ — in those rooms.
+اس is the oblique for one thing. ان (un) is the oblique for more than one, and it serves both یہ and وہ exactly as اس does.
+
+Grammar Lens: a plural that is not about number.
+Here is the part a learner has to be told, because guessing it wrong is rude.
+Chapter three taught that Urdu says آپ to somebody it respects — a plural form used for one person. It does the same thing about somebody:
+ان کو — un ko — to him or to her, respectfully.
+So ان (un) کو is to them, and it is also to him, and which one it is depends entirely on who you are talking about. Said of a mother, a teacher, an elder, ان (un) is the only correct choice, and اس would be heard the way calling a stranger by their first name is heard.
+The safe habit while you are learning: ان (un) for anybody older than you, اس (is) for children and for things.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: un ko]
+[pause 8 seconds for the answer]
+[your turn — say: the two obliques side by side — is ko, un ko]
+[pause 8 seconds for the answer]
+[your turn — say: of a mother, respectfully — māṅ … un ko]
+[pause 8 seconds for the answer]
+[your turn — say: un kamroṅ meṅ]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the plural oblique? (ان (un).) Does it always mean more than one person? (No — it is also the respectful him or her.) And which word for you works the same way? (آپ.)
+Source: Unicode Arabic chart.
+
+
+Lesson 3 of 5.
+یہاں (yahāṅ) — here.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Ask where? Then say this, and look at how the two words begin.
+
+You'll want to know: یہاں.
+میں یہاں ہوں — maiṅ yahāṅ hūṅ — I am here.
+Chapter seventeen taught کہاں — where? — and this book has had no way to answer it ever since. A learner could ask the question and could not receive the reply.
+Look at the two words together. کہاں and یہاں (yahāṅ) share their ending, and differ only in the head: ک- asks, یہ- points near. That is not a coincidence to be memorised — it is a frame.
+
+Grammar Lens: the frame, two thirds filled.
+[a table of 6 rows, read aloud]
+head: ک- asking. frame: thing. word: کیا.
+head: ک- asking. frame: place. word: کہاں.
+head: یہ- near. frame: thing. word: یہ.
+head: یہ- near. frame: place. word: یہاں (yahāṅ).
+head: وہ- far. frame: thing. word: وہ.
+head: وہ- far. frame: place. word: next lesson.
+Chapter seventeen already showed you that کیا, کون and کہاں are one family. This is the other half of that observation: the answers are a family too, built on the pointing heads, and the ending is shared across both.
+One cell is still empty, and you can already guess what goes in it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: maiṅ yahāṅ hūṅ]
+[pause 8 seconds for the answer]
+[your turn — say: the question and its answer — kahāṅ? … yahāṅ]
+[pause 8 seconds for the answer]
+[your turn — say: with a room in it — kamrā yahāṅ hai]
+[pause 8 seconds for the answer]
+[your turn — say: the two endings, side by side — kahāṅ, yahāṅ]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do کہاں and یہاں (yahāṅ) share? (Their ending.) What is different? (The head — asking against near.) And which cell of the frame is still empty? (The far one.)
+Source: Unicode Arabic chart.
+
+
+Lesson 4 of 5.
+وہاں (vahāṅ) — there.
+
+Warm-up.
+[pause 2 seconds]
+Say here. Then say that. Now guess this lesson's word before you read on.
+
+You'll want to know: وہاں.
+وہ وہاں ہے — voh vahāṅ hai — he is there.
+If you guessed it, that is the lesson. The frame is closed:
+[a table of 3 rows, read aloud]
+head: ک- asking. thing: کیا. place: کہاں.
+head: یہ- near. thing: یہ. place: یہاں (yahāṅ).
+head: وہ- far. thing: وہ. place: وہاں (vahāṅ).
+Six words, three heads, two frames — and every one of them was predictable from the shape of the others.
+
+Grammar Lens: what a place word can now do.
+These two words and the postpositions of the last chapter answer the same question at different resolutions:
+وہاں (vahāṅ) — there, gesturing.
+اس (is) کمرے میں — in that room, naming.
+And the denial you already own works on both, because نہیں goes in front of the verb wherever the verb is:
+وہ وہاں نہیں ہے — voh vahāṅ nahīṅ hai — he is not there.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: voh vahāṅ hai]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — maiṅ yahāṅ hūṅ, voh vahāṅ hai]
+[pause 8 seconds for the answer]
+[your turn — say: the denial — voh vahāṅ nahīṅ hai]
+[pause 8 seconds for the answer]
+[your turn — say: gesturing and naming — vahāṅ, then is kamre meṅ]
+[pause 8 seconds for the answer]
+[your turn — say: the whole frame — kyā, kahāṅ; yih, yahāṅ; voh, vahāṅ]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the three heads? (ک- asking, یہ- near, وہ- far.) What ending do the place words share? (-اں.) And where does نہیں go in he is not there? (In front of the verb.)
+Source: Unicode Arabic chart.
+
+
+Lesson 5 of 5.
+Here, there, and where — the demonstratives learn to bend, and کہاں finally has two answers.
+
+Warm-up.
+[pause 4 seconds]
+Two demonstratives learned a second shape in this chapter and two place words closed a frame. Name all four, and say which of the four is also a mark of respect.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the obliques — is ko, un ko]
+[pause 8 seconds for the answer]
+[your turn — say: kahāṅ? … yahāṅ … vahāṅ]
+[pause 8 seconds for the answer]
+[your turn — say: gesturing, then naming — vahāṅ, then us kamre meṅ]
+[pause 8 seconds for the answer]
+[your turn — recall: two chapters back, the word that asks why — kyūṅ]
+[pause 8 seconds for the answer]
+
+Guided Practice: the distant band — everything the book owns, pointed at and placed.
+[pause 4 seconds]
+Two chapters ago nothing in this book could be anywhere and no demonstrative could stand in front of a postposition. Run the distance, cold.
+[your turn — say: the question family — kyā, kaun, kahāṅ]
+[pause 8 seconds for the answer]
+[your turn — say: the answer family — yih, yahāṅ; voh, vahāṅ]
+[pause 8 seconds for the answer]
+[your turn — say: the drinks, placed — chāy yahāṅ hai, pānī vahāṅ hai]
+[pause 8 seconds for the answer]
+[your turn — say: the whole phrase bending together — is kāle kamre meṅ]
+[pause 8 seconds for the answer]
+[your turn — say: people, respectfully and not — is ko, then of a mother, un ko]
+[pause 8 seconds for the answer]
+[your turn — say: the family, placed — māṅ yahāṅ haiṅ, bahan vahāṅ hai]
+[pause 8 seconds for the answer]
+[your turn — say: the weather — sardī hai, and yahāṅ sardī hai]
+[pause 8 seconds for the answer]
+[your turn — say: a denial — voh yahāṅ nahīṅ hai]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 4 seconds]
+What is the oblique of یہ and of وہ? (اس for both.) What is the plural oblique? (ان (un).) When must you use ان (un) about one person? (When you respect them.) And what do کہاں, یہاں (yahāṅ) and وہاں (vahāṅ) share? (Their ending.)
+Source: Unicode Arabic chart.

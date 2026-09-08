@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:aed5cb7d37175160",
+  "lessonIds": [
+    "UR-C26-is-ka",
+    "UR-C26-apna",
+    "UR-C26-hai-na",
+    "UR-C26-vocative",
+    "UR-R26-whose-and-who-to"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "urdu/narration/ch26.txt",
+  "json": "urdu/narration/ch26.json",
+  "textHash": "fnv1a64:8bda20fa0bd22512",
+  "jsonHash": "fnv1a64:c826606fadd1a5e3",
+  "findings": []
+}

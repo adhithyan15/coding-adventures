@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C24-is",
+    "language": "urdu",
+    "chapter": 24,
+    "sequence": 1270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c8f504bc4dc1ab3"
+  },
+  "findings": []
+}

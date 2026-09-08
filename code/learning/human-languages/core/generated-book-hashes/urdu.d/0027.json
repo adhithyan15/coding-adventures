@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:ddd2a9dee881f52c",
+  "lessonIds": [
+    "UR-C27-shahr",
+    "UR-C27-mulk",
+    "UR-C27-lahore",
+    "UR-C27-lahori",
+    "UR-R27-where-you-are-from"
+  ],
+  "tex": "urdu/book/chapters/ch27-where-you-are-from.tex"
+}
