@@ -122,6 +122,7 @@ where
     Ok(session)
 }
 
+#[cfg(target_vendor = "apple")]
 fn activate_control_at(
     session: &mut BrowserSession,
     viewport_x: f64,
