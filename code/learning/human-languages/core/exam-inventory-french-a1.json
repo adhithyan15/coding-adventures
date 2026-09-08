@@ -32,25 +32,31 @@
       "id": "A1-N-01",
       "category": "Le nom",
       "label": "proper nouns: personal names, forms of address, place names",
-      "probe": null
+      "probe": null,
+      "note": "Untaught as a class. Personal names appear in practice dialogue and no lesson owns proper nouns, forms of address, or place names."
     },
     {
       "id": "A1-N-02",
       "category": "Le nom",
       "label": "grammatical gender is inherent and unpredictable from meaning",
-      "probe": null
+      "probe": [
+        "FR-GRAM-LE-LA-GENDER-05"
+      ],
+      "note": "The same atom as A1-D-01, and honestly so: FR-C01-le-la's grammar lens is where the fact lives -- 'a grammatical gender baked into the noun, inherited from Latin ... you learn each noun with its article, because the gender can't be guessed.' The article set and the unpredictability are one lesson because in French they are one fact."
     },
     {
       "id": "A1-N-03",
       "category": "Le nom",
       "label": "regular plural in -s, silent in speech",
-      "probe": null
+      "probe": null,
+      "note": "Half owned and not probed. les is taught in chapter 1 as the plural article both genders share; the -s on the noun itself, and its silence in speech, is nowhere named. FR-PHON-PARLER-PARLE-PARLEZ-03 makes the same point about VERB endings only."
     },
     {
       "id": "A1-N-04",
       "category": "Le nom",
       "label": "plurals in -x (-eau, -eu) and invariable nouns in -s/-x/-z",
-      "probe": null
+      "probe": null,
+      "note": "Untaught."
     },
     {
       "id": "A1-D-01",
@@ -73,37 +79,43 @@
       "id": "A1-D-03",
       "category": "Les determinants",
       "label": "indefinite article un / une / des",
-      "probe": null
+      "probe": null,
+      "note": "Two thirds owned. un and une have a lesson and an atom; des, the plural indefinite, is never taught -- which is also why A1-D-04 cannot close."
     },
     {
       "id": "A1-D-04",
       "category": "Les determinants",
       "label": "partitive du / de la / de l' / des",
-      "probe": null
+      "probe": null,
+      "note": "Half owned. FR-C11-du teaches du and de l' and explains the contraction that produces them. de la and des are not shown, so a probe naming the point's four forms would resolve against two."
     },
     {
       "id": "A1-D-05",
       "category": "Les determinants",
       "label": "de after a negation (pas de pain)",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. The negation is owned (FR-GRAMMAR-NEGATION-04) and the partitive is owned; what happens when they meet is not."
     },
     {
       "id": "A1-D-06",
       "category": "Les determinants",
       "label": "possessive adjectives mon / ma / mes, ton, son",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. mon appears inside no lesson's atom set."
     },
     {
       "id": "A1-D-07",
       "category": "Les determinants",
       "label": "demonstrative ce / cet / cette / ces",
-      "probe": null
+      "probe": null,
+      "note": "Untaught."
     },
     {
       "id": "A1-D-08",
       "category": "Les determinants",
       "label": "cardinal numbers 0-100",
-      "probe": null
+      "probe": null,
+      "note": "One to twenty owned outright, with the dix-sept seam and the liaison that goes with counting. zero and the tens above twenty are untaught, so four fifths of the range cannot be said."
     },
     {
       "id": "A1-A-01",
@@ -118,19 +130,24 @@
       "id": "A1-A-02",
       "category": "L'adjectif",
       "label": "feminine in -e, and the audible consonant it reveals",
-      "probe": null
+      "probe": null,
+      "note": "Half owned. FR-GRAM-ADJ-AGREEMENT-04 teaches the four shapes of bon, which is the -e feminine; the audible consonant it reveals on a word like petit/petite is not shown."
     },
     {
       "id": "A1-A-03",
       "category": "L'adjectif",
       "label": "position: most adjectives follow the noun",
-      "probe": null
+      "probe": [
+        "FR-GRAM-ADJ-APRES-NOM-10"
+      ],
+      "note": "FR-C13-vin-rouge states it and its exception together, which is why it is one atom: 'the short common ones lead, and everything else follows' -- because the reader already says bonjour, where bon leads."
     },
     {
       "id": "A1-A-04",
       "category": "L'adjectif",
       "label": "the short pre-posed set (grand, petit, bon, beau, jeune, vieux)",
-      "probe": null
+      "probe": null,
+      "note": "Blocked behind A1-D-08's neighbour problem: FR-C13-vin-rouge names the pre-posed class and gives only bon as a member -- 'a few others you will meet'. Five of the six words this point lists are unwritten."
     },
     {
       "id": "A1-A-05",
@@ -145,19 +162,30 @@
       "id": "A1-P-01",
       "category": "Les pronoms",
       "label": "subject pronouns je, tu, il/elle, nous, vous, ils/elles",
-      "probe": null
+      "probe": [
+        "FR-LEX-JE-01",
+        "FR-LEX-TU-VOUS-08",
+        "FR-GRAM-PRONOUN-REQUIRED-03",
+        "FR-VERB-ETRE-EST-03",
+        "FR-VERB-ETRE-SOMMES-04",
+        "FR-VERB-ETRE-ETES-05",
+        "FR-VERB-ETRE-SONT-06"
+      ],
+      "note": "Six pronouns, six lessons, and no single atom for the set. je and tu/vous have their own lessons in chapters 2 and 3; il/elle, nous, vous and ils/elles arrive attached to the etre form each one governs, because chapter 19 gives etre ONE LESSON PER PERSON. FR-GRAM-PRONOUN-REQUIRED-03 is the rule that makes the set obligatory rather than optional -- French cannot drop a subject pronoun, because parle, parles and parlent are one sound."
     },
     {
       "id": "A1-P-02",
       "category": "Les pronoms",
       "label": "on for an unspecified subject and for nous",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. on is arguably the single most common subject pronoun in spoken French and the track does not have it."
     },
     {
       "id": "A1-P-03",
       "category": "Les pronoms",
       "label": "tonic pronouns moi, toi, lui, elle",
-      "probe": null
+      "probe": null,
+      "note": "Shown in practice prose and never taught. et toi ? appears in two practice dialogues, glossed as a phrase; moi, toi, lui and elle have no atom."
     },
     {
       "id": "A1-P-04",
@@ -174,19 +202,34 @@
       "id": "A1-P-05",
       "category": "Les pronoms",
       "label": "interrogative qui, que, quoi",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. The track owns five question WORDS (A1-INT-04) and none of the three question PRONOUNS."
     },
     {
       "id": "A1-V-01",
       "category": "Le verbe",
       "label": "present indicative of etre",
-      "probe": null
+      "probe": [
+        "FR-VERB-ETRE-SUIS-01",
+        "FR-VERB-ETRE-ES-02",
+        "FR-VERB-ETRE-EST-03",
+        "FR-VERB-ETRE-SOMMES-04",
+        "FR-VERB-ETRE-ETES-05",
+        "FR-VERB-ETRE-SONT-06"
+      ]
     },
     {
       "id": "A1-V-02",
       "category": "Le verbe",
       "label": "present indicative of avoir",
-      "probe": null
+      "probe": [
+        "FR-VERB-AVOIR-JAI-01",
+        "FR-VERB-AVOIR-AS-02",
+        "FR-VERB-AVOIR-A-03",
+        "FR-VERB-AVOIR-AVONS-05",
+        "FR-VERB-AVOIR-AVEZ-06",
+        "FR-VERB-AVOIR-ONT-07"
+      ]
     },
     {
       "id": "A1-V-03",
@@ -200,13 +243,15 @@
       "id": "A1-V-04",
       "category": "Le verbe",
       "label": "present indicative of regular -ir verbs (finir type)",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. The -er family is owned in full; the finir family is not, so the second regular conjugation is missing."
     },
     {
       "id": "A1-V-05",
       "category": "Le verbe",
       "label": "aller, and the near future aller + infinitive",
-      "probe": null
+      "probe": null,
+      "note": "Half owned. aller has a lesson and its suppletion atom since chapter 3, and its participle is the headline case of the etre-perfect. The near future aller + infinitive is not taught, so the track can say where it went and not where it is going."
     },
     {
       "id": "A1-V-06",
@@ -276,31 +321,44 @@
       "id": "A1-V-13",
       "category": "Le verbe",
       "label": "imperative for instructions and requests",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. Every verb in the track appears with a subject pronoun in front of it, which is exactly the form the imperative drops."
     },
     {
       "id": "A1-V-14",
       "category": "Le verbe",
       "label": "passe compose with avoir",
-      "probe": null
+      "probe": [
+        "FR-GRAM-PASSE-COMPOSE-02",
+        "FR-GRAM-PARTICIPE-ER-01",
+        "FR-GRAM-PARTICIPE-IR-RE-04"
+      ]
     },
     {
       "id": "A1-V-15",
       "category": "Le verbe",
       "label": "passe compose with etre and its agreement",
-      "probe": null
+      "probe": [
+        "FR-GRAM-PASSE-COMPOSE-ETRE-01",
+        "FR-GRAM-ACCORD-PARTICIPE-07",
+        "FR-GRAM-ACCORD-UNIFIE-06",
+        "FR-GRAM-ETRE-PAS-MOUVEMENT-03"
+      ],
+      "note": "All four, because the point names the agreement as well as the auxiliary. FR-C16-accord-unifie is the one that earns the point: it shows the avoir rule and the etre rule are one rule, because the participle was an adjective and an adjective agrees with what it described."
     },
     {
       "id": "A1-V-16",
       "category": "Le verbe",
       "label": "il y a for existence",
-      "probe": null
+      "probe": null,
+      "note": "Untaught."
     },
     {
       "id": "A1-V-17",
       "category": "Le verbe",
       "label": "c'est / ce sont for identification",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. c'est appears once, unglossed, in FR-C32-combien."
     },
     {
       "id": "A1-NEG-01",
@@ -314,7 +372,8 @@
       "id": "A1-NEG-02",
       "category": "La negation",
       "label": "dropping ne in speech",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. FR-GRAMMAR-NEGATION-04 teaches the ne ... pas frame; that speakers drop ne is a register fact the track does not state."
     },
     {
       "id": "A1-NEG-03",
@@ -373,43 +432,50 @@
       "id": "A1-PREP-01",
       "category": "Les prepositions",
       "label": "a and de, and the contractions au, aux, du, des",
-      "probe": null
+      "probe": null,
+      "note": "Untaught, and it is the largest single gap in the track: a, de and their four contractions sit under the place, country and time points below, so one lesson set unblocks a whole column."
     },
     {
       "id": "A1-PREP-02",
       "category": "Les prepositions",
       "label": "place: dans, sur, sous, devant, derriere, chez",
-      "probe": null
+      "probe": null,
+      "note": "Untaught."
     },
     {
       "id": "A1-PREP-03",
       "category": "Les prepositions",
       "label": "countries and cities: en, au, aux, a",
-      "probe": null
+      "probe": null,
+      "note": "Untaught."
     },
     {
       "id": "A1-PREP-04",
       "category": "Les prepositions",
       "label": "time: a, en, de ... a, depuis",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. The clock is fully owned (A1-LEX-07) and cannot yet be put in a sentence with a preposition."
     },
     {
       "id": "A1-ADV-01",
       "category": "L'adverbe",
       "label": "quantity: beaucoup, un peu, tres, assez",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. bien is owned from ca va bien and is an adverb of manner, not of quantity."
     },
     {
       "id": "A1-ADV-02",
       "category": "L'adverbe",
       "label": "time: aujourd'hui, demain, hier, maintenant, souvent",
-      "probe": null
+      "probe": null,
+      "note": "Untaught. a demain and a bientot are owned as farewells, so demain is in the reader's mouth inside a fixed phrase and not available as a word."
     },
     {
       "id": "A1-ADV-03",
       "category": "L'adverbe",
       "label": "place: ici, la, la-bas",
-      "probe": null
+      "probe": null,
+      "note": "Untaught."
     },
     {
       "id": "A1-ADV-04",
@@ -423,25 +489,29 @@
       "id": "A1-PH-01",
       "category": "La phrase",
       "label": "basic subject-verb-object order",
-      "probe": null
+      "probe": null,
+      "note": "Shown on every page and never named. FR-GRAM-PRONOUN-REQUIRED-03 states that the subject slot must be filled; no lesson states the order the slots come in."
     },
     {
       "id": "A1-PH-02",
       "category": "La phrase",
       "label": "coordination with et, ou, mais",
-      "probe": null
+      "probe": null,
+      "note": "One of three shown, none owned. et is glossed in FR-C03-practice as the glue in et toi ?; ou and mais have no atom."
     },
     {
       "id": "A1-PH-03",
       "category": "La phrase",
       "label": "cause with parce que",
-      "probe": null
+      "probe": null,
+      "note": "Untaught, and it is the track's only subordinating construction."
     },
     {
       "id": "A1-PH-04",
       "category": "La phrase",
       "label": "presenting oneself and others",
-      "probe": null
+      "probe": null,
+      "note": "Introducing ONESELF is fully owned: je m'appelle, enchante, and the inversion that asks for a name. Introducing somebody else is not -- c'est and voici have no atom."
     },
     {
       "id": "A1-PRON-01",
@@ -455,7 +525,8 @@
       "id": "A1-PRON-02",
       "category": "Prononciation et orthographe",
       "label": "silent final consonants",
-      "probe": null
+      "probe": null,
+      "note": "Shown per word and never generalised. il est, ils sont and the parler/parle/parlez trio each say their own final consonants are silent; no lesson makes it the rule the liaison points already presuppose."
     },
     {
       "id": "A1-PRON-03",
@@ -478,7 +549,9 @@
       "id": "A1-PRON-05",
       "category": "Prononciation et orthographe",
       "label": "the cedilla",
-      "probe": null
+      "probe": [
+        "FR-SCRIPT-CEDILLE-09"
+      ]
     },
     {
       "id": "A1-LEX-01",
@@ -569,7 +642,11 @@
       "id": "A1-LEX-08",
       "category": "Lexique de base",
       "label": "weather",
-      "probe": null
+      "probe": [
+        "FR-LEX-TEMPS-02",
+        "FR-GRAMMAR-IL-FAIT-03",
+        "FR-LEX-IL-PLEUT-04"
+      ]
     },
     {
       "id": "A1-LEX-09",

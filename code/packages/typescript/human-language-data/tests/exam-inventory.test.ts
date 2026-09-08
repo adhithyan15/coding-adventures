@@ -688,16 +688,57 @@ describe("the committed French A1 inventory", () => {
     // 31 -> 33: retiring chapters 17 and 19 gave `avoir` and `etre` a typed atom
     // per person instead of one lesson holding each whole paradigm, which is
     // what the two remaining verb points were waiting for.
-    expect(coverage.covered).toBe(33);
+    //
+    // 33 -> 42, AND NOT ONE LESSON CHANGED. Nine points were taught in full and
+    // carried `probe: null`, which this module documents as "no atom in the
+    // corpus corresponds to this point" -- a finding, scored uncovered. Here it
+    // was not a finding: it was 41 points nobody had written a probe for, and the
+    // chapters that closed nine of them were generated after the inventory was
+    // authored. Each was confirmed by reading the lesson, not by an atom name
+    // looking right:
+    //
+    //   A1-V-01  A1-V-02   chapter 19 gives etre ONE LESSON PER PERSON and
+    //     chapter 17 does the same for avoir, so there are twelve atoms where an
+    //     author looking for `FR-VERB-ETRE-PRESENT` finds none. That shape is not
+    //     an accident: `maxNewGrammarCellsPerLesson` is 1, so a paradigm CANNOT be
+    //     one atom, and an inventory that expects one will always read it as absent.
+    //   A1-V-14  A1-V-15   the avoir-perfect (chapter 18) and the etre-perfect with
+    //     its agreement (chapter 20), including FR-C16-accord-unifie, which shows
+    //     the two agreement rules are one rule.
+    //   A1-P-01   six subject pronouns across six lessons, plus the rule that makes
+    //     them obligatory -- parle, parles and parlent are one sound.
+    //   A1-N-02   FR-C01-le-la: "a grammatical gender baked into the noun ... the
+    //     gender can't be guessed."
+    //   A1-A-03   FR-C13-vin-rouge states the position rule AND its exception.
+    //   A1-PRON-05  FR-W02-cedille.
+    //   A1-LEX-08   le temps, il fait chaud, il pleut -- a whole weather lesson.
+    //
+    // The other 32 now each carry a note saying what the track holds and what is
+    // missing, so the next author does not repeat the 232-lesson read.
+    expect(coverage.covered).toBe(42);
     expect(coverage.byCategory["L'interrogation"]).toEqual({ enumerated: 5, covered: 5 });
-    // The shape, not the score: vocabulary is still a strong column and the
-    // sentence-level categories are still empty. No quantity of headwords moves
-    // these -- only grammar chapters like the one that just closed the fourth.
-    for (const empty of ["La phrase", "Le nom", "Les prepositions"]) {
+    // Lexique de base closes outright: ten of ten. It is the column vocabulary
+    // work moves, and it has now run out of room, which is the finding -- every
+    // remaining point in this inventory is grammar or a function word.
+    expect(coverage.byCategory["Lexique de base"]).toEqual({ enumerated: 10, covered: 10 });
+    // The shape, not the score: the sentence-level categories are still empty.
+    // No quantity of headwords moves these -- only grammar chapters like the one
+    // that closed L'interrogation.
+    for (const empty of ["La phrase", "Les prepositions"]) {
       expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
     }
-    expect(coverage.byCategory["Lexique de base"]!.covered).toBeGreaterThan(0);
   }, 60_000);
+
+  it("never lets an unmapped point read as 'nobody has looked yet'", () => {
+    // The rule Marathi has had since HL-C290. Thirty-two of this inventory's 41
+    // unmapped points carried no note, so "the corpus does not teach it" and
+    // "nobody has checked" were the same JSON -- and nine of the 41 turned out to
+    // be taught in full. A note is what stops that read being redone.
+    for (const point of inventory.points) {
+      if (point.probe !== null) continue;
+      expect(point.note?.trim(), `${point.id} is unmapped and must say why`).toBeTruthy();
+    }
+  });
 });
 
 describe("the committed French A2 inventory", () => {
