@@ -1422,3 +1422,11 @@ before the additional width regression; that regression passed20op/type cases.
 Clippy for iir-to-beam and lang-aot alltargets passed. Remaining VM040families
 are Twig strings/records/closures, Nib, BASIC, FLOW-MATIC and COBOL; re-audit
 current declarations before selection. VM060b hostinput and VM0138008 remain.
+
+### VM-040 Nib implementation contract: four-bit result width
+
+The real-BEAM corpus reached Nib's ~15 u4 comparison and returned0 instead
+of1: complement was not narrowed to four bits. Extend the existing u8 result
+mask to select15 for u4 in all three arithmetic/unary/bitwise families; preserve
+u8mask255 and wider integers. Extend the op/type regression to u4. Rerun all26
+Nib programs including BCD storage, then promote only proven BEAM cells.
