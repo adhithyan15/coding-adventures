@@ -29,6 +29,8 @@ const JAPANESE_YU = DUCTUS[ductusKey("japanese", "ゆ")];
 const JAPANESE_YO = DUCTUS[ductusKey("japanese", "よ")];
 const JAPANESE_ME = DUCTUS[ductusKey("japanese", "め")];
 const JAPANESE_TSU = DUCTUS[ductusKey("japanese", "つ")];
+const JAPANESE_RO = DUCTUS[ductusKey("japanese", "ろ")];
+const JAPANESE_SMALL_YU = DUCTUS[ductusKey("japanese", "ゅ")];
 
 const OWNER_SCRIPTS = new Set(["japanese"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -343,5 +345,82 @@ describe("handwriting ductus", () => {
     expect(JAPANESE_TSU.source.citation).toMatch(
       /Sirgazil.*つ.*24 frames.*2\.4 seconds.*1 October 2009/i,
     );
+  });
+
+  // The two signs the cardinals one to ten cost. ろ carries its own frame-by-frame
+  // observation; ゅ carries ゆ's, under the same named rule っ uses from つ.
+  it("Japanese ろ draws shoulder, diagonal and belly in one unbroken run", () => {
+    expect(penLifts(JAPANESE_RO)).toBe(0);
+    expect(JAPANESE_RO.strokes).toHaveLength(1);
+    expect(
+      JAPANESE_RO.strokes[0].segments.map((segment) => segment.label),
+    ).toEqual([
+      "begin at the upper left and draw the short high shoulder to the right",
+      "turn down at the corner and descend the long diagonal to the lower left",
+      "swing right into the broad clockwise belly and finish with a short tail at the bottom",
+    ]);
+    expect(JAPANESE_RO.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%8D_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_RO.source.citation).toMatch(
+      /Sirgazil.*ろ.*26 frames.*2\.6 seconds.*1 October 2009/i,
+    );
+    // The pen reaches the FOOT of the diagonal before the belly departs, and it
+    // has to: a path that turns at the belly's departure instead leaves ~10% of
+    // the letter's ink more than 100 units from any stroke, which the coverage
+    // check in registerStrokeHonestyTests rejects.
+    const diagonal = JAPANESE_RO.strokes[0].segments[1].path;
+    const foot = diagonal[diagonal.length - 1];
+    expect(foot.x).toBeLessThan(200);
+    expect(foot.y).toBeLessThan(300);
+  });
+
+  it("Japanese small ゅ scales ゆ's two-run movement to its own glyph", () => {
+    expect(penLifts(JAPANESE_SMALL_YU)).toBe(1);
+    expect(JAPANESE_SMALL_YU.strokes).toHaveLength(2);
+    // The labels are ゆ's, verbatim, because the movement is ゆ's. Only the
+    // coordinates are the small glyph's.
+    expect(
+      JAPANESE_SMALL_YU.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual(
+      JAPANESE_YU.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    );
+    expect(JAPANESE_SMALL_YU.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%86_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_SMALL_YU.source.citation).toMatch(
+      /Sirgazil.*ゆ.*30 frames.*U\+3085 HIRAGANA LETTER SMALL YU/i,
+    );
+    // Phrase-by-phrase rather than one regex with six greedy `.*` gaps between
+    // them: that shape backtracks polynomially on a subject that does NOT match
+    // (measured at 23 seconds for a 5,000-character one), and each phrase is a
+    // separate claim anyway, so a failure names which one went missing. The
+    // older assertions in this file still carry the greedy shape and are worth
+    // the same treatment when they are next touched.
+    for (const phrase of [
+      "two pen-down runs",
+      "one lift",
+      "small yu",
+      "scaling",
+      "explicit rather than presented as independent handwriting evidence",
+    ]) {
+      expect(JAPANESE_SMALL_YU.source.variation, phrase).toContain(phrase);
+    }
+    // Every point sits inside the SMALL glyph's own box, so the entry is not the
+    // full-size path wearing a smaller caption.
+    const yuPoints = JAPANESE_YU.strokes.flatMap((stroke) =>
+      stroke.segments.flatMap((segment) => segment.path),
+    );
+    const smallPoints = JAPANESE_SMALL_YU.strokes.flatMap((stroke) =>
+      stroke.segments.flatMap((segment) => segment.path),
+    );
+    const top = (points: Point[]) => Math.max(...points.map((p) => p.y));
+    const right = (points: Point[]) => Math.max(...points.map((p) => p.x));
+    expect(top(smallPoints)).toBeLessThan(top(yuPoints));
+    expect(right(smallPoints)).toBeLessThan(right(yuPoints));
   });
 });

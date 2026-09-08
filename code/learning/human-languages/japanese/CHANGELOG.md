@@ -4,6 +4,95 @@ All notable changes to the Japanese curriculum track are recorded here.
 
 ## [Unreleased]
 
+### Added — chapters 14 and 15: the cardinals one to ten, and the two signs they cost
+
+`JA-A1-NUM-01` was ticked on ONE numeral, and that one was inside a phrase. The
+track taught no other number and no counter. Fourteen lessons in two chapters
+close it on all ten, and the coverage total does not move — which is the finding,
+not an oversight: the tranche DEEPENS two existing ticks rather than adding one,
+and a coverage column cannot see that. The named test pin exists for exactly that
+reason.
+
+**TWO OF THE TEN WERE ALREADY IN THE READER'S HANDS, AND THE CHAPTERS OPEN ON
+THEM.** *ichi* has been said since chapter 9 inside **もういちど**, whose lesson
+states in so many words that *ichi* is one. And **五** has been in the hand since
+chapter 5, where the script lesson that taught its four strokes wrote on the page
+that **the sign means five on its own** and then asked for nothing but its sound,
+because it was there to cue the *go* inside **語**. That was an explicit deferral,
+and chapter 14 is where it is paid. So the chapter opens **ichi, go** — one out of
+the mouth, one out of the hand — and neither lesson spends a sign.
+
+**THE ORDER IS BY COST, NOT BY NUMBER, IN BOTH CHAPTERS.** Chapter 14 runs
+*ichi, go, ni, san, yon* and costs **zero** new signs. Chapter 15 runs *nana,
+hachi, ku*, then buys **ろ** for *roku* and **ゅ** for *jū* — so the reader counts
+round an audible hole at six for three lessons, and the chapter says on the page
+why the hole is there. Six and ten are the only two numerals between one and ten
+whose everyday reading needs a hiragana sign this book had not taught.
+
+**THE GRAMMAR ATOM IS THE SEAM THE COUNTERS WILL RUN ALONG, AND IT IS TAUGHT WITH
+ITS EDGES.** Wiktionary's readings box gives **し** as the on'yomi of four and
+**よん** as the kun'yomi, and **しち**/**なな** the same way at seven. So at four
+and seven the NATIVE word stands inside a borrowed count and is the one the reader
+will hear. `JA-GRAMMAR-KUN-IN-THE-COUNT` is introduced at four and held at seven,
+and then the chapter shows both edges rather than leaving the reader to overgeneralise:
+**はち** has no second name at all, and **く** has one whose second reading the
+same box calls on'yomi as well. Some numbers have two names; only some of those
+get the second from the native side.
+
+**TEN WORDS, NINETY-NINE NUMBERS.** `JA-GRAMMAR-JUU-COMPOUND` is what carries the
+point past ten: a numeral before **じゅう** multiplies it, one after it is added,
+and nothing is inserted between them.
+
+**REINFORCEMENT: THE TRACK'S PERFECT RECORD IS INTACT, AND ONE DEFECT IS GONE.**
+
+    reinforcementWindowMisses          0 ->   0
+    reinforcementMissesByWindow-R1     0 ->   0
+    reinforcementMissesByWindow-R2     0 ->   0
+    reinforcementMissesByWindow-R3     0 ->   0
+    reinforcementMissesByWindow-R4     0 ->   0
+    atomsTaught                      111 -> 125
+    atomsNeverRevisited                1 ->   0
+    scriptClosureViolations            0 ->   0
+    neverTaughtGlyphs                  0 ->   0
+
+Fourteen more lessons make **29** (atom, window) slots newly judgeable on OLDER
+atoms — one R1, two R2, ten R3, sixteen R4 — debt the length EXPOSES rather than
+creates. Every one is answered, and answered on a **diagonal**: lesson *n* of the
+tranche services the R4 of the atom introduced at old position 36+*n* and the
+R3 of the atom at 98+*n*, so the fourteen warm-ups walk the whole of chapters 8-9
+and the whole of chapter 13 in order. The tranche's own fourteen atoms create
+**zero** debt. Zero regressions on previously judged slots. And
+`JA-PERFORMANCE-FAMILY-NINE-01`, introduced by the track's last lesson and
+therefore never revisited, is revisited now — which is why `atomsNeverRevisited`
+falls to **zero**.
+
+**THE SCRIPT COST WAS TWO SIGNS AND IT WAS MEASURED, NOT ASSUMED.** ろ and ゅ join
+`data/scripts/japanese.d`, with owner declarations and evidence. **ろ's stroke
+order was observed**: the cited Sirgazil animation was fetched, expanded to its 26
+frames and read, and the start marker never leaves the upper-left origin, so the
+run is single and `penLifts` is 0. **ゅ claims no independent handwriting
+evidence**: it reuses ゆ's observed two-run movement and says so in its
+`variation` field, exactly as U+3063 small tsu reuses つ's. Closure held at zero
+only because the chapters do NOT print the nine kanji they cannot teach — three
+Wiktionary link texts originally carried 四, 七 and 九 and were rewritten, which
+the closure measurement caught and prose review would not have.
+
+**A LEVEL GATE FLIPPED, AND IT IS WORTH THE SAME CAVEAT CHINESE AND MARWADI GOT.**
+`JA-C14-yon` realizes `SPINE-COUNT-ONE-TO-FIVE`, so the track's `reach` moves from
+pre-A1 to A1 and no track in the corpus is now below A1. Everything else the track
+holds is still pre-A1 and `attained` has not moved. One node realized is not a
+level reached.
+
+**NOT CLAIMED, and the inventory notes now say so rather than leaving it to be
+inferred.** The nine remaining kanji (五 is the only one of the ten the reader can
+write as Japanese writes it). Zero, which needs **れ**. *kyū*, which needs **き**
+and is given in romanization with the reason. The COUNTERS — `JA-A1-NUM-02` —
+which is the next tranche and is what still stops the reader counting *things*
+rather than counting aloud; the reader already owns one counter without its being
+named as one, the **-ど** of chapter 9's **いちど**, whose lesson says *do* counts
+an occurrence. And ordinals, `JA-A1-NUM-03`, which are blocked behind the
+counters and not behind the cardinals any more.
+
 ### Changed — learner guide follows the authored runway (#12568)
 
 - Replaced the obsolete single-chapter/eight-lesson description with the current

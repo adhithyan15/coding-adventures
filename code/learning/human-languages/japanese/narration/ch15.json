@@ -1,0 +1,1290 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 15,
+  "title": "The Two Signs the Rest of the Run Cost",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:7df2bece0b8959e4",
+  "lessons": [
+    {
+      "id": "JA-C15-nana",
+      "sequence": 1240,
+      "title": "なな (nana) — seven, and the pattern from four holding",
+      "headword": "なな",
+      "romanization": "nana",
+      "gloss": "seven — the second place the native word stands inside the borrowed count, which is what makes it a pattern",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e451060ec1126345",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 30,
+              "perItem": false,
+              "source": "[PAUSE 30s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then a number out of order, on purpose."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say four both ways, and say which is the native one — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *four* both ways, and say which is the native one — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say my mother — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *my mother* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "take the farewell in all four skills — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: take the farewell in all four skills — **R4**, eighty lessons back]"
+            },
+            {
+              "kind": "speech",
+              "text": "This chapter does not start at six. Six is one of only two numbers left that costs a new sign, and both of those wait until the end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll Want to Know — hear and say",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なな — nana — seven."
+            },
+            {
+              "kind": "speech",
+              "text": "しち — shichi — seven, the same number said the other way."
+            },
+            {
+              "kind": "speech",
+              "text": "All three signs are yours: な, し, ち."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — the same seam, a second time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Wiktionary's readings box for the kanji seven says exactly what the box for four said:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "number",
+                "borrowed reading",
+                "native word"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "number: four. borrowed reading: し shi. native word: よん yon.",
+                "number: seven. borrowed reading: しち shichi. native word: なな nana."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Twice now, and both times at a number where the borrowed reading is easy to mishear — shi against ichi, shichi against ichi. The native word is the one that keeps the count clear, and it is the one you will hear."
+            },
+            {
+              "kind": "speech",
+              "text": "One instance was a fact about four. Two is a pattern, and this is where the book says so."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — read, copy, recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write なな. Say what you have: ichi, ni, san, yon, go … nana. Leave the hole where six is; you will hear it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many new signs did this lesson need? (None.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: the kanji read shichi and nana; Wiktionary: なな."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C15-nana-recall",
+              "prompt": "Which two numbers so far have a native word standing beside a borrowed reading?",
+              "assesses": [
+                "JA-LEX-NANA",
+                "JA-GRAMMAR-KUN-IN-THE-COUNT"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "four and seven",
+                "4 and 7",
+                "yon and nana"
+              ],
+              "feedback": {
+                "correct": "Two instances. That is a pattern.",
+                "incorrect": "One of them arrived last chapter and one arrived just now."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C15-hachi",
+      "sequence": 1250,
+      "title": "はち (hachi) — eight, with nothing standing beside it",
+      "headword": "はち",
+      "romanization": "hachi",
+      "gloss": "eight — one reading, no native word beside it, and the plain case the pattern needed",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:42bedc3f16b7164c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then the plain case."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say seven, both ways — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *seven*, both ways — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say my elder brother — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *my elder brother* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say excuse me — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *excuse me* — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll Want to Know — hear and say",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はち — hachi — eight."
+            },
+            {
+              "kind": "speech",
+              "text": "Two beats, two old signs: は from chapter one and ち from chapter two."
+            },
+            {
+              "kind": "speech",
+              "text": "And that is the whole lesson, which is the point of it. Eight has no second name. Four had one and seven had one; eight does not, and neither did one, two, three or five. The pattern you were shown twice is not everywhere — it sits at two numbers out of the seven you now hold."
+            },
+            {
+              "kind": "speech",
+              "text": "A rule you cannot see the edge of is not a rule you can use. This is the edge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — read, copy, recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write はち. Say what you hold: ichi, ni, san, yon, go … nana, hachi. The hole at six is still there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many new signs did this lesson need? (None.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Wiktionary: はち (hachi)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C15-hachi-recall",
+              "prompt": "Does eight have a native word beside its borrowed reading in the everyday count?",
+              "assesses": [
+                "JA-LEX-HACHI",
+                "JA-GRAMMAR-KUN-IN-THE-COUNT"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "no",
+                "no, only one reading",
+                "it does not"
+              ],
+              "feedback": {
+                "correct": "Two of the seven have one. Eight is not one of them.",
+                "incorrect": "Four and seven have one. Eight does not."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C15-ku",
+      "sequence": 1260,
+      "title": "く (ku) — nine, and the exception to the seam",
+      "headword": "く",
+      "romanization": "ku",
+      "gloss": "nine — a second reading that is not the native one, which is the exception the pattern needed",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e9be00ff7587e83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then a number with two readings and no native one."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say eight — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *eight* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say my elder sister — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *my elder sister* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write み — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **み** — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll Want to Know — hear and say",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "く — ku — nine."
+            },
+            {
+              "kind": "speech",
+              "text": "One mora, one sign, and you have had that sign since chapter nine, where it closed よく. Say hachi, ku."
+            },
+            {
+              "kind": "speech",
+              "text": "Nine has a second everyday reading as well, kyū, and it is the commoner of the two. This book cannot spell it yet — it needs two signs you have not met — so it is written here in romanization only and will be spelled when those signs arrive."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — a second reading that is not a native word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four and seven each had two names, and in both the second was the native word. Nine has two names too, and Wiktionary's readings box puts both of them on the borrowed side:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "number",
+                "readings the box calls borrowed",
+                "the native word"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "number: four. readings the box calls borrowed: し. the native word: よん — used.",
+                "number: seven. readings the box calls borrowed: しち. the native word: なな (nana) — used.",
+                "number: nine. readings the box calls borrowed: く (ku), kyū. the native word: kokono — not used in the plain count."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So the pattern is narrower than it looked two lessons ago: some numbers have two everyday names, and only some of those get their second name from the native side. Nine has two names for a different reason."
+            },
+            {
+              "kind": "speech",
+              "text": "You met the plain case at eight. This is the other edge."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — read, copy, recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write く. Say what you hold: ichi, ni, san, yon, go … nana, hachi, ku. Two numbers are missing and you can hear both gaps."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which two numbers are still missing? (Six and ten — the two that cost a sign.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Wiktionary: the kanji read kyuu and ku."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C15-ku-recall",
+              "prompt": "Nine has two everyday readings. Is either of them the native word?",
+              "assesses": [
+                "JA-LEX-KU",
+                "JA-GRAMMAR-KUN-IN-THE-COUNT"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "no — the readings box calls both of them borrowed",
+                "no",
+                "neither, both are borrowed"
+              ],
+              "feedback": {
+                "correct": "Two names, but not for the reason four and seven have two.",
+                "incorrect": "Compare the row for nine with the rows for four and seven."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W15-ro",
+      "sequence": 1270,
+      "title": "ろ (ro) — one turn, and the r you already make",
+      "headword": "ろ",
+      "romanization": "ro",
+      "gloss": "the hiragana sign for the mora ro — the first of the two signs this chapter has to buy",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b411303a33faaead",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then one sign."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nine — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nine* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say my younger brother — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *my younger brother* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write め — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **め** — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ろ — ro."
+            },
+            {
+              "kind": "speech",
+              "text": "Write ら once. ろ starts the same way and ends differently: a short stroke across the top, then down and round to the left and back up, closing the loop instead of leaving a hook."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound is the one ら already taught you — a single tap of the tongue, neither the English r nor the English l."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first new sign in two chapters, and it is here for one word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ろ (ro) once and copy it once."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it; write it after ten seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "Write ら and ろ (ro) side by side and say both, one tap each."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one accurate form."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W15-ro-write",
+              "prompt": "Write the hiragana sign for the mora ro.",
+              "assesses": [
+                "JA-SCRIPT-RO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ろ",
+                "ro"
+              ],
+              "feedback": {
+                "correct": "Right: ろ closes where ら hooks.",
+                "incorrect": "Across the top, then down, round to the left, and close."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C15-roku",
+      "sequence": 1280,
+      "title": "ろく (roku) — six, and the hole closes",
+      "headword": "ろく",
+      "romanization": "roku",
+      "gloss": "six — the hole the chapter left open, and the reason it was left",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b92c1da694bea12e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then the word the last lesson bought a sign for."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ろ (ro) — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ろ** — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say my younger sister — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *my younger sister* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say well, fully — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *well, fully* — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll Want to Know — hear and say",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ろく — roku — six."
+            },
+            {
+              "kind": "speech",
+              "text": "ろ (ro) arrived last lesson; く (ku) you have had since chapter nine, where it also became the number nine. So the sign く (ku) does two jobs in this run: it is nine on its own and the second beat of six."
+            },
+            {
+              "kind": "speech",
+              "text": "Six has one everyday reading. No native word stands beside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — why six waited",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have been counting round a gap for three lessons. Here is what the gap was: of the ten numbers in this run, exactly two need a sign this book had not taught, and six is the first of them."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why the chapter did not start here. Everything that cost nothing came first, so that when a lesson finally spends a sign you can see exactly what it bought."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the run: ichi, ni, san, yon, go, roku, nana, hachi, ku. Nine of ten, and only one gap left."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — read, copy, recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ろ | く. Write ろく, hide it, write it again from the meaning. Then say roku, nana, hachi, ku four times, without stopping."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many of the ten numbers cost a new sign? (Two — this one, and one more.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Wiktionary: ろく (roku)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C15-roku-recall",
+              "prompt": "The sign く (ku) does two jobs in this count. Name both.",
+              "assesses": [
+                "JA-LEX-ROKU",
+                "JA-LEX-KU"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "it is the number nine on its own, and the second beat of roku, six",
+                "nine, and the ku in roku",
+                "nine and the second beat of six"
+              ],
+              "feedback": {
+                "correct": "One sign, two jobs, both of them numbers.",
+                "incorrect": "You wrote it as a whole number one lesson before you wrote it inside one."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W15-small-yu",
+      "sequence": 1290,
+      "title": "ゅ (small yu) — a small sign that joins forward",
+      "headword": "ゅ",
+      "romanization": "small yu",
+      "gloss": "the small hiragana sign that joins to the sign before it instead of taking a beat of its own",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7aeddb63f714ad1a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 30,
+              "perItem": false,
+              "source": "[PAUSE 30s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then the last new sign of the run."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ゆ, full size — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ゆ**, full size — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say my husband — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *my husband* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write く (ku) — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **く** — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゅ — small yu."
+            },
+            {
+              "kind": "speech",
+              "text": "Same shape as ゆ, written small and sitting low — the way っ is a small つ."
+            },
+            {
+              "kind": "speech",
+              "text": "The two small signs do opposite jobs, and it is worth putting them side by side:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "sign",
+                "what it does"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "sign: っ. what it does: holds a silent beat before the next consonant.",
+                "sign: ゅ (small yu). what it does: joins to the sign before it, and the two become one beat."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So し plus ゅ (small yu) is not shi-yu. It is one beat, shu. Voice the し with the dakuten first and じ plus ゅ (small yu) is one beat, ju."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the sign the last number needs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write ゆ, then ゅ (small yu) beneath it, half the height."
+            },
+            {
+              "kind": "speech",
+              "text": "Write っ and ゅ (small yu) side by side; say which one holds and which one joins."
+            },
+            {
+              "kind": "speech",
+              "text": "Read じゅ as a single beat. Do not let a yu escape between the two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one accurate small form."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W15-small-yu-write",
+              "prompt": "How many beats is じゅ, and how many is いっ?",
+              "assesses": [
+                "JA-SCRIPT-SMALL-YU-01",
+                "JA-SCRIPT-SMALL-TSU-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "じゅ is one beat; いっ is two",
+                "one and two",
+                "1, 2"
+              ],
+              "feedback": {
+                "correct": "One joins forward and makes a single beat; the other holds one of its own.",
+                "incorrect": "ゅ joins to the sign before it. っ is a beat of silence."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C15-juu",
+      "sequence": 1300,
+      "title": "じゅう (jū) — ten, and what ten does",
+      "headword": "じゅう",
+      "romanization": "jū",
+      "gloss": "ten — the last number of the run, and the one that turns nine words into ninety-nine",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3b3b687108d9ac4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three recalls, then the last number."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ゅ (small yu), and say what it does to the sign before it — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ゅ**, and say what it does to the sign before it — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say my wife — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *my wife* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say I do not understand — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *I do not understand* — **R4**, eighty lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll Want to Know — hear and say",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅう — jū — ten."
+            },
+            {
+              "kind": "speech",
+              "text": "Three signs, two beats. し voiced with the dakuten is じ; じ with the small ゅ (small yu) is one beat, ju; the う after it holds that beat long. Say it as two beats, not three: ju–u, not ji-yu-u."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens — ten words, ninety-nine numbers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅう (jū) is not just the tenth word in a list. It is the one that makes the list go further than itself, and it does so with no joining word at all:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you say",
+                "what it is"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what you say: じゅういち. what it is: ten, one becomes eleven.",
+                "what you say: にじゅう. what it is: two, ten becomes twenty.",
+                "what you say: にじゅういち. what it is: two, ten, one becomes twenty-one."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A number before じゅう (jū) multiplies it. A number after じゅう (jū) is added to it. Nothing is inserted between them."
+            },
+            {
+              "kind": "speech",
+              "text": "Ten words, and every number up to ninety-nine is one of their arrangements. That is what the last two chapters were for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — read, copy, recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write じゅう. Say the whole run, one to ten, without stopping. Then say jūichi, nijū, sanjū, and build one number of your own between twenty and ninety-nine."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many beats is じゅう (jū)? (Two.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Wiktionary: じゅう (jū)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C15-juu-recall",
+              "prompt": "Say what nijuu means and what juuni means, and say why they are different.",
+              "assesses": [
+                "JA-LEX-JUU",
+                "JA-GRAMMAR-JUU-COMPOUND"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "nijuu is twenty and juuni is twelve; a number before juu multiplies it and a number after it is added",
+                "20 and 12; before multiplies, after adds",
+                "nijuu 20, juuni 12"
+              ],
+              "feedback": {
+                "correct": "Same two words, two different numbers, and the order is the whole of the difference.",
+                "incorrect": "Ask which side of juu the ni is on."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R15-six-to-ten",
+      "sequence": 1310,
+      "title": "One to ten, and what the run cost",
+      "headword": "ろく・なな・はち・く・じゅう",
+      "romanization": "roku, nana, hachi, ku, jū",
+      "gloss": "six to ten, the whole run at last, and the two signs the ten numbers cost between them",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce92acf335b8718e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four recalls before the run."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say ten, in two beats — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *ten*, in two beats — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say seven, both ways — R2, five lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *seven*, both ways — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say child — R3, twenty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *child* — **R3**, twenty lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "write ど — R4, eighty lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: write **ど** — **R4**, eighty lessons back]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new arrives here. This is the first time all ten stand in order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — the run",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ichi ni san yon go roku nana hachi ku jū — without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ichi ni san yon go roku nana hachi ku jū* — without stopping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again with し at four and しち at seven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again with **し** at four and **しち** at seven]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "五",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **五**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R15-six-to-ten-run",
+              "prompt": "Write six to ten in hiragana, in order.",
+              "assesses": [
+                "JA-LEX-ROKU",
+                "JA-LEX-NANA",
+                "JA-LEX-HACHI",
+                "JA-LEX-KU",
+                "JA-LEX-JUU"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ろく・なな・はち・く・じゅう",
+                "ろく なな はち く じゅう",
+                "roku nana hachi ku juu"
+              ],
+              "feedback": {
+                "correct": "The run is closed.",
+                "incorrect": "ろく, なな, はち, く, じゅう."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R15-six-to-ten-build",
+              "prompt": "Say thirteen and say thirty, and say which part of each does the work.",
+              "assesses": [
+                "JA-GRAMMAR-JUU-COMPOUND",
+                "JA-LEX-JUU",
+                "JA-LEX-SAN"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "juusan is thirteen and sanjuu is thirty; the number after juu is added and the number before it multiplies",
+                "juusan 13, sanjuu 30",
+                "13 juusan, 30 sanjuu"
+              ],
+              "feedback": {
+                "correct": "Order alone, no joining word.",
+                "incorrect": "Put san on one side of juu, then the other."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built in two chapters, in three numbers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ten numbers. Two new signs. Ninety-nine numbers you can now say."
+            },
+            {
+              "kind": "speech",
+              "text": "Ichi and go were yours before chapter fourteen opened. Only ろ (ro) and ゅ (small yu) had to be bought, one word each."
+            },
+            {
+              "kind": "speech",
+              "text": "At four and seven the native word stands beside the borrowed reading; at nine both readings are borrowed, and eight has no second name at all."
+            },
+            {
+              "kind": "speech",
+              "text": "五 is still the only one of the ten you can write as Japanese writes it. The other nine kanji are the next thing this book owes you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many new signs did ten numbers cost? (Two.) Which two numbers have a native word standing beside a borrowed reading? (Four and seven.) What does a number before じゅう (jū) do to it? (Multiplies it.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

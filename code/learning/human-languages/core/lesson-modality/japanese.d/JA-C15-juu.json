@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C15-juu",
+    "language": "japanese",
+    "chapter": 15,
+    "sequence": 1300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3b3b687108d9ac4"
+  },
+  "findings": []
+}

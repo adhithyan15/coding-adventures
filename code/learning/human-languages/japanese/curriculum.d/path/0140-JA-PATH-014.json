@@ -1,0 +1,26 @@
+{
+  "id": "JA-PATH-014",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "JA-C14-ichi",
+    "JA-C14-go",
+    "JA-C14-ni",
+    "JA-C14-san",
+    "JA-C14-yon",
+    "JA-R14-one-to-five",
+    "JA-C15-nana",
+    "JA-C15-hachi",
+    "JA-C15-ku",
+    "JA-W15-ro",
+    "JA-C15-roku",
+    "JA-W15-small-yu",
+    "JA-C15-juu",
+    "JA-R15-six-to-ten"
+  ],
+  "before": [],
+  "inline": [
+    "JA-EXT-021-NUMBERS-ONE-TO-FIVE",
+    "JA-EXT-022-NUMBERS-SIX-TO-TEN"
+  ],
+  "after": []
+}

@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "NUMBER-ONE-TO-FIVE"
+  "segments": [
+    "JA-PATH-014"
   ],
+  "omits": [],
   "relocates": {}
 }

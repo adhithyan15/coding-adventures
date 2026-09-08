@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:ecc903f670f15a59",
+  "lessonIds": [
+    "JA-C14-ichi",
+    "JA-C14-go",
+    "JA-C14-ni",
+    "JA-C14-san",
+    "JA-C14-yon",
+    "JA-R14-one-to-five"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch14.txt",
+  "json": "japanese/narration/ch14.json",
+  "textHash": "fnv1a64:17bf53728d5cbe58",
+  "jsonHash": "fnv1a64:83d8ba1e3da06458",
+  "findings": []
+}

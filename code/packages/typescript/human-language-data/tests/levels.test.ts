@@ -261,7 +261,7 @@ describe("corpus level summary", () => {
       expect(readdirSync(join(root, "core", entry.name)), entry.name).toEqual([]);
     }
   });
-  it("shows twenty tracks have reached A2, and only two have not reached A1", () => {
+  it("shows twenty tracks have reached A2, and every track has now reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
@@ -311,7 +311,16 @@ describe("corpus level summary", () => {
       // chapters out of thirty-six. Everything else the track holds is still pre-A1,
       // `attained` has not moved, and the number below is the one that means
       // something. One node realized is not a level reached.
-    ).toEqual(["japanese"]);
+      //
+      // HL-C360: japanese leaves it too, and the list is now EMPTY. Chapters 14-15
+      // teach the cardinals one to ten and JA-C14-yon realizes
+      // SPINE-COUNT-ONE-TO-FIVE, so `reach` moves to A1 on the strength of two
+      // chapters out of fifteen. The same caveat as chinese and marwadi applies
+      // word for word: everything else the track holds is still pre-A1, `attained`
+      // has not moved, and one node realized is not a level reached. What HAS
+      // changed is that no track in the corpus is now stuck below A1 by a missing
+      // count.
+    ).toEqual([]);
   });
 
   it("can already build a ramp-to-A1 edition from the canonical corpus", () => {

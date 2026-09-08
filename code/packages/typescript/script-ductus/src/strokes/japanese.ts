@@ -1028,4 +1028,168 @@ export const entries: DuctusEntry[] = [
         .strokeOrderSource!,
     },
   ],
+  // Sirgazil's 26-frame animation writes hiragana ろ in a single pen-down run:
+  // the start marker never leaves the upper-left origin across all 26 frames.
+  // This path is the bundled Noto Sans JP subset's own medial line, so the
+  // shoulder, the diagonal and the belly are the font's geometry rather than a
+  // second drawing. The diagonal is traced to its foot because it has to be:
+  // stopping where the belly departs leaves a tenth of the letter's ink
+  // untraced, which the coverage check rejects.
+  [
+    "japanese:ろ",
+    {
+      script: "japanese",
+      glyph: "ろ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "begin at the upper left and draw the short high shoulder to the right",
+              path: [
+                { x: 252, y: 671 },
+                { x: 323, y: 695 },
+                { x: 403, y: 695 },
+                { x: 484, y: 695 },
+                { x: 563, y: 699 },
+                { x: 640, y: 691 },
+              ],
+            },
+            {
+              label:
+                "turn down at the corner and descend the long diagonal to the lower left",
+              path: [
+                { x: 640, y: 691 },
+                { x: 566, y: 585 },
+                { x: 463, y: 498 },
+                { x: 380, y: 403 },
+                { x: 272, y: 327 },
+                { x: 168, y: 243 },
+              ],
+            },
+            {
+              label:
+                "swing right into the broad clockwise belly and finish with a short tail at the bottom",
+              path: [
+                { x: 168, y: 243 },
+                { x: 250, y: 309 },
+                { x: 334, y: 373 },
+                { x: 426, y: 407 },
+                { x: 531, y: 419 },
+                { x: 637, y: 418 },
+                { x: 731, y: 379 },
+                { x: 795, y: 296 },
+                { x: 804, y: 193 },
+                { x: 762, y: 101 },
+                { x: 678, y: 39 },
+                { x: 581, y: 8 },
+                { x: 475, y: -2 },
+                { x: 368, y: -1 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "ろ")!
+        .strokeOrderSource!,
+    },
+  ],
+  // Small ゅ takes ゆ's two-run movement, exactly as small っ takes つ's. The
+  // path is ゆ's own verified pen path mapped through the two glyphs' bounding
+  // boxes and then snapped to the SMALL glyph's medial line — no point moved
+  // more than 33 units to land on it — so the order is ゆ's citation and the
+  // geometry is ゅ's own outline.
+  [
+    "japanese:ゅ",
+    {
+      script: "japanese",
+      glyph: "ゅ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "descend through the left stem and turn up across the high shoulder",
+              path: [
+                { x: 259, y: 543 },
+                { x: 247, y: 486 },
+                { x: 238, y: 420 },
+                { x: 235, y: 357 },
+                { x: 232, y: 291 },
+                { x: 241, y: 216 },
+                { x: 247, y: 147 },
+                { x: 250, y: 93 },
+                { x: 244, y: 156 },
+                { x: 241, y: 225 },
+                { x: 289, y: 282 },
+                { x: 319, y: 336 },
+                { x: 373, y: 396 },
+                { x: 436, y: 441 },
+              ],
+            },
+            {
+              label:
+                "continue clockwise around the broad loop",
+              path: [
+                { x: 436, y: 441 },
+                { x: 508, y: 471 },
+                { x: 595, y: 486 },
+                { x: 685, y: 474 },
+                { x: 766, y: 429 },
+                { x: 808, y: 360 },
+                { x: 817, y: 291 },
+                { x: 811, y: 231 },
+                { x: 784, y: 168 },
+                { x: 727, y: 117 },
+                { x: 658, y: 90 },
+                { x: 589, y: 87 },
+              ],
+            },
+            {
+              label:
+                "curve left to the inner finish",
+              path: [
+                { x: 589, y: 87 },
+                { x: 535, y: 93 },
+                { x: 484, y: 114 },
+                { x: 439, y: 147 },
+                { x: 400, y: 192 },
+                { x: 403, y: 225 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "descend through the center of the loop",
+              path: [
+                { x: 562, y: 582 },
+                { x: 568, y: 540 },
+                { x: 580, y: 465 },
+                { x: 583, y: 393 },
+                { x: 583, y: 318 },
+                { x: 580, y: 240 },
+                { x: 568, y: 168 },
+                { x: 532, y: 96 },
+              ],
+            },
+            {
+              label:
+                "curve down and left to the finish",
+              path: [
+                { x: 532, y: 96 },
+                { x: 508, y: 24 },
+                { x: 469, y: -21 },
+                { x: 415, y: -42 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "ゅ")!
+        .strokeOrderSource!,
+    },
+  ],
 ];

@@ -73,8 +73,8 @@ load-bearing.
 ## Read and practise
 
 - [`session-map.md`](./session-map.md) maps one canonical lesson to each of the
-  current 100 five-minute sessions and explains the review rule.
-- [`roadmap.md`](./roadmap.md) records the twelve authored chapters and the
+  current 131 five-minute sessions and explains the review rule.
+- [`roadmap.md`](./roadmap.md) records the authored chapters and the
   dependency order toward the complete pre-A1-to-C2 destination.
 - [`chapters.json`](./chapters.json) is the authoritative chapter and payoff
   ledger; [`curriculum.json`](./curriculum.json) supplies the canonical lesson
