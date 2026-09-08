@@ -1486,3 +1486,13 @@ on real Erlang. Preserve exact stdout and hard failures after runtime detection.
 Only promote executed cells. If a defect appears, commit its bounded contract
 before production edits. Larger COBOL string operations, BEAM input/EOF,
 VM-060b host-reader ABI, and VM-013 machine semantics remain separate items.
+
+### VM-040 COBOL probe: integer arithmetic literal operands
+
+Literal DISPLAY and numeric MOVE execute successfully, but ADD 7 fails lowering
+with expected variable operand, got Int(7). Integer binary arithmetic currently
+requires register sources even though IIR permits integer immediates. Accept
+Var and Int operands directly in the existing gc_bif2 arithmetic source slots;
+retain explicit errors for unsupported operand kinds, source arity validation,
+and u4/u8 narrowing. Do not allocate scratch registers for immediate values.
+Rerun the four COBOL probes and add operation/operand regression coverage.
