@@ -760,6 +760,31 @@ impl EngramSession {
             let command: FacadeCommand = serde_json::from_str(command_json)
                 .map_err(|err| format!("invalid command: {err}"))?;
             let resets_browser = matches!(command, FacadeCommand::LoadState { .. });
+            // `upsertNote` carries a whole `Note` straight from the caller --
+            // `deckId` and `noteTypeId` included -- so it is a third way into
+            // `UpsertNote` beside the editor and the event payload, and it is a
+            // documented public surface: the crate README describes it, the web
+            // host declares it, and `eg_dispatch` exports it to every native
+            // shell. Without this it accepted ids naming nothing, which is the
+            // defect the other two routes were fixed for.
+            //
+            // Unlike the reducer, `dispatch` CAN report the error: it is inside
+            // `catch_json`, so a `Err` becomes `{"ok": false, "error": ...}`
+            // rather than a silently dropped note.
+            if let FacadeCommand::UpsertNote { note, .. } = &command {
+                validate_note_target(
+                    &self.state,
+                    &note.note_type_id,
+                    &note.deck_id,
+                    // Unlike the other two callers: this route has no inherit
+                    // step -- the reducer stores the `Note` verbatim -- so an
+                    // empty deck id is not "keep the deck you had", it is
+                    // "belong to no deck". Sharing their exemption let
+                    // `deckId: ""` store the same orphan the check exists to
+                    // prevent, and blank an existing note's real deck besides.
+                    EmptyDeckId::MeansNoDeck,
+                )?;
+            }
             let command = command.into_core_command();
             self.state = reduce(&self.state, command);
             if resets_browser {
@@ -1535,7 +1560,17 @@ impl EngramSession {
                     self.note_type_editor.reset();
                 }
                 EngramAppEvent::SaveNote => {
-                    let note = note_from_app_event(&parsed, &self.state, deck_id, now)?;
+                    // `selected_deck_context`, not the raw `deck_id`, the way
+                    // every sibling arm resolves it. The raw argument can be
+                    // empty, and `note_from_app_event` falls back to it for a
+                    // NEW note -- so an empty one produced a note, and the cards
+                    // generated from it, carrying `deck_id: ""`. That is not in
+                    // any deck's queue or stats and is not reached by
+                    // `DeleteDeck`'s cascade: the same orphan this validation
+                    // exists to prevent, arrived at through the exemption for
+                    // the inherit case rather than around it.
+                    let note =
+                        note_from_app_event(&parsed, &self.state, &selected_deck_context, now)?;
                     self.state = reduce(
                         &self.state,
                         engram_core::EngramCommand::UpsertNote {
@@ -4280,6 +4315,72 @@ fn note_editor_selected_field<'a>(
         .and_then(|index| selection.fields.get(index))
 }
 
+/// What an **empty** deck id means to a particular caller.
+///
+/// It is not the same thing everywhere, and treating it as though it were is how
+/// a guard becomes a hole. Two of the three callers resolve inheritance *before*
+/// validating, so an empty id at that point means "the note keeps the deck it
+/// already had". The raw `upsertNote` command has no such step -- the reducer
+/// stores the `Note` verbatim -- so an empty id there means the note is stored
+/// belonging to no deck at all, which is the orphan this validation exists to
+/// prevent.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum EmptyDeckId {
+    /// The caller has already resolved inheritance; empty means "keep what the
+    /// note had". Accepted.
+    MeansInherit,
+    /// Nothing downstream will fill it in. Refused.
+    MeansNoDeck,
+}
+
+/// Refuse a note whose note type or deck names something the collection does
+/// not contain.
+///
+/// Three routes build a `Note` from partly-external input and hand it to
+/// `UpsertNote` -- the editor draft (`note_from_editor_selection`), the event
+/// payload (`note_from_app_event`), and the raw `upsertNote` command -- so all
+/// three have to uphold this. They did not: the editor path checked the note
+/// type and (since the id-hardening pass) the deck; the other two checked
+/// neither.
+///
+/// The reducer would be the tempting place to put it, since it is the one point
+/// every write passes through. It cannot go there: `reduce` returns `AppState`,
+/// not `Result`, so the only thing it could do with a bad id is drop the note
+/// silently -- trading a visible wrong answer for an invisible one, which is
+/// worse than the bug. So the rule lives here, once, and all three callers use
+/// it.
+///
+/// This is **not** a global invariant on `AppState`. The bulk paths --
+/// `loadState`, `load_snapshot`, `import_backup`, `merge_app_states`, and the
+/// `.apkg`/TSV importers -- can all still introduce a note or card naming a deck
+/// that does not exist, and the merge paths matter most, because they fold
+/// untrusted file content into an existing collection. Those are tracked
+/// separately; do not read this function as covering them.
+fn validate_note_target(
+    state: &AppState,
+    note_type_id: &str,
+    deck_id: &str,
+    empty_deck_id: EmptyDeckId,
+) -> Result<(), String> {
+    if !state
+        .note_types
+        .iter()
+        .any(|note_type| note_type.id == note_type_id)
+    {
+        return Err("selected note type does not exist".to_string());
+    }
+    if deck_id.is_empty() {
+        return match empty_deck_id {
+            EmptyDeckId::MeansInherit => Ok(()),
+            EmptyDeckId::MeansNoDeck => Err("selected deck does not exist".to_string()),
+        };
+    }
+    if !state.decks.iter().any(|deck| deck.id == deck_id) {
+        return Err("selected deck does not exist".to_string());
+    }
+    Ok(())
+}
+
 fn note_from_editor_selection(
     state: &AppState,
     selection: &BrowserSelection,
@@ -4297,13 +4398,6 @@ fn note_from_editor_selection(
             .map(|note| note.note_type_id.clone())
             .ok_or_else(|| "selected note has no note type".to_string())?
     };
-    if !state
-        .note_types
-        .iter()
-        .any(|note_type| note_type.id == note_type_id)
-    {
-        return Err("selected note type does not exist".to_string());
-    }
     let deck_id = if !selection.deck_id.is_empty() {
         selection.deck_id.clone()
     } else {
@@ -4311,30 +4405,9 @@ fn note_from_editor_selection(
             .map(|note| note.deck_id.clone())
             .unwrap_or_default()
     };
-    // The note type is checked just above; the deck was not, and both arrive
-    // from the same editor draft.
-    //
-    // The *editor* path upheld this on its own -- `NoteEditorSelectDeck`
-    // resolves an *index* into `state.decks` and errors with "cannot select
-    // missing deck" -- so no draft could name a deck that did not exist. That
-    // makes this guard cheap insurance today and load-bearing the moment any
-    // other writer reaches a draft, which is exactly what persisting one would
-    // do. Without it, a deck id nothing carries plus one Save writes the note
-    // *and its generated cards* into a deck that does not exist: unreachable
-    // from every deck list, and the editor renders a selected-deck index of -1,
-    // so the UI cannot even say where they went.
-    //
-    // Note the narrower claim: the *editor* path, not every path.
-    // `EngramAppEvent::SaveNote` takes `deckId` straight from its payload and
-    // checks neither the deck nor the note type, so a host that fabricates that
-    // event can still do this. That is a wider surface than this change is
-    // about, and is left alone rather than silently widened into.
-    //
-    // An empty id is deliberately left alone -- that is the "inherit the
-    // existing note's deck" case above, not a claim about a deck.
-    if !deck_id.is_empty() && !state.decks.iter().any(|deck| deck.id == deck_id) {
-        return Err("selected deck does not exist".to_string());
-    }
+    // Both halves in one place, so the editor path and the event path cannot
+    // drift apart again -- they already had, which is what this consolidates.
+    validate_note_target(state, &note_type_id, &deck_id, EmptyDeckId::MeansInherit)?;
     let draft_active = editor.draft_note_id.as_deref() == Some(selection.note_id.as_str());
     let fields = if selection.fields.is_empty() {
         existing_note
@@ -5214,6 +5287,7 @@ fn note_from_app_event(
     let deck_id = string_field(note_payload, &["deckId", "deck_id"])
         .or_else(|| existing_note.map(|note| note.deck_id.clone()))
         .unwrap_or_else(|| deck_id.to_string());
+    validate_note_target(state, &note_type_id, &deck_id, EmptyDeckId::MeansInherit)?;
     let note_type = state
         .note_types
         .iter()
@@ -7149,6 +7223,296 @@ mod tests {
             selected_deck_id_with_override(&state, "", None),
             "deck-a",
             "a phantom active-session deck must fall through to a real one"
+        );
+    }
+
+    /// `onSaveNote` refuses a deck or note type the collection does not contain.
+    ///
+    /// The editor route already refused both; this route checked neither, so
+    /// the invariant "a note belongs to a deck that exists" held on one path
+    /// and not the other. Both now share `validate_note_target`, and this test
+    /// is what stops them drifting apart again.
+    #[test]
+    fn save_note_events_refuse_a_deck_or_note_type_the_collection_lacks() {
+        fn session_with_demo() -> EngramSession {
+            let mut session = EngramSession::new();
+            session.load_snapshot(DEMO_SNAPSHOT_JSON);
+            session
+        }
+
+        let existing_note_id = session_with_demo().state().notes[0].id.clone();
+
+        // A phantom deck is refused.
+        let mut session = session_with_demo();
+        let refused: Value = serde_json::from_str(&session.handle_engram_app_event(
+            &format!(
+                r#"{{
+                    "event":"onSaveNote",
+                    "noteId":"{existing_note_id}",
+                    "deckId":"deck-that-does-not-exist"
+                }}"#
+            ),
+            "",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(refused["ok"], false, "expected refusal, got {refused}");
+        assert!(
+            refused["error"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("deck does not exist"),
+            "expected a deck error, got {refused}"
+        );
+
+        // A phantom note type is refused too -- this route checked neither.
+        let mut session = session_with_demo();
+        let refused: Value = serde_json::from_str(&session.handle_engram_app_event(
+            &format!(
+                r#"{{
+                    "event":"onSaveNote",
+                    "noteId":"{existing_note_id}",
+                    "noteTypeId":"note-type-that-does-not-exist"
+                }}"#
+            ),
+            "",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(refused["ok"], false, "expected refusal, got {refused}");
+        assert!(
+            refused["error"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("note type does not exist"),
+            "expected a note-type error, got {refused}"
+        );
+
+        // And the guard is not simply refusing everything: a real deck saves,
+        // and the note lands in it.
+        let mut session = session_with_demo();
+        let real_deck = session.state().decks[0].id.clone();
+        let saved: Value = serde_json::from_str(&session.handle_engram_app_event(
+            &format!(
+                r#"{{
+                    "event":"onSaveNote",
+                    "noteId":"{existing_note_id}",
+                    "deckId":"{real_deck}"
+                }}"#
+            ),
+            "",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(saved["ok"], true, "a real deck must still save: {saved}");
+        let note = session
+            .state()
+            .notes
+            .iter()
+            .find(|note| note.id == existing_note_id)
+            .expect("the note should still be there");
+        assert_eq!(note.deck_id, real_deck);
+    }
+
+    /// The raw `upsertNote` command surface is validated too.
+    ///
+    /// This is the third route into `UpsertNote`, beside the editor draft and
+    /// the event payload -- and the least guarded, since it carries a whole
+    /// `Note` straight from the caller. It is public: the README documents it,
+    /// the web host declares it, and `eg_dispatch` exports it to every native
+    /// shell. I originally claimed there were two routes; there are three.
+    #[test]
+    fn dispatch_upsert_note_refuses_ids_the_collection_lacks() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+        let before = session.state().notes.len();
+
+        let refused: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertNote",
+                "note": {
+                    "id": "smuggled",
+                    "noteTypeId": "basic-story",
+                    "deckId": "deck-that-does-not-exist",
+                    "fields": [],
+                    "tags": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                },
+                "materializeCardsAt": 1700000000000
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(refused["ok"], false, "expected refusal, got {refused}");
+        assert!(refused["error"]
+            .as_str()
+            .unwrap_or_default()
+            .contains("deck does not exist"));
+        assert_eq!(
+            session.state().notes.len(),
+            before,
+            "a refused command must not write"
+        );
+        assert!(
+            !session
+                .state()
+                .cards
+                .iter()
+                .any(|card| card.deck_id == "deck-that-does-not-exist"),
+            "no card should carry the phantom deck"
+        );
+
+        // Not refusing everything: a real deck still goes through.
+        let real_deck = session.state().decks[0].id.clone();
+        let accepted: Value = serde_json::from_str(&session.dispatch(&format!(
+            r#"{{
+                "type": "upsertNote",
+                "note": {{
+                    "id": "genuine",
+                    "noteTypeId": "basic-story",
+                    "deckId": "{real_deck}",
+                    "fields": [],
+                    "tags": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }},
+                "materializeCardsAt": 1700000000000
+            }}"#
+        )))
+        .unwrap();
+        assert_eq!(
+            accepted["ok"], true,
+            "a real deck must go through: {accepted}"
+        );
+        assert_eq!(session.state().notes.len(), before + 1);
+    }
+
+    /// `upsertNote` does not get the other callers' empty-deck exemption.
+    ///
+    /// That exemption means "the caller already resolved inheritance, so empty
+    /// means keep the deck the note had". This route has no inherit step -- the
+    /// reducer stores the `Note` verbatim -- so empty means *no deck*. Sharing
+    /// the exemption stored the same orphan the check exists to prevent, and on
+    /// an existing note it silently blanked a real deck, which is worse.
+    #[test]
+    fn dispatch_upsert_note_refuses_an_empty_deck_id() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+        let victim = session.state().notes[0].id.clone();
+        let victim_deck = session.state().notes[0].deck_id.clone();
+        assert!(!victim_deck.is_empty(), "the fixture note must have a deck");
+
+        // A new note claiming no deck is refused.
+        let refused: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertNote",
+                "note": {
+                    "id": "orphan",
+                    "noteTypeId": "basic-story",
+                    "deckId": "",
+                    "fields": [],
+                    "tags": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                },
+                "materializeCardsAt": 1700000000000
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(refused["ok"], false, "expected refusal, got {refused}");
+        assert!(!session.state().notes.iter().any(|note| note.id == "orphan"));
+        assert!(
+            !session
+                .state()
+                .cards
+                .iter()
+                .any(|card| card.deck_id.is_empty()),
+            "no card should be left without a deck"
+        );
+
+        // And an EXISTING note cannot have its real deck blanked this way.
+        let blanked: Value = serde_json::from_str(&session.dispatch(&format!(
+            r#"{{
+                "type": "upsertNote",
+                "note": {{
+                    "id": "{victim}",
+                    "noteTypeId": "basic-story",
+                    "deckId": "",
+                    "fields": [],
+                    "tags": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }},
+                "materializeCardsAt": 1700000000000
+            }}"#
+        )))
+        .unwrap();
+        assert_eq!(blanked["ok"], false, "expected refusal, got {blanked}");
+        assert_eq!(
+            session
+                .state()
+                .notes
+                .iter()
+                .find(|note| note.id == victim)
+                .expect("the note should still be there")
+                .deck_id,
+            victim_deck,
+            "the existing note's deck must be untouched"
+        );
+    }
+
+    /// A new note with no deck named lands in a real deck, not in none.
+    ///
+    /// `note_from_app_event` falls back to the caller's `deck_id` argument for
+    /// a new note. Passing the *raw* argument let an empty one through the
+    /// inherit exemption, so the note -- and the cards generated from it --
+    /// carried `deck_id: ""`: absent from every deck's queue and stats, and not
+    /// reached by `DeleteDeck`'s cascade.
+    #[test]
+    fn a_new_note_saved_with_no_deck_lands_in_a_real_deck() {
+        let mut session = EngramSession::new();
+        session.load_snapshot(DEMO_SNAPSHOT_JSON);
+
+        let saved: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{
+                "event":"onSaveNote",
+                "noteId":"brand-new-note",
+                "noteTypeId":"basic-story",
+                "fields": {"Front": "hola", "Back": "hello"}
+            }"#,
+            "",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(saved["ok"], true, "expected a save, got {saved}");
+
+        let note = session
+            .state()
+            .notes
+            .iter()
+            .find(|note| note.id == "brand-new-note")
+            .expect("the note should have been created");
+        assert!(
+            !note.deck_id.is_empty(),
+            "a new note must not be stranded with an empty deck id"
+        );
+        assert!(
+            session
+                .state()
+                .decks
+                .iter()
+                .any(|deck| deck.id == note.deck_id),
+            "the resolved deck must be one the collection contains, got {:?}",
+            note.deck_id
+        );
+        assert!(
+            session
+                .state()
+                .cards
+                .iter()
+                .filter(|card| card.lineage.as_ref().is_some_and(|l| l.note_id == note.id))
+                .all(|card| !card.deck_id.is_empty()),
+            "generated cards must not be stranded either"
         );
     }
 
