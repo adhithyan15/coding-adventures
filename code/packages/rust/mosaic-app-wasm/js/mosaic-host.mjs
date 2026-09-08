@@ -1,3 +1,9 @@
+export class MosaicHostError extends Error {
+  constructor(message, code, pendingEffects = []) {
+    super(message); this.name = 'MosaicHostError'; this.code = code; this.pendingEffects = pendingEffects;
+  }
+}
+
 // Standard Mosaic lifecycle transport. No application behavior belongs here.
 export async function loadMosaicModule(bytes, imports = {}) {
   const result = await WebAssembly.instantiate(bytes, imports);
@@ -29,7 +35,7 @@ export function createMosaicModule(instance) {
       if (!output) throw new Error('Mosaic transport returned no response');
       const length = new DataView(ex.memory.buffer).getUint32(output, true);
       const response = JSON.parse(decoder.decode(new Uint8Array(ex.memory.buffer, output + 4, length)));
-      if (!response.ok) throw new Error(response.error);
+      if (!response.ok) throw new MosaicHostError(response.error, response.code, response.pendingEffects);
       return response.value;
     } catch (error) {
       if (error instanceof WebAssembly.RuntimeError) failed = true;
@@ -59,9 +65,15 @@ export function createMosaicModule(instance) {
           alive();
           if (!Number.isSafeInteger(sequence)) throw new Error('Mosaic event sequence exhausted');
           const next = request({ op: 'dispatch', handle,
-            event: { protocolVersion: 1, sequence, name, payload } });
+            event: { protocolVersion: update.protocolVersion, sequence, name, payload } });
           sequence += 1; // rejected events do not consume their sequence
           update = next;
+          return update;
+        },
+        completeEffect(id, result) {
+          alive();
+          if (!Number.isSafeInteger(id) || id <= 0) throw new Error('Mosaic effect id must be a positive safe integer');
+          update = request({ op: 'completeEffect', handle, id, result });
           return update;
         },
         snapshot() { alive(); return request({ op: 'snapshot', handle }); },

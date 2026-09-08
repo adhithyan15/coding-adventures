@@ -66,6 +66,7 @@ pub enum MosaicStatus {
     EncodeError = 5,
     Panic = 6,
     Poisoned = 7,
+    PendingEffects = 8,
 }
 
 /// Emit the fixed Mosaic C ABI for one concrete Rust application type.
@@ -91,6 +92,16 @@ macro_rules! export_mosaic_app {
             update: *mut $crate::MosaicBuffer,
         ) -> $crate::MosaicStatus {
             $crate::bridge::dispatch::<$app>(app, event, update)
+        }
+
+        #[no_mangle]
+        pub unsafe extern "C" fn mosaic_app_complete_effect(
+            app: $crate::MosaicHandle,
+            id: $crate::MosaicBytes,
+            result: $crate::MosaicBytes,
+            update: *mut $crate::MosaicBuffer,
+        ) -> $crate::MosaicStatus {
+            $crate::bridge::complete_effect::<$app>(app, id, result, update)
         }
 
         #[no_mangle]
@@ -130,7 +141,8 @@ macro_rules! export_mosaic_app {
 pub mod bridge {
     use super::{MosaicBuffer, MosaicBytes, MosaicHandle, MosaicStatus, MAX_DIAGNOSTIC_BYTES};
     use mosaic_app_runtime::{
-        Event, MosaicApp, MosaicRuntime, RuntimeError, Snapshot, StartContext,
+        EffectId, EffectResult, Event, MosaicApp, MosaicRuntime, RuntimeError, Snapshot,
+        StartContext,
     };
     use std::any::Any;
     use std::fmt::Display;
@@ -171,6 +183,10 @@ pub mod bridge {
     fn map_runtime_error<E: Display>(error: RuntimeError<E>) -> Failure {
         let status = if matches!(&error, RuntimeError::Application(_)) {
             MosaicStatus::ApplicationError
+        } else if matches!(&error, RuntimeError::PendingEffects(_)) {
+            MosaicStatus::PendingEffects
+        } else if matches!(&error, RuntimeError::Poisoned) {
+            MosaicStatus::Poisoned
         } else {
             MosaicStatus::ProtocolError
         };
@@ -360,6 +376,24 @@ pub mod bridge {
             let event = read_input(event)?;
             let event: Event = decode(&event)?;
             let update = runtime.dispatch(event).map_err(map_runtime_error)?;
+            encode(&update)
+        })
+    }
+
+    /// # Safety
+    /// The handle must be live and input/output pointers follow `mosaic_app.h`.
+    pub unsafe fn complete_effect<A: MosaicApp>(
+        app: MosaicHandle,
+        id: MosaicBytes,
+        result: MosaicBytes,
+        update: *mut MosaicBuffer,
+    ) -> MosaicStatus {
+        with_app::<A, _>(app, update, |runtime| {
+            let id: EffectId = decode(&read_input(id)?)?;
+            let result: EffectResult = decode(&read_input(result)?)?;
+            let update = runtime
+                .complete_effect(id, result)
+                .map_err(map_runtime_error)?;
             encode(&update)
         })
     }
