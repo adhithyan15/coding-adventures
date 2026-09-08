@@ -1,0 +1,8 @@
+(lang dune 3.16)
+(name coding-adventures-capability-analyzer)
+(generate_opam_files false)
+(package
+ (name coding-adventures-capability-analyzer)
+ (synopsis "Static capability-manifest enforcement for OCaml packages")
+ (description
+  "Compiler-libs AST analysis for direct OS access and unsafe OCaml constructs"))

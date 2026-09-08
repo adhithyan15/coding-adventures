@@ -144,7 +144,7 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
                 "          persist-credentials: false",
                 "          persist-credentials: false\n        continue-on-error: true",
             ),
-            self.mutate(
+            self.mutate_last(
                 "ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0",
                 "ocaml/setup-ocaml@v3",
             ),
@@ -152,20 +152,22 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
                 "matrix.sharded != true || contains(matrix.languages, 'ocaml')",
                 "matrix.sharded != true",
             ),
-            self.mutate(
+            self.mutate_last(
                 "ocaml-compiler: ocaml-base-compiler.5.2.1",
                 "ocaml-compiler: ${{ env.OCAML_VERSION }}",
             ),
-            self.mutate(
+            self.mutate_last(
                 "opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff",
                 "opam-repository.git#master",
             ),
-            self.mutate("opam-pin: false", "opam-pin: true"),
-            self.mutate("dune-cache: false", "dune-cache: true"),
+            self.mutate_last("opam-pin: false", "opam-pin: true"),
+            self.mutate_last("dune-cache: false", "dune-cache: true"),
             self.mutate("-${{ github.run_attempt }}-build-", "-build-"),
             self.mutate("windows-compiler: mingw", "windows-compiler: msvc"),
             self.mutate("windows-environment: cygwin", "windows-environment: msys2"),
-            self.mutate("github-token: ${{ github.token }}", "github-token: token"),
+            self.mutate_last(
+                "github-token: ${{ github.token }}", "github-token: token"
+            ),
         )
         for index, workflow in enumerate(cases):
             with self.subTest(case=index), self.assertRaises(toolchain.ContractError):
@@ -173,19 +175,19 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
 
     def test_rejects_missing_runtime_repository_or_checksum_evidence(self) -> None:
         cases = (
-            self.mutate(
+            self.mutate_last(
                 'test "$(opam --version)" = "2.5.2"',
                 'test "$(opam --version)" = "2.4.0"',
             ),
-            self.mutate(
+            self.mutate_last(
                 'test "$(opam exec -- ocamlc -version | tr -d \'\\r\')" = "5.2.1"',
                 "test -n \"$(opam exec -- ocamlc -version | tr -d '\\r')\"",
             ),
-            self.mutate(
+            self.mutate_last(
                 "validate-repository-report \\",
                 "validate-runtime \\",
             ),
-            self.mutate("--yes --require-checksums", "--yes"),
+            self.mutate_last("--yes --require-checksums", "--yes"),
             self.mutate(
                 "printf 'OPAMREQUIRECHECKSUMS=true\\n' >> \"$GITHUB_ENV\"",
                 "printf 'OPAMREQUIRECHECKSUMS=false\\n' >> \"$GITHUB_ENV\"",

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ocaml/ca-capability-analyzer",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads OCaml source files and the package capability manifest under review."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "*",
+      "justification": "Discovers regular OCaml source files beneath the selected package directory."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "temporary test directories",
+      "justification": "Integration tests create isolated temporary package directories."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "temporary test fixtures",
+      "justification": "Integration tests write bounded source and manifest fixtures into temporary directories."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "temporary test fixtures",
+      "justification": "Integration tests remove every temporary file and directory during cleanup."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Prints deterministic findings and tool errors for developers and CI."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "ocamlrun",
+      "justification": "The entrypoint integration test launches the built bytecode CLI through the reviewed OCaml runtime."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "CAPABILITY_TEST_OCAMLRUN and CAPABILITY_TEST_CLI",
+      "justification": "The entrypoint integration test reads two Dune-provided paths for the reviewed runtime and CLI bytecode."
+    }
+  ],
+  "justification": "The analyzer reads and lists one selected package tree and prints its deterministic verdict. Its test suite creates, writes, and removes only isolated temporary fixtures and launches the built CLI through the reviewed OCaml runtime; production opens no network connection and starts no process."
+}

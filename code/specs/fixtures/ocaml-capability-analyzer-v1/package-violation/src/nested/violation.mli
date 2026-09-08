@@ -1,0 +1,1 @@
+val announce : string -> unit
