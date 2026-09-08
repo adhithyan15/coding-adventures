@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C67-segunda-lectura",
+    "language": "spanish",
+    "chapter": 266,
+    "sequence": 2568,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:217d918dc1d41230"
+  },
+  "findings": []
+}

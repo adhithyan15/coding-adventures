@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-A1-LECTURA",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a short connected paragraph of Spanish straight through and answer questions about it, without translating word by word.",
+  "prerequisites": [
+    "ES-EXT-A1-REVIEW-CIERRE"
+  ],
+  "lessons": [
+    "ES-C67-primera-lectura",
+    "ES-C67-segunda-lectura",
+    "ES-C67-tercera-lectura"
+  ]
+}

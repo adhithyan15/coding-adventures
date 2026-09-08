@@ -1,0 +1,14 @@
+{
+  "id": "ES-PATH-A1-LECTURA",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C67-primera-lectura",
+    "ES-C67-segunda-lectura",
+    "ES-C67-tercera-lectura"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-LECTURA"
+  ],
+  "after": []
+}

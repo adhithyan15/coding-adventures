@@ -1,10 +1,13 @@
 {
   "language": "spanish",
   "chapter": 266,
-  "sourceHash": "fnv1a64:32d9b4bf375283c6",
+  "sourceHash": "fnv1a64:bf637f1ed7b9da05",
   "lessonIds": [
     "ES-C67-repaso-a1",
-    "ES-C67-repaso-lo-que-reemplazo-los-casos"
+    "ES-C67-repaso-lo-que-reemplazo-los-casos",
+    "ES-C67-primera-lectura",
+    "ES-C67-segunda-lectura",
+    "ES-C67-tercera-lectura"
   ],
   "tex": "spanish/book/chapters/ch266-review-a1.tex"
 }

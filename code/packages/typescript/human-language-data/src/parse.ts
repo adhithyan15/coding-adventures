@@ -92,6 +92,16 @@ function classifyBlock(title: string): LessonBlockType {
   // authored prose unclassifiable.
   if (normalized.startsWith("across the family")) return "cognates";
   if (normalized.includes("taken apart")) return "etymology";
+  // "Reading" opens a connected passage: several sentences of the target
+  // language in a row, every word of which the learner has already met. The
+  // `comprehension` block type has sat in the union since schema v2 with
+  // nothing on either side of it -- no heading produced it and no renderer
+  // consumed it -- so the only way to get a passage past the parser was to
+  // label it "You'll want to know" and call a paragraph an input block. That
+  // is why a 6,574-lesson corpus had three `type: reading` lessons and not one
+  // actual passage. Same call as the two gaps above: classify the authored
+  // heading honestly rather than leave real prose unclassifiable.
+  if (normalized.startsWith("reading")) return "comprehension";
   if (normalized.startsWith("why it's said this way")) return "culture-pragmatics";
   if (
     normalized.startsWith("grammar lens") ||
